@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:OMS系统参数表 t_oms_comm_sys_para -->
+<mapper namespace="omsCommSysParaBase">
+	<resultMap type="OmsCommSysPara" id="omsCommSysParaBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_sys_para_code" javaType="java.lang.String" property="sysParaCode"/>  <!-- 参数码 -->        <result column="f_sys_para_value" javaType="java.lang.String" property="sysParaValue"/>  <!-- 参数值 -->        <result column="f_sys_para_desc" javaType="java.lang.String" property="sysParaDesc"/>  <!-- 参数描述 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="OmsCommSysPara" id="omsCommSysParaExtendMap" extends="omsCommSysParaBaseMap">
+	</resultMap>
+	<resultMap type="OmsCommSysPara" id="omsCommSysParaBaseMap_AppendTable">
+        <id column="omsCommSysPara_f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="omsCommSysPara_f_sys_para_code" javaType="java.lang.String" property="sysParaCode"/>  <!-- 参数码 -->        <result column="omsCommSysPara_f_sys_para_value" javaType="java.lang.String" property="sysParaValue"/>  <!-- 参数值 -->        <result column="omsCommSysPara_f_sys_para_desc" javaType="java.lang.String" property="sysParaDesc"/>  <!-- 参数描述 -->        <result column="omsCommSysPara_f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="omsCommSysPara_f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="omsCommSysPara_f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="omsCommSysPara_f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="omsCommSysPara_f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="omsCommSysPara_f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="omsCommSysPara_f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		OCSP.f_id,OCSP.f_sys_para_code,OCSP.f_sys_para_value,OCSP.f_sys_para_desc,date_format(OCSP.f_sys0_add_time,'%Y-%m-%d %T') as f_sys0_add_time,date_format(OCSP.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time,date_format(OCSP.f_sys0_del_time,'%Y-%m-%d %T') as f_sys0_del_time,OCSP.f_sys0_add_user,OCSP.f_sys0_upd_user,OCSP.f_sys0_del_user,OCSP.f_sys0_del_state
+	</sql>
+	<sql id="queryHead_AppendTable">
+		OCSP.f_id as omsCommSysPara_f_id,OCSP.f_sys_para_code as omsCommSysPara_f_sys_para_code,OCSP.f_sys_para_value as omsCommSysPara_f_sys_para_value,OCSP.f_sys_para_desc as omsCommSysPara_f_sys_para_desc,date_format(OCSP.f_sys0_add_time,'%Y-%m-%d %T') as omsCommSysPara_f_sys0_add_time,date_format(OCSP.f_sys0_upd_time,'%Y-%m-%d %T') as omsCommSysPara_f_sys0_upd_time,date_format(OCSP.f_sys0_del_time,'%Y-%m-%d %T') as omsCommSysPara_f_sys0_del_time,OCSP.f_sys0_add_user as omsCommSysPara_f_sys0_add_user,OCSP.f_sys0_upd_user as omsCommSysPara_f_sys0_upd_user,OCSP.f_sys0_del_user as omsCommSysPara_f_sys0_del_user,OCSP.f_sys0_del_state as omsCommSysPara_f_sys0_del_state
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (OCSP.f_id = #{id} ) </if>        <if test="sysParaCode != null">  and (OCSP.f_sys_para_code = #{sysParaCode} ) </if>        <if test="sysParaValue != null">  and (OCSP.f_sys_para_value = #{sysParaValue} ) </if>        <if test="sysParaDesc != null">  and (OCSP.f_sys_para_desc = #{sysParaDesc} ) </if>        <if test="sys0AddTime != null and sys0AddTime != '' ">  and (OCSP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and sys0AddTime_START != '' ">              <![CDATA[ and (OCSP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and sys0AddTime_END != '' ">            <![CDATA[ and (OCSP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and sys0UpdTime != '' ">  and (OCSP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and sys0UpdTime_START != '' ">              <![CDATA[ and (OCSP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and sys0UpdTime_END != '' ">            <![CDATA[ and (OCSP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and sys0DelTime != '' ">  and (OCSP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and sys0DelTime_START != '' ">              <![CDATA[ and (OCSP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and sys0DelTime_END != '' ">            <![CDATA[ and (OCSP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (OCSP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (OCSP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (OCSP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (OCSP.f_sys0_del_state = #{sys0DelState} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and id != '' ">  and (OCSP.f_id = #{id} ) </if>        <if test="sysParaCode != null and sysParaCode != '' ">  and (OCSP.f_sys_para_code like CONCAT('%',#{sysParaCode},'%') ) </if>        <if test="sysParaValue != null and sysParaValue != '' ">  and (OCSP.f_sys_para_value like CONCAT('%',#{sysParaValue},'%') ) </if>        <if test="sysParaDesc != null and sysParaDesc != '' ">  and (OCSP.f_sys_para_desc like CONCAT('%',#{sysParaDesc},'%') ) </if>        <if test="sys0AddTime != null and sys0AddTime != '' ">  and (OCSP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and sys0AddTime_START != '' ">              <![CDATA[ and (OCSP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and sys0AddTime_END != '' ">            <![CDATA[ and (OCSP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and sys0UpdTime != '' ">  and (OCSP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and sys0UpdTime_START != '' ">              <![CDATA[ and (OCSP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and sys0UpdTime_END != '' ">            <![CDATA[ and (OCSP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and sys0DelTime != '' ">  and (OCSP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and sys0DelTime_START != '' ">              <![CDATA[ and (OCSP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and sys0DelTime_END != '' ">            <![CDATA[ and (OCSP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and sys0AddUser != '' ">  and (OCSP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and sys0UpdUser != '' ">  and (OCSP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and sys0DelUser != '' ">  and (OCSP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and sys0DelState != '' ">  and (OCSP.f_sys0_del_state = #{sys0DelState} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="omsCommSysParaBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == false"><include refid="omsCommSysParaBase.querySql"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or _QUERY_TYPE_IF_DIM == '' "><!-- 默认精确查询 -->
+			<include refid="omsCommSysParaBase.querySql"/>
+		</if>
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="omsCommSysParaBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_oms_comm_sys_para OCSP    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(OMS系统参数表)信息。 -->
+	<sql id="select_omsCommSysPara">
+		SELECT <include refid="omsCommSysParaBase.queryHead"/>
+		<include refid="omsCommSysParaBase.busiQueryCondition"/>
+		<include refid="omsCommSysParaBase.dimCheckSql"/>
+		ORDER BY OCSP.f_id DESC
+	</sql>
+	<select id="select_omsCommSysPara" parameterType="java.util.HashMap" resultMap="omsCommSysParaBase.omsCommSysParaExtendMap">
+		<include refid="omsCommSysParaBase.select_omsCommSysPara"/>
+	</select>
+	
+	<!-- 根据条件分页查询(OMS系统参数表)信息  -->
+	<sql id="select_omsCommSysPara_withPage">
+		SELECT <include refid="omsCommSysParaBase.queryHead"/>
+		<include refid="omsCommSysParaBase.busiQueryCondition"/>
+		<include refid="omsCommSysParaBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_omsCommSysPara_withPage" resultMap="omsCommSysParaBase.omsCommSysParaExtendMap" parameterType="java.util.Map">
+		<include refid="omsCommSysParaBase.select_omsCommSysPara_withPage"/>
+	</select>
+	
+	<!-- 根据序列号查询某个(OMS系统参数表)信息。 -->
+	<sql id="select_omsCommSysPara_bySeqId">
+		SELECT <include refid="omsCommSysParaBase.queryHead"/>
+		<include refid="omsCommSysParaBase.busiQueryCondition"/>
+		 and OCSP.f_id = #{_parameter}
+	</sql>
+	<select id="select_omsCommSysPara_bySeqId" parameterType="java.lang.String" resultMap="omsCommSysParaBase.omsCommSysParaBaseMap">
+		<include refid="omsCommSysParaBase.select_omsCommSysPara_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(OMS系统参数表)记录数  -->
+	<sql id="select_omsCommSysPara_count">
+		SELECT COUNT(*)
+		<include refid="omsCommSysParaBase.busiQueryCount"/>
+		<include refid="omsCommSysParaBase.dimCheckSql"/>
+	</sql>
+	<select id="select_omsCommSysPara_count" resultType="java.lang.Integer">
+		<include refid="omsCommSysParaBase.select_omsCommSysPara_count"/>
+	</select>
+	
+	 <!-- 往(OMS系统参数表)新增一条记录。 -->
+	 <sql id="insert_omsCommSysPara">
+		INSERT INTO t_oms_comm_sys_para 		(f_id,f_sys_para_code,f_sys_para_value,f_sys_para_desc,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 		(#{id},#{sysParaCode,jdbcType=VARCHAR},#{sysParaValue,jdbcType=VARCHAR},#{sysParaDesc,jdbcType=VARCHAR},str_to_date(#{sys0AddTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},#{sys0DelState})
+	 </sql>
+    <insert id="insert_omsCommSysPara" parameterType="java.util.HashMap">
+		<include refid="omsCommSysParaBase.insert_omsCommSysPara"/>
+    </insert>
+	
+    <!-- 更新(OMS系统参数表)信息。 -->
+    <sql id="update_omsCommSysPara">
+		UPDATE t_oms_comm_sys_para SET f_id=#{id} 		<if test="sysParaCode != null and sysParaCode != '' "> ,f_sys_para_code=#{sysParaCode}</if> 		<if test="sysParaValue != null and sysParaValue != '' "> ,f_sys_para_value=#{sysParaValue}</if> 		<if test="sysParaDesc != null and sysParaDesc != '' "> ,f_sys_para_desc=#{sysParaDesc}</if> 		<if test="sys0AddTime != null and sys0AddTime != '' "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and sys0UpdTime != '' "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and sys0DelTime != '' "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and sys0AddUser != '' "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and sys0UpdUser != '' "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and sys0DelUser != '' "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and sys0DelState != '' "> ,f_sys0_del_state=#{sys0DelState}</if>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_omsCommSysPara" parameterType="java.util.HashMap">
+		<include refid="omsCommSysParaBase.update_omsCommSysPara"/>
+    </update>
+    
+    <!-- 根据序列号删除(OMS系统参数表)信息。 -->
+    <sql id="delete_omsCommSysPara">
+		DELETE FROM t_oms_comm_sys_para WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_omsCommSysPara" parameterType="java.lang.String">
+		<include refid="omsCommSysParaBase.delete_omsCommSysPara"/>
+    </delete>
+    
+</mapper>

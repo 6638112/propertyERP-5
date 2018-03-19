@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 账户管理 -->
+<mapper namespace="accountManage">
+<!-- 更新主账号及申请账号的绑定相关信息 -->
+	<update id="update_ApplyAndMain_AccountData" parameterType="java.util.Map">
+		UPDATE t_login_no LN_main
+			INNER JOIN t_user U_main ON U_main.f_id = LN_main.t_user_f_id AND U_main.f_sys0_del_state = 0
+				AND U_main.f_id = #{mainUserId}
+				
+			INNER JOIN t_login_no LN_apply ON LN_apply.f_sys0_del_state = 0
+				AND LN_apply.f_id = #{applyLoginNoId}
+			LEFT JOIN t_login_no LN_apply_hua ON LN_apply_hua.f_sys0_del_state = 0
+				AND LN_apply_hua.f_type = 2 <!-- 账号类别=={"2":"花号"} -->
+				AND LN_apply_hua.t_user_f_id = LN_apply.t_user_f_id 
+			INNER JOIN t_user U_apply ON U_apply.f_id = LN_apply.t_user_f_id AND U_apply.f_sys0_del_state = 0
+			
+			SET 
+				<!-- 从账号的处理 -->
+				LN_apply.f_password = LN_main.f_password <!-- 密码 -->
+				,LN_apply.f_old_user_id = LN_apply.t_user_f_id <!-- 老用户Id -->
+				,LN_apply.t_user_f_id = U_main.f_id <!-- 新用户Id -->
+				,LN_apply.f_bind_status = 2	<!-- 绑定状态=={"2":"已绑定"} -->
+				,LN_apply.f_main_apply_type = 2 <!-- 绑定过程中主从账号标识=={"1":"主账号","2":"从账号"}-->
+				,LN_apply.f_sys0_upd_time = SYSDATE()
+				
+				<!-- 从账号的花号账户处理 逻辑删除 -->
+				,LN_apply_hua.f_sys0_del_state = 1
+				,LN_apply_hua.f_sys0_del_time = SYSDATE()
+				
+				<!-- 主账号的处理 -->
+				,LN_main.f_bind_status = 2	<!-- 绑定状态=={"2":"已绑定"},控制主账号不能再参与绑定到其他 -->
+				<!-- 绑定过程中主从账号标识=={"1":"主账号","2":"从账号"}，为空才更新,确保只有一个主 -->
+				,LN_main.f_main_apply_type = CASE WHEN ISNULL(LN_main.f_main_apply_type) THEN 1 ELSE LN_main.f_main_apply_type END
+				,LN_main.f_sys0_upd_time = SYSDATE()
+				<!-- TODO 是否删除从用户 -->
+		WHERE 1=1
+		AND LN_main.f_sys0_del_state = 0
+		AND LN_main.f_type = 2 <!-- 账号类别=={"2":"花号"} -->
+		AND (ISNULL(LN_apply.f_bind_status) OR LN_apply.f_bind_status !=2 )<!-- 绑定状态=={"2":"已绑定"},从账号不能为已绑定 -->
+		AND LN_apply.f_type != 2 <!-- 花号不能参与绑定 -->
+	</update>
+</mapper>

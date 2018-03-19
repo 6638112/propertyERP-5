@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:与第三方供应商类型对应关系 t_service_type_mapper -->
+<mapper namespace="serviceTypeMapperBase">
+	<resultMap type="ServiceTypeMapper" id="serviceTypeMapperBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_service_type_id" javaType="java.lang.String" property="serviceTypeId"/>  <!-- 服务端的维修类型id -->        <result column="t_dredge_type_f_id" javaType="java.math.BigInteger" property="tDredgeTypeFId"/>  <!-- 我方类型 -->        <result column="t_dredge_type_2nd_f_id" javaType="java.math.BigInteger" property="tDredgeType2ndFId"/>  <!--  -->        <result column="t_dredge_3rd_spl_f_id" javaType="java.math.BigInteger" property="tDredge3rdSplFId"/>  <!-- 第三方类型id -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="ServiceTypeMapper" id="serviceTypeMapperExtendMap" extends="serviceTypeMapperBaseMap">
+	</resultMap>
+	<resultMap type="ServiceTypeMapper" id="serviceTypeMapperBaseMap_AppendTable">
+        <id column="STMid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="STMserviceTypeId" javaType="java.lang.String" property="serviceTypeId"/>  <!-- 服务端的维修类型id -->        <result column="STMtDredgeTypeFId" javaType="java.math.BigInteger" property="tDredgeTypeFId"/>  <!-- 我方类型 -->        <result column="STMtDredgeType2ndFId" javaType="java.math.BigInteger" property="tDredgeType2ndFId"/>  <!--  -->        <result column="STMtDredge3rdSplFId" javaType="java.math.BigInteger" property="tDredge3rdSplFId"/>  <!-- 第三方类型id -->        <result column="STMsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="STMsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="STMsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="STMsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="STMsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="STMsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="STMsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="ServiceTypeMapper" id="serviceTypeMapperBaseMap_AppendTable1">
+        <id column="STM1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="STM1serviceTypeId" javaType="java.lang.String" property="serviceTypeId"/>  <!-- 服务端的维修类型id -->        <result column="STM1tDredgeTypeFId" javaType="java.math.BigInteger" property="tDredgeTypeFId"/>  <!-- 我方类型 -->        <result column="STM1tDredgeType2ndFId" javaType="java.math.BigInteger" property="tDredgeType2ndFId"/>  <!--  -->        <result column="STM1tDredge3rdSplFId" javaType="java.math.BigInteger" property="tDredge3rdSplFId"/>  <!-- 第三方类型id -->        <result column="STM1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="STM1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="STM1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="STM1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="STM1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="STM1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="STM1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		STM.f_id,STM.f_service_type_id,STM.t_dredge_type_f_id,STM.t_dredge_type_2nd_f_id,STM.t_dredge_3rd_spl_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		STM.f_id as STMid,STM.f_service_type_id as STMserviceTypeId,STM.t_dredge_type_f_id as STMtDredgeTypeFId,STM.t_dredge_type_2nd_f_id as STMtDredgeType2ndFId,STM.t_dredge_3rd_spl_f_id as STMtDredge3rdSplFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		STM1.f_id as STM1id,STM1.f_service_type_id as STM1serviceTypeId,STM1.t_dredge_type_f_id as STM1tDredgeTypeFId,STM1.t_dredge_type_2nd_f_id as STM1tDredgeType2ndFId,STM1.t_dredge_3rd_spl_f_id as STM1tDredge3rdSplFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (STM.f_id = #{id} ) </if>        <if test="serviceTypeId != null">  and (STM.f_service_type_id = #{serviceTypeId} ) </if>        <if test="tDredgeTypeFId != null">  and (STM.t_dredge_type_f_id = #{tDredgeTypeFId} ) </if>        <if test="tDredgeType2ndFId != null">  and (STM.t_dredge_type_2nd_f_id = #{tDredgeType2ndFId} ) </if>        <if test="tDredge3rdSplFId != null">  and (STM.t_dredge_3rd_spl_f_id = #{tDredge3rdSplFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (STM.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (STM.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (STM.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (STM.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (STM.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (STM.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (STM.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (STM.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (STM.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (STM.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (STM.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (STM.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (STM.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (STM.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (STM.f_id = #{id} ) </if>        <if test="serviceTypeId != null and !serviceTypeId.equals('')  ">  and (STM.f_service_type_id like CONCAT('%',#{serviceTypeId},'%') ) </if>        <if test="tDredgeTypeFId != null and !tDredgeTypeFId.equals('')  ">  and (STM.t_dredge_type_f_id = #{tDredgeTypeFId} ) </if>        <if test="tDredgeType2ndFId != null and !tDredgeType2ndFId.equals('')  ">  and (STM.t_dredge_type_2nd_f_id = #{tDredgeType2ndFId} ) </if>        <if test="tDredge3rdSplFId != null and !tDredge3rdSplFId.equals('')  ">  and (STM.t_dredge_3rd_spl_f_id = #{tDredge3rdSplFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (STM.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (STM.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (STM.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (STM.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (STM.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (STM.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (STM.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (STM.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (STM.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (STM.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (STM.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (STM.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (STM.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (STM.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="serviceTypeMapperBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="serviceTypeMapperBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="serviceTypeMapperBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="serviceTypeMapperBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_service_type_mapper STM    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(与第三方供应商类型对应关系)信息。 -->
+	<sql id="select_serviceTypeMapper">
+		SELECT <include refid="serviceTypeMapperBase.queryHead"/>
+		<include refid="serviceTypeMapperBase.busiQueryCondition"/>
+		<include refid="serviceTypeMapperBase.dimCheckSql"/>
+		ORDER BY STM.f_id DESC
+	</sql>
+	<select id="select_serviceTypeMapper" parameterType="java.util.Map" resultMap="serviceTypeMapperBase.serviceTypeMapperExtendMap">
+		<include refid="serviceTypeMapperBase.select_serviceTypeMapper"/>
+	</select>
+	
+	<!-- 根据条件分页查询(与第三方供应商类型对应关系)信息  -->
+	<sql id="select_serviceTypeMapper_withPage">
+		SELECT <include refid="serviceTypeMapperBase.queryHead"/>
+		<include refid="serviceTypeMapperBase.busiQueryCondition"/>
+		<include refid="serviceTypeMapperBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_serviceTypeMapper_withPage" resultMap="serviceTypeMapperBase.serviceTypeMapperExtendMap" parameterType="java.util.Map">
+		<include refid="serviceTypeMapperBase.select_serviceTypeMapper_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(与第三方供应商类型对应关系)信息。 -->
+	<sql id="select_serviceTypeMapper_bySeqId">
+		SELECT <include refid="serviceTypeMapperBase.queryHead"/>
+		<include refid="serviceTypeMapperBase.busiQueryCondition"/>
+		 and STM.f_id = #{_parameter}
+	</sql>
+	<select id="select_serviceTypeMapper_bySeqId" parameterType="java.math.BigInteger" resultMap="serviceTypeMapperBase.serviceTypeMapperBaseMap">
+		<include refid="serviceTypeMapperBase.select_serviceTypeMapper_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(与第三方供应商类型对应关系)记录数  -->
+	<sql id="select_serviceTypeMapper_count">
+		SELECT COUNT(*)
+		<include refid="serviceTypeMapperBase.busiQueryCount"/>
+		<include refid="serviceTypeMapperBase.dimCheckSql"/>
+	</sql>
+	<select id="select_serviceTypeMapper_count" resultType="java.lang.Integer">
+		<include refid="serviceTypeMapperBase.select_serviceTypeMapper_count"/>
+	</select>
+	
+	 <!-- 往(与第三方供应商类型对应关系)新增一条记录。 -->
+	 <sql id="insert_serviceTypeMapper">
+		INSERT INTO t_service_type_mapper 
+		(f_id,f_service_type_id,t_dredge_type_f_id,t_dredge_type_2nd_f_id,t_dredge_3rd_spl_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{serviceTypeId,jdbcType=VARCHAR},#{tDredgeTypeFId},#{tDredgeType2ndFId},#{tDredge3rdSplFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_serviceTypeMapper" parameterType="ServiceTypeMapper">
+		<include refid="serviceTypeMapperBase.insert_serviceTypeMapper"/>
+    </insert>
+    
+	<!-- 批量新增(与第三方供应商类型对应关系)信息 -->
+    <insert id="insert_serviceTypeMapper_Batch" parameterType="java.util.List">
+    	INSERT INTO t_service_type_mapper 
+		(f_id,f_service_type_id,t_dredge_type_f_id,t_dredge_type_2nd_f_id,t_dredge_3rd_spl_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.serviceTypeId,jdbcType=VARCHAR},#{item.tDredgeTypeFId},#{item.tDredgeType2ndFId},#{item.tDredge3rdSplFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(与第三方供应商类型对应关系)信息。 -->
+    <sql id="update_serviceTypeMapper">
+		UPDATE t_service_type_mapper		<trim prefix="SET" prefixOverrides=","> 		<if test="serviceTypeId != null and !serviceTypeId.equals('') "> ,f_service_type_id=#{serviceTypeId}</if> 		<if test="tDredgeTypeFId != null and !tDredgeTypeFId.equals('') "> ,t_dredge_type_f_id=#{tDredgeTypeFId}</if> 		<if test="tDredgeType2ndFId != null and !tDredgeType2ndFId.equals('') "> ,t_dredge_type_2nd_f_id=#{tDredgeType2ndFId}</if> 		<if test="tDredge3rdSplFId != null and !tDredge3rdSplFId.equals('') "> ,t_dredge_3rd_spl_f_id=#{tDredge3rdSplFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_serviceTypeMapper" parameterType="ServiceTypeMapper">
+		<include refid="serviceTypeMapperBase.update_serviceTypeMapper"/>
+    </update>
+    
+    <!-- 批量更新(与第三方供应商类型对应关系)信息。 -->
+    <update id="update_serviceTypeMapper_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_service_type_mapper		<trim prefix="SET" prefixOverrides=","> 		<if test="item.serviceTypeId != null and !item.serviceTypeId.equals('')  "> ,f_service_type_id=#{item.serviceTypeId}</if> 		<if test="item.tDredgeTypeFId != null and !item.tDredgeTypeFId.equals('')  "> ,t_dredge_type_f_id=#{item.tDredgeTypeFId}</if> 		<if test="item.tDredgeType2ndFId != null and !item.tDredgeType2ndFId.equals('')  "> ,t_dredge_type_2nd_f_id=#{item.tDredgeType2ndFId}</if> 		<if test="item.tDredge3rdSplFId != null and !item.tDredge3rdSplFId.equals('')  "> ,t_dredge_3rd_spl_f_id=#{item.tDredge3rdSplFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(与第三方供应商类型对应关系)信息_逻辑删除。 -->
+    <sql id="delete_serviceTypeMapper_Logic">
+		UPDATE t_service_type_mapper		<trim prefix="SET" prefixOverrides=","> 		<if test="serviceTypeId != null and !serviceTypeId.equals('')  "> ,f_service_type_id=#{serviceTypeId}</if> 		<if test="tDredgeTypeFId != null and !tDredgeTypeFId.equals('')  "> ,t_dredge_type_f_id=#{tDredgeTypeFId}</if> 		<if test="tDredgeType2ndFId != null and !tDredgeType2ndFId.equals('')  "> ,t_dredge_type_2nd_f_id=#{tDredgeType2ndFId}</if> 		<if test="tDredge3rdSplFId != null and !tDredge3rdSplFId.equals('')  "> ,t_dredge_3rd_spl_f_id=#{tDredge3rdSplFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_serviceTypeMapper_Logic" parameterType="ServiceTypeMapper">
+		<include refid="serviceTypeMapperBase.delete_serviceTypeMapper_Logic"/>
+    </update>
+    
+    <!-- 批量删除(与第三方供应商类型对应关系)信息_逻辑删除 -->
+    <update id="delete_serviceTypeMapper_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_service_type_mapper		<trim prefix="SET" prefixOverrides=","> 		<if test="item.serviceTypeId != null and !item.serviceTypeId.equals('')  "> ,f_service_type_id=#{item.serviceTypeId}</if> 		<if test="item.tDredgeTypeFId != null and !item.tDredgeTypeFId.equals('')  "> ,t_dredge_type_f_id=#{item.tDredgeTypeFId}</if> 		<if test="item.tDredgeType2ndFId != null and !item.tDredgeType2ndFId.equals('')  "> ,t_dredge_type_2nd_f_id=#{item.tDredgeType2ndFId}</if> 		<if test="item.tDredge3rdSplFId != null and !item.tDredge3rdSplFId.equals('')  "> ,t_dredge_3rd_spl_f_id=#{item.tDredge3rdSplFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(与第三方供应商类型对应关系)信息。 -->
+    <sql id="delete_serviceTypeMapper">
+		DELETE FROM t_service_type_mapper WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_serviceTypeMapper" parameterType="java.lang.String">
+		<include refid="serviceTypeMapperBase.delete_serviceTypeMapper"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(与第三方供应商类型对应关系)信息。 -->
+    <delete id="delete_serviceTypeMapper_Batch" parameterType="java.util.List">
+		DELETE FROM t_service_type_mapper WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

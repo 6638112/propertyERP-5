@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:加密日志记录 t_encypt_log -->
+<mapper namespace="encyptLogBase">
+	<resultMap type="EncyptLog" id="encyptLogBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_src_str" javaType="java.lang.String" property="srcStr"/>  <!-- 待加密字符串 -->        <result column="f_sign_type" javaType="java.lang.Integer" property="signType"/>  <!-- 加密类型 -->        <result column="f_sign_param" javaType="java.lang.String" property="signParam"/>  <!-- 客户端上传的加密结果 -->        <result column="f_sign_server" javaType="java.lang.String" property="signServer"/>  <!-- 服务端加密结果 -->        <result column="f_err_info" javaType="java.lang.String" property="errInfo"/>  <!-- 错误信息 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EncyptLog" id="encyptLogExtendMap" extends="encyptLogBaseMap">
+	</resultMap>
+	<resultMap type="EncyptLog" id="encyptLogBaseMap_AppendTable">
+        <id column="ELid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ELsrcStr" javaType="java.lang.String" property="srcStr"/>  <!-- 待加密字符串 -->        <result column="ELsignType" javaType="java.lang.Integer" property="signType"/>  <!-- 加密类型 -->        <result column="ELsignParam" javaType="java.lang.String" property="signParam"/>  <!-- 客户端上传的加密结果 -->        <result column="ELsignServer" javaType="java.lang.String" property="signServer"/>  <!-- 服务端加密结果 -->        <result column="ELerrInfo" javaType="java.lang.String" property="errInfo"/>  <!-- 错误信息 -->        <result column="ELsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="ELsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ELsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ELsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ELsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ELsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ELsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EncyptLog" id="encyptLogBaseMap_AppendTable1">
+        <id column="EL1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EL1srcStr" javaType="java.lang.String" property="srcStr"/>  <!-- 待加密字符串 -->        <result column="EL1signType" javaType="java.lang.Integer" property="signType"/>  <!-- 加密类型 -->        <result column="EL1signParam" javaType="java.lang.String" property="signParam"/>  <!-- 客户端上传的加密结果 -->        <result column="EL1signServer" javaType="java.lang.String" property="signServer"/>  <!-- 服务端加密结果 -->        <result column="EL1errInfo" javaType="java.lang.String" property="errInfo"/>  <!-- 错误信息 -->        <result column="EL1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EL1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EL1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EL1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EL1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EL1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EL1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EL.f_id,EL.f_src_str,EL.f_sign_type,EL.f_sign_param,EL.f_sign_server,EL.f_err_info
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EL.f_id as ELid,EL.f_src_str as ELsrcStr,EL.f_sign_type as ELsignType,EL.f_sign_param as ELsignParam,EL.f_sign_server as ELsignServer,EL.f_err_info as ELerrInfo
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EL1.f_id as EL1id,EL1.f_src_str as EL1srcStr,EL1.f_sign_type as EL1signType,EL1.f_sign_param as EL1signParam,EL1.f_sign_server as EL1signServer,EL1.f_err_info as EL1errInfo
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EL.f_id = #{id} ) </if>        <if test="srcStr != null">  and (EL.f_src_str = #{srcStr} ) </if>        <if test="signType != null">  and (EL.f_sign_type = #{signType} ) </if>        <if test="signParam != null">  and (EL.f_sign_param = #{signParam} ) </if>        <if test="signServer != null">  and (EL.f_sign_server = #{signServer} ) </if>        <if test="errInfo != null">  and (EL.f_err_info = #{errInfo} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EL.f_id = #{id} ) </if>        <if test="srcStr != null and !srcStr.equals('')  ">  and (EL.f_src_str like CONCAT('%',#{srcStr},'%') ) </if>        <if test="signType != null and !signType.equals('')  ">  and (EL.f_sign_type = #{signType} ) </if>        <if test="signParam != null and !signParam.equals('')  ">  and (EL.f_sign_param like CONCAT('%',#{signParam},'%') ) </if>        <if test="signServer != null and !signServer.equals('')  ">  and (EL.f_sign_server like CONCAT('%',#{signServer},'%') ) </if>        <if test="errInfo != null and !errInfo.equals('')  ">  and (EL.f_err_info like CONCAT('%',#{errInfo},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="encyptLogBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="encyptLogBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="encyptLogBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="encyptLogBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_encypt_log EL    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(加密日志记录)信息。 -->
+	<sql id="select_encyptLog">
+		SELECT <include refid="encyptLogBase.queryHead"/>
+		<include refid="encyptLogBase.busiQueryCondition"/>
+		<include refid="encyptLogBase.dimCheckSql"/>
+		ORDER BY EL.f_id DESC
+	</sql>
+	<select id="select_encyptLog" parameterType="java.util.Map" resultMap="encyptLogBase.encyptLogExtendMap">
+		<include refid="encyptLogBase.select_encyptLog"/>
+	</select>
+	
+	<!-- 根据条件分页查询(加密日志记录)信息  -->
+	<sql id="select_encyptLog_withPage">
+		SELECT <include refid="encyptLogBase.queryHead"/>
+		<include refid="encyptLogBase.busiQueryCondition"/>
+		<include refid="encyptLogBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_encyptLog_withPage" resultMap="encyptLogBase.encyptLogExtendMap" parameterType="java.util.Map">
+		<include refid="encyptLogBase.select_encyptLog_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(加密日志记录)信息。 -->
+	<sql id="select_encyptLog_bySeqId">
+		SELECT <include refid="encyptLogBase.queryHead"/>
+		<include refid="encyptLogBase.busiQueryCondition"/>
+		 and EL.f_id = #{_parameter}
+	</sql>
+	<select id="select_encyptLog_bySeqId" parameterType="java.math.BigInteger" resultMap="encyptLogBase.encyptLogBaseMap">
+		<include refid="encyptLogBase.select_encyptLog_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(加密日志记录)记录数  -->
+	<sql id="select_encyptLog_count">
+		SELECT COUNT(*)
+		<include refid="encyptLogBase.busiQueryCount"/>
+		<include refid="encyptLogBase.dimCheckSql"/>
+	</sql>
+	<select id="select_encyptLog_count" resultType="java.lang.Integer">
+		<include refid="encyptLogBase.select_encyptLog_count"/>
+	</select>
+	
+	 <!-- 往(加密日志记录)新增一条记录。 -->
+	 <sql id="insert_encyptLog">
+		INSERT INTO t_encypt_log 
+		(f_id,f_src_str,f_sign_type,f_sign_param,f_sign_server,f_err_info,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{srcStr,jdbcType=VARCHAR},#{signType},#{signParam,jdbcType=VARCHAR},#{signServer,jdbcType=VARCHAR},#{errInfo,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_encyptLog" parameterType="EncyptLog">
+		<include refid="encyptLogBase.insert_encyptLog"/>
+    </insert>
+    
+	<!-- 批量新增(加密日志记录)信息 -->
+    <insert id="insert_encyptLog_Batch" parameterType="java.util.List">
+    	INSERT INTO t_encypt_log 
+		(f_id,f_src_str,f_sign_type,f_sign_param,f_sign_server,f_err_info,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.srcStr,jdbcType=VARCHAR},#{item.signType},#{item.signParam,jdbcType=VARCHAR},#{item.signServer,jdbcType=VARCHAR},#{item.errInfo,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(加密日志记录)信息。 -->
+    <sql id="update_encyptLog">
+		UPDATE t_encypt_log		<trim prefix="SET" prefixOverrides=","> 		<if test="srcStr != null and !srcStr.equals('') "> ,f_src_str=#{srcStr}</if> 		<if test="signType != null and !signType.equals('') "> ,f_sign_type=#{signType}</if> 		<if test="signParam != null and !signParam.equals('') "> ,f_sign_param=#{signParam}</if> 		<if test="signServer != null and !signServer.equals('') "> ,f_sign_server=#{signServer}</if> 		<if test="errInfo != null and !errInfo.equals('') "> ,f_err_info=#{errInfo}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_encyptLog" parameterType="EncyptLog">
+		<include refid="encyptLogBase.update_encyptLog"/>
+    </update>
+    
+    <!-- 批量更新(加密日志记录)信息。 -->
+    <update id="update_encyptLog_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_encypt_log		<trim prefix="SET" prefixOverrides=","> 		<if test="item.srcStr != null and !item.srcStr.equals('')  "> ,f_src_str=#{item.srcStr}</if> 		<if test="item.signType != null and !item.signType.equals('')  "> ,f_sign_type=#{item.signType}</if> 		<if test="item.signParam != null and !item.signParam.equals('')  "> ,f_sign_param=#{item.signParam}</if> 		<if test="item.signServer != null and !item.signServer.equals('')  "> ,f_sign_server=#{item.signServer}</if> 		<if test="item.errInfo != null and !item.errInfo.equals('')  "> ,f_err_info=#{item.errInfo}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(加密日志记录)信息_逻辑删除。 -->
+    <sql id="delete_encyptLog_Logic">
+		UPDATE t_encypt_log		<trim prefix="SET" prefixOverrides=","> 		<if test="srcStr != null and !srcStr.equals('')  "> ,f_src_str=#{srcStr}</if> 		<if test="signType != null and !signType.equals('')  "> ,f_sign_type=#{signType}</if> 		<if test="signParam != null and !signParam.equals('')  "> ,f_sign_param=#{signParam}</if> 		<if test="signServer != null and !signServer.equals('')  "> ,f_sign_server=#{signServer}</if> 		<if test="errInfo != null and !errInfo.equals('')  "> ,f_err_info=#{errInfo}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_encyptLog_Logic" parameterType="EncyptLog">
+		<include refid="encyptLogBase.delete_encyptLog_Logic"/>
+    </update>
+    
+    <!-- 批量删除(加密日志记录)信息_逻辑删除 -->
+    <update id="delete_encyptLog_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_encypt_log		<trim prefix="SET" prefixOverrides=","> 		<if test="item.srcStr != null and !item.srcStr.equals('')  "> ,f_src_str=#{item.srcStr}</if> 		<if test="item.signType != null and !item.signType.equals('')  "> ,f_sign_type=#{item.signType}</if> 		<if test="item.signParam != null and !item.signParam.equals('')  "> ,f_sign_param=#{item.signParam}</if> 		<if test="item.signServer != null and !item.signServer.equals('')  "> ,f_sign_server=#{item.signServer}</if> 		<if test="item.errInfo != null and !item.errInfo.equals('')  "> ,f_err_info=#{item.errInfo}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(加密日志记录)信息。 -->
+    <sql id="delete_encyptLog">
+		DELETE FROM t_encypt_log WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_encyptLog" parameterType="java.lang.String">
+		<include refid="encyptLogBase.delete_encyptLog"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(加密日志记录)信息。 -->
+    <delete id="delete_encyptLog_Batch" parameterType="java.util.List">
+		DELETE FROM t_encypt_log WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

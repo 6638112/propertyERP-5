@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:微博信息举报表 t_microblog_report -->
+<mapper namespace="microblogReportBase">
+	<resultMap type="MicroblogReport" id="microblogReportBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键,同t_ebuy_product.f_id -->        <result column="t_microblog_content_f_id" javaType="java.math.BigInteger" property="tMicroblogContentFId"/>  <!-- 微博信息id -->        <result column="f_report_Info" javaType="java.lang.String" property="reportInfo"/>  <!-- 退款原因 -->        <result column="f_area_Info" javaType="java.lang.String" property="areaInfo"/>  <!-- 退款原因 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MicroblogReport" id="microblogReportExtendMap" extends="microblogReportBaseMap">
+	</resultMap>
+	<resultMap type="MicroblogReport" id="microblogReportBaseMap_AppendTable">
+        <id column="MRid" javaType="java.math.BigInteger" property="id"/>  <!-- 主键,同t_ebuy_product.f_id -->        <result column="MRtMicroblogContentFId" javaType="java.math.BigInteger" property="tMicroblogContentFId"/>  <!-- 微博信息id -->        <result column="MRreportInfo" javaType="java.lang.String" property="reportInfo"/>  <!-- 退款原因 -->        <result column="MRareaInfo" javaType="java.lang.String" property="areaInfo"/>  <!-- 退款原因 -->        <result column="MRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MicroblogReport" id="microblogReportBaseMap_AppendTable1">
+        <id column="MR1id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键,同t_ebuy_product.f_id -->        <result column="MR1tMicroblogContentFId" javaType="java.math.BigInteger" property="tMicroblogContentFId"/>  <!-- 微博信息id -->        <result column="MR1reportInfo" javaType="java.lang.String" property="reportInfo"/>  <!-- 退款原因 -->        <result column="MR1areaInfo" javaType="java.lang.String" property="areaInfo"/>  <!-- 退款原因 -->        <result column="MR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		MR.f_id,MR.t_microblog_content_f_id,MR.f_report_Info,MR.f_area_Info
+	</sql>
+	<sql id="queryHead_AppendTable">
+		MR.f_id as MRid,MR.t_microblog_content_f_id as MRtMicroblogContentFId,MR.f_report_Info as MRreportInfo,MR.f_area_Info as MRareaInfo
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		MR1.f_id as MR1id,MR1.t_microblog_content_f_id as MR1tMicroblogContentFId,MR1.f_report_Info as MR1reportInfo,MR1.f_area_Info as MR1areaInfo
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (MR.f_id = #{id} ) </if>        <if test="tMicroblogContentFId != null">  and (MR.t_microblog_content_f_id = #{tMicroblogContentFId} ) </if>        <if test="reportInfo != null">  and (MR.f_report_Info = #{reportInfo} ) </if>        <if test="areaInfo != null">  and (MR.f_area_Info = #{areaInfo} ) </if>        <if test="sys0DelState != null">  and (MR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (MR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (MR.f_id = #{id} ) </if>        <if test="tMicroblogContentFId != null and !tMicroblogContentFId.equals('')  ">  and (MR.t_microblog_content_f_id = #{tMicroblogContentFId} ) </if>        <if test="reportInfo != null and !reportInfo.equals('')  ">  and (MR.f_report_Info like CONCAT('%',#{reportInfo},'%') ) </if>        <if test="areaInfo != null and !areaInfo.equals('')  ">  and (MR.f_area_Info like CONCAT('%',#{areaInfo},'%') ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (MR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (MR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="microblogReportBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="microblogReportBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="microblogReportBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="microblogReportBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_microblog_report MR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(微博信息举报表)信息。 -->
+	<sql id="select_microblogReport">
+		SELECT <include refid="microblogReportBase.queryHead"/>
+		<include refid="microblogReportBase.busiQueryCondition"/>
+		<include refid="microblogReportBase.dimCheckSql"/>
+		ORDER BY MR.f_id DESC
+	</sql>
+	<select id="select_microblogReport" parameterType="java.util.Map" resultMap="microblogReportBase.microblogReportExtendMap">
+		<include refid="microblogReportBase.select_microblogReport"/>
+	</select>
+	
+	<!-- 根据条件分页查询(微博信息举报表)信息  -->
+	<sql id="select_microblogReport_withPage">
+		SELECT <include refid="microblogReportBase.queryHead"/>
+		<include refid="microblogReportBase.busiQueryCondition"/>
+		<include refid="microblogReportBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_microblogReport_withPage" resultMap="microblogReportBase.microblogReportExtendMap" parameterType="java.util.Map">
+		<include refid="microblogReportBase.select_microblogReport_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(微博信息举报表)信息。 -->
+	<sql id="select_microblogReport_bySeqId">
+		SELECT <include refid="microblogReportBase.queryHead"/>
+		<include refid="microblogReportBase.busiQueryCondition"/>
+		 and MR.f_id = #{_parameter}
+	</sql>
+	<select id="select_microblogReport_bySeqId" parameterType="java.math.BigInteger" resultMap="microblogReportBase.microblogReportBaseMap">
+		<include refid="microblogReportBase.select_microblogReport_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(微博信息举报表)记录数  -->
+	<sql id="select_microblogReport_count">
+		SELECT COUNT(*)
+		<include refid="microblogReportBase.busiQueryCount"/>
+		<include refid="microblogReportBase.dimCheckSql"/>
+	</sql>
+	<select id="select_microblogReport_count" resultType="java.lang.Integer">
+		<include refid="microblogReportBase.select_microblogReport_count"/>
+	</select>
+	
+	 <!-- 往(微博信息举报表)新增一条记录。 -->
+	 <sql id="insert_microblogReport">
+		INSERT INTO t_microblog_report 
+		(f_id,t_microblog_content_f_id,f_report_Info,f_area_Info,f_sys0_del_state) VALUES 
+		(#{id},#{tMicroblogContentFId},#{reportInfo,jdbcType=VARCHAR},#{areaInfo,jdbcType=VARCHAR},0)
+	 </sql>
+    <insert id="insert_microblogReport" parameterType="MicroblogReport">
+		<include refid="microblogReportBase.insert_microblogReport"/>
+    </insert>
+    
+	<!-- 批量新增(微博信息举报表)信息 -->
+    <insert id="insert_microblogReport_Batch" parameterType="java.util.List">
+    	INSERT INTO t_microblog_report 
+		(f_id,t_microblog_content_f_id,f_report_Info,f_area_Info,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tMicroblogContentFId},#{item.reportInfo,jdbcType=VARCHAR},#{item.areaInfo,jdbcType=VARCHAR},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(微博信息举报表)信息。 -->
+    <sql id="update_microblogReport">
+		UPDATE t_microblog_report		<trim prefix="SET" prefixOverrides=","> 		<if test="tMicroblogContentFId != null and !tMicroblogContentFId.equals('') "> ,t_microblog_content_f_id=#{tMicroblogContentFId}</if> 		<if test="reportInfo != null and !reportInfo.equals('') "> ,f_report_Info=#{reportInfo}</if> 		<if test="areaInfo != null and !areaInfo.equals('') "> ,f_area_Info=#{areaInfo}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_microblogReport" parameterType="MicroblogReport">
+		<include refid="microblogReportBase.update_microblogReport"/>
+    </update>
+    
+    <!-- 批量更新(微博信息举报表)信息。 -->
+    <update id="update_microblogReport_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_microblog_report		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tMicroblogContentFId != null and !item.tMicroblogContentFId.equals('')  "> ,t_microblog_content_f_id=#{item.tMicroblogContentFId}</if> 		<if test="item.reportInfo != null and !item.reportInfo.equals('')  "> ,f_report_Info=#{item.reportInfo}</if> 		<if test="item.areaInfo != null and !item.areaInfo.equals('')  "> ,f_area_Info=#{item.areaInfo}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(微博信息举报表)信息_逻辑删除。 -->
+    <sql id="delete_microblogReport_Logic">
+		UPDATE t_microblog_report		<trim prefix="SET" prefixOverrides=","> 		<if test="tMicroblogContentFId != null and !tMicroblogContentFId.equals('')  "> ,t_microblog_content_f_id=#{tMicroblogContentFId}</if> 		<if test="reportInfo != null and !reportInfo.equals('')  "> ,f_report_Info=#{reportInfo}</if> 		<if test="areaInfo != null and !areaInfo.equals('')  "> ,f_area_Info=#{areaInfo}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_microblogReport_Logic" parameterType="MicroblogReport">
+		<include refid="microblogReportBase.delete_microblogReport_Logic"/>
+    </update>
+    
+    <!-- 批量删除(微博信息举报表)信息_逻辑删除 -->
+    <update id="delete_microblogReport_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_microblog_report		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tMicroblogContentFId != null and !item.tMicroblogContentFId.equals('')  "> ,t_microblog_content_f_id=#{item.tMicroblogContentFId}</if> 		<if test="item.reportInfo != null and !item.reportInfo.equals('')  "> ,f_report_Info=#{item.reportInfo}</if> 		<if test="item.areaInfo != null and !item.areaInfo.equals('')  "> ,f_area_Info=#{item.areaInfo}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(微博信息举报表)信息。 -->
+    <sql id="delete_microblogReport">
+		DELETE FROM t_microblog_report WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_microblogReport" parameterType="java.lang.String">
+		<include refid="microblogReportBase.delete_microblogReport"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(微博信息举报表)信息。 -->
+    <delete id="delete_microblogReport_Batch" parameterType="java.util.List">
+		DELETE FROM t_microblog_report WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

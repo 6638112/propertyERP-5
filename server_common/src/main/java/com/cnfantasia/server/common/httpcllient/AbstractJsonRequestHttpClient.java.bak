@@ -1,0 +1,134 @@
+/**   
+ * Filename:    AbstractJsonRequestHttpClient.java   
+ * @version:    1.0  
+ * Create at:   2014年7月21日 下午12:00:08   
+ * Description:  
+ *   
+ * Modification History:   
+ * Date        Author      Version     Description   
+ * ----------------------------------------------------------------- 
+ * 2014年7月21日    shiyl      1.0         1.0 Version   
+ */
+package com.cnfantasia.server.common.httpcllient;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.cnfantasia.server.common.json.JsonRequest;
+import com.cnfantasia.server.common.utils.StringUtils;
+
+/**
+ * Filename: AbstractJsonRequestHttpClient.java
+ * 
+ * @version: 1.0.0 Create at: 2014年7月21日 下午12:00:08 Description:
+ * 
+ *           Modification History: Date Author Version Description
+ *           ------------------------------------------------------------------
+ *           2014年7月21日 shiyl 1.0 1.0 Version
+ */
+public abstract class AbstractJsonRequestHttpClient<R> extends AbstractHttpClient<JsonRequest, R> {
+	private Log logger = LogFactory.getLog(getClass());
+	private String contentType;
+	private String defaultContentType;
+
+	public final String getDefaultContentType() {
+		return defaultContentType;
+	}
+
+	public final void setDefaultContentType(String defaultContentType) {
+		this.defaultContentType = defaultContentType;
+	}
+
+	@Override
+	protected R postMethod(JsonRequest args, HttpMethod httpMethod) throws Exception {
+		int statusCode = httpMethod.getStatusCode();
+		if ((statusCode == HttpStatus.SC_MOVED_TEMPORARILY) || (statusCode == HttpStatus.SC_MOVED_PERMANENTLY)
+				|| (statusCode == HttpStatus.SC_SEE_OTHER) || (statusCode == HttpStatus.SC_TEMPORARY_REDIRECT)) {
+			// 读取新的URL地址
+			Header headerLocation = httpMethod.getResponseHeader("location");
+			if (headerLocation != null) {
+				String newuri = headerLocation.getValue();
+				if ((newuri == null) || (newuri.equals(""))) {
+					newuri = "/";
+				}
+				logger.debug("Redirect:" + newuri);
+				GetMethod getMethod = new GetMethod(newuri);
+				Header headerCookie = httpMethod.getResponseHeader("Set-Cookie");
+				if(headerCookie!=null){
+					getMethod.addRequestHeader("Cookie", httpMethod.getResponseHeader("Set-Cookie").getValue());
+				}
+				return submit(null,getMethod);
+//				JsonRequest jsonRequest = new JsonRequest();
+//				Map<String, String> header= new HashMap<String, String>();
+//				Header[] aa=httpMethod.getResponseHeaders();
+//				for(Header tt:aa){
+//					System.out.println(tt.getName()+"  "+tt.getValue());
+//				}
+//				System.out.println(httpMethod.getResponseBodyAsString());
+//				Header headerCookie = httpMethod.getResponseHeader("Set-Cookie");
+//				if(headerCookie!=null){
+//					header.put("Cookie", httpMethod.getResponseHeader("Set-Cookie").getValue());
+//				}
+//				jsonRequest.setHeader(header);
+//				Request request = new Request();
+//				request.setTransaction(newuri);
+//				jsonRequest.setRequest(request);
+//				return submit(jsonRequest);
+			}else{
+				throw new RuntimeException("Invalid redirect");
+			}
+		} else {
+			return doPostMethod(args, httpMethod);
+		}
+	}
+	
+	protected abstract R doPostMethod(JsonRequest args, HttpMethod httpMethod) throws Exception;
+	
+	@Override
+	protected Map<String, String> getParameters(JsonRequest args) {
+		Map<String, String> resMap = new HashMap<String, String>();
+		if(args!=null){
+			Map<String, Object> params = args.getRequest().getParams();
+			for (String key : params.keySet()) {
+				if (StringUtils.isEmpty(params.get(key))) {
+					resMap.put(key, null);
+				} else {
+					resMap.put(key, params.get(key).toString());
+				}
+			}
+		}
+		
+		return resMap;
+	}
+
+	@Override
+	protected String getUrl(JsonRequest args) {
+		return super.getUrl(args) + args.getRequest().getTransaction();
+	}
+
+	public String getContentType() {
+		if (null == contentType) {
+			Map<String, String> headers = getHeaders();
+			if (null != headers) {
+				contentType = headers.get("content-type");
+			}
+			if (null == contentType) {
+				contentType = defaultContentType;
+			}
+		}
+		return contentType;
+	}
+
+	/**
+	 */
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+}

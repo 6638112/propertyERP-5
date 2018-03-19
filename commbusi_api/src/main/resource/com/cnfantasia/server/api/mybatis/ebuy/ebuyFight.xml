@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 拼购模块 -->
+<mapper namespace="ebuyFight">
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.FightgroupProductEntity" id="fightgroupProductEntityMap" extends="ebuyProductBase.ebuyProductBaseMap_AppendTable">
+		<!--<result column="buyNum" javaType="java.lang.Long" property="buyNum"/> -->
+		<result column="shelfPrice" javaType="java.lang.Long" property="shelfPrice"/>
+		<result column="fightPrice" javaType="java.lang.Long" property="fightPrice"/>
+		<result column="startDate" javaType="java.lang.String" property="startDate"/>
+		<result column="expireDate" javaType="java.lang.String" property="expireDate"/>
+		<result column="fightNum" javaType="java.lang.Long" property="fightNum"/>
+		<result column="fightProductId" javaType="java.math.BigInteger" property="fightProductId"/>
+		<result column="fightStatus" javaType="java.lang.Integer" property="fightStatus"/>
+		<result column="productShelfId" javaType="java.lang.Long" property="productShelfId"/>
+		<association property="merchantName" resultMap="ebuySupplyMerchantBase.ebuySupplyMerchantBaseMap_AppendTable"/>		
+		<association property="zitiDian" resultMap="ebuyFightSupplyMerchantBase.ebuyFightSupplyMerchantBaseMap_AppendTable"/>
+		<collection javaType="list" property="picUrls" ofType="string">
+			<result column="picUrl"  property="picUrls" />
+		</collection>
+		<collection property="proIntroduceList" resultMap="ebuyProductIntroducePicBase.ebuyProductIntroducePicBaseMap_AppendTable"/>
+		<collection property="buyNum" resultMap="ebuyFightOrderBase.ebuyFightOrderBaseMap_AppendTable"/>
+	</resultMap>
+	<sql id="appebuyproductlist">
+		EP.f_id as EPid,EP.f_src_id as EPsrcId,EP.t_supply_merchant_f_id as EPtSupplyMerchantFId,EP.f_name as EPname,EP.f_name_mini as EPnameMini,EP.f_price as EPprice,EPS.f_price_discount as EPpriceDiscount,EP.f_purchase_price as EPpurchasePrice,EP.f_default_delivery_id as EPdefaultDeliveryId,EP.f_left_count as EPleftCount,date_format(EP.f_create_time,'%Y-%m-%d %T') as EPcreateTime,EP.f_sel_num as EPselNum,EP.f_pic_base as EPpicBase,EP.f_pic_base_mini as EPpicBaseMini,EP.t_ebuy_product_type_f_id as EPtEbuyProductTypeFId,EP.t_ebuy_product_type_for_enter_f_id as EPtEbuyProductTypeForEnterFId,EP.t_ebuy_delivery_desc_id as EPtEbuyDeliveryDescId,EP.f_price_unit as EPpriceUnit,EP.f_specification as EPspecification,EP.f_desc as EPdesc,EP.f_status as EPstatus,EP.f_status_audit as EPstatusAudit,date_format(EP.f_up_shelf_time,'%Y-%m-%d %T') as EPupShelfTime,date_format(EP.f_down_shelf_time,'%Y-%m-%d %T') as EPdownShelfTime,EP.f_pic_special as EPpicSpecial,EP.f_price_point as EPpricePoint,EP.f_price_discount_point as EPpriceDiscountPoint,EP.f_point_type as EPpointType,EP.f_wlApp_type as EPwlappType,EP.f_special_product_type as EPspecialProductType,EP.f_application_rang as EPapplicationRang,date_format(EP.f_end_time,'%Y-%m-%d %T') as EPendTime,EP.f_convert_process as EPconvertProcess,EP.f_attention_info as EPattentionInfo,EP.f_film_ticket_num as EPfilmTicketNum,date_format(EP.f_sys0_upd_time,'%Y-%m-%d %T') as EPsys0UpdTime
+	</sql>
+	<!-- 查询自提点对应拼购商品列表 -->
+	<select id="selelct_fight_product_list" parameterType="java.util.Map" resultMap="fightgroupProductEntityMap">
+		SELECT <include refid="appebuyproductlist" />,<include refid="ebuyFightOrderBase.queryHead_AppendTable"/>,
+		EPFG.f_price_discount fightPrice,date_format(EPFG.f_start_date,'%Y-%m-%d %T') startDate,date_format(EPFG.f_expire_date,'%Y-%m-%d %T') expireDate,EPFG.f_fight_num fightNum,(select f_url_mini from t_ebuy_product_fight_pic pfp where pfp.t_ebuy_product_f_id = EPFG.t_ebuy_product_f_id order by f_id desc limit 1) picUrl,EPFG.f_id fightProductId,
+		EPS.f_id productShelfId
+		FROM t_ebuy_product_fight_groups EPFG
+		INNER JOIN t_ebuy_product EP ON EPFG.t_ebuy_product_f_id = EP.f_id and EP.f_status = 0 
+		INNER JOIN t_ebuy_product_shelf EPS ON EPS.t_ebuy_product_id = EP.f_id and EPS.f_up_shelf_state = 0 
+		LEFT JOIN t_ebuy_fight_order EFO ON EPFG.f_id = EFO.t_ebuy_product_fight_groups_f_id
+		LEFT JOIN t_ebuy_product_fight_pic EPP ON EPP.t_ebuy_product_f_id=EP.f_id 
+		<if test="appType!=null and !appType.equals('')">
+			INNER JOIN t_ebuy_product_type EPT ON EPT.f_id = EPS.t_ebuy_product_type_id AND EPT.f_wlApp_type = #{appType} AND EPT.f_sys0_del_state = 0
+		</if>
+		WHERE 1=1 AND EPFG.f_sys0_del_state = 0 AND EPFG.f_start_date &lt;=NOW() AND EPFG.f_expire_date &gt; NOW() AND EPFG.f_left_count > 0 
+		AND EPFG.t_ebuy_fight_supply_merchant_f_id=#{fightMerchantId}
+		<if test="productId != null and productId != ''">
+			AND EPFG.t_ebuy_product_f_id = #{productId}
+		</if>
+		ORDER BY EPFG.f_start_date DESC, EPFG.f_id DESC
+	</select>
+	
+	<select id="selelct_fight_product_detail" parameterType="java.util.Map" resultMap="fightgroupProductEntityMap">
+		SELECT <include refid="appebuyproductlist" />,<include refid="ebuyProductIntroducePicBase.queryHead_AppendTable"/>,
+			<include refid="ebuyFightSupplyMerchantBase.queryHead_AppendTable"/>,<include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>,
+			<include refid="ebuyFightOrderBase.queryHead_AppendTable"/>,
+			EPFG.f_price_discount fightPrice,date_format(EPFG.f_start_date,'%Y-%m-%d %T') AS startDate,date_format(EPFG.f_expire_date,'%m/%d/%Y %T') AS expireDate,EPFG.f_fight_num fightNum,
+			ifnull(EPP.f_url_mini,(select f_url_mini from t_ebuy_product_fight_pic pfp where pfp.t_ebuy_product_f_id = EPFG.t_ebuy_product_f_id order by f_id desc limit 1)) picUrl,EPFG.f_id fightProductId,ESM.f_name merchantName,
+			CASE WHEN EPFG.f_expire_date &lt; now() THEN 3 WHEN EPFG.f_expire_date > now() AND EPFG.f_start_date > now() THEN 0
+				WHEN EP.f_left_count &lt;= 0 THEN 2  ELSE 1 END fightStatus,
+			EPS.f_id productShelfId
+			FROM t_ebuy_product_fight_groups EPFG
+			INNER JOIN t_ebuy_product EP ON EPFG.t_ebuy_product_f_id = EP.f_id and EP.f_status = 0
+			INNER JOIN t_ebuy_product_shelf EPS ON EPS.t_ebuy_product_id = EP.f_id and EPS.f_up_shelf_state = 0
+		<if test="appType != null and appType != ''">
+			INNER JOIN t_ebuy_product_type ept on EPS.t_ebuy_product_type_id = ept.f_id and ept.f_sys0_del_state = 0 and ept.f_wlApp_type = #{appType}
+		</if>
+			INNER JOIN t_ebuy_fight_supply_merchant EFSM ON EFSM.f_id = EPFG.t_ebuy_fight_supply_merchant_f_id
+			LEFT JOIN(t_ebuy_fight_order EFO  INNER JOIN t_ebuy_order EO 
+			ON EO.f_id = EFO.t_ebuy_order_f_id AND EO.f_pay_status=2 )
+			ON EPFG.f_id = EFO.t_ebuy_product_fight_groups_f_id AND EFO.f_sys0_del_state=0
+			LEFT JOIN t_ebuy_product_pic EPP ON EPP.t_ebuy_product_f_id=EP.f_id
+			LEFT JOIN t_ebuy_product_introduce_pic EPIP ON EPIP.t_ebuy_product_f_id = EPFG.t_ebuy_product_f_id
+			INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id
+		WHERE 1=1 AND EPFG.f_id=#{productId}
+
+	</select>
+	<!-- 减少库存 -->
+	<update id="update_ebuy_fight_left_count" parameterType="java.util.Map">
+		UPDATE t_ebuy_fight_order EFO
+		INNER JOIN t_ebuy_product_fight_groups EPFG ON EFO.t_ebuy_product_fight_groups_f_id = EPFG.f_id
+			SET EPFG.f_left_count = EPFG.f_left_count-#{fightProductCount} 
+			,EPFG.f_sys0_upd_time = SYSDATE()
+			WHERE 1=1
+		AND EPFG.f_sys0_del_state = 0
+		AND EPFG.f_left_count>=#{fightProductCount} 
+		AND EFO.t_ebuy_order_f_id=#{orderId}
+	</update>
+	<select id="select_user_fight_product_msg" parameterType="java.math.BigInteger" resultMap="ebuyOrderBase.ebuyOrderBaseMap_AppendTable">
+		SELECT <include refid="ebuyOrderBase.queryHead_AppendTable"/> FROM t_ebuy_order EO
+		INNER JOIN t_ebuy_fight_order EFO ON EFO.t_ebuy_order_f_id = EO.f_id
+		WHERE 1=1 AND EO.f_buyer_id= #{userId}  ORDER BY EO.f_id DESC LIMIT 1
+	</select>
+	<!-- 根据userId和订单Id查询该订单是否为拼购订单且是否能付款 -->
+	<select id="select_isNot_fight_order_end" parameterType="java.util.Map" resultType="java.lang.Boolean">
+		
+	</select>
+</mapper>

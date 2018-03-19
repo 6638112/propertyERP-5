@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  功能栏 -->
+<mapper namespace="appFunctionBar">
+
+    <!--设置mybatis缓存，1分钟过期-->
+    <cache
+            eviction="LRU"
+            flushInterval="60000"
+            size="2048"
+            readOnly="true"/>
+
+    <resultMap id="funcBarGroupMap" type="com.cnfantasia.server.api.appFunctionBar.entity.AppFunctionBarGroup">
+        <id property="functionType" column="functionType" javaType="java.lang.Integer"/>
+        <collection property="functionList" resultMap="funcBarMap"/>
+    </resultMap>
+    <resultMap id="funcBarMap" type="com.cnfantasia.server.api.appFunctionBar.entity.AppFuncBar">
+        <id column="barId" property="id" javaType="java.math.BigInteger"/>
+        <result column="name" property="name" javaType="java.lang.String"/>
+        <result column="iconUrl" property="iconUrl" javaType="java.lang.String"/>
+        <result column="jumpType" property="jumpType" javaType="java.lang.Integer"/>
+        <result column="linkUrl" property="linkUrl" javaType="java.lang.String"/>
+        <result column="code" property="code" javaType="java.lang.String"/>
+        <result column="androidParam" property="androidParam" javaType="java.lang.String"/>
+        <result column="iosParam" property="iosParam" javaType="java.lang.String"/>
+    </resultMap>
+
+    <!-- 手动调用清除缓存使用 -->
+    <select id="cleanCache" resultType="long" useCache="false" flushCache="true">
+        select 1
+    </select>
+
+    <select id="getFuncBarGroupListByPositionType" parameterType="map" resultMap="funcBarGroupMap">
+        SELECT DISTINCT afb.f_id barId, afb.f_name `name`, afb.f_icon_url iconUrl, afb.f_jump_type jumpType, afb.f_function_type functionType,
+        afb.f_link_url linkUrl, afb.f_code `code`, afb.f_android_param androidParam, afb.f_ios_param iosParam
+        FROM t_app_function_bar afb
+        INNER JOIN t_operation_sa_has_eb_supply oss ON oss.f_sys0_del_state = 0 AND oss.f_eb_supply_id = afb.f_id AND oss.f_type = 7
+        WHERE afb.f_sys0_del_state = 0 AND afb.f_position_type = #{positionType}
+        AND IFNULL(afb.f_start_version, 0) &lt;= #{version}
+        AND IFNULL(afb.f_end_version, 99999) >= #{version}
+        AND oss.f_sa_id IN
+        <foreach collection="codeIdList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY afb.f_function_type, afb.f_order DESC;
+    </select>
+</mapper>

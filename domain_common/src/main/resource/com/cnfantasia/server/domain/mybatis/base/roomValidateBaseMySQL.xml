@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:门牌校验信息 t_room_validate -->
+<mapper namespace="roomValidateBase">
+	<resultMap type="RoomValidate" id="roomValidateBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="f_verify_status" javaType="java.lang.Integer" property="verifyStatus"/>  <!-- 验证状态 -->
+        <result column="f_verify_pic_url" javaType="java.lang.String" property="verifyPicUrl"/>  <!-- 提交验证的图片地址 -->
+        <result column="f_verify_result_desc" javaType="java.lang.String" property="verifyResultDesc"/>  <!-- 审核结果描述 -->
+        <result column="t_room_f_id" javaType="java.math.BigInteger" property="tRoomFId"/>  <!-- 所属虚拟room门牌Id -->
+        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!-- 提交验证的用户Id -->
+        <result column="f_record_num" javaType="java.lang.Integer" property="recordNum"/>  <!-- 用户提交的记录数 -->
+        <result column="f_verify_succ_time" javaType="java.lang.String" property="verifySuccTime"/>  <!-- 验证通过时间 -->
+        <result column="f_source_type" javaType="java.lang.Integer" property="sourceType"/>  <!-- 验证信息来源类型 -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="f_old_user_id" javaType="java.math.BigInteger" property="oldUserId"/>  <!-- 绑定前的old验证用户Id -->
+	</resultMap>
+	<resultMap type="RoomValidate" id="roomValidateExtendMap" extends="roomValidateBaseMap">
+	</resultMap>
+	<resultMap type="RoomValidate" id="roomValidateBaseMap_AppendTable">
+        <id column="RVid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="RVverifyStatus" javaType="java.lang.Integer" property="verifyStatus"/>  <!-- 验证状态 -->
+        <result column="RVverifyPicUrl" javaType="java.lang.String" property="verifyPicUrl"/>  <!-- 提交验证的图片地址 -->
+        <result column="RVverifyResultDesc" javaType="java.lang.String" property="verifyResultDesc"/>  <!-- 审核结果描述 -->
+        <result column="RVtRoomFId" javaType="java.math.BigInteger" property="tRoomFId"/>  <!-- 所属虚拟room门牌Id -->
+        <result column="RVuserId" javaType="java.math.BigInteger" property="userId"/>  <!-- 提交验证的用户Id -->
+        <result column="RVrecordNum" javaType="java.lang.Integer" property="recordNum"/>  <!-- 用户提交的记录数 -->
+        <result column="RVverifySuccTime" javaType="java.lang.String" property="verifySuccTime"/>  <!-- 验证通过时间 -->
+        <result column="RVsourceType" javaType="java.lang.Integer" property="sourceType"/>  <!-- 验证信息来源类型 -->
+        <result column="RVsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="RVsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="RVsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="RVsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="RVsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="RVsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="RVsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="RVoldUserId" javaType="java.math.BigInteger" property="oldUserId"/>  <!-- 绑定前的old验证用户Id -->
+	</resultMap>
+	<resultMap type="RoomValidate" id="roomValidateBaseMap_AppendTable1">
+        <id column="RV1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="RV1verifyStatus" javaType="java.lang.Integer" property="verifyStatus"/>  <!-- 验证状态 -->
+        <result column="RV1verifyPicUrl" javaType="java.lang.String" property="verifyPicUrl"/>  <!-- 提交验证的图片地址 -->
+        <result column="RV1verifyResultDesc" javaType="java.lang.String" property="verifyResultDesc"/>  <!-- 审核结果描述 -->
+        <result column="RV1tRoomFId" javaType="java.math.BigInteger" property="tRoomFId"/>  <!-- 所属虚拟room门牌Id -->
+        <result column="RV1userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 提交验证的用户Id -->
+        <result column="RV1recordNum" javaType="java.lang.Integer" property="recordNum"/>  <!-- 用户提交的记录数 -->
+        <result column="RV1verifySuccTime" javaType="java.lang.String" property="verifySuccTime"/>  <!-- 验证通过时间 -->
+        <result column="RV1sourceType" javaType="java.lang.Integer" property="sourceType"/>  <!-- 验证信息来源类型 -->
+        <result column="RV1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="RV1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="RV1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="RV1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="RV1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="RV1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="RV1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="RV1oldUserId" javaType="java.math.BigInteger" property="oldUserId"/>  <!-- 绑定前的old验证用户Id -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		RV.f_id,RV.f_verify_status,RV.f_verify_pic_url,RV.f_verify_result_desc,RV.t_room_f_id,RV.f_user_id,RV.f_record_num,date_format(RV.f_verify_succ_time,'%Y-%m-%d %T') as f_verify_succ_time,RV.f_source_type,date_format(RV.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time,RV.f_old_user_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		RV.f_id as RVid,RV.f_verify_status as RVverifyStatus,RV.f_verify_pic_url as RVverifyPicUrl,RV.f_verify_result_desc as RVverifyResultDesc,RV.t_room_f_id as RVtRoomFId,RV.f_user_id as RVuserId,RV.f_record_num as RVrecordNum,date_format(RV.f_verify_succ_time,'%Y-%m-%d %T') as RVverifySuccTime,RV.f_source_type as RVsourceType,date_format(RV.f_sys0_upd_time,'%Y-%m-%d %T') as RVsys0UpdTime,RV.f_old_user_id as RVoldUserId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		RV1.f_id as RV1id,RV1.f_verify_status as RV1verifyStatus,RV1.f_verify_pic_url as RV1verifyPicUrl,RV1.f_verify_result_desc as RV1verifyResultDesc,RV1.t_room_f_id as RV1tRoomFId,RV1.f_user_id as RV1userId,RV1.f_record_num as RV1recordNum,date_format(RV1.f_verify_succ_time,'%Y-%m-%d %T') as RV1verifySuccTime,RV1.f_source_type as RV1sourceType,date_format(RV1.f_sys0_upd_time,'%Y-%m-%d %T') as RV1sys0UpdTime,RV1.f_old_user_id as RV1oldUserId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (RV.f_id = #{id} ) </if>
+        <if test="verifyStatus != null">  and (RV.f_verify_status = #{verifyStatus} ) </if>
+        <if test="verifyPicUrl != null">  and (RV.f_verify_pic_url = #{verifyPicUrl} ) </if>
+        <if test="verifyResultDesc != null">  and (RV.f_verify_result_desc = #{verifyResultDesc} ) </if>
+        <if test="tRoomFId != null">  and (RV.t_room_f_id = #{tRoomFId} ) </if>
+        <if test="userId != null">  and (RV.f_user_id = #{userId} ) </if>
+        <if test="recordNum != null">  and (RV.f_record_num = #{recordNum} ) </if>
+        <if test="verifySuccTime != null and !verifySuccTime.equals('')  ">  and (RV.f_verify_succ_time = str_to_date(#{verifySuccTime},'%Y-%m-%d %T') ) </if>
+        <if test="verifySuccTime_START != null and !verifySuccTime_START.equals('')  ">  
+            <![CDATA[ and (RV.f_verify_succ_time >= str_to_date(#{verifySuccTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="verifySuccTime_END != null and !verifySuccTime_END.equals('')  ">
+            <![CDATA[ and (RV.f_verify_succ_time <= str_to_date(#{verifySuccTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sourceType != null">  and (RV.f_source_type = #{sourceType} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (RV.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (RV.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (RV.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (RV.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (RV.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (RV.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (RV.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (RV.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (RV.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (RV.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (RV.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (RV.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (RV.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (RV.f_sys0_del_state = 0 ) </if>
+        <if test="oldUserId != null">  and (RV.f_old_user_id = #{oldUserId} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (RV.f_id = #{id} ) </if>
+        <if test="verifyStatus != null and !verifyStatus.equals('')  ">  and (RV.f_verify_status = #{verifyStatus} ) </if>
+        <if test="verifyPicUrl != null and !verifyPicUrl.equals('')  ">  and (RV.f_verify_pic_url like CONCAT('%',#{verifyPicUrl},'%') ) </if>
+        <if test="verifyResultDesc != null and !verifyResultDesc.equals('')  ">  and (RV.f_verify_result_desc like CONCAT('%',#{verifyResultDesc},'%') ) </if>
+        <if test="tRoomFId != null and !tRoomFId.equals('')  ">  and (RV.t_room_f_id = #{tRoomFId} ) </if>
+        <if test="userId != null and !userId.equals('')  ">  and (RV.f_user_id = #{userId} ) </if>
+        <if test="recordNum != null and !recordNum.equals('')  ">  and (RV.f_record_num = #{recordNum} ) </if>
+        <if test="verifySuccTime != null and !verifySuccTime.equals('')  ">  and (RV.f_verify_succ_time = str_to_date(#{verifySuccTime},'%Y-%m-%d %T') ) </if>
+        <if test="verifySuccTime_START != null and !verifySuccTime_START.equals('')  ">  
+            <![CDATA[ and (RV.f_verify_succ_time >= str_to_date(#{verifySuccTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="verifySuccTime_END != null and !verifySuccTime_END.equals('')  ">
+            <![CDATA[ and (RV.f_verify_succ_time <= str_to_date(#{verifySuccTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sourceType != null and !sourceType.equals('')  ">  and (RV.f_source_type = #{sourceType} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (RV.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (RV.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (RV.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (RV.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (RV.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (RV.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (RV.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (RV.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (RV.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (RV.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (RV.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (RV.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (RV.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (RV.f_sys0_del_state = 0 ) </if>
+        <if test="oldUserId != null and !oldUserId.equals('')  ">  and (RV.f_old_user_id = #{oldUserId} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="roomValidateBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="roomValidateBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="roomValidateBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="roomValidateBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_room_validate RV
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(门牌校验信息)信息。 -->
+	<sql id="select_roomValidate">
+		SELECT <include refid="roomValidateBase.queryHead"/>
+		<include refid="roomValidateBase.busiQueryCondition"/>
+		<include refid="roomValidateBase.dimCheckSql"/>
+		ORDER BY RV.f_id DESC
+	</sql>
+	<select id="select_roomValidate" parameterType="java.util.Map" resultMap="roomValidateBase.roomValidateExtendMap">
+		<include refid="roomValidateBase.select_roomValidate"/>
+	</select>
+	
+	<!-- 根据条件分页查询(门牌校验信息)信息  -->
+	<sql id="select_roomValidate_withPage">
+		SELECT <include refid="roomValidateBase.queryHead"/>
+		<include refid="roomValidateBase.busiQueryCondition"/>
+		<include refid="roomValidateBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_roomValidate_withPage" resultMap="roomValidateBase.roomValidateExtendMap" parameterType="java.util.Map">
+		<include refid="roomValidateBase.select_roomValidate_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(门牌校验信息)信息。 -->
+	<sql id="select_roomValidate_bySeqId">
+		SELECT <include refid="roomValidateBase.queryHead"/>
+		<include refid="roomValidateBase.busiQueryCondition"/>
+		 and RV.f_id = #{_parameter}
+	</sql>
+	<select id="select_roomValidate_bySeqId" parameterType="java.math.BigInteger" resultMap="roomValidateBase.roomValidateBaseMap">
+		<include refid="roomValidateBase.select_roomValidate_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(门牌校验信息)记录数  -->
+	<sql id="select_roomValidate_count">
+		SELECT COUNT(*)
+		<include refid="roomValidateBase.busiQueryCount"/>
+		<include refid="roomValidateBase.dimCheckSql"/>
+	</sql>
+	<select id="select_roomValidate_count" resultType="java.lang.Integer">
+		<include refid="roomValidateBase.select_roomValidate_count"/>
+	</select>
+	
+	 <!-- 往(门牌校验信息)新增一条记录。 -->
+	 <sql id="insert_roomValidate">
+		INSERT INTO t_room_validate 
+		(f_id,f_verify_status,f_verify_pic_url,f_verify_result_desc,t_room_f_id,f_user_id,f_record_num,f_verify_succ_time,f_source_type,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_old_user_id) VALUES 
+		(#{id},#{verifyStatus},#{verifyPicUrl,jdbcType=VARCHAR},#{verifyResultDesc,jdbcType=VARCHAR},#{tRoomFId},#{userId},#{recordNum},str_to_date(#{verifySuccTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sourceType},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0,#{oldUserId})
+	 </sql>
+    <insert id="insert_roomValidate" parameterType="RoomValidate">
+		<include refid="roomValidateBase.insert_roomValidate"/>
+    </insert>
+    
+	<!-- 批量新增(门牌校验信息)信息 -->
+    <insert id="insert_roomValidate_Batch" parameterType="java.util.List">
+    	INSERT INTO t_room_validate 
+		(f_id,f_verify_status,f_verify_pic_url,f_verify_result_desc,t_room_f_id,f_user_id,f_record_num,f_verify_succ_time,f_source_type,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_old_user_id) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.verifyStatus},#{item.verifyPicUrl,jdbcType=VARCHAR},#{item.verifyResultDesc,jdbcType=VARCHAR},#{item.tRoomFId},#{item.userId},#{item.recordNum},str_to_date(#{item.verifySuccTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sourceType},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0,#{item.oldUserId})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(门牌校验信息)信息。 -->
+    <sql id="update_roomValidate">
+		UPDATE t_room_validate
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="verifyStatus != null and !verifyStatus.equals('') "> ,f_verify_status=#{verifyStatus}</if>
+ 		<if test="verifyPicUrl != null and !verifyPicUrl.equals('') "> ,f_verify_pic_url=#{verifyPicUrl}</if>
+ 		<if test="verifyResultDesc != null and !verifyResultDesc.equals('') "> ,f_verify_result_desc=#{verifyResultDesc}</if>
+ 		<if test="tRoomFId != null and !tRoomFId.equals('') "> ,t_room_f_id=#{tRoomFId}</if>
+ 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if>
+ 		<if test="recordNum != null and !recordNum.equals('') "> ,f_record_num=#{recordNum}</if>
+ 		<if test="verifySuccTime != null and !verifySuccTime.equals('') "> ,f_verify_succ_time=str_to_date(#{verifySuccTime},'%Y-%m-%d %T')</if>
+ 		<if test="sourceType != null and !sourceType.equals('') "> ,f_source_type=#{sourceType}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+ 		<if test="oldUserId != null and !oldUserId.equals('') "> ,f_old_user_id=#{oldUserId}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_roomValidate" parameterType="RoomValidate">
+		<include refid="roomValidateBase.update_roomValidate"/>
+    </update>
+    
+    <!-- 批量更新(门牌校验信息)信息。 -->
+    <update id="update_roomValidate_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_room_validate
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.verifyStatus != null and !item.verifyStatus.equals('')  "> ,f_verify_status=#{item.verifyStatus}</if>
+ 		<if test="item.verifyPicUrl != null and !item.verifyPicUrl.equals('')  "> ,f_verify_pic_url=#{item.verifyPicUrl}</if>
+ 		<if test="item.verifyResultDesc != null and !item.verifyResultDesc.equals('')  "> ,f_verify_result_desc=#{item.verifyResultDesc}</if>
+ 		<if test="item.tRoomFId != null and !item.tRoomFId.equals('')  "> ,t_room_f_id=#{item.tRoomFId}</if>
+ 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if>
+ 		<if test="item.recordNum != null and !item.recordNum.equals('')  "> ,f_record_num=#{item.recordNum}</if>
+ 		<if test="item.verifySuccTime != null and !item.verifySuccTime.equals('')  "> ,f_verify_succ_time=str_to_date(#{item.verifySuccTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sourceType != null and !item.sourceType.equals('')  "> ,f_source_type=#{item.sourceType}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+ 		<if test="item.oldUserId != null and !item.oldUserId.equals('')  "> ,f_old_user_id=#{item.oldUserId}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(门牌校验信息)信息_逻辑删除。 -->
+    <sql id="delete_roomValidate_Logic">
+		UPDATE t_room_validate
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="verifyStatus != null and !verifyStatus.equals('')  "> ,f_verify_status=#{verifyStatus}</if>
+ 		<if test="verifyPicUrl != null and !verifyPicUrl.equals('')  "> ,f_verify_pic_url=#{verifyPicUrl}</if>
+ 		<if test="verifyResultDesc != null and !verifyResultDesc.equals('')  "> ,f_verify_result_desc=#{verifyResultDesc}</if>
+ 		<if test="tRoomFId != null and !tRoomFId.equals('')  "> ,t_room_f_id=#{tRoomFId}</if>
+ 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if>
+ 		<if test="recordNum != null and !recordNum.equals('')  "> ,f_record_num=#{recordNum}</if>
+ 		<if test="verifySuccTime != null and !verifySuccTime.equals('')  "> ,f_verify_succ_time=str_to_date(#{verifySuccTime},'%Y-%m-%d %T')</if>
+ 		<if test="sourceType != null and !sourceType.equals('')  "> ,f_source_type=#{sourceType}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="oldUserId != null and !oldUserId.equals('')  "> ,f_old_user_id=#{oldUserId}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_roomValidate_Logic" parameterType="RoomValidate">
+		<include refid="roomValidateBase.delete_roomValidate_Logic"/>
+    </update>
+    
+    <!-- 批量删除(门牌校验信息)信息_逻辑删除 -->
+    <update id="delete_roomValidate_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_room_validate
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.verifyStatus != null and !item.verifyStatus.equals('')  "> ,f_verify_status=#{item.verifyStatus}</if>
+ 		<if test="item.verifyPicUrl != null and !item.verifyPicUrl.equals('')  "> ,f_verify_pic_url=#{item.verifyPicUrl}</if>
+ 		<if test="item.verifyResultDesc != null and !item.verifyResultDesc.equals('')  "> ,f_verify_result_desc=#{item.verifyResultDesc}</if>
+ 		<if test="item.tRoomFId != null and !item.tRoomFId.equals('')  "> ,t_room_f_id=#{item.tRoomFId}</if>
+ 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if>
+ 		<if test="item.recordNum != null and !item.recordNum.equals('')  "> ,f_record_num=#{item.recordNum}</if>
+ 		<if test="item.verifySuccTime != null and !item.verifySuccTime.equals('')  "> ,f_verify_succ_time=str_to_date(#{item.verifySuccTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sourceType != null and !item.sourceType.equals('')  "> ,f_source_type=#{item.sourceType}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.oldUserId != null and !item.oldUserId.equals('')  "> ,f_old_user_id=#{item.oldUserId}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(门牌校验信息)信息。 -->
+    <sql id="delete_roomValidate">
+		DELETE FROM t_room_validate WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_roomValidate" parameterType="java.lang.String">
+		<include refid="roomValidateBase.delete_roomValidate"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(门牌校验信息)信息。 -->
+    <delete id="delete_roomValidate_Batch" parameterType="java.util.List">
+		DELETE FROM t_room_validate WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

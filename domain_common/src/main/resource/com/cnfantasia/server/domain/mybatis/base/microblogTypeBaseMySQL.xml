@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:微博类别 t_microblog_type -->
+<mapper namespace="microblogTypeBase">
+	<resultMap type="MicroblogType" id="microblogTypeBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="f_icon" javaType="java.lang.String" property="icon"/>  <!-- 图标地址 -->        <result column="f_icon_before" javaType="java.lang.String" property="iconBefore"/>  <!-- 选择前图标地址 -->        <result column="f_icon_after" javaType="java.lang.String" property="iconAfter"/>  <!-- 选择后图标地址 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MicroblogType" id="microblogTypeExtendMap" extends="microblogTypeBaseMap">
+	</resultMap>
+	<resultMap type="MicroblogType" id="microblogTypeBaseMap_AppendTable">
+        <id column="MTid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MTname" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="MTicon" javaType="java.lang.String" property="icon"/>  <!-- 图标地址 -->        <result column="MTiconBefore" javaType="java.lang.String" property="iconBefore"/>  <!-- 选择前图标地址 -->        <result column="MTiconAfter" javaType="java.lang.String" property="iconAfter"/>  <!-- 选择后图标地址 -->        <result column="MTsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MTsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MTsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MTsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MTsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MTsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MTsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MicroblogType" id="microblogTypeBaseMap_AppendTable1">
+        <id column="MT1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MT1name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="MT1icon" javaType="java.lang.String" property="icon"/>  <!-- 图标地址 -->        <result column="MT1iconBefore" javaType="java.lang.String" property="iconBefore"/>  <!-- 选择前图标地址 -->        <result column="MT1iconAfter" javaType="java.lang.String" property="iconAfter"/>  <!-- 选择后图标地址 -->        <result column="MT1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MT1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MT1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MT1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MT1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MT1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MT1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		MT.f_id,MT.f_name,MT.f_icon,MT.f_icon_before,MT.f_icon_after,date_format(MT.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		MT.f_id as MTid,MT.f_name as MTname,MT.f_icon as MTicon,MT.f_icon_before as MTiconBefore,MT.f_icon_after as MTiconAfter,date_format(MT.f_sys0_upd_time,'%Y-%m-%d %T') as MTsys0UpdTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		MT1.f_id as MT1id,MT1.f_name as MT1name,MT1.f_icon as MT1icon,MT1.f_icon_before as MT1iconBefore,MT1.f_icon_after as MT1iconAfter,date_format(MT1.f_sys0_upd_time,'%Y-%m-%d %T') as MT1sys0UpdTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (MT.f_id = #{id} ) </if>        <if test="name != null">  and (MT.f_name = #{name} ) </if>        <if test="icon != null">  and (MT.f_icon = #{icon} ) </if>        <if test="iconBefore != null">  and (MT.f_icon_before = #{iconBefore} ) </if>        <if test="iconAfter != null">  and (MT.f_icon_after = #{iconAfter} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MT.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MT.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MT.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MT.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MT.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MT.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MT.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MT.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MT.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (MT.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (MT.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (MT.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (MT.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (MT.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (MT.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (MT.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="icon != null and !icon.equals('')  ">  and (MT.f_icon like CONCAT('%',#{icon},'%') ) </if>        <if test="iconBefore != null and !iconBefore.equals('')  ">  and (MT.f_icon_before like CONCAT('%',#{iconBefore},'%') ) </if>        <if test="iconAfter != null and !iconAfter.equals('')  ">  and (MT.f_icon_after like CONCAT('%',#{iconAfter},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MT.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MT.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MT.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MT.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MT.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MT.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MT.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MT.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MT.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (MT.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (MT.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (MT.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (MT.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (MT.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="microblogTypeBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="microblogTypeBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="microblogTypeBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="microblogTypeBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_microblog_type MT    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(微博类别)信息。 -->
+	<sql id="select_microblogType">
+		SELECT <include refid="microblogTypeBase.queryHead"/>
+		<include refid="microblogTypeBase.busiQueryCondition"/>
+		<include refid="microblogTypeBase.dimCheckSql"/>
+		ORDER BY MT.f_id DESC
+	</sql>
+	<select id="select_microblogType" parameterType="java.util.Map" resultMap="microblogTypeBase.microblogTypeExtendMap">
+		<include refid="microblogTypeBase.select_microblogType"/>
+	</select>
+	
+	<!-- 根据条件分页查询(微博类别)信息  -->
+	<sql id="select_microblogType_withPage">
+		SELECT <include refid="microblogTypeBase.queryHead"/>
+		<include refid="microblogTypeBase.busiQueryCondition"/>
+		<include refid="microblogTypeBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_microblogType_withPage" resultMap="microblogTypeBase.microblogTypeExtendMap" parameterType="java.util.Map">
+		<include refid="microblogTypeBase.select_microblogType_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(微博类别)信息。 -->
+	<sql id="select_microblogType_bySeqId">
+		SELECT <include refid="microblogTypeBase.queryHead"/>
+		<include refid="microblogTypeBase.busiQueryCondition"/>
+		 and MT.f_id = #{_parameter}
+	</sql>
+	<select id="select_microblogType_bySeqId" parameterType="java.math.BigInteger" resultMap="microblogTypeBase.microblogTypeBaseMap">
+		<include refid="microblogTypeBase.select_microblogType_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(微博类别)记录数  -->
+	<sql id="select_microblogType_count">
+		SELECT COUNT(*)
+		<include refid="microblogTypeBase.busiQueryCount"/>
+		<include refid="microblogTypeBase.dimCheckSql"/>
+	</sql>
+	<select id="select_microblogType_count" resultType="java.lang.Integer">
+		<include refid="microblogTypeBase.select_microblogType_count"/>
+	</select>
+	
+	 <!-- 往(微博类别)新增一条记录。 -->
+	 <sql id="insert_microblogType">
+		INSERT INTO t_microblog_type 
+		(f_id,f_name,f_icon,f_icon_before,f_icon_after,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{icon,jdbcType=VARCHAR},#{iconBefore,jdbcType=VARCHAR},#{iconAfter,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_microblogType" parameterType="MicroblogType">
+		<include refid="microblogTypeBase.insert_microblogType"/>
+    </insert>
+    
+	<!-- 批量新增(微博类别)信息 -->
+    <insert id="insert_microblogType_Batch" parameterType="java.util.List">
+    	INSERT INTO t_microblog_type 
+		(f_id,f_name,f_icon,f_icon_before,f_icon_after,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.icon,jdbcType=VARCHAR},#{item.iconBefore,jdbcType=VARCHAR},#{item.iconAfter,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(微博类别)信息。 -->
+    <sql id="update_microblogType">
+		UPDATE t_microblog_type		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="icon != null and !icon.equals('') "> ,f_icon=#{icon}</if> 		<if test="iconBefore != null and !iconBefore.equals('') "> ,f_icon_before=#{iconBefore}</if> 		<if test="iconAfter != null and !iconAfter.equals('') "> ,f_icon_after=#{iconAfter}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_microblogType" parameterType="MicroblogType">
+		<include refid="microblogTypeBase.update_microblogType"/>
+    </update>
+    
+    <!-- 批量更新(微博类别)信息。 -->
+    <update id="update_microblogType_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_microblog_type		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.icon != null and !item.icon.equals('')  "> ,f_icon=#{item.icon}</if> 		<if test="item.iconBefore != null and !item.iconBefore.equals('')  "> ,f_icon_before=#{item.iconBefore}</if> 		<if test="item.iconAfter != null and !item.iconAfter.equals('')  "> ,f_icon_after=#{item.iconAfter}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(微博类别)信息_逻辑删除。 -->
+    <sql id="delete_microblogType_Logic">
+		UPDATE t_microblog_type		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="icon != null and !icon.equals('')  "> ,f_icon=#{icon}</if> 		<if test="iconBefore != null and !iconBefore.equals('')  "> ,f_icon_before=#{iconBefore}</if> 		<if test="iconAfter != null and !iconAfter.equals('')  "> ,f_icon_after=#{iconAfter}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_microblogType_Logic" parameterType="MicroblogType">
+		<include refid="microblogTypeBase.delete_microblogType_Logic"/>
+    </update>
+    
+    <!-- 批量删除(微博类别)信息_逻辑删除 -->
+    <update id="delete_microblogType_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_microblog_type		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.icon != null and !item.icon.equals('')  "> ,f_icon=#{item.icon}</if> 		<if test="item.iconBefore != null and !item.iconBefore.equals('')  "> ,f_icon_before=#{item.iconBefore}</if> 		<if test="item.iconAfter != null and !item.iconAfter.equals('')  "> ,f_icon_after=#{item.iconAfter}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(微博类别)信息。 -->
+    <sql id="delete_microblogType">
+		DELETE FROM t_microblog_type WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_microblogType" parameterType="java.lang.String">
+		<include refid="microblogTypeBase.delete_microblogType"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(微博类别)信息。 -->
+    <delete id="delete_microblogType_Batch" parameterType="java.util.List">
+		DELETE FROM t_microblog_type WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

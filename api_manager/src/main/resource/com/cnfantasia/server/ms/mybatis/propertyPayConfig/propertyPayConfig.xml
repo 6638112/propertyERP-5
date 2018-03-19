@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="propertyPayConfig">
+	<select id="getAlterPeriodCfgWithLock" parameterType="java.util.Map" resultMap="alterPeriodCfgBase.alterPeriodCfgBaseMap">
+		SELECT *
+		FROM 
+			t_alter_period_cfg
+		WHERE t_gb_id=#{gbId} AND f_sys0_del_state=0 LIMIT 1 FOR UPDATE
+	</select>
+	
+	<!-- 根据条件查询(选择周期收费项)信息。 -->
+	<select id="select_alterPeriodFeeItem" parameterType="java.util.Map" resultMap="alterPeriodFeeItemBase.alterPeriodFeeItemExtendMap">
+		SELECT <include refid="alterPeriodFeeItemBase.queryHead"/>
+		<include refid="alterPeriodFeeItemBase.busiQueryCondition"/>
+		<include refid="alterPeriodFeeItemBase.dimCheckSql"/>
+		ORDER BY APFI.f_id ASC
+	</select>
+
+	<resultMap id="getMrFeeItemEntityByGbId_Map" type="com.cnfantasia.server.ms.propertyPayConfig.entity.MrFeeItemEntity"
+			   extends="mrFeeItemBase.mrFeeItemBaseMap_AppendTable">
+		<collection property="calculateRuleCfgList" resultMap="mrCalculateRuleCfgBase.mrCalculateRuleCfgBaseMap_AppendTable"/>
+	</resultMap>
+	<!-- 查询抄表收费项和计费规则 -->
+	<select id="getMrFeeItemEntityByGbId" parameterType="java.math.BigInteger" resultMap="getMrFeeItemEntityByGbId_Map">
+		SELECT <include refid="mrFeeItemBase.queryHead_AppendTable"/>,<include refid="mrCalculateRuleCfgBase.queryHead_AppendTable"/> FROM
+		t_mr_fee_item MFI LEFT JOIN t_mr_calculate_rule_cfg MCRC ON MFI.f_id = MCRC.t_mr_fee_item_id AND MCRC.f_sys0_del_state = 0
+		WHERE MFI.f_sys0_del_state = 0 AND MFI.f_gb_id = #{gbId} ORDER BY MFI.f_id, MCRC.f_id ASC;
+	</select>
+
+	<resultMap id="getRoomTreeByGbId_Map" type="com.cnfantasia.server.ms.propertyPayConfig.entity.GroupBuildingTreeEntity">
+		<id property="gbId" column="gbId" javaType="java.math.BigInteger"/>
+		<result property="gbName" column="gbName" javaType="java.lang.String"/>
+		<collection property="buildingRooms" resultMap="getRoomTreeByGbId_room_Map"/>
+	</resultMap>
+	<resultMap id="getRoomTreeByGbId_room_Map" type="com.cnfantasia.server.ms.propertyPayConfig.entity.RealRoomTreeEntity">
+		<id property="buildingId" column="buildingId" javaType="java.math.BigInteger"/>
+		<result property="buildingName" column="buildingName" javaType="java.lang.String"/>
+		<collection property="realRooms" resultMap="getRoomTreeByGbId_realRooms_Map"/>
+	</resultMap>
+	<resultMap id="getRoomTreeByGbId_realRooms_Map" type="com.cnfantasia.server.ms.propertyPayConfig.entity.RealRoomTree">
+		<id property="realRoomId" column="realRoomId" javaType="java.math.BigInteger"/>
+		<result property="realRoomName" column="realRoomName" javaType="java.lang.String"/>
+	</resultMap>
+	<!--根据小区ID查询抄表收费标准的楼栋房间数据-->
+	<select id="getRoomTreeByGbId" parameterType="java.math.BigInteger" resultMap="getRoomTreeByGbId_Map">
+		SELECT GB.f_id AS gbId, GB.f_name AS gbName,B.f_id AS buildingId, B.f_name AS buildingName,RR.f_id AS realRoomId,
+			CONCAT(IF(RR.f_unit_name is null,'', concat(RR.f_unit_name, '-')), RR.f_num_tail) AS realRoomName
+		FROM
+			t_group_building GB
+		INNER JOIN	t_building B ON B.t_group_building_f_id = GB.f_id
+		INNER JOIN t_real_room RR ON B.f_id = RR.t_building_f_id
+		WHERE
+			B.f_sys0_del_state = 0
+		AND RR.f_sys0_del_state = 0
+		AND GB.f_sys0_del_state=0
+		AND B.f_check_status IN (1, 9)
+		AND RR.f_check_status IN (1, 9)
+		AND GB.f_check_status IN (1, 9)
+		AND GB.f_id =#{gbId}
+		ORDER BY B.f_name_char_order, B.f_name_digit_order+0, RR.f_unit_name, RR.f_num_tail_char_order, RR.f_num_tail_digit_order+0;
+	</select>
+
+	<!--收费标准-->
+	<resultMap id="mrFeeItemForStandars_Map" type="com.cnfantasia.server.ms.propertyPayConfig.entity.MrFeeItemForStandar">
+		<id property="feeItemId" column="feeItemId" javaType="java.math.BigInteger"/>
+		<result property="feeItemName" column="feeItemName" javaType="java.lang.String"/>
+		<result property="mrCalculateRuleCfgId" column="mrCalculateRuleCfgId" javaType="java.math.BigInteger"/>
+		<collection property="calculateRuleForStandars" resultMap="mrFeeItemForStandars_calculateRuleForStandars_Map"/>
+	</resultMap>
+	<resultMap id="mrFeeItemForStandars_calculateRuleForStandars_Map" type="com.cnfantasia.server.ms.propertyPayConfig.entity.CalculateRuleForStandar">
+		<id property="calculateRuleId" column="calculateRuleId" javaType="java.math.BigInteger"/>
+		<result property="calculateRuleName" column="calculateRuleName" javaType="java.lang.String"/>
+	</resultMap>
+
+	<!--根据房间id查询收费标准数据-->
+	<resultMap id="getMrStandardRoomByRealRoomId_Map" type="com.cnfantasia.server.ms.propertyPayConfig.entity.MrStandardRoomEntity" extends="mrStandardRoomBase.mrStandardRoomBaseMap_AppendTable">
+		<result property="buildingName" column="buildingName" javaType="java.lang.String"/>
+		<result property="unitName" column="unitName" javaType="java.lang.String"/>
+		<result property="roomNo" column="roomNo" javaType="java.lang.String"/>
+		<result property="ppName" column="ppName" javaType="java.lang.String"/>
+	</resultMap>
+	<select id="getMrStandardRoomByRealRoomId" parameterType="java.math.BigInteger" resultMap="getMrStandardRoomByRealRoomId_Map">
+		SELECT <include refid="mrStandardRoomBase.queryHead_AppendTable"/>,
+				B.f_name AS buildingName, IF(RR.f_unit_name is null,'', RR.f_unit_name) AS unitName,
+				RR.f_num_tail AS roomNo, PP.f_name AS ppName, MFI.f_id AS feeItemId, MFI.f_name AS feeItemName,
+				MCRC.f_id AS calculateRuleId, MCRC.f_name AS calculateRuleName
+		FROM t_mr_standard_room MSR
+		INNER JOIN t_real_room RR ON RR.f_id = MSR.t_real_room_id AND RR.f_sys0_del_state = 0
+		INNER JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id AND PP.f_sys0_del_state = 0
+		INNER JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0
+		INNER JOIN t_mr_fee_item MFI ON MFI.f_id = MSR.t_mr_fee_item_id AND MFI.f_sys0_del_state = 0
+		LEFT JOIN t_mr_calculate_rule_cfg MCRC ON MFI.f_id = MCRC.t_mr_fee_item_id AND MCRC.f_sys0_del_state = 0 AND MSR.t_mr_calculate_rule_cfg_id = MCRC.f_id
+		WHERE MSR.t_real_room_id = #{realRoomId} AND MSR.f_sys0_del_state = 0
+		ORDER BY B.f_name_char_order, B.f_name_digit_order+0, RR.f_unit_name, RR.f_num_tail_char_order, RR.f_num_tail_digit_order+0;
+	</select>
+	<!--根据楼栋ID查询收费标准数据-->
+	<resultMap id="getMrStandardBuildingByBuildingId_Map" type="com.cnfantasia.server.ms.propertyPayConfig.entity.MrStandardBuildingEntity">
+		<id property="id" column="id" javaType="java.math.BigInteger"/>
+		<result property="gbId" column="gbId" javaType="java.math.BigInteger"/>
+		<result property="buildingId" column="buildingId" javaType="java.math.BigInteger"/>
+		<result property="buildingName" column="buildingName" javaType="java.lang.String"/>
+		<collection property="mrFeeItemForStandars" resultMap="mrFeeItemForStandars_Map"/>
+	</resultMap>
+	<select id="getMrStandardBuildingByBuildingId" parameterType="java.math.BigInteger" resultMap="getMrStandardBuildingByBuildingId_Map">
+		SELECT DISTINCT MSB.f_id AS id, MSB.t_gb_id AS gbId, MSB.t_building_id AS buildingId, B.f_name AS buildingName, MFI.f_id AS feeItemId, MFI.f_name AS feeItemName,
+				MCRC.f_id AS calculateRuleId, MCRC.f_name AS calculateRuleName,MSB.t_mr_calculate_rule_cfg_id AS mrCalculateRuleCfgId
+		FROM t_mr_standard_building MSB
+		INNER JOIN t_building B ON B.f_id = MSB.t_building_id AND B.f_sys0_del_state = 0
+		INNER JOIN t_mr_fee_item MFI ON MFI.f_id = MSB.t_mr_fee_item_id AND MFI.f_sys0_del_state = 0
+		LEFT JOIN t_mr_calculate_rule_cfg MCRC ON MFI.f_id = MCRC.t_mr_fee_item_id AND MCRC.f_sys0_del_state = 0
+		WHERE MSB.t_building_id = #{buildingId} AND MSB.f_sys0_del_state = 0
+		ORDER BY B.f_name_char_order, B.f_name_digit_order+0;
+	</select>
+	<!--根据小区ID查询收费标准数据-->
+	<resultMap id="getMrStandardBuildingBygbId_Map" type="com.cnfantasia.server.ms.propertyPayConfig.entity.MrStandardGroupBuildingEntity">
+		<id property="id" column="id" javaType="java.math.BigInteger"/>
+		<result property="gbId" column="gbId" javaType="java.math.BigInteger"/>
+		<result property="gbName" column="gbName" javaType="java.lang.String"/>
+		<collection property="mrFeeItemForStandars" resultMap="mrFeeItemForStandars_Map"/>
+	</resultMap>
+	<select id="getMrStandardBuildingBygbId" parameterType="java.math.BigInteger" resultMap="getMrStandardBuildingBygbId_Map">
+		SELECT DISTINCT MSGB.f_id AS id, GB.f_name AS gbName, GB.f_id AS gbId, MFI.f_id AS feeItemId, MFI.f_name AS feeItemName,
+				MCRC.f_id AS calculateRuleId, MCRC.f_name AS calculateRuleName,MSGB.t_mr_calculate_rule_cfg_id AS mrCalculateRuleCfgId
+		FROM t_mr_standard_group_building MSGB
+		INNER JOIN t_group_building GB ON GB.f_id = MSGB.t_gb_id AND GB.f_sys0_del_state = 0
+		INNER JOIN t_mr_fee_item MFI ON MFI.f_id = MSGB.t_mr_fee_item_id AND MFI.f_sys0_del_state = 0
+		LEFT JOIN t_mr_calculate_rule_cfg MCRC ON MFI.f_id = MCRC.t_mr_fee_item_id AND MCRC.f_sys0_del_state = 0
+		WHERE MSGB.t_gb_id = #{gbId} AND MSGB.f_sys0_del_state = 0;
+	</select>
+
+	<!--根据房间ID查询费用项对应的计算规则-->
+	<select id="getItemFeesHascalculateRules" parameterType="java.math.BigInteger" resultMap="mrFeeItemForStandars_Map">
+		  SELECT MFI.f_id AS feeItemId, MFI.f_name AS feeItemName,
+				MCRC.f_id AS calculateRuleId, MCRC.f_name AS calculateRuleName
+		  FROM t_real_room RR INNER JOIN t_building B ON RR.t_building_f_id = B.f_id AND B.f_sys0_del_state=0 AND RR.f_sys0_del_state=0
+		  INNER JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id AND GB.f_sys0_del_state=0
+		  INNER JOIN t_mr_fee_item MFI ON MFI.f_gb_id = GB.f_id AND MFI.f_sys0_del_state=0
+		  INNER JOIN t_mr_calculate_rule_cfg MCRC ON MCRC.t_mr_fee_item_id = MFI.f_id AND MCRC.f_sys0_del_state=0
+		  WHERE RR.f_id=#{realRoomId};
+	</select>
+
+	<!--根据房间收费标准ID查询计算规则-->
+	<resultMap id="getCalculateRuleByStandardRooId_Map" type="com.cnfantasia.server.ms.propertyPayConfig.entity.CalculateRuleEntity" extends="mrCalculateRuleCfgBase.mrCalculateRuleCfgBaseMap_AppendTable">
+		<collection property="mrFeeItemFormulas" resultMap="mrFeeItemFormulaBase.mrFeeItemFormulaBaseMap_AppendTable"/>
+	</resultMap>
+	<select id="getCalculateRuleByStandardRooId" parameterType="java.math.BigInteger" resultMap="getCalculateRuleByStandardRooId_Map">
+		SELECT <include refid="mrCalculateRuleCfgBase.queryHead_AppendTable"/>,<include refid="mrFeeItemFormulaBase.queryHead_AppendTable"/>
+		FROM t_mr_standard_room MSR
+		INNER JOIN t_mr_calculate_rule_cfg MCRC ON MCRC.f_id = MSR.t_mr_calculate_rule_cfg_id
+			AND MSR.t_mr_fee_item_id = MCRC.t_mr_fee_item_id AND MSR.f_id=#{standardRoomId} AND MSR.f_sys0_del_state=0 AND MCRC.f_sys0_del_state=0
+		INNER JOIN t_mr_fee_item_formula MFIF ON MFIF.t_mr_calculate_rule_cfg_id = MCRC.f_id AND MFIF.t_mr_fee_item_f_id = MSR.t_mr_fee_item_id
+		    AND MFIF.f_sys0_del_state=0
+		ORDER BY MFIF.f_start_value ASC;
+	</select>
+
+	<!--查询定价方式-->
+	<select id="getCalculatePriceTypeByStandardRoomId" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+		SELECT MCRC.f_calculate_price_type FROM t_mr_calculate_rule_cfg MCRC INNER JOIN t_mr_standard_room MSR ON MSR.t_mr_calculate_rule_cfg_id = MCRC.f_id
+		WHERE MCRC.f_sys0_del_state = 0 AND MSR.f_sys0_del_state = 0 AND MSR.f_id=#{standardRoomId};
+	</select>
+
+	<!--查询计算规则使用情况-->
+	<select id="getCalculateRuleIsUseList" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM t_mr_calculate_rule_cfg MCRC
+		LEFT JOIN t_mr_standard_group_building SGB ON SGB.t_mr_calculate_rule_cfg_id = MCRC.f_id AND SGB.f_sys0_del_state=0
+		LEFT JOIN t_mr_standard_building SB ON SGB.t_mr_fee_item_id AND SB.f_sys0_del_state=0 AND SB.t_mr_calculate_rule_cfg_id=#{id}
+		LEFT JOIN t_mr_standard_room SR ON SR.t_mr_fee_item_id = SB.t_mr_fee_item_id AND SR.f_sys0_del_state=0 AND SR.t_mr_calculate_rule_cfg_id=#{id}
+		WHERE MCRC.f_sys0_del_state=0 AND MCRC.f_id=#{id}
+	</select>
+	
+	<!-- 更新(选择周期配置)信息。 -->
+	<update id="update_alterPeriodCfg" parameterType="AlterPeriodCfg">
+		UPDATE t_alter_period_cfg
+		SET 
+	 		f_latefee_rate=#{latefeeRate},
+	 		f_latefee_status=#{latefeeStatus},
+	 		f_calculate_expression=#{calculateExpression},
+	 		f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T'),
+	 		f_sys0_upd_user=#{sys0UpdUser}
+		WHERE f_id=#{id}
+    </update>
+
+	<update id="deleteAlterRoomHasFeeItemByItemId" parameterType="java.util.Map">
+		UPDATE t_alter_room_has_fee_item arhfi SET arhfi.f_sys0_del_state = 1
+		WHERE arhfi.t_alter_period_fee_item_id = #{alterPeriodFeeItemId};
+	</update>
+
+
+	<update id="deleteAllDetailByGb" parameterType="java.util.Map">
+		UPDATE t_alter_period_data_detail apdd, t_alter_period_cfg apc SET apdd.f_sys0_del_state = 1
+		WHERE apc.f_id = apdd.t_alter_period_cfg_id AND apc.t_gb_id = #{tGbId};
+
+		UPDATE t_alter_room_has_fee_item arhfi, t_alter_period_fee_item apfi SET arhfi.f_sys0_del_state = 1
+		WHERE arhfi.t_alter_period_fee_item_id = apfi.f_id AND apfi.t_gb_id = #{tGbId};
+	</update>
+
+	<!--删除计费规则 抄表-->
+	<update id="delMrCalculateRuleCfg" parameterType="java.util.Map">
+		UPDATE t_mr_calculate_rule_cfg SET f_sys0_del_state = 1 ,f_sys0_del_time=NOW(),f_sys0_del_user=#{userId} WHERE f_id=#{id};
+	</update>
+</mapper>

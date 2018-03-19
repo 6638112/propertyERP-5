@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+	<bean id="ebuyController" class="com.cnfantasia.server.api.ebuy.web.EbuyController">
+		<property name="ebuyService" ref="ebuyService"/>
+		<property name="ebuyNewService" ref="ebuyNewService"/>
+		<property name="fileServerService" ref="fileServerService"/>
+		<!-- <property name="ebuyProductTypeBaseService" ref="ebuyProductTypeBaseService"/> -->
+		<property name="sysParamManager" ref="sysParamManager" />
+		<property name="ebuyAuthPicParamParser" ref="ebuyAuthPicParamParser" />
+		<property name="commonDeviceService" ref="commonDeviceService" />
+		<!-- <property name="productPicSpecialPathParamParser" ref="productPicSpecialPathParamParser" /> -->
+		<property name="commEntityConvertService" ref="commEntityConvertService" />
+		<property name="ebuyInvoiceService" ref="ebuyInvoiceService" />
+		<property name="surpriseGiftService" ref="surpriseGiftService" />
+		<property name="ebuyFilmTicketService" ref="ebuyFilmTicketService" />
+		<property name="ebuyFlowRechargeService" ref="ebuyFlowRechargeService" />
+		<property name="fileServerParamParser" ref="fileServerParamParser"></property>
+	</bean>
+	
+	<bean id="ebuyNewController" class="com.cnfantasia.server.api.ebuy.web.EbuyNewController">
+		<property name="ebuyNewService" ref="ebuyNewService"/>
+		<property name="operationService" ref="operationService" />
+		<property name="advertiseService" ref="ebuyAdvertiseService" />
+		<property name="commonRoomService" ref="commonRoomService" />
+		<property name="commonUserService" ref="commonUserService" />
+		<property name="commonDeviceService" ref="commonDeviceService" />
+		<property name="ebuyService" ref="ebuyService"/>
+		<property name="ebuyFlowRechargeService" ref="ebuyFlowRechargeService" />
+		<property name="ebuyIdentifyInfoService" ref="ebuyIdentifyInfoService" />
+	</bean>
+	
+	<bean id="pointProductController" class="com.cnfantasia.server.api.ebuy.web.PointProductController" parent="ebuyController">
+		<property name="commonPointService" ref="commonPointService"></property>
+		<property name="dualDao" ref="dualDao"></property>
+	</bean>
+	
+	<!-- 依谷网task -->
+	<bean id="eguTask" class="com.cnfantasia.server.api.ebuy.task.EguTask" />
+	
+</beans>  

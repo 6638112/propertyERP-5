@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:上门维修第三方服务供应商 t_service_supplier -->
+<mapper namespace="serviceSupplierBase">
+	<resultMap type="ServiceSupplier" id="serviceSupplierBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_number" javaType="java.lang.String" property="number"/>  <!-- 编码 -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="ServiceSupplier" id="serviceSupplierExtendMap" extends="serviceSupplierBaseMap">
+	</resultMap>
+	<resultMap type="ServiceSupplier" id="serviceSupplierBaseMap_AppendTable">
+        <id column="SSid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="SSnumber" javaType="java.lang.String" property="number"/>  <!-- 编码 -->        <result column="SSname" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="SSdesc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="SSsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="SSsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="SSsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="SSsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="SSsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="SSsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="SSsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="ServiceSupplier" id="serviceSupplierBaseMap_AppendTable1">
+        <id column="SS1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="SS1number" javaType="java.lang.String" property="number"/>  <!-- 编码 -->        <result column="SS1name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="SS1desc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="SS1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="SS1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="SS1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="SS1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="SS1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="SS1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="SS1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		SS.f_id,SS.f_number,SS.f_name,SS.f_desc
+	</sql>
+	<sql id="queryHead_AppendTable">
+		SS.f_id as SSid,SS.f_number as SSnumber,SS.f_name as SSname,SS.f_desc as SSdesc
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		SS1.f_id as SS1id,SS1.f_number as SS1number,SS1.f_name as SS1name,SS1.f_desc as SS1desc
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (SS.f_id = #{id} ) </if>        <if test="number != null">  and (SS.f_number = #{number} ) </if>        <if test="name != null">  and (SS.f_name = #{name} ) </if>        <if test="desc != null">  and (SS.f_desc = #{desc} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (SS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (SS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (SS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (SS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (SS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (SS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (SS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (SS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (SS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (SS.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (SS.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (SS.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (SS.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (SS.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (SS.f_id = #{id} ) </if>        <if test="number != null and !number.equals('')  ">  and (SS.f_number like CONCAT('%',#{number},'%') ) </if>        <if test="name != null and !name.equals('')  ">  and (SS.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="desc != null and !desc.equals('')  ">  and (SS.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (SS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (SS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (SS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (SS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (SS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (SS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (SS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (SS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (SS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (SS.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (SS.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (SS.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (SS.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (SS.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="serviceSupplierBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="serviceSupplierBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="serviceSupplierBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="serviceSupplierBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_service_supplier SS    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(上门维修第三方服务供应商)信息。 -->
+	<sql id="select_serviceSupplier">
+		SELECT <include refid="serviceSupplierBase.queryHead"/>
+		<include refid="serviceSupplierBase.busiQueryCondition"/>
+		<include refid="serviceSupplierBase.dimCheckSql"/>
+		ORDER BY SS.f_id DESC
+	</sql>
+	<select id="select_serviceSupplier" parameterType="java.util.Map" resultMap="serviceSupplierBase.serviceSupplierExtendMap">
+		<include refid="serviceSupplierBase.select_serviceSupplier"/>
+	</select>
+	
+	<!-- 根据条件分页查询(上门维修第三方服务供应商)信息  -->
+	<sql id="select_serviceSupplier_withPage">
+		SELECT <include refid="serviceSupplierBase.queryHead"/>
+		<include refid="serviceSupplierBase.busiQueryCondition"/>
+		<include refid="serviceSupplierBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_serviceSupplier_withPage" resultMap="serviceSupplierBase.serviceSupplierExtendMap" parameterType="java.util.Map">
+		<include refid="serviceSupplierBase.select_serviceSupplier_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(上门维修第三方服务供应商)信息。 -->
+	<sql id="select_serviceSupplier_bySeqId">
+		SELECT <include refid="serviceSupplierBase.queryHead"/>
+		<include refid="serviceSupplierBase.busiQueryCondition"/>
+		 and SS.f_id = #{_parameter}
+	</sql>
+	<select id="select_serviceSupplier_bySeqId" parameterType="java.math.BigInteger" resultMap="serviceSupplierBase.serviceSupplierBaseMap">
+		<include refid="serviceSupplierBase.select_serviceSupplier_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(上门维修第三方服务供应商)记录数  -->
+	<sql id="select_serviceSupplier_count">
+		SELECT COUNT(*)
+		<include refid="serviceSupplierBase.busiQueryCount"/>
+		<include refid="serviceSupplierBase.dimCheckSql"/>
+	</sql>
+	<select id="select_serviceSupplier_count" resultType="java.lang.Integer">
+		<include refid="serviceSupplierBase.select_serviceSupplier_count"/>
+	</select>
+	
+	 <!-- 往(上门维修第三方服务供应商)新增一条记录。 -->
+	 <sql id="insert_serviceSupplier">
+		INSERT INTO t_service_supplier 
+		(f_id,f_number,f_name,f_desc,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{number,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_serviceSupplier" parameterType="ServiceSupplier">
+		<include refid="serviceSupplierBase.insert_serviceSupplier"/>
+    </insert>
+    
+	<!-- 批量新增(上门维修第三方服务供应商)信息 -->
+    <insert id="insert_serviceSupplier_Batch" parameterType="java.util.List">
+    	INSERT INTO t_service_supplier 
+		(f_id,f_number,f_name,f_desc,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.number,jdbcType=VARCHAR},#{item.name,jdbcType=VARCHAR},#{item.desc,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(上门维修第三方服务供应商)信息。 -->
+    <sql id="update_serviceSupplier">
+		UPDATE t_service_supplier		<trim prefix="SET" prefixOverrides=","> 		<if test="number != null and !number.equals('') "> ,f_number=#{number}</if> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_serviceSupplier" parameterType="ServiceSupplier">
+		<include refid="serviceSupplierBase.update_serviceSupplier"/>
+    </update>
+    
+    <!-- 批量更新(上门维修第三方服务供应商)信息。 -->
+    <update id="update_serviceSupplier_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_service_supplier		<trim prefix="SET" prefixOverrides=","> 		<if test="item.number != null and !item.number.equals('')  "> ,f_number=#{item.number}</if> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(上门维修第三方服务供应商)信息_逻辑删除。 -->
+    <sql id="delete_serviceSupplier_Logic">
+		UPDATE t_service_supplier		<trim prefix="SET" prefixOverrides=","> 		<if test="number != null and !number.equals('')  "> ,f_number=#{number}</if> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_serviceSupplier_Logic" parameterType="ServiceSupplier">
+		<include refid="serviceSupplierBase.delete_serviceSupplier_Logic"/>
+    </update>
+    
+    <!-- 批量删除(上门维修第三方服务供应商)信息_逻辑删除 -->
+    <update id="delete_serviceSupplier_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_service_supplier		<trim prefix="SET" prefixOverrides=","> 		<if test="item.number != null and !item.number.equals('')  "> ,f_number=#{item.number}</if> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(上门维修第三方服务供应商)信息。 -->
+    <sql id="delete_serviceSupplier">
+		DELETE FROM t_service_supplier WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_serviceSupplier" parameterType="java.lang.String">
+		<include refid="serviceSupplierBase.delete_serviceSupplier"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(上门维修第三方服务供应商)信息。 -->
+    <delete id="delete_serviceSupplier_Batch" parameterType="java.util.List">
+		DELETE FROM t_service_supplier WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:疏通工单推送时间记录表 t_dredge_bill_push_time -->
+<mapper namespace="dredgeBillPushTimeBase">
+    <resultMap type="DredgeBillPushTime" id="dredgeBillPushTimeBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="t_dredge_bill_f_id" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!-- 维修单ID -->
+        <result column="f_push_level" javaType="java.lang.Integer" property="pushLevel"/>  <!-- 推送等级 -->
+        <result column="f_push_time" javaType="java.lang.String" property="pushTime"/>  <!-- 推送时间 -->
+    </resultMap>
+    <resultMap type="DredgeBillPushTime" id="dredgeBillPushTimeExtendMap" extends="dredgeBillPushTimeBaseMap">
+    </resultMap>
+    <resultMap type="DredgeBillPushTime" id="dredgeBillPushTimeBaseMap_AppendTable">
+        <id column="DBPTid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="DBPTtDredgeBillFId" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!-- 维修单ID -->
+        <result column="DBPTpushLevel" javaType="java.lang.Integer" property="pushLevel"/>  <!-- 推送等级 -->
+        <result column="DBPTpushTime" javaType="java.lang.String" property="pushTime"/>  <!-- 推送时间 -->
+    </resultMap>
+    <resultMap type="DredgeBillPushTime" id="dredgeBillPushTimeBaseMap_AppendTable1">
+        <id column="DBPT1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="DBPT1tDredgeBillFId" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!-- 维修单ID -->
+        <result column="DBPT1pushLevel" javaType="java.lang.Integer" property="pushLevel"/>  <!-- 推送等级 -->
+        <result column="DBPT1pushTime" javaType="java.lang.String" property="pushTime"/>  <!-- 推送时间 -->
+    </resultMap>
+    <!-- 公共sql提取  -->
+    <sql id="queryHead">
+		DBPT.f_id,DBPT.t_dredge_bill_f_id,DBPT.f_push_level,date_format(DBPT.f_push_time,'%Y-%m-%d %T') as f_push_time
+	</sql>
+    <sql id="queryHead_AppendTable">
+		DBPT.f_id as DBPTid,DBPT.t_dredge_bill_f_id as DBPTtDredgeBillFId,DBPT.f_push_level as DBPTpushLevel,date_format(DBPT.f_push_time,'%Y-%m-%d %T') as DBPTpushTime
+	</sql>
+    <sql id="queryHead_AppendTable1">
+		DBPT1.f_id as DBPT1id,DBPT1.t_dredge_bill_f_id as DBPT1tDredgeBillFId,DBPT1.f_push_level as DBPT1pushLevel,date_format(DBPT1.f_push_time,'%Y-%m-%d %T') as DBPT1pushTime
+	</sql>
+    <sql id="querySql">
+        <if test="id != null">and (DBPT.f_id = #{id} )</if>
+        <if test="tDredgeBillFId != null">and (DBPT.t_dredge_bill_f_id = #{tDredgeBillFId} )</if>
+        <if test="pushLevel != null">and (DBPT.f_push_level = #{pushLevel} )</if>
+        <if test="pushTime != null and !pushTime.equals('')  ">and (DBPT.f_push_time = str_to_date(#{pushTime},'%Y-%m-%d
+            %T') )
+        </if>
+        <if test="pushTime_START != null and !pushTime_START.equals('')  ">
+            <![CDATA[ and (DBPT.f_push_time >= str_to_date(#{pushTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="pushTime_END != null and !pushTime_END.equals('')  ">
+            <![CDATA[ and (DBPT.f_push_time <= str_to_date(#{pushTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+    </sql>
+    <sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">and (DBPT.f_id = #{id} )</if>
+        <if test="tDredgeBillFId != null and !tDredgeBillFId.equals('')  ">and (DBPT.t_dredge_bill_f_id =
+            #{tDredgeBillFId} )
+        </if>
+        <if test="pushLevel != null and !pushLevel.equals('')  ">and (DBPT.f_push_level = #{pushLevel} )</if>
+        <if test="pushTime != null and !pushTime.equals('')  ">and (DBPT.f_push_time = str_to_date(#{pushTime},'%Y-%m-%d
+            %T') )
+        </if>
+        <if test="pushTime_START != null and !pushTime_START.equals('')  ">
+            <![CDATA[ and (DBPT.f_push_time >= str_to_date(#{pushTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="pushTime_END != null and !pushTime_END.equals('')  ">
+            <![CDATA[ and (DBPT.f_push_time <= str_to_date(#{pushTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+    </sql>
+    <sql id="dimCheckSql">
+        <if test="_QUERY_TYPE_IF_DIM == true">
+            <include refid="dredgeBillPushTimeBase.querySqlDim"/>
+        </if>
+        <if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true">
+            <include refid="dredgeBillPushTimeBase.querySql"/>
+        </if><!-- 默认精确查询 -->
+        <!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="dredgeBillPushTimeBase.querySql"/></if> --><!-- 默认精确查询 -->
+    </sql>
+    <!-- 各种查询附加的查询条件 -->
+    <sql id="busiQueryCondition">
+        <include refid="dredgeBillPushTimeBase.busiQueryCount"/>
+    </sql>
+    <!-- 查询记录数附加的查询条件 -->
+    <sql id="busiQueryCount">
+	     FROM t_dredge_bill_push_time DBPT
+    	 WHERE 1=1
+	</sql>
+
+    <!-- 根据条件查询(疏通工单推送时间记录表)信息。 -->
+    <sql id="select_dredgeBillPushTime">
+        SELECT
+        <include refid="dredgeBillPushTimeBase.queryHead"/>
+        <include refid="dredgeBillPushTimeBase.busiQueryCondition"/>
+        <include refid="dredgeBillPushTimeBase.dimCheckSql"/>
+        ORDER BY DBPT.f_id DESC
+    </sql>
+    <select id="select_dredgeBillPushTime" parameterType="java.util.Map"
+            resultMap="dredgeBillPushTimeBase.dredgeBillPushTimeExtendMap">
+        <include refid="dredgeBillPushTimeBase.select_dredgeBillPushTime"/>
+    </select>
+
+    <!-- 根据条件分页查询(疏通工单推送时间记录表)信息  -->
+    <sql id="select_dredgeBillPushTime_withPage">
+        SELECT
+        <include refid="dredgeBillPushTimeBase.queryHead"/>
+        <include refid="dredgeBillPushTimeBase.busiQueryCondition"/>
+        <include refid="dredgeBillPushTimeBase.dimCheckSql"/>
+        ORDER BY f_id DESC
+        <![CDATA[ LIMIT #{_begin},#{_length} ]]>
+    </sql>
+    <select id="select_dredgeBillPushTime_withPage" resultMap="dredgeBillPushTimeBase.dredgeBillPushTimeExtendMap"
+            parameterType="java.util.Map">
+        <include refid="dredgeBillPushTimeBase.select_dredgeBillPushTime_withPage"/>
+    </select>
+
+    <!-- 根据序列号查询某个(疏通工单推送时间记录表)信息。 -->
+    <sql id="select_dredgeBillPushTime_bySeqId">
+        SELECT
+        <include refid="dredgeBillPushTimeBase.queryHead"/>
+        <include refid="dredgeBillPushTimeBase.busiQueryCondition"/>
+        and DBPT.f_id = #{_parameter}
+    </sql>
+    <select id="select_dredgeBillPushTime_bySeqId" parameterType="java.math.BigInteger"
+            resultMap="dredgeBillPushTimeBase.dredgeBillPushTimeBaseMap">
+        <include refid="dredgeBillPushTimeBase.select_dredgeBillPushTime_bySeqId"/>
+    </select>
+
+    <!-- 根据条件查询满足条件的(疏通工单推送时间记录表)记录数  -->
+    <sql id="select_dredgeBillPushTime_count">
+        SELECT COUNT(*)
+        <include refid="dredgeBillPushTimeBase.busiQueryCount"/>
+        <include refid="dredgeBillPushTimeBase.dimCheckSql"/>
+    </sql>
+    <select id="select_dredgeBillPushTime_count" resultType="java.lang.Integer">
+        <include refid="dredgeBillPushTimeBase.select_dredgeBillPushTime_count"/>
+    </select>
+
+    <!-- 往(疏通工单推送时间记录表)新增一条记录。 -->
+    <sql id="insert_dredgeBillPushTime">
+		INSERT INTO t_dredge_bill_push_time 
+		(f_id,t_dredge_bill_f_id,f_push_level,f_push_time) VALUES 
+		(#{id},#{tDredgeBillFId},#{pushLevel},str_to_date(#{pushTime,jdbcType=DATE},'%Y-%m-%d %T'))
+	 </sql>
+    <insert id="insert_dredgeBillPushTime" parameterType="DredgeBillPushTime">
+        <include refid="dredgeBillPushTimeBase.insert_dredgeBillPushTime"/>
+    </insert>
+
+    <!-- 批量新增(疏通工单推送时间记录表)信息 -->
+    <insert id="insert_dredgeBillPushTime_Batch" parameterType="java.util.List">
+        INSERT INTO t_dredge_bill_push_time
+        (f_id,t_dredge_bill_f_id,f_push_level,f_push_time) VALUES
+        <foreach item="item" collection="list" separator=","><!-- open="("  close=")" -->
+            (#{item.id},#{item.tDredgeBillFId},#{item.pushLevel},str_to_date(#{item.pushTime,jdbcType=DATE},'%Y-%m-%d
+            %T'))
+        </foreach>
+    </insert>
+
+    <!-- 更新(疏通工单推送时间记录表)信息。 -->
+    <sql id="update_dredgeBillPushTime">
+        UPDATE t_dredge_bill_push_time
+        <trim prefix="SET" prefixOverrides=",">
+            <if test="tDredgeBillFId != null and !tDredgeBillFId.equals('') ">,t_dredge_bill_f_id=#{tDredgeBillFId}</if>
+            <if test="pushLevel != null and !pushLevel.equals('') ">,f_push_level=#{pushLevel}</if>
+            <if test="pushTime != null and !pushTime.equals('') ">,f_push_time=str_to_date(#{pushTime},'%Y-%m-%d %T')
+            </if>
+        </trim>
+        WHERE f_id=#{id}
+    </sql>
+    <update id="update_dredgeBillPushTime" parameterType="DredgeBillPushTime">
+        <include refid="dredgeBillPushTimeBase.update_dredgeBillPushTime"/>
+    </update>
+
+    <!-- 批量更新(疏通工单推送时间记录表)信息。 -->
+    <update id="update_dredgeBillPushTime_Batch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";" open="" close="">
+            UPDATE t_dredge_bill_push_time
+            <trim prefix="SET" prefixOverrides=",">
+                <if test="item.tDredgeBillFId != null and !item.tDredgeBillFId.equals('')  ">
+                    ,t_dredge_bill_f_id=#{item.tDredgeBillFId}
+                </if>
+                <if test="item.pushLevel != null and !item.pushLevel.equals('')  ">,f_push_level=#{item.pushLevel}</if>
+                <if test="item.pushTime != null and !item.pushTime.equals('')  ">
+                    ,f_push_time=str_to_date(#{item.pushTime},'%Y-%m-%d %T')
+                </if>
+            </trim>
+            WHERE f_id=#{item.id}
+        </foreach>
+    </update>
+
+    <!-- 根据序列号删除(疏通工单推送时间记录表)信息_逻辑删除。 -->
+    <!-- <sql id="delete_dredgeBillPushTime_Logic">
+		UPDATE t_dredge_bill_push_time
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tDredgeBillFId != null and !tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{tDredgeBillFId}</if>
+ 		<if test="pushLevel != null and !pushLevel.equals('')  "> ,f_push_level=#{pushLevel}</if>
+ 		<if test="pushTime != null and !pushTime.equals('')  "> ,f_push_time=str_to_date(#{pushTime},'%Y-%m-%d %T')</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_dredgeBillPushTime_Logic" parameterType="DredgeBillPushTime">
+		<include refid="dredgeBillPushTimeBase.delete_dredgeBillPushTime_Logic"/>
+    </update> -->
+
+    <!-- 批量删除(疏通工单推送时间记录表)信息_逻辑删除 -->
+    <!-- <update id="delete_dredgeBillPushTime_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_bill_push_time
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tDredgeBillFId != null and !item.tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{item.tDredgeBillFId}</if>
+ 		<if test="item.pushLevel != null and !item.pushLevel.equals('')  "> ,f_push_level=#{item.pushLevel}</if>
+ 		<if test="item.pushTime != null and !item.pushTime.equals('')  "> ,f_push_time=str_to_date(#{item.pushTime},'%Y-%m-%d %T')</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+
+    <!-- 根据序列号删除(疏通工单推送时间记录表)信息。 -->
+    <sql id="delete_dredgeBillPushTime">
+		DELETE FROM t_dredge_bill_push_time WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_dredgeBillPushTime" parameterType="java.lang.String">
+        <include refid="dredgeBillPushTimeBase.delete_dredgeBillPushTime"/>
+    </delete>
+
+    <!-- 根据序列号批量删除(疏通工单推送时间记录表)信息。 -->
+    <delete id="delete_dredgeBillPushTime_Batch" parameterType="java.util.List">
+        DELETE FROM t_dredge_bill_push_time WHERE 1=1 AND f_id IN
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

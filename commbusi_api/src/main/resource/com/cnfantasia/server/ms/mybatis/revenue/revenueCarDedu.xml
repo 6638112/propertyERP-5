@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:收益中心 -->
+<mapper namespace="revenueCarDedu">
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.CarDeduRevenueSignalAmount" id="CarDeduRevenueSignalAmountMap" extends="revenueSignalAmountBase.revenueSignalAmountBaseMap_AppendTable">
+		<result column="carNum" javaType="java.lang.String" property="carNum"/>
+		<result column="gbName" javaType="java.lang.String" property="gbName"/>
+	</resultMap>
+	
+	<update id="updateRevenueStatus" parameterType="java.util.Map">
+		update t_revenue_generation t set t.f_revenue_status = #{revenueStatusTo}
+ 		  <where>
+ 			<if test="revenueStatus != null">and t.f_revenue_status = #{revenueStatus} </if>
+ 			<if test="goalId != null">and t.f_id = #{goalId} </if>
+ 			<if test="updStatusList != null">
+				AND t.f_id in
+				<foreach item="updStatus" collection="updStatusList" open="(" separator="," close=")">
+					#{updStatus}
+				</foreach>
+			</if>
+ 			<![CDATA[ and t.f_revenue_status < 99 ]]>
+ 		  </where>
+	</update>
+	
+	<select id="selectRevenueList" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.revenue.entity.CarDeduRevenue">
+		select distinct fb.t_finance_req_id goalId, pc.f_id miniRoleId, pc.f_name roleName, date_format(fb.f_buy_time,'%Y-%m-%d %T') goalRevTime,
+				fb.f_parking_fee amount, 8 payMethod, fb.f_order_no orderNo, rg.f_revenue_status revenueStatus,
+				fb.f_deduction_begin_date deduBeginDate, fb.f_deduction_end_date deduEndDate, GB.f_id gbId,
+				GB.f_id tGroupBuildingId, GB.t_property_management_f_id tPropertyManagementFId
+			from t_finance_buy fb
+				inner join t_property_company pc on pc.f_id = fb.t_property_company_id
+				<!-- 增加小区id查询 -->
+			    inner join t_real_room RR on RR.f_id = fb.t_real_room_id  and RR.f_sys0_del_state = 0
+			    inner join t_building B on RR.t_building_f_id = B.f_id  and B.f_sys0_del_state = 0
+			    inner join t_group_building GB on B.t_group_building_f_id = GB.f_id  and GB.f_sys0_del_state = 0
+		   
+				left join t_revenue_generation rg on rg.f_id = fb.t_finance_req_id and rg.f_type = 3
+			where f_finance_type = 2
+			 and (rg.f_id is null or (rg.f_revenue_status in(1, -1) AND rg.f_revenue_tm >= date_sub(now(), interval 30 minute)))
+			limit 300
+	</select>
+	
+	<sql id="revenueWhere">
+		where RSA.f_sys0_del_state = 0 and RSA.f_goal_type = 10
+			<![CDATA[ and RSA.f_goal_rev_time <= now() ]]>
+			<if test="wyName != null and wyName != ''">
+				AND RSA.f_role_name like CONCAT('%',#{wyName},'%')
+			</if>
+			<if test="gbName != null and gbName != ''">
+				AND (fr.f_residential like CONCAT('%',#{gbName},'%') )
+			</if>
+			<if test="applyId == null and roleId != null and roleId != ''">
+				AND RSA.f_mini_role_id = #{roleId}
+			</if>
+			<if test="roleIdList != null">
+				AND RSA.f_mini_role_id in
+				<foreach item="tempRoleId" collection="roleIdList" open="(" separator="," close=")">
+					#{tempRoleId}
+				</foreach>
+			</if>
+			<if test="pcUserId != null and pcUserId != ''">
+				AND RSA.f_mini_role_id = #{roleId}
+			</if>
+			<if test="smId != null and smId != ''">
+				AND RSA.f_mini_role_id = #{smId}
+			</if>
+			<if test="goalRevTimeStart != null and goalRevTimeStart != ''">
+				<![CDATA[ AND RSA.f_goal_rev_time >= #{goalRevTimeStart} ]]>
+			</if>
+			<if test="goalRevTimeEnd != null and goalRevTimeEnd != ''">
+				<![CDATA[ AND RSA.f_goal_rev_time < #{goalRevTimeEnd} ]]>
+			</if>
+			<if test="monthStart != null and monthStart != ''">
+				<![CDATA[ AND RSA.f_goal_rev_time >= #{monthStart} ]]>
+			</if>
+			<if test="monthEnd != null and monthEnd != ''">
+				<![CDATA[ AND RSA.f_goal_rev_time < #{monthEnd} ]]>
+			</if>
+			<if test="tkStatus != null and tkStatus != ''">
+				AND RSA.f_tk_status = #{tkStatus}
+			</if>
+			<if test="applyId != null and applyId != ''">
+				AND (RSA.f_rev_apply_id = #{applyId}  or RSA.f_rev_apply_finance_id = #{applyId})
+			</if>
+			and EXISTS (select 1 from t_group_building GB where GB.f_id = RSA.t_group_building_id <include refid="permiOos.dataPermissionCondition" />)
+	</sql>
+	
+	<select id="selectRevenueSaList" parameterType="java.util.Map" resultMap="CarDeduRevenueSignalAmountMap">
+		SELECT <include refid="revenueSignalAmountBase.queryHead_AppendTable"/>,
+			fr.f_residential gbName, fb.f_car_num carNum
+		 from t_revenue_signal_amount RSA  
+			inner join t_finance_buy fb on fb.f_order_no = RSA.f_order_no
+			inner join t_finance_req fr on fb.t_finance_req_id = fr.f_id
+		<include refid="revenueWhere" />
+		order by RSA.f_mini_role_id, RSA.f_goal_rev_time desc
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<select id="selectRevenueSaCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT count(*)
+		from t_revenue_signal_amount RSA  
+			inner join t_finance_buy fb on fb.f_order_no = RSA.f_order_no
+			inner join t_finance_req fr on fb.t_finance_req_id = fr.f_id
+		<include refid="revenueWhere" />
+	</select>
+	
+	<select id="selectRevenueTotal" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.revenue.entity.EbuyRevenueTotal">
+		select sum(RSA.f_amount) totalAmount
+		    from t_revenue_signal_amount RSA  
+			inner join t_finance_buy fb on fb.f_order_no = RSA.f_order_no
+			inner join t_finance_req fr on fb.t_finance_req_id = fr.f_id
+		<include refid="revenueWhere" />
+	</select>
+
+</mapper>

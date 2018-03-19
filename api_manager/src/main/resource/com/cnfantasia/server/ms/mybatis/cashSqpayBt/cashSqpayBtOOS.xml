@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 双乾支付优惠补贴-->
+<mapper namespace="cashSqpayBtOOS">
+    
+    <!-- 双乾支付优惠补贴head -->
+    <sql id="cashSqpayBtIndex_head">
+		CSB.f_goal_name AS goalName,
+		CSB.f_order_type AS orderType,
+		IFNULL(CSB.f_amount_bt, 0) AS amountBt,
+		(IFNULL(EO.f_amount, 0)-IFNULL(CSB.f_amount_bt, 0)) AS amount,
+		DATE_FORMAT(
+			EO.f_pay_time,
+			'%Y-%m-%d %H:%i:%s'
+		) AS payTime,
+		EO.f_order_no AS orderNo
+    </sql>
+    
+    <!-- 双乾支付优惠补贴查询from -->
+	<sql id="cashSqpayBtIndex_QueryFrom">
+	    FROM 
+	    	t_cash_sqpay_bt CSB 
+	    	LEFT JOIN t_ebuy_order EO ON CSB.t_ebuy_order_f_id=EO.f_id
+	</sql>
+	
+	<sql id="cashSqpayBtIndex_checkSql">
+		WHERE 
+			1=1
+			<if test="goalName != null and !goalName.equals('')">
+			AND LOCATE(#{goalName}, CSB.f_goal_name)>0
+			</if>
+			<if test="orderType != null and !orderType.equals('')">
+			AND CSB.f_order_type=#{orderType}
+			</if>
+			<if test="payTimeStart != null and !payTimeStart.equals('')">
+			AND EO.f_pay_time>#{payTimeStart}
+			</if>
+			<if test="payTimeEnd != null and !payTimeEnd.equals('')">
+			<![CDATA[AND EO.f_pay_time<#{payTimeEnd}]]>
+			</if>
+			<if test="orderNo != null and !orderNo.equals('')">
+			AND EO.f_order_no=#{orderNo}
+			</if>
+	</sql>
+	
+	<!-- 双乾支付优惠补贴页面列表 -->
+	<select id="select_cashSqpayBt_list" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.cashSqpayBt.entity.CashSqpayBtDto">
+		SELECT
+		<include refid="cashSqpayBtIndex_head"/>
+		<include refid="cashSqpayBtIndex_QueryFrom"/>
+		<include refid="cashSqpayBtIndex_checkSql"/>
+		ORDER BY CSB.f_id DESC
+		<if test="(_begin != null and !_begin.equals('')) or (_length != null and !_length.equals(''))">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+	
+	<!-- 双乾支付优惠补贴页面列表数据条数 -->
+	<select id="select_cashSqpayBt_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="cashSqpayBtIndex_QueryFrom"/>
+		<include refid="cashSqpayBtIndex_checkSql"/>
+	</select>
+	
+	<!-- 双乾支付优惠补贴页面总金额 -->
+	<select id="select_cashSqpayBt_with_totalAmountBt" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT SUM(IFNULL(CSB.f_amount_bt, 0)) AS amountBt
+		<include refid="cashSqpayBtIndex_QueryFrom"/>
+		<include refid="cashSqpayBtIndex_checkSql"/>
+	</select>
+</mapper>

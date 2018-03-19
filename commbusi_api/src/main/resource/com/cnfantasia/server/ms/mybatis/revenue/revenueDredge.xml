@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:收益中心 -->
+<mapper namespace="revenueDredge">
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.DredgeBillRevenue" id="DredgeBillRevenueMap">
+		<id column="id" javaType="java.lang.Long" property="id"/>
+		<result column="discountMoney" property="discountMoney" javaType="java.lang.Long"/>
+		<result column="amountUsrReal" property="amountUsrReal" javaType="java.lang.Long"/>
+		<result column="payTm" property="payTm" javaType="java.util.Date"/>
+		<result column="pcName" property="pcName" javaType="java.lang.String"/>
+		<result column="pcId" property="pcId" javaType="java.math.BigInteger"/>
+		<result column="agentName" property="agentName" javaType="java.lang.String"/>
+		<result column="agentId" property="agentId" javaType="java.math.BigInteger"/>
+		<result column="huaId" property="huaId" javaType="java.lang.String"/>
+		<result column="dredgeUserName" property="dredgeUserName" javaType="java.lang.String"/>
+		<result column="dredgeServiceName" property="dredgeServiceName" javaType="java.lang.String"/>
+		<result column="gbName" property="gbName" javaType="java.lang.String"/>
+		<result column="gbId" property="gbId" javaType="java.math.BigInteger"/>
+		<result column="propertyManagementId" property="propertyManagementId" javaType="java.math.BigInteger" />
+		<result column="flowNo" property="flowNo" javaType="java.lang.String"/>
+		<result column="payType" property="payType" javaType="java.lang.Integer"/>
+		<!--
+		<association property="dredgeBill" resultMap="DredgeBillDetailMap"/>
+		-->
+		<association property="dredgeBillWithDetail" resultMap="DredgeBillWithDetailMap" />
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.DredgeBillWithDetail" id="DredgeBillWithDetailMap" extends="dredgeBillBase.dredgeBillBaseMap_AppendTable">
+		<result column="feeType" property="feeType" javaType="java.lang.Integer"/>
+		<result column="payAmountDetail" property="payAmountDetail" javaType="java.lang.Long"/>
+		<result column="isIncludePlatformFee" property="isIncludePlatformFee" javaType="java.lang.Integer"/>
+		<result column="revenueTmAdd" property="revenueTmAdd" javaType="java.lang.Integer"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.EbuyRevenueSignalAmount" id="EbuyRevenueSignalAmountMap" extends="revenueSignalAmountBase.revenueSignalAmountBaseMap_AppendTable">
+		<result column="RSAamountAgent" javaType="java.lang.Double" property="amountAgent"/>  <!-- 该项可提款金额(初始为空) -->
+        <result column="RSAtkStatusAgent" javaType="java.lang.Integer" property="tkStatusAgent"/>  <!-- 提款状态 -->
+        <result column="RSAamountWy" javaType="java.lang.Double" property="amountWy"/>  <!-- 该项可提款金额(初始为空) -->
+        <result column="RSAtkStatusWy" javaType="java.lang.Integer" property="tkStatusWy"/>  <!-- 提款状态 -->
+        <result column="RSAamountRepair" javaType="java.lang.Double" property="amountRepair"/>  <!-- 该项可提款金额(初始为空) -->
+        <result column="RSAtkStatusRepair" javaType="java.lang.Integer" property="tkStatusRepair"/>  <!-- 提款状态 -->
+        <result column="RSAamountPlatform" javaType="java.lang.Double" property="amountPlatform"/>  <!-- 该项可提款金额(初始为空) -->
+        <result column="RSAtkStatusPlatform" javaType="java.lang.Integer" property="tkStatusPlatform"/>  <!-- 提款状态 -->
+        <result column="RSAamountRecommender" javaType="java.lang.Double" property="amountRecommender"/>  <!-- 该项可提款金额(初始为空) -->
+        <result column="RSAtkStatusRecommender" javaType="java.lang.Integer" property="tkStatusRecommender"/>  <!-- 提款状态 -->
+        <result column="recommenderName" javaType="java.lang.String" property="recommenderName"/>  <!-- 提款状态 -->
+        <result column="payAmount" javaType="java.lang.Double" property="payAmount"/>  <!-- 订单总金额-->
+        <result column="orderNo" javaType="java.lang.String" property="orderNo"/>
+		<association property="revenueSignalAmountEbuy" resultMap="revenueSignalAmountEbuyBase.revenueSignalAmountEbuyBaseMap_AppendTable"/>
+	</resultMap>
+	
+	<update id="updateForDredgeRevenue" parameterType="java.util.Map">
+		update t_dredge_bill t set t.f_revenue_status = 1, t.f_revenue_tm = #{currentDate}
+ 			where t.f_status IN (3, 5) <![CDATA[  and ifnull(t.f_revenue_status, 0) = 0 ]]>
+ 			AND t.f_sys0_del_state = 0
+ 			and EXISTS (select 1 from t_ebuy_order o where o.f_id = t.t_ebuy_order_f_id and o.f_pay_method is not null)
+ 			limit 100
+	</update>
+	
+	<update id="updateDredgeRevenueStatus" parameterType="java.util.Map">
+		update t_dredge_bill t set t.f_revenue_status = #{revenueStatusTo}
+ 		  <where>
+ 			<if test="dredgeBillId != null">and t.f_id = #{dredgeBillId}</if>
+ 			<if test="revenueStatus != null">and t.f_revenue_status = #{revenueStatus} </if>
+ 			<![CDATA[ and t.f_revenue_status < 99 ]]>
+ 		  </where>
+	</update>
+	
+	<select id="selectDredgeRevenueList" parameterType="java.util.Map" resultMap="DredgeBillRevenueMap">
+		SELECT distinct dbd.f_id id, <include refid="dredgeBillBase.queryHead_AppendTable"/>,
+			ifnull(dbd.f_fee_type, 0) feeType, ifnull(dbd.f_pay_amount, DB.f_pay_amount) payAmountDetail, ifnull(dbd.f_is_include_platform_fee, 1) isIncludePlatformFee, ifnull(rftt.f_fee_tm, 0) revenueTmAdd,
+			ifnull(DB.f_ptbt_amount, eo.f_total_coupon_amount) discountMoney, eo.f_amount amountUsrReal,
+ 			eo.f_pay_time payTm, pc.f_id pcId, pc.f_name pcName, cp.f_id agentId, cp.f_name agentName,
+ 			appU.f_hua_id huaId, dw.f_real_name dredgeUserName,
+ 			gb.f_name gbName,gb.f_id gbId, gb.t_property_management_f_id propertyManagementId,  eo.f_pay_method payType,
+ 			epr.f_flow_no flowNo, dt.f_name dredgeServiceName
+		  FROM
+		    t_dredge_bill DB
+		    left join t_dredge_type dt on DB.t_dredge_type_f_id = dt.f_id
+		    left join t_dredge_bill_amount_detail dbd on dbd.t_dredge_bill_f_id = DB.f_id
+			left join t_revenue_fee_type_tm rftt on rftt.f_fee_type = dbd.f_fee_type
+		    inner join t_ebuy_order eo on eo.f_id = DB.t_ebuy_order_f_id
+		    inner join t_user u on u.f_id = DB.t_worker_f_id
+		    inner join t_user appU on appU.f_id = DB.t_user_f_id
+		    inner join t_dredge_worker dw on dw.t_user_f_id = DB.t_worker_f_id
+			left join t_room r on DB.f_roomId = r.f_id
+			left join t_real_room rr on r.t_real_room_f_id = rr.f_id
+			left join t_building b on rr.t_building_f_id = b.f_id
+			left join t_group_building gb on b.t_group_building_f_id = gb.f_id
+			left join t_property_company pc on gb.t_property_company_f_id = pc.f_id
+	 		left join t_channel_partner_recommend pr on pr.f_pc_name = pc.f_name
+	 		left join t_channel_partner cp on pr.t_channel_partner_f_id = cp.f_id
+	 		left join t_ebuy_pay_record epr on epr.t_ebuy_order_f_id = eo.f_id and epr.f_pay_status = 2 and epr.f_flow_no is not null
+		  WHERE
+			DB.f_revenue_status in(1, -1)
+			AND DB.f_revenue_tm >= date_sub(now(), interval 1 hour) <!-- 跑失败后，一小时内会重复跑收益，一小时内仍未跑成功收益，则不生成收益 -->
+	</select>
+	
+	<select id="selectRevenueConfig" parameterType="java.util.Map" resultMap="revenueConfigBase.revenueConfigBaseMap_AppendTable">
+		SELECT <include refid="revenueConfigBase.queryHead_AppendTable"/>
+		  FROM t_revenue_config RC
+    	WHERE 
+    	  RC.f_sys0_del_state = 0
+    	  AND RC.f_active_status = 1
+    	  <if test="pcId != null"> and RC.f_company_id = #{pcId} </if>
+    	  <if test="goalRevTime != null"> AND (#{goalRevTime} between RC.f_start_date and ADDDATE(RC.f_end_date, INTERVAL +1 DAY)) </if>
+    	  <choose>
+    	    <when test="projectType != null and projectType != ''"> AND RC.f_project_type = #{projectType} </when>
+    	    <otherwise> AND RC.f_project_type = 2 </otherwise>
+    	  </choose>
+    	  limit 1
+	</select>
+	
+	<sql id="ebuyRevenueWhere">
+		where RSA.f_sys0_del_state = 0 and RSA.f_src_money > 0
+			<if test="wyOrAgentName != null and wyOrAgentName != ''">
+				AND (RSAE.f_pc_name like CONCAT('%',#{wyOrAgentName},'%')  or RSAE.f_agent_name like CONCAT('%',#{wyOrAgentName},'%'))
+			</if>
+			<if test="gbName != null and gbName != ''">
+				AND (RSAE.f_gb_name like CONCAT('%',#{gbName},'%') )
+			</if>
+			<if test="applyId == null and roleId != null and roleId != ''">
+				<choose>
+					<when test="roleType == 13"><!-- 管理处 -->
+						AND RSA.f_mini_role_type = 2
+						and RSA.t_property_management_f_id = #{roleId}
+					</when>
+					<otherwise>
+						AND RSA.f_mini_role_id = #{roleId}
+					</otherwise>
+				</choose>
+			</if>
+			<if test="roleIdList != null">
+				AND RSA.f_mini_role_id in
+				<foreach item="tempRoleId" collection="roleIdList" open="(" separator="," close=")">
+					#{tempRoleId}
+				</foreach>
+			</if>
+			<if test="pcUserId != null and pcUserId != ''">
+				AND RSA.f_mini_role_id = #{roleId}
+			</if>
+			<if test="smId != null and smId != ''">
+				AND RSA.f_mini_role_id = #{smId}
+			</if>
+			<if test="(roleId == null or roleId == '') and roleIdList == null">
+				and RSA.f_mini_role_type = 6
+			</if>
+			<if test="payTmStart != null and payTmStart != ''">
+				<![CDATA[ AND RSAE.f_pay_tm >= #{payTmStart} ]]>
+			</if>
+			<if test="payTmEnd != null and payTmEnd != ''">
+				<![CDATA[ AND RSAE.f_pay_tm <= #{payTmEnd} ]]>
+			</if>
+			<if test="tkStatus != null and tkStatus != ''">
+				AND RSA.f_tk_status = #{tkStatus}
+			</if>
+			<if test="tkStatusWy != null and tkStatusWy != ''">
+				AND RSA3.f_tk_status = #{tkStatusWy}
+			</if>
+			<if test="tkStatusAgent != null and tkStatusAgent != ''">
+				AND RSA2.f_tk_status = #{tkStatusAgent}
+			</if>
+			<if test="tkStatusRepair != null and tkStatusRepair != ''">
+				AND RSA4.f_tk_status = #{tkStatusRepair}
+			</if>
+			<if test="tkStatusPlatform != null and tkStatusPlatform != ''">
+				AND RSA5.f_tk_status = #{tkStatusPlatform}
+			</if>
+			<if test="tkStatusRecommender != null and tkStatusRecommender != ''">
+				AND RSA6.f_tk_status = #{tkStatusRecommender}
+			</if>
+			<if test="applyId != null and applyId != ''">
+				AND (RSA.f_rev_apply_finance_id = #{applyId} or RSA.f_rev_apply_id = #{applyId})
+			</if>
+			<if test="recommenderName != null and recommenderName != ''">
+				AND RSA6.f_role_name like CONCAT('%',#{recommenderName},'%')
+			</if>
+			and EXISTS (select 1 from t_group_building GB where GB.f_id = RSA.t_group_building_id <include refid="permiOos.dataPermissionCondition" />)
+	</sql>
+	
+	<select id="selectDredgeRevenueSaList" parameterType="java.util.Map" resultMap="EbuyRevenueSignalAmountMap">
+		SELECT <include refid="revenueSignalAmountBase.queryHead_AppendTable"/>
+			,<include refid="revenueSignalAmountEbuyBase.queryHead_AppendTable"/>
+			,RSA2.f_amount as RSAamountAgent,RSA2.f_tk_status as RSAtkStatusAgent,RSA3.f_amount as RSAamountWy,RSA3.f_tk_status as RSAtkStatusWy,
+			RSA4.f_amount as RSAamountRepair,RSA4.f_tk_status as RSAtkStatusRepair, RSA5.f_amount as RSAamountPlatform,RSA5.f_tk_status as RSAtkStatusPlatform,
+			RSA6.f_amount as RSAamountRecommender,RSA6.f_tk_status as RSAtkStatusRecommender, RSA6.f_role_name as recommenderName, RSA.f_goal_detail_type as RSAgoalDetailType, db.f_pay_amount as payAmount,
+			db.f_bill_no orderNo
+		FROM t_dredge_bill db
+			inner join t_revenue_signal_amount RSA on RSA.f_goal_id = db.f_id and RSA.f_goal_type = 2
+			left join t_revenue_signal_amount RSA2 on db.f_id = RSA2.f_goal_id and RSA2.f_mini_role_type = 3 and RSA2.f_goal_type = 2 and RSA.f_goal_detail_type = RSA2.f_goal_detail_type <!-- 代理 -->
+			left join t_revenue_signal_amount RSA3 on db.f_id = RSA3.f_goal_id and RSA3.f_mini_role_type = 2 and RSA3.f_goal_type = 2 and RSA.f_goal_detail_type = RSA3.f_goal_detail_type<!-- 物业 -->
+			left join t_revenue_signal_amount RSA4 on db.f_id = RSA4.f_goal_id and RSA4.f_mini_role_type = 6 and RSA4.f_goal_type = 2 and RSA.f_goal_detail_type = RSA4.f_goal_detail_type<!-- 师傅 -->
+			left join t_revenue_signal_amount RSA5 on db.f_id = RSA5.f_goal_id and RSA5.f_mini_role_type = 1 and RSA5.f_goal_type = 2 and RSA.f_goal_detail_type = RSA5.f_goal_detail_type<!-- 平台 -->
+			left join t_revenue_signal_amount RSA6 on db.f_id = RSA6.f_goal_id and RSA6.f_mini_role_type = 7 and RSA6.f_goal_type = 2 and RSA.f_goal_detail_type = RSA6.f_goal_detail_type<!-- 推荐人收益 -->
+			INNER JOIN t_revenue_signal_amount_ebuy RSAE ON RSA.f_id = RSAE.t_revenue_signal_amount_id and RSAE.f_sys0_del_state = 0
+			left join t_property_company pc on RSA.f_mini_role_id = pc.f_id
+		<include refid="ebuyRevenueWhere" />
+		order by RSAE.f_pay_tm desc
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<select id="selectDredgeRevenueSaManagementList" parameterType="java.util.Map" resultMap="EbuyRevenueSignalAmountMap">
+		SELECT <include refid="revenueSignalAmountBase.queryHead_AppendTable"/>
+			,<include refid="revenueSignalAmountEbuyBase.queryHead_AppendTable"/>
+			,RSA2.f_amount as RSAamountAgent,RSA2.f_tk_status as RSAtkStatusAgent,RSA3.f_amount as RSAamountWy,RSA3.f_tk_status as RSAtkStatusWy,
+			RSA4.f_amount as RSAamountRepair,RSA4.f_tk_status as RSAtkStatusRepair, RSA5.f_amount as RSAamountPlatform,RSA5.f_tk_status as RSAtkStatusPlatform,
+			RSA6.f_amount as RSAamountRecommender,RSA6.f_tk_status as RSAtkStatusRecommender, RSA6.f_role_name as recommenderName, RSA.f_goal_detail_type as RSAgoalDetailType, db.f_pay_amount as payAmount
+		FROM t_dredge_bill db
+			inner join t_revenue_signal_amount RSA on RSA.f_goal_id = db.f_id and RSA.f_goal_type = 2
+			left join t_revenue_signal_amount RSA2 on db.f_id = RSA2.f_goal_id and RSA2.f_mini_role_type = 3 and RSA2.f_goal_type = 2 and RSA.f_goal_detail_type = RSA2.f_goal_detail_type <!-- 代理 -->
+			left join t_revenue_signal_amount RSA3 on db.f_id = RSA3.f_goal_id and RSA3.f_mini_role_type = 2 and RSA3.f_goal_type = 2 and RSA.f_goal_detail_type = RSA3.f_goal_detail_type<!-- 物业 -->
+			left join t_revenue_signal_amount RSA4 on db.f_id = RSA4.f_goal_id and RSA4.f_mini_role_type = 6 and RSA4.f_goal_type = 2 and RSA.f_goal_detail_type = RSA4.f_goal_detail_type<!-- 师傅 -->
+			left join t_revenue_signal_amount RSA5 on db.f_id = RSA5.f_goal_id and RSA5.f_mini_role_type = 1 and RSA5.f_goal_type = 2 and RSA.f_goal_detail_type = RSA5.f_goal_detail_type<!-- 平台 -->
+			left join t_revenue_signal_amount RSA6 on db.f_id = RSA6.f_goal_id and RSA6.f_mini_role_type = 7 and RSA6.f_goal_type = 2 and RSA.f_goal_detail_type = RSA6.f_goal_detail_type<!-- 推荐人收益 -->
+			INNER JOIN t_revenue_signal_amount_ebuy RSAE ON RSA.f_id = RSAE.t_revenue_signal_amount_id and RSAE.f_sys0_del_state = 0
+			left join t_property_company pc on RSA.f_mini_role_id = pc.f_id
+			INNER JOIN 
+			t_group_building GB ON GB.f_id =RSA.t_group_building_id AND GB.f_sys0_del_state = 0 <include refid="permiOos.dataPermissionCondition" />
+			INNER JOIN
+			t_property_management PM ON PM.f_id = GB.t_property_management_f_id AND PM.f_is_edit = 1 <!-- 已经审核 -->
+			INNER JOIN
+			t_property_management_has_oms_user PMHOU ON PMHOU.t_property_management_f_id = PM.f_id AND PMHOU.f_sys0_del_state = 0 AND PMHOU.t_oms_user_f_id = #{omsUserId}
+		where RSA.f_sys0_del_state = 0 and RSA.f_src_money > 0
+			<if test="wyOrAgentName != null and wyOrAgentName != ''">
+				AND (RSAE.f_pc_name like CONCAT('%',#{wyOrAgentName},'%')  or RSAE.f_agent_name like CONCAT('%',#{wyOrAgentName},'%'))
+			</if>
+			<if test="gbName != null and gbName != ''">
+				AND (RSAE.f_gb_name like CONCAT('%',#{gbName},'%') )
+			</if>
+			<if test="roleId != null and roleId != ''">
+				AND RSA.f_mini_role_id = #{roleId}
+			</if>
+			<if test="roleIdList != null">
+				AND RSA.f_mini_role_id in
+				<foreach item="tempRoleId" collection="roleIdList" open="(" separator="," close=")">
+					#{tempRoleId}
+				</foreach>
+			</if>
+			<if test="payTmStart != null and payTmStart != ''">
+				<![CDATA[ AND RSAE.f_pay_tm >= #{payTmStart} ]]>
+			</if>
+			<if test="payTmEnd != null and payTmEnd != ''">
+				<![CDATA[ AND RSAE.f_pay_tm <= #{payTmEnd} ]]>
+			</if>
+			<if test="tkStatus != null and tkStatus != ''">
+				AND RSA.f_tk_status = #{tkStatus}
+			</if>
+			<if test="tkStatusWy != null and tkStatusWy != ''">
+				AND RSA3.f_tk_status = #{tkStatusWy}
+			</if>
+			<if test="tkStatusAgent != null and tkStatusAgent != ''">
+				AND RSA2.f_tk_status = #{tkStatusAgent}
+			</if>
+			<if test="tkStatusRepair != null and tkStatusRepair != ''">
+				AND RSA4.f_tk_status = #{tkStatusRepair}
+			</if>
+			<if test="tkStatusPlatform != null and tkStatusPlatform != ''">
+				AND RSA5.f_tk_status = #{tkStatusPlatform}
+			</if>
+			<if test="tkStatusRecommender != null and tkStatusRecommender != ''">
+				AND RSA6.f_tk_status = #{tkStatusRecommender}
+			</if>
+			<if test="applyId != null and applyId != ''">
+				AND RSA.f_rev_apply_id = #{applyId}
+			</if>
+			<if test="recommenderName != null and recommenderName != ''">
+				AND RSA6.f_role_name like CONCAT('%',#{recommenderName},'%')
+			</if>
+		order by RSAE.f_pay_tm desc
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<select id="selectDredgeRevenueSaCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT count(*)
+		  FROM t_dredge_bill db
+			inner join t_revenue_signal_amount RSA on RSA.f_goal_id = db.f_id and RSA.f_goal_type = 2
+			left join t_revenue_signal_amount RSA2 on db.f_id = RSA2.f_goal_id and RSA2.f_mini_role_type = 3 and RSA2.f_goal_type = 2 and RSA.f_goal_detail_type = RSA2.f_goal_detail_type <!-- 代理 -->
+			left join t_revenue_signal_amount RSA3 on db.f_id = RSA3.f_goal_id and RSA3.f_mini_role_type = 2 and RSA3.f_goal_type = 2 and RSA.f_goal_detail_type = RSA3.f_goal_detail_type<!-- 物业 -->
+			left join t_revenue_signal_amount RSA4 on db.f_id = RSA4.f_goal_id and RSA4.f_mini_role_type = 6 and RSA4.f_goal_type = 2 and RSA.f_goal_detail_type = RSA4.f_goal_detail_type<!-- 师傅 -->
+			left join t_revenue_signal_amount RSA5 on db.f_id = RSA5.f_goal_id and RSA5.f_mini_role_type = 1 and RSA5.f_goal_type = 2 and RSA.f_goal_detail_type = RSA5.f_goal_detail_type<!-- 平台 -->
+			left join t_revenue_signal_amount RSA6 on db.f_id = RSA6.f_goal_id and RSA6.f_mini_role_type = 7 and RSA6.f_goal_type = 2 and RSA.f_goal_detail_type = RSA6.f_goal_detail_type<!-- 推荐人收益 -->
+			INNER JOIN t_revenue_signal_amount_ebuy RSAE ON RSA.f_id = RSAE.t_revenue_signal_amount_id and RSAE.f_sys0_del_state = 0
+			left join t_property_company pc on RSA.f_mini_role_id = pc.f_id
+		<include refid="ebuyRevenueWhere" />
+	</select>
+	
+	<select id="selectDredgeRevenueSaManagementCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT count(*)
+		  FROM t_dredge_bill db
+			inner join t_revenue_signal_amount RSA on RSA.f_goal_id = db.f_id and RSA.f_goal_type = 2
+			left join t_revenue_signal_amount RSA2 on db.f_id = RSA2.f_goal_id and RSA2.f_mini_role_type = 3 and RSA2.f_goal_type = 2 and RSA.f_goal_detail_type = RSA2.f_goal_detail_type <!-- 代理 -->
+			left join t_revenue_signal_amount RSA3 on db.f_id = RSA3.f_goal_id and RSA3.f_mini_role_type = 2 and RSA3.f_goal_type = 2 and RSA.f_goal_detail_type = RSA3.f_goal_detail_type<!-- 物业 -->
+			left join t_revenue_signal_amount RSA4 on db.f_id = RSA4.f_goal_id and RSA4.f_mini_role_type = 6 and RSA4.f_goal_type = 2 and RSA.f_goal_detail_type = RSA4.f_goal_detail_type<!-- 师傅 -->
+			left join t_revenue_signal_amount RSA5 on db.f_id = RSA5.f_goal_id and RSA5.f_mini_role_type = 1 and RSA5.f_goal_type = 2 and RSA.f_goal_detail_type = RSA5.f_goal_detail_type<!-- 平台 -->
+			left join t_revenue_signal_amount RSA6 on db.f_id = RSA6.f_goal_id and RSA6.f_mini_role_type = 7 and RSA6.f_goal_type = 2 and RSA.f_goal_detail_type = RSA6.f_goal_detail_type<!-- 推荐人收益 -->
+			INNER JOIN t_revenue_signal_amount_ebuy RSAE ON RSA.f_id = RSAE.t_revenue_signal_amount_id and RSAE.f_sys0_del_state = 0
+			left join t_property_company pc on RSA.f_mini_role_id = pc.f_id
+			INNER JOIN 
+			t_group_building GB ON GB.f_id =RSA.t_group_building_id AND GB.f_sys0_del_state = 0 <include refid="permiOos.dataPermissionCondition" />
+			INNER JOIN
+			t_property_management PM ON PM.f_id = GB.t_property_management_f_id AND PM.f_is_edit = 1 <!-- 已经审核 -->
+			INNER JOIN
+			t_property_management_has_oms_user PMHOU ON PMHOU.t_property_management_f_id = PM.f_id AND PMHOU.f_sys0_del_state = 0 AND PMHOU.t_oms_user_f_id = #{omsUserId}
+		<if test="wyOrAgentName != null and wyOrAgentName != ''">
+				AND (RSAE.f_pc_name like CONCAT('%',#{wyOrAgentName},'%')  or RSAE.f_agent_name like CONCAT('%',#{wyOrAgentName},'%'))
+			</if>
+			<if test="gbName != null and gbName != ''">
+				AND (RSAE.f_gb_name like CONCAT('%',#{gbName},'%') )
+			</if>
+			<if test="roleId != null and roleId != ''">
+				AND RSA.f_mini_role_id = #{roleId}
+			</if>
+			<if test="roleIdList != null">
+				AND RSA.f_mini_role_id in
+				<foreach item="tempRoleId" collection="roleIdList" open="(" separator="," close=")">
+					#{tempRoleId}
+				</foreach>
+			</if>
+			<if test="payTmStart != null and payTmStart != ''">
+				<![CDATA[ AND RSAE.f_pay_tm >= #{payTmStart} ]]>
+			</if>
+			<if test="payTmEnd != null and payTmEnd != ''">
+				<![CDATA[ AND RSAE.f_pay_tm <= #{payTmEnd} ]]>
+			</if>
+			<if test="tkStatus != null and tkStatus != ''">
+				AND RSA.f_tk_status = #{tkStatus}
+			</if>
+			<if test="tkStatusWy != null and tkStatusWy != ''">
+				AND RSA3.f_tk_status = #{tkStatusWy}
+			</if>
+			<if test="tkStatusAgent != null and tkStatusAgent != ''">
+				AND RSA2.f_tk_status = #{tkStatusAgent}
+			</if>
+			<if test="tkStatusRepair != null and tkStatusRepair != ''">
+				AND RSA4.f_tk_status = #{tkStatusRepair}
+			</if>
+			<if test="tkStatusPlatform != null and tkStatusPlatform != ''">
+				AND RSA5.f_tk_status = #{tkStatusPlatform}
+			</if>
+			<if test="tkStatusRecommender != null and tkStatusRecommender != ''">
+				AND RSA6.f_tk_status = #{tkStatusRecommender}
+			</if>
+			<if test="applyId != null and applyId != ''">
+				AND RSA.f_rev_apply_id = #{applyId}
+			</if>
+			<if test="recommenderName != null and recommenderName != ''">
+				AND RSA6.f_role_name like CONCAT('%',#{recommenderName},'%')
+			</if>
+	</select>
+	
+	<select id="selectDredgeRevenueTotal" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.revenue.entity.EbuyRevenueTotal">
+		select sum(RSA4.f_amount) totalAmount, sum(RSA2.f_amount) totalAmountReal, sum(RSA3.f_amount) totalAmountDiscount, sum(RSA5.f_amount) totalPlatform,
+			sum(RSA6.f_amount) totalRecommender, sum(RSA.f_src_money) totalOrder, sum(RSAE.f_amount_discount) totalOrderDiscount, sum(RSAE.f_amount_order_real) totalOrderReal
+		  FROM t_dredge_bill db
+			inner join t_revenue_signal_amount RSA on RSA.f_goal_id = db.f_id and RSA.f_goal_type = 2
+			left join t_revenue_signal_amount RSA2 on db.f_id = RSA2.f_goal_id and RSA2.f_mini_role_type = 3 and RSA2.f_goal_type = 2 and RSA.f_goal_detail_type = RSA2.f_goal_detail_type <!-- 代理 -->
+			left join t_revenue_signal_amount RSA3 on db.f_id = RSA3.f_goal_id and RSA3.f_mini_role_type = 2 and RSA3.f_goal_type = 2 and RSA.f_goal_detail_type = RSA3.f_goal_detail_type<!-- 物业 -->
+			left join t_revenue_signal_amount RSA4 on db.f_id = RSA4.f_goal_id and RSA4.f_mini_role_type = 6 and RSA4.f_goal_type = 2 and RSA.f_goal_detail_type = RSA4.f_goal_detail_type<!-- 师傅 -->
+			left join t_revenue_signal_amount RSA5 on db.f_id = RSA5.f_goal_id and RSA5.f_mini_role_type = 1 and RSA5.f_goal_type = 2 and RSA.f_goal_detail_type = RSA5.f_goal_detail_type<!-- 平台 -->
+			left join t_revenue_signal_amount RSA6 on db.f_id = RSA6.f_goal_id and RSA6.f_mini_role_type = 7 and RSA6.f_goal_type = 2 and RSA.f_goal_detail_type = RSA6.f_goal_detail_type<!-- 推荐人收益 -->
+			INNER JOIN t_revenue_signal_amount_ebuy RSAE ON RSA.f_id = RSAE.t_revenue_signal_amount_id and RSAE.f_sys0_del_state = 0
+			left join t_property_company pc on RSA.f_mini_role_id = pc.f_id
+			<include refid="ebuyRevenueWhere" />
+	</select>
+	
+	<select id="selectDredgeRevenueManagementTotal" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.revenue.entity.EbuyRevenueTotal">
+		select sum(RSA4.f_amount) totalAmount, sum(RSA2.f_amount) totalAmountReal, sum(RSA3.f_amount) totalAmountDiscount, sum(RSA5.f_amount) totalPlatform,
+			sum(RSA6.f_amount) totalRecommender, sum(RSA.f_src_money) totalOrder, sum(RSAE.f_amount_discount) totalOrderDiscount, sum(RSAE.f_amount_order_real) totalOrderReal
+		  FROM t_dredge_bill db
+			inner join t_revenue_signal_amount RSA on RSA.f_goal_id = db.f_id and RSA.f_goal_type = 2
+			left join t_revenue_signal_amount RSA2 on db.f_id = RSA2.f_goal_id and RSA2.f_mini_role_type = 3 and RSA2.f_goal_type = 2 and RSA.f_goal_detail_type = RSA2.f_goal_detail_type <!-- 代理 -->
+			left join t_revenue_signal_amount RSA3 on db.f_id = RSA3.f_goal_id and RSA3.f_mini_role_type = 2 and RSA3.f_goal_type = 2 and RSA.f_goal_detail_type = RSA3.f_goal_detail_type<!-- 物业 -->
+			left join t_revenue_signal_amount RSA4 on db.f_id = RSA4.f_goal_id and RSA4.f_mini_role_type = 6 and RSA4.f_goal_type = 2 and RSA.f_goal_detail_type = RSA4.f_goal_detail_type<!-- 师傅 -->
+			left join t_revenue_signal_amount RSA5 on db.f_id = RSA5.f_goal_id and RSA5.f_mini_role_type = 1 and RSA5.f_goal_type = 2 and RSA.f_goal_detail_type = RSA5.f_goal_detail_type<!-- 平台 -->
+			left join t_revenue_signal_amount RSA6 on db.f_id = RSA6.f_goal_id and RSA6.f_mini_role_type = 7 and RSA6.f_goal_type = 2 and RSA.f_goal_detail_type = RSA6.f_goal_detail_type<!-- 推荐人收益 -->
+			INNER JOIN t_revenue_signal_amount_ebuy RSAE ON RSA.f_id = RSAE.t_revenue_signal_amount_id and RSAE.f_sys0_del_state = 0
+			left join t_property_company pc on RSA.f_mini_role_id = pc.f_id
+			INNER JOIN 
+			t_group_building GB ON GB.f_id =RSA.t_group_building_id AND GB.f_sys0_del_state = 0
+			INNER JOIN
+			t_property_management PM ON PM.f_id = GB.t_property_management_f_id AND PM.f_is_edit = 1 <!-- 已经审核 -->
+			INNER JOIN
+			t_property_management_has_oms_user PMHOU ON PMHOU.t_property_management_f_id = PM.f_id AND PMHOU.f_sys0_del_state = 0 AND PMHOU.t_oms_user_f_id = #{omsUserId}
+			<if test="wyOrAgentName != null and wyOrAgentName != ''">
+				AND (RSAE.f_pc_name like CONCAT('%',#{wyOrAgentName},'%')  or RSAE.f_agent_name like CONCAT('%',#{wyOrAgentName},'%'))
+			</if>
+			<if test="gbName != null and gbName != ''">
+				AND (RSAE.f_gb_name like CONCAT('%',#{gbName},'%') )
+			</if>
+			<if test="roleId != null and roleId != ''">
+				AND RSA.f_mini_role_id = #{roleId}
+			</if>
+			<if test="roleIdList != null">
+				AND RSA.f_mini_role_id in
+				<foreach item="tempRoleId" collection="roleIdList" open="(" separator="," close=")">
+					#{tempRoleId}
+				</foreach>
+			</if>
+			<if test="payTmStart != null and payTmStart != ''">
+				<![CDATA[ AND RSAE.f_pay_tm >= #{payTmStart} ]]>
+			</if>
+			<if test="payTmEnd != null and payTmEnd != ''">
+				<![CDATA[ AND RSAE.f_pay_tm <= #{payTmEnd} ]]>
+			</if>
+			<if test="tkStatus != null and tkStatus != ''">
+				AND RSA.f_tk_status = #{tkStatus}
+			</if>
+			<if test="tkStatusWy != null and tkStatusWy != ''">
+				AND RSA3.f_tk_status = #{tkStatusWy}
+			</if>
+			<if test="tkStatusAgent != null and tkStatusAgent != ''">
+				AND RSA2.f_tk_status = #{tkStatusAgent}
+			</if>
+			<if test="tkStatusRepair != null and tkStatusRepair != ''">
+				AND RSA4.f_tk_status = #{tkStatusRepair}
+			</if>
+			<if test="tkStatusPlatform != null and tkStatusPlatform != ''">
+				AND RSA5.f_tk_status = #{tkStatusPlatform}
+			</if>
+			<if test="tkStatusRecommender != null and tkStatusRecommender != ''">
+				AND RSA6.f_tk_status = #{tkStatusRecommender}
+			</if>
+			<if test="applyId != null and applyId != ''">
+				AND RSA.f_rev_apply_id = #{applyId}
+			</if>
+			<if test="recommenderName != null and recommenderName != ''">
+				AND RSA6.f_role_name like CONCAT('%',#{recommenderName},'%')
+			</if>
+	</select>
+
+</mapper>

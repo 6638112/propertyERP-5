@@ -1,0 +1,92 @@
+package com.cnfantasia.server.ms.revenue.serviceUn;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+import com.cnfantasia.server.ms.revenue.constant.RevenueDict.UserRole;
+import com.cnfantasia.server.ms.revenue.dao.IRevenueDao;
+import com.cnfantasia.server.ms.revenue.entity.RevenueConfigByTime;
+import com.cnfantasia.server.ms.revenue.entity.RevenueRole;
+
+
+public class SimpleRevenueCalcRule<T> extends AbstractRevenueCalcRule<T>{
+	/**规则配置Map*/
+	private Map<Integer,IRevenueCalcRuleByType<T>> ruleMap;
+	
+	private IRevenueDao revenueDao;
+	public void setRevenueDao(IRevenueDao revenueDao) {
+		this.revenueDao = revenueDao;
+	}
+
+	/**
+	 * 构造方法
+	 * @param calcRuleList
+	 */
+	public SimpleRevenueCalcRule(List<IRevenueCalcRuleByType<T>> calcRuleList){
+		ruleMap = new HashMap<Integer, IRevenueCalcRuleByType<T>>();
+		if(calcRuleList!=null&&calcRuleList.size()>0){
+			for(IRevenueCalcRuleByType<T> tmpRule:calcRuleList){
+				Integer projectType = tmpRule.getProjectType();
+				if(ruleMap.get(projectType)!=null){
+					throw new BusinessRuntimeException("RevenueCalcRule.init.haveExist",new Object[]{projectType});
+				}
+				ruleMap.put(projectType, tmpRule);
+			}
+		}
+	}
+	
+	/**
+	 * 获取某个类别的收益配置
+	 * @param projectType
+	 * @return
+	 */
+	@Override
+	public IRevenueCalcRuleByType<T> getCalcRule(Integer projectType){
+		IRevenueCalcRuleByType<T> tmpRule = null;
+		if(ruleMap!=null){
+			tmpRule = ruleMap.get(projectType);
+		}
+		if(tmpRule==null){
+			throw new BusinessRuntimeException("RevenueCalcRule.getCalcRule.null",new Object[]{projectType});
+		}
+		return tmpRule;
+	}
+	
+	@Override
+	public List<RevenueConfigByTime> getRuleConfig(Integer projectType, RevenueRole revenueRole,String startTime, String endTime){
+		List<RevenueConfigByTime> configList = null;
+		UserRole role = revenueRole.getRole();
+		BigInteger roleId = revenueRole.getRoleId();
+		switch (role) {
+			case PropertyCompany:
+				configList = revenueDao.selectRevenueConfigByTimeListByCompanyId(projectType,roleId,startTime,endTime);
+				break;
+			default:
+				throw new BusinessRuntimeException("RevenueCalcRule.getRuleConfig.role.unsupport",new Object[]{role.getCode()});
+		}
+		return configList;
+	}
+
+	@Override
+	public List<RevenueRole> getSubRoleList(RevenueRole revenueRole) {
+		List<RevenueRole> resRoleList = null;
+		UserRole role = revenueRole.getRole();
+		BigInteger roleId = revenueRole.getRoleId();
+		if(role.compareTo(UserRole.PropertyAgent)==0){
+			List<BigInteger> companyIdList= revenueDao.selectCompanyIdListByAgentId(roleId);
+			if(companyIdList!=null&&companyIdList.size()>0){
+				resRoleList = new ArrayList<RevenueRole>();
+				for(BigInteger companyId:companyIdList){
+					RevenueRole subRole = new RevenueRole(UserRole.PropertyCompany, companyId, revenueRole);
+					resRoleList.add(subRole);
+				}
+			}
+		}
+		return resRoleList;
+	}
+	
+}

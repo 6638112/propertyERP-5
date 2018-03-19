@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:物业公司银行托收日期配置 t_bank_collection_date -->
+<mapper namespace="bankCollectionDateBase">
+	<resultMap type="BankCollectionDate" id="bankCollectionDateBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_bank_collection_date" javaType="java.lang.Integer" property="bankCollectionDate"/>  <!-- 银行托收日（同一物业公司可设置多个） -->        <result column="t_property_company_f_id" javaType="java.math.BigInteger" property="tPropertyCompanyFId"/>  <!-- 物业公司ID -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="BankCollectionDate" id="bankCollectionDateExtendMap" extends="bankCollectionDateBaseMap">
+	</resultMap>
+	<resultMap type="BankCollectionDate" id="bankCollectionDateBaseMap_AppendTable">
+        <id column="BCDid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="BCDbankCollectionDate" javaType="java.lang.Integer" property="bankCollectionDate"/>  <!-- 银行托收日（同一物业公司可设置多个） -->        <result column="BCDtPropertyCompanyFId" javaType="java.math.BigInteger" property="tPropertyCompanyFId"/>  <!-- 物业公司ID -->        <result column="BCDsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="BCDsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="BCDsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="BCDsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="BCDsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="BCDsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="BCDsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="BankCollectionDate" id="bankCollectionDateBaseMap_AppendTable1">
+        <id column="BCD1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="BCD1bankCollectionDate" javaType="java.lang.Integer" property="bankCollectionDate"/>  <!-- 银行托收日（同一物业公司可设置多个） -->        <result column="BCD1tPropertyCompanyFId" javaType="java.math.BigInteger" property="tPropertyCompanyFId"/>  <!-- 物业公司ID -->        <result column="BCD1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="BCD1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="BCD1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="BCD1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="BCD1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="BCD1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="BCD1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		BCD.f_id,BCD.f_bank_collection_date,BCD.t_property_company_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		BCD.f_id as BCDid,BCD.f_bank_collection_date as BCDbankCollectionDate,BCD.t_property_company_f_id as BCDtPropertyCompanyFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		BCD1.f_id as BCD1id,BCD1.f_bank_collection_date as BCD1bankCollectionDate,BCD1.t_property_company_f_id as BCD1tPropertyCompanyFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (BCD.f_id = #{id} ) </if>        <if test="bankCollectionDate != null">  and (BCD.f_bank_collection_date = #{bankCollectionDate} ) </if>        <if test="tPropertyCompanyFId != null">  and (BCD.t_property_company_f_id = #{tPropertyCompanyFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (BCD.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (BCD.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (BCD.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (BCD.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (BCD.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (BCD.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (BCD.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (BCD.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (BCD.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (BCD.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (BCD.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (BCD.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (BCD.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (BCD.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (BCD.f_id = #{id} ) </if>        <if test="bankCollectionDate != null and !bankCollectionDate.equals('')  ">  and (BCD.f_bank_collection_date = #{bankCollectionDate} ) </if>        <if test="tPropertyCompanyFId != null and !tPropertyCompanyFId.equals('')  ">  and (BCD.t_property_company_f_id = #{tPropertyCompanyFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (BCD.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (BCD.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (BCD.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (BCD.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (BCD.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (BCD.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (BCD.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (BCD.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (BCD.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (BCD.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (BCD.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (BCD.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (BCD.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (BCD.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="bankCollectionDateBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="bankCollectionDateBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="bankCollectionDateBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="bankCollectionDateBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_bank_collection_date BCD    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(物业公司银行托收日期配置)信息。 -->
+	<sql id="select_bankCollectionDate">
+		SELECT <include refid="bankCollectionDateBase.queryHead"/>
+		<include refid="bankCollectionDateBase.busiQueryCondition"/>
+		<include refid="bankCollectionDateBase.dimCheckSql"/>
+		ORDER BY BCD.f_id DESC
+	</sql>
+	<select id="select_bankCollectionDate" parameterType="java.util.Map" resultMap="bankCollectionDateBase.bankCollectionDateExtendMap">
+		<include refid="bankCollectionDateBase.select_bankCollectionDate"/>
+	</select>
+	
+	<!-- 根据条件分页查询(物业公司银行托收日期配置)信息  -->
+	<sql id="select_bankCollectionDate_withPage">
+		SELECT <include refid="bankCollectionDateBase.queryHead"/>
+		<include refid="bankCollectionDateBase.busiQueryCondition"/>
+		<include refid="bankCollectionDateBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_bankCollectionDate_withPage" resultMap="bankCollectionDateBase.bankCollectionDateExtendMap" parameterType="java.util.Map">
+		<include refid="bankCollectionDateBase.select_bankCollectionDate_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(物业公司银行托收日期配置)信息。 -->
+	<sql id="select_bankCollectionDate_bySeqId">
+		SELECT <include refid="bankCollectionDateBase.queryHead"/>
+		<include refid="bankCollectionDateBase.busiQueryCondition"/>
+		 and BCD.f_id = #{_parameter}
+	</sql>
+	<select id="select_bankCollectionDate_bySeqId" parameterType="java.math.BigInteger" resultMap="bankCollectionDateBase.bankCollectionDateBaseMap">
+		<include refid="bankCollectionDateBase.select_bankCollectionDate_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(物业公司银行托收日期配置)记录数  -->
+	<sql id="select_bankCollectionDate_count">
+		SELECT COUNT(*)
+		<include refid="bankCollectionDateBase.busiQueryCount"/>
+		<include refid="bankCollectionDateBase.dimCheckSql"/>
+	</sql>
+	<select id="select_bankCollectionDate_count" resultType="java.lang.Integer">
+		<include refid="bankCollectionDateBase.select_bankCollectionDate_count"/>
+	</select>
+	
+	 <!-- 往(物业公司银行托收日期配置)新增一条记录。 -->
+	 <sql id="insert_bankCollectionDate">
+		INSERT INTO t_bank_collection_date 
+		(f_id,f_bank_collection_date,t_property_company_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{bankCollectionDate},#{tPropertyCompanyFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_bankCollectionDate" parameterType="BankCollectionDate">
+		<include refid="bankCollectionDateBase.insert_bankCollectionDate"/>
+    </insert>
+    
+	<!-- 批量新增(物业公司银行托收日期配置)信息 -->
+    <insert id="insert_bankCollectionDate_Batch" parameterType="java.util.List">
+    	INSERT INTO t_bank_collection_date 
+		(f_id,f_bank_collection_date,t_property_company_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.bankCollectionDate},#{item.tPropertyCompanyFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(物业公司银行托收日期配置)信息。 -->
+    <sql id="update_bankCollectionDate">
+		UPDATE t_bank_collection_date		<trim prefix="SET" prefixOverrides=","> 		<if test="bankCollectionDate != null and !bankCollectionDate.equals('') "> ,f_bank_collection_date=#{bankCollectionDate}</if> 		<if test="tPropertyCompanyFId != null and !tPropertyCompanyFId.equals('') "> ,t_property_company_f_id=#{tPropertyCompanyFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_bankCollectionDate" parameterType="BankCollectionDate">
+		<include refid="bankCollectionDateBase.update_bankCollectionDate"/>
+    </update>
+    
+    <!-- 批量更新(物业公司银行托收日期配置)信息。 -->
+    <update id="update_bankCollectionDate_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_bank_collection_date		<trim prefix="SET" prefixOverrides=","> 		<if test="item.bankCollectionDate != null and !item.bankCollectionDate.equals('')  "> ,f_bank_collection_date=#{item.bankCollectionDate}</if> 		<if test="item.tPropertyCompanyFId != null and !item.tPropertyCompanyFId.equals('')  "> ,t_property_company_f_id=#{item.tPropertyCompanyFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(物业公司银行托收日期配置)信息_逻辑删除。 -->
+    <sql id="delete_bankCollectionDate_Logic">
+		UPDATE t_bank_collection_date		<trim prefix="SET" prefixOverrides=","> 		<if test="bankCollectionDate != null and !bankCollectionDate.equals('')  "> ,f_bank_collection_date=#{bankCollectionDate}</if> 		<if test="tPropertyCompanyFId != null and !tPropertyCompanyFId.equals('')  "> ,t_property_company_f_id=#{tPropertyCompanyFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_bankCollectionDate_Logic" parameterType="BankCollectionDate">
+		<include refid="bankCollectionDateBase.delete_bankCollectionDate_Logic"/>
+    </update>
+    
+    <!-- 批量删除(物业公司银行托收日期配置)信息_逻辑删除 -->
+    <update id="delete_bankCollectionDate_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_bank_collection_date		<trim prefix="SET" prefixOverrides=","> 		<if test="item.bankCollectionDate != null and !item.bankCollectionDate.equals('')  "> ,f_bank_collection_date=#{item.bankCollectionDate}</if> 		<if test="item.tPropertyCompanyFId != null and !item.tPropertyCompanyFId.equals('')  "> ,t_property_company_f_id=#{item.tPropertyCompanyFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(物业公司银行托收日期配置)信息。 -->
+    <sql id="delete_bankCollectionDate">
+		DELETE FROM t_bank_collection_date WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_bankCollectionDate" parameterType="java.lang.String">
+		<include refid="bankCollectionDateBase.delete_bankCollectionDate"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(物业公司银行托收日期配置)信息。 -->
+    <delete id="delete_bankCollectionDate_Batch" parameterType="java.util.List">
+		DELETE FROM t_bank_collection_date WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

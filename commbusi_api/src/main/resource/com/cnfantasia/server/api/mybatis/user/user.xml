@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户表 t_user -->
+<mapper namespace="user">
+
+	<!-- <resultMap type="com.cnfantasia.server.api.user.entity.UserEntity" id="userMap" extends="userBase.userBaseMap">
+		默认门牌信息
+        <association column="f_default_room_id" javaType="com.cnfantasia.server.api.room.entity.RoomEntity" property="defaultRoomEntity" select="commonRoom.select_room_bySeqId"/>
+	</resultMap> -->
+	
+	<!-- 根据条件查询(用户登录账号)信息。 -->
+	<select  id="select_user_bySeqId" parameterType="java.math.BigInteger" resultMap="commonUser.userEntityMap_Append">
+		SELECT <include refid="commonUser.userSimple_common_select"/>
+			,<include refid="roomBase.queryHead_AppendTable"/>
+			,<include refid="realRoomBase.queryHead_AppendTable"/>,<include refid="buildingBase.queryHead_AppendTable"/>
+			,<include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+   			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+   			,<include refid="roomValidateBase.queryHead_AppendTable"/><!-- 门牌校验信息 -->
+   			,<include refid="propertyProprietorBase.queryHead_AppendTable"/><!-- 真实门牌的业主信息 -->
+   			,<include refid="achievementBase.queryHead_AppendTable"/><!-- 成就 -->
+   			,<include refid="hobbyBase.queryHead_AppendTable"/><!-- 兴趣爱好 -->
+		FROM t_user U
+				<include refid="commonUser.userSimple_common_from_leftJoin"/>
+				LEFT JOIN t_room R ON  U.f_default_room_id= R.f_id AND R.f_sys0_del_state = 0
+				LEFT JOIN (
+					t_real_room RR  
+					LEFT JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id AND PP.f_sys0_del_state = 0
+					INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+					INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+					INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+					INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+					INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+				) ON R.t_real_room_f_id = RR.f_id AND RR.f_sys0_del_state = 0
+				
+				LEFT JOIN t_room_validate RV ON RV.t_room_f_id = R.f_id AND RV.f_sys0_del_state = 0
+				
+				LEFT JOIN (
+					t_user_has_t_achievement UHTA
+					INNER JOIN t_achievement A ON UHTA.t_achievement_f_id = A.f_id AND A.f_sys0_del_state = 0
+				) ON UHTA.t_user_f_id = U.f_id AND UHTA.f_sys0_del_state = 0
+					AND CASE WHEN UHTA.f_is_about_room = 1 <!-- 成就信息跟门牌相关=={"0":"否","1":"是"} --> 
+					THEN UHTA.f_room_id = U.f_default_room_id END
+				LEFT JOIN (
+					t_user_has_t_hobby UHTH
+					INNER JOIN t_hobby H ON UHTH.t_hobby_f_id = H.f_id AND H.f_sys0_del_state = 0
+				) ON UHTH.t_user_f_id = U.f_id AND UHTH.f_sys0_del_state = 0
+		WHERE 1 = 1
+		AND U.f_sys0_del_state = 0
+		AND U.f_id = #{_parameter}
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.user.entity.HobbyEntity" id="HobbyEntity_Map_Append" 
+		extends="hobbyBase.hobbyBaseMap_AppendTable">
+		<result column="ext_haveSelectFlag" javaType="java.lang.Integer" property="haveSelectFlag"/><!-- 是否已选择的标识 0未选中 1 已选中  -->
+	</resultMap>
+	<!-- 查询所有的兴趣爱好列表，返回包含用户是否已经选择的标识 -->
+	<select id="select_AllHobby_List_page" parameterType="java.util.Map" resultMap="HobbyEntity_Map_Append">
+		SELECT <include refid="hobbyBase.queryHead_AppendTable"/>
+			,CASE WHEN ISNULL(tmpAA.t_hobby_f_id) THEN 0 ELSE 1 END AS ext_haveSelectFlag <!-- 0未选中 1 已选中 -->
+		FROM t_hobby H
+			LEFT JOIN (
+				SELECT t_hobby_f_id 
+				FROM t_user_has_t_hobby 
+				WHERE 1=1
+				AND f_sys0_del_state = 0 AND t_user_f_id = #{userId}
+				GROUP BY t_hobby_f_id 
+			) tmpAA ON tmpAA.t_hobby_f_id = H.f_id
+    	WHERE 1=1
+    	AND H.f_sys0_del_state = 0
+    	ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	<select id="select_AllHobby_List_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_hobby H
+		WHERE 1=1
+    	AND H.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询用户的兴趣爱好列表 -->
+	<select id="select_HobbyList_ByUserId" parameterType="java.util.Map" resultMap="hobbyBase.hobbyBaseMap_AppendTable">
+		SELECT <include refid="hobbyBase.queryHead_AppendTable"/>
+		FROM t_hobby H
+			INNER JOIN (
+				SELECT t_hobby_f_id 
+				FROM t_user_has_t_hobby 
+				WHERE 1=1
+				AND f_sys0_del_state = 0 AND t_user_f_id = #{userId}
+				GROUP BY t_hobby_f_id 
+			) tmpAA ON tmpAA.t_hobby_f_id = H.f_id
+    	WHERE 1=1
+    	AND H.f_sys0_del_state = 0
+    	ORDER BY f_id
+	</select>
+	
+	<!-- 批量取消个人兴趣列表-->
+	<update id="cancel_HobbyIds_Batch" parameterType="java.util.Map">
+		UPDATE t_user_has_t_hobby UHTH
+		SET UHTH.f_sys0_del_state = 1
+			,UHTH.f_sys0_del_time= SYSDATE()
+		WHERE 1=1
+		AND UHTH.f_sys0_del_state = 0
+		AND UHTH.t_hobby_f_id IN
+		<foreach item="item" collection="cancelHobbyIds" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		AND UHTH.t_user_f_id = #{userId}
+	</update>
+	
+	<!-- 更新(用户表)信息。 -->
+	<update id="update_user" parameterType="User">
+		UPDATE t_user SET f_id=#{id}
+ 		<if test="mobile != null and mobile != '' "> ,f_mobile=#{mobile}</if>
+ 		<if test="huaId != null and huaId != '' "> ,f_hua_id=#{huaId}</if>
+ 		<if test="nickName != null and nickName != '' "> ,f_nick_name=#{nickName}</if>
+ 		<if test="realName != null and realName != '' "> ,f_real_name=#{realName}</if>
+ 		<if test="sex != null and sex != '' "> ,f_sex=#{sex}</if>
+ 		<if test="birthday != null and birthday != '' "> ,f_birthday=str_to_date(#{birthday},'%Y-%m-%d %T')</if>
+ 		<if test="imgprofile != null and imgprofile != '' "> ,f_imgProfile=#{imgprofile}</if>
+ 		<if test="defaultRoomId != null and defaultRoomId != '' "> ,f_default_room_id=#{defaultRoomId}</if>
+ 		<if test="utmCampaign != null and utmCampaign != '' "> ,f_utm_campaign=#{utmCampaign}</if>
+ 		<if test="utmContent != null and utmContent != '' "> ,f_utm_content=#{utmContent}</if>
+ 		<if test="isFirstLoginStatus != null and isFirstLoginStatus != '' "> ,f_is_first_login_status=#{isFirstLoginStatus}</if>
+ 		<if test="userState != null and userState != '' "> ,f_user_state=#{userState}</if>
+ 		<if test="tChannelSubFId != null and tChannelSubFId != '' "> ,t_channel_sub_f_id=#{tChannelSubFId}</if>
+ 		
+ 		<if test="inviteNo != null and inviteNo != '' "> <!-- 邀请码只能录入一次 -->
+ 			,f_invite_no = CASE WHEN ( ISNULL(f_invite_no) OR f_invite_no = '') THEN #{inviteNo} ELSE f_invite_no END
+ 		</if>
+ 		
+ 		<if test="passwdStatus != null and passwdStatus != '' "> ,f_passwd_status=#{passwdStatus}</if>
+ 		<if test="lastPwderrTime != null and lastPwderrTime != '' "> ,f_last_pwderr_time=str_to_date(#{lastPwderrTime},'%Y-%m-%d %T')</if>
+ 		<if test="lastLoginTime != null and lastLoginTime != '' "> ,f_last_login_time=str_to_date(#{lastLoginTime},'%Y-%m-%d %T')</if>
+ 		<if test="lastPwdmodTime != null and lastPwdmodTime != '' "> ,f_last_pwdmod_time=str_to_date(#{lastPwdmodTime},'%Y-%m-%d %T')</if>
+ 		<if test="lastPwdResetTime != null and lastPwdResetTime != '' "> ,f_last_pwd_reset_time=str_to_date(#{lastPwdResetTime},'%Y-%m-%d %T')</if>
+ 		<if test="deviceId != null and deviceId != '' "> ,f_device_id=#{deviceId}</if>
+ 		<if test="signature != null "> ,f_signature=#{signature}</if> <!-- 签名可设置为空 -->
+        <if test="familyRole != null and familyRole != '' "> ,f_family_role=#{familyRole}</if>
+ 		<if test="sys0AddTime != null and sys0AddTime != '' "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and sys0UpdTime != '' "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime == '' "> ,f_sys0_upd_time= SYSDATE() </if>
+ 		<if test="sys0DelTime != null and sys0DelTime != '' "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and sys0AddUser != '' "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and sys0UpdUser != '' "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and sys0DelUser != '' "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and sys0DelState != '' "> ,f_sys0_del_state=#{sys0DelState}</if>
+ 		<if test="phoneBindState != null and !phoneBindState.equals('') "> ,f_phone_bind_state=#{phoneBindState}</if>
+		WHERE f_id=#{id}
+    </update>
+    
+    <!-- 根据userId查询其下有没有业务数据，调用mysql的函数实现, 目前是基准于默认门牌和订单数据 -->
+    <select id="select_hasBusinessDataOrNot_byUserId" parameterType="java.math.BigInteger" resultType="int"> 
+    	select fn_qryHasBusinessDataOrNot(#{userId})
+    </select>
+    
+    <!-- 设置用户f_mobile为null -->
+	<update id="update_user_mobile_to_null" parameterType="java.math.BigInteger">
+		UPDATE t_user SET f_mobile= null, f_sys0_upd_time= SYSDATE()
+		WHERE f_id=#{userId};
+	</update>
+	
+	<!-- 查询用户是否有业务数据，条件是：1）不是默认门牌，2）有床单；3）有师傅信息；4）有楼下店铺信息 -->
+	<select id="selectHasBusinessDataCount_ByUserId" parameterType="java.math.BigInteger" resultType="int">
+		select fn_qryHasBusinessDataOrNot(#{userId});
+	</select>
+
+	<update id="changeCouponUser" parameterType="map">
+		update t_user_coupon set t_user_f_id = #{toUserId} where t_user_f_id = #{fromUserId}
+	</update>
+</mapper>

@@ -1,0 +1,25 @@
+<%@page import="com.cnfantasia.server.api.pub.header.HeaderConstant"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimal-ui">
+<link rel="dns-prefetch" href="//jiefangqu.com">
+
+<title>提交成功</title>
+<link rel="stylesheet" href="../css/shopping.common.css">
+</head>
+
+<body class="bggrey">
+<section class="sectionBox bordertopgrey">
+	<ul class="p20 t-center">
+    	<li class="mtop10">
+    		<img class="wp15 rotateZoomIn animated1s" src="../images/icon-gathering-done.png" />
+    	</li>
+    	<li class="mtop10"><span class="f20">提交成功</span></li>
+    	<li class="mtop10 f14">解放区工作人员将在3个工作日内审核处理，谢谢您的反馈。</li>
+    </ul>
+</section>
+</body>
+</html>

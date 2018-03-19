@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 账户管理 -->
+<mapper namespace="accountManage">
+	
+	<resultMap type="com.cnfantasia.server.api.accountManage.entity.LoginNoSimpleEntity" id="loginNoSimpleEntity_Map_Append"
+		extends="loginNoBase.loginNoBaseMap_AppendTable">
+		<association property="userSimpleEntity"  resultMap="commonUser.userSimpleEntity_Map_Append"/>
+	</resultMap>
+	
+	<!-- 根据登录账号Id查询对应的详情 -->
+	<select id="select_LoginNoSimpleEntity_ById" parameterType="java.util.Map" resultMap="loginNoSimpleEntity_Map_Append">
+		SELECT <include refid="loginNoBase.queryHead_AppendTable"/>
+		FROM t_login_no LN
+		WHERE 1=1
+		AND LN.f_sys0_del_state = 0
+		AND LN.f_id = #{loginNoId}
+	</select>
+	<select id="select_UserSimpleEntity_ById" parameterType="java.util.Map" resultMap="commonUser.userSimpleEntity_Map_Append">
+		SELECT <include refid="commonUser.userSimple_common_select"/>
+		FROM t_user U 
+			<include refid="commonUser.userSimple_common_from"/>
+		WHERE 1=1
+		AND U.f_sys0_del_state = 0
+		AND U.f_id = #{userId}
+	</select>
+	
+	<!-- 获取绑定的账号列表 -->
+	<!-- <select id="select_BindAcc_List" parameterType="java.util.Map" resultMap="loginNoBase.loginNoBaseMap_AppendTable">
+		SELECT <include refid="loginNoBase.queryHead_AppendTable"/>
+		FROM t_login_no LN
+			INNER JOIN t_user U ON U.f_id = LN.t_user_f_id AND U.f_sys0_del_state = 0
+			LEFT JOIN t_login_no_bind_relation LNBR ON (LNBR.f_main_user_id = U.f_id OR LNBR.f_apply_user_id = U.f_id) 
+				AND LNBR.f_sys0_del_state = 0
+		WHERE 1=1
+		AND LN.f_sys0_del_state = 0
+		AND ((LNBR.f_main_user_id = #{userId} OR LNBR.f_apply_user_id = #{userId}) OR (ISNULL(LNBR.f_id) AND LN.t_user_f_id = #{userId}))
+	</select> -->
+	<sql id="qry_user_bind_acc_comm_base">
+		FROM t_login_no LN
+		LEFT JOIN (
+			SELECT distinct U.f_id 
+			FROM(
+				SELECT AA.f_main_user_id,AA.f_apply_user_id
+				FROM t_login_no_bind_relation LNBR
+					INNER JOIN t_login_no_bind_relation AA ON (AA.f_main_user_id = LNBR.f_main_user_id OR AA.f_apply_user_id = LNBR.f_main_user_id OR AA.f_apply_user_id = LNBR.f_apply_user_id OR AA.f_main_user_id = LNBR.f_apply_user_id )
+						AND AA.f_sys0_del_state = 0
+				WHERE 1=1
+				AND LNBR.f_sys0_del_state = 0
+				AND (LNBR.f_main_user_id = #{userId} OR LNBR.f_apply_user_id = #{userId})
+			)AS AA_tmp 
+			INNER JOIN t_user U ON (AA_tmp.f_main_user_id = U.f_id OR AA_tmp.f_apply_user_id = U.f_id)
+				AND U.f_sys0_del_state = 0
+			WHERE 1=1
+		) U_idList ON U_idList.f_id = LN.t_user_f_id
+		WHERE 1=1
+		AND LN.f_sys0_del_state = 0
+		AND ( NOT ISNULL(U_idList.f_id) OR ( ISNULL(U_idList.f_id) AND (LN.t_user_f_id = #{userId}) ) )
+	</sql>
+	<select id="select_BindAcc_List" parameterType="java.util.Map" resultMap="loginNoBase.loginNoBaseMap_AppendTable">
+		SELECT <include refid="loginNoBase.queryHead_AppendTable"/>
+		<include refid="qry_user_bind_acc_comm_base"/>
+	</select>
+	
+	<!-- 查询当前用户的手机号账户信息 -->
+	<select id="select_UserPhone_AccInfo" parameterType="java.util.Map" resultMap="loginNoBase.loginNoBaseMap_AppendTable">
+		SELECT <include refid="loginNoBase.queryHead_AppendTable"/>
+		<include refid="qry_user_bind_acc_comm_base"/>
+		AND LN.f_type = 0 <!-- 账号类别=={"0":"手机"} -->
+	</select>
+	
+	<!-- 查询账号详情 -->
+	<select id="select_LoginNo_Detail" parameterType="java.util.Map" resultMap="loginNoBase.loginNoBaseMap_AppendTable">
+		SELECT <include refid="loginNoBase.queryHead_AppendTable"/>
+		FROM t_login_no LN
+		WHERE 1=1
+		AND LN.f_sys0_del_state = 0
+		AND LN.f_no = #{toBindAccountNo}
+		AND LN.f_type = #{toBindAccType}
+	</select>
+	
+	<!-- 查询账号参与绑定的记录数 -->
+	<select id="select_BindRelation_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_login_no_bind_relation LNBR
+			INNER JOIN t_login_no LN ON LN.f_no = #{toBindAccountNo} AND LN.f_type = #{toBindAccType} 
+				AND LN.f_sys0_del_state = 0
+			INNER JOIN t_user U ON U.f_id = LN.t_user_f_id AND U.f_sys0_del_state = 0
+		WHERE 1=1
+		AND LNBR.f_sys0_del_state = 0
+		AND (LNBR.f_main_user_id = U.f_id OR LNBR.f_apply_user_id = U.f_id) <!-- 只要参与过绑定就不可以再绑定到其它 -->
+	</select>
+	
+	<!-- <select id="select_BindRelation_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_login_no_bind_relation LNBR
+			INNER JOIN t_login_no LN ON LN.f_no = #{toBindAccountNo} AND LN.f_type = #{toBindAccType} 
+				AND LN.f_sys0_del_state = 0
+			INNER JOIN t_user U ON U.f_id = LN.t_user_f_id AND U.f_sys0_del_state = 0
+			INNER JOIN t_login_no mainLN ON mainLN.f_id = LNBR.f_main_login_no_id AND mainLN.f_sys0_del_state = 0
+			INNER JOIN t_login_no applyLN ON applyLN.f_id = LNBR.f_apply_login_no_id AND applyLN.f_sys0_del_state = 0
+		WHERE 1=1
+		AND LNBR.f_sys0_del_state = 0
+		AND (LNBR.f_main_user_id = U.f_id OR LNBR.f_apply_user_id = U.f_id) 
+		AND (( ISNULL(mainLN.f_union_id) AND ISNULL(applyLN.f_union_id) ) 
+			OR ( ISNULL(mainLN.f_union_id) AND NOT ISNULL(applyLN.f_union_id) ) 
+			OR ( NOT ISNULL(mainLN.f_union_id) AND  ISNULL(applyLN.f_union_id) ) 
+			OR (mainLN.f_union_id != applyLN.f_union_id)
+			)
+	</select> -->
+	
+	<!-- 查询当前用户的花号账户信息 -->
+	<select id="select_UserHua_LoginNoInfo" parameterType="java.util.Map" resultMap="loginNoBase.loginNoBaseMap_AppendTable">
+		SELECT <include refid="loginNoBase.queryHead_AppendTable"/>
+		FROM t_login_no LN
+		WHERE 1=1
+		AND LN.f_sys0_del_state = 0
+		AND LN.f_type = 2 <!-- 账号类别=={"2":"花号"} -->
+		AND LN.t_user_f_id = #{userId}
+	</select>
+	
+	<!-- 根据当前用户Id查询对应的主账号Id -->
+	<select id="select_MainUserId_ById" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		<!-- 为空则取当前用户Id -->
+		<!-- SELECT CASE WHEN ISNULL(LNBR.f_main_user_id) THEN #{userId} ELSE LNBR.f_main_user_id END AS userId
+		FROM t_login_no_bind_relation LNBR
+		WHERE 1=1
+		AND LNBR.f_sys0_del_state = 0
+		AND LNBR.f_apply_user_id = #{userId} -->
+		
+		SELECT IFNULL(
+			(SELECT CASE WHEN LNBR_group.count>0 THEN LNBR_group.f_main_user_id ELSE #{userId} END AS userId
+			FROM (
+				SELECT COUNT(*) as count,f_main_user_id
+				FROM t_login_no_bind_relation 
+				WHERE 1=1
+				AND f_sys0_del_state = 0
+				AND f_apply_user_id = #{userId}
+				GROUP BY f_main_user_id
+				ORDER BY f_id ASC <!-- 若有错误数据，优先取最老的数据 -->
+				LIMIT 0,1
+			) LNBR_group)
+			,#{userId}
+		) userId
+	</select>
+	
+	<!-- 将从账号的密码统一设置为主账号的密码 -->
+	<update id="update_ApplyPwd_ByMainUser" parameterType="java.util.Map">
+		UPDATE t_login_no LN
+		LEFT JOIN (
+			SELECT distinct U.f_id 
+			FROM(
+				SELECT AA.f_main_user_id,AA.f_apply_user_id
+				FROM t_login_no_bind_relation LNBR
+					INNER JOIN t_login_no_bind_relation AA ON (AA.f_main_user_id = LNBR.f_main_user_id OR AA.f_apply_user_id = LNBR.f_main_user_id OR AA.f_apply_user_id = LNBR.f_apply_user_id OR AA.f_main_user_id = LNBR.f_apply_user_id )
+						AND AA.f_sys0_del_state = 0
+				WHERE 1=1
+				AND LNBR.f_sys0_del_state = 0
+				AND (LNBR.f_main_user_id = #{userId} OR LNBR.f_apply_user_id = #{userId})
+			)AS AA_tmp 
+			INNER JOIN t_user U ON (AA_tmp.f_main_user_id = U.f_id OR AA_tmp.f_apply_user_id = U.f_id)
+				AND U.f_sys0_del_state = 0
+			WHERE 1=1
+		) U_idList ON U_idList.f_id = LN.t_user_f_id
+		SET LN.f_password = #{mainPassword}
+		WHERE 1=1
+		AND LN.f_sys0_del_state = 0
+		AND ( NOT ISNULL(U_idList.f_id) OR ( ISNULL(U_idList.f_id) AND (LN.t_user_f_id = #{userId}) ) )
+	</update>
+</mapper>

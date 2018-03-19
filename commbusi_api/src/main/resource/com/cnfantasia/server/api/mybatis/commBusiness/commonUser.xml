@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 用户管理公共模块 -->
+<mapper namespace="commonUser">
+	
+	<!-- 用户是否为管理员的一套信息 -->
+	<!-- ~~~~~~~~~~~~~~~~如下处理 开始~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- 用户信息 包含是否为门牌管理员 -->
+	<resultMap type="com.cnfantasia.server.api.user.entity.UserSimpleEntity" id="userSimpleEntity_Map_Append"
+		extends="userBase.userBaseMap_AppendTable">
+		<!-- 是否为对应真实门牌的管理员 -->
+		<result column="user_ext_room_isAdmin" javaType="java.lang.Boolean" property="ext_room_isAdmin"/>  
+	</resultMap>
+	
+	<select id="select_UserSimple_By_UserId" parameterType="java.util.Map" resultMap="commonUser.userSimpleEntity_Map_Append">
+		SELECT <include refid="commonUser.userSimple_common_select"/>
+		FROM t_user U
+			<include refid="commonUser.userSimple_common_from"/>
+		WHERE 1=1
+		AND U.f_sys0_del_state = 0
+		AND U.f_id = #{userId}
+	</select>
+	
+	<sql id="userSimple_common_select">
+		<include refid="userBase.queryHead_AppendTable"/>
+		,CASE WHEN (RR_ext_0s.f_validate_user_id = U.f_id AND RR_ext_0s.f_validate_status = 5) THEN TRUE ELSE FALSE END AS user_ext_room_isAdmin
+	</sql>
+	<sql id="userSimple_common_from">
+		INNER JOIN (
+				t_room R_ext_0s
+				INNER JOIN t_real_room RR_ext_0s ON RR_ext_0s.f_id = R_ext_0s.t_real_room_f_id AND RR_ext_0s.f_sys0_del_state = 0
+			) ON R_ext_0s.f_id = U.f_default_room_id AND R_ext_0s.f_sys0_del_state = 0
+	</sql>
+	<!-- syl-add-2015-2-11 10:41:30 -->
+	<sql id="userSimple_common_from_by_curr_room">
+		INNER JOIN (
+				t_room R_ext_0s
+				INNER JOIN t_real_room RR_ext_0s ON RR_ext_0s.f_id = R_ext_0s.t_real_room_f_id AND RR_ext_0s.f_sys0_del_state = 0
+			) ON R_ext_0s.f_id = R.f_id AND R_ext_0s.f_sys0_del_state = 0
+	</sql>
+	<sql id="userSimple_common_from_leftJoin">
+		LEFT JOIN (
+				t_room R_ext_0s
+				INNER JOIN t_real_room RR_ext_0s ON RR_ext_0s.f_id = R_ext_0s.t_real_room_f_id AND RR_ext_0s.f_sys0_del_state = 0
+			) ON R_ext_0s.f_id = U.f_default_room_id AND R_ext_0s.f_sys0_del_state = 0
+	</sql>
+	<!-- ~~~~~~~~~~~~~~~~~~处理 结束~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	
+	
+	<!-- 用户信息 -->
+	<resultMap type="com.cnfantasia.server.api.user.entity.UserEntity" id="userEntityMap_Append" extends="commonUser.userSimpleEntity_Map_Append">
+		<!-- 门牌信息 -->
+		<!-- <association property="defaultRoomEntity" resultMap="commonRoom.roomMap_Search"></association> -->
+		<!-- 门牌信息,包含校验 -->
+		<association property="defaultRoomEntity" resultMap="commonRoom.roomEntityWithValidate_Append"></association>
+		<!-- 成就 -->
+		<collection property="achievementList" resultMap="achievementBase.achievementBaseMap_AppendTable"/>
+		<!-- 爱好 -->
+		<collection property="hobbyList" resultMap="hobbyBase.hobbyBaseMap_AppendTable"/>
+	</resultMap>
+	
+	<!-- 查询总的用户数 -->
+	<!-- <select id="select_User_TotalCount" resultType="java.lang.Long">
+		SELECT COUNT(*)
+		FROM t_user U
+		WHERE 1=1
+		AND U.f_sys0_del_state = 0
+	</select> -->
+	
+	<!-- 查询总的用户数 区分当前用户门牌是否在签约小区还是非签约小区-->
+	<!-- SELECT COUNT(*)
+	FROM t_user U 
+	WHERE 1=1
+	AND U.f_sys0_del_state = 0 -->
+	<!-- <select id="select_User_TotalCount_ByUserId" resultType="java.lang.Long">
+		SELECT 
+		    f_num
+		FROM
+		    (select 
+		        gb.f_sign_status, count(1) f_num
+		    from
+		        t_user u
+		    join t_room r ON r.f_id = u.f_default_room_id and r.f_sys0_del_state = 0
+		    join t_real_room rr ON rr.f_id = r.t_real_room_f_id and rr.f_sys0_del_state = 0
+		    join t_building b ON b.f_id = rr.t_building_f_id and b.f_sys0_del_state = 0
+		    join t_group_building gb ON gb.f_id = b.t_group_building_f_id and gb.f_sys0_del_state = 0
+		    group by gb.f_sign_status) tab
+		WHERE
+		    f_sign_status = (case
+		        when ISNULL(#{userId}) then 0
+		        else (
+		        	SELECT 
+		                gb.f_sign_status
+		            FROM
+		                t_user u
+		                    join
+		                t_room r ON r.f_id = u.f_default_room_id and r.f_sys0_del_state = 0
+		                    join
+		                t_real_room rr ON rr.f_id = r.t_real_room_f_id and rr.f_sys0_del_state = 0
+		                    join
+		                t_building b ON b.f_id = rr.t_building_f_id and b.f_sys0_del_state = 0
+		                    join
+		                t_group_building gb ON gb.f_id = b.t_group_building_f_id and gb.f_sys0_del_state = 0
+		            WHERE
+		                u.f_id = #{userId})
+		    END)
+	</select> -->
+	
+	<!-- 根据用户状态查询用户数 -->
+	<!-- <select id="select_userCount_byStates" parameterType="java.util.List" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_user U
+		WHERE 1=1 
+		AND U.f_sys0_del_state = 0
+		AND U.f_user_state IN 
+		<foreach item="idItem" collection="list" open="(" separator="," close=")">
+		#{idItem}
+		</foreach>
+	</select> -->
+	
+	<!-- 查询用户当月在线天数 -->
+	<!-- <select id="select_userCount_byOnlineDays"  parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) 
+		FROM (
+			SELECT LL.f_login_day 
+			<include refid="loginLogBase.busiQueryCount"/>
+			<include refid="loginLogBase.dimCheckSql"/>
+			GROUP BY LL.f_login_day
+		) tblA
+	</select> -->
+	
+	<!-- 根据设备信息查询对应的临时表用户数 -->
+	<select id="select_UserCount_By_DeviceInfo" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_user_tmp UT
+    	WHERE 1=1
+    	AND UT.f_sys0_del_state = 0
+    	AND UT.f_device_type = #{channelId}
+    	AND UT.f_device_id = #{deviceId}
+	</select>
+	
+	<!-- 根据设备信息查询对应的临时表用户列表 -->
+	<select id="select_UserList_ByDeviceInfo" parameterType="java.util.Map" resultMap="userTmpBase.userTmpBaseMap_AppendTable">
+		SELECT <include refid="userTmpBase.queryHead_AppendTable"/>
+		FROM t_user_tmp UT
+    	WHERE 1=1
+    	AND UT.f_sys0_del_state = 0
+    	AND UT.f_device_type = #{channelId}
+    	AND UT.f_device_id = #{deviceId}
+	</select>
+	
+	<!-- <sql id="select_FamilyMembers_comm"> 该sql有是否为管理员的问题
+		SELECT <include refid="commonUser.userSimple_common_select"/>
+		FROM t_user U
+			<include refid="commonUser.userSimple_common_from"/>
+			INNER JOIN (
+				<include refid="commonSql.qry_userIds_family_by_userInfo_select"/>
+			) AS User_Family_Group ON U.f_id =User_Family_Group.t_user_f_id
+		WHERE 1=1
+		AND U.f_sys0_del_state = 0
+	</sql> -->
+	
+	<sql id="select_FamilyMembers_comm">
+		SELECT distinct <include refid="commonUser.userSimple_common_select"/>
+		FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+			INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND R.f_id = UHTR.t_room_f_id AND UHTR.f_apply_status = 1
+			INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+            <if test="null != isAtTheRoom and true == isAtTheRoom"> AND U.f_default_room_id = Group_roomId.room_Id</if>
+    		<include refid="commonUser.userSimple_common_from_by_curr_room"/>
+    		
+		WHERE 1=1
+	</sql>
+	
+	<!-- 查询用户的家庭成员列表 -->
+	<select id="select_FamilyMembers" parameterType="java.util.Map" resultMap="commonUser.userSimpleEntity_Map_Append">
+		<include refid="select_FamilyMembers_comm"/>
+	</select>
+	<!-- 查询用户的家庭成员列表  不包含自己-->
+	<select id="select_FamilyMembers_WithoutSelf" parameterType="java.util.Map" resultMap="commonUser.userSimpleEntity_Map_Append">
+		<include refid="select_FamilyMembers_comm"/>
+		AND U.f_id != #{userId}
+	</select>
+	
+	<!-- 查询用户默认门牌所在的家庭各成员及对应成员的绑定账号的所有的UserHasTRoom信息 -->
+	<select id="select_Family_UserHasTRoom_WithBind" parameterType="java.util.Map" resultMap="userHasTRoomBase.userHasTRoomBaseMap_AppendTable">
+		SELECT 
+	</select>
+	
+</mapper>

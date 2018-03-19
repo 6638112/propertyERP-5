@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="carMsgTask">
+	
+	<!-- 查询30天内到期的车辆绑定的所有用户的短信模板参数 -->
+	<select id="select_carMsgInfo" resultType="com.cnfantasia.server.api.carMsgTask.entity.CarSendMsgEntity">
+		SELECT DISTINCT
+			U.f_mobile AS mobile,
+			CNL.t_car_num AS carNum,
+			GB.f_name AS gbName,
+			DATEDIFF(CNL.f_expire_date, now()) AS expireDay
+		FROM
+			t_car_num_list CNL
+			INNER JOIN t_room_has_car_num RHCN ON RHCN.t_car_num_list_f_id = CNL.f_id AND RHCN.f_is_relieve=0 AND RHCN.f_sys0_del_state = 0
+			INNER JOIN t_user U ON U.f_id = RHCN.t_user_id AND U.f_sys0_del_state = 0
+			INNER JOIN t_group_building GB ON GB.f_id = CNL.t_group_building_f_id AND GB.f_sys0_del_state = 0
+		WHERE
+			CNL.f_status = 1
+			AND (DATEDIFF(CNL.f_expire_date, NOW()=15 OR DATEDIFF(CNL.f_expire_date, NOW()=1)
+			AND CNL.f_sys0_del_state = 0
+			AND U.f_mobile IS NOT NULL
+	</select>
+
+	<select id="select_carPushInfo" resultType="com.cnfantasia.server.api.carMsgTask.entity.CarSendPushEntity">
+		SELECT
+			U.f_default_room_id defaultRoomId,
+			RHCN.t_user_id userId,
+			CNL.f_id carId,
+			CNL.t_car_num carNum,
+			date_format(
+			CNL.f_expire_date,
+			'%Y-%m-%d %T'
+			) expireDate,
+			CNL.f_fee / 100 fee,
+			CNL.f_status carStatus,
+			GB.f_name park
+		FROM
+			t_car_num_list CNL
+			INNER JOIN t_room_has_car_num RHCN ON RHCN.t_car_num_list_f_id = CNL.f_id AND RHCN.f_is_relieve=0 AND RHCN.f_sys0_del_state = 0
+			INNER JOIN t_user U ON U.f_id = RHCN.t_user_id AND U.f_sys0_del_state = 0
+			INNER JOIN t_group_building GB ON GB.f_id = CNL.t_group_building_f_id AND GB.f_sys0_del_state = 0
+		WHERE
+			CNL.f_status = 1
+			AND DATEDIFF(CNL.f_expire_date, NOW()) <![CDATA[<=]]> 30 AND CNL.f_expire_date > now()
+			AND CNL.f_sys0_del_state = 0
+	</select>
+
+	<select id="qryTimeoutInMonthCount" resultType="integer">
+		SELECT count(1)
+		FROM t_car_num_list CNL
+		INNER JOIN t_room_has_car_num RHCN ON RHCN.t_car_num_list_f_id = CNL.f_id AND RHCN.f_is_relieve=0 AND RHCN.f_sys0_del_state = 0
+		INNER JOIN t_user U ON U.f_id = RHCN.t_user_id AND U.f_sys0_del_state = 0
+		INNER JOIN t_group_building GB ON GB.f_id = CNL.t_group_building_f_id AND GB.f_sys0_del_state = 0
+		WHERE CNL.f_status = 1 AND DATEDIFF(CNL.f_expire_date, NOW()) <![CDATA[<=]]> 30 AND CNL.f_expire_date > now() AND CNL.f_sys0_del_state = 0
+		AND RHCN.t_user_id = #{userId}
+	</select>
+</mapper>

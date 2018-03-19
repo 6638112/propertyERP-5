@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:停车记录表 t_parking_record -->
+<mapper namespace="parkingRecordBase">
+	<resultMap type="ParkingRecord" id="parkingRecordBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="f_parking_start_time" javaType="java.lang.String" property="parkingStartTime"/>  <!-- 停车时间 -->
+        <result column="f_parking_end_time" javaType="java.lang.String" property="parkingEndTime"/>  <!-- 离开时间 -->
+        <result column="t_car_num_id" javaType="java.math.BigInteger" property="tCarNumId"/>  <!-- 车牌id -->
+        <result column="f_parking_fee" javaType="java.lang.Long" property="parkingFee"/>  <!-- 停车费 -->
+        <result column="t_group_building_id" javaType="java.math.BigInteger" property="tGroupBuildingId"/>  <!-- 停车小区Id -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="ParkingRecord" id="parkingRecordExtendMap" extends="parkingRecordBaseMap">
+	</resultMap>
+	<resultMap type="ParkingRecord" id="parkingRecordBaseMap_AppendTable">
+        <id column="PRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="PRparkingStartTime" javaType="java.lang.String" property="parkingStartTime"/>  <!-- 停车时间 -->
+        <result column="PRparkingEndTime" javaType="java.lang.String" property="parkingEndTime"/>  <!-- 离开时间 -->
+        <result column="PRtCarNumId" javaType="java.math.BigInteger" property="tCarNumId"/>  <!-- 车牌id -->
+        <result column="PRparkingFee" javaType="java.lang.Long" property="parkingFee"/>  <!-- 停车费 -->
+        <result column="PRtGroupBuildingId" javaType="java.math.BigInteger" property="tGroupBuildingId"/>  <!-- 停车小区Id -->
+        <result column="PRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="PRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="PRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="PRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="PRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="PRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="PRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="ParkingRecord" id="parkingRecordBaseMap_AppendTable1">
+        <id column="PR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="PR1parkingStartTime" javaType="java.lang.String" property="parkingStartTime"/>  <!-- 停车时间 -->
+        <result column="PR1parkingEndTime" javaType="java.lang.String" property="parkingEndTime"/>  <!-- 离开时间 -->
+        <result column="PR1tCarNumId" javaType="java.math.BigInteger" property="tCarNumId"/>  <!-- 车牌id -->
+        <result column="PR1parkingFee" javaType="java.lang.Long" property="parkingFee"/>  <!-- 停车费 -->
+        <result column="PR1tGroupBuildingId" javaType="java.math.BigInteger" property="tGroupBuildingId"/>  <!-- 停车小区Id -->
+        <result column="PR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="PR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="PR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="PR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="PR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="PR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="PR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PR.f_id,date_format(PR.f_parking_start_time,'%Y-%m-%d %T') as f_parking_start_time,date_format(PR.f_parking_end_time,'%Y-%m-%d %T') as f_parking_end_time,PR.t_car_num_id,PR.f_parking_fee,PR.t_group_building_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PR.f_id as PRid,date_format(PR.f_parking_start_time,'%Y-%m-%d %T') as PRparkingStartTime,date_format(PR.f_parking_end_time,'%Y-%m-%d %T') as PRparkingEndTime,PR.t_car_num_id as PRtCarNumId,PR.f_parking_fee as PRparkingFee,PR.t_group_building_id as PRtGroupBuildingId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PR1.f_id as PR1id,date_format(PR1.f_parking_start_time,'%Y-%m-%d %T') as PR1parkingStartTime,date_format(PR1.f_parking_end_time,'%Y-%m-%d %T') as PR1parkingEndTime,PR1.t_car_num_id as PR1tCarNumId,PR1.f_parking_fee as PR1parkingFee,PR1.t_group_building_id as PR1tGroupBuildingId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PR.f_id = #{id} ) </if>
+        <if test="parkingStartTime != null and !parkingStartTime.equals('')  ">  and (PR.f_parking_start_time = str_to_date(#{parkingStartTime},'%Y-%m-%d %T') ) </if>
+        <if test="parkingStartTime_START != null and !parkingStartTime_START.equals('')  ">  
+            <![CDATA[ and (PR.f_parking_start_time >= str_to_date(#{parkingStartTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="parkingStartTime_END != null and !parkingStartTime_END.equals('')  ">
+            <![CDATA[ and (PR.f_parking_start_time <= str_to_date(#{parkingStartTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="parkingEndTime != null and !parkingEndTime.equals('')  ">  and (PR.f_parking_end_time = str_to_date(#{parkingEndTime},'%Y-%m-%d %T') ) </if>
+        <if test="parkingEndTime_START != null and !parkingEndTime_START.equals('')  ">  
+            <![CDATA[ and (PR.f_parking_end_time >= str_to_date(#{parkingEndTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="parkingEndTime_END != null and !parkingEndTime_END.equals('')  ">
+            <![CDATA[ and (PR.f_parking_end_time <= str_to_date(#{parkingEndTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="tCarNumId != null">  and (PR.t_car_num_id = #{tCarNumId} ) </if>
+        <if test="parkingFee != null">  and (PR.f_parking_fee = #{parkingFee} ) </if>
+        <if test="tGroupBuildingId != null">  and (PR.t_group_building_id = #{tGroupBuildingId} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (PR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (PR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (PR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (PR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (PR.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (PR.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (PR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (PR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelUser != null">  and (PR.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (PR.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (PR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PR.f_id = #{id} ) </if>
+        <if test="parkingStartTime != null and !parkingStartTime.equals('')  ">  and (PR.f_parking_start_time = str_to_date(#{parkingStartTime},'%Y-%m-%d %T') ) </if>
+        <if test="parkingStartTime_START != null and !parkingStartTime_START.equals('')  ">  
+            <![CDATA[ and (PR.f_parking_start_time >= str_to_date(#{parkingStartTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="parkingStartTime_END != null and !parkingStartTime_END.equals('')  ">
+            <![CDATA[ and (PR.f_parking_start_time <= str_to_date(#{parkingStartTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="parkingEndTime != null and !parkingEndTime.equals('')  ">  and (PR.f_parking_end_time = str_to_date(#{parkingEndTime},'%Y-%m-%d %T') ) </if>
+        <if test="parkingEndTime_START != null and !parkingEndTime_START.equals('')  ">  
+            <![CDATA[ and (PR.f_parking_end_time >= str_to_date(#{parkingEndTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="parkingEndTime_END != null and !parkingEndTime_END.equals('')  ">
+            <![CDATA[ and (PR.f_parking_end_time <= str_to_date(#{parkingEndTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="tCarNumId != null and !tCarNumId.equals('')  ">  and (PR.t_car_num_id = #{tCarNumId} ) </if>
+        <if test="parkingFee != null and !parkingFee.equals('')  ">  and (PR.f_parking_fee = #{parkingFee} ) </if>
+        <if test="tGroupBuildingId != null and !tGroupBuildingId.equals('')  ">  and (PR.t_group_building_id = #{tGroupBuildingId} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (PR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (PR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (PR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (PR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PR.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PR.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (PR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (PR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PR.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PR.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (PR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="parkingRecordBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="parkingRecordBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="parkingRecordBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="parkingRecordBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_parking_record PR
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(停车记录表)信息。 -->
+	<sql id="select_parkingRecord">
+		SELECT <include refid="parkingRecordBase.queryHead"/>
+		<include refid="parkingRecordBase.busiQueryCondition"/>
+		<include refid="parkingRecordBase.dimCheckSql"/>
+		ORDER BY PR.f_id DESC
+	</sql>
+	<select id="select_parkingRecord" parameterType="java.util.Map" resultMap="parkingRecordBase.parkingRecordExtendMap">
+		<include refid="parkingRecordBase.select_parkingRecord"/>
+	</select>
+	
+	<!-- 根据条件分页查询(停车记录表)信息  -->
+	<sql id="select_parkingRecord_withPage">
+		SELECT <include refid="parkingRecordBase.queryHead"/>
+		<include refid="parkingRecordBase.busiQueryCondition"/>
+		<include refid="parkingRecordBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_parkingRecord_withPage" resultMap="parkingRecordBase.parkingRecordExtendMap" parameterType="java.util.Map">
+		<include refid="parkingRecordBase.select_parkingRecord_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(停车记录表)信息。 -->
+	<sql id="select_parkingRecord_bySeqId">
+		SELECT <include refid="parkingRecordBase.queryHead"/>
+		<include refid="parkingRecordBase.busiQueryCondition"/>
+		 and PR.f_id = #{_parameter}
+	</sql>
+	<select id="select_parkingRecord_bySeqId" parameterType="java.math.BigInteger" resultMap="parkingRecordBase.parkingRecordBaseMap">
+		<include refid="parkingRecordBase.select_parkingRecord_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(停车记录表)记录数  -->
+	<sql id="select_parkingRecord_count">
+		SELECT COUNT(*)
+		<include refid="parkingRecordBase.busiQueryCount"/>
+		<include refid="parkingRecordBase.dimCheckSql"/>
+	</sql>
+	<select id="select_parkingRecord_count" resultType="java.lang.Integer">
+		<include refid="parkingRecordBase.select_parkingRecord_count"/>
+	</select>
+	
+	 <!-- 往(停车记录表)新增一条记录。 -->
+	 <sql id="insert_parkingRecord">
+		INSERT INTO t_parking_record 
+		(f_id,f_parking_start_time,f_parking_end_time,t_car_num_id,f_parking_fee,t_group_building_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_time,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},str_to_date(#{parkingStartTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{parkingEndTime,jdbcType=DATE},'%Y-%m-%d %T'),#{tCarNumId},#{parkingFee},#{tGroupBuildingId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_parkingRecord" parameterType="ParkingRecord">
+		<include refid="parkingRecordBase.insert_parkingRecord"/>
+    </insert>
+    
+	<!-- 批量新增(停车记录表)信息 -->
+    <insert id="insert_parkingRecord_Batch" parameterType="java.util.List">
+    	INSERT INTO t_parking_record 
+		(f_id,f_parking_start_time,f_parking_end_time,t_car_num_id,f_parking_fee,t_group_building_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_time,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},str_to_date(#{item.parkingStartTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.parkingEndTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.tCarNumId},#{item.parkingFee},#{item.tGroupBuildingId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(停车记录表)信息。 -->
+    <sql id="update_parkingRecord">
+		UPDATE t_parking_record
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="parkingStartTime != null and !parkingStartTime.equals('') "> ,f_parking_start_time=str_to_date(#{parkingStartTime},'%Y-%m-%d %T')</if>
+ 		<if test="parkingEndTime != null and !parkingEndTime.equals('') "> ,f_parking_end_time=str_to_date(#{parkingEndTime},'%Y-%m-%d %T')</if>
+ 		<if test="tCarNumId != null and !tCarNumId.equals('') "> ,t_car_num_id=#{tCarNumId}</if>
+ 		<if test="parkingFee != null and !parkingFee.equals('') "> ,f_parking_fee=#{parkingFee}</if>
+ 		<if test="tGroupBuildingId != null and !tGroupBuildingId.equals('') "> ,t_group_building_id=#{tGroupBuildingId}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_parkingRecord" parameterType="ParkingRecord">
+		<include refid="parkingRecordBase.update_parkingRecord"/>
+    </update>
+    
+    <!-- 批量更新(停车记录表)信息。 -->
+    <update id="update_parkingRecord_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_parking_record
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.parkingStartTime != null and !item.parkingStartTime.equals('')  "> ,f_parking_start_time=str_to_date(#{item.parkingStartTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.parkingEndTime != null and !item.parkingEndTime.equals('')  "> ,f_parking_end_time=str_to_date(#{item.parkingEndTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.tCarNumId != null and !item.tCarNumId.equals('')  "> ,t_car_num_id=#{item.tCarNumId}</if>
+ 		<if test="item.parkingFee != null and !item.parkingFee.equals('')  "> ,f_parking_fee=#{item.parkingFee}</if>
+ 		<if test="item.tGroupBuildingId != null and !item.tGroupBuildingId.equals('')  "> ,t_group_building_id=#{item.tGroupBuildingId}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(停车记录表)信息_逻辑删除。 -->
+    <sql id="delete_parkingRecord_Logic">
+		UPDATE t_parking_record
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="parkingStartTime != null and !parkingStartTime.equals('')  "> ,f_parking_start_time=str_to_date(#{parkingStartTime},'%Y-%m-%d %T')</if>
+ 		<if test="parkingEndTime != null and !parkingEndTime.equals('')  "> ,f_parking_end_time=str_to_date(#{parkingEndTime},'%Y-%m-%d %T')</if>
+ 		<if test="tCarNumId != null and !tCarNumId.equals('')  "> ,t_car_num_id=#{tCarNumId}</if>
+ 		<if test="parkingFee != null and !parkingFee.equals('')  "> ,f_parking_fee=#{parkingFee}</if>
+ 		<if test="tGroupBuildingId != null and !tGroupBuildingId.equals('')  "> ,t_group_building_id=#{tGroupBuildingId}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_parkingRecord_Logic" parameterType="ParkingRecord">
+		<include refid="parkingRecordBase.delete_parkingRecord_Logic"/>
+    </update>
+    
+    <!-- 批量删除(停车记录表)信息_逻辑删除 -->
+    <update id="delete_parkingRecord_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_parking_record
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.parkingStartTime != null and !item.parkingStartTime.equals('')  "> ,f_parking_start_time=str_to_date(#{item.parkingStartTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.parkingEndTime != null and !item.parkingEndTime.equals('')  "> ,f_parking_end_time=str_to_date(#{item.parkingEndTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.tCarNumId != null and !item.tCarNumId.equals('')  "> ,t_car_num_id=#{item.tCarNumId}</if>
+ 		<if test="item.parkingFee != null and !item.parkingFee.equals('')  "> ,f_parking_fee=#{item.parkingFee}</if>
+ 		<if test="item.tGroupBuildingId != null and !item.tGroupBuildingId.equals('')  "> ,t_group_building_id=#{item.tGroupBuildingId}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(停车记录表)信息。 -->
+    <sql id="delete_parkingRecord">
+		DELETE FROM t_parking_record WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_parkingRecord" parameterType="java.lang.String">
+		<include refid="parkingRecordBase.delete_parkingRecord"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(停车记录表)信息。 -->
+    <delete id="delete_parkingRecord_Batch" parameterType="java.util.List">
+		DELETE FROM t_parking_record WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

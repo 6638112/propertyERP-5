@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  用户提问 -->
+<mapper namespace="userQuestion">
+
+	<select id="getPropertyDistrictByRoomId" parameterType="bigInteger" resultMap="propertyDistrictBase.propertyDistrictBaseMap">
+		SELECT
+		<include refid="propertyDistrictBase.queryHead"/>
+		FROM t_room r
+		INNER JOIN t_real_room rr ON rr.f_id = r.t_real_room_f_id
+		INNER JOIN t_building b ON b.f_id = rr.t_building_f_id
+		INNER JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id
+		INNER JOIN t_property_district_has_group_building dtgb on dtgb.t_group_building_f_id = gb.f_id AND dtgb.f_sys0_del_state = 0
+		INNER JOIN t_property_district PD on PD.f_id = dtgb.t_property_district_f_id AND PD.f_sys0_del_state = 0
+		WHERE r.f_id = #{_parameter} ORDER BY PD.f_id DESC limit 1
+	</select>
+	<!-- 用户提问题列表， 供运营后台管理用 -->
+	<select id="selectUserQuestionList" parameterType="map" resultType="com.cnfantasia.server.api.userQuestion.entity.UserQuestion4Admin">
+		SELECT uq.f_id uqId, gb.f_name gbName, CONCAT(ap.f_name,'-',ac.f_name,'-',ab.f_name) location, 
+			b.f_name buildingName,
+			rr.f_num roomNum, u.f_id huaId, u.f_mobile mobile, uq.f_content content, uq.f_answer_content answerContent, uq.f_sys0_upd_user updateUser,<![CDATA[  CONCAT(ou.f_user_account,' ',ifnull(ou.f_real_name, '')) updateUserName ]]>,
+			uq.f_status `status`,  date_format(uq.f_sys0_add_time,'%Y-%m-%d %T') addTime, uq.f_service_id serviceId, date_format(uq.f_sys0_upd_time,'%Y-%m-%d %T') updateTime
+		from t_user_question uq 
+		LEFT JOIN t_room r on r.f_id = uq.t_room_f_id
+		LEFT JOIN t_real_room rr on rr.f_id = r.t_real_room_f_id
+		LEFT JOIN t_building b on b.f_id = rr.t_building_f_id 
+		LEFT JOIN t_group_building gb on gb.f_id = b.t_group_building_f_id 
+		LEFT JOIN t_address_block ab on ab.f_id = gb.t_block_f_id
+		LEFT JOIN t_address_city ac on ac.f_id = ab.t_city_f_id
+		LEFT JOIN t_address_province ap on ap.f_id = ac.t_province_f_id
+		LEFT JOIN t_user u on u.f_id = uq.f_sys0_add_user 
+		left join t_oms_user ou on ou.f_id = uq.f_sys0_upd_user and ou.f_sys0_del_state = 0
+		where uq.f_sys0_del_state = 0 
+	    <if test="location !=null and location !='' ">
+	    	and (ap.f_name like concat('%', #{location}, '%') or ac.f_name like concat('%', #{location}, '%') or ab.f_name like concat('%', #{location}, '%'))
+	    </if>
+	    <if test="gbName !=null and gbName !='' ">
+	    	and gb.f_name like concat('%', #{gbName}, '%')
+	    </if>
+	    <if test="content !=null and content !='' ">
+	    	and uq.f_content like concat('%', #{content}, '%')
+	    </if>
+		<if test="status !=null and status !='' and status >= 0 ">
+	    	and (uq.f_status = #{status} OR (uq.f_status in (3,7) and 3 = #{status}))
+	    </if>
+	    <if test="huaId !=null and huaId !='' ">
+	    	and uq.f_sys0_add_user = #{huaId}
+	    </if>
+
+	    <if test="pushTimeBegin !=null and pushTimeBegin !=''">
+	    	and uq.f_sys0_add_time >= #{pushTimeBegin}
+	    </if>
+	    <if test="pushTimeEnd !=null and pushTimeEnd !=''">
+	    	and #{pushTimeEnd} >= uq.f_sys0_add_time
+	    </if>
+	    <if test="gbIdList != null and gbIdList.size() > 0 ">
+	    	AND gb.f_id IN
+            <foreach item="gbId" collection="gbIdList" open="(" separator="," close=")">
+                #{gbId}
+            </foreach>
+	    </if>
+	    
+	   	order by uq.f_id desc
+	    <if test="_begin != null and _length != '' ">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+	
+	<!-- 用户提问题详情， 供运营后台管理用 -->
+	<select id="selectUserQuestionDetailById" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.userQuestion.entity.UserQuestionDetail4Admin">
+		SELECT uq.f_id uqId, gb.f_name gbName, gb.f_id gbId, 
+		CONCAT(ap.f_name,'-',ac.f_name,'-',ab.f_name) location, 
+		b.f_name buildingName,
+			rr.f_num roomNum, u.f_id huaId, u.f_mobile mobile, uq.f_content content, uq.f_answer_content answerContent, uq.f_sys0_upd_user updateUser, <![CDATA[  CONCAT(ou.f_user_account,' ',ifnull(ou.f_real_name, '')) updateUserName ]]> ,
+			uq.f_status `status`,  date_format(uq.f_sys0_add_time,'%Y-%m-%d %T') addTime, date_format(uq.f_sys0_upd_time,'%Y-%m-%d %T') updateTime, 
+			uq.f_pic_url pics, uq.t_room_f_id roomId
+		from t_user_question uq 
+		LEFT JOIN t_room r on r.f_id = uq.t_room_f_id
+		LEFT JOIN t_real_room rr on rr.f_id = r.t_real_room_f_id
+		LEFT JOIN t_building b on b.f_id = rr.t_building_f_id 
+		LEFT JOIN t_group_building gb on gb.f_id = b.t_group_building_f_id 
+		LEFT JOIN t_address_block ab on ab.f_id = gb.t_block_f_id
+		LEFT JOIN t_address_city ac on ac.f_id = ab.t_city_f_id
+		LEFT JOIN t_address_province ap on ap.f_id = ac.t_province_f_id
+		LEFT JOIN t_user u on u.f_id = uq.f_sys0_add_user 
+		left join t_oms_user ou on ou.f_id = uq.f_sys0_upd_user and ou.f_sys0_del_state = 0
+		where uq.f_id = #{id} 
+	</select>
+
+	<select id="getRoomDetailAddress" parameterType="map" resultType="string">
+		select concat(ac.f_name, ab.f_name, gb.f_name, b.f_name, '-', rr.f_num) from t_room r
+		left join t_real_room rr on rr.f_id = r.t_real_room_f_id
+		left join t_building b on b.f_id = rr.t_building_f_id
+		left join t_group_building gb on gb.f_id = b.t_group_building_f_id
+		left join t_address_block ab on ab.f_id = gb.t_block_f_id
+		left join t_address_city ac on ac.f_id = ab.t_city_f_id
+		where r.f_id = #{_parameter}
+	</select>
+</mapper>

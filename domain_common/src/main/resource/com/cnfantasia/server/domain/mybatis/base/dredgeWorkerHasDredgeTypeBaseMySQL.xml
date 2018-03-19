@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:疏通师傅支持的疏通类型 t_dredge_worker_has_dredge_type -->
+<mapper namespace="dredgeWorkerHasDredgeTypeBase">
+	<resultMap type="DredgeWorkerHasDredgeType" id="dredgeWorkerHasDredgeTypeBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_dredge_type_f_id" javaType="java.math.BigInteger" property="tDredgeTypeFId"/>  <!--  -->        <result column="t_user_f_id" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->
+	</resultMap>
+	<resultMap type="DredgeWorkerHasDredgeType" id="dredgeWorkerHasDredgeTypeExtendMap" extends="dredgeWorkerHasDredgeTypeBaseMap">
+	</resultMap>
+	<resultMap type="DredgeWorkerHasDredgeType" id="dredgeWorkerHasDredgeTypeBaseMap_AppendTable">
+        <id column="DWHDTid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="DWHDTtDredgeTypeFId" javaType="java.math.BigInteger" property="tDredgeTypeFId"/>  <!--  -->        <result column="DWHDTtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->
+	</resultMap>
+	<resultMap type="DredgeWorkerHasDredgeType" id="dredgeWorkerHasDredgeTypeBaseMap_AppendTable1">
+        <id column="DWHDT1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="DWHDT1tDredgeTypeFId" javaType="java.math.BigInteger" property="tDredgeTypeFId"/>  <!--  -->        <result column="DWHDT1tUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		DWHDT.f_id,DWHDT.t_dredge_type_f_id,DWHDT.t_user_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		DWHDT.f_id as DWHDTid,DWHDT.t_dredge_type_f_id as DWHDTtDredgeTypeFId,DWHDT.t_user_f_id as DWHDTtUserFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		DWHDT1.f_id as DWHDT1id,DWHDT1.t_dredge_type_f_id as DWHDT1tDredgeTypeFId,DWHDT1.t_user_f_id as DWHDT1tUserFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (DWHDT.f_id = #{id} ) </if>        <if test="tDredgeTypeFId != null">  and (DWHDT.t_dredge_type_f_id = #{tDredgeTypeFId} ) </if>        <if test="tUserFId != null">  and (DWHDT.t_user_f_id = #{tUserFId} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (DWHDT.f_id = #{id} ) </if>        <if test="tDredgeTypeFId != null and !tDredgeTypeFId.equals('')  ">  and (DWHDT.t_dredge_type_f_id = #{tDredgeTypeFId} ) </if>        <if test="tUserFId != null and !tUserFId.equals('')  ">  and (DWHDT.t_user_f_id = #{tUserFId} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="dredgeWorkerHasDredgeTypeBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="dredgeWorkerHasDredgeTypeBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="dredgeWorkerHasDredgeTypeBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="dredgeWorkerHasDredgeTypeBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_dredge_worker_has_dredge_type DWHDT    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(疏通师傅支持的疏通类型)信息。 -->
+	<sql id="select_dredgeWorkerHasDredgeType">
+		SELECT <include refid="dredgeWorkerHasDredgeTypeBase.queryHead"/>
+		<include refid="dredgeWorkerHasDredgeTypeBase.busiQueryCondition"/>
+		<include refid="dredgeWorkerHasDredgeTypeBase.dimCheckSql"/>
+		ORDER BY DWHDT.f_id DESC
+	</sql>
+	<select id="select_dredgeWorkerHasDredgeType" parameterType="java.util.Map" resultMap="dredgeWorkerHasDredgeTypeBase.dredgeWorkerHasDredgeTypeExtendMap">
+		<include refid="dredgeWorkerHasDredgeTypeBase.select_dredgeWorkerHasDredgeType"/>
+	</select>
+	
+	<!-- 根据条件分页查询(疏通师傅支持的疏通类型)信息  -->
+	<sql id="select_dredgeWorkerHasDredgeType_withPage">
+		SELECT <include refid="dredgeWorkerHasDredgeTypeBase.queryHead"/>
+		<include refid="dredgeWorkerHasDredgeTypeBase.busiQueryCondition"/>
+		<include refid="dredgeWorkerHasDredgeTypeBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_dredgeWorkerHasDredgeType_withPage" resultMap="dredgeWorkerHasDredgeTypeBase.dredgeWorkerHasDredgeTypeExtendMap" parameterType="java.util.Map">
+		<include refid="dredgeWorkerHasDredgeTypeBase.select_dredgeWorkerHasDredgeType_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(疏通师傅支持的疏通类型)信息。 -->
+	<sql id="select_dredgeWorkerHasDredgeType_bySeqId">
+		SELECT <include refid="dredgeWorkerHasDredgeTypeBase.queryHead"/>
+		<include refid="dredgeWorkerHasDredgeTypeBase.busiQueryCondition"/>
+		 and DWHDT.f_id = #{_parameter}
+	</sql>
+	<select id="select_dredgeWorkerHasDredgeType_bySeqId" parameterType="java.math.BigInteger" resultMap="dredgeWorkerHasDredgeTypeBase.dredgeWorkerHasDredgeTypeBaseMap">
+		<include refid="dredgeWorkerHasDredgeTypeBase.select_dredgeWorkerHasDredgeType_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(疏通师傅支持的疏通类型)记录数  -->
+	<sql id="select_dredgeWorkerHasDredgeType_count">
+		SELECT COUNT(*)
+		<include refid="dredgeWorkerHasDredgeTypeBase.busiQueryCount"/>
+		<include refid="dredgeWorkerHasDredgeTypeBase.dimCheckSql"/>
+	</sql>
+	<select id="select_dredgeWorkerHasDredgeType_count" resultType="java.lang.Integer">
+		<include refid="dredgeWorkerHasDredgeTypeBase.select_dredgeWorkerHasDredgeType_count"/>
+	</select>
+	
+	 <!-- 往(疏通师傅支持的疏通类型)新增一条记录。 -->
+	 <sql id="insert_dredgeWorkerHasDredgeType">
+		INSERT INTO t_dredge_worker_has_dredge_type 
+		(f_id,t_dredge_type_f_id,t_user_f_id) VALUES 
+		(#{id},#{tDredgeTypeFId},#{tUserFId})
+	 </sql>
+    <insert id="insert_dredgeWorkerHasDredgeType" parameterType="DredgeWorkerHasDredgeType">
+		<include refid="dredgeWorkerHasDredgeTypeBase.insert_dredgeWorkerHasDredgeType"/>
+    </insert>
+    
+	<!-- 批量新增(疏通师傅支持的疏通类型)信息 -->
+    <insert id="insert_dredgeWorkerHasDredgeType_Batch" parameterType="java.util.List">
+    	INSERT INTO t_dredge_worker_has_dredge_type 
+		(f_id,t_dredge_type_f_id,t_user_f_id) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tDredgeTypeFId},#{item.tUserFId})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(疏通师傅支持的疏通类型)信息。 -->
+    <sql id="update_dredgeWorkerHasDredgeType">
+		UPDATE t_dredge_worker_has_dredge_type		<trim prefix="SET" prefixOverrides=","> 		<if test="tDredgeTypeFId != null and !tDredgeTypeFId.equals('') "> ,t_dredge_type_f_id=#{tDredgeTypeFId}</if> 		<if test="tUserFId != null and !tUserFId.equals('') "> ,t_user_f_id=#{tUserFId}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_dredgeWorkerHasDredgeType" parameterType="DredgeWorkerHasDredgeType">
+		<include refid="dredgeWorkerHasDredgeTypeBase.update_dredgeWorkerHasDredgeType"/>
+    </update>
+    
+    <!-- 批量更新(疏通师傅支持的疏通类型)信息。 -->
+    <update id="update_dredgeWorkerHasDredgeType_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_worker_has_dredge_type		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tDredgeTypeFId != null and !item.tDredgeTypeFId.equals('')  "> ,t_dredge_type_f_id=#{item.tDredgeTypeFId}</if> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(疏通师傅支持的疏通类型)信息_逻辑删除。 -->
+    <!-- <sql id="delete_dredgeWorkerHasDredgeType_Logic">
+		UPDATE t_dredge_worker_has_dredge_type		<trim prefix="SET" prefixOverrides=","> 		<if test="tDredgeTypeFId != null and !tDredgeTypeFId.equals('')  "> ,t_dredge_type_f_id=#{tDredgeTypeFId}</if> 		<if test="tUserFId != null and !tUserFId.equals('')  "> ,t_user_f_id=#{tUserFId}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_dredgeWorkerHasDredgeType_Logic" parameterType="DredgeWorkerHasDredgeType">
+		<include refid="dredgeWorkerHasDredgeTypeBase.delete_dredgeWorkerHasDredgeType_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(疏通师傅支持的疏通类型)信息_逻辑删除 -->
+    <!-- <update id="delete_dredgeWorkerHasDredgeType_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_worker_has_dredge_type		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tDredgeTypeFId != null and !item.tDredgeTypeFId.equals('')  "> ,t_dredge_type_f_id=#{item.tDredgeTypeFId}</if> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(疏通师傅支持的疏通类型)信息。 -->
+    <sql id="delete_dredgeWorkerHasDredgeType">
+		DELETE FROM t_dredge_worker_has_dredge_type WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_dredgeWorkerHasDredgeType" parameterType="java.lang.String">
+		<include refid="dredgeWorkerHasDredgeTypeBase.delete_dredgeWorkerHasDredgeType"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(疏通师傅支持的疏通类型)信息。 -->
+    <delete id="delete_dredgeWorkerHasDredgeType_Batch" parameterType="java.util.List">
+		DELETE FROM t_dredge_worker_has_dredge_type WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

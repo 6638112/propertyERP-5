@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:账单优惠用户关系表 t_paybill_user_prefer -->
+<mapper namespace="paybillUserPreferBase">
+	<resultMap type="PaybillUserPrefer" id="paybillUserPreferBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_paybill_id" javaType="java.math.BigInteger" property="paybillId"/>  <!-- 账单id -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户id -->        <result column="f_prefer" javaType="java.lang.Long" property="prefer"/>  <!-- 优惠金额 -->        <result column="f_prefer_name" javaType="java.lang.String" property="preferName"/>  <!-- 优惠名称（冗余） -->        <result column="f_is_get_prefer" javaType="java.lang.Integer" property="isGetPrefer"/>  <!-- 是否获取优惠金额（1获取，0未获取） -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+	</resultMap>
+	<resultMap type="PaybillUserPrefer" id="paybillUserPreferExtendMap" extends="paybillUserPreferBaseMap">
+	</resultMap>
+	<resultMap type="PaybillUserPrefer" id="paybillUserPreferBaseMap_AppendTable">
+        <id column="PUPid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PUPpaybillId" javaType="java.math.BigInteger" property="paybillId"/>  <!-- 账单id -->        <result column="PUPuserId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户id -->        <result column="PUPprefer" javaType="java.lang.Long" property="prefer"/>  <!-- 优惠金额 -->        <result column="PUPpreferName" javaType="java.lang.String" property="preferName"/>  <!-- 优惠名称（冗余） -->        <result column="PUPisGetPrefer" javaType="java.lang.Integer" property="isGetPrefer"/>  <!-- 是否获取优惠金额（1获取，0未获取） -->        <result column="PUPsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+	</resultMap>
+	<resultMap type="PaybillUserPrefer" id="paybillUserPreferBaseMap_AppendTable1">
+        <id column="PUP1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PUP1paybillId" javaType="java.math.BigInteger" property="paybillId"/>  <!-- 账单id -->        <result column="PUP1userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户id -->        <result column="PUP1prefer" javaType="java.lang.Long" property="prefer"/>  <!-- 优惠金额 -->        <result column="PUP1preferName" javaType="java.lang.String" property="preferName"/>  <!-- 优惠名称（冗余） -->        <result column="PUP1isGetPrefer" javaType="java.lang.Integer" property="isGetPrefer"/>  <!-- 是否获取优惠金额（1获取，0未获取） -->        <result column="PUP1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PUP.f_id,PUP.f_paybill_id,PUP.f_user_id,PUP.f_prefer,PUP.f_prefer_name,PUP.f_is_get_prefer
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PUP.f_id as PUPid,PUP.f_paybill_id as PUPpaybillId,PUP.f_user_id as PUPuserId,PUP.f_prefer as PUPprefer,PUP.f_prefer_name as PUPpreferName,PUP.f_is_get_prefer as PUPisGetPrefer
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PUP1.f_id as PUP1id,PUP1.f_paybill_id as PUP1paybillId,PUP1.f_user_id as PUP1userId,PUP1.f_prefer as PUP1prefer,PUP1.f_prefer_name as PUP1preferName,PUP1.f_is_get_prefer as PUP1isGetPrefer
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PUP.f_id = #{id} ) </if>        <if test="paybillId != null">  and (PUP.f_paybill_id = #{paybillId} ) </if>        <if test="userId != null">  and (PUP.f_user_id = #{userId} ) </if>        <if test="prefer != null">  and (PUP.f_prefer = #{prefer} ) </if>        <if test="preferName != null">  and (PUP.f_prefer_name = #{preferName} ) </if>        <if test="isGetPrefer != null">  and (PUP.f_is_get_prefer = #{isGetPrefer} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PUP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PUP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PUP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PUP.f_id = #{id} ) </if>        <if test="paybillId != null and !paybillId.equals('')  ">  and (PUP.f_paybill_id = #{paybillId} ) </if>        <if test="userId != null and !userId.equals('')  ">  and (PUP.f_user_id = #{userId} ) </if>        <if test="prefer != null and !prefer.equals('')  ">  and (PUP.f_prefer = #{prefer} ) </if>        <if test="preferName != null and !preferName.equals('')  ">  and (PUP.f_prefer_name like CONCAT('%',#{preferName},'%') ) </if>        <if test="isGetPrefer != null and !isGetPrefer.equals('')  ">  and (PUP.f_is_get_prefer = #{isGetPrefer} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PUP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PUP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PUP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="paybillUserPreferBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="paybillUserPreferBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="paybillUserPreferBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="paybillUserPreferBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_paybill_user_prefer PUP    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(账单优惠用户关系表)信息。 -->
+	<sql id="select_paybillUserPrefer">
+		SELECT <include refid="paybillUserPreferBase.queryHead"/>
+		<include refid="paybillUserPreferBase.busiQueryCondition"/>
+		<include refid="paybillUserPreferBase.dimCheckSql"/>
+		ORDER BY PUP.f_id DESC
+	</sql>
+	<select id="select_paybillUserPrefer" parameterType="java.util.Map" resultMap="paybillUserPreferBase.paybillUserPreferExtendMap">
+		<include refid="paybillUserPreferBase.select_paybillUserPrefer"/>
+	</select>
+	
+	<!-- 根据条件分页查询(账单优惠用户关系表)信息  -->
+	<sql id="select_paybillUserPrefer_withPage">
+		SELECT <include refid="paybillUserPreferBase.queryHead"/>
+		<include refid="paybillUserPreferBase.busiQueryCondition"/>
+		<include refid="paybillUserPreferBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_paybillUserPrefer_withPage" resultMap="paybillUserPreferBase.paybillUserPreferExtendMap" parameterType="java.util.Map">
+		<include refid="paybillUserPreferBase.select_paybillUserPrefer_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(账单优惠用户关系表)信息。 -->
+	<sql id="select_paybillUserPrefer_bySeqId">
+		SELECT <include refid="paybillUserPreferBase.queryHead"/>
+		<include refid="paybillUserPreferBase.busiQueryCondition"/>
+		 and PUP.f_id = #{_parameter}
+	</sql>
+	<select id="select_paybillUserPrefer_bySeqId" parameterType="java.math.BigInteger" resultMap="paybillUserPreferBase.paybillUserPreferBaseMap">
+		<include refid="paybillUserPreferBase.select_paybillUserPrefer_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(账单优惠用户关系表)记录数  -->
+	<sql id="select_paybillUserPrefer_count">
+		SELECT COUNT(*)
+		<include refid="paybillUserPreferBase.busiQueryCount"/>
+		<include refid="paybillUserPreferBase.dimCheckSql"/>
+	</sql>
+	<select id="select_paybillUserPrefer_count" resultType="java.lang.Integer">
+		<include refid="paybillUserPreferBase.select_paybillUserPrefer_count"/>
+	</select>
+	
+	 <!-- 往(账单优惠用户关系表)新增一条记录。 -->
+	 <sql id="insert_paybillUserPrefer">
+		INSERT INTO t_paybill_user_prefer 
+		(f_id,f_paybill_id,f_user_id,f_prefer,f_prefer_name,f_is_get_prefer,f_sys0_add_time) VALUES 
+		(#{id},#{paybillId},#{userId},#{prefer},#{preferName,jdbcType=VARCHAR},#{isGetPrefer},sysdate())
+	 </sql>
+    <insert id="insert_paybillUserPrefer" parameterType="PaybillUserPrefer">
+		<include refid="paybillUserPreferBase.insert_paybillUserPrefer"/>
+    </insert>
+    
+	<!-- 批量新增(账单优惠用户关系表)信息 -->
+    <insert id="insert_paybillUserPrefer_Batch" parameterType="java.util.List">
+    	INSERT INTO t_paybill_user_prefer 
+		(f_id,f_paybill_id,f_user_id,f_prefer,f_prefer_name,f_is_get_prefer,f_sys0_add_time) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.paybillId},#{item.userId},#{item.prefer},#{item.preferName,jdbcType=VARCHAR},#{item.isGetPrefer},sysdate())
+		</foreach>
+    </insert>
+    
+    <!-- 更新(账单优惠用户关系表)信息。 -->
+    <sql id="update_paybillUserPrefer">
+		UPDATE t_paybill_user_prefer		<trim prefix="SET" prefixOverrides=","> 		<if test="paybillId != null and !paybillId.equals('') "> ,f_paybill_id=#{paybillId}</if> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="prefer != null and !prefer.equals('') "> ,f_prefer=#{prefer}</if> 		<if test="preferName != null and !preferName.equals('') "> ,f_prefer_name=#{preferName}</if> 		<if test="isGetPrefer != null and !isGetPrefer.equals('') "> ,f_is_get_prefer=#{isGetPrefer}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_paybillUserPrefer" parameterType="PaybillUserPrefer">
+		<include refid="paybillUserPreferBase.update_paybillUserPrefer"/>
+    </update>
+    
+    <!-- 批量更新(账单优惠用户关系表)信息。 -->
+    <update id="update_paybillUserPrefer_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_paybill_user_prefer		<trim prefix="SET" prefixOverrides=","> 		<if test="item.paybillId != null and !item.paybillId.equals('')  "> ,f_paybill_id=#{item.paybillId}</if> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.prefer != null and !item.prefer.equals('')  "> ,f_prefer=#{item.prefer}</if> 		<if test="item.preferName != null and !item.preferName.equals('')  "> ,f_prefer_name=#{item.preferName}</if> 		<if test="item.isGetPrefer != null and !item.isGetPrefer.equals('')  "> ,f_is_get_prefer=#{item.isGetPrefer}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(账单优惠用户关系表)信息_逻辑删除。 -->
+    <!-- <sql id="delete_paybillUserPrefer_Logic">
+		UPDATE t_paybill_user_prefer		<trim prefix="SET" prefixOverrides=","> 		<if test="paybillId != null and !paybillId.equals('')  "> ,f_paybill_id=#{paybillId}</if> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="prefer != null and !prefer.equals('')  "> ,f_prefer=#{prefer}</if> 		<if test="preferName != null and !preferName.equals('')  "> ,f_prefer_name=#{preferName}</if> 		<if test="isGetPrefer != null and !isGetPrefer.equals('')  "> ,f_is_get_prefer=#{isGetPrefer}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_paybillUserPrefer_Logic" parameterType="PaybillUserPrefer">
+		<include refid="paybillUserPreferBase.delete_paybillUserPrefer_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(账单优惠用户关系表)信息_逻辑删除 -->
+    <!-- <update id="delete_paybillUserPrefer_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_paybill_user_prefer		<trim prefix="SET" prefixOverrides=","> 		<if test="item.paybillId != null and !item.paybillId.equals('')  "> ,f_paybill_id=#{item.paybillId}</if> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.prefer != null and !item.prefer.equals('')  "> ,f_prefer=#{item.prefer}</if> 		<if test="item.preferName != null and !item.preferName.equals('')  "> ,f_prefer_name=#{item.preferName}</if> 		<if test="item.isGetPrefer != null and !item.isGetPrefer.equals('')  "> ,f_is_get_prefer=#{item.isGetPrefer}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(账单优惠用户关系表)信息。 -->
+    <sql id="delete_paybillUserPrefer">
+		DELETE FROM t_paybill_user_prefer WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_paybillUserPrefer" parameterType="java.lang.String">
+		<include refid="paybillUserPreferBase.delete_paybillUserPrefer"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(账单优惠用户关系表)信息。 -->
+    <delete id="delete_paybillUserPrefer_Batch" parameterType="java.util.List">
+		DELETE FROM t_paybill_user_prefer WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

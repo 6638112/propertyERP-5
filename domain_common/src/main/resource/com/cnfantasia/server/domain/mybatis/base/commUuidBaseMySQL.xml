@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:唯一编号 t_comm_uuid -->
+<mapper namespace="commUuidBase">
+	<resultMap type="CommUuid" id="commUuidBaseMap">
+        <id column="f_table_name" javaType="java.lang.String" property="tableName"/>  <!-- 表名 -->        <result column="f_number" javaType="java.math.BigInteger" property="number"/>  <!-- 当前记录号 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommUuid" id="commUuidExtendMap" extends="commUuidBaseMap">
+	</resultMap>
+	<resultMap type="CommUuid" id="commUuidBaseMap_AppendTable">
+        <id column="CUtableName" javaType="java.lang.String" property="tableName"/>  <!-- 表名 -->        <result column="CUnumber" javaType="java.math.BigInteger" property="number"/>  <!-- 当前记录号 -->        <result column="CUsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CUsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CUsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CUsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CUsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CUsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CUsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommUuid" id="commUuidBaseMap_AppendTable1">
+        <id column="CU1tableName" javaType="java.lang.String" property="tableName"/>  <!-- 表名 -->        <result column="CU1number" javaType="java.math.BigInteger" property="number"/>  <!-- 当前记录号 -->        <result column="CU1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CU1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CU1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CU1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CU1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CU1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CU1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CU.f_table_name,CU.f_number
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CU.f_table_name as CUtableName,CU.f_number as CUnumber
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CU1.f_table_name as CU1tableName,CU1.f_number as CU1number
+	</sql>
+	<sql id="querySql">
+        <if test="tableName != null">  and (CU.f_table_name = #{tableName} ) </if>        <if test="number != null">  and (CU.f_number = #{number} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CU.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CU.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CU.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CU.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CU.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CU.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CU.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CU.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CU.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (CU.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (CU.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (CU.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (CU.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (CU.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="tableName != null and !tableName.equals('')  ">  and (CU.f_table_name like CONCAT('%',#{tableName},'%') ) </if>        <if test="number != null and !number.equals('')  ">  and (CU.f_number = #{number} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CU.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CU.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CU.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CU.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CU.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CU.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CU.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CU.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CU.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CU.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CU.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CU.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CU.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (CU.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="commUuidBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="commUuidBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="commUuidBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="commUuidBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_comm_uuid CU    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(唯一编号)信息。 -->
+	<sql id="select_commUuid">
+		SELECT <include refid="commUuidBase.queryHead"/>
+		<include refid="commUuidBase.busiQueryCondition"/>
+		<include refid="commUuidBase.dimCheckSql"/>
+		ORDER BY CU.f_table_name DESC
+	</sql>
+	<select id="select_commUuid" parameterType="java.util.Map" resultMap="commUuidBase.commUuidExtendMap">
+		<include refid="commUuidBase.select_commUuid"/>
+	</select>
+	
+	<!-- 根据条件分页查询(唯一编号)信息  -->
+	<sql id="select_commUuid_withPage">
+		SELECT <include refid="commUuidBase.queryHead"/>
+		<include refid="commUuidBase.busiQueryCondition"/>
+		<include refid="commUuidBase.dimCheckSql"/>
+		ORDER BY f_table_name DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_commUuid_withPage" resultMap="commUuidBase.commUuidExtendMap" parameterType="java.util.Map">
+		<include refid="commUuidBase.select_commUuid_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(唯一编号)信息。 -->
+	<sql id="select_commUuid_bySeqId">
+		SELECT <include refid="commUuidBase.queryHead"/>
+		<include refid="commUuidBase.busiQueryCondition"/>
+		 and CU.f_table_name = #{_parameter}
+	</sql>
+	<select id="select_commUuid_bySeqId" parameterType="java.lang.String" resultMap="commUuidBase.commUuidBaseMap">
+		<include refid="commUuidBase.select_commUuid_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(唯一编号)记录数  -->
+	<sql id="select_commUuid_count">
+		SELECT COUNT(*)
+		<include refid="commUuidBase.busiQueryCount"/>
+		<include refid="commUuidBase.dimCheckSql"/>
+	</sql>
+	<select id="select_commUuid_count" resultType="java.lang.Integer">
+		<include refid="commUuidBase.select_commUuid_count"/>
+	</select>
+	
+	 <!-- 往(唯一编号)新增一条记录。 -->
+	 <sql id="insert_commUuid">
+		INSERT INTO t_comm_uuid 
+		(f_table_name,f_number,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{tableName,jdbcType=VARCHAR},#{number},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_commUuid" parameterType="CommUuid">
+		<include refid="commUuidBase.insert_commUuid"/>
+    </insert>
+    
+	<!-- 批量新增(唯一编号)信息 -->
+    <insert id="insert_commUuid_Batch" parameterType="java.util.List">
+    	INSERT INTO t_comm_uuid 
+		(f_table_name,f_number,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.tableName,jdbcType=VARCHAR},#{item.number},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(唯一编号)信息。 -->
+    <sql id="update_commUuid">
+		UPDATE t_comm_uuid		<trim prefix="SET" prefixOverrides=","> 		<if test="number != null and !number.equals('') "> ,f_number=#{number}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_table_name=#{tableName}
+    </sql>
+	<update id="update_commUuid" parameterType="CommUuid">
+		<include refid="commUuidBase.update_commUuid"/>
+    </update>
+    
+    <!-- 批量更新(唯一编号)信息。 -->
+    <update id="update_commUuid_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_comm_uuid		<trim prefix="SET" prefixOverrides=","> 		<if test="item.number != null and !item.number.equals('')  "> ,f_number=#{item.number}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_table_name=#{item.tableName}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(唯一编号)信息_逻辑删除。 -->
+    <sql id="delete_commUuid_Logic">
+		UPDATE t_comm_uuid		<trim prefix="SET" prefixOverrides=","> 		<if test="number != null and !number.equals('')  "> ,f_number=#{number}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_table_name=#{tableName}
+    </sql>
+    <update id="delete_commUuid_Logic" parameterType="CommUuid">
+		<include refid="commUuidBase.delete_commUuid_Logic"/>
+    </update>
+    
+    <!-- 批量删除(唯一编号)信息_逻辑删除 -->
+    <update id="delete_commUuid_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_comm_uuid		<trim prefix="SET" prefixOverrides=","> 		<if test="item.number != null and !item.number.equals('')  "> ,f_number=#{item.number}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_table_name=#{item.tableName}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(唯一编号)信息。 -->
+    <sql id="delete_commUuid">
+		DELETE FROM t_comm_uuid WHERE f_table_name=#{_parameter}
+    </sql>
+    <delete id="delete_commUuid" parameterType="java.lang.String">
+		<include refid="commUuidBase.delete_commUuid"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(唯一编号)信息。 -->
+    <delete id="delete_commUuid_Batch" parameterType="java.util.List">
+		DELETE FROM t_comm_uuid WHERE 1=1 AND f_table_name IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

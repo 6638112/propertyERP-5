@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:定时同步收益额记录表 t_revenue_task_record -->
+<mapper namespace="revenueTaskRecordBase">
+	<resultMap type="RevenueTaskRecord" id="revenueTaskRecordBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_start_time" javaType="java.lang.String" property="startTime"/>  <!--  -->        <result column="f_finish_time" javaType="java.lang.String" property="finishTime"/>  <!--  -->        <result column="f_mini_role_type" javaType="java.lang.Integer" property="miniRoleType"/>  <!-- 所属最小粒度角色类型 -->        <result column="f_mini_role_id" javaType="java.math.BigInteger" property="miniRoleId"/>  <!--  -->        <result column="f_goal_type" javaType="java.lang.Integer" property="goalType"/>  <!-- 提款对象类型 -->        <result column="f_succ_count" javaType="java.lang.Long" property="succCount"/>  <!--  -->        <result column="f_failed_count" javaType="java.lang.Long" property="failedCount"/>  <!--  -->        <result column="f_last_syn_time" javaType="java.lang.String" property="lastSynTime"/>  <!-- 最近同步成功的时间 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="f_excep_stack_info" javaType="java.lang.String" property="excepStackInfo"/>  <!-- 错误堆栈信息 -->
+	</resultMap>
+	<resultMap type="RevenueTaskRecord" id="revenueTaskRecordExtendMap" extends="revenueTaskRecordBaseMap">
+	</resultMap>
+	<resultMap type="RevenueTaskRecord" id="revenueTaskRecordBaseMap_AppendTable">
+        <id column="RTRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="RTRstartTime" javaType="java.lang.String" property="startTime"/>  <!--  -->        <result column="RTRfinishTime" javaType="java.lang.String" property="finishTime"/>  <!--  -->        <result column="RTRminiRoleType" javaType="java.lang.Integer" property="miniRoleType"/>  <!-- 所属最小粒度角色类型 -->        <result column="RTRminiRoleId" javaType="java.math.BigInteger" property="miniRoleId"/>  <!--  -->        <result column="RTRgoalType" javaType="java.lang.Integer" property="goalType"/>  <!-- 提款对象类型 -->        <result column="RTRsuccCount" javaType="java.lang.Long" property="succCount"/>  <!--  -->        <result column="RTRfailedCount" javaType="java.lang.Long" property="failedCount"/>  <!--  -->        <result column="RTRlastSynTime" javaType="java.lang.String" property="lastSynTime"/>  <!-- 最近同步成功的时间 -->        <result column="RTRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="RTRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="RTRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="RTRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="RTRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="RTRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="RTRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="RTRexcepStackInfo" javaType="java.lang.String" property="excepStackInfo"/>  <!-- 错误堆栈信息 -->
+	</resultMap>
+	<resultMap type="RevenueTaskRecord" id="revenueTaskRecordBaseMap_AppendTable1">
+        <id column="RTR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="RTR1startTime" javaType="java.lang.String" property="startTime"/>  <!--  -->        <result column="RTR1finishTime" javaType="java.lang.String" property="finishTime"/>  <!--  -->        <result column="RTR1miniRoleType" javaType="java.lang.Integer" property="miniRoleType"/>  <!-- 所属最小粒度角色类型 -->        <result column="RTR1miniRoleId" javaType="java.math.BigInteger" property="miniRoleId"/>  <!--  -->        <result column="RTR1goalType" javaType="java.lang.Integer" property="goalType"/>  <!-- 提款对象类型 -->        <result column="RTR1succCount" javaType="java.lang.Long" property="succCount"/>  <!--  -->        <result column="RTR1failedCount" javaType="java.lang.Long" property="failedCount"/>  <!--  -->        <result column="RTR1lastSynTime" javaType="java.lang.String" property="lastSynTime"/>  <!-- 最近同步成功的时间 -->        <result column="RTR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="RTR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="RTR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="RTR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="RTR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="RTR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="RTR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="RTR1excepStackInfo" javaType="java.lang.String" property="excepStackInfo"/>  <!-- 错误堆栈信息 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		RTR.f_id,date_format(RTR.f_start_time,'%Y-%m-%d %T') as f_start_time,date_format(RTR.f_finish_time,'%Y-%m-%d %T') as f_finish_time,RTR.f_mini_role_type,RTR.f_mini_role_id,RTR.f_goal_type,RTR.f_succ_count,RTR.f_failed_count,date_format(RTR.f_last_syn_time,'%Y-%m-%d %T') as f_last_syn_time,RTR.f_excep_stack_info
+	</sql>
+	<sql id="queryHead_AppendTable">
+		RTR.f_id as RTRid,date_format(RTR.f_start_time,'%Y-%m-%d %T') as RTRstartTime,date_format(RTR.f_finish_time,'%Y-%m-%d %T') as RTRfinishTime,RTR.f_mini_role_type as RTRminiRoleType,RTR.f_mini_role_id as RTRminiRoleId,RTR.f_goal_type as RTRgoalType,RTR.f_succ_count as RTRsuccCount,RTR.f_failed_count as RTRfailedCount,date_format(RTR.f_last_syn_time,'%Y-%m-%d %T') as RTRlastSynTime,RTR.f_excep_stack_info as RTRexcepStackInfo
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		RTR1.f_id as RTR1id,date_format(RTR1.f_start_time,'%Y-%m-%d %T') as RTR1startTime,date_format(RTR1.f_finish_time,'%Y-%m-%d %T') as RTR1finishTime,RTR1.f_mini_role_type as RTR1miniRoleType,RTR1.f_mini_role_id as RTR1miniRoleId,RTR1.f_goal_type as RTR1goalType,RTR1.f_succ_count as RTR1succCount,RTR1.f_failed_count as RTR1failedCount,date_format(RTR1.f_last_syn_time,'%Y-%m-%d %T') as RTR1lastSynTime,RTR1.f_excep_stack_info as RTR1excepStackInfo
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (RTR.f_id = #{id} ) </if>        <if test="startTime != null and !startTime.equals('')  ">  and (RTR.f_start_time = str_to_date(#{startTime},'%Y-%m-%d %T') ) </if>        <if test="startTime_START != null and !startTime_START.equals('')  ">              <![CDATA[ and (RTR.f_start_time >= str_to_date(#{startTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="startTime_END != null and !startTime_END.equals('')  ">            <![CDATA[ and (RTR.f_start_time <= str_to_date(#{startTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="finishTime != null and !finishTime.equals('')  ">  and (RTR.f_finish_time = str_to_date(#{finishTime},'%Y-%m-%d %T') ) </if>        <if test="finishTime_START != null and !finishTime_START.equals('')  ">              <![CDATA[ and (RTR.f_finish_time >= str_to_date(#{finishTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="finishTime_END != null and !finishTime_END.equals('')  ">            <![CDATA[ and (RTR.f_finish_time <= str_to_date(#{finishTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="miniRoleType != null">  and (RTR.f_mini_role_type = #{miniRoleType} ) </if>        <if test="miniRoleId != null">  and (RTR.f_mini_role_id = #{miniRoleId} ) </if>        <if test="goalType != null">  and (RTR.f_goal_type = #{goalType} ) </if>        <if test="succCount != null">  and (RTR.f_succ_count = #{succCount} ) </if>        <if test="failedCount != null">  and (RTR.f_failed_count = #{failedCount} ) </if>        <if test="lastSynTime != null and !lastSynTime.equals('')  ">  and (RTR.f_last_syn_time = str_to_date(#{lastSynTime},'%Y-%m-%d %T') ) </if>        <if test="lastSynTime_START != null and !lastSynTime_START.equals('')  ">              <![CDATA[ and (RTR.f_last_syn_time >= str_to_date(#{lastSynTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="lastSynTime_END != null and !lastSynTime_END.equals('')  ">            <![CDATA[ and (RTR.f_last_syn_time <= str_to_date(#{lastSynTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (RTR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (RTR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (RTR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (RTR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (RTR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (RTR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (RTR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (RTR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (RTR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (RTR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (RTR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (RTR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (RTR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (RTR.f_sys0_del_state = 0 ) </if>        <if test="excepStackInfo != null">  and (RTR.f_excep_stack_info = #{excepStackInfo} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (RTR.f_id = #{id} ) </if>        <if test="startTime != null and !startTime.equals('')  ">  and (RTR.f_start_time = str_to_date(#{startTime},'%Y-%m-%d %T') ) </if>        <if test="startTime_START != null and !startTime_START.equals('')  ">              <![CDATA[ and (RTR.f_start_time >= str_to_date(#{startTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="startTime_END != null and !startTime_END.equals('')  ">            <![CDATA[ and (RTR.f_start_time <= str_to_date(#{startTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="finishTime != null and !finishTime.equals('')  ">  and (RTR.f_finish_time = str_to_date(#{finishTime},'%Y-%m-%d %T') ) </if>        <if test="finishTime_START != null and !finishTime_START.equals('')  ">              <![CDATA[ and (RTR.f_finish_time >= str_to_date(#{finishTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="finishTime_END != null and !finishTime_END.equals('')  ">            <![CDATA[ and (RTR.f_finish_time <= str_to_date(#{finishTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="miniRoleType != null and !miniRoleType.equals('')  ">  and (RTR.f_mini_role_type = #{miniRoleType} ) </if>        <if test="miniRoleId != null and !miniRoleId.equals('')  ">  and (RTR.f_mini_role_id = #{miniRoleId} ) </if>        <if test="goalType != null and !goalType.equals('')  ">  and (RTR.f_goal_type = #{goalType} ) </if>        <if test="succCount != null and !succCount.equals('')  ">  and (RTR.f_succ_count = #{succCount} ) </if>        <if test="failedCount != null and !failedCount.equals('')  ">  and (RTR.f_failed_count = #{failedCount} ) </if>        <if test="lastSynTime != null and !lastSynTime.equals('')  ">  and (RTR.f_last_syn_time = str_to_date(#{lastSynTime},'%Y-%m-%d %T') ) </if>        <if test="lastSynTime_START != null and !lastSynTime_START.equals('')  ">              <![CDATA[ and (RTR.f_last_syn_time >= str_to_date(#{lastSynTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="lastSynTime_END != null and !lastSynTime_END.equals('')  ">            <![CDATA[ and (RTR.f_last_syn_time <= str_to_date(#{lastSynTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (RTR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (RTR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (RTR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (RTR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (RTR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (RTR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (RTR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (RTR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (RTR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (RTR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (RTR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (RTR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (RTR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (RTR.f_sys0_del_state = 0 ) </if>        <if test="excepStackInfo != null and !excepStackInfo.equals('')  ">  and (RTR.f_excep_stack_info like CONCAT('%',#{excepStackInfo},'%') ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="revenueTaskRecordBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="revenueTaskRecordBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="revenueTaskRecordBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="revenueTaskRecordBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_revenue_task_record RTR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(定时同步收益额记录表)信息。 -->
+	<sql id="select_revenueTaskRecord">
+		SELECT <include refid="revenueTaskRecordBase.queryHead"/>
+		<include refid="revenueTaskRecordBase.busiQueryCondition"/>
+		<include refid="revenueTaskRecordBase.dimCheckSql"/>
+		ORDER BY RTR.f_id DESC
+	</sql>
+	<select id="select_revenueTaskRecord" parameterType="java.util.Map" resultMap="revenueTaskRecordBase.revenueTaskRecordExtendMap">
+		<include refid="revenueTaskRecordBase.select_revenueTaskRecord"/>
+	</select>
+	
+	<!-- 根据条件分页查询(定时同步收益额记录表)信息  -->
+	<sql id="select_revenueTaskRecord_withPage">
+		SELECT <include refid="revenueTaskRecordBase.queryHead"/>
+		<include refid="revenueTaskRecordBase.busiQueryCondition"/>
+		<include refid="revenueTaskRecordBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_revenueTaskRecord_withPage" resultMap="revenueTaskRecordBase.revenueTaskRecordExtendMap" parameterType="java.util.Map">
+		<include refid="revenueTaskRecordBase.select_revenueTaskRecord_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(定时同步收益额记录表)信息。 -->
+	<sql id="select_revenueTaskRecord_bySeqId">
+		SELECT <include refid="revenueTaskRecordBase.queryHead"/>
+		<include refid="revenueTaskRecordBase.busiQueryCondition"/>
+		 and RTR.f_id = #{_parameter}
+	</sql>
+	<select id="select_revenueTaskRecord_bySeqId" parameterType="java.math.BigInteger" resultMap="revenueTaskRecordBase.revenueTaskRecordBaseMap">
+		<include refid="revenueTaskRecordBase.select_revenueTaskRecord_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(定时同步收益额记录表)记录数  -->
+	<sql id="select_revenueTaskRecord_count">
+		SELECT COUNT(*)
+		<include refid="revenueTaskRecordBase.busiQueryCount"/>
+		<include refid="revenueTaskRecordBase.dimCheckSql"/>
+	</sql>
+	<select id="select_revenueTaskRecord_count" resultType="java.lang.Integer">
+		<include refid="revenueTaskRecordBase.select_revenueTaskRecord_count"/>
+	</select>
+	
+	 <!-- 往(定时同步收益额记录表)新增一条记录。 -->
+	 <sql id="insert_revenueTaskRecord">
+		INSERT INTO t_revenue_task_record 
+		(f_id,f_start_time,f_finish_time,f_mini_role_type,f_mini_role_id,f_goal_type,f_succ_count,f_failed_count,f_last_syn_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_excep_stack_info) VALUES 
+		(#{id},str_to_date(#{startTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{finishTime,jdbcType=DATE},'%Y-%m-%d %T'),#{miniRoleType},#{miniRoleId},#{goalType},#{succCount},#{failedCount},str_to_date(#{lastSynTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0,#{excepStackInfo,jdbcType=VARCHAR})
+	 </sql>
+    <insert id="insert_revenueTaskRecord" parameterType="RevenueTaskRecord">
+		<include refid="revenueTaskRecordBase.insert_revenueTaskRecord"/>
+    </insert>
+    
+	<!-- 批量新增(定时同步收益额记录表)信息 -->
+    <insert id="insert_revenueTaskRecord_Batch" parameterType="java.util.List">
+    	INSERT INTO t_revenue_task_record 
+		(f_id,f_start_time,f_finish_time,f_mini_role_type,f_mini_role_id,f_goal_type,f_succ_count,f_failed_count,f_last_syn_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_excep_stack_info) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},str_to_date(#{item.startTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.finishTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.miniRoleType},#{item.miniRoleId},#{item.goalType},#{item.succCount},#{item.failedCount},str_to_date(#{item.lastSynTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0,#{item.excepStackInfo,jdbcType=VARCHAR})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(定时同步收益额记录表)信息。 -->
+    <sql id="update_revenueTaskRecord">
+		UPDATE t_revenue_task_record		<trim prefix="SET" prefixOverrides=","> 		<if test="startTime != null and !startTime.equals('') "> ,f_start_time=str_to_date(#{startTime},'%Y-%m-%d %T')</if> 		<if test="finishTime != null and !finishTime.equals('') "> ,f_finish_time=str_to_date(#{finishTime},'%Y-%m-%d %T')</if> 		<if test="miniRoleType != null and !miniRoleType.equals('') "> ,f_mini_role_type=#{miniRoleType}</if> 		<if test="miniRoleId != null and !miniRoleId.equals('') "> ,f_mini_role_id=#{miniRoleId}</if> 		<if test="goalType != null and !goalType.equals('') "> ,f_goal_type=#{goalType}</if> 		<if test="succCount != null and !succCount.equals('') "> ,f_succ_count=#{succCount}</if> 		<if test="failedCount != null and !failedCount.equals('') "> ,f_failed_count=#{failedCount}</if> 		<if test="lastSynTime != null and !lastSynTime.equals('') "> ,f_last_syn_time=str_to_date(#{lastSynTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if> 		<if test="excepStackInfo != null and !excepStackInfo.equals('') "> ,f_excep_stack_info=#{excepStackInfo}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_revenueTaskRecord" parameterType="RevenueTaskRecord">
+		<include refid="revenueTaskRecordBase.update_revenueTaskRecord"/>
+    </update>
+    
+    <!-- 批量更新(定时同步收益额记录表)信息。 -->
+    <update id="update_revenueTaskRecord_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_revenue_task_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.startTime != null and !item.startTime.equals('')  "> ,f_start_time=str_to_date(#{item.startTime},'%Y-%m-%d %T')</if> 		<if test="item.finishTime != null and !item.finishTime.equals('')  "> ,f_finish_time=str_to_date(#{item.finishTime},'%Y-%m-%d %T')</if> 		<if test="item.miniRoleType != null and !item.miniRoleType.equals('')  "> ,f_mini_role_type=#{item.miniRoleType}</if> 		<if test="item.miniRoleId != null and !item.miniRoleId.equals('')  "> ,f_mini_role_id=#{item.miniRoleId}</if> 		<if test="item.goalType != null and !item.goalType.equals('')  "> ,f_goal_type=#{item.goalType}</if> 		<if test="item.succCount != null and !item.succCount.equals('')  "> ,f_succ_count=#{item.succCount}</if> 		<if test="item.failedCount != null and !item.failedCount.equals('')  "> ,f_failed_count=#{item.failedCount}</if> 		<if test="item.lastSynTime != null and !item.lastSynTime.equals('')  "> ,f_last_syn_time=str_to_date(#{item.lastSynTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if> 		<if test="item.excepStackInfo != null and !item.excepStackInfo.equals('')  "> ,f_excep_stack_info=#{item.excepStackInfo}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(定时同步收益额记录表)信息_逻辑删除。 -->
+    <sql id="delete_revenueTaskRecord_Logic">
+		UPDATE t_revenue_task_record		<trim prefix="SET" prefixOverrides=","> 		<if test="startTime != null and !startTime.equals('')  "> ,f_start_time=str_to_date(#{startTime},'%Y-%m-%d %T')</if> 		<if test="finishTime != null and !finishTime.equals('')  "> ,f_finish_time=str_to_date(#{finishTime},'%Y-%m-%d %T')</if> 		<if test="miniRoleType != null and !miniRoleType.equals('')  "> ,f_mini_role_type=#{miniRoleType}</if> 		<if test="miniRoleId != null and !miniRoleId.equals('')  "> ,f_mini_role_id=#{miniRoleId}</if> 		<if test="goalType != null and !goalType.equals('')  "> ,f_goal_type=#{goalType}</if> 		<if test="succCount != null and !succCount.equals('')  "> ,f_succ_count=#{succCount}</if> 		<if test="failedCount != null and !failedCount.equals('')  "> ,f_failed_count=#{failedCount}</if> 		<if test="lastSynTime != null and !lastSynTime.equals('')  "> ,f_last_syn_time=str_to_date(#{lastSynTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="excepStackInfo != null and !excepStackInfo.equals('')  "> ,f_excep_stack_info=#{excepStackInfo}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_revenueTaskRecord_Logic" parameterType="RevenueTaskRecord">
+		<include refid="revenueTaskRecordBase.delete_revenueTaskRecord_Logic"/>
+    </update>
+    
+    <!-- 批量删除(定时同步收益额记录表)信息_逻辑删除 -->
+    <update id="delete_revenueTaskRecord_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_revenue_task_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.startTime != null and !item.startTime.equals('')  "> ,f_start_time=str_to_date(#{item.startTime},'%Y-%m-%d %T')</if> 		<if test="item.finishTime != null and !item.finishTime.equals('')  "> ,f_finish_time=str_to_date(#{item.finishTime},'%Y-%m-%d %T')</if> 		<if test="item.miniRoleType != null and !item.miniRoleType.equals('')  "> ,f_mini_role_type=#{item.miniRoleType}</if> 		<if test="item.miniRoleId != null and !item.miniRoleId.equals('')  "> ,f_mini_role_id=#{item.miniRoleId}</if> 		<if test="item.goalType != null and !item.goalType.equals('')  "> ,f_goal_type=#{item.goalType}</if> 		<if test="item.succCount != null and !item.succCount.equals('')  "> ,f_succ_count=#{item.succCount}</if> 		<if test="item.failedCount != null and !item.failedCount.equals('')  "> ,f_failed_count=#{item.failedCount}</if> 		<if test="item.lastSynTime != null and !item.lastSynTime.equals('')  "> ,f_last_syn_time=str_to_date(#{item.lastSynTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.excepStackInfo != null and !item.excepStackInfo.equals('')  "> ,f_excep_stack_info=#{item.excepStackInfo}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(定时同步收益额记录表)信息。 -->
+    <sql id="delete_revenueTaskRecord">
+		DELETE FROM t_revenue_task_record WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_revenueTaskRecord" parameterType="java.lang.String">
+		<include refid="revenueTaskRecordBase.delete_revenueTaskRecord"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(定时同步收益额记录表)信息。 -->
+    <delete id="delete_revenueTaskRecord_Batch" parameterType="java.util.List">
+		DELETE FROM t_revenue_task_record WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

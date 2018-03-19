@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:基础的url信息 t_comm_sys_url -->
+<mapper namespace="commSysUrlBase">
+	<resultMap type="CommSysUrl" id="commSysUrlBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 功能名称 -->        <result column="f_action_url" javaType="java.lang.String" property="actionUrl"/>  <!-- 功能url -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 功能描述 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommSysUrl" id="commSysUrlExtendMap" extends="commSysUrlBaseMap">
+	</resultMap>
+	<resultMap type="CommSysUrl" id="commSysUrlBaseMap_AppendTable">
+        <id column="CSUid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CSUname" javaType="java.lang.String" property="name"/>  <!-- 功能名称 -->        <result column="CSUactionUrl" javaType="java.lang.String" property="actionUrl"/>  <!-- 功能url -->        <result column="CSUdesc" javaType="java.lang.String" property="desc"/>  <!-- 功能描述 -->        <result column="CSUsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CSUsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CSUsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CSUsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CSUsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CSUsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CSUsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommSysUrl" id="commSysUrlBaseMap_AppendTable1">
+        <id column="CSU1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CSU1name" javaType="java.lang.String" property="name"/>  <!-- 功能名称 -->        <result column="CSU1actionUrl" javaType="java.lang.String" property="actionUrl"/>  <!-- 功能url -->        <result column="CSU1desc" javaType="java.lang.String" property="desc"/>  <!-- 功能描述 -->        <result column="CSU1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CSU1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CSU1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CSU1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CSU1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CSU1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CSU1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CSU.f_id,CSU.f_name,CSU.f_action_url,CSU.f_desc
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CSU.f_id as CSUid,CSU.f_name as CSUname,CSU.f_action_url as CSUactionUrl,CSU.f_desc as CSUdesc
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CSU1.f_id as CSU1id,CSU1.f_name as CSU1name,CSU1.f_action_url as CSU1actionUrl,CSU1.f_desc as CSU1desc
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CSU.f_id = #{id} ) </if>        <if test="name != null">  and (CSU.f_name = #{name} ) </if>        <if test="actionUrl != null">  and (CSU.f_action_url = #{actionUrl} ) </if>        <if test="desc != null">  and (CSU.f_desc = #{desc} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CSU.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CSU.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CSU.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CSU.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CSU.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CSU.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CSU.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CSU.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CSU.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (CSU.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (CSU.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (CSU.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (CSU.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (CSU.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CSU.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (CSU.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="actionUrl != null and !actionUrl.equals('')  ">  and (CSU.f_action_url like CONCAT('%',#{actionUrl},'%') ) </if>        <if test="desc != null and !desc.equals('')  ">  and (CSU.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CSU.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CSU.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CSU.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CSU.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CSU.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CSU.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CSU.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CSU.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CSU.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CSU.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CSU.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CSU.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CSU.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (CSU.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="commSysUrlBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="commSysUrlBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="commSysUrlBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="commSysUrlBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_comm_sys_url CSU    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(基础的url信息)信息。 -->
+	<sql id="select_commSysUrl">
+		SELECT <include refid="commSysUrlBase.queryHead"/>
+		<include refid="commSysUrlBase.busiQueryCondition"/>
+		<include refid="commSysUrlBase.dimCheckSql"/>
+		ORDER BY CSU.f_id DESC
+	</sql>
+	<select id="select_commSysUrl" parameterType="java.util.Map" resultMap="commSysUrlBase.commSysUrlExtendMap">
+		<include refid="commSysUrlBase.select_commSysUrl"/>
+	</select>
+	
+	<!-- 根据条件分页查询(基础的url信息)信息  -->
+	<sql id="select_commSysUrl_withPage">
+		SELECT <include refid="commSysUrlBase.queryHead"/>
+		<include refid="commSysUrlBase.busiQueryCondition"/>
+		<include refid="commSysUrlBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_commSysUrl_withPage" resultMap="commSysUrlBase.commSysUrlExtendMap" parameterType="java.util.Map">
+		<include refid="commSysUrlBase.select_commSysUrl_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(基础的url信息)信息。 -->
+	<sql id="select_commSysUrl_bySeqId">
+		SELECT <include refid="commSysUrlBase.queryHead"/>
+		<include refid="commSysUrlBase.busiQueryCondition"/>
+		 and CSU.f_id = #{_parameter}
+	</sql>
+	<select id="select_commSysUrl_bySeqId" parameterType="java.math.BigInteger" resultMap="commSysUrlBase.commSysUrlBaseMap">
+		<include refid="commSysUrlBase.select_commSysUrl_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(基础的url信息)记录数  -->
+	<sql id="select_commSysUrl_count">
+		SELECT COUNT(*)
+		<include refid="commSysUrlBase.busiQueryCount"/>
+		<include refid="commSysUrlBase.dimCheckSql"/>
+	</sql>
+	<select id="select_commSysUrl_count" resultType="java.lang.Integer">
+		<include refid="commSysUrlBase.select_commSysUrl_count"/>
+	</select>
+	
+	 <!-- 往(基础的url信息)新增一条记录。 -->
+	 <sql id="insert_commSysUrl">
+		INSERT INTO t_comm_sys_url 
+		(f_id,f_name,f_action_url,f_desc,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{actionUrl,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_commSysUrl" parameterType="CommSysUrl">
+		<include refid="commSysUrlBase.insert_commSysUrl"/>
+    </insert>
+    
+	<!-- 批量新增(基础的url信息)信息 -->
+    <insert id="insert_commSysUrl_Batch" parameterType="java.util.List">
+    	INSERT INTO t_comm_sys_url 
+		(f_id,f_name,f_action_url,f_desc,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.actionUrl,jdbcType=VARCHAR},#{item.desc,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(基础的url信息)信息。 -->
+    <sql id="update_commSysUrl">
+		UPDATE t_comm_sys_url		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="actionUrl != null and !actionUrl.equals('') "> ,f_action_url=#{actionUrl}</if> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_commSysUrl" parameterType="CommSysUrl">
+		<include refid="commSysUrlBase.update_commSysUrl"/>
+    </update>
+    
+    <!-- 批量更新(基础的url信息)信息。 -->
+    <update id="update_commSysUrl_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_comm_sys_url		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.actionUrl != null and !item.actionUrl.equals('')  "> ,f_action_url=#{item.actionUrl}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(基础的url信息)信息_逻辑删除。 -->
+    <sql id="delete_commSysUrl_Logic">
+		UPDATE t_comm_sys_url		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="actionUrl != null and !actionUrl.equals('')  "> ,f_action_url=#{actionUrl}</if> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_commSysUrl_Logic" parameterType="CommSysUrl">
+		<include refid="commSysUrlBase.delete_commSysUrl_Logic"/>
+    </update>
+    
+    <!-- 批量删除(基础的url信息)信息_逻辑删除 -->
+    <update id="delete_commSysUrl_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_comm_sys_url		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.actionUrl != null and !item.actionUrl.equals('')  "> ,f_action_url=#{item.actionUrl}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(基础的url信息)信息。 -->
+    <sql id="delete_commSysUrl">
+		DELETE FROM t_comm_sys_url WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_commSysUrl" parameterType="java.lang.String">
+		<include refid="commSysUrlBase.delete_commSysUrl"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(基础的url信息)信息。 -->
+    <delete id="delete_commSysUrl_Batch" parameterType="java.util.List">
+		DELETE FROM t_comm_sys_url WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+	<bean id="ebuyNewDao" class="com.cnfantasia.server.api.ebuy.dao.EbuyNewDao"  parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="ebuyNewService" class="com.cnfantasia.server.api.ebuy.service.EbuyNewService">
+		<property name="ebuyNewDao" ref="ebuyNewDao" />
+		<property name="ebuyDao" ref="ebuyDao" />
+		<property name="ebuyAdvertiseBaseService" ref="ebuyAdvertiseBaseService"/>
+	</bean>
+
+	<bean id="ebuyAdvertiseDao" class="com.cnfantasia.server.api.ebuy.dao.EbuyAdvertiseDao"  parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="ebuyAdvertiseService" class="com.cnfantasia.server.api.ebuy.service.EbuyAdvertiseService">
+		<property name="ebuyAdvertiseDao" ref="ebuyAdvertiseDao" />
+	</bean>
+	
+	<bean id="ebuyFilmTicketDao" class="com.cnfantasia.server.api.ebuy.dao.EbuyFilmTicketDao"  parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="ebuyFilmTicketService" class="com.cnfantasia.server.api.ebuy.service.EbuyFilmTicketService">
+		<property name="ebuyFilmTicketDao" ref="ebuyFilmTicketDao" />
+		<property name="commonLockDao" ref="commonLockDao" />
+	</bean>
+	
+	<bean id="ebuyFlowRechargeDao" class="com.cnfantasia.server.api.ebuy.dao.EbuyFlowRechargeDao"  parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="ebuyFlowRechargeService" class="com.cnfantasia.server.api.ebuy.service.EbuyFlowRechargeService">
+		<property name="ebuyFlowRechargeDao" ref="ebuyFlowRechargeDao" />
+		<property name="commonLockDao" ref="commonLockDao" />
+	</bean>
+	
+	<bean id="flowRechargePool" class="com.cnfantasia.server.api.ebuy.util.FlowRechargePool" init-method="init">
+		<property name="ebuyFlowRechargeService" ref="ebuyFlowRechargeService" />
+		<property name="sysParamManager" ref="sysParamManager" />
+	</bean>
+	
+	<bean id="flowRechargeTask" class="com.cnfantasia.server.api.ebuy.util.FlowRechargeTask">
+		<property name="ebuyFlowRechargeService" ref="ebuyFlowRechargeService" />
+	</bean>
+	
+	<bean id="ebuyIdentifyInfoDao" class="com.cnfantasia.server.api.ebuy.dao.EbuyIdentifyInfoDao"  parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="ebuyIdentifyInfoService" class="com.cnfantasia.server.api.ebuy.service.EbuyIdentifyInfoService">
+		<property name="ebuyIdentifyInfoDao" ref="ebuyIdentifyInfoDao" />
+	</bean>
+	
+	
+</beans>  

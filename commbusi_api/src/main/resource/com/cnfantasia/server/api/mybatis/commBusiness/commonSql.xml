@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 公用的sql模块 -->
+<mapper namespace="commonSql">
+	<sql id="base_qry_roomIds_pre">
+		<![CDATA[ 
+		SELECT DISTINCT
+			CASE
+				WHEN RV2.f_id IS NOT NULL THEN R1.f_id
+				ELSE R2.f_id
+			END AS room_Id
+		FROM t_user U2
+		JOIN t_room R2 ON R2.f_id = U2.f_default_room_id AND R2.f_sys0_del_state = 0
+		LEFT JOIN t_real_room RR2 ON R2.t_real_room_f_id = RR2.f_id AND RR2.f_sys0_del_state = 0 AND RR2.f_id <> -1
+		LEFT JOIN t_room_validate RV2 ON RV2.t_room_f_id = U2.f_default_room_id
+			AND RV2.f_verify_status = 4  AND RV2.f_sys0_del_state = 0
+		LEFT JOIN t_room R1 ON R1.f_sys0_del_state = 0 AND R1.t_real_room_f_id = RR2.f_id  
+		LEFT JOIN t_room_validate RV1 ON RV1.t_room_f_id = R1.f_id AND RV1.f_sys0_del_state = 0
+		
+		WHERE 1=1
+			AND U2.f_id = #{userId} AND U2.f_sys0_del_state = 0
+		]]>
+	</sql>
+	<!-- <sql id="base_qry_roomIds_tail">
+		
+	</sql> -->
+	
+	<!-- 查询家庭成员，包含门牌管理，区分是否为管理员 -->
+	<sql id="qry_roomIds_forFamilyAdmin_by_userInfo">
+		<include refid="commonSql.base_qry_roomIds_pre"/>
+		AND (
+			(R2.t_real_room_f_id = -1 AND ISNULL(RR2.f_id) ) 
+			OR 
+			(CASE 
+        	<!-- 管理员看到有验证信息的门牌且不包含验证失败的 -->
+        	WHEN RR2.f_validate_user_id = U2.f_id AND RV2.f_verify_status = 4 THEN 1=1 
+        		AND RV1.f_verify_status !=3
+        		AND NOT ISNULL(RV1.f_verify_status)
+        	<!-- 已经验证过的普通用户只看到验证通过的 -->
+        	WHEN RV2.f_verify_status = 4 THEN RV1.f_verify_status = 4 
+        	<!-- 余下的未验证过的用户只看到自己门牌下的 -->
+        	ELSE R1.f_id = R2.f_id 
+        	END )
+        )
+        <!-- <include refid="commonSql.base_qry_roomIds_tail"/> -->
+	</sql>
+	
+	<!-- 门牌合并筛选 -->
+	<sql id="qry_roomIds_by_userInfo">
+		<include refid="commonSql.base_qry_roomIds_pre"/>
+		AND (
+			(R2.t_real_room_f_id = -1 AND ISNULL(RR2.f_id) ) 
+			OR 
+			(CASE 
+        	<!-- 已经验证过的普通用户只看到验证通过的 -->
+        	WHEN RV2.f_verify_status = 4 THEN RV1.f_verify_status = 4 
+        	<!-- 余下的未验证过的用户只看到自己门牌下的 -->
+        	ELSE R1.f_id = R2.f_id 
+        	END )
+        )
+        <!-- <include refid="commonSql.base_qry_roomIds_tail"/> -->
+	</sql>
+	
+	<!-- 查询绑定家庭成员列表 -->
+	<!-- 查询普通家庭成员列表 -->
+	<!-- 查询全部家庭成员列表 -->
+	
+	
+	<!-- 查询用户的家庭成员Id 返回包含自己的Ids -->
+	<!-- 用户筛选 已验证门牌的用户 查询相同real_room下的所有验证过的用户 -->
+	<!-- 未验证门牌的用户 查询自己门牌下的用户 -->
+	<!-- <sql id="qry_userIds_family_by_userInfo_innerJoin">
+		INNER JOIN (
+			<include refid="commonSql.qry_userIds_family_by_userInfo_select"/>
+		) AS User_Family_Group ON 1=1 注释掉 AND User_Family_Group.t_user_f_id = U .f_id
+	</sql> -->
+	
+	<sql id="qry_userIds_count_withOutSelf">
+		SELECT
+			COUNT(ur.t_user_f_id)
+		FROM
+			t_user u
+		LEFT JOIN t_room r ON u.f_default_room_id = r.f_id AND r.f_sys0_del_state = 0
+		<![CDATA[  LEFT JOIN t_real_room rr ON r.t_real_room_f_id = rr.f_id AND rr.f_id  <> -1  AND rr.f_sys0_del_state = 0 ]]>
+		LEFT JOIN t_room_validate trv ON trv.t_room_f_id = u.f_default_room_id AND trv.f_user_id = u.f_id  AND trv.f_sys0_del_state = 0
+		
+		LEFT JOIN t_room tr ON tr.t_real_room_f_id = rr.f_id  AND tr.f_sys0_del_state = 0
+		LEFT JOIN t_user_has_t_room ur ON ur.t_room_f_id = tr.f_id  AND ur.f_sys0_del_state = 0
+		LEFT JOIN t_room_validate rv ON rv.t_room_f_id = ur.t_room_f_id AND rv.f_user_id = ur.t_user_f_id  AND rv.f_sys0_del_state = 0
+		WHERE
+			u.f_id = #{userId}  AND u.f_sys0_del_state = 0
+			AND ur.t_user_f_id != #{userId} <!-- 非当前用户 -->
+		AND (
+			( rv.f_verify_status = 4 AND trv.f_verify_status = 4 )
+			<!-- OR ( ur.t_user_f_id = #{userId}  ) --> <!-- 非当前用户 -->
+			OR  ( ur.t_user_f_id IS NULL AND  r.t_real_room_f_id  = -1)
+		)
+	</sql>
+	
+	<sql id="qry_userIds_family_by_userInfo_select">
+		SELECT
+			IFNULL(ur.t_user_f_id,u.f_id) as t_user_f_id
+		FROM
+			t_user u
+		LEFT JOIN t_room r ON u.f_default_room_id = r.f_id AND r.f_sys0_del_state = 0
+		<![CDATA[  LEFT JOIN t_real_room rr ON r.t_real_room_f_id = rr.f_id AND rr.f_id  <> -1  AND rr.f_sys0_del_state = 0 ]]>
+		LEFT JOIN t_room_validate trv ON trv.t_room_f_id = u.f_default_room_id AND trv.f_user_id = u.f_id  AND trv.f_sys0_del_state = 0
+		
+		LEFT JOIN t_room tr ON tr.t_real_room_f_id = rr.f_id  AND tr.f_sys0_del_state = 0
+		LEFT JOIN t_user_has_t_room ur ON ur.t_room_f_id = tr.f_id  AND ur.f_sys0_del_state = 0
+		LEFT JOIN t_room_validate rv ON rv.t_room_f_id = ur.t_room_f_id AND rv.f_user_id = ur.t_user_f_id  AND rv.f_sys0_del_state = 0
+		WHERE
+			u.f_id = #{userId}  AND u.f_sys0_del_state = 0
+		AND (
+			( rv.f_verify_status = 4 AND trv.f_verify_status = 4 )
+			OR ( ur.t_user_f_id = #{userId}  )
+			OR  ( ur.t_user_f_id IS NULL AND  r.t_real_room_f_id  = -1)
+		)
+	</sql>
+	
+	<!-- 根据主用户Id查询参与绑定相关的门牌Id列表 -->
+	<sql id="qry_roomIdList_by_curr_user_id_with_bind">
+		SELECT R.f_id AS roomId
+		FROM t_user U
+			INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND UHTR.f_apply_status = 1
+				AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+			INNER JOIN t_room R ON R.f_id = UHTR.t_room_f_id AND R.f_sys0_del_state = 0
+		WHERE 1=1 
+		AND U.f_id = #{userId} 
+		AND U.f_sys0_del_state = 0
+		GROUP BY R.f_id
+	
+		<!-- SELECT R.f_id AS roomId
+		FROM t_user_has_t_room UHTR
+			INNER JOIN t_room R ON R.f_id = UHTR.t_room_f_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_user U ON U.f_sys0_del_state = 0 
+				AND CASE WHEN ISNULL(UHTR.f_bind_user_id) THEN U.f_id = UHTR.t_user_f_id ELSE U.f_id = UHTR.f_bind_user_id END
+		WHERE 1=1
+			AND UHTR.f_sys0_del_state = 0
+			AND UHTR.f_apply_status = 1
+			AND U.f_id = #{userId}
+		GROUP BY R.f_id -->
+	</sql>
+	
+	<!-- <sql id="select_uhtr_append_bind_user">
+		SELECT 
+        	f_id,
+            t_room_f_id,
+            t_user_f_id,
+            f_inviter_id,
+            f_is_admin,
+            f_apply_status,
+            f_plan_property_amount,
+            f_plan_switch_status,
+            f_sys0_add_time,
+            f_sys0_upd_time,
+            f_sys0_del_time,
+            f_sys0_add_user,
+            f_sys0_upd_user,
+            f_sys0_del_user,
+            f_sys0_del_state,
+            f_bind_user_id,
+            CASE
+                WHEN ISNULL(f_bind_user_id) THEN t_user_f_id
+                ELSE f_bind_user_id
+            END ext_final_user_id
+	    FROM
+	        t_user_has_t_room
+	    WHERE 1=1
+	        AND f_sys0_del_state = 0
+	</sql> -->
+	<!-- <sql id="select_uhtr_append_bind_user">
+		 t_user_has_t_room 
+	</sql> -->
+	
+	<sql id="user_and_userHasRoom_condition">
+		U.f_id = UHTR.f_final_user_id 
+		<!-- U.f_id = UHTR.ext_final_user_id -->
+	</sql>
+</mapper>

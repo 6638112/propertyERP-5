@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:角色功能关系 t_permi_role_has_t_permi_function -->
+<mapper namespace="permiRoleHasTPermiFunctionBase">
+	<resultMap type="PermiRoleHasTPermiFunction" id="permiRoleHasTPermiFunctionBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_permi_role_f_id" javaType="java.math.BigInteger" property="tPermiRoleFId"/>  <!-- 角色编号 -->        <result column="t_permi_function_f_id" javaType="java.math.BigInteger" property="tPermiFunctionFId"/>  <!-- 功能编号 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PermiRoleHasTPermiFunction" id="permiRoleHasTPermiFunctionExtendMap" extends="permiRoleHasTPermiFunctionBaseMap">
+	</resultMap>
+	<resultMap type="PermiRoleHasTPermiFunction" id="permiRoleHasTPermiFunctionBaseMap_AppendTable">
+        <id column="PRHTPFid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PRHTPFtPermiRoleFId" javaType="java.math.BigInteger" property="tPermiRoleFId"/>  <!-- 角色编号 -->        <result column="PRHTPFtPermiFunctionFId" javaType="java.math.BigInteger" property="tPermiFunctionFId"/>  <!-- 功能编号 -->        <result column="PRHTPFsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PRHTPFsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PRHTPFsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PRHTPFsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PRHTPFsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PRHTPFsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PRHTPFsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PermiRoleHasTPermiFunction" id="permiRoleHasTPermiFunctionBaseMap_AppendTable1">
+        <id column="PRHTPF1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PRHTPF1tPermiRoleFId" javaType="java.math.BigInteger" property="tPermiRoleFId"/>  <!-- 角色编号 -->        <result column="PRHTPF1tPermiFunctionFId" javaType="java.math.BigInteger" property="tPermiFunctionFId"/>  <!-- 功能编号 -->        <result column="PRHTPF1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PRHTPF1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PRHTPF1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PRHTPF1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PRHTPF1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PRHTPF1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PRHTPF1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PRHTPF.f_id,PRHTPF.t_permi_role_f_id,PRHTPF.t_permi_function_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PRHTPF.f_id as PRHTPFid,PRHTPF.t_permi_role_f_id as PRHTPFtPermiRoleFId,PRHTPF.t_permi_function_f_id as PRHTPFtPermiFunctionFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PRHTPF1.f_id as PRHTPF1id,PRHTPF1.t_permi_role_f_id as PRHTPF1tPermiRoleFId,PRHTPF1.t_permi_function_f_id as PRHTPF1tPermiFunctionFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PRHTPF.f_id = #{id} ) </if>        <if test="tPermiRoleFId != null">  and (PRHTPF.t_permi_role_f_id = #{tPermiRoleFId} ) </if>        <if test="tPermiFunctionFId != null">  and (PRHTPF.t_permi_function_f_id = #{tPermiFunctionFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PRHTPF.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PRHTPF.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PRHTPF.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PRHTPF.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PRHTPF.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PRHTPF.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PRHTPF.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PRHTPF.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PRHTPF.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (PRHTPF.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (PRHTPF.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (PRHTPF.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (PRHTPF.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (PRHTPF.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PRHTPF.f_id = #{id} ) </if>        <if test="tPermiRoleFId != null and !tPermiRoleFId.equals('')  ">  and (PRHTPF.t_permi_role_f_id = #{tPermiRoleFId} ) </if>        <if test="tPermiFunctionFId != null and !tPermiFunctionFId.equals('')  ">  and (PRHTPF.t_permi_function_f_id = #{tPermiFunctionFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PRHTPF.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PRHTPF.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PRHTPF.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PRHTPF.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PRHTPF.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PRHTPF.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PRHTPF.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PRHTPF.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PRHTPF.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PRHTPF.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PRHTPF.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PRHTPF.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PRHTPF.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (PRHTPF.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="permiRoleHasTPermiFunctionBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="permiRoleHasTPermiFunctionBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="permiRoleHasTPermiFunctionBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="permiRoleHasTPermiFunctionBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_permi_role_has_t_permi_function PRHTPF    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(角色功能关系)信息。 -->
+	<sql id="select_permiRoleHasTPermiFunction">
+		SELECT <include refid="permiRoleHasTPermiFunctionBase.queryHead"/>
+		<include refid="permiRoleHasTPermiFunctionBase.busiQueryCondition"/>
+		<include refid="permiRoleHasTPermiFunctionBase.dimCheckSql"/>
+		ORDER BY PRHTPF.f_id DESC
+	</sql>
+	<select id="select_permiRoleHasTPermiFunction" parameterType="java.util.Map" resultMap="permiRoleHasTPermiFunctionBase.permiRoleHasTPermiFunctionExtendMap">
+		<include refid="permiRoleHasTPermiFunctionBase.select_permiRoleHasTPermiFunction"/>
+	</select>
+	
+	<!-- 根据条件分页查询(角色功能关系)信息  -->
+	<sql id="select_permiRoleHasTPermiFunction_withPage">
+		SELECT <include refid="permiRoleHasTPermiFunctionBase.queryHead"/>
+		<include refid="permiRoleHasTPermiFunctionBase.busiQueryCondition"/>
+		<include refid="permiRoleHasTPermiFunctionBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_permiRoleHasTPermiFunction_withPage" resultMap="permiRoleHasTPermiFunctionBase.permiRoleHasTPermiFunctionExtendMap" parameterType="java.util.Map">
+		<include refid="permiRoleHasTPermiFunctionBase.select_permiRoleHasTPermiFunction_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(角色功能关系)信息。 -->
+	<sql id="select_permiRoleHasTPermiFunction_bySeqId">
+		SELECT <include refid="permiRoleHasTPermiFunctionBase.queryHead"/>
+		<include refid="permiRoleHasTPermiFunctionBase.busiQueryCondition"/>
+		 and PRHTPF.f_id = #{_parameter}
+	</sql>
+	<select id="select_permiRoleHasTPermiFunction_bySeqId" parameterType="java.math.BigInteger" resultMap="permiRoleHasTPermiFunctionBase.permiRoleHasTPermiFunctionBaseMap">
+		<include refid="permiRoleHasTPermiFunctionBase.select_permiRoleHasTPermiFunction_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(角色功能关系)记录数  -->
+	<sql id="select_permiRoleHasTPermiFunction_count">
+		SELECT COUNT(*)
+		<include refid="permiRoleHasTPermiFunctionBase.busiQueryCount"/>
+		<include refid="permiRoleHasTPermiFunctionBase.dimCheckSql"/>
+	</sql>
+	<select id="select_permiRoleHasTPermiFunction_count" resultType="java.lang.Integer">
+		<include refid="permiRoleHasTPermiFunctionBase.select_permiRoleHasTPermiFunction_count"/>
+	</select>
+	
+	 <!-- 往(角色功能关系)新增一条记录。 -->
+	 <sql id="insert_permiRoleHasTPermiFunction">
+		INSERT INTO t_permi_role_has_t_permi_function 
+		(f_id,t_permi_role_f_id,t_permi_function_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tPermiRoleFId},#{tPermiFunctionFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_permiRoleHasTPermiFunction" parameterType="PermiRoleHasTPermiFunction">
+		<include refid="permiRoleHasTPermiFunctionBase.insert_permiRoleHasTPermiFunction"/>
+    </insert>
+    
+	<!-- 批量新增(角色功能关系)信息 -->
+    <insert id="insert_permiRoleHasTPermiFunction_Batch" parameterType="java.util.List">
+    	INSERT INTO t_permi_role_has_t_permi_function 
+		(f_id,t_permi_role_f_id,t_permi_function_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tPermiRoleFId},#{item.tPermiFunctionFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(角色功能关系)信息。 -->
+    <sql id="update_permiRoleHasTPermiFunction">
+		UPDATE t_permi_role_has_t_permi_function		<trim prefix="SET" prefixOverrides=","> 		<if test="tPermiRoleFId != null and !tPermiRoleFId.equals('') "> ,t_permi_role_f_id=#{tPermiRoleFId}</if> 		<if test="tPermiFunctionFId != null and !tPermiFunctionFId.equals('') "> ,t_permi_function_f_id=#{tPermiFunctionFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_permiRoleHasTPermiFunction" parameterType="PermiRoleHasTPermiFunction">
+		<include refid="permiRoleHasTPermiFunctionBase.update_permiRoleHasTPermiFunction"/>
+    </update>
+    
+    <!-- 批量更新(角色功能关系)信息。 -->
+    <update id="update_permiRoleHasTPermiFunction_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_permi_role_has_t_permi_function		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tPermiRoleFId != null and !item.tPermiRoleFId.equals('')  "> ,t_permi_role_f_id=#{item.tPermiRoleFId}</if> 		<if test="item.tPermiFunctionFId != null and !item.tPermiFunctionFId.equals('')  "> ,t_permi_function_f_id=#{item.tPermiFunctionFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(角色功能关系)信息_逻辑删除。 -->
+    <sql id="delete_permiRoleHasTPermiFunction_Logic">
+		UPDATE t_permi_role_has_t_permi_function		<trim prefix="SET" prefixOverrides=","> 		<if test="tPermiRoleFId != null and !tPermiRoleFId.equals('')  "> ,t_permi_role_f_id=#{tPermiRoleFId}</if> 		<if test="tPermiFunctionFId != null and !tPermiFunctionFId.equals('')  "> ,t_permi_function_f_id=#{tPermiFunctionFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_permiRoleHasTPermiFunction_Logic" parameterType="PermiRoleHasTPermiFunction">
+		<include refid="permiRoleHasTPermiFunctionBase.delete_permiRoleHasTPermiFunction_Logic"/>
+    </update>
+    
+    <!-- 批量删除(角色功能关系)信息_逻辑删除 -->
+    <update id="delete_permiRoleHasTPermiFunction_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_permi_role_has_t_permi_function		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tPermiRoleFId != null and !item.tPermiRoleFId.equals('')  "> ,t_permi_role_f_id=#{item.tPermiRoleFId}</if> 		<if test="item.tPermiFunctionFId != null and !item.tPermiFunctionFId.equals('')  "> ,t_permi_function_f_id=#{item.tPermiFunctionFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(角色功能关系)信息。 -->
+    <sql id="delete_permiRoleHasTPermiFunction">
+		DELETE FROM t_permi_role_has_t_permi_function WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_permiRoleHasTPermiFunction" parameterType="java.lang.String">
+		<include refid="permiRoleHasTPermiFunctionBase.delete_permiRoleHasTPermiFunction"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(角色功能关系)信息。 -->
+    <delete id="delete_permiRoleHasTPermiFunction_Batch" parameterType="java.util.List">
+		DELETE FROM t_permi_role_has_t_permi_function WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

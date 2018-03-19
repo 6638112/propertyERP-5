@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:建筑单元 t_building -->
+<mapper namespace="building">
+	<resultMap type="com.cnfantasia.server.api.room.entity.BuildingEntity" id="buildingMap" extends="buildingBase.buildingBaseMap">
+		<!-- 小区信息 -->
+        <association column="t_group_building_f_id" javaType="com.cnfantasia.server.api.room.entity.GroupBuildingEntity" 
+        	property="groupBuildingEntity" select="groupBuilding.select_groupBuilding_bySeqId"/>
+	</resultMap>
+    
+    <!-- 根据序列号查询某个(建筑单元)信息。 -->
+	<select id="select_building_bySeqId" parameterType="java.math.BigInteger" resultMap="buildingMap">
+		<include refid="buildingBase.select_building_bySeqId"/>
+	</select>
+	
+</mapper>

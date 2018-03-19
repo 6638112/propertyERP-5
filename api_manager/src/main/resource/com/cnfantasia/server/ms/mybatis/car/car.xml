@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 车辆管理 -->
+<mapper namespace="car">
+	<sql id="select_car_list_QueryFrom">
+	    FROM
+			t_car_num_list CNL
+		INNER JOIN t_group_building GB ON GB.f_id = CNL.t_group_building_f_id
+		<if test="gbIdList !=null">
+	   		<if test="gbIdList.size() > 0">
+				AND GB.f_id IN 
+			<foreach item="item" collection="gbIdList" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+	   		</if>
+	   		<if test="gbIdList.size() == 0"><!-- 无小区权限用户 -->
+	   			AND GB.f_id = -2
+	   		</if>
+		</if>
+		LEFT JOIN t_real_room RR ON RR.f_id = CNL.f_real_room_id
+		LEFT JOIN t_building B ON B.f_id = RR.t_building_f_id
+		LEFT JOIN t_group_building XQ ON XQ.f_id = B.t_group_building_f_id
+	</sql>
+	
+	<sql id="select_car_list_checkSql">
+		WHERE
+			CNL.f_sys0_del_state = 0
+			<if test="carNum != null and !carNum.equals('')">
+				AND locate(#{carNum}, CNL.t_car_num) > 0
+			</if>
+			<if test="park != null and !park.equals('')">
+				AND CNL.t_group_building_f_id=#{park}
+			</if>
+			<if test="gbName != null and !gbName.equals('')">
+				AND B.t_group_building_f_id=#{gbName}
+			</if>
+			<if test="buildingName != null and !buildingName.equals('')">
+				AND RR.t_building_f_id=#{buildingName}
+			</if>
+			<if test="roomName != null and !roomName.equals('')">
+				AND RR.f_id=#{roomName}
+			</if>
+	</sql>
+	
+	<!-- 车辆管理首页数据查询 -->
+	<select id="select_car_list_with_page" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.car.entity.CarEntity">
+		SELECT
+		    CNL.f_id AS carId,
+			CNL.t_car_num AS carNum,
+			IFNULL(CNL.f_fee, 0)/100 AS fee,
+			DATE_FORMAT(
+				CNL.f_expire_date,
+				'%Y-%m-%d %H:%i:%s'
+			) AS expireDate,
+			GB.f_name AS park,
+			B.f_name AS buildingName,
+			RR.f_num AS roomName,
+			XQ.f_name AS xqName,
+			CNL.f_from `from`
+		<include refid="select_car_list_QueryFrom"/>
+		<include refid="select_car_list_checkSql"/>
+		order by CNL.f_expire_date ASC
+		<if test="(_begin != null and !_begin.equals('')) or (_length != null and !_length.equals(''))">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+	
+	<!-- 车辆管理首页数据数量 -->
+	<select id="select_car_list_with_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="select_car_list_QueryFrom"/>
+		<include refid="select_car_list_checkSql"/>
+	</select>
+	
+	<!-- 根据小区名称查询小区信息 -->
+	<select id="select_gb_by_name" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.car.entity.AutoCompleteEntity">
+		SELECT
+			GB.f_id AS id,
+			GB.f_name AS name
+		FROM
+			t_group_building GB
+		WHERE
+			GB.f_sys0_del_state = 0
+			<if test="gbName != null and !gbName.equals('')">
+				AND locate(#{gbName}, GB.f_name) > 0
+			</if>
+		ORDER BY GB.f_id DESC
+		LIMIT 10
+	</select>
+	
+	<!-- 根据楼栋名称、gbId查询楼栋信息 -->
+	<select id="select_building_by_name" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.car.entity.AutoCompleteEntity">
+		SELECT
+			B.f_id AS id,
+			B.f_name AS name
+		FROM
+			t_building B
+		WHERE
+			b.t_group_building_f_id =#{gbId}
+		AND B.f_sys0_del_state = 0
+		<if test="buildingName != null and !buildingName.equals('')">
+			AND locate(#{buildingName}, B.f_name) > 0
+		</if>
+		ORDER BY B.f_id DESC
+		LIMIT 10
+	</select>
+	
+	<!-- 根据buildingId查询房间信息 -->
+	<select id="select_realRoom_by_name" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.car.entity.AutoCompleteEntity">
+		SELECT
+			RR.f_id AS id,
+			RR.f_num AS name
+		FROM
+			t_real_room RR
+		WHERE
+			RR.t_building_f_id =#{buildingId}
+		AND RR.f_sys0_del_state = 0
+		<if test="roomName != null and !roomName.equals('')">
+			AND locate(#{roomName}, RR.f_num) > 0
+		</if>
+		ORDER BY RR.f_id DESC
+		LIMIT 10
+	</select>
+	
+	<select id="is_exist_pay_log" parameterType="java.util.Map" resultType="java.lang.Integer">
+		
+	</select>
+</mapper>

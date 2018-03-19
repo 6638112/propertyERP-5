@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	
+    <import resource="classpath:/com/cnfantasia/server/commbusi/commbusi_redis.xml" />
+	<!-- 博客队列 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/microblogQueue/microblogQueue_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/microblogQueue/microblogQueue_dao.xml"/>
+
+	<import resource="classpath:/com/cnfantasia/server/api/business/common/common.xml"/>
+
+	<!-- 电商移动版HTML5商户端 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/ebuyorder/ebuyMerchant.xml"/>
+
+	<import resource="classpath:/com/cnfantasia/server/api/business/communitySupply/communitySupply_manager.xml"/>
+	
+	<bean id="omsCommSysParaDao" class="com.cnfantasia.server.ms.omsCommonSysParam.dao.OmsCommSysParaDao" parent="omsCommSysParaBaseDao"/>
+	<bean id="omsCommSysParaService" class="com.cnfantasia.server.ms.omsCommonSysParam.service.OmsCommSysParaService" parent="omsCommSysParaBaseService"/>
+	
+	<bean id="omsSysParamManager" class="com.cnfantasia.server.ms.pub.omsSysParam.OmsSysParamManager" init-method="init"/>
+	<bean id="ebuyProductTempDao" class="com.cnfantasia.server.ms.ebuyProductTemp.dao.EbuyProductTempDao" parent="ebuyProductTempBaseDao">
+
+	</bean>
+	<bean id="ebuyProductTempService" class="com.cnfantasia.server.ms.ebuyProductTemp.service.EbuyProductTempService" parent="ebuyProductTempBaseService">
+		<property name="uuidManager" ref="uuidManager"></property>
+		<property name="ebuyProductTempDao" ref="ebuyProductTempDao"></property>
+		<property name="ebuyProductBaseDao" ref="ebuyProductBaseDao"></property>
+		<property name="ebuyProductParametersBaseDao" ref="ebuyProductParametersBaseDao"></property>
+		<property name="ebuyProductPicBaseDao" ref="ebuyProductPicBaseDao"></property>
+	</bean>
+	
+	<bean id="ebuyOrderPusherService" class="com.cnfantasia.server.api.ebuyorder.service.EbuyOrderPusherService" />
+	<bean id="ebuyOrderPusherTask" class="com.cnfantasia.server.api.ebuyorder.serviceUn.EbuyOrderPusherTask" />
+	<bean id="productImpotter4HJXTask" class="com.cnfantasia.server.api.ebuyProductTemp.importter.ProductImpotter4HJX" >
+		<property name="uuidManager" ref="uuidManager"></property>
+		<property name="ebuyProductTempDao" ref="ebuyProductTempDao"></property>
+		<property name="ebuyProductParametersTempBaseDao" ref="ebuyProductParametersTempBaseDao"></property>
+	</bean>
+	
+	<bean id="ebuyOrderPusherDao" class="com.cnfantasia.server.api.ebuyorder.dao.EbuyOrderPusherDao"  parent="abstractBaseDao"/>
+	<bean id="commonEbuyDao" class="com.cnfantasia.server.api.commonBusiness.dao.CommonEbuyDao" parent="abstractBaseDao" />
+	<bean id="commonRoomDao" class="com.cnfantasia.server.api.commonBusiness.dao.CommonRoomDao" parent="abstractBaseDao" />
+	
+	<!-- fileServer文件服务器 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/fileServer/fileServer_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/fileServer/fileServer_service.xml"/>
+	
+	<!-- commSysPara -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/commSysPara/commSysPara_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/commSysPara/commSysPara_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/commSysPara/commSysPara_parser.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/commSysPara/commSysPara_manager.xml"/>
+
+	<bean id="dredgeService" class="com.cnfantasia.server.api.dredge.service.DredgeService" />
+	<bean id="dredgePushService" class="com.cnfantasia.server.api.dredge.service.DredgePushService" />
+	<bean id="dredgeDao" class="com.cnfantasia.server.api.dredge.dao.DredgeDao" parent="abstractBaseDao"/>
+	
+	<bean id="selfActivityService" class="com.cnfantasia.server.api.selfActivity.service.SelfActivityService" />
+	<bean id="selfActivityDao" class="com.cnfantasia.server.api.selfActivity.dao.SelfActivityDao" parent="abstractBaseDao"/>
+	
+	<bean id="operateMsgService" class="com.cnfantasia.server.api.operateMsg.service.OperateMsgService" />
+	<bean id="operateMsgDao" class="com.cnfantasia.server.api.operateMsg.dao.OperateMsgDao" parent="abstractBaseDao"/>
+
+	<bean id="meterReadingService" class="com.cnfantasia.server.api.meterReading.service.MeterReadingService" />
+	<bean id="meterReadingDao" class="com.cnfantasia.server.api.meterReading.dao.MeterReadingDao" parent="abstractBaseDao"/>
+	
+	<bean id="propertyCardService" class="com.cnfantasia.server.api.propertycard.service.PropertyCardService" />
+	<bean id="propertyCardDao" class="com.cnfantasia.server.api.propertycard.dao.PropertyCardDao" parent="abstractBaseDao"/>
+	
+	<bean id="propertyAccountDeduTask" class="com.cnfantasia.server.ms.revenue.task.PropertyAccountDeduTask">
+		<property name="propertyCardService" ref="propertyCardService"></property>
+	</bean>
+	
+	<!-- 运维文案信息-2015-8-25 18:07:36迁移到commbusi_both -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/operation/operation_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/operation/operation_dao.xml"/>
+	
+	<!-- 抽奖配置 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/prizeActivity/prizeActivity_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/prizeActivity/prizeActivity_dao.xml"/>
+	
+	<!-- 物业宝 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/plotproperty/finance.xml"/>
+	
+	<!-- 收益中心 -->
+	<import resource="classpath:/com/cnfantasia/server/ms/business/revenue/revenue_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/revenue/revenue_service.xml"/> 
+	
+	<!-- 缴费配置 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/plotpropertyCfg/plotpropertyCfg_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/plotpropertyCfg/plotpropertyCfg_dao.xml"/>
+	
+	<!-- 接口加密 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/encrypt/encrypt_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/encrypt/encrypt_dao.xml"/>
+	
+	<bean class="com.cnfantasia.server.api.pub.utils.ApplicationContextBothUtil"/>
+	
+	<!-- 消息通知 -->
+	<import resource="classpath:com/cnfantasia/server/api/business/notification/notification.xml"/>
+	
+	<!-- 门禁认证选项配置信息 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/cloudKeyUserData/cloudKeyUserData_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/cloudKeyUserData/cloudKeyUserData_service.xml"/>
+
+	<!-- 两禁模块 -->
+    <import resource="classpath:/com/cnfantasia/server/api/business/access/access_dao.xml"/>
+
+	<!--消费券模块-->
+	<import resource="classpath:/com/cnfantasia/server/api/business/coupon/coupon_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/coupon/coupon_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/couponArea/couponArea_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/couponArea/couponArea_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/userCoupon/userCoupon_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/userCoupon/userCoupon_service.xml"/>
+
+	<!--自提点-->
+	<import resource="classpath:/com/cnfantasia/server/api/business/ebuyFightSupplyMerchant/ebuyFightSupplyMerchant_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/ebuyFightSupplyMerchant/ebuyFightSupplyMerchant_service.xml"/>
+
+	<!--拼购-->
+	<import resource="classpath:/com/cnfantasia/server/api/business/ebuyProductFightGroups/ebuyProductFightGroups_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/ebuyProductFightGroups/ebuyProductFightGroups_service.xml"/>
+	
+	<!-- 账单用户优惠关系 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/paybillUserPrefer/paybillUserPrefer_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/paybillUserPrefer/paybillUserPrefer_service.xml"/>
+	
+	<!-- 提款单推送到EAS -->
+	<bean id="revenueApplyPushService" class="com.cnfantasia.server.api.revenueApplyPush.service.RevenueApplyPushService" />
+	<bean id="revenueApplyPushDao" class="com.cnfantasia.server.api.revenueApplyPush.dao.RevenueApplyPushDao" parent="abstractBaseDao"/>
+	
+	<bean id="payBillService" class="com.cnfantasia.server.ms.payBill.service.PayBillService" parent="payBillBaseService">
+		<property name="payBillDao" ref="payBillDao"></property>
+		<property name="uuidManager" ref="uuidManager"></property>
+		<property name="PropertyFeeDetailBaseDao" ref="propertyFeeDetailBaseDao"></property>
+		<property name="payBillMarkLogBaseDao" ref="payBillMarkLogBaseDao"></property>
+	</bean>
+	
+	<bean id="payBillDao" class="com.cnfantasia.server.ms.payBill.dao.PayBillDao" parent="payBillBaseDao">
+	</bean>
+	
+	<bean id="gaoDeFetchTask" class="com.cnfantasia.server.ms.revenue.task.GaoDeFetchTask" >
+	</bean>
+	
+	<bean id="limitBuyPriceSysTask" class="com.cnfantasia.server.ms.revenue.task.LimitBuyPriceSysTask" > 
+	</bean>
+	
+	<import resource="classpath:/com/cnfantasia/server/api/business/redpoint/redpoint_dao.xml"/>
+
+	<import resource="classpath:/com/cnfantasia/server/api/business/roomVerifyPayment/roomVerifyPayment_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/cashFlowSummary/cashFlowSummary_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/cashFlowSummary/cashFlowSummary_service.xml"/>
+	<!-- 临停车缴费消息发送 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/carYhsMsg/carYhsMsg_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/carYhsMsg/carYhsMsg_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/ebuyProductSettle/ebuyProductSettle_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/ebuyProductSettle/ebuyProductSettle_service.xml"/>
+	<!-- 双乾支付优惠补贴 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/cashSqpayBt/cashSqpayBt_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/cashSqpayBt/cashSqpayBt_service.xml"/>
+
+	<!--用户和设备缴费限制-->
+	<import resource="classpath:/com/cnfantasia/server/ms/business/payCountInit/userAndDevicePayCountInit_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/payCountInit/userAndDevicePayCountInit_dao.xml"/>
+
+	<!--选择周期缴费-->
+	<import resource="classpath:/com/cnfantasia/server/ms/business/alterPeriod/alterPeriod_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/alterPeriod/alterPeriod_dao.xml"/>
+	
+	<import resource="classpath:/com/cnfantasia/server/api/business/propertyAccountInfo/propertyAccountInfo_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/userHasPropertyCard/userHasPropertyCard_dao.xml"/>
+
+	<import resource="classpath:/com/cnfantasia/server/api/business/propertySoftwareDock/propertySoftwareDock_dao_service.xml"/>
+
+	<!--限时抢购活动-->
+	<import resource="classpath:/com/cnfantasia/server/api/business/limitBuy/limitBuy_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/limitBuy/limitBuy_service.xml"/>
+
+	<import resource="classpath:/com/cnfantasia/server/api/business/userQuestion/userQuestionBean.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/homeMessage/homeMessageBean.xml"/>
+	
+	<import resource="classpath:/com/cnfantasia/server/api/business/bankCollection/bankCollection_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/bankCollection/bankCollection_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/shortUrl/shortUrl_bean.xml"/>
+	<!--账期配置-->
+	<import resource="classpath:/com/cnfantasia/server/api/business/groupBuildingCycleCfg/groupBuildingCycleCfg_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/groupBuildingCycleCfg/groupBuildingCycleCfg_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/dredgeAddress/dredgeAddressBean.xml"/>
+
+	<import resource="classpath:/com/cnfantasia/server/api/business/coupon/coupon_sender.xml"/>
+    <!--生活缴费-->
+    <bean id="livingPayDao" class="com.cnfantasia.server.api.livingPay.dao.LivingPayDao"  parent="abstractBaseDao" />
+    <bean id="livingPayService" class="com.cnfantasia.server.api.livingPay.service.LivingPayService"/>
+
+	<!--滞纳金计算-->
+	<import resource="classpath:/com/cnfantasia/server/api/business/lateFee/latefee_service.xml"/>
+
+	<bean id="aliDiffPaymentPayDao" class="com.cnfantasia.server.api.payment.dao.AliDiffPaymentPayDao" parent="abstractBaseDao" />
+</beans>

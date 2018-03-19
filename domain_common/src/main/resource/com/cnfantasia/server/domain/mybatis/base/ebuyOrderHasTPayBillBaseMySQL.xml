@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN: t_ebuy_order_has_t_pay_bill -->
+<mapper namespace="ebuyOrderHasTPayBillBase">
+	<resultMap type="EbuyOrderHasTPayBill" id="ebuyOrderHasTPayBillBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_ebuy_order_f_id" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!--  -->        <result column="t_pay_bill_f_id" javaType="java.math.BigInteger" property="tPayBillFId"/>  <!--  -->        <result column="f_discount" javaType="java.lang.Double" property="discount"/>  <!-- 使用的物业折扣,为空表示不使用折扣 -->        <result column="f_prize_record_id" javaType="java.math.BigInteger" property="prizeRecordId"/>  <!-- 中奖记录Id -->        <result column="f_prize_user_room_id" javaType="java.math.BigInteger" property="prizeUserRoomId"/>  <!-- 中奖记录对应的用户门牌Id -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyOrderHasTPayBill" id="ebuyOrderHasTPayBillExtendMap" extends="ebuyOrderHasTPayBillBaseMap">
+	</resultMap>
+	<resultMap type="EbuyOrderHasTPayBill" id="ebuyOrderHasTPayBillBaseMap_AppendTable">
+        <id column="EOHTPBid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EOHTPBtEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!--  -->        <result column="EOHTPBtPayBillFId" javaType="java.math.BigInteger" property="tPayBillFId"/>  <!--  -->        <result column="EOHTPBdiscount" javaType="java.lang.Double" property="discount"/>  <!-- 使用的物业折扣,为空表示不使用折扣 -->        <result column="EOHTPBprizeRecordId" javaType="java.math.BigInteger" property="prizeRecordId"/>  <!-- 中奖记录Id -->        <result column="EOHTPBprizeUserRoomId" javaType="java.math.BigInteger" property="prizeUserRoomId"/>  <!-- 中奖记录对应的用户门牌Id -->        <result column="EOHTPBsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EOHTPBsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EOHTPBsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EOHTPBsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EOHTPBsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EOHTPBsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EOHTPBsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyOrderHasTPayBill" id="ebuyOrderHasTPayBillBaseMap_AppendTable1">
+        <id column="EOHTPB1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EOHTPB1tEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!--  -->        <result column="EOHTPB1tPayBillFId" javaType="java.math.BigInteger" property="tPayBillFId"/>  <!--  -->        <result column="EOHTPB1discount" javaType="java.lang.Double" property="discount"/>  <!-- 使用的物业折扣,为空表示不使用折扣 -->        <result column="EOHTPB1prizeRecordId" javaType="java.math.BigInteger" property="prizeRecordId"/>  <!-- 中奖记录Id -->        <result column="EOHTPB1prizeUserRoomId" javaType="java.math.BigInteger" property="prizeUserRoomId"/>  <!-- 中奖记录对应的用户门牌Id -->        <result column="EOHTPB1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EOHTPB1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EOHTPB1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EOHTPB1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EOHTPB1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EOHTPB1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EOHTPB1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EOHTPB.f_id,EOHTPB.t_ebuy_order_f_id,EOHTPB.t_pay_bill_f_id,EOHTPB.f_discount,EOHTPB.f_prize_record_id,EOHTPB.f_prize_user_room_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EOHTPB.f_id as EOHTPBid,EOHTPB.t_ebuy_order_f_id as EOHTPBtEbuyOrderFId,EOHTPB.t_pay_bill_f_id as EOHTPBtPayBillFId,EOHTPB.f_discount as EOHTPBdiscount,EOHTPB.f_prize_record_id as EOHTPBprizeRecordId,EOHTPB.f_prize_user_room_id as EOHTPBprizeUserRoomId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EOHTPB1.f_id as EOHTPB1id,EOHTPB1.t_ebuy_order_f_id as EOHTPB1tEbuyOrderFId,EOHTPB1.t_pay_bill_f_id as EOHTPB1tPayBillFId,EOHTPB1.f_discount as EOHTPB1discount,EOHTPB1.f_prize_record_id as EOHTPB1prizeRecordId,EOHTPB1.f_prize_user_room_id as EOHTPB1prizeUserRoomId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EOHTPB.f_id = #{id} ) </if>        <if test="tEbuyOrderFId != null">  and (EOHTPB.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="tPayBillFId != null">  and (EOHTPB.t_pay_bill_f_id = #{tPayBillFId} ) </if>        <if test="discount != null">  and (EOHTPB.f_discount = #{discount} ) </if>        <if test="prizeRecordId != null">  and (EOHTPB.f_prize_record_id = #{prizeRecordId} ) </if>        <if test="prizeUserRoomId != null">  and (EOHTPB.f_prize_user_room_id = #{prizeUserRoomId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EOHTPB.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EOHTPB.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EOHTPB.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EOHTPB.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EOHTPB.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EOHTPB.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EOHTPB.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EOHTPB.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EOHTPB.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EOHTPB.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EOHTPB.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EOHTPB.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EOHTPB.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EOHTPB.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EOHTPB.f_id = #{id} ) </if>        <if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  ">  and (EOHTPB.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="tPayBillFId != null and !tPayBillFId.equals('')  ">  and (EOHTPB.t_pay_bill_f_id = #{tPayBillFId} ) </if>        <if test="discount != null and !discount.equals('')  ">  and (EOHTPB.f_discount = #{discount} ) </if>        <if test="prizeRecordId != null and !prizeRecordId.equals('')  ">  and (EOHTPB.f_prize_record_id = #{prizeRecordId} ) </if>        <if test="prizeUserRoomId != null and !prizeUserRoomId.equals('')  ">  and (EOHTPB.f_prize_user_room_id = #{prizeUserRoomId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EOHTPB.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EOHTPB.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EOHTPB.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EOHTPB.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EOHTPB.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EOHTPB.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EOHTPB.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EOHTPB.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EOHTPB.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EOHTPB.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EOHTPB.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EOHTPB.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EOHTPB.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EOHTPB.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyOrderHasTPayBillBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyOrderHasTPayBillBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyOrderHasTPayBillBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyOrderHasTPayBillBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_order_has_t_pay_bill EOHTPB    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询()信息。 -->
+	<sql id="select_ebuyOrderHasTPayBill">
+		SELECT <include refid="ebuyOrderHasTPayBillBase.queryHead"/>
+		<include refid="ebuyOrderHasTPayBillBase.busiQueryCondition"/>
+		<include refid="ebuyOrderHasTPayBillBase.dimCheckSql"/>
+		ORDER BY EOHTPB.f_id DESC
+	</sql>
+	<select id="select_ebuyOrderHasTPayBill" parameterType="java.util.Map" resultMap="ebuyOrderHasTPayBillBase.ebuyOrderHasTPayBillExtendMap">
+		<include refid="ebuyOrderHasTPayBillBase.select_ebuyOrderHasTPayBill"/>
+	</select>
+	
+	<!-- 根据条件分页查询()信息  -->
+	<sql id="select_ebuyOrderHasTPayBill_withPage">
+		SELECT <include refid="ebuyOrderHasTPayBillBase.queryHead"/>
+		<include refid="ebuyOrderHasTPayBillBase.busiQueryCondition"/>
+		<include refid="ebuyOrderHasTPayBillBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyOrderHasTPayBill_withPage" resultMap="ebuyOrderHasTPayBillBase.ebuyOrderHasTPayBillExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyOrderHasTPayBillBase.select_ebuyOrderHasTPayBill_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个()信息。 -->
+	<sql id="select_ebuyOrderHasTPayBill_bySeqId">
+		SELECT <include refid="ebuyOrderHasTPayBillBase.queryHead"/>
+		<include refid="ebuyOrderHasTPayBillBase.busiQueryCondition"/>
+		 and EOHTPB.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyOrderHasTPayBill_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyOrderHasTPayBillBase.ebuyOrderHasTPayBillBaseMap">
+		<include refid="ebuyOrderHasTPayBillBase.select_ebuyOrderHasTPayBill_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的()记录数  -->
+	<sql id="select_ebuyOrderHasTPayBill_count">
+		SELECT COUNT(*)
+		<include refid="ebuyOrderHasTPayBillBase.busiQueryCount"/>
+		<include refid="ebuyOrderHasTPayBillBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyOrderHasTPayBill_count" resultType="java.lang.Integer">
+		<include refid="ebuyOrderHasTPayBillBase.select_ebuyOrderHasTPayBill_count"/>
+	</select>
+	
+	 <!-- 往()新增一条记录。 -->
+	 <sql id="insert_ebuyOrderHasTPayBill">
+		INSERT INTO t_ebuy_order_has_t_pay_bill 
+		(f_id,t_ebuy_order_f_id,t_pay_bill_f_id,f_discount,f_prize_record_id,f_prize_user_room_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tEbuyOrderFId},#{tPayBillFId},#{discount},#{prizeRecordId},#{prizeUserRoomId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_ebuyOrderHasTPayBill" parameterType="EbuyOrderHasTPayBill">
+		<include refid="ebuyOrderHasTPayBillBase.insert_ebuyOrderHasTPayBill"/>
+    </insert>
+    
+	<!-- 批量新增()信息 -->
+    <insert id="insert_ebuyOrderHasTPayBill_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_order_has_t_pay_bill 
+		(f_id,t_ebuy_order_f_id,t_pay_bill_f_id,f_discount,f_prize_record_id,f_prize_user_room_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tEbuyOrderFId},#{item.tPayBillFId},#{item.discount},#{item.prizeRecordId},#{item.prizeUserRoomId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新()信息。 -->
+    <sql id="update_ebuyOrderHasTPayBill">
+		UPDATE t_ebuy_order_has_t_pay_bill		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('') "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="tPayBillFId != null and !tPayBillFId.equals('') "> ,t_pay_bill_f_id=#{tPayBillFId}</if> 		<if test="discount != null and !discount.equals('') "> ,f_discount=#{discount}</if> 		<if test="prizeRecordId != null and !prizeRecordId.equals('') "> ,f_prize_record_id=#{prizeRecordId}</if> 		<if test="prizeUserRoomId != null and !prizeUserRoomId.equals('') "> ,f_prize_user_room_id=#{prizeUserRoomId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyOrderHasTPayBill" parameterType="EbuyOrderHasTPayBill">
+		<include refid="ebuyOrderHasTPayBillBase.update_ebuyOrderHasTPayBill"/>
+    </update>
+    
+    <!-- 批量更新()信息。 -->
+    <update id="update_ebuyOrderHasTPayBill_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_order_has_t_pay_bill		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.tPayBillFId != null and !item.tPayBillFId.equals('')  "> ,t_pay_bill_f_id=#{item.tPayBillFId}</if> 		<if test="item.discount != null and !item.discount.equals('')  "> ,f_discount=#{item.discount}</if> 		<if test="item.prizeRecordId != null and !item.prizeRecordId.equals('')  "> ,f_prize_record_id=#{item.prizeRecordId}</if> 		<if test="item.prizeUserRoomId != null and !item.prizeUserRoomId.equals('')  "> ,f_prize_user_room_id=#{item.prizeUserRoomId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除()信息_逻辑删除。 -->
+    <sql id="delete_ebuyOrderHasTPayBill_Logic">
+		UPDATE t_ebuy_order_has_t_pay_bill		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="tPayBillFId != null and !tPayBillFId.equals('')  "> ,t_pay_bill_f_id=#{tPayBillFId}</if> 		<if test="discount != null and !discount.equals('')  "> ,f_discount=#{discount}</if> 		<if test="prizeRecordId != null and !prizeRecordId.equals('')  "> ,f_prize_record_id=#{prizeRecordId}</if> 		<if test="prizeUserRoomId != null and !prizeUserRoomId.equals('')  "> ,f_prize_user_room_id=#{prizeUserRoomId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyOrderHasTPayBill_Logic" parameterType="EbuyOrderHasTPayBill">
+		<include refid="ebuyOrderHasTPayBillBase.delete_ebuyOrderHasTPayBill_Logic"/>
+    </update>
+    
+    <!-- 批量删除()信息_逻辑删除 -->
+    <update id="delete_ebuyOrderHasTPayBill_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_order_has_t_pay_bill		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.tPayBillFId != null and !item.tPayBillFId.equals('')  "> ,t_pay_bill_f_id=#{item.tPayBillFId}</if> 		<if test="item.discount != null and !item.discount.equals('')  "> ,f_discount=#{item.discount}</if> 		<if test="item.prizeRecordId != null and !item.prizeRecordId.equals('')  "> ,f_prize_record_id=#{item.prizeRecordId}</if> 		<if test="item.prizeUserRoomId != null and !item.prizeUserRoomId.equals('')  "> ,f_prize_user_room_id=#{item.prizeUserRoomId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除()信息。 -->
+    <sql id="delete_ebuyOrderHasTPayBill">
+		DELETE FROM t_ebuy_order_has_t_pay_bill WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyOrderHasTPayBill" parameterType="java.lang.String">
+		<include refid="ebuyOrderHasTPayBillBase.delete_ebuyOrderHasTPayBill"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除()信息。 -->
+    <delete id="delete_ebuyOrderHasTPayBill_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_order_has_t_pay_bill WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

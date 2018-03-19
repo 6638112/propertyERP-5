@@ -1,0 +1,713 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 抽奖业务公共模块 -->
+<mapper namespace="commonPrize">
+	 <!-- <resultMap type="com.cnfantasia.server.api.prize.entity.PrizeRecordSimpleEntity" id="prizeRecordSimpleEntity_Append" 
+    	extends="prizeRecordBase.prizeRecordBaseMap_AppendTable">
+    	
+    </resultMap> -->
+	<resultMap type="com.cnfantasia.server.api.prize.entity.PrizeRecordEntity" id="prizeRecordEntityMap_Append" 
+		extends="prizeRecordBase.prizeRecordBaseMap_AppendTable">
+		<association property="prizeUser" resultMap="commonUser.userSimpleEntity_Map_Append"></association>
+	</resultMap>
+	
+	<select id="select_User_By_PrizeRecordId" parameterType="java.util.Map" resultMap="commonUser.userSimpleEntity_Map_Append">
+		SELECT <include refid="commonUser.userSimple_common_select"/>
+		FROM t_prize_record PR
+			INNER JOIN t_user_has_t_room  UHTR ON 1 = 1 AND PR.t_user_has_t_room_f_id = UHTR.f_id
+			INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+				
+				<include refid="commonUser.userSimple_common_from"/>
+		WHERE 1=1
+		AND PR.f_sys0_del_state = 0
+		AND PR.f_id = #{prizeRecordId}
+	</select>
+	
+	<!-- 按对应月份是否有已经使用过的折扣,返回使用过的记录数 -->
+	<sql id="select_IsUsed_Discount_Count_comm">
+		SELECT COUNT(*)
+		FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+			INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND R.f_id = UHTR.t_room_f_id AND UHTR.f_apply_status = 1
+			INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+			
+			INNER JOIN t_prize_record PR ON PR.t_user_has_t_room_f_id = UHTR.f_id 
+				AND PR.f_sys0_del_state = 0
+				AND PR.f_status = 1
+		WHERE 1=1
+	</sql>
+	
+    <!-- <select id="select_IsUsed_Discount_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	<include refid="select_IsUsed_Discount_Count_comm"/>
+		AND date_format(PR.f_prize_time, '%Y%m')= #{month}
+    </select> -->
+    <select id="select_IsUsed_Discount_Count_DayInterval" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	<include refid="select_IsUsed_Discount_Count_comm"/>
+    	<![CDATA[ 
+			AND date_format(PR.f_prize_time, '%Y%m%d') >= #{startDate}
+			AND date_format(PR.f_prize_time, '%Y%m%d') <= #{endDate}
+		]]>
+    </select>
+    
+    <!-- 查询对应月份可用的折扣数 -->
+    <!-- <select id="select_discount_total_count"  parameterType="java.util.Map" resultType="java.lang.Integer">
+    </select> -->
+    
+    <!-- 查询对应月份已经使用的折扣信息 -->
+    <sql id="select_isUsed_PrizeRecord_ByMonth_comm">
+    	SELECT <include refid="prizeRecordBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+		FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+			INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND R.f_id = UHTR.t_room_f_id AND UHTR.f_apply_status = 1
+		 	INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+			<include refid="commonUser.userSimple_common_from"/>
+			
+			INNER JOIN t_prize_record PR ON PR.t_user_has_t_room_f_id = UHTR.f_id 
+				AND PR.f_sys0_del_state = 0
+				AND PR.f_status = 1 <!-- 使用状态=={"0":"未使用","1":"已使用"} -->
+		WHERE 1=1
+    </sql>
+    
+    <!-- <select id="select_isUsed_PrizeRecord_ByMonth" parameterType="java.util.Map" resultMap="prizeRecordEntityMap_Append">
+    	<include refid="select_isUsed_PrizeRecord_ByMonth_comm"/>
+		AND date_format(PR.f_prize_time, '%Y%m')= #{month}
+		ORDER BY PR.f_id ASC
+		LIMIT 0,1
+    </select> -->
+    
+    <select id="select_isUsed_PrizeRecord_ByMonth_DayInterval" parameterType="java.util.Map" resultMap="prizeRecordEntityMap_Append">
+    	<include refid="select_isUsed_PrizeRecord_ByMonth_comm"/>
+		<![CDATA[ 
+			AND date_format(PR.f_prize_time, '%Y%m%d') >= #{startDate}
+			AND date_format(PR.f_prize_time, '%Y%m%d') <= #{endDate}
+		]]>
+		ORDER BY PR.f_id ASC
+		LIMIT 0,1
+    </select>
+    
+    <!-- 根据用户Id，查询对应月份第一个最低折扣 -->
+    <sql id="select_Least_Discount_First_ByMonth_comm">
+    	SELECT <include refid="prizeRecordBase.queryHead_AppendTable"/>
+    		,<include refid="commonUser.userSimple_common_select"/>
+    	FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+    		INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+    		INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND R.f_id = UHTR.t_room_f_id AND UHTR.f_apply_status = 1
+    		INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+    		<include refid="commonUser.userSimple_common_from"/>
+    		
+    		INNER JOIN t_prize_record PR ON PR.t_user_has_t_room_f_id = UHTR.f_id 
+    			AND PR.f_sys0_del_state = 0
+				<!-- AND PR.f_status = 0 --> <!-- 使用状态=={"0":"未使用","1":"已使用"} -->
+		WHERE 1=1
+    </sql>
+    
+    <sql id="select_Least_Discount_First_ByMonth_comm02">
+    	SELECT MIN(PR.f_discount)
+    	FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+    		INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+    		INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND R.f_id = UHTR.t_room_f_id AND UHTR.f_apply_status = 1
+			INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+			
+    		INNER JOIN t_prize_record PR ON PR.t_user_has_t_room_f_id = UHTR.f_id 
+    			AND PR.f_sys0_del_state = 0
+				<!-- AND U.f_id = #{userId} -->
+				<!-- AND PR.f_status = 0  --><!-- 使用状态=={"0":"未使用","1":"已使用"} -->
+		WHERE 1=1
+    </sql>
+    
+    <!-- 若有多个最低折扣，则返回时间最早的那个 -->
+    <!-- <select id="select_Least_Discount_First_ByMonth" parameterType="java.util.Map" resultMap="prizeRecordEntityMap_Append">
+    	<include refid="select_Least_Discount_First_ByMonth_comm"/>
+		AND PR.f_discount = (
+			<include refid="select_Least_Discount_First_ByMonth_comm02"/>
+			AND date_format(PR.f_prize_time, '%Y%m')= #{month}
+		)
+		AND date_format(PR.f_prize_time, '%Y%m')= #{month}
+		ORDER BY PR.f_id ASC
+		LIMIT 0,1
+    </select> -->
+    
+    <select id="select_Least_Discount_First_ByMonth_DayInterval" parameterType="java.util.Map" resultMap="prizeRecordEntityMap_Append">
+    	<include refid="select_Least_Discount_First_ByMonth_comm"/>
+		AND PR.f_discount = (
+			<include refid="select_Least_Discount_First_ByMonth_comm02"/>
+			<![CDATA[ 
+				AND date_format(PR.f_prize_time, '%Y%m%d') >= #{startDate}
+				AND date_format(PR.f_prize_time, '%Y%m%d') <= #{endDate}
+			]]>
+		)
+		<![CDATA[ 
+			AND date_format(PR.f_prize_time, '%Y%m%d') >= #{startDate}
+			AND date_format(PR.f_prize_time, '%Y%m%d') <= #{endDate}
+		]]>
+		ORDER BY PR.f_id ASC
+		LIMIT 0,1
+    </select>
+    
+    
+    <!-- 根据起止日期查询用户的所有折扣列表 -->
+    <select id="select_Discount_List_ByMonth_DayInterval" parameterType="java.util.Map" resultMap="prizeRecordEntityMap_Append">
+    	SELECT <include refid="prizeRecordBase.queryHead_AppendTable"/> 
+    		,<include refid="commonUser.userSimple_common_select"/>
+    	FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+    		INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+    		INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND R.f_id = UHTR.t_room_f_id AND UHTR.f_apply_status = 1
+			INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+			<include refid="commonUser.userSimple_common_from"/>
+			
+    		INNER JOIN t_prize_record PR ON PR.t_user_has_t_room_f_id = UHTR.f_id 
+    			AND PR.f_sys0_del_state = 0
+    			<!-- AND PR.f_status = 0 --> <!-- 使用状态=={"0":"未使用","1":"已使用"} -->
+    	WHERE 1=1
+    	<![CDATA[ 
+			AND date_format(PR.f_prize_time, '%Y%m%d') >= #{startDate}
+			AND date_format(PR.f_prize_time, '%Y%m%d') <= #{endDate}
+		]]>
+		ORDER BY PR.f_id ASC
+    </select>
+    
+    <!-- 根据起止日期查询用户的所有折扣列表 返回抽奖人信息-->
+    <sql id="select_Discount_WithUser_List_ByMonth_DayInterval_comm">
+    	FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+    		INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+    		INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND R.f_id = UHTR.t_room_f_id AND UHTR.f_apply_status = 1
+    		INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+    		<include refid="commonUser.userSimple_common_from"/>
+    		
+    		INNER JOIN t_prize_record PR ON PR.t_user_has_t_room_f_id = UHTR.f_id 
+    			AND PR.f_sys0_del_state = 0
+				<!-- AND PR.f_status = 0 --> <!-- 使用状态=={"0":"未使用","1":"已使用"} -->
+		WHERE 1=1
+    	<![CDATA[ 
+			AND date_format(PR.f_prize_time, '%Y%m%d') >= #{startDate}
+			AND date_format(PR.f_prize_time, '%Y%m%d') <= #{endDate}
+		]]>
+    </sql>
+    
+    <select id="select_Discount_WithUser_List_ByMonth_DayInterval_page" parameterType="java.util.Map" resultMap="prizeRecordEntityMap_Append">
+    	SELECT <include refid="prizeRecordBase.queryHead_AppendTable"/> 
+    		,<include refid="commonUser.userSimple_common_select"/>
+    	<include refid="select_Discount_WithUser_List_ByMonth_DayInterval_comm"/>
+		ORDER BY
+			CASE WHEN PR.f_id = #{leastRecordId} THEN 1 ELSE 2 END ASC <!-- 是最低折扣则排最前 -->
+			,PR.f_prize_time DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+    </select>
+    <select id="select_Discount_WithUser_List_ByMonth_DayInterval_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="select_Discount_WithUser_List_ByMonth_DayInterval_comm"/>
+	</select>
+    
+    <!-- 获取当月最低折扣-未登录 -->	
+	<!-- <select id="select_LeastDiscount_NotLogin_ByMonth" parameterType="java.util.HashMap" resultType="java.lang.Double">
+		SELECT MIN(PRT.f_discount) 
+		FROM t_prize_record_tmp PRT 
+			INNER JOIN t_user_tmp UT ON PRT.t_user_tmp_f_id = UT.f_id AND UT.f_sys0_del_state = 0
+		WHERE 1=1 
+		AND PRT.f_sys0_del_state = 0
+		AND UT.f_device_id = #{deviceId} AND UT.f_device_type = #{deviceType} 
+		AND date_format(PRT.f_prize_time, '%Y%m')= #{month}
+	</select> -->
+	
+    <!-- 获取当天最低折扣-未登录 -->	
+	<!-- <select id="select_LeastDiscount_NotLogin_NowDay" parameterType="java.util.HashMap" resultMap="prizeRecordTmpBase.prizeRecordTmpBaseMap_AppendTable">
+		SELECT <include refid="prizeRecordTmpBase.queryHead_AppendTable"/> 
+		FROM t_prize_record_tmp PRT
+			INNER JOIN t_user_tmp UT ON PRT.t_user_tmp_f_id = UT.f_id AND UT.f_sys0_del_state = 0
+		WHERE 1=1
+		AND PRT.f_sys0_del_state = 0
+		AND UT.f_id = #{userTmpId}
+		AND date_format(PRT.f_prize_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')
+		AND PRT.f_discount = (
+			SELECT MIN(PRT02.f_discount) 
+			FROM t_prize_record_tmp PRT02 
+				INNER JOIN t_user_tmp UT02 ON PRT02.t_user_tmp_f_id = UT02.f_id AND UT02.f_sys0_del_state = 0
+			WHERE 1=1 
+			AND PRT02.f_sys0_del_state = 0
+			AND UT02.f_id = #{userTmpId}
+			AND date_format(PRT02.f_prize_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') 
+		)
+		ORDER BY PRT.f_prize_time ASC
+		LIMIT 0,1
+	</select> -->
+	
+	<select id="select_LeastDiscount_NotLoginNowDayByTmpUser" parameterType="java.util.HashMap" resultMap="prizeRecordTmpBase.prizeRecordTmpBaseMap_AppendTable">
+		SELECT <include refid="prizeRecordTmpBase.queryHead_AppendTable"/> 
+		FROM t_prize_record_tmp PRT
+			INNER JOIN t_user_tmp UT ON PRT.t_user_tmp_f_id = UT.f_id AND UT.f_sys0_del_state = 0
+		WHERE 1=1
+		AND PRT.f_sys0_del_state = 0
+		AND UT.f_id = #{tmpUserId} 
+		AND date_format(PRT.f_prize_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d')
+		AND PRT.f_discount = (
+			SELECT MIN(PRT02.f_discount) 
+			FROM t_prize_record_tmp PRT02 
+				INNER JOIN t_user_tmp UT02 ON PRT02.t_user_tmp_f_id = UT02.f_id AND UT02.f_sys0_del_state = 0
+			WHERE 1=1 
+			AND PRT02.f_sys0_del_state = 0
+			AND UT02.f_id = #{tmpUserId}
+			AND date_format(PRT02.f_prize_time,'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') 
+		)
+		ORDER BY PRT.f_prize_time ASC
+		LIMIT 0,1
+	</select>
+	
+	<!-- 根据抽奖记录Id查询对应所属门牌信息，该抽奖记录为已绑定门牌的 -->
+	<select id="select_Room_By_PrizeRecordId"  parameterType="java.util.HashMap" resultMap="roomBase.roomBaseMap_AppendTable">
+		SELECT <include refid="roomBase.queryHead_AppendTable"/>
+		FROM t_prize_record PR
+			INNER JOIN t_user_has_t_room UHTR ON UHTR.f_id = PR.t_user_has_t_room_f_id AND UHTR.f_sys0_del_state = 0
+				AND UHTR.f_apply_status = 1 <!-- 门牌申请加入状态=={"0":"未处理","1":"已通过","2":"已拒绝"} -->
+			INNER JOIN t_room R ON R.f_id = UHTR.t_room_f_id AND R.f_sys0_del_state = 0
+		WHERE 1=1
+		AND PR.f_sys0_del_state = 0
+		AND PR.f_id = #{prizeRecordId}
+	</select>
+	
+	<!-- 标记对应折扣为已使用 -->
+	<update id="update_Discount_As_Used"  parameterType="java.util.HashMap">
+		UPDATE t_prize_record PR
+		SET PR.f_status = 1
+			,PR.f_used_type = #{usedType}
+			,PR.f_saved_money = #{savedMoney}
+			,PR.f_used_time = SYSDATE()
+			,PR.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND PR.f_sys0_del_state = 0
+		AND PR.f_status = 0 <!-- 使用状态=={"0":"未使用","1":"已使用"} -->
+		AND PR.f_id = #{prizeRecordId}
+	</update>
+	
+	<!-- 标记折扣已退回 -->
+	<update id="update_PrizeRecord_As_IsBack" parameterType="java.util.HashMap">
+		UPDATE t_prize_record PR
+		SET PR.f_back_pool_status = 1 <!-- 1:已退回 -->
+			,PR.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND PR.f_sys0_del_state = 0
+		AND (PR.f_back_pool_status != 1 OR ISNULL(PR.f_back_pool_status) )
+		AND PR.f_id IN 
+		<foreach item="item" collection="toBackIds" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<!-- 根据用户Id查询当天已经抽奖的次数 -->
+	<select id="select_PrizeDoneCount_AllTime" resultType="java.lang.Integer">
+		SELECT count(*) 
+		FROM t_prize_record PR 
+			INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND PR.t_user_has_t_room_f_id=UHTR.f_id AND UHTR.f_apply_status = 1
+			INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+				<!-- AND UHTR.t_room_f_id = U.f_default_room_id --> <!-- 只查询当前用户默认门牌下的 -->
+				
+		WHERE 1=1
+		AND PR.f_sys0_del_state = 0
+		AND U.f_id = #{_parameter}
+	</select>
+	
+	<!-- 查询已签约的小区下的门牌总数 -->
+	<select id="select_Signed_RealRoom_TotalCount" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_real_room RR
+			INNER JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0
+			INNER JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id AND GB.f_sys0_del_state = 0
+				AND GB.f_sign_status = 1 <!-- 是否签约标志=={"0":"否","1":"是"} -->
+		WHERE 1=1
+		AND RR.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询未签约小区下的用户总数(默认门牌) -->
+	<select id="select_UnSigned_User_TotalCount" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_user U 
+			INNER JOIN t_room R ON R.f_id = U.f_default_room_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id AND RR.f_sys0_del_state = 0
+			INNER JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0
+			INNER JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id AND GB.f_sys0_del_state = 0
+				AND GB.f_sign_status = 0 <!-- 是否签约标志=={"0":"否","1":"是"} -->
+		WHERE 1=1
+		AND U.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 家庭运势相关的查询 -->
+	<resultMap type="com.cnfantasia.server.api.prize.entity.PrizeRecordEntity" id="prizeRecordEntityMap_Append_for_Fortune" 
+		extends="prizeRecordEntityMap_Append">
+		<id column="ext_prizeDate" javaType="java.lang.String" property="prizeDate"/>  <!-- 抽奖日期 -->
+	</resultMap>
+	<sql id="select_PrizeRecordEntity_MonthAll_WithNull_base">
+		SELECT
+			date_format(d.f_date,'%Y-%m-%d %T') AS f_prize_date,
+			t.t_prize_record_f_id AS f_prize_record_id,
+			ifnull(t.f_discount, NULL) AS f_discount,
+			nowUserId
+		FROM
+			t_comm_date d
+		LEFT JOIN (
+			SELECT
+				tab1.f_date,
+				tab1.t_prize_record_f_id,
+				tab1.f_discount,
+				tab1.nowUserId nowUserId,
+			IF (
+				@v_date = tab1.f_date ,@v_rank :=@v_rank + 1 ,@v_rank := 1
+			) AS f_rank,
+			@v_date := tab1.f_date
+		FROM
+			(
+				SELECT
+					DATE_FORMAT(pr.f_prize_time, '%Y%m%d') f_date,
+					pr.f_id t_prize_record_f_id,
+					pr.f_discount,
+					CASE WHEN ISNULL(ur.f_bind_user_id) THEN ur.t_user_f_id  ELSE ur.f_bind_user_id END AS nowUserId
+				FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+					INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+					INNER JOIN t_user_has_t_room ur ON 1=1 AND R.f_id = ur.t_room_f_id AND ur.f_sys0_del_state = 0
+					INNER JOIN t_prize_record pr ON pr.t_user_has_t_room_f_id = ur.f_id 
+    					AND pr.f_sys0_del_state = 0
+				
+				<!-- JOIN t_user u ON ur.t_user_f_id = u.f_id AND u.f_sys0_del_state = 0 -->
+				<!-- AND ur.t_user_f_id = #{userId} -->
+				<!-- AND ur.t_user_f_id IN (<include refid="commonSql.qry_userIds_family_by_userInfo_select"/>) -->
+				
+				WHERE 1=1
+					AND pr.f_sys0_del_state = 0
+					AND pr.f_prize_time >= #{startYearMonthDay}
+				<![CDATA[ AND DATE_FORMAT(pr.f_prize_time, '%Y%m%d %T') <= CONCAT(#{endYearMonthDay},' 24:00:00')  ]]>
+				ORDER BY
+					STR_TO_DATE(
+						DATE_FORMAT(pr.f_prize_time, '%Y%m%d'),
+						'%Y%m%d'
+					) ASC,
+					pr.f_status DESC,
+					pr.f_discount ASC,
+					pr.f_prize_time ASC
+			) tab1,
+			(
+				SELECT
+					@v_date := NULL,
+					@v_rank := 0
+			) tab2
+		) t ON d.f_date = t.f_date
+		AND t.f_rank = 1
+		WHERE
+			d.f_date >= #{startYearMonthDay}
+		<![CDATA[ AND DATE_FORMAT(d.f_date, '%Y%m%d %T') <=  CONCAT(#{endYearMonthDay},' 24:00:00') ]]>
+		ORDER BY
+			d.f_date ASC
+	</sql>
+	<select id="select_PrizeRecordEntity_MonthAll_WithNull" parameterType="java.util.Map" resultMap="prizeRecordEntityMap_Append_for_Fortune">
+		SELECT <include refid="prizeRecordBase.queryHead_AppendTable"/> 
+    		,<include refid="commonUser.userSimple_common_select"/>
+    		,tab01.f_prize_date AS ext_prizeDate
+    	FROM 
+    	(
+			<include refid="select_PrizeRecordEntity_MonthAll_WithNull_base"/>
+		) AS tab01
+		LEFT JOIN t_prize_record PR ON 1=1 AND tab01.f_prize_record_id = PR.f_id AND PR.f_sys0_del_state = 0
+		LEFT JOIN t_user U ON U.f_sys0_del_state = 0 AND U.f_id = tab01.nowUserId
+		<include refid="commonUser.userSimple_common_from_leftJoin"/>	
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.prize.entity.PrizeCountWithUserEntity" id="prizeCountWithUserEntity_Map_Append"
+		extends="commonUser.userSimpleEntity_Map_Append">
+		<result column="ext_prizeCount" javaType="java.lang.Long" property="prizeCount"/>
+	</resultMap>
+	<!-- 查询用户所属家庭下对应起止时间最多抽奖次数的用户信息 -->
+	<select id="select_Family_MaxPrizeCountInfo_ByUserId" parameterType="java.util.Map" resultMap="prizeCountWithUserEntity_Map_Append">
+		SELECT <include refid="commonUser.userSimple_common_select"/>
+			,prizeCount_group.signalCount AS ext_prizeCount
+		FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+    		INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+    		INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND R.f_id = UHTR.t_room_f_id AND UHTR.f_apply_status = 1
+    		INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+    		<include refid="commonUser.userSimple_common_from"/>	
+		
+		INNER JOIN (
+			SELECT count(PR.f_id) signalCount,U.f_id userId
+			FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+    			INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+				INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND R.f_id = UHTR.t_room_f_id 
+				INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+				
+				INNER JOIN t_prize_record PR ON PR.t_user_has_t_room_f_id = UHTR.f_id 
+					AND PR.f_sys0_del_state = 0
+					
+			WHERE 1=1
+			<![CDATA[ 
+				AND date_format(PR.f_prize_time, '%Y%m%d') >= #{startYearMonthDay}
+				AND date_format(PR.f_prize_time, '%Y%m%d') <= #{endYearMonthDay}
+			]]>
+			<!-- AND U.f_id IN (<include refid="commonSql.qry_userIds_family_by_userInfo_select"/>) -->
+			GROUP BY U.f_id
+			ORDER BY signalCount DESC 
+			LIMIT 0,1
+		)AS prizeCount_group ON prizeCount_group.userId = U.f_id
+		WHERE 1=1
+		LIMIT 0,1
+	</select>
+	<!-- 查询单个用户对应时间抽奖次数信息 -->
+	<select id="select_Signal_PrizeCountInfo_ByUserId" parameterType="java.util.Map" resultMap="prizeCountWithUserEntity_Map_Append">
+		SELECT <include refid="commonUser.userSimple_common_select"/>
+			,prizeCount_group.signalCount AS ext_prizeCount
+		FROM t_user U
+		<include refid="commonUser.userSimple_common_from"/>
+		LEFT JOIN ( <!-- 如果没有抽奖次数信息也返回用户信息 -->
+			SELECT count(PR.f_id) signalCount,U.f_id userId
+			FROM t_user U
+				INNER JOIN t_user_has_t_room UHTR ON 1 = 1 
+					AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+				INNER JOIN t_room R ON R.f_id = UHTR.t_room_f_id AND R.f_sys0_del_state = 0
+				INNER JOIN t_prize_record PR ON UHTR.f_id = PR.t_user_has_t_room_f_id AND PR.f_sys0_del_state = 0
+					<![CDATA[ 
+						AND date_format(PR.f_prize_time, '%Y%m%d') >= #{startYearMonthDay}
+						AND date_format(PR.f_prize_time, '%Y%m%d') <= #{endYearMonthDay}
+					]]>
+			WHERE 1=1
+			AND U.f_id = #{userId}
+			AND U.f_sys0_del_state = 0
+			AND U.f_default_room_id = R.f_id <!-- add 查询当前用户当前门牌下的抽奖记录 --> 
+			GROUP BY U.f_id
+			ORDER BY signalCount DESC 
+			LIMIT 0,1
+		)AS prizeCount_group ON prizeCount_group.userId = U.f_id
+		WHERE 1=1
+		AND U.f_sys0_del_state = 0
+		AND U.f_id = #{userId}
+		LIMIT 0,1
+	</select>
+	
+	<!--  -->
+	<resultMap type="com.cnfantasia.server.api.prize.entity.FirstLastPrizeTimeEntity" id="firstLastPrizeTimeEntity_Map">
+		<result column="ext_firstPrizeTime" javaType="java.lang.String" property="firstPrizeTime"/>
+		<result column="ext_lastPrizeTime" javaType="java.lang.String" property="lastPrizeTime"/>
+	</resultMap>
+	<select id="select_Family_FirstLastPrizeTime_ByUserId" parameterType="java.util.Map" resultMap="firstLastPrizeTimeEntity_Map">
+		SELECT date_format(MIN(PR.f_prize_time),'%Y-%m-%d %T') AS ext_firstPrizeTime
+			,date_format(MAX(PR.f_prize_time),'%Y-%m-%d %T') AS ext_lastPrizeTime
+		FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+			INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+    		INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND R.f_id = UHTR.t_room_f_id 
+			INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+			
+			INNER JOIN t_prize_record PR ON PR.t_user_has_t_room_f_id = UHTR.f_id 
+    			AND PR.f_sys0_del_state = 0
+		WHERE 1=1
+		<!-- AND U.f_id IN (<include refid="commonSql.qry_userIds_family_by_userInfo_select"/>) -->
+	</select>
+	
+	
+	<!-- 查询临时用户所有抽奖次数 -->
+	<select id="select_All_PrizeDoneCount_TmpUser" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) 
+		FROM t_prize_record_tmp PRT 
+			INNER JOIN t_user_tmp UT ON PRT.t_user_tmp_f_id=UT.f_id AND UT.f_sys0_del_state = 0
+				AND UT.f_id = #{userId}
+		WHERE 1=1
+		AND PRT.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询注册用户所有抽奖次数 -->
+	<select id="select_All_PrizeDoneCount_RegistUser" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) 
+		FROM t_prize_record PR 
+			INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND PR.t_user_has_t_room_f_id=UHTR.f_id AND UHTR.f_apply_status = 1
+			INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+				AND UHTR.t_room_f_id = U.f_default_room_id <!-- 只查询当前用户默认门牌下的 -->
+		WHERE 1=1
+		AND PR.f_sys0_del_state = 0
+		AND U.f_id = #{userId}
+	</select>
+	
+	<!-- 直接关联room_realRoom 查询获取最低折扣信息 -->
+	<select id="select_Mini_PrizeRecordEntity_FromRoom_NowTime" parameterType="java.util.Map" resultMap="prizeRecordEntityMap_Append">
+		SELECT <include refid="prizeRecordBase.queryHead_AppendTable"/> 
+    		,<include refid="commonUser.userSimple_common_select"/>
+    	FROM (
+    		SELECT 
+			    u.f_id,
+			    CASE
+			        WHEN
+			            rv.f_id IS NULL
+			        THEN
+			            IF(NOW() BETWEEN r.f_mini_discount_period_start AND r.f_mini_discount_period_end,
+			                r.f_mini_discount,
+			                NULL)
+			        ELSE IF(NOW() BETWEEN rr.f_mini_discount_period_start AND rr.f_mini_discount_period_end,
+			            rr.f_mini_discount,
+			            NULL)
+			    END f_mini_discount,
+			    CASE
+			        WHEN
+			            rv.f_id IS NULL
+			        THEN
+			            IF(NOW() BETWEEN r.f_mini_discount_period_start AND r.f_mini_discount_period_end,
+			                r.f_mini_discount_id,
+			                NULL)
+			        ELSE IF(NOW() BETWEEN rr.f_mini_discount_period_start AND rr.f_mini_discount_period_end,
+			            rr.f_mini_discount_id,
+			            NULL)
+			    END f_mini_discount_id
+			FROM
+			    t_user u
+			        JOIN
+			    t_room r ON u.f_default_room_id = r.f_id AND r.f_sys0_del_state = 0
+			        JOIN
+			    t_real_room rr ON r.t_real_room_f_id = rr.f_id AND rr.f_sys0_del_state = 0
+			        LEFT JOIN
+			    t_room_validate rv ON rv.t_room_f_id = r.f_id AND rv.f_sys0_del_state = 0
+			        AND rv.f_user_id = u.f_id
+			        AND rv.f_verify_status = 4
+			WHERE 1=1
+				AND u.f_sys0_del_state = 0
+				AND u.f_id = #{userId}
+    		) AS pr_tmp_tbl
+    		
+    		INNER JOIN t_prize_record PR ON pr_tmp_tbl.f_mini_discount_id = PR.f_id AND PR.f_sys0_del_state = 0
+    		INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND PR.t_user_has_t_room_f_id = UHTR.f_id 
+    		INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+			<include refid="commonUser.userSimple_common_from"/>
+    	WHERE 1=1
+	</select>
+	
+	<!-- 通过用户Id刷新对应门牌的最低折扣 -->
+	<update id="update_Mini_Discount_ByUserId" parameterType="java.util.Map">
+		UPDATE t_user u
+		        JOIN
+		    t_user_has_t_room ur ON ur.t_room_f_id = u.f_default_room_id
+		        AND ur.t_user_f_id = u.f_id
+		        JOIN
+		    t_room r ON u.f_default_room_id = r.f_id
+		        JOIN
+		    t_real_room rr ON r.t_real_room_f_id = rr.f_id
+		        JOIN
+		    t_building b ON rr.t_building_f_id = b.f_id
+		        JOIN
+		    t_group_building gb ON b.t_group_building_f_id = gb.f_id
+		        LEFT JOIN
+		    t_room_validate rv ON rv.t_room_f_id = ur.t_room_f_id
+		        AND rv.f_user_id = ur.t_user_f_id
+		        AND rv.f_verify_status = 4 
+		SET 
+		    r.f_mini_discount = #{discount},
+		    r.f_mini_discount_id = #{prizeRecordId},
+		    r.f_mini_discount_period_start = CASE
+		        WHEN
+		            gb.f_sign_status = 1
+		                AND NOT ISNULL(gb.f_pay_period_start)
+		                AND NOT ISNULL(gb.f_pay_period_end)
+		        THEN
+		            CASE
+		                WHEN
+		                    DAY(NOW()) > gb.f_pay_period_end
+		                THEN
+		                    ADDDATE(DATE_FORMAT(NOW(),
+		                                CONCAT('%Y-%m-',
+		                                        gb.f_pay_period_start,
+		                                        ' 00:00:00')),
+		                        INTERVAL 0 MONTH)
+		                ELSE ADDDATE(DATE_FORMAT(NOW(),
+		                            CONCAT('%Y-%m-',
+		                                    gb.f_pay_period_start,
+		                                    ' 00:00:00')),
+		                    INTERVAL - 1 MONTH)
+		            END
+		        ELSE DATE_FORMAT(NOW(), '%Y-%m-01 00:00:00')
+		    END,
+		    r.f_mini_discount_period_end = CASE
+		        WHEN
+		            gb.f_sign_status = 1
+		                AND NOT ISNULL(gb.f_pay_period_start)
+		                AND NOT ISNULL(gb.f_pay_period_end)
+		        THEN
+		            CASE
+		                WHEN
+		                    DAY(NOW()) > gb.f_pay_period_end
+		                THEN
+		                    ADDDATE(DATE_FORMAT(NOW(),
+		                                CONCAT('%Y-%m-',
+		                                        gb.f_pay_period_end,
+		                                        ' 23:59:59')),
+		                        INTERVAL 1 MONTH)
+		                ELSE ADDDATE(DATE_FORMAT(NOW(),
+		                            CONCAT('%Y-%m-',
+		                                    gb.f_pay_period_end,
+		                                    ' 23:59:59')),
+		                    INTERVAL 0 MONTH)
+		            END
+		        ELSE ADDDATE(DATE_FORMAT(ADDDATE(NOW(), INTERVAL 1 MONTH),
+		                    '%Y-%m-01 23:59:59'),
+		            INTERVAL - 1 DAY)
+		    END,
+		    r.f_sys0_upd_time = NOW(),
+		    rr.f_mini_discount = IF(rv.f_verify_status = 4,
+		        #{discount},
+		        rr.f_mini_discount),
+		    rr.f_mini_discount_id = IF(rv.f_verify_status = 4,
+		        #{prizeRecordId},
+		        rr.f_mini_discount_id),
+		    rr.f_mini_discount_period_start = IF(rv.f_verify_status = 4,
+		        CASE
+		            WHEN
+		                gb.f_sign_status = 1
+		                    AND NOT ISNULL(gb.f_pay_period_start)
+		                    AND NOT ISNULL(gb.f_pay_period_end)
+		            THEN
+		                CASE
+		                    WHEN
+		                        DAY(NOW()) > gb.f_pay_period_end
+		                    THEN
+		                        ADDDATE(DATE_FORMAT(NOW(),
+		                                    CONCAT('%Y-%m-',
+		                                            gb.f_pay_period_start,
+		                                            ' 00:00:00')),
+		                            INTERVAL 0 MONTH)
+		                    ELSE ADDDATE(DATE_FORMAT(NOW(),
+		                                CONCAT('%Y-%m-',
+		                                        gb.f_pay_period_start,
+		                                        ' 00:00:00')),
+		                        INTERVAL - 1 MONTH)
+		                END
+		            ELSE DATE_FORMAT(NOW(), '%Y-%m-01 00:00:00')
+		        END,
+		        rr.f_mini_discount_period_start),
+		    rr.f_mini_discount_period_end = IF(rv.f_verify_status = 4,
+		        CASE
+		            WHEN
+		                gb.f_sign_status = 1
+		                    AND NOT ISNULL(gb.f_pay_period_start)
+		                    AND NOT ISNULL(gb.f_pay_period_end)
+		            THEN
+		                CASE
+		                    WHEN
+		                        DAY(NOW()) > gb.f_pay_period_end
+		                    THEN
+		                        ADDDATE(DATE_FORMAT(NOW(),
+		                                    CONCAT('%Y-%m-',
+		                                            gb.f_pay_period_end,
+		                                            ' 23:59:59')),
+		                            INTERVAL 1 MONTH)
+		                    ELSE ADDDATE(DATE_FORMAT(NOW(),
+		                                CONCAT('%Y-%m-',
+		                                        gb.f_pay_period_end,
+		                                        ' 23:59:59')),
+		                        INTERVAL 0 MONTH)
+		                END
+		            ELSE ADDDATE(DATE_FORMAT(ADDDATE(NOW(), INTERVAL 1 MONTH),
+		                        '%Y-%m-01 23:59:59'),
+		                INTERVAL - 1 DAY)
+		        END,
+		        rr.f_mini_discount_period_end),
+		    rr.f_sys0_upd_time = IF(rv.f_verify_status = 4,
+		        NOW(),
+		        rr.f_sys0_upd_time)
+		WHERE
+		    u.f_id = #{userId}
+	</update>
+	
+	<select id="select_Pre2Month_StartDay" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT fn_get_discountuse_month(#{groupBuildId})
+	</select>
+	
+</mapper>

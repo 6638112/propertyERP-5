@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:楼下店等电商供应商银行卡信息 t_ebuy_supply_merchant_bank_account -->
+<mapper namespace="ebuySupplyMerchantBankAccountBase">
+	<resultMap type="EbuySupplyMerchantBankAccount" id="ebuySupplyMerchantBankAccountBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_supply_merchant_id" javaType="java.math.BigInteger" property="tSupplyMerchantId"/>  <!-- 电商供应商Id -->        <result column="f_account_bank" javaType="java.lang.String" property="accountBank"/>  <!-- 银行账号 -->        <result column="f_account_name" javaType="java.lang.String" property="accountName"/>  <!-- 银行账号账户名 -->        <result column="f_bank_name" javaType="java.lang.String" property="bankName"/>  <!-- 开户行 -->        <result column="f_bank_branch" javaType="java.lang.String" property="bankBranch"/>  <!-- 开卡支行 -->        <result column="f_bank_province" javaType="java.lang.String" property="bankProvince"/>  <!-- 支行所在省 -->        <result column="f_bank_city" javaType="java.lang.String" property="bankCity"/>  <!-- 运行所在城市 -->        <result column="f_link_tel" javaType="java.lang.String" property="linkTel"/>  <!-- 备注手机号 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuySupplyMerchantBankAccount" id="ebuySupplyMerchantBankAccountExtendMap" extends="ebuySupplyMerchantBankAccountBaseMap">
+	</resultMap>
+	<resultMap type="EbuySupplyMerchantBankAccount" id="ebuySupplyMerchantBankAccountBaseMap_AppendTable">
+        <id column="ESMBAid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ESMBAtSupplyMerchantId" javaType="java.math.BigInteger" property="tSupplyMerchantId"/>  <!-- 电商供应商Id -->        <result column="ESMBAaccountBank" javaType="java.lang.String" property="accountBank"/>  <!-- 银行账号 -->        <result column="ESMBAaccountName" javaType="java.lang.String" property="accountName"/>  <!-- 银行账号账户名 -->        <result column="ESMBAbankName" javaType="java.lang.String" property="bankName"/>  <!-- 开户行 -->        <result column="ESMBAbankBranch" javaType="java.lang.String" property="bankBranch"/>  <!-- 开卡支行 -->        <result column="ESMBAbankProvince" javaType="java.lang.String" property="bankProvince"/>  <!-- 支行所在省 -->        <result column="ESMBAbankCity" javaType="java.lang.String" property="bankCity"/>  <!-- 运行所在城市 -->        <result column="ESMBAlinkTel" javaType="java.lang.String" property="linkTel"/>  <!-- 备注手机号 -->        <result column="ESMBAsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ESMBAsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuySupplyMerchantBankAccount" id="ebuySupplyMerchantBankAccountBaseMap_AppendTable1">
+        <id column="ESMBA1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ESMBA1tSupplyMerchantId" javaType="java.math.BigInteger" property="tSupplyMerchantId"/>  <!-- 电商供应商Id -->        <result column="ESMBA1accountBank" javaType="java.lang.String" property="accountBank"/>  <!-- 银行账号 -->        <result column="ESMBA1accountName" javaType="java.lang.String" property="accountName"/>  <!-- 银行账号账户名 -->        <result column="ESMBA1bankName" javaType="java.lang.String" property="bankName"/>  <!-- 开户行 -->        <result column="ESMBA1bankBranch" javaType="java.lang.String" property="bankBranch"/>  <!-- 开卡支行 -->        <result column="ESMBA1bankProvince" javaType="java.lang.String" property="bankProvince"/>  <!-- 支行所在省 -->        <result column="ESMBA1bankCity" javaType="java.lang.String" property="bankCity"/>  <!-- 运行所在城市 -->        <result column="ESMBA1linkTel" javaType="java.lang.String" property="linkTel"/>  <!-- 备注手机号 -->        <result column="ESMBA1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ESMBA1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		ESMBA.f_id,ESMBA.t_supply_merchant_id,ESMBA.f_account_bank,ESMBA.f_account_name,ESMBA.f_bank_name,ESMBA.f_bank_branch,ESMBA.f_bank_province,ESMBA.f_bank_city,ESMBA.f_link_tel
+	</sql>
+	<sql id="queryHead_AppendTable">
+		ESMBA.f_id as ESMBAid,ESMBA.t_supply_merchant_id as ESMBAtSupplyMerchantId,ESMBA.f_account_bank as ESMBAaccountBank,ESMBA.f_account_name as ESMBAaccountName,ESMBA.f_bank_name as ESMBAbankName,ESMBA.f_bank_branch as ESMBAbankBranch,ESMBA.f_bank_province as ESMBAbankProvince,ESMBA.f_bank_city as ESMBAbankCity,ESMBA.f_link_tel as ESMBAlinkTel
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		ESMBA1.f_id as ESMBA1id,ESMBA1.t_supply_merchant_id as ESMBA1tSupplyMerchantId,ESMBA1.f_account_bank as ESMBA1accountBank,ESMBA1.f_account_name as ESMBA1accountName,ESMBA1.f_bank_name as ESMBA1bankName,ESMBA1.f_bank_branch as ESMBA1bankBranch,ESMBA1.f_bank_province as ESMBA1bankProvince,ESMBA1.f_bank_city as ESMBA1bankCity,ESMBA1.f_link_tel as ESMBA1linkTel
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (ESMBA.f_id = #{id} ) </if>        <if test="tSupplyMerchantId != null">  and (ESMBA.t_supply_merchant_id = #{tSupplyMerchantId} ) </if>        <if test="accountBank != null">  and (ESMBA.f_account_bank = #{accountBank} ) </if>        <if test="accountName != null">  and (ESMBA.f_account_name = #{accountName} ) </if>        <if test="bankName != null">  and (ESMBA.f_bank_name = #{bankName} ) </if>        <if test="bankBranch != null">  and (ESMBA.f_bank_branch = #{bankBranch} ) </if>        <if test="bankProvince != null">  and (ESMBA.f_bank_province = #{bankProvince} ) </if>        <if test="bankCity != null">  and (ESMBA.f_bank_city = #{bankCity} ) </if>        <if test="linkTel != null">  and (ESMBA.f_link_tel = #{linkTel} ) </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ESMBA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (ESMBA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (ESMBA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelState != null">  and (ESMBA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (ESMBA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (ESMBA.f_id = #{id} ) </if>        <if test="tSupplyMerchantId != null and !tSupplyMerchantId.equals('')  ">  and (ESMBA.t_supply_merchant_id = #{tSupplyMerchantId} ) </if>        <if test="accountBank != null and !accountBank.equals('')  ">  and (ESMBA.f_account_bank like CONCAT('%',#{accountBank},'%') ) </if>        <if test="accountName != null and !accountName.equals('')  ">  and (ESMBA.f_account_name like CONCAT('%',#{accountName},'%') ) </if>        <if test="bankName != null and !bankName.equals('')  ">  and (ESMBA.f_bank_name like CONCAT('%',#{bankName},'%') ) </if>        <if test="bankBranch != null and !bankBranch.equals('')  ">  and (ESMBA.f_bank_branch like CONCAT('%',#{bankBranch},'%') ) </if>        <if test="bankProvince != null and !bankProvince.equals('')  ">  and (ESMBA.f_bank_province like CONCAT('%',#{bankProvince},'%') ) </if>        <if test="bankCity != null and !bankCity.equals('')  ">  and (ESMBA.f_bank_city like CONCAT('%',#{bankCity},'%') ) </if>        <if test="linkTel != null and !linkTel.equals('')  ">  and (ESMBA.f_link_tel like CONCAT('%',#{linkTel},'%') ) </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ESMBA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (ESMBA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (ESMBA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (ESMBA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (ESMBA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuySupplyMerchantBankAccountBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuySupplyMerchantBankAccountBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuySupplyMerchantBankAccountBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuySupplyMerchantBankAccountBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_supply_merchant_bank_account ESMBA    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(楼下店等电商供应商银行卡信息)信息。 -->
+	<sql id="select_ebuySupplyMerchantBankAccount">
+		SELECT <include refid="ebuySupplyMerchantBankAccountBase.queryHead"/>
+		<include refid="ebuySupplyMerchantBankAccountBase.busiQueryCondition"/>
+		<include refid="ebuySupplyMerchantBankAccountBase.dimCheckSql"/>
+		ORDER BY ESMBA.f_id DESC
+	</sql>
+	<select id="select_ebuySupplyMerchantBankAccount" parameterType="java.util.Map" resultMap="ebuySupplyMerchantBankAccountBase.ebuySupplyMerchantBankAccountExtendMap">
+		<include refid="ebuySupplyMerchantBankAccountBase.select_ebuySupplyMerchantBankAccount"/>
+	</select>
+	
+	<!-- 根据条件分页查询(楼下店等电商供应商银行卡信息)信息  -->
+	<sql id="select_ebuySupplyMerchantBankAccount_withPage">
+		SELECT <include refid="ebuySupplyMerchantBankAccountBase.queryHead"/>
+		<include refid="ebuySupplyMerchantBankAccountBase.busiQueryCondition"/>
+		<include refid="ebuySupplyMerchantBankAccountBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuySupplyMerchantBankAccount_withPage" resultMap="ebuySupplyMerchantBankAccountBase.ebuySupplyMerchantBankAccountExtendMap" parameterType="java.util.Map">
+		<include refid="ebuySupplyMerchantBankAccountBase.select_ebuySupplyMerchantBankAccount_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(楼下店等电商供应商银行卡信息)信息。 -->
+	<sql id="select_ebuySupplyMerchantBankAccount_bySeqId">
+		SELECT <include refid="ebuySupplyMerchantBankAccountBase.queryHead"/>
+		<include refid="ebuySupplyMerchantBankAccountBase.busiQueryCondition"/>
+		 and ESMBA.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuySupplyMerchantBankAccount_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuySupplyMerchantBankAccountBase.ebuySupplyMerchantBankAccountBaseMap">
+		<include refid="ebuySupplyMerchantBankAccountBase.select_ebuySupplyMerchantBankAccount_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(楼下店等电商供应商银行卡信息)记录数  -->
+	<sql id="select_ebuySupplyMerchantBankAccount_count">
+		SELECT COUNT(*)
+		<include refid="ebuySupplyMerchantBankAccountBase.busiQueryCount"/>
+		<include refid="ebuySupplyMerchantBankAccountBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuySupplyMerchantBankAccount_count" resultType="java.lang.Integer">
+		<include refid="ebuySupplyMerchantBankAccountBase.select_ebuySupplyMerchantBankAccount_count"/>
+	</select>
+	
+	 <!-- 往(楼下店等电商供应商银行卡信息)新增一条记录。 -->
+	 <sql id="insert_ebuySupplyMerchantBankAccount">
+		INSERT INTO t_ebuy_supply_merchant_bank_account 
+		(f_id,t_supply_merchant_id,f_account_bank,f_account_name,f_bank_name,f_bank_branch,f_bank_province,f_bank_city,f_link_tel,f_sys0_upd_time,f_sys0_del_state) VALUES 
+		(#{id},#{tSupplyMerchantId},#{accountBank,jdbcType=VARCHAR},#{accountName,jdbcType=VARCHAR},#{bankName,jdbcType=VARCHAR},#{bankBranch,jdbcType=VARCHAR},#{bankProvince,jdbcType=VARCHAR},#{bankCity,jdbcType=VARCHAR},#{linkTel,jdbcType=VARCHAR},str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),0)
+	 </sql>
+    <insert id="insert_ebuySupplyMerchantBankAccount" parameterType="EbuySupplyMerchantBankAccount">
+		<include refid="ebuySupplyMerchantBankAccountBase.insert_ebuySupplyMerchantBankAccount"/>
+    </insert>
+    
+	<!-- 批量新增(楼下店等电商供应商银行卡信息)信息 -->
+    <insert id="insert_ebuySupplyMerchantBankAccount_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_supply_merchant_bank_account 
+		(f_id,t_supply_merchant_id,f_account_bank,f_account_name,f_bank_name,f_bank_branch,f_bank_province,f_bank_city,f_link_tel,f_sys0_upd_time,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tSupplyMerchantId},#{item.accountBank,jdbcType=VARCHAR},#{item.accountName,jdbcType=VARCHAR},#{item.bankName,jdbcType=VARCHAR},#{item.bankBranch,jdbcType=VARCHAR},#{item.bankProvince,jdbcType=VARCHAR},#{item.bankCity,jdbcType=VARCHAR},#{item.linkTel,jdbcType=VARCHAR},str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(楼下店等电商供应商银行卡信息)信息。 -->
+    <sql id="update_ebuySupplyMerchantBankAccount">
+		UPDATE t_ebuy_supply_merchant_bank_account		<trim prefix="SET" prefixOverrides=","> 		<if test="tSupplyMerchantId != null and !tSupplyMerchantId.equals('') "> ,t_supply_merchant_id=#{tSupplyMerchantId}</if> 		<if test="accountBank != null and !accountBank.equals('') "> ,f_account_bank=#{accountBank}</if> 		<if test="accountName != null and !accountName.equals('') "> ,f_account_name=#{accountName}</if> 		<if test="bankName != null and !bankName.equals('') "> ,f_bank_name=#{bankName}</if> 		<if test="bankBranch != null and !bankBranch.equals('') "> ,f_bank_branch=#{bankBranch}</if> 		<if test="bankProvince != null and !bankProvince.equals('') "> ,f_bank_province=#{bankProvince}</if> 		<if test="bankCity != null and !bankCity.equals('') "> ,f_bank_city=#{bankCity}</if> 		<if test="linkTel != null and !linkTel.equals('') "> ,f_link_tel=#{linkTel}</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuySupplyMerchantBankAccount" parameterType="EbuySupplyMerchantBankAccount">
+		<include refid="ebuySupplyMerchantBankAccountBase.update_ebuySupplyMerchantBankAccount"/>
+    </update>
+    
+    <!-- 批量更新(楼下店等电商供应商银行卡信息)信息。 -->
+    <update id="update_ebuySupplyMerchantBankAccount_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_supply_merchant_bank_account		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tSupplyMerchantId != null and !item.tSupplyMerchantId.equals('')  "> ,t_supply_merchant_id=#{item.tSupplyMerchantId}</if> 		<if test="item.accountBank != null and !item.accountBank.equals('')  "> ,f_account_bank=#{item.accountBank}</if> 		<if test="item.accountName != null and !item.accountName.equals('')  "> ,f_account_name=#{item.accountName}</if> 		<if test="item.bankName != null and !item.bankName.equals('')  "> ,f_bank_name=#{item.bankName}</if> 		<if test="item.bankBranch != null and !item.bankBranch.equals('')  "> ,f_bank_branch=#{item.bankBranch}</if> 		<if test="item.bankProvince != null and !item.bankProvince.equals('')  "> ,f_bank_province=#{item.bankProvince}</if> 		<if test="item.bankCity != null and !item.bankCity.equals('')  "> ,f_bank_city=#{item.bankCity}</if> 		<if test="item.linkTel != null and !item.linkTel.equals('')  "> ,f_link_tel=#{item.linkTel}</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(楼下店等电商供应商银行卡信息)信息_逻辑删除。 -->
+    <sql id="delete_ebuySupplyMerchantBankAccount_Logic">
+		UPDATE t_ebuy_supply_merchant_bank_account		<trim prefix="SET" prefixOverrides=","> 		<if test="tSupplyMerchantId != null and !tSupplyMerchantId.equals('')  "> ,t_supply_merchant_id=#{tSupplyMerchantId}</if> 		<if test="accountBank != null and !accountBank.equals('')  "> ,f_account_bank=#{accountBank}</if> 		<if test="accountName != null and !accountName.equals('')  "> ,f_account_name=#{accountName}</if> 		<if test="bankName != null and !bankName.equals('')  "> ,f_bank_name=#{bankName}</if> 		<if test="bankBranch != null and !bankBranch.equals('')  "> ,f_bank_branch=#{bankBranch}</if> 		<if test="bankProvince != null and !bankProvince.equals('')  "> ,f_bank_province=#{bankProvince}</if> 		<if test="bankCity != null and !bankCity.equals('')  "> ,f_bank_city=#{bankCity}</if> 		<if test="linkTel != null and !linkTel.equals('')  "> ,f_link_tel=#{linkTel}</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuySupplyMerchantBankAccount_Logic" parameterType="EbuySupplyMerchantBankAccount">
+		<include refid="ebuySupplyMerchantBankAccountBase.delete_ebuySupplyMerchantBankAccount_Logic"/>
+    </update>
+    
+    <!-- 批量删除(楼下店等电商供应商银行卡信息)信息_逻辑删除 -->
+    <update id="delete_ebuySupplyMerchantBankAccount_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_supply_merchant_bank_account		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tSupplyMerchantId != null and !item.tSupplyMerchantId.equals('')  "> ,t_supply_merchant_id=#{item.tSupplyMerchantId}</if> 		<if test="item.accountBank != null and !item.accountBank.equals('')  "> ,f_account_bank=#{item.accountBank}</if> 		<if test="item.accountName != null and !item.accountName.equals('')  "> ,f_account_name=#{item.accountName}</if> 		<if test="item.bankName != null and !item.bankName.equals('')  "> ,f_bank_name=#{item.bankName}</if> 		<if test="item.bankBranch != null and !item.bankBranch.equals('')  "> ,f_bank_branch=#{item.bankBranch}</if> 		<if test="item.bankProvince != null and !item.bankProvince.equals('')  "> ,f_bank_province=#{item.bankProvince}</if> 		<if test="item.bankCity != null and !item.bankCity.equals('')  "> ,f_bank_city=#{item.bankCity}</if> 		<if test="item.linkTel != null and !item.linkTel.equals('')  "> ,f_link_tel=#{item.linkTel}</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(楼下店等电商供应商银行卡信息)信息。 -->
+    <sql id="delete_ebuySupplyMerchantBankAccount">
+		DELETE FROM t_ebuy_supply_merchant_bank_account WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuySupplyMerchantBankAccount" parameterType="java.lang.String">
+		<include refid="ebuySupplyMerchantBankAccountBase.delete_ebuySupplyMerchantBankAccount"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(楼下店等电商供应商银行卡信息)信息。 -->
+    <delete id="delete_ebuySupplyMerchantBankAccount_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_supply_merchant_bank_account WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

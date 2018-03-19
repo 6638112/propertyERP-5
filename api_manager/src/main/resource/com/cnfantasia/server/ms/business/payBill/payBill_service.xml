@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="feePrintService" class="com.cnfantasia.server.ms.payBill.service.FeePrintService">
+		<property name="feePrintDao" ref="feePrintDao"></property>
+	</bean>
+	
+	<bean id="feePrintDao" class="com.cnfantasia.server.ms.payBill.dao.FeePrintDao" parent="abstractBaseDao">
+
+	</bean>
+	
+	<bean id="payBillPrintDao" class="com.cnfantasia.server.ms.payBill.dao.PayBillPrintDao" parent="abstractBaseDao">
+
+	</bean>
+	
+	<bean id="payBillPrintService" class="com.cnfantasia.server.ms.payBill.service.PayBillPrintService">
+		<property name="groupBuildingBaseDao" ref="groupBuildingBaseDao"></property>
+		<property name="payBillService" ref="payBillService"></property>
+		<property name="propertyCompanyBaseDao" ref="propertyCompanyBaseDao"></property>
+		<property name="feePrintDao" ref="feePrintDao"></property>
+		<property name="payBillPrintDao" ref="payBillPrintDao"></property>
+		<property name="propertyManagementBaseDao" ref="propertyManagementBaseDao"></property>
+	</bean>
+
+	<bean id="payBillReportDao" class="com.cnfantasia.server.ms.payBill.dao.PayBillReportDao" parent="abstractBaseDao"/>
+	<bean id="payBillReportService" class="com.cnfantasia.server.ms.payBill.service.PayBillReportService">
+		<property name="payBillReportDao" ref="payBillReportDao"></property>
+	</bean>
+	
+</beans>  

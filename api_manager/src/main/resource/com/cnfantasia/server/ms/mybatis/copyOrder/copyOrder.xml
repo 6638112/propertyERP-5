@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="copyOrder">
+
+	<resultMap type="com.cnfantasia.server.ms.copyOrder.entity.DeliveryOrderEntity" id="deliveryOrderEntityMap">
+		<id column="deliveryId" property="deliveryId"/>
+        <result column="orderNo" javaType="java.lang.String" property="orderNo"/>
+        <result column="downTime" javaType="java.lang.String" property="downTime"/>
+        <result column="linkName" javaType="java.lang.String" property="linkName"/>
+        <result column="mobile" javaType="java.lang.String" property="mobile"/>
+        <result column="address" javaType="java.lang.String" property="address"/>
+        <association property="orderInfoList" resultMap="orderInfoEntityMap"/>
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.ms.copyOrder.entity.OrderInfoEntity" id="orderInfoEntityMap">
+        <result column="productName" javaType="java.lang.String" property="productName"/>
+        <result column="num" javaType="java.lang.Integer" property="num"/>
+    </resultMap>
+	
+	<!-- 查询复制的订单信息 -->
+	<select id="selectDeliveryOrderForCopy" parameterType="java.util.Map" resultMap="deliveryOrderEntityMap">
+		SELECT
+			EDO.f_id deliveryId,
+			EO.f_order_no AS orderNo,
+			DATE_FORMAT(
+				EO.f_sys0_add_time,
+				'%Y-%m-%d %H:%i'
+			) AS downTime,
+			EO.f_deliv_people_name AS linkName,
+			EO.f_deliv_phone AS mobile,
+			CONCAT(
+				IFNULL(EO.f_deliv_address_area, ''),
+				IFNULL(
+					EO.f_deliv_address_detail,
+					''
+				)
+			) AS address,
+			EP.f_name AS productName,
+			EOHTEP.f_product_qty AS num
+		FROM
+			t_ebuy_delivery_order EDO
+		INNER JOIN t_ebuy_order EO ON EO.f_id = EDO.t_ebuy_order_f_id
+		INNER JOIN t_ebuy_delivery_order_product EDOP ON EDOP.t_ebuy_delivery_order_f_id = EDO.f_id
+		AND EDOP.f_sys0_del_state = 0
+		INNER JOIN t_ebuy_order_has_t_ebuy_product EOHTEP ON EOHTEP.f_id = EDOP.t_ebuy_order_has_t_ebuy_product_f_id
+		AND EOHTEP.f_sys0_del_state = 0
+		INNER JOIN t_ebuy_product_shelf EPS ON EPS.f_id = EOHTEP.t_ebuy_product_f_id
+		INNER JOIN t_ebuy_product EP ON EP.f_id = EPS.t_ebuy_product_id
+		WHERE
+			EDO.f_id IN 
+			<foreach collection="idList" item="item" open="(" close=")" separator=",">
+				${item}
+			</foreach>
+			AND EDO.f_sys0_del_state = 0
+		ORDER BY
+			EDO.f_id DESC
+	</select>
+	
+</mapper>

@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 固定收费项管理 -->
+<mapper namespace="fixedFeeCfg">
+
+	<!--查询小区列表-->
+	<select id="getGroupBuildingList" parameterType="java.util.Map" resultType="map">
+		SELECT gb.f_id AS id , gb.f_name as gbName FROM t_group_building gb
+		<if test="isSubUser !=null and isSubUser == 1" >
+			<!-- 管理处账号只能看到它所管辖的小区，所以用inner join -->
+			inner join t_property_management PM on PM.f_id=GB.t_property_management_f_id and PM.f_sys0_del_state=0
+			inner join t_property_management_has_oms_user PMHOU on PM.f_id = PMHOU.t_property_management_f_id and PMHOU.f_sys0_del_state=0
+		</if>
+		<if test="isSubUser == 0">
+			left join t_property_management PM on PM.f_id=GB.t_property_management_f_id
+		</if>
+		left JOIN t_property_company PC on GB.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+		INNER JOIN t_group_building_ext gbe ON gbe.f_id = gb.f_id AND  gbe.f_fixed_fee_status = 1
+		WHERE 1 = 1 AND gb.f_propfee_canpay = 1
+		<if test="isAdmin ==null or isAdmin == 0">
+			<if test="isSubUser !=null and isSubUser == 0" >and PC.f_admin_id=#{adminId}</if>
+			<if test="isSubUser !=null and isSubUser == 1" >and PMHOU.t_oms_user_f_id=#{adminId}</if>
+		</if>
+		<if test="gbName != null and gbName != ''">
+			AND gb.f_name LIKE CONCAT('%',#{gbName}, '%')
+		</if>
+		<include refid="dataPermissionCondition"/>
+		ORDER BY GB.f_id DESC
+		<if test="_begin != null and _length != null">
+			limit #{_begin}, #{_length}
+		</if>
+	</select>
+	
+	<!-- 数据权限过滤条件 -->
+	<sql id="dataPermissionCondition">
+		<if test="gbIdList !=null">
+			   		<if test="gbIdList.size() > 0">
+					and GB.f_id in 
+					<foreach item="item" collection="gbIdList" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+			   		</if>
+			   		<if test="gbIdList.size() == 0"><!-- 无小区权限用户 -->
+			   			and GB.f_id = -2
+			   		</if>
+		</if>
+	</sql>
+
+	<!--查询小区列表总数-->
+	<select id="getGroupBuildingListCount" parameterType="java.util.Map" resultType="integer">
+		SELECT COUNT(1) FROM t_group_building gb
+		<if test="isSubUser !=null and isSubUser == 1" >
+			<!-- 管理处账号只能看到它所管辖的小区，所以用inner join -->
+			inner join t_property_management PM on PM.f_id=GB.t_property_management_f_id and PM.f_sys0_del_state=0
+			inner join t_property_management_has_oms_user PMHOU on PM.f_id = PMHOU.t_property_management_f_id and PMHOU.f_sys0_del_state=0
+		</if>
+		<if test="isSubUser == 0">
+			left join t_property_management PM on PM.f_id=GB.t_property_management_f_id
+		</if>
+		left JOIN t_property_company PC on GB.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+		INNER JOIN t_group_building_ext gbe ON gbe.f_id = gb.f_id AND  gbe.f_fixed_fee_status = 1
+		WHERE 1 = 1 AND gb.f_propfee_canpay = 1
+		<if test="isAdmin ==null or isAdmin == 0">
+			<if test="isSubUser !=null and isSubUser == 0" >and PC.f_admin_id=#{adminId}</if>
+			<if test="isSubUser !=null and isSubUser == 1" >and PMHOU.t_oms_user_f_id=#{adminId}</if>
+		</if>
+		<if test="gbName != null and gbName != ''">
+			AND gb.f_name LIKE CONCAT('%',#{gbName}, '%')
+		</if>
+		<include refid="dataPermissionCondition"/>
+	</select>
+
+	<!--删除收费项数据，同时删除收费项和房间关联的数据信息-->
+	<update id="deleteFixedFeeItemById" parameterType="java.util.Map">
+			DELETE FROM t_fixed_fee_item WHERE f_id=#{id};
+			DELETE FROM t_fixed_fee_item_has_room WHERE t_fixed_fee_item_id = #{id};
+			<!-- t_fixed_fee_item_room_data是针对小区门牌的，
+			只有当改门牌下没有对应的t_fixed_fee_item_has_room才进行删除，
+			删除收费项是针对整个小区下的所有房间，所以这里使用小区id作为条件-->
+			DELETE
+				ffird
+			FROM
+				t_fixed_fee_item_room_data ffird
+			LEFT JOIN t_fixed_fee_item_has_room ffihr ON ffird.f_id = ffihr.t_fixed_fee_data_id
+			WHERE
+				ffihr.f_id IS NULL AND ffird.t_gb_id = #{gbId};
+			UPDATE t_group_building_bill_cycle_config_has_fee_item SET f_sys0_del_state = 1 WHERE t_fee_item_id = #{id};
+	</update>
+	
+	<sql id="getRoomFixedFeeItemDetailListComm">
+		FROM t_group_building gb
+			INNER JOIN t_building b ON b.t_group_building_f_id = gb.f_id AND b.f_sys0_del_state = 0
+			INNER JOIN t_real_room rr ON rr.t_building_f_id = b.f_id AND rr.f_sys0_del_state = 0
+			INNER JOIN t_fixed_fee_item_room_data ffird on ffird.t_real_room_id = rr.f_id and ffird.f_sys0_del_state = 0
+			WHERE gb.f_sys0_del_state = 0 AND gb.f_id = #{gbId}
+			<if test="bName != null and bName != ''">
+				AND b.f_name like concat('%', #{bName}, '%')
+			</if>
+			<if test="unitName != null and unitName != ''">
+				AND rr.f_unit_name like concat('%', #{unitName}, '%')
+			</if>
+			<if test="roomNum != null and roomNum != ''">
+				AND rr.f_num_tail like concat('%', #{roomNum}, '%')
+			</if>
+	</sql>
+
+	<!--数据详情-->
+	<select id="getRoomFixedFeeItemDetailList" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.fixedFeeCfg.entity.RoomFixedFeeItemDetail">
+		SELECT gb.f_id gbId -- 小区ID
+		,rr.f_id realRoomId
+		,ffird.f_id fixedFeeItemHasRoomDataId
+		,gb.f_name gbName -- 小区名
+		,b.f_name bName -- 楼栋
+		,rr.f_unit_name unitName -- 单元
+		,rr.f_num_tail roomNumTail -- 房号
+		<include refid="getRoomFixedFeeItemDetailListComm"></include>
+		ORDER BY ffird.f_id
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+
+	<select id="getRoomFixedFeeItemDetailCount" parameterType="java.util.Map" resultType="integer">
+		SELECT count(1)
+		<include refid="getRoomFixedFeeItemDetailListComm"></include>
+	</select>
+
+	<resultMap id="roomFixedFeeItemDetailByDataIdMap" type="com.cnfantasia.server.ms.fixedFeeCfg.entity.RoomFixedFeeItemDetail">
+		<id column="gbId" javaType="java.math.BigInteger" property="gbId"/>
+		<id column="realRoomId" javaType="java.math.BigInteger" property="realRoomId"/>
+		<id column="fixedFeeItemHasRoomDataId" javaType="java.math.BigInteger" property="fixedFeeItemHasRoomDataId"/>
+		<id column="gbName" javaType="java.lang.String" property="gbName"/>
+		<id column="bName" javaType="java.lang.String" property="bName"/>
+		<id column="unitName" javaType="java.lang.String" property="unitName"/>
+		<id column="roomNumTail" javaType="java.lang.String" property="roomNumTail"/>
+		<collection property="editFeeItemList"  ofType="com.cnfantasia.server.ms.fixedFeeCfg.entity.FixedFeeItemHasRoomEntity">
+			<result column="id" javaType="java.math.BigInteger" property="id"/>
+			<result column="tFixedFeeItemId" javaType="java.math.BigInteger" property="tFixedFeeItemId"/>
+			<result column="tFixedFeeDataId" javaType="java.math.BigInteger" property="tFixedFeeDataId"/>
+			<result column="name" javaType="java.lang.String" property="name"/>
+			<result column="signalPrice" javaType="java.lang.Long" property="signalPrice"/>
+			<result column="priceUnitValue" javaType="java.lang.Long" property="priceUnitValue"/>
+			<result column="totalPrice" javaType="java.lang.Long" property="totalPrice"/>
+			<result column="calculateType" javaType="java.lang.Integer" property="calculateType"/>
+			<result column="billMonthStart" javaType="java.lang.String" property="billMonthStart"/>
+		</collection>
+	</resultMap>
+	<select id="getRoomFixedFeeItemDetailByDataId" parameterType="java.math.BigInteger" resultMap="roomFixedFeeItemDetailByDataIdMap">
+		SELECT gb.f_id gbId
+		,rr.f_id realRoomId
+		,ffird.f_id fixedFeeItemHasRoomDataId
+		,gb.f_name gbName
+		,b.f_name bName
+		,rr.f_unit_name unitName
+		,rr.f_num_tail roomNumTail
+		,ffihr.f_id id,ffihr.t_fixed_fee_item_id tFixedFeeItemId,ffihr.t_fixed_fee_data_id tFixedFeeDataId
+		,ffi.f_name name,ffihr.f_price_unit_value priceUnitValue,ffihr.f_signal_price signalPrice,ffihr.f_total_price totalPrice,ffi.f_calculate_type calculateType,
+		DATE_FORMAT(
+			ffihr.f_bill_month_start,
+			'%Y-%m-%d'
+		) billMonthStart
+		FROM t_group_building gb
+		INNER JOIN t_building b ON b.t_group_building_f_id = gb.f_id AND b.f_sys0_del_state = 0
+		INNER JOIN t_real_room rr ON rr.t_building_f_id = b.f_id AND rr.f_sys0_del_state = 0
+		INNER JOIN t_fixed_fee_item_room_data ffird ON ffird.t_real_room_id = rr.f_id and ffird.f_sys0_del_state = 0
+		INNER JOIN t_fixed_fee_item_has_room ffihr ON ffihr.t_fixed_fee_data_id = ffird.f_id
+		INNER JOIN t_fixed_fee_item ffi ON ffi.f_id = ffihr.t_fixed_fee_item_id
+		WHERE ffird.f_sys0_del_state=0 AND ffihr.f_sys0_del_state=0 AND ffi.f_sys0_del_state=0 AND ffird.f_id = #{dataId}
+	</select>
+
+	<!--数据详情-导入校验使用-->
+	<resultMap id="getRoomFixedFeeItemDetailListForImportCheck_Map" type="com.cnfantasia.server.ms.fixedFeeCfg.entity.RoomFixedFeeItemDetail">
+		<id column="gbId" javaType="java.math.BigInteger" property="gbId"/>
+		<id column="realRoomId" javaType="java.math.BigInteger" property="realRoomId"/>
+		<id column="fixedFeeItemHasRoomDataId" javaType="java.math.BigInteger" property="fixedFeeItemHasRoomDataId"/>
+		<id column="gbName" javaType="java.lang.String" property="gbName"/>
+		<id column="bName" javaType="java.lang.String" property="bName"/>
+		<id column="unitName" javaType="java.lang.String" property="unitName"/>
+		<id column="roomNumTail" javaType="java.lang.String" property="roomNumTail"/>
+		<collection property="hasFeeItemList" resultMap="fixedFeeItemHasRoomBase.fixedFeeItemHasRoomBaseMap_AppendTable"/>
+	</resultMap>
+	<select id="getRoomFixedFeeItemDetailListForImportCheck" parameterType="java.math.BigInteger" resultMap="getRoomFixedFeeItemDetailListForImportCheck_Map">
+		SELECT gb.f_id gbId -- 小区ID
+		,rr.f_id realRoomId
+		,ffird.f_id fixedFeeItemHasRoomDataId
+		,gb.f_name gbName -- 小区名
+		,b.f_name bName -- 楼栋
+		,rr.f_unit_name unitName -- 单元
+		,rr.f_num_tail roomNumTail -- 房号
+		,<include refid="fixedFeeItemHasRoomBase.queryHead_AppendTable"/>
+		FROM t_group_building gb
+		INNER JOIN t_building b ON b.t_group_building_f_id = gb.f_id AND b.f_sys0_del_state = 0
+		INNER JOIN t_real_room rr ON rr.t_building_f_id = b.f_id AND rr.f_sys0_del_state = 0
+		INNER JOIN t_fixed_fee_item_room_data ffird on ffird.t_real_room_id = rr.f_id and ffird.f_sys0_del_state = 0
+		INNER JOIN t_fixed_fee_item_has_room FFIHR ON FFIHR.t_fixed_fee_data_id = ffird.f_id AND FFIHR.f_sys0_del_state = 0
+		WHERE gb.f_sys0_del_state = 0 AND gb.f_id = #{gbId}
+		/*保持模板下载顺序一致，循环校验时可以节约时间*/
+		ORDER BY b.f_name_char_order, b.f_name_digit_order+0, rr.f_unit_name, rr.f_num_tail_char_order, rr.f_num_tail_digit_order+0
+	</select>
+
+	<select id="getRoomStrByGbId" parameterType="java.math.BigInteger" resultType="java.util.Map">
+		SELECT 
+			CONCAT(
+				IFNULL(b.f_name, ''),
+				"-",
+				IFNULL(rr.f_unit_name, ''),
+				"-",
+				IFNULL(rr.f_num_tail, '')
+			) AS room, 
+			rr.f_id AS realRoomId
+		FROM t_group_building gb
+		INNER JOIN t_building b ON b.t_group_building_f_id = gb.f_id AND b.f_sys0_del_state = 0 AND b.f_check_status in (1,9)
+		INNER JOIN t_real_room rr ON rr.t_building_f_id = b.f_id AND rr.f_sys0_del_state = 0 AND rr.f_check_status in (1,9)
+		WHERE gb.f_sys0_del_state = 0 AND gb.f_id = #{gbId} AND gb.f_check_status in (1,9)
+	</select>
+
+	<!--自动生成常规收费项-->
+	<select id="getNeedSynchroData" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.revenue.entity.PropertyFeeDetailTempEntity">
+		SELECT
+			ffi.f_name AS name,
+			ffihr.f_total_price AS price,
+			ffi.t_gb_id AS tGbId,
+			ffird.t_real_room_id AS tRealRoomId,
+			ffihr.f_id AS targetId,
+			ffihr.f_signal_price AS signalPrice,
+			ffihr.f_price_unit_value AS priceUnitValue,
+			date_format(ffihr.f_bill_month_start,'%Y-%m-%d') AS billMonthStart,
+			ffihr.f_id AS targetId,
+			date_format(ffihr.f_create_bill_month,'%Y-%m-%d') AS createBillMonth
+		FROM
+			t_fixed_fee_item ffi
+		INNER JOIN t_fixed_fee_item_has_room ffihr ON ffi.f_id = ffihr.t_fixed_fee_item_id AND ffihr.f_sys0_del_state = 0
+		INNER JOIN t_fixed_fee_item_room_data ffird ON ffird.f_id = ffihr.t_fixed_fee_data_id AND ffird.f_sys0_del_state = 0
+		INNER JOIN t_group_building_bill_cycle_config_has_fee_item gbbcchfi ON gbbcchfi.t_fee_item_id = ffi.f_id AND gbbcchfi.t_gb_cycle_cfg_id = #{cfgId}
+					AND gbbcchfi.f_sys0_del_state = 0
+		WHERE ffi.f_sys0_del_state = 0 AND ffi.t_gb_id = #{gbId};
+	</select>
+
+	<!--同步常规收费项-->
+	<select id="getNeedSynchroData01" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.domainbase.propertyFeeDetailTemp.entity.PropertyFeeDetailTemp">
+		<if test="cfgId != null">/*通过自动账期配置的  只生成配置的费用项*/
+			SELECT
+			ffi.f_name AS name,
+			ffihr.f_total_price AS price,
+			ffi.t_gb_id AS tGbId,
+			ffird.t_real_room_id AS tRealRoomId,
+			ffihr.f_signal_price AS signalPrice,
+			ffihr.f_price_unit_value AS priceUnitValue,
+			date_format(ffihr.f_bill_month_start,'%Y-%m-%d') AS billMonthStart,
+			ffihr.f_id AS targetId,
+			date_format(ffihr.f_create_bill_month,'%Y-%m-%d') AS createBillMonth
+			FROM
+			t_fixed_fee_item ffi
+			INNER JOIN t_fixed_fee_item_has_room ffihr ON ffi.f_id = ffihr.t_fixed_fee_item_id AND ffihr.f_sys0_del_state = 0
+			INNER JOIN t_fixed_fee_item_room_data ffird ON ffird.f_id = ffihr.t_fixed_fee_data_id AND ffird.f_sys0_del_state = 0
+			INNER JOIN t_group_building_bill_cycle_config_has_fee_item gbbcchfi ON gbbcchfi.t_fee_item_id = ffi.f_id AND gbbcchfi.t_gb_cycle_cfg_id = #{cfgId}
+			AND gbbcchfi.f_sys0_del_state = 0
+			WHERE ffi.f_sys0_del_state = 0 AND ffi.t_gb_id = #{gbId};
+		</if>
+		<if test="cfgId == null or cfgId == ''">/*不是通过自动账期配置的 生成全部的费用项信息*/
+			SELECT
+			ffi.f_name AS name,
+			ffihr.f_total_price AS price,
+			ffi.t_gb_id AS tGbId,
+			ffird.t_real_room_id AS tRealRoomId,
+			ffihr.f_signal_price AS signalPrice,
+			ffihr.f_price_unit_value AS priceUnitValue,
+			date_format(ffihr.f_bill_month_start,'%Y-%m-%d') AS billMonthStart,
+			ffihr.f_id AS targetId
+			FROM
+			t_fixed_fee_item ffi
+			INNER JOIN t_fixed_fee_item_has_room ffihr ON ffi.f_id = ffihr.t_fixed_fee_item_id AND ffihr.f_sys0_del_state = 0
+			INNER JOIN t_fixed_fee_item_room_data ffird ON ffird.f_id = ffihr.t_fixed_fee_data_id AND ffird.f_sys0_del_state = 0
+			WHERE ffi.f_sys0_del_state = 0 AND ffi.t_gb_id = #{gbId};
+		</if>
+	</select>
+
+	<!--查询小区对应的账期配置的收费项-->
+	<select id="getCycleCfgFeeItemsByGbId" parameterType="java.math.BigInteger" resultType="java.math.BigInteger">
+		SELECT GBBCCHFI.t_fee_item_id FROM  t_group_building_bill_cycle_config_has_fee_item GBBCCHFI WHERE GBBCCHFI.t_gb_id = #{gbId} AND GBBCCHFI.f_sys0_del_state = 0;
+	</select>
+
+	<!--查询房间费用明细  删除费用项更新账单金额所用-->
+	<resultMap id="itemHasRoomByItemId_Map" type="com.cnfantasia.server.api.groupBuildingCycleCfg.entity.UpdatePayBillInitEntity">
+		<id column="realRoomId" property="realRoomId" javaType="java.math.BigInteger"/>
+		<id column="type" property="type" javaType="java.lang.Integer"/>
+		<collection property="fixedFeeItemHasRoomList" resultMap="fixedFeeItemHasRoomBase.fixedFeeItemHasRoomBaseMap_AppendTable"/>
+	</resultMap>
+	<select id="itemHasRoomByItemId" parameterType="java.math.BigInteger" resultMap="itemHasRoomByItemId_Map">
+		SELECT
+			ffird.t_real_room_id AS realRoomId, 4 AS type,<!-- 删除费用项默认为4 -->
+			<include refid="fixedFeeItemHasRoomBase.queryHead_AppendTable"/>
+		FROM
+			t_fixed_fee_item_has_room FFIHR
+		INNER JOIN t_fixed_fee_item_room_data ffird ON FFIHR.t_fixed_fee_data_id = ffird.f_id
+		WHERE FFIHR.t_fixed_fee_item_id = #{id};
+	</select>
+
+	<!--删除房间和收费项的关系信息-->
+	<update id="delFixedFeeDetailById">
+		DELETE a, b FROM t_fixed_fee_item_has_room a INNER JOIN t_fixed_fee_item_room_data b ON a.t_fixed_fee_data_id = b.f_id WHERE b.f_id=#{id};
+	</update>
+
+	<!--清空删除房间和收费项的数据-->
+	<update id="delFixedFeeDetailAll">
+		DELETE a, b FROM t_fixed_fee_item_has_room a INNER JOIN t_fixed_fee_item_room_data b ON a.t_fixed_fee_data_id = b.f_id WHERE b.t_gb_id=#{gbId};
+	</update>
+
+	<!--删除费用项和房间的管理关系-->
+	<update id="delFeeItemHasRoom">
+		DELETE FROM t_fixed_fee_item_has_room WHERE t_fixed_fee_data_id=#{dataId};
+	</update>
+</mapper>

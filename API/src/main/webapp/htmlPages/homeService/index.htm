@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="cleartype" content="on">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimal-ui">
+<link rel="dns-prefetch" href="//jiefangqu.com">
+<title>到家服务</title>
+<link rel="stylesheet" href="css/homeservice.css">
+</head>
+<body>
+<div class="main-part01">  
+	<section id="slideBox" class="slideBox mtop0" style="height: 0;">
+	    <div id="slidePic" class="bd">
+	        <ul id="slideLi">
+	            <li><img src="images/main_banner01.jpg" /></li>
+	            <li><img src="images/main_banner01.jpg" /></li>
+	        </ul>
+	    </div>
+	    <div id="slideDot" class="hd">
+	        <ul></ul>
+	    </div>
+	</section>
+	<section class="sectionBox">
+		<ul class="maintain-menus m010 t-center">
+			<li class="server-big" data-id="111" data-name="维修"><img src="images/icon_appliance_repair.png"/><div>维修</div></li>
+			<li class="server-big" data-id="113" data-name="清洗"><img src="images/icon_appliance_cleaning.png"/><div>清洗</div></li>
+			<li class="server-big" data-id="113" data-name="清洗"><img src="images/icon_anzh.png"/><div>清洗</div></li>
+			<li class="server-big" data-id="113" data-name="清洗"><img src="images/icon_appliance_cleaning.png"/><div>清洗</div></li>
+			<li class="server-big" data-id="113" data-name="清洗"><img src="images/icon_anzh.png"/><div>清洗</div></li>
+			<li class="server-big" data-id="113" data-name="清洗"><img src="images/icon_anzh.png"/><div>清洗</div></li>
+			<li class="server-big" data-id="115" data-name="家政"><img src="images/icon_appliance_cleaning.png"/><div>家政</div></li>
+			<li class="server-big" data-id="115" data-name="家政"><img src="images/icon_anzh.png"/><div>家政</div></li>
+		</ul>
+	</section>
+	
+	<section id="szSaleInfo" class="sectionBox pb20" style="margin-top: -1px;">
+		<section class="divide-box bordertbgrey"></section>
+		<div class="m20 f16 t-center"><img class="w24 mtop3 align-middle" src="images/sale_title_left.png" /><span class="m010">特惠精选</span><img class="w24 mtop3 align-middle" src="images/sale_title_right.png" /></div>
+		<ul class="t-center displaybox f14 lineheightnormal">
+			<li class="boxflex01 server-hot">
+				<a href="serviceProcess.html?dredgeTypeId=4&subTypeId=">
+					<img src="images/sale_icon_yyj.jpg" /><br>油烟机清洗<br><span class="red">79元</span> <span class="grey"><span class="f12 align-top">|</span> 1个</span>
+				</a>
+			</li>
+			<li class="boxflex01 server-hot" style="margin: 0 2px;">
+				<a href="serviceProcess.html?dredgeTypeId=3&subTypeId=1001">
+					<img src="images/sale_icon_xyj.jpg" /><br>洗衣机清洗<br><span class="red">69元</span> <span class="grey"><span class="f12 align-top">|</span> 1个</span>
+				</a>
+			</li>
+			<li class="boxflex01 server-hot server-big" data-id="113" data-name="清洗">
+				<img src="images/sale_icon_qx.jpg" /><br>热水器清洁<br><span class="red">69元</span> <span class="grey"><span class="f12 align-top">|</span> 1个</span>
+			</li>
+		</ul>
+		<ul class="t-center displaybox f14 lineheightnormal mtop20">
+			<li class="boxflex01 server-hot server-big" data-id="115" data-name="家政">
+				<img src="images/sale_icon_zdg.jpg" /><br>钟点工保洁<br><span class="red">35元</span> <span class="grey"><span class="f12 align-top">|</span> 2小时</span>
+			</li>
+			<li class="boxflex01 server-hot server-big" data-id="111" data-name="维修" style="margin: 0 2px;">
+				<img src="images/sale_icon_wx.jpg" /><br>热水器维修<br><span class="red">50元</span> <span class="red borderred f12 align-top">起</span>
+			</li>
+			<li class="boxflex01 opacity0">维修列表</li>
+		</ul>
+	</section>
+</div>
+
+<script src="../../commonjs/jquery-1.11.2.min.js"></script>
+<script src="js/TouchSlide.1.1.js"></script>
+<script>
+$(function(){
+    TouchSlide({ 
+        slideCell:"#slideBox",
+        titCell:"#slideDot ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+        mainCell:"#slidePic ul", 
+        effect:"left", 
+        autoPage:true,//自动分页
+        autoPlay:false //自动播放
+    });
+    
+	updateBanner();
+})
+	
+	var windowWidth = document.getElementById("slideBox").offsetWidth;
+	var hdWidth = document.getElementById("slideDot").offsetWidth;
+	document.getElementById("slideBox").style.height = 340*windowWidth/640 + 'px';
+	document.getElementById("slideDot").style.marginLeft = -hdWidth/2 + 'px';
+    
+    var liLength = document.getElementById("slideLi").children.length;
+	if(liLength === 1){
+		document.getElementById("slideDot").style.display = 'none';
+	}
+	
+	//精选列表图片尺寸设置
+	var serverHot = document.querySelectorAll('.server-hot');
+	var serverHotWidth = serverHot[0].offsetWidth;
+	var serverHotHeight = serverHotWidth*210/226;
+	
+	for(var j = 0; j < serverHot.length; j++){
+		var serverHotImg = serverHot[j].getElementsByTagName('img');
+		serverHotImg[0].style.width = serverHotWidth + 'px';
+		serverHotImg[0].style.height = serverHotHeight + 'px';
+	}
+	
+	
+	//更新城市后更新广告图
+    function updateBanner(){
+    	var $ul = $("#slideBox ul");
+    	$.ajax({
+			  url: "../ebuyNew/qryAds.json",
+			  dataType:"json",
+			  data:{"code":"LA_EBUY", "city":"深圳"},
+			  success: function(data){
+				  if(data.status!="0000"){
+					  alert(data.message);
+				  }else{
+					  if(data.dataValue.list != null){
+						  var li_item = "";
+						  $.each(data.dataValue.list, function(i,item){
+							  li_item += '<li><a href="' + item.linkUrl + '"><img src="' + item.picUrl + '" /></a></li>';
+						  });  
+						  $ul.html(li_item);
+					  }
+					  
+					  TouchSlide({ 
+				        slideCell:"#slideBox",
+				        titCell:"#slideDot ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+				        mainCell:"#slidePic ul", 
+				        effect:"left", 
+				        autoPage:true,//自动分页
+				        autoPlay:false //自动播放
+					  });
+					  
+						var $li = $('#slideBox .hd ul li');
+						if($li.length == 1){
+							$li.hide();
+						}
+				  }
+			  },
+			  error: function(){  
+               	alert('网络不给力，请稍后重试'); 
+             }
+		});
+    }
+	
+	//判断安卓ios系统
+	var u = navigator.userAgent, app = navigator.appVersion;
+	var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器
+	var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+	
+	var serverInfo = {};
+	
+	var serverBig = document.querySelectorAll('.server-big');
+	for(var i = 0; i < serverBig.length; i++){
+		serverBig[i].onclick = function(){
+			serverInfo.id = this.getAttribute('data-id');
+			serverInfo.name = this.getAttribute('data-name');
+			console.log(serverInfo);
+		}
+	}
+	
+	//安卓
+	if(isAndroid){
+		for(var i = 0; i < serverBig.length; i++){
+			serverBig[i].onclick = function(){
+				serverInfo.id = this.getAttribute('data-id');
+				serverInfo.name = this.getAttribute('data-name');
+				window.homeServer.serverSelected(JSON.stringify(serverInfo));
+			}
+		}
+	}
+	
+	//ios
+	if(isiOS){
+		setupWebViewJavascriptBridge(function(bridge) {
+			for(var i = 0; i < serverBig.length; i++){
+				serverBig[i].onclick = function(){
+					serverInfo.id = this.getAttribute('data-id');
+					serverInfo.name = this.getAttribute('data-name');
+					bridge.callHandler('serverSelected', serverInfo, function(response) {});
+				}
+			}
+		});
+	}
+	
+	function setupWebViewJavascriptBridge(callback) {
+	    if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+	    if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+	    window.WVJBCallbacks = [callback];
+	    var WVJBIframe = document.createElement('iframe');
+	    WVJBIframe.style.display = 'none';
+	    WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+	    document.documentElement.appendChild(WVJBIframe);
+	    setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0);
+	}
+</script>
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1261123817'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1261123817' type='text/javascript'%3E%3C/script%3E"));</script>
+</body>
+</html>

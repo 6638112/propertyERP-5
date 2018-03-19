@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:收益中心 -->
+<mapper namespace="dredge4la">
+
+	<select id="select_orderCount_byUserId" parameterType="string" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			t_ebuy_order
+		WHERE
+			f_sys0_del_state = 0
+		AND f_buyer_id = #{userId}
+		AND f_type = 1
+	</select>
+	
+	
+	<select id="select_dredgeBillCount_byUserId" parameterType="string" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			t_dredge_bill
+		WHERE
+			f_sys0_del_state = 0
+		AND t_user_f_id = #{userId} 		
+	</select>
+</mapper>

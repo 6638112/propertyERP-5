@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+	<!-- 基于JSON的客户端实现 -->
+	<bean id="simpleHttpClient" class="com.cnfantasia.server.ms.pub.httpcllient.SimpleHttpClientApi"
+		init-method="init">
+		<!-- 发送缓冲大小 待加入系统参数表中 -->
+		<property name="sendBufferSize" value="8192" />
+		<!-- API服务地址  待加入系统参数表中 -->
+		<property name="baseURL" value="http://127.0.0.1:8080/API"/>
+		<!-- <property name="baseURL" value="http://192.168.1.45:8080/API321"/> -->
+	 	<!-- <property name="baseURL" value="http://api.jiefangqu.com:8080/API"/> --> <!-- 对公 -->
+
+		<property name="encoding" value="UTF-8" />
+		<property name="method" value="POST" />
+		<property name="headers">
+			<map>
+				<!-- syl_upd 2014-6-5 16:35:43 -->
+				<entry key="content-type" value="application/x-www-form-urlencoded; charset=utf-8" />
+				<entry key="subChannelId" value="7" />
+				<!-- <entry key="content-type" value="application/json; charset=utf-8" /> -->
+				<!-- <entry key="content-type" value="text/html; charset=utf-8" /> -->
+			</map>
+		</property>
+	</bean>
+
+</beans>

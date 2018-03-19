@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="userCoupon">
+
+    <sql id="queryHead">
+        SELECT uc.f_id AS id, uc.t_user_f_id AS userId, uc.f_status AS userCouponStatus, uc.f_code as code,
+        c.f_coupon_name AS couponName, c.f_coupon_type AS couponType, c.f_max_discount_percent AS maxDiscountPercent,c.f_link_url linkUrl,
+        c.f_least_spend_use AS leastSpendUse, c.f_discount_money AS discountMoney, c.f_discount_value AS discountValue,
+        c.f_exchange_product_id AS exchangeProductId, date_format(uc.f_use_end_date,'%Y-%m-%d') AS  useEndDate,date_format(uc.f_sys0_upd_time,'%Y-%m-%d %T') AS  updTime,
+        c.f_supply_merchant_id AS supplyMerchantId, c.f_use_type AS useType, sm.f_name supplyMerchantName, sm.f_type supplyMerchantType,dcc.f_coupon_fee_type dredgeCouponFeeType
+        <if test="gbId != null and gbId != ''">
+            ,(select count(smhgb.f_id) > 0 from t_ebuy_supply_merchant_has_group_building smhgb where smhgb.f_sys0_del_state = 0 and sm.f_id = smhgb.t_ebuy_supply_merchant_id and smhgb.t_group_building_id = #{gbId} and sm.f_sys0_del_state = 0) inMerchantService
+        </if>
+    </sql>
+    <sql id="querySql">
+        <if test="id != null"> AND uc.f_id = #{id}</if>
+        <if test="userCouponStatus != null"> AND uc.f_status = #{userCouponStatus}</if>
+        <if test="tUserFId != null"> AND uc.t_user_f_id = #{tUserFId}</if>
+        <if test="status != null"> AND uc.f_status = #{status}</if>
+        <if test="getType != null"> AND uc.f_get_type = #{getType}</if>
+        <if test="tEbuyOrderFId != null"> AND (uc.t_ebuy_order_f_id = #{tEbuyOrderFId} or exists (select 1 from t_ebuy_order_relation eor where eor.f_sys0_del_state = 0 and eor.f_parent_id = #{tEbuyOrderFId} AND eor.f_sub_id = uc.t_ebuy_order_f_id))</if>
+        <if test="coupon != null and coupon.leastSpendUse != null"> AND c.f_least_spend_use &lt;= #{coupon.leastSpendUse}</if>
+        <if test="coupon != null and coupon.couponType != null"> AND c.f_coupon_type = #{coupon.couponType}</if>
+        <if test="coupon != null and coupon.useType != null and coupon.useType != '1'.toString()"> AND (c.f_use_type = #{coupon.useType} OR c.f_use_type = 0)</if>
+        <if test="coupon != null and coupon.useType != null and coupon.useType == '1'.toString()">
+            <if test="supplyMerchantIds != null">
+                AND (c.f_use_type = 1
+                    OR c.f_use_type = 0
+                    OR (c.f_use_type = 5 AND c.f_supply_merchant_id IN (
+                      <foreach item="item" collection="supplyMerchantIds"  separator=",">
+                        #{item}
+                      </foreach>
+                )))
+            </if>
+            <if test="supplyMerchantIds == null">
+                AND (c.f_use_type = 1 or c.f_use_type = 0)
+            </if>
+        </if>
+    </sql>
+    <select id="getUserCouponList" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.coupon.entity.UserCouponEntity">
+        <include refid="userCoupon.queryHead"/>
+        FROM t_user_coupon uc
+        INNER JOIN t_coupon c ON uc.t_coupon_f_id = c.f_id
+        LEFT JOIN t_ebuy_supply_merchant sm on sm.f_id = c.f_supply_merchant_id and sm.f_sys0_del_state = 0
+        LEFT JOIN t_dredge_coupon_config dcc on dcc.f_coupon_id = c.f_id and dcc.f_sys0_del_state = 0
+        WHERE 1 = 1 and ((c.f_use_type = 5 and sm.f_id is not null) or c.f_use_type != 5)
+        <include refid="userCoupon.querySql"/>
+        <choose>
+            <when test="status != null and '1'.toString() == status.toString()">
+                ORDER BY uc.f_use_end_date
+            </when>
+            <otherwise>
+                ORDER BY uc.f_sys0_upd_time DESC
+            </otherwise>
+        </choose>
+
+        <if test="begin != null and length != null">
+            limit #{begin}, #{length}
+        </if>
+    </select>
+
+    <select id="getUserCouponCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_user_coupon uc LEFT JOIN t_coupon c
+        ON uc.t_coupon_f_id = c.f_id
+        WHERE 1=1
+        <include refid="userCoupon.querySql"/>
+    </select>
+
+    <update id="updateUserCouponValidBatchByIds" parameterType="java.util.List">
+        UPDATE t_user_coupon uc SET uc.f_status = 1, uc.f_sys0_upd_time = now() WHERE 1 = 1
+        AND uc.f_id in
+        <foreach item="item" collection="list"  separator="," open="(" close=")">#{item}</foreach>
+    </update>
+
+    <update id="updateUserCouponInvalidBatch" parameterType="java.util.Map">
+        UPDATE t_user_coupon uc SET uc.f_status = 3, uc.f_sys0_upd_time = now() WHERE uc.f_status = 1 AND uc.f_use_end_date &lt; date_add(now(), INTERVAL -1 day)
+        <if test="userId != null">AND  uc.t_user_f_id = #{userId}</if>
+    </update>
+
+    <select id="getDredgeCouponListCanUse" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.coupon.entity.UserCouponEntity">
+        select uc.f_id AS id, uc.t_user_f_id AS userId, uc.f_status AS userCouponStatus,
+        c.f_coupon_name AS couponName, c.f_coupon_type AS couponType, c.f_max_discount_percent AS maxDiscountPercent,
+        c.f_least_spend_use AS leastSpendUse, c.f_discount_money AS discountMoney, c.f_discount_value AS discountValue,
+        date_format(uc.f_use_end_date,'%Y-%m-%d') AS  useEndDate,c.f_use_type AS useType,
+		duc.f_support_level AS dredgeSupportLevel,duc.f_community_supply_type_id AS communitySupplyType,duc.f_dredge_type_id AS dredgeType,duc.f_coupon_fee_type AS dredgeCouponFeeType
+        FROM t_user_coupon uc
+        LEFT JOIN t_coupon c on uc.t_coupon_f_id = c.f_id
+        LEFT JOIN t_dredge_coupon_config duc on duc.f_sys0_del_state = 0 AND duc.f_coupon_id = c.f_id and duc.f_sys0_del_state = 0
+        WHERE uc.f_status = 1 and uc.t_user_f_id = #{userId} and c.f_least_spend_use &lt;= #{amount}
+          AND ((c.f_use_type = 3 and (duc.f_support_level = 1
+              or (duc.f_support_level = 2 and duc.f_community_supply_type_id = #{communitySupplyType})
+              or(duc.f_support_level = 3 AND duc.f_dredge_type_id = #{dredgeType})
+              ))
+              or (c.f_use_type = 7 and exists (select 1 from t_coupon_product cp where cp.f_sys0_del_state = 0 and cp.f_coupon_id = c.f_id and cp.f_dredge_product_id = #{dredgeProductId})))
+        ORDER BY uc.f_use_end_date
+    </select>
+
+    <delete id="delUserCouponUseRecord" parameterType="java.math.BigInteger">
+        DELETE FROM t_ebuy_order_has_coupon WHERE t_ebuy_order_f_id = #{orderId}
+    </delete>
+
+
+    <resultMap id="userCouponEntityMap" type="com.cnfantasia.server.api.coupon.entity.UserCouponEntity">
+        <id property="id" column="id" javaType="java.math.BigInteger"/>
+        <result property="userId" column="userId" javaType="java.math.BigInteger"/>
+        <result property="userCouponStatus" column="userCouponStatus" javaType="java.lang.Integer"/>
+        <result property="couponName" column="couponName" javaType="java.lang.String"/>
+        <result property="couponType" column="couponType" javaType="java.lang.Integer"/>
+        <result property="maxDiscountPercent" column="maxDiscountPercent" javaType="java.lang.Integer"/>
+        <result property="leastSpendUse" column="leastSpendUse" javaType="java.lang.Integer"/>
+        <result property="discountMoney" column="discountMoney" javaType="java.lang.Integer"/>
+        <result property="discountValue" column="discountValue" javaType="java.lang.Integer"/>
+        <result property="useEndDate" column="useEndDate" javaType="java.lang.String"/>
+        <result property="useType" column="useType" javaType="java.lang.Integer"/>
+        <collection property="discountProductShelfIdList" ofType="java.math.BigInteger" javaType="list">
+            <result column="shelfId"/>
+        </collection>
+    </resultMap>
+    <select id="getUserCouponList4EbuyProduct" parameterType="map" resultMap="userCouponEntityMap">
+        SELECT  uc.f_id AS id, uc.t_user_f_id AS userId, uc.f_status AS userCouponStatus,
+            c.f_coupon_name AS couponName, c.f_coupon_type AS couponType, c.f_max_discount_percent AS maxDiscountPercent,
+            c.f_least_spend_use AS leastSpendUse, c.f_discount_money AS discountMoney, c.f_discount_value AS discountValue,
+            date_format(uc.f_use_end_date,'%Y-%m-%d') AS  useEndDate,c.f_use_type AS useType, cp.f_shelf_id shelfId
+        FROM t_user_coupon uc
+        INNER JOIN t_coupon c ON uc.t_coupon_f_id = c.f_id
+        inner join t_coupon_product cp on cp.f_sys0_del_state = 0 and cp.f_coupon_id = c.f_id
+        where c.f_use_type = 6 and uc.f_use_end_date > date_sub(now(), INTERVAL 1 day) and uc.f_status = 1 and uc.t_user_f_id = #{userId}
+        order by uc.f_use_end_date desc
+    </select>
+</mapper>

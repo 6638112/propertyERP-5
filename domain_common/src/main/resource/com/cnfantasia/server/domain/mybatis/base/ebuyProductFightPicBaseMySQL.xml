@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:拼购产品列表图片信息 t_ebuy_product_fight_pic -->
+<mapper namespace="ebuyProductFightPicBase">
+	<resultMap type="EbuyProductFightPic" id="ebuyProductFightPicBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_url_big" javaType="java.lang.String" property="urlBig"/>  <!-- 大图地址 -->        <result column="f_url_mini" javaType="java.lang.String" property="urlMini"/>  <!-- 小图地址 -->        <result column="t_ebuy_product_f_id" javaType="java.math.BigInteger" property="tEbuyProductFId"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyProductFightPic" id="ebuyProductFightPicExtendMap" extends="ebuyProductFightPicBaseMap">
+	</resultMap>
+	<resultMap type="EbuyProductFightPic" id="ebuyProductFightPicBaseMap_AppendTable">
+        <id column="EPFPid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EPFPurlBig" javaType="java.lang.String" property="urlBig"/>  <!-- 大图地址 -->        <result column="EPFPurlMini" javaType="java.lang.String" property="urlMini"/>  <!-- 小图地址 -->        <result column="EPFPtEbuyProductFId" javaType="java.math.BigInteger" property="tEbuyProductFId"/>  <!--  -->        <result column="EPFPsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="EPFPsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="EPFPsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="EPFPsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="EPFPsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="EPFPsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="EPFPsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyProductFightPic" id="ebuyProductFightPicBaseMap_AppendTable1">
+        <id column="EPFP1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EPFP1urlBig" javaType="java.lang.String" property="urlBig"/>  <!-- 大图地址 -->        <result column="EPFP1urlMini" javaType="java.lang.String" property="urlMini"/>  <!-- 小图地址 -->        <result column="EPFP1tEbuyProductFId" javaType="java.math.BigInteger" property="tEbuyProductFId"/>  <!--  -->        <result column="EPFP1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="EPFP1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="EPFP1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="EPFP1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="EPFP1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="EPFP1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="EPFP1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EPFP.f_id,EPFP.f_url_big,EPFP.f_url_mini,EPFP.t_ebuy_product_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EPFP.f_id as EPFPid,EPFP.f_url_big as EPFPurlBig,EPFP.f_url_mini as EPFPurlMini,EPFP.t_ebuy_product_f_id as EPFPtEbuyProductFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EPFP1.f_id as EPFP1id,EPFP1.f_url_big as EPFP1urlBig,EPFP1.f_url_mini as EPFP1urlMini,EPFP1.t_ebuy_product_f_id as EPFP1tEbuyProductFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EPFP.f_id = #{id} ) </if>        <if test="urlBig != null">  and (EPFP.f_url_big = #{urlBig} ) </if>        <if test="urlMini != null">  and (EPFP.f_url_mini = #{urlMini} ) </if>        <if test="tEbuyProductFId != null">  and (EPFP.t_ebuy_product_f_id = #{tEbuyProductFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EPFP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EPFP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EPFP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EPFP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EPFP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EPFP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EPFP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EPFP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EPFP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EPFP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EPFP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EPFP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EPFP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EPFP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EPFP.f_id = #{id} ) </if>        <if test="urlBig != null and !urlBig.equals('')  ">  and (EPFP.f_url_big like CONCAT('%',#{urlBig},'%') ) </if>        <if test="urlMini != null and !urlMini.equals('')  ">  and (EPFP.f_url_mini like CONCAT('%',#{urlMini},'%') ) </if>        <if test="tEbuyProductFId != null and !tEbuyProductFId.equals('')  ">  and (EPFP.t_ebuy_product_f_id = #{tEbuyProductFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EPFP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EPFP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EPFP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EPFP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EPFP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EPFP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EPFP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EPFP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EPFP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EPFP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EPFP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EPFP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EPFP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EPFP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyProductFightPicBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyProductFightPicBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyProductFightPicBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyProductFightPicBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_product_fight_pic EPFP    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(拼购产品列表图片信息)信息。 -->
+	<sql id="select_ebuyProductFightPic">
+		SELECT <include refid="ebuyProductFightPicBase.queryHead"/>
+		<include refid="ebuyProductFightPicBase.busiQueryCondition"/>
+		<include refid="ebuyProductFightPicBase.dimCheckSql"/>
+		ORDER BY EPFP.f_id DESC
+	</sql>
+	<select id="select_ebuyProductFightPic" parameterType="java.util.Map" resultMap="ebuyProductFightPicBase.ebuyProductFightPicExtendMap">
+		<include refid="ebuyProductFightPicBase.select_ebuyProductFightPic"/>
+	</select>
+	
+	<!-- 根据条件分页查询(拼购产品列表图片信息)信息  -->
+	<sql id="select_ebuyProductFightPic_withPage">
+		SELECT <include refid="ebuyProductFightPicBase.queryHead"/>
+		<include refid="ebuyProductFightPicBase.busiQueryCondition"/>
+		<include refid="ebuyProductFightPicBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyProductFightPic_withPage" resultMap="ebuyProductFightPicBase.ebuyProductFightPicExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyProductFightPicBase.select_ebuyProductFightPic_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(拼购产品列表图片信息)信息。 -->
+	<sql id="select_ebuyProductFightPic_bySeqId">
+		SELECT <include refid="ebuyProductFightPicBase.queryHead"/>
+		<include refid="ebuyProductFightPicBase.busiQueryCondition"/>
+		 and EPFP.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyProductFightPic_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyProductFightPicBase.ebuyProductFightPicBaseMap">
+		<include refid="ebuyProductFightPicBase.select_ebuyProductFightPic_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(拼购产品列表图片信息)记录数  -->
+	<sql id="select_ebuyProductFightPic_count">
+		SELECT COUNT(*)
+		<include refid="ebuyProductFightPicBase.busiQueryCount"/>
+		<include refid="ebuyProductFightPicBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyProductFightPic_count" resultType="java.lang.Integer">
+		<include refid="ebuyProductFightPicBase.select_ebuyProductFightPic_count"/>
+	</select>
+	
+	 <!-- 往(拼购产品列表图片信息)新增一条记录。 -->
+	 <sql id="insert_ebuyProductFightPic">
+		INSERT INTO t_ebuy_product_fight_pic 
+		(f_id,f_url_big,f_url_mini,t_ebuy_product_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{urlBig,jdbcType=VARCHAR},#{urlMini,jdbcType=VARCHAR},#{tEbuyProductFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_ebuyProductFightPic" parameterType="EbuyProductFightPic">
+		<include refid="ebuyProductFightPicBase.insert_ebuyProductFightPic"/>
+    </insert>
+    
+	<!-- 批量新增(拼购产品列表图片信息)信息 -->
+    <insert id="insert_ebuyProductFightPic_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_product_fight_pic 
+		(f_id,f_url_big,f_url_mini,t_ebuy_product_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.urlBig,jdbcType=VARCHAR},#{item.urlMini,jdbcType=VARCHAR},#{item.tEbuyProductFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(拼购产品列表图片信息)信息。 -->
+    <sql id="update_ebuyProductFightPic">
+		UPDATE t_ebuy_product_fight_pic		<trim prefix="SET" prefixOverrides=","> 		<if test="urlBig != null and !urlBig.equals('') "> ,f_url_big=#{urlBig}</if> 		<if test="urlMini != null and !urlMini.equals('') "> ,f_url_mini=#{urlMini}</if> 		<if test="tEbuyProductFId != null and !tEbuyProductFId.equals('') "> ,t_ebuy_product_f_id=#{tEbuyProductFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyProductFightPic" parameterType="EbuyProductFightPic">
+		<include refid="ebuyProductFightPicBase.update_ebuyProductFightPic"/>
+    </update>
+    
+    <!-- 批量更新(拼购产品列表图片信息)信息。 -->
+    <update id="update_ebuyProductFightPic_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_product_fight_pic		<trim prefix="SET" prefixOverrides=","> 		<if test="item.urlBig != null and !item.urlBig.equals('')  "> ,f_url_big=#{item.urlBig}</if> 		<if test="item.urlMini != null and !item.urlMini.equals('')  "> ,f_url_mini=#{item.urlMini}</if> 		<if test="item.tEbuyProductFId != null and !item.tEbuyProductFId.equals('')  "> ,t_ebuy_product_f_id=#{item.tEbuyProductFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(拼购产品列表图片信息)信息_逻辑删除。 -->
+    <sql id="delete_ebuyProductFightPic_Logic">
+		UPDATE t_ebuy_product_fight_pic		<trim prefix="SET" prefixOverrides=","> 		<if test="urlBig != null and !urlBig.equals('')  "> ,f_url_big=#{urlBig}</if> 		<if test="urlMini != null and !urlMini.equals('')  "> ,f_url_mini=#{urlMini}</if> 		<if test="tEbuyProductFId != null and !tEbuyProductFId.equals('')  "> ,t_ebuy_product_f_id=#{tEbuyProductFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyProductFightPic_Logic" parameterType="EbuyProductFightPic">
+		<include refid="ebuyProductFightPicBase.delete_ebuyProductFightPic_Logic"/>
+    </update>
+    
+    <!-- 批量删除(拼购产品列表图片信息)信息_逻辑删除 -->
+    <update id="delete_ebuyProductFightPic_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_product_fight_pic		<trim prefix="SET" prefixOverrides=","> 		<if test="item.urlBig != null and !item.urlBig.equals('')  "> ,f_url_big=#{item.urlBig}</if> 		<if test="item.urlMini != null and !item.urlMini.equals('')  "> ,f_url_mini=#{item.urlMini}</if> 		<if test="item.tEbuyProductFId != null and !item.tEbuyProductFId.equals('')  "> ,t_ebuy_product_f_id=#{item.tEbuyProductFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(拼购产品列表图片信息)信息。 -->
+    <sql id="delete_ebuyProductFightPic">
+		DELETE FROM t_ebuy_product_fight_pic WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyProductFightPic" parameterType="java.lang.String">
+		<include refid="ebuyProductFightPicBase.delete_ebuyProductFightPic"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(拼购产品列表图片信息)信息。 -->
+    <delete id="delete_ebuyProductFightPic_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_product_fight_pic WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

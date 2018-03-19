@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN: 门牌审核 t_room_validate -->
+<mapper namespace="roomValidate">
+	<resultMap type="com.cnfantasia.server.ms.roomValidate.entity.RoomValidateEntity" id="roomValidateEntity" extends="roomValidateBase.roomValidateBaseMap">
+	</resultMap>
+	
+	<!-- 根据 登录用户Id，找 所属 门牌信息  -->
+    <select id="select_rvList_ByOmsUserId" parameterType="java.util.Map" resultType="java.util.Map">
+		select concat(ap.f_name, ac.f_name, ab.f_name, gb.f_name) as gbDesc, b.f_name bName, rr.f_unit_name unitName, rr.f_num_tail numTail,
+		date_format(rv.f_sys0_add_time,'%Y-%m-%d %T') rvSubmitTime, rv.f_verify_status rvStatus, rv.f_id rvId, rv.f_user_id uId,
+		r.f_id rId, rr.f_id rrId, rv.f_record_num as recordNum 
+		from t_room_validate rv
+		inner join t_room r on r.f_id  = rv.t_room_f_id and  r.f_sys0_del_state = 0
+		inner join t_real_room rr on rr.f_id = r.t_real_room_f_id and rr.f_sys0_del_state = 0
+		inner join t_building b on b.f_id = rr.t_building_f_id and b.f_sys0_del_state = 0
+		inner join t_group_building gb on gb.f_id = b.t_group_building_f_id and gb.f_sys0_del_state = 0
+		inner join t_address_block ab on ab.f_id = gb.t_block_f_id and ab.f_sys0_del_state = 0
+		inner join t_address_city ac on ac.f_id = ab.t_city_f_id and ac.f_sys0_del_state = 0
+		inner join t_address_province ap on ap.f_id = ac.t_province_f_id and ap.f_sys0_del_state = 0
+		left join t_property_company pc on pc.f_id = gb.t_property_company_f_id and pc.f_sys0_del_state = 0
+		left join t_oms_user ou on ou.f_id = pc.f_admin_id and ou.f_sys0_del_state = 0
+		where 1 = 1 and rv.f_sys0_del_state = 0 and rv.f_user_id !=-1
+		and rv.f_source_type = 1 <!-- 只过滤出提交门牌资料待审核的数据 -->
+		<if test="isadmin !=null and isadmin == 0" >and pc.f_admin_id = #{omsUserId}</if> <!-- 当isadmin == 1 ，即解放区后台管理员 要看到所有,其它的只能看到所管辖的 -->
+		<if test="rvStatus != null and rvStatus != '' ">  and rv.f_verify_status = #{rvStatus} </if> 
+		<if test="startTime != null and startTime != '' ">  and rv.f_sys0_add_time &gt;= #{startTime} </if> 
+		<if test="endTime != null and endTime != '' ">  and rv.f_sys0_add_time &lt;= #{endTime} </if> 
+		<if test="uId != null and uId != '' ">  and rv.f_user_id like CONCAT('%', #{uId} ,'%') </if> 
+		<if test="groupBuildingName != null and groupBuildingName != '' ">
+		and (gb.f_name like CONCAT('%', #{groupBuildingName} ,'%') 
+			or 
+			gb.f_pinyin_name like CONCAT('%', #{groupBuildingName} ,'%') )
+		</if> 
+		order by rv.f_sys0_add_time desc
+		<if test="_begin != null and _length != null "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<!-- 根据rommValidate的ID找到对应的信息，供审批人查看审核 -->
+	<select id="select_rm_forAudit" parameterType="java.lang.String" resultType="java.util.Map" >
+		select r.f_hua_id, concat(ap.f_name, ac.f_name, ab.f_name, gb.f_name, b.f_name,"-", rr.f_num) as rvDesc , 
+		rv.f_sys0_add_time rvSubmitTime, rv.f_verify_status rvStatus, rv.f_id rvId, rv.f_verify_pic_url picURL,rv.f_verify_result_desc auditResultDesc,rv.f_user_id userId,
+		u.f_real_name userRealName, u.f_mobile userMobile, u.f_invite_no inviteNo,
+		 rr.f_id rrId, r.f_id rId,
+		 gb.f_id gbId,gb.f_name gbName,
+		 uhtr.f_plan_property_amount planPropertyAmount,uhtr.f_plan_switch_status planSwitchStatus,
+		u.f_invite_no inviteNo, irc.t_invite_user_f_id inviteUserId, irc.f_invite_type inviteType
+		from t_room_validate rv
+		inner join t_room r on r.f_id  = rv.t_room_f_id and  r.f_sys0_del_state = 0
+		inner join t_real_room rr on rr.f_id = r.t_real_room_f_id and rr.f_sys0_del_state = 0
+		inner join t_building b on b.f_id = rr.t_building_f_id and b.f_sys0_del_state = 0
+		inner join t_group_building gb on gb.f_id = b.t_group_building_f_id and gb.f_sys0_del_state = 0
+		inner join t_address_block ab on ab.f_id = gb.t_block_f_id and ab.f_sys0_del_state = 0
+		inner join t_address_city ac on ac.f_id = ab.t_city_f_id and ac.f_sys0_del_state = 0
+		inner join t_address_province ap on ap.f_id = ac.t_province_f_id and ap.f_sys0_del_state = 0
+		inner join t_user u on u.f_id = rv.f_user_id
+		left join t_invite_reward_config irc on irc.f_invite_code = u.f_invite_no
+		<!-- inner join t_user_has_t_room uhtr on uhtr.t_room_f_id = u.f_default_room_id and uhtr.t_user_f_id = u.f_id and uhtr.f_sys0_del_state = 0 -->
+		inner join t_user_has_t_room uhtr on rv.t_room_f_id = uhtr.t_room_f_id and rv.f_user_id = uhtr.t_user_f_id
+		where rv.f_id = #{_parameter};
+	</select>
+	
+	<!-- 审核通过 -->
+	<update id="update_roomValidate_forAuditPass">
+		update t_room_validate set f_verify_status = 4, f_verify_result_desc=#{auditResultDesc}, f_verify_succ_time = sysdate(), f_sys0_upd_time = sysDate(), f_sys0_upd_user = #{omsUserId}
+		where f_id = #{rvId}
+	</update>
+	
+	<!-- 审核通过，还要更新RealRoom表 -->
+	<update id="update_realRoom_forAudit">
+		update t_real_room set f_validate_user_id = #{userId}, f_validate_status =5, f_validate_time = sysDate(), f_validate_room_id = #{roomId}, f_sys0_upd_time = sysDate(), f_sys0_upd_user = #{omsUserId}
+		where f_id = #{rrId}
+		and (f_validate_status != 5 OR ISNULL(f_validate_status))<!-- 存在验证通过的则不更新 -->
+	</update>
+	
+	<!-- 审核不通过 -->
+	<update id="update_roomValidate_forAuditNotPass">
+		update t_room_validate set f_verify_status = 3, f_verify_result_desc=#{auditNotPassResultDesc}, f_verify_succ_time = sysdate(), f_sys0_upd_time = sysDate(), f_sys0_upd_user = #{omsUserId}
+		where f_id = #{rvId};
+		
+		<!-- 再次验证不通时，要将realRoom的管理员置空 -->
+		update t_real_room set f_validate_user_id = null, f_validate_status =3, f_validate_time = null, f_validate_room_id = null, f_sys0_upd_time = sysDate(), f_sys0_upd_user = #{omsUserId}
+		where f_id = #{rrId}
+		and f_validate_status = 5 
+		and f_validate_user_id = #{userId};
+	</update>
+	
+	<!-- 更新userHasTRoom表信息 -->
+	<update id="update_userHasTRoom_whenAudit">
+		update t_user_has_t_room uhtr
+			inner join t_room_validate rv on rv.t_room_f_id = uhtr.t_room_f_id and rv.f_user_id = uhtr.t_user_f_id
+		set uhtr.f_plan_switch_status=#{planSwitchStatus}
+ 		<if test="planPropertyAmount != null and planPropertyAmount != '' "> ,f_plan_property_amount=#{planPropertyAmount}</if>
+		where 1=1
+		and uhtr.f_sys0_del_state = 0
+		and rv.f_id=#{rvId}
+	</update>
+	
+	<!-- 根据待验证门牌的ID，更新门牌验证对应的小区名称 -->
+	<update id="update_roomValidate_name">
+		UPDATE t_room_validate rv 
+		INNER JOIN t_room r ON rv.t_room_f_id = r.f_id
+		INNER JOIN t_real_room rr ON r.t_real_room_f_id = rr.f_id
+		INNER JOIN t_building b ON rr.t_building_f_id = b.f_id
+		INNER JOIN t_group_building gb ON b.t_group_building_f_id = gb.f_id
+		INNER JOIN t_building b1 ON b1.t_group_building_f_id = gb.f_id
+		LEFT JOIN t_group_building gb2 ON gb2.f_name = #{gbName} 
+		AND gb2.t_block_f_id = gb.t_block_f_id
+		AND gb2.f_check_status IN (1, 9)
+		<![CDATA[ AND gb2.f_id <> gb.f_id]]>
+		SET 
+			b1.t_group_building_f_id = if(gb2.f_id is null,gb.f_id,gb2.f_id),<!-- gb2.f_id is null：表示该行政区域没有审核的小区 -->
+			b1.f_sys0_upd_time = if(gb2.f_id is null,null,sysDate()),
+			b1.f_sys0_upd_user = if(gb2.f_id is null,null,#{omsUserId}),
+			gb.f_name = if(gb2.f_id is null,#{gbName} ,gb.f_name),
+			gb.f_sys0_del_state = if(gb2.f_id is null,0,1),
+			gb.f_sys0_del_time = if(gb2.f_id is null,NULL,sysDate()),
+			gb.f_sys0_del_user = if(gb2.f_id is null,NULL,#{omsUserId})
+		WHERE
+		rv.f_id = #{rvId};
+	</update>
+	
+	<!-- 根据待验证门牌的ID，更新门牌验证对应的小区名称checkStatus，1为审核通过，审核通过后，其它用户在新增门牌时就可以看到此小区  -->
+	<update id="update_roomValidate_checkStatus">
+		UPDATE t_group_building gb
+		INNER JOIN	t_building b ON b.t_group_building_f_id = gb.f_id
+		INNER JOIN	t_real_room rr ON rr.t_building_f_id = b.f_id
+		INNER JOIN	t_room r ON r.t_real_room_f_id = rr.f_id
+		INNER JOIN	t_room_validate rv ON rv.t_room_f_id = r.f_id
+		LEFT JOIN	t_group_building gb2 ON gb2.f_name = gb.f_name	AND gb2.t_block_f_id = gb.t_block_f_id	AND gb2.f_check_status IN (1 , 9) 
+		<![CDATA[ AND gb2.f_id <> gb.f_id]]>
+		SET	gb.f_check_status = 1
+		WHERE	rv.f_id = #{rvId} AND gb2.f_id IS NULL;
+	</update>
+	
+	<select id="select_GbSignStatus" parameterType="java.util.Map" resultType="java.lang.Boolean">
+		SELECT case when f_sign_status=1 then true else false end as signStatus
+		FROM t_group_building
+		WHERE f_sys0_del_state=0
+		AND f_id = #{gbId}
+	</select>
+</mapper>

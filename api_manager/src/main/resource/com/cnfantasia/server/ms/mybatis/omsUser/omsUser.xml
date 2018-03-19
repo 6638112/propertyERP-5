@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户表 t_oms_user -->
+<mapper namespace="omsUser">
+	<!-- 根据用户Id，删除 用户-角色 中间表中的数据 -->
+    <delete id="delete_userRole_byUserId" parameterType="java.util.Map">
+		delete from t_oms_user_has_t_oms_permi_role 
+		WHERE t_oms_user_f_id = #{omsUserId}
+    </delete>
+    
+    <select id="select_omsPermiFunction_byOmsUserId" parameterType="java.math.BigInteger" resultMap="omsPermiFunctionBase.omsPermiFunctionBaseMap_AppendTable">
+    	select distinct <include refid="omsPermiFunctionBase.queryHead_AppendTable"/>
+    	FROM t_oms_permi_function OPF
+    	inner join t_oms_permi_role_has_t_oms_permi_function OPRHTOPF on OPRHTOPF.t_oms_permi_function_f_id = OPF.f_id and OPRHTOPF.f_sys0_del_state = 0
+    	inner join t_oms_permi_role OPR on OPR.f_id = OPRHTOPF.t_oms_permi_role_f_id and OPR.f_sys0_del_state = 0
+    	inner join t_oms_user_has_t_oms_permi_role OUHTOPR on OUHTOPR.t_oms_permi_role_f_id = OPR.f_id and OUHTOPR.f_sys0_del_state = 0
+    	inner join t_oms_user OU on OU.f_id = OUHTOPR.t_oms_user_f_id
+    	WHERE 1=1 
+    	and OPF.f_sys0_del_state = 0
+    	and OPF.f_id &gt;=10000
+    	and OU.f_id = ${_parameter}
+    	order by OPF.f_longNumber
+	</select>
+	
+	<!-- 查询开启银行托收的小区数量 -->
+	<select id="selectOpenBCGbCount" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			(
+				(
+				SELECT
+					pc.f_id pcId
+				FROM
+					t_property_company pc
+				WHERE
+					pc.f_admin_id = #{userId}
+				)
+				UNION
+				(
+					SELECT
+						uc.t_property_company_id pcId
+					FROM
+						t_oms_user_has_t_property_company uc
+					WHERE
+						uc.t_oms_user_id = #{userId}
+				)
+			) _pct
+			INNER JOIN t_group_building gb ON gb.t_property_company_f_id=_pct.pcId 
+			AND gb.f_sign_status=1 AND gb.f_propfee_canpay=1 AND gb.f_sys0_del_state=0
+			INNER JOIN t_group_building_ext gbe on gb.f_id=gbe.f_id AND gbe.f_open_bank_collection=1
+	</select>
+	
+	<!-- 获得左上角的欢迎消息 -->
+    <select id="getWelcomMsgInfo_byOmsuserId" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.ms.propertyCompany.entity.PropertyCompanySimple">
+		select PC.f_name pcName,
+    	if(PC.f_is_all_cooperation= 1, 3, if(PC.f_is_high_cooperation=1, 2, if(PC.f_is_light_cooperation = 1, 1, 0))) AS cooperationType,
+    	PC.f_id pcId
+    	FROM t_property_company PC 
+    	inner join t_oms_user OU on OU.f_id = PC.f_admin_id
+    	WHERE 1=1 
+    	and OU.f_id = ${_parameter}
+    	
+    	union
+        <!-- 物业分配的子账号 -->
+        select PC.f_name pcName,
+    	if(PC.f_is_all_cooperation= 1, 3, if(PC.f_is_high_cooperation=1, 2, if(PC.f_is_light_cooperation = 1, 1, 0))) AS cooperationType,
+    	PC.f_id pcId
+    	FROM t_property_company PC 
+    	inner join t_oms_user OU on OU.f_parent_user_id = PC.f_admin_id
+    	WHERE 1=1 and OU.f_is_sub_user =1
+    	and OU.f_id =${_parameter}
+    	
+    	union
+        <!-- 管理处账号 -->
+        select PC.f_name pcName,
+    	if(PC.f_is_all_cooperation= 1, 3, if(PC.f_is_high_cooperation=1, 2, if(PC.f_is_light_cooperation = 1, 1, 0))) AS cooperationType,
+    	PC.f_id pcId
+        from  t_property_company PC 
+        inner join  t_property_management  pm on pm.t_property_company_f_id = PC.f_id
+        join t_property_management_has_oms_user  pmhou on pmhou.t_property_management_f_id = pm.f_id
+        join t_oms_user ou on  pmhou.t_oms_user_f_id = ou.f_id
+        where ou.f_id = ${_parameter};
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.ms.omsUser.entity.OmsUserWithRoles" id="omsUserWithRolesMap">
+		<id column="id" javaType="java.math.BigInteger" property="id"/>
+	 	<result column="parentUserId" property="parentUserId" javaType="java.math.BigInteger" />
+	 	<result column="parentName" property="parentName" javaType="java.lang.String" />
+	 	<result column="userAccount" property="userAccount" javaType="java.lang.String" />
+	 	<result column="realName" property="realName" javaType="java.lang.String" />
+	 	<result column="phone" property="telPhone" javaType="string" />
+	 	<collection property="roleNames" javaType="list" ofType="string" >
+	 		<result column="prName" property="roleNames"/>
+	 	</collection>
+	 </resultMap>
+	 
+	<select id="selectSubUserList" parameterType="map" resultMap="omsUserWithRolesMap">
+		<!-- 物业公司的子账号 -->
+		SELECT ou.f_parent_user_id parentUserId, pc.f_name parentName, pr.f_name prName, ou.f_id id, ou.f_user_account userAccount, ou.f_real_name realName, ou.f_tel_phone phone 
+		from t_oms_user ou 
+		left JOIN t_oms_user_has_t_oms_permi_role oupr on oupr.t_oms_user_f_id = ou.f_id and oupr.f_sys0_del_state = 0
+		LEFT JOIN t_oms_permi_role pr on pr.f_id = oupr.t_oms_permi_role_f_id and pr.f_sys0_del_state = 0
+		LEFT JOIN t_property_company pc on pc.f_admin_id = ou.f_parent_user_id and pc.f_sys0_del_state = 0
+				where ou.f_sys0_del_state = 0 
+		AND ou.f_is_pm_user = 0 AND ou.f_is_sub_user = 1
+		<if test="parentUserId != null and !parentUserId.equals('') " >  and (ou.f_parent_user_id = #{parentUserId} ) </if>
+		<if test="userAccount != null and !userAccount.equals('')">  and (ou.f_user_account like concat('%',  #{userAccount}, '%') ) </if>
+		<if test="realName != null and !realName.equals('')">  and (ou.f_real_name like concat('%', #{realName}, '%') ) </if>
+		<if test="roleName != null and !roleName.equals('')">  and (pr.f_name like concat('%',  #{roleName}, '%') ) </if>
+		
+		UNION
+		<!-- 物业看 管理处的子账号 -->
+		SELECT ou.f_parent_user_id parentUserId, pm.f_name parentName, pr.f_name prName, ou.f_id id, ou.f_user_account userAccount, ou.f_real_name realName, ou.f_tel_phone phone 
+		from t_oms_user ou 
+		left JOIN t_oms_user_has_t_oms_permi_role oupr on oupr.t_oms_user_f_id = ou.f_id and oupr.f_sys0_del_state = 0
+		LEFT JOIN t_oms_permi_role pr on pr.f_id = oupr.t_oms_permi_role_f_id and pr.f_sys0_del_state = 0
+		LEFT JOIN t_property_management_has_oms_user pmou on pmou.t_oms_user_f_id = ou.f_parent_user_id and pmou.f_sys0_del_state = 0
+		LEFT JOIN t_property_management pm on pm.f_id = pmou.t_property_management_f_id and pm.f_sys0_del_state = 0
+		LEFT JOIN t_property_company pc ON pc.f_id = pm.t_property_company_f_id AND pc.f_sys0_del_state = 0
+		WHERE
+			ou.f_sys0_del_state = 0
+		AND ou.f_is_sub_user = 1 AND ou.f_is_pm_user = 1
+		<if test="parentUserId != null and !parentUserId.equals('') " >  and (pc.f_admin_id = #{parentUserId} ) </if>
+		<if test="userAccount != null and !userAccount.equals('')">  and (ou.f_user_account like concat('%',  #{userAccount}, '%') ) </if>
+		<if test="realName != null and !realName.equals('')">  and (ou.f_real_name like concat('%', #{realName}, '%') ) </if>
+		<if test="roleName != null and !roleName.equals('')">  and (pr.f_name like concat('%',  #{roleName}, '%') ) </if>
+		
+		UNION
+		<!-- 管理处看 管理处的子账号 -->
+		SELECT ou.f_parent_user_id parentUserId, pm.f_name parentName, pr.f_name prName, ou.f_id id, ou.f_user_account userAccount, ou.f_real_name realName, ou.f_tel_phone phone 
+		from t_oms_user ou 
+		left JOIN t_oms_user_has_t_oms_permi_role oupr on oupr.t_oms_user_f_id = ou.f_id and oupr.f_sys0_del_state = 0
+		LEFT JOIN t_oms_permi_role pr on pr.f_id = oupr.t_oms_permi_role_f_id and pr.f_sys0_del_state = 0
+		LEFT JOIN t_property_management_has_oms_user pmou on pmou.t_oms_user_f_id = ou.f_parent_user_id and pmou.f_sys0_del_state = 0
+		LEFT JOIN t_property_management pm on pm.f_id = pmou.t_property_management_f_id and pm.f_sys0_del_state = 0
+		WHERE
+			ou.f_sys0_del_state = 0
+		AND ou.f_is_sub_user = 1 AND ou.f_is_pm_user = 1
+		<if test="parentUserId != null and !parentUserId.equals('') " >  and (ou.f_parent_user_id = #{parentUserId} ) </if>
+		<if test="userAccount != null and !userAccount.equals('')">  and (ou.f_user_account like concat('%',  #{userAccount}, '%') ) </if>
+		<if test="realName != null and !realName.equals('')">  and (ou.f_real_name like concat('%', #{realName}, '%') ) </if>
+		<if test="roleName != null and !roleName.equals('')">  and (pr.f_name like concat('%',  #{roleName}, '%') ) </if>
+	</select>
+	
+	<sql id="selectAccountManageComm">
+		FROM t_oms_user OU
+	    	WHERE 1=1
+	        <if test="userAccount != null">  and LOCATE(#{userAccount}, OU.f_user_account)>0 </if>
+	        <if test="realName != null">  and LOCATE(#{realName}, OU.f_real_name)>0 </if>
+	        <if test="userState != null">  and (OU.f_user_state = #{userState} ) </if>
+	        and (OU.f_sys0_del_state = 0 )
+	</sql>
+	
+	<select id="selectAccountManageList" parameterType="java.util.Map" resultMap="omsUserBase.omsUserExtendMap">
+		SELECT <include refid="omsUserBase.queryHead"/>
+		<include refid="selectAccountManageComm"></include>
+		ORDER BY OU.f_id DESC
+	</select>
+	
+	<select id="selectAccountManageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="selectAccountManageComm"></include>
+	</select>
+	
+</mapper>

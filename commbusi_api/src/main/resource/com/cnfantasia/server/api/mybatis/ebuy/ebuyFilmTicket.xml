@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 电商模块 -->
+<mapper namespace="ebuyFilmTicket">
+
+	<resultMap type="EbuyFilmTicket" id="ebuyFilmTicketMap">
+		<id column="f_id" javaType="java.lang.Long" property="id"/>
+		<result column="f_identify_code" javaType="java.lang.String" property="identifyCode"/>
+		<result column="f_expire_tm" javaType="java.util.Date" property="expireTm" />
+		<result column="f_type" javaType="java.lang.Integer" property="type"/>
+	</resultMap>
+
+	<select id="fetchFilmTickByOrderId" parameterType="Long" resultType="EbuyFilmTicket">
+		select op.t_ebuy_order_f_id as orderId, ps.f_id as productId, ((op.f_product_qty * p.f_film_ticket_num) % 100) as ticketNum,
+				(CASE WHEN p.f_film_ticket_num > 100 THEN 2 ELSE 1 END) as type
+		 from t_ebuy_order_has_t_ebuy_product op
+			inner join t_ebuy_product_shelf ps on op.t_ebuy_product_f_id = ps.f_id
+			inner join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id
+		where op.t_ebuy_order_f_id = #{orderid} and p.f_film_ticket_num > 0
+	</select>
+	
+	<update id="updateFilmTicketToLock" parameterType="EbuyFilmTicket">
+		<![CDATA[
+		update t_ebuy_order_film_ticket t set t_order_id = #{orderId}, t_product_id = #{productId}, f_state = 1, f_sys0_upd_time = CURRENT_TIMESTAMP
+ 			where f_type = #{type} and (f_state = 0 or (f_state = 1 and f_sys0_upd_time < DATE_SUB(NOW(),INTERVAL 30 MINUTE)))
+ 		limit #{ticketNum}
+ 		]]>
+	</update>
+	
+	<update id="updateFilmTicketLockReset" parameterType="Long">
+		<![CDATA[
+		update t_ebuy_order_film_ticket t set f_state = 0, f_sys0_upd_time = CURRENT_TIMESTAMP
+ 			where t_order_id = #{orderId} and f_state = 1
+ 		]]>
+	</update>
+	
+	<update id="updateFilmTicketLockToUsed" parameterType="java.util.Map">
+		<![CDATA[
+		update t_ebuy_order_film_ticket t set f_state = 2, f_sys0_upd_time = CURRENT_TIMESTAMP
+ 			where t_order_id = #{orderId} and f_state = 1
+ 		]]>
+	</update>
+	
+	<update id="updateFilmTicketToUsed" parameterType="EbuyFilmTicket">
+		<![CDATA[
+		update t_ebuy_order_film_ticket t set t_order_id = #{orderId}, t_product_id = #{productId}, f_state = 2, f_sys0_upd_time = CURRENT_TIMESTAMP
+ 			where f_type = #{type} and (f_state = 0 or (f_state = 1 and f_sys0_upd_time < DATE_SUB(NOW(),INTERVAL 30 MINUTE)))
+ 		limit #{ticketNum}
+ 		]]>
+	</update>
+	
+	<select id="getFilmTickList" parameterType="Map" resultMap="ebuyFilmTicketMap">
+		select t.f_id, t.f_identify_code, t.f_expire_tm, f_type from t_ebuy_order_film_ticket t
+ 			where t.t_order_id = #{orderId}
+		<if test="productId != null and productId != ''">
+			 and t.t_product_id=#{productId}
+		</if>
+	</select>
+	
+</mapper>

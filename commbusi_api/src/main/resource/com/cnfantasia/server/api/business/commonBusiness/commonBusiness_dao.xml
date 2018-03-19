@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+
+	<bean id="commonPointDao" class="com.cnfantasia.server.api.commonBusiness.dao.CommonPointDao" parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="commonPrizeDao" class="com.cnfantasia.server.api.commonBusiness.dao.CommonPrizeDao" parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="commonEbuyDao" class="com.cnfantasia.server.api.commonBusiness.dao.CommonEbuyDao" parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="commonRedenvelopeDao" class="com.cnfantasia.server.api.commonBusiness.dao.CommonRedenvelopeDao" parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="commonUserDao" class="com.cnfantasia.server.api.commonBusiness.dao.CommonUserDao" parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="commonLoginDao" class="com.cnfantasia.server.api.commonBusiness.dao.CommonLoginDao" parent="abstractBaseDao">
+		<property name="commUserSessionBaseDao" ref="commUserSessionBaseDao"/>
+	</bean>
+	
+	<bean id="commDataUpgradeDao" class="com.cnfantasia.server.api.commonBusiness.dao.CommDataUpgradeDao" parent="abstractBaseDao">
+	</bean>
+	
+	<!-- 数据归集 -->
+	<bean id="commonGatherDataDao" class="com.cnfantasia.server.api.commonBusiness.dao.CommonGatherDataDao" parent="abstractBaseDao">
+		<property name="uuidManager" ref="uuidManager"/>
+		<property name="dualDao" ref="dualDao"/>
+		<property name="commonGatherDataBaseDao" ref="commonGatherDataBaseDao"/>
+	</bean>
+	
+</beans>  

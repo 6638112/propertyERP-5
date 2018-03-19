@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:与供应商结算邮费规则 t_supply_merchant_delivery_fee_settlement -->
+<mapper namespace="supplyMerchantDeliveryFeeSettlementBase">
+	<resultMap type="SupplyMerchantDeliveryFeeSettlement" id="supplyMerchantDeliveryFeeSettlementBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_ebuy_supply_merchant_f_id" javaType="java.math.BigInteger" property="tEbuySupplyMerchantFId"/>  <!--  -->        <result column="f_amount_start" javaType="java.lang.Long" property="amountStart"/>  <!-- 运单金额(包含) -->        <result column="f_amount_end" javaType="java.lang.Long" property="amountEnd"/>  <!-- 运单金额(不包含) -->        <result column="f_settlement_fee" javaType="java.lang.Long" property="settlementFee"/>  <!-- 结算邮费 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="SupplyMerchantDeliveryFeeSettlement" id="supplyMerchantDeliveryFeeSettlementExtendMap" extends="supplyMerchantDeliveryFeeSettlementBaseMap">
+	</resultMap>
+	<resultMap type="SupplyMerchantDeliveryFeeSettlement" id="supplyMerchantDeliveryFeeSettlementBaseMap_AppendTable">
+        <id column="SMDFSid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="SMDFStEbuySupplyMerchantFId" javaType="java.math.BigInteger" property="tEbuySupplyMerchantFId"/>  <!--  -->        <result column="SMDFSamountStart" javaType="java.lang.Long" property="amountStart"/>  <!-- 运单金额(包含) -->        <result column="SMDFSamountEnd" javaType="java.lang.Long" property="amountEnd"/>  <!-- 运单金额(不包含) -->        <result column="SMDFSsettlementFee" javaType="java.lang.Long" property="settlementFee"/>  <!-- 结算邮费 -->        <result column="SMDFSsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="SMDFSsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="SMDFSsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="SMDFSsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="SMDFSsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="SMDFSsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="SMDFSsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="SupplyMerchantDeliveryFeeSettlement" id="supplyMerchantDeliveryFeeSettlementBaseMap_AppendTable1">
+        <id column="SMDFS1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="SMDFS1tEbuySupplyMerchantFId" javaType="java.math.BigInteger" property="tEbuySupplyMerchantFId"/>  <!--  -->        <result column="SMDFS1amountStart" javaType="java.lang.Long" property="amountStart"/>  <!-- 运单金额(包含) -->        <result column="SMDFS1amountEnd" javaType="java.lang.Long" property="amountEnd"/>  <!-- 运单金额(不包含) -->        <result column="SMDFS1settlementFee" javaType="java.lang.Long" property="settlementFee"/>  <!-- 结算邮费 -->        <result column="SMDFS1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="SMDFS1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="SMDFS1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="SMDFS1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="SMDFS1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="SMDFS1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="SMDFS1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		SMDFS.f_id,SMDFS.t_ebuy_supply_merchant_f_id,SMDFS.f_amount_start,SMDFS.f_amount_end,SMDFS.f_settlement_fee
+	</sql>
+	<sql id="queryHead_AppendTable">
+		SMDFS.f_id as SMDFSid,SMDFS.t_ebuy_supply_merchant_f_id as SMDFStEbuySupplyMerchantFId,SMDFS.f_amount_start as SMDFSamountStart,SMDFS.f_amount_end as SMDFSamountEnd,SMDFS.f_settlement_fee as SMDFSsettlementFee
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		SMDFS1.f_id as SMDFS1id,SMDFS1.t_ebuy_supply_merchant_f_id as SMDFS1tEbuySupplyMerchantFId,SMDFS1.f_amount_start as SMDFS1amountStart,SMDFS1.f_amount_end as SMDFS1amountEnd,SMDFS1.f_settlement_fee as SMDFS1settlementFee
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (SMDFS.f_id = #{id} ) </if>        <if test="tEbuySupplyMerchantFId != null">  and (SMDFS.t_ebuy_supply_merchant_f_id = #{tEbuySupplyMerchantFId} ) </if>        <if test="amountStart != null">  and (SMDFS.f_amount_start = #{amountStart} ) </if>        <if test="amountEnd != null">  and (SMDFS.f_amount_end = #{amountEnd} ) </if>        <if test="settlementFee != null">  and (SMDFS.f_settlement_fee = #{settlementFee} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (SMDFS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (SMDFS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (SMDFS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (SMDFS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (SMDFS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (SMDFS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (SMDFS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (SMDFS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (SMDFS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (SMDFS.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (SMDFS.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (SMDFS.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (SMDFS.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (SMDFS.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (SMDFS.f_id = #{id} ) </if>        <if test="tEbuySupplyMerchantFId != null and !tEbuySupplyMerchantFId.equals('')  ">  and (SMDFS.t_ebuy_supply_merchant_f_id = #{tEbuySupplyMerchantFId} ) </if>        <if test="amountStart != null and !amountStart.equals('')  ">  and (SMDFS.f_amount_start = #{amountStart} ) </if>        <if test="amountEnd != null and !amountEnd.equals('')  ">  and (SMDFS.f_amount_end = #{amountEnd} ) </if>        <if test="settlementFee != null and !settlementFee.equals('')  ">  and (SMDFS.f_settlement_fee = #{settlementFee} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (SMDFS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (SMDFS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (SMDFS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (SMDFS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (SMDFS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (SMDFS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (SMDFS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (SMDFS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (SMDFS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (SMDFS.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (SMDFS.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (SMDFS.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (SMDFS.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (SMDFS.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="supplyMerchantDeliveryFeeSettlementBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="supplyMerchantDeliveryFeeSettlementBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="supplyMerchantDeliveryFeeSettlementBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="supplyMerchantDeliveryFeeSettlementBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_supply_merchant_delivery_fee_settlement SMDFS    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(与供应商结算邮费规则)信息。 -->
+	<sql id="select_supplyMerchantDeliveryFeeSettlement">
+		SELECT <include refid="supplyMerchantDeliveryFeeSettlementBase.queryHead"/>
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.busiQueryCondition"/>
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.dimCheckSql"/>
+		ORDER BY SMDFS.f_id DESC
+	</sql>
+	<select id="select_supplyMerchantDeliveryFeeSettlement" parameterType="java.util.Map" resultMap="supplyMerchantDeliveryFeeSettlementBase.supplyMerchantDeliveryFeeSettlementExtendMap">
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.select_supplyMerchantDeliveryFeeSettlement"/>
+	</select>
+	
+	<!-- 根据条件分页查询(与供应商结算邮费规则)信息  -->
+	<sql id="select_supplyMerchantDeliveryFeeSettlement_withPage">
+		SELECT <include refid="supplyMerchantDeliveryFeeSettlementBase.queryHead"/>
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.busiQueryCondition"/>
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_supplyMerchantDeliveryFeeSettlement_withPage" resultMap="supplyMerchantDeliveryFeeSettlementBase.supplyMerchantDeliveryFeeSettlementExtendMap" parameterType="java.util.Map">
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.select_supplyMerchantDeliveryFeeSettlement_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(与供应商结算邮费规则)信息。 -->
+	<sql id="select_supplyMerchantDeliveryFeeSettlement_bySeqId">
+		SELECT <include refid="supplyMerchantDeliveryFeeSettlementBase.queryHead"/>
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.busiQueryCondition"/>
+		 and SMDFS.f_id = #{_parameter}
+	</sql>
+	<select id="select_supplyMerchantDeliveryFeeSettlement_bySeqId" parameterType="java.math.BigInteger" resultMap="supplyMerchantDeliveryFeeSettlementBase.supplyMerchantDeliveryFeeSettlementBaseMap">
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.select_supplyMerchantDeliveryFeeSettlement_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(与供应商结算邮费规则)记录数  -->
+	<sql id="select_supplyMerchantDeliveryFeeSettlement_count">
+		SELECT COUNT(*)
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.busiQueryCount"/>
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.dimCheckSql"/>
+	</sql>
+	<select id="select_supplyMerchantDeliveryFeeSettlement_count" resultType="java.lang.Integer">
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.select_supplyMerchantDeliveryFeeSettlement_count"/>
+	</select>
+	
+	 <!-- 往(与供应商结算邮费规则)新增一条记录。 -->
+	 <sql id="insert_supplyMerchantDeliveryFeeSettlement">
+		INSERT INTO t_supply_merchant_delivery_fee_settlement 
+		(f_id,t_ebuy_supply_merchant_f_id,f_amount_start,f_amount_end,f_settlement_fee,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tEbuySupplyMerchantFId},#{amountStart},#{amountEnd},#{settlementFee},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_supplyMerchantDeliveryFeeSettlement" parameterType="SupplyMerchantDeliveryFeeSettlement">
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.insert_supplyMerchantDeliveryFeeSettlement"/>
+    </insert>
+    
+	<!-- 批量新增(与供应商结算邮费规则)信息 -->
+    <insert id="insert_supplyMerchantDeliveryFeeSettlement_Batch" parameterType="java.util.List">
+    	INSERT INTO t_supply_merchant_delivery_fee_settlement 
+		(f_id,t_ebuy_supply_merchant_f_id,f_amount_start,f_amount_end,f_settlement_fee,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tEbuySupplyMerchantFId},#{item.amountStart},#{item.amountEnd},#{item.settlementFee},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(与供应商结算邮费规则)信息。 -->
+    <sql id="update_supplyMerchantDeliveryFeeSettlement">
+		UPDATE t_supply_merchant_delivery_fee_settlement		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuySupplyMerchantFId != null and !tEbuySupplyMerchantFId.equals('') "> ,t_ebuy_supply_merchant_f_id=#{tEbuySupplyMerchantFId}</if> 		<if test="amountStart != null and !amountStart.equals('') "> ,f_amount_start=#{amountStart}</if> 		<if test="amountEnd != null and !amountEnd.equals('') "> ,f_amount_end=#{amountEnd}</if> 		<if test="settlementFee != null and !settlementFee.equals('') "> ,f_settlement_fee=#{settlementFee}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_supplyMerchantDeliveryFeeSettlement" parameterType="SupplyMerchantDeliveryFeeSettlement">
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.update_supplyMerchantDeliveryFeeSettlement"/>
+    </update>
+    
+    <!-- 批量更新(与供应商结算邮费规则)信息。 -->
+    <update id="update_supplyMerchantDeliveryFeeSettlement_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_supply_merchant_delivery_fee_settlement		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuySupplyMerchantFId != null and !item.tEbuySupplyMerchantFId.equals('')  "> ,t_ebuy_supply_merchant_f_id=#{item.tEbuySupplyMerchantFId}</if> 		<if test="item.amountStart != null and !item.amountStart.equals('')  "> ,f_amount_start=#{item.amountStart}</if> 		<if test="item.amountEnd != null and !item.amountEnd.equals('')  "> ,f_amount_end=#{item.amountEnd}</if> 		<if test="item.settlementFee != null and !item.settlementFee.equals('')  "> ,f_settlement_fee=#{item.settlementFee}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(与供应商结算邮费规则)信息_逻辑删除。 -->
+    <sql id="delete_supplyMerchantDeliveryFeeSettlement_Logic">
+		UPDATE t_supply_merchant_delivery_fee_settlement		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuySupplyMerchantFId != null and !tEbuySupplyMerchantFId.equals('')  "> ,t_ebuy_supply_merchant_f_id=#{tEbuySupplyMerchantFId}</if> 		<if test="amountStart != null and !amountStart.equals('')  "> ,f_amount_start=#{amountStart}</if> 		<if test="amountEnd != null and !amountEnd.equals('')  "> ,f_amount_end=#{amountEnd}</if> 		<if test="settlementFee != null and !settlementFee.equals('')  "> ,f_settlement_fee=#{settlementFee}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_supplyMerchantDeliveryFeeSettlement_Logic" parameterType="SupplyMerchantDeliveryFeeSettlement">
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.delete_supplyMerchantDeliveryFeeSettlement_Logic"/>
+    </update>
+    
+    <!-- 批量删除(与供应商结算邮费规则)信息_逻辑删除 -->
+    <update id="delete_supplyMerchantDeliveryFeeSettlement_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_supply_merchant_delivery_fee_settlement		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuySupplyMerchantFId != null and !item.tEbuySupplyMerchantFId.equals('')  "> ,t_ebuy_supply_merchant_f_id=#{item.tEbuySupplyMerchantFId}</if> 		<if test="item.amountStart != null and !item.amountStart.equals('')  "> ,f_amount_start=#{item.amountStart}</if> 		<if test="item.amountEnd != null and !item.amountEnd.equals('')  "> ,f_amount_end=#{item.amountEnd}</if> 		<if test="item.settlementFee != null and !item.settlementFee.equals('')  "> ,f_settlement_fee=#{item.settlementFee}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(与供应商结算邮费规则)信息。 -->
+    <sql id="delete_supplyMerchantDeliveryFeeSettlement">
+		DELETE FROM t_supply_merchant_delivery_fee_settlement WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_supplyMerchantDeliveryFeeSettlement" parameterType="java.lang.String">
+		<include refid="supplyMerchantDeliveryFeeSettlementBase.delete_supplyMerchantDeliveryFeeSettlement"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(与供应商结算邮费规则)信息。 -->
+    <delete id="delete_supplyMerchantDeliveryFeeSettlement_Batch" parameterType="java.util.List">
+		DELETE FROM t_supply_merchant_delivery_fee_settlement WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

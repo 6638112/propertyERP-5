@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 权限控制模块 -->
+<mapper namespace="permi">
+	<resultMap type="com.cnfantasia.server.ms.permi.entity.PermiFunctionEntity" id="permiFunctionMap" extends="omsPermiFunctionBase.omsPermiFunctionBaseMap">
+		<!-- 角色信息列表 -->
+		<collection  column="f_id" javaType="java.util.List" property="permiRoleList" 
+			ofType="com.cnfantasia.server.msbase.omsPermiRole.entity.OmsPermiRole"
+			select="permi.select_permiRoleList_byFunctionId"/>
+	</resultMap>
+	<!-- <resultMap type="com.cnfantasia.server.ms.permi.entity.PermiRoleHasTPermiFunctionEntity" id="permiRoleHasTPermiFunctionMap" extends="permiRoleHasTPermiFunctionBase.permiRoleHasTPermiFunctionBaseMap">
+		角色信息
+        <association column="t_permi_role_f_id" javaType="com.cnfantasia.server.msbase.permiRole.entity.PermiRole" 
+        	property="permiRole" select="permiRoleBase.select_permiRole_bySeqId"/>
+	</resultMap> -->
+	
+	<!-- 查询功能列表 -->
+	<select id="select_permiFunction" parameterType="java.util.HashMap" resultMap="permiFunctionMap">
+		<include refid="omsPermiFunctionBase.select_omsPermiFunction"/>
+	</select>
+	
+	<!-- 根据功能Id查询对应的角色信息,角色状态为启用 -->
+	<select id="select_permiRoleList_byFunctionId" parameterType="java.math.BigInteger" resultMap="omsPermiRoleBase.omsPermiRoleBaseMap">
+		SELECT <include refid="omsPermiRoleBase.queryHead"/>
+		FROM t_oms_permi_role OPR,t_oms_permi_role_has_t_oms_permi_function OPRHTOPF
+     	WHERE 1=1
+     	AND OPRHTOPF.t_oms_permi_function_f_id = #{_parameter}
+     	AND OPR.f_status = 0
+     	AND OPR.f_id = OPRHTOPF.t_oms_permi_role_f_id
+		ORDER BY OPR.f_id DESC
+	</select>
+	
+	<!-- 根据用户Id查询对应的角色Ids -->
+	<select id="select_roleIds_byUserId" parameterType="java.math.BigInteger" resultType="java.math.BigInteger">
+		SELECT OUHTOPR.t_oms_permi_role_f_id
+		FROM t_oms_user OU,t_oms_user_has_t_oms_permi_role OUHTOPR
+		WHERE 1 = 1
+		AND OU.f_id = #{_parameter}
+		AND OUHTOPR.t_oms_user_f_id = OU.f_id
+	</select>
+	
+	<!-- 根据用户ID查出其拥有的角色列表 -->
+	<select id="select_roleList_byUserId" parameterType="java.math.BigInteger" resultMap="omsPermiRoleBase.omsPermiRoleBaseMap">
+		SELECT <include refid="omsPermiRoleBase.queryHead"/>
+		FROM
+			t_oms_permi_role opr
+		JOIN t_oms_user_has_t_oms_permi_role ouopr ON ouopr.t_oms_permi_role_f_id = opr.f_id and ouopr.f_sys0_del_state = 0
+		JOIN t_oms_user ou ON ou.f_id = ouopr.t_oms_user_f_id and ou.f_sys0_del_state = 0
+		WHERE
+			opr.f_sys0_del_state = 0
+		AND ou.f_id = #{omsUserId};
+	</select>
+	
+	<!-- 数据权限过滤条件 -->
+	<sql id="dataPermissionCondition">
+		<if test="gbIdList !=null">
+			   		<if test="gbIdList.size() > 0">
+					and GB.f_id in 
+					<foreach item="item" collection="gbIdList" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+			   		</if>
+			   		<if test="gbIdList.size() == 0"><!-- 无小区权限用户 -->
+			   			and GB.f_id = -2
+			   		</if>
+		</if>
+	</sql>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户门牌关系 t_user_has_t_room -->
+<mapper namespace="userHasTRoom">
+
+	<!-- 用户门牌关系Map -->
+	<resultMap type="com.cnfantasia.server.api.user.entity.UserHasTRoomEntity" id="userHasTRoomEntityMap_Append" extends="commonRoom.roomEntityWithValidate_Append">
+		<result column="ext_AdminU_Name" javaType="java.lang.String" property="realRoomAdminName"/>
+	</resultMap>
+	
+	<!-- 根据用户Id分页查询(用户门牌关系)_返回门牌信息  -->
+	<sql id="select_userHasTRoom_withPage_RoomEntity_common">
+		FROM (<!-- 用户条件已经包含在include -->
+				<include refid="commonSql.qry_roomIdList_by_curr_user_id_with_bind"/>
+			)AS table_roomId
+			INNER JOIN t_user U ON U.f_id = #{userId} AND U.f_sys0_del_state = 0
+			INNER JOIN t_room R ON table_roomId.roomId = R.f_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON R.t_real_room_f_id = RR.f_id  AND RR.f_sys0_del_state = 0
+				LEFT JOIN t_user AdminU ON AdminU.f_id = RR.f_validate_user_id AND AdminU.f_sys0_del_state = 0 <!-- 门牌管理员 -->
+			INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+			INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+			LEFT JOIN t_room_validate RV ON RV.t_room_f_id = R.f_id AND RV.f_sys0_del_state = 0
+		WHERE 1 = 1
+	</sql>
+	<select id="select_userHasTRoom_withPage_RoomEntity" resultMap="userHasTRoomEntityMap_Append" parameterType="java.util.Map">
+	     SELECT <include refid="roomBase.queryHead_AppendTable"/>
+			,<include refid="realRoomBase.queryHead_AppendTable"/>
+			,CASE 
+				WHEN NOT ISNULL(AdminU.f_nick_name) THEN AdminU.f_nick_name
+				WHEN NOT ISNULL(AdminU.f_hua_id) THEN AdminU.f_hua_id
+				ELSE AdminU.f_id END AS ext_AdminU_Name
+			,<include refid="buildingBase.queryHead_AppendTable"/>
+			,<include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+   			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+   			,<include refid="roomValidateBase.queryHead_AppendTable"/>
+		<include refid="userHasTRoom.select_userHasTRoom_withPage_RoomEntity_common"/>
+		ORDER BY CASE WHEN U.f_default_room_id = R.f_id THEN 1 ELSE 2 END ASC
+			,CASE WHEN NOT ISNULL(RR.f_validate_user_id) AND RR.f_validate_user_id = U.f_id THEN 1 
+				WHEN NOT ISNULL(RR.f_validate_user_id) AND RR.f_validate_user_id != U.f_id THEN 2 
+				ELSE 3 END ASC <!-- 验证的且管理员为当前用户的门牌排在前  -->
+			,R.f_sys0_add_time DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	<select id="select_userHasTRoom_withPage_RoomEntity_count" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT COUNT(*) <include refid="userHasTRoom.select_userHasTRoom_withPage_RoomEntity_common"/>
+	</select>
+	
+</mapper>

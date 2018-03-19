@@ -1,0 +1,896 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 车禁门禁sql -->
+<mapper namespace="access">
+    <resultMap type="com.cnfantasia.server.api.access.entity.UserDoorKeyMsg" id="UserDoorKeyMsgMap">
+        <result column="openStatus" javaType="java.lang.Integer" property="openStatus" />
+        <result column="payStatus" javaType="java.lang.Integer" property="payStatus" />
+        <result column="auditReason" javaType="java.lang.String" property="auditReason" />
+        <result column="doorKey" javaType="java.lang.String" property="doorKey" />
+        <result column="type" javaType="java.lang.Integer" property="type" />
+        <result column="doorName" javaType="java.lang.String" property="doorName" />
+        <result column="isOpenRemote" javaType="java.lang.Integer" property="isOpenRemote" />
+        <result column="isOpenClose" javaType="java.lang.Integer" property="isOpenClose" />
+        <result column="gbId" javaType="java.lang.String" property="gbId" />
+    </resultMap>
+    <resultMap type="com.cnfantasia.server.api.access.entity.UserDoorKeyList" id="UserDoorKeyListMap">
+        <result column="buildingId" javaType="java.math.BigInteger" property="buildingId" />
+        <result column="doorKey" javaType="java.lang.String" property="doorKey" />
+        <result column="type" javaType="java.lang.Integer" property="type" />
+        <result column="doorName" javaType="java.lang.String" property="doorName" />
+    </resultMap>
+    <resultMap type="com.cnfantasia.server.api.access.entity.CarNumPayLogDetail" id="CarNumPayLogDetailMap"
+        extends="carNumPayLogBase.carNumPayLogBaseMap_AppendTable">
+        <result column="pushUrl" javaType="java.lang.String" property="pushUrl" />
+        <result column="tradeCode" javaType="java.lang.String" property="tradeCode" />
+        <result column="plate" javaType="java.lang.String" property="plate" />
+        <result column="validDate" javaType="java.lang.String" property="validDate" />
+    </resultMap>
+    <resultMap type="com.cnfantasia.server.api.access.entity.UserCarpushMsg" id="userCarpushMsgMap">
+        <result column="userId" javaType="java.math.BigInteger" property="userId" />
+        <result column="expiredate" javaType="java.lang.String" property="expiredate" />
+        <result column="defaultRoomId" javaType="java.math.BigInteger" property="defaultRoomId" />
+        <association property="userCar" resultMap="userCarNummsgMap" />
+    </resultMap>
+    <resultMap type="com.cnfantasia.server.api.access.entity.UserCarNummsg" id="userCarNummsgMap">
+        <result column="id" javaType="java.math.BigInteger" property="id" />
+        <result column="fee" javaType="java.lang.Double" property="fee" />
+        <result column="carStatus" javaType="java.lang.Integer" property="carStatus" />
+        <result column="platenumber" javaType="java.lang.String" property="platenumber" />
+        <result column="groupbuildingName" javaType="java.lang.String" property="groupbuildingName" />
+    </resultMap>
+	<resultMap type="com.cnfantasia.server.domainbase.carNumPayLog.entity.PayCarFeeLog" id="userCarFeeMap" extends="carNumPayLogBase.carNumPayLogBaseMap">
+		<result column="t_car_num" javaType="java.lang.String" property="tCarNum"/>
+	</resultMap>
+	<resultMap type="com.cnfantasia.server.api.access.entity.CarNumPayLogDetail" id="CarNumPayLogMap1" extends="carNumPayLogBase.carNumPayLogBaseMap">
+		<result column="isBuyFinance" javaType="java.lang.Boolean" property="isBuyFinance"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.access.entity.CarDetailEntity" id="carDetailListMap" extends="carNumListBase.carNumListBaseMap_AppendTable">
+		<result column="isBuyFinance" javaType="java.lang.Integer" property="isBuyFinance"/>
+		<result column="buyMoney" javaType="java.lang.Double" property="buyMoney"/>
+		<result column="returnMoney" javaType="java.lang.Double" property="returnMoney"/>
+		<result column="deduBeginTm" javaType="java.lang.String" property="deduBeginTm"/>
+		<result column="deduEndTm" javaType="java.lang.String" property="deduEndTm"/>
+		<result column="isRelieve" javaType="java.lang.Integer" property="isRelieve"/>
+		<result column="gbName" javaType="java.lang.String" property="gbName"/>
+		<result column="carMonthIsOpen" javaType="java.lang.Integer" property="carMonthIsOpen"/>
+		<result column="needBillIsOpen" javaType="java.lang.Integer" property="needBillIsOpen"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.access.entity.ParkingRecordEntity" id="parkingRecordMap">
+		<result column="f_id" javaType="java.math.BigInteger" property="parkingId"/>
+		<result column="parking_time" javaType="java.util.Date" property="parkingTime"/>
+		<result column="t_group_building_id" javaType="java.math.BigInteger" property="gbId"/>
+		<result column="parkingType" javaType="java.lang.String" property="type"/>
+		<result column="f_name" javaType="java.lang.String" property="gbName"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.access.entity.CarPreferDto" id="carPreferDtoMap">
+		<result column="f_id" javaType="java.math.BigInteger" property="id"/>
+		<result column="f_amount" javaType="java.math.BigInteger" property="amount"/>
+	</resultMap>
+	
+    <!-- 查询停车记录 -->
+    <sql id="qryParkingRecord">
+        SELECT
+        <include refid="parkingRecordBase.queryHead" />
+        FROM t_parking_record PR
+        WHERE PR.t_car_num_id = #{carid}
+        AND PR.f_sys0_del_state = 0
+    </sql>
+
+    <select id="select_Parking_Record_Page" parameterType="java.util.Map" resultMap="parkingRecordBase.parkingRecordBaseMap">
+        <include refid="access.qryParkingRecord" />
+        ORDER BY PR.f_parking_start_time DESC
+        <![CDATA[ LIMIT #{_begin},#{_length} ]]>
+    </select>
+    <select id="select_Parking_Record_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM (
+        <include refid="access.qryParkingRecord" />
+        ) AS table01
+    </select>
+    
+    <sql id="qryParkingRecord2_list">
+        SELECT
+			_PR.*, GB.f_name
+		FROM
+			((SELECT
+				PR.f_id,
+				date_format(
+					PR.f_parking_start_time,
+					'%Y-%m-%d %T'
+				) AS parking_time,
+				PR.t_group_building_id,
+				'in' AS parkingType
+			FROM
+				t_parking_record PR
+			WHERE
+				PR.t_car_num_id = #{carid} AND PR.f_parking_start_time is not null
+			AND PR.f_sys0_del_state = 0
+			ORDER BY
+				PR.f_parking_start_time DESC
+        	<![CDATA[ LIMIT #{_begin},#{_length} ]]>)
+			UNION
+				(SELECT
+					PR.f_id,
+					date_format(
+						PR.f_parking_end_time,
+						'%Y-%m-%d %T'
+					) AS parking_time,
+					PR.t_group_building_id,
+					'out' AS parkingType
+				FROM
+					t_parking_record PR
+				WHERE
+					PR.t_car_num_id = #{carid} AND PR.f_parking_end_time is not null
+				AND PR.f_sys0_del_state = 0
+				ORDER BY
+					PR.f_parking_end_time DESC
+        		<![CDATA[ LIMIT #{_begin},#{_length} ]]>)
+			) AS _PR
+		LEFT JOIN t_group_building GB ON _PR.t_group_building_id = GB.f_id
+    </sql>
+    
+    <sql id="qryParkingRecord2_count">
+        SELECT
+			count(*)
+		FROM
+			(
+				SELECT
+					PR.f_id
+				FROM
+					t_parking_record PR
+				WHERE
+					PR.t_car_num_id = #{carid} AND PR.f_parking_start_time is not null
+				AND PR.f_sys0_del_state = 0
+				UNION
+					SELECT
+						PR.f_id
+					FROM
+						t_parking_record PR
+					WHERE
+						PR.t_car_num_id = #{carid} AND PR.f_parking_end_time is not null
+					AND PR.f_sys0_del_state = 0
+			) AS _PR
+    </sql>
+    
+    <select id="select_Parking_Record_Page2" parameterType="java.util.Map" resultMap="access.parkingRecordMap">
+        <include refid="access.qryParkingRecord2_list" />
+		ORDER BY
+			_PR.parking_time DESC
+        <![CDATA[ LIMIT #{_begin},#{_length} ]]>
+    </select>
+    
+    <select id="select_Parking_Record_Count2" parameterType="java.util.Map" resultType="java.lang.Integer">
+        <include refid="access.qryParkingRecord2_count" />
+    </select>
+    
+    <select id="select_parking_fee" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.access.entity.TmpCarPayDetail">
+        SELECT
+			EO.f_amount / 100 AS payMoney,
+			(IFNULL(EO.f_total_coupon_amount, 0)+IFNULL(EOE.f_wy_coupon_amount, 0)-IFNULL(EOHC.f_amount, 0)) / 100 AS couponAmount,
+			IFNULL(EOHC.f_amount, 0) / 100 ucAmount,
+			EO.f_pay_method AS payMethod,
+			DATE_FORMAT(
+				EO.f_pay_time,
+				'%Y-%m-%d %H:%i:%s'
+			) AS payTime,
+			EO.f_order_no AS orderNo,
+			EO.f_pay_status AS payStatus
+		FROM
+			t_ebuy_order EO
+			LEFT JOIN t_ebuy_order_ext EOE ON EOE.t_ebuy_order_f_id=EO.f_id AND EOE.f_sys0_del_state=0
+			LEFT JOIN t_ebuy_order_has_coupon EOHC ON EO.f_id=EOHC.t_ebuy_order_f_id AND EOHC.f_sys0_del_state=0
+		WHERE
+			EO.f_id = #{orderId}
+    </select>
+    
+    <!-- 门牌下的车列表(取消门牌关联车牌，改为与小区userId关联) -->
+    <select id="select_carNumList_by_realroomid" parameterType="java.util.Map" resultMap="carDetailListMap">
+        SELECT 
+			<include refid="carNumListBase.queryHead_AppendTable" />,
+			CASE WHEN tfb.f_order_no IS NULL THEN 0 
+				  ELSE 1 END AS isBuyFinance, 
+			tfb.f_buy_money AS buyMoney,
+	    	tfb.f_return_money AS returnMoney, 
+	    	tfb.f_deduction_begin_date AS deduBeginTm, 
+	    	tfb.f_deduction_end_date AS deduEndTm,
+	    	GB.f_name AS gbName,
+	    	GB.f_car_month_is_open AS carMonthIsOpen,
+	    	GB.f_need_bill_is_open AS needBillIsOpen
+        FROM t_room_has_car_num RHCN 
+			INNER JOIN t_car_num_list CNL ON RHCN.t_car_num_list_f_id = CNL.f_id AND CNL.f_sys0_del_state=0
+			LEFT JOIN t_finance_buy tfb ON tfb.f_hud_id=RHCN.t_user_id AND tfb.f_car_num=CNL.t_car_num 
+			AND tfb.f_finance_type='2' AND now()<![CDATA[<=]]>tfb.f_parking_expire_date
+			INNER JOIN t_group_building GB ON GB.f_id=CNL.t_group_building_f_id
+		WHERE RHCN.f_sys0_del_state=0 
+			AND RHCN.t_user_id=#{t_user_id}
+			AND RHCN.f_is_relieve=0
+	        <!--AND CNL.f_real_room_id = #{real_room_id}取消车牌与门牌关系-->
+        ORDER BY CNL.f_id DESC
+    </select>
+    
+    <select id="select_car_info" parameterType="java.util.Map" resultMap="carDetailListMap">
+        SELECT 
+			<include refid="carNumListBase.queryHead_AppendTable" />,
+			CASE WHEN tfb.f_order_no IS NULL THEN 0 
+				  ELSE 1 END AS isBuyFinance, 
+			tfb.f_buy_money AS buyMoney,
+	    	tfb.f_return_money AS returnMoney, 
+	    	tfb.f_deduction_begin_date AS deduBeginTm, 
+	    	tfb.f_deduction_end_date AS deduEndTm,
+	    	RHCN.f_is_relieve AS isRelieve,
+	    	GB.f_name AS gbName,
+	    	GB.f_car_month_is_open AS carMonthIsOpen,
+	    	GB.f_need_bill_is_open AS needBillIsOpen
+        FROM t_room_has_car_num RHCN 
+			INNER JOIN t_car_num_list CNL ON RHCN.t_car_num_list_f_id = CNL.f_id AND CNL.f_sys0_del_state=0 <!-- and RHCN.f_is_relieve=0 -->
+			LEFT JOIN t_finance_buy tfb ON tfb.f_hud_id=RHCN.t_user_id AND tfb.f_car_num=CNL.t_car_num 
+			AND tfb.f_finance_type='2' AND now()<![CDATA[<=]]>tfb.f_parking_expire_date
+			INNER JOIN t_group_building GB ON GB.f_id=CNL.t_group_building_f_id
+		WHERE RHCN.f_sys0_del_state=0 AND CNL.t_car_num=#{carNum} AND RHCN.t_user_id=#{userId}
+        ORDER BY CNL.f_id DESC
+    </select>
+    
+    <select id="select_car_info_by_carid" parameterType="java.math.BigInteger" resultType="java.util.Map">
+	    select 
+	    	cnl.t_car_num as carNum, cnl.f_fee as fee, gb.f_need_bill_is_open as needBillIsOpen
+	    from 
+	    	t_car_num_list  cnl
+	    	left join t_group_building gb on gb.f_id=cnl.t_group_building_f_id
+	    where cnl.f_id=#{carId}
+    </select>
+    
+    <select id="select_car_info_by_carNum" parameterType="java.lang.String" resultType="java.util.Map">
+	    SELECT
+			f_id AS carId,
+			t_car_num AS carNum,
+			f_fee AS fee,
+			t_group_building_f_id AS gbId,
+			f_from `from`
+		FROM
+			t_car_num_list
+		WHERE
+			t_car_num = #{carNum} LIMIT 1
+    </select>
+
+    <!-- 查询缴费记录 -->
+    <sql id="qryPaymentRecord">
+        <!-- SELECT * FROM
+        (SELECT
+        <include refid="carNumPayLogBase.queryHead" />
+        ,
+        date_format(CNPL.f_sys0_add_time,'%Y-%m-%d %T') AS f_sys0_add_time
+        FROM t_ebuy_order TEO
+        INNER JOIN t_car_num_pay_log
+        CNPL ON CNPL.t_ebuy_order_id = TEO.f_id
+        AND CNPL.t_car_num_id = #{carid}
+        AND CNPL.f_sys0_del_state = 0
+        WHERE 1=1 AND
+        TEO.f_type=4 AND TEO.f_pay_status=2
+        UNION
+        SELECT
+        <include refid="carNumPayLogBase.queryHead" />
+        ,
+        date_format(CNPL.f_sys0_add_time,'%Y-%m-%d %T') AS f_sys0_add_time
+        FROM t_car_num_pay_log CNPL WHERE 1=1 AND CNPL.f_status=1
+        AND CNPL.t_car_num_id = #{carid} 
+   		AND CNPL.f_sys0_del_state = 0) AS table1 -->
+   		SELECT
+	    false as isBuyFinance, CNPL.f_id,CNPL.t_car_num_id,CNPL.t_ebuy_order_id,CNPL.f_status,CNPL.f_push_status,CNPL.f_pay_num,CNPL.f_fee,date_format(CNPL.f_pay_time,'%Y-%m-%d %T') as f_pay_time,date_format(CNPL.f_sys0_add_time,'%Y-%m-%d %T') AS f_sys0_add_time
+	    FROM t_car_num_pay_log CNPL left join t_ebuy_order TEO ON CNPL.t_ebuy_order_id = TEO.f_id 
+	   	AND CNPL.f_sys0_del_state = 0
+	   	INNER JOIN t_car_num_list CNL ON CNL.f_id = CNPL.t_car_num_id
+		AND (
+			CNL.f_status != 1
+			OR (
+				CNL.f_status = 1
+				AND CNPL.f_pay_num > 0
+			)
+		)
+	    WHERE CNPL.t_car_num_id = #{carid} and ((TEO.f_type=4 AND TEO.f_pay_status=2) or (CNPL.f_status=1 AND CNPL.f_sys0_del_state = 0))
+		UNION
+		SELECT
+    	true as isBuyFinance, 0 as f_id,0 as t_car_num_id, 0 as t_ebuy_order_id, 1 as f_status, 1 as f_push_status, tfb.f_deduction_count as f_pay_num, tfb.f_buy_money as f_fee,date_format(tfb.f_buy_time,'%Y-%m-%d %T') as f_pay_time, date_format(tfb.f_add_tm,'%Y-%m-%d %T') AS f_sys0_add_time
+	    FROM t_finance_buy tfb
+	    where tfb.f_hud_id=#{userId} 
+	    AND tfb.f_car_num=(select t_car_num from t_car_num_list where f_id = #{carid})
+	    AND tfb.f_finance_type='2' and now() <![CDATA[<=]]> tfb.f_parking_expire_date
+    </sql>
+    
+    <!-- 根据userId和小区Id查询缴费记录（轻应用） By Liyl-->
+    <select id="select_Payment_CarNo_Records" parameterType="java.util.Map" resultMap="access.userCarFeeMap">
+        SELECT
+        <include refid="carNumPayLogBase.queryHead" />,TCNL.t_car_num,
+        date_format(CNPL.f_sys0_add_time,'%Y-%m-%d %T') AS f_sys0_add_time 
+        FROM t_ebuy_order TEO 
+   		INNER JOIN t_car_num_pay_log CNPL ON CNPL.t_ebuy_order_id = TEO.f_id AND CNPL.f_pay_num > 0 AND CNPL.f_sys0_del_state = 0 
+		INNER JOIN t_car_num_list TCNL ON TCNL.f_id=CNPL.t_car_num_id AND TCNL.t_group_building_f_id=#{groupBuildingId} 
+		WHERE TEO.f_type=4 AND TEO.f_pay_status=2 AND TEO.f_buyer_id = #{userId}
+    </select>
+
+	<!-- <select id="select_Payment_Record_Page" parameterType="java.util.Map" resultMap="carNumPayLogBase.carNumPayLogBaseMap"> -->
+    <select id="select_Payment_Record_Page" parameterType="java.util.Map" resultMap="CarNumPayLogMap1">
+        <include refid="access.qryPaymentRecord" />
+        	ORDER BY f_id DESC
+        <![CDATA[ LIMIT #{_begin},#{_length} ]]>
+    </select>
+    <select id="select_Payment_Record_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM (
+        <include refid="access.qryPaymentRecord" />
+        ) AS table01
+    </select>
+
+    <!-- 小区停车位信息 -->
+    <select id="select_Building_Parking_Info" parameterType="java.util.Map"
+        resultType="com.cnfantasia.server.api.access.entity.GroupBuildingParkingInfo">
+        SELECT CGB.f_parking_total as total,CGB.f_parking_crnt as current
+        FROM t_car_group_building CGB where
+        CGB.t_group_building_id = #{buidingId}
+        AND CGB.f_sys0_del_state = 0
+        LIMIT 1
+    </select>
+
+    <!-- 门牌下某车牌数 (修改为该车牌是否存在) -->
+    <select id="select_RealroomId_PlateNum_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        <include refid="carNumListBase.busiQueryCondition" />
+        <!-- AND CNL.f_real_room_id = #{realroomId}取消门牌与车牌关系 -->
+        AND CNL.t_car_num = #{plateNum}
+        AND CNL.f_status=1
+        AND CNL.f_sys0_del_state = 0
+    </select>
+
+    <!-- 该车牌是否存在（轻应用）-->
+    <select id="select_CarNo_Name_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_car_num_list CNL 
+        <!-- LEFT JOIN t_room_has_car_num RHCN ON CNL.f_id=RHCN.t_car_num_list_f_id 
+        LEFT JOIN t_user U ON RHCN.t_user_id = U.f_id -->
+        WHERE CNL.t_car_num = #{carNo}
+        AND CNL.f_status=1
+        <!-- AND U.f_real_name= #{name} -->
+        AND CNL.f_sys0_del_state = 0
+    </select>
+    
+    <!-- 根据车牌和姓名查询userId、carId、groupBuildingId（轻应用）-->
+    <select id="select_UserInfo_By_CarNo" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT RHCN.t_user_id as userId, CNL.f_id as carId, CNL.t_group_building_f_id as groupBuildingId
+        FROM t_car_num_list CNL 
+        LEFT JOIN t_room_has_car_num RHCN ON CNL.f_id=RHCN.t_car_num_list_f_id 
+        LEFT JOIN t_user U ON RHCN.t_user_id = U.f_id
+        WHERE CNL.t_car_num = #{carNo}
+        <!-- AND U.f_real_name= #{name} -->
+        AND CNL.f_sys0_del_state = 0
+        AND RHCN.f_sys0_del_state=0
+    </select>
+    
+    <!-- 某未认证用户是否绑定过 -->
+    <select id="select_RealroomId_UserId_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        <include refid="roomHasCarNumBase.busiQueryCondition" />
+        <!--AND RHCN.t_real_room_id = #{realroomId} 取消车牌与门牌关系 -->
+        AND RHCN.t_user_id = #{userId}
+        AND RHCN.f_sys0_del_state = 0
+    </select>
+    <select id="getCarGroupBuilding" parameterType="java.lang.String" resultMap="carGroupBuildingBase.carGroupBuildingBaseMap_AppendTable">
+        SELECT
+        <include refid="carGroupBuildingBase.queryHead_AppendTable" />
+        FROM t_car_group_building CGB WHERE 1=1 AND CGB.f_trade_code=#{trade_code}
+    </select>
+    <select id="get_car_num_id" parameterType="java.util.Map" resultMap="carNumListBase.carNumListBaseMap_AppendTable">
+        SELECT
+        <include refid="carNumListBase.queryHead_AppendTable" />
+        FROM t_car_num_list CNL WHERE 1=1 AND CNL.t_car_num=#{carNum} AND CNL.t_group_building_f_id=#{gbId}
+    </select>
+    <update id="updatecarpaylog" parameterType="java.util.Map">
+		<![CDATA[
+		UPDATE t_car_num_list CNL
+		 SET CNL.f_expire_date=str_to_date(#{pay_valid_date},'%Y-%m-%d %T')
+			WHERE 1=1 AND CNL.t_car_num=#{car_num}
+		]]>
+    </update>
+    <!-- 根据订单id查询车禁缴费详情 -->
+    <select id="select_Car_Pay_record_detail" parameterType="java.math.BigInteger" resultMap="carNumPayLogBase.carNumPayLogBaseMap_AppendTable">
+        SELECT
+        <include refid="carNumPayLogBase.queryHead_AppendTable" />
+        FROM t_car_num_pay_log CNPL WHERE 1=1 AND CNPL.t_ebuy_order_id=#{orderId}
+    </select>
+    <!-- 根据小区id，楼栋，房间号，已经验证，并获取该门牌下验证用户id -->
+    <select id="select_userId_by_gbId_roomId" parameterType="java.util.Map" resultMap="realRoomBase.realRoomBaseMap_AppendTable">
+        SELECT
+        <include refid="realRoomBase.queryHead_AppendTable" />
+        FROM t_group_building TGB
+        INNER JOIN t_building TB ON TGB.f_id= TB.t_group_building_f_id
+        AND TB.f_sys0_del_state=0
+        <if test="bdNum != null and !bdNum.equals('') ">
+            AND TB.f_name=#{bdNum}
+        </if>
+        INNER JOIN t_real_room RR ON TB.f_id= RR.t_building_f_id
+        AND RR.f_sys0_del_state=0 AND RR.f_validate_status=5
+        <if test="roomNum !=null and !roomNum.equals('')">
+            AND RR.f_num_tail=#{roomNum}
+        </if>
+        <if test="unitNum !=null and !unitNum.equals('')">
+            AND RR.f_unit_name=#{unitNum}
+        </if>
+        WHERE 1=1 AND TGB.f_id=#{gbId}
+    </select>
+    <!-- 根据订单id查询付款时的门牌对应的小区名字 -->
+    <select id="select_gbName_by_orderId" parameterType="java.math.BigInteger" resultType="java.lang.String">
+        SELECT TGB.f_name FROM
+        t_ebuy_order TEO
+        INNER JOIN t_room TR ON TEO.f_curr_room_id = TR.f_id
+        INNER JOIN t_real_room TRR ON TRR.f_id =
+        TR.t_real_room_f_id
+        INNER JOIN t_building TB ON TB.f_id = TRR.t_building_f_id
+        INNER JOIN t_group_building TGB ON
+        TGB.f_id = TB.t_group_building_f_id
+        WHERE 1=1 AND TEO.f_id =#{orderId}
+    </select>
+    <!-- 查询用户门禁状态 -->
+    <select id="select_user_door_key_msg" parameterType="java.util.Map" resultMap="UserDoorKeyMsgMap">
+        SELECT DISTINCT
+        	TCKUA.f_status AS openStatus,
+        	CASE WHEN TCKUA.f_sys0_del_time >NOW() THEN 1 ELSE 0 END AS payStatus,
+        	TCKUA.f_audit_reason AS auditReason,
+        	TBKL.t_building_key_str AS doorKey,
+        	TBKL.f_type AS type,
+        	TBKL.f_door_name AS doorName,
+        	TBKL.f_is_open_remote isOpenRemote,
+        	TBKL.f_is_open_local isOpenClose,
+        	TBKL.t_gb_id gbId
+        FROM
+	        t_cloud_key_user_audit TCKUA
+	        LEFT JOIN t_cloud_key_user_list TCKUL ON TCKUA.f_hua_id = TCKUL.f_hua_id AND TCKUL.t_building_f_id=TCKUA.t_building_f_id AND TCKUL.f_sys0_del_state=0
+	        LEFT JOIN t_building_key_list TBKL ON TBKL.t_building_f_id = TCKUL.t_building_f_id AND TBKL.f_sys0_del_state=0
+        WHERE 
+			TCKUA.f_hua_id=#{userId}
+	        AND TCKUA.t_building_f_id=#{buildingId}
+	        AND ((TBKL.f_type=1) OR (TBKL.f_type=2 AND (TBKL.f_is_open_remote!=1 OR TBKL.f_is_open_local!=1)))
+	        AND TCKUA.f_sys0_del_state=0
+    </select>
+    <!-- 查询解放区缴费记录 -->
+    <select id="select_jiefangqu_pay_log" parameterType="java.util.Map" resultMap="CarNumPayLogDetailMap">
+        <!-- SELECT
+        <include refid="carNumPayLogBase.queryHead_AppendTable" />
+        ,CGB.f_push_url pushUrl,CGB.f_trade_code tradeCode
+        FROM t_ebuy_order TEO
+        INNER JOIN t_car_num_pay_log CNPL ON
+        CNPL.t_ebuy_order_id = TEO.f_id
+        INNER JOIN t_car_num_list CNL ON CNL.f_id = CNPL.t_car_num_id
+        INNER JOIN
+        t_car_group_building CGB ON CGB.t_group_building_id = CNL.t_group_building_f_id
+        WHERE 1=1 AND TEO.f_type=4 AND
+        TEO.f_pay_status=2 AND CNPL.f_push_status=0 -->
+        SELECT
+			<include refid="carNumPayLogBase.queryHead_AppendTable" />
+        ,CGB.f_push_url pushUrl,CGB.f_trade_code tradeCode,CNL.t_car_num plate,CNL.f_expire_date validDate
+		FROM
+			t_ebuy_order TEO
+		INNER JOIN t_car_num_pay_log CNPL ON CNPL.t_ebuy_order_id = TEO.f_id
+		INNER JOIN t_car_num_list CNL ON CNL.f_id = CNPL.t_car_num_id
+		INNER JOIN t_car_group_building CGB ON CGB.t_group_building_id = IF(CNPL.t_group_building_f_id IS NOT NULL, CNPL.t_group_building_f_id, CNL.t_group_building_f_id)
+		WHERE
+			TEO.f_type = 4
+		AND TEO.f_pay_status = 2
+		AND CNPL.f_push_status = 0
+        AND CNL.f_status = 1
+        <if test="gbid !=null">
+            AND CNL.t_group_building_f_id=#{gbid}
+        </if>
+		UNION
+			SELECT
+				<include refid="carNumPayLogBase.queryHead_AppendTable" />
+        	,CGB.f_push_url pushUrl,CGB.f_trade_code tradeCode,CNL.t_car_num plate,CNL.f_expire_date validDate
+			FROM
+				t_finance_buy TFB
+			INNER JOIN t_car_num_pay_log CNPL ON CNPL.t_ebuy_order_id = TFB.f_order_no
+			INNER JOIN t_car_num_list CNL ON CNL.f_id = CNPL.t_car_num_id
+			INNER JOIN t_car_group_building CGB ON CGB.t_group_building_id = CNL.t_group_building_f_id
+			WHERE
+				CNPL.f_push_status = 0
+			AND TFB.f_finance_type = '2'
+            AND CGB.f_trade_code is not null
+            AND CNL.f_status = 1
+            <if test="gbid !=null">
+                AND CNL.t_group_building_f_id=#{gbid}
+            </if>
+    </select>
+    <!-- 根据订单id查询业务编号，推送url -->
+    <select id="select_gbName_by_orderId_carBmsg" parameterType="java.math.BigInteger"
+        resultMap="carGroupBuildingBase.carGroupBuildingBaseMap_AppendTable">
+        SELECT
+        <include refid="carGroupBuildingBase.queryHead_AppendTable" />
+        FROM t_ebuy_order TEO
+        INNER JOIN t_room TR ON TEO.f_curr_room_id = TR.f_id
+        INNER JOIN t_real_room TRR ON TRR.f_id =
+        TR.t_real_room_f_id
+        INNER JOIN t_building TB ON TB.f_id = TRR.t_building_f_id
+        INNER JOIN t_group_building TGB ON
+        TGB.f_id = TB.t_group_building_f_id
+        INNER JOIN t_car_group_building CGB ON CGB.t_group_building_id = TGB.f_id
+        WHERE 1=1
+        AND TEO.f_id =#{orderId}
+    </select>
+    <select id="select_car_expire_push_msg" resultMap="userCarpushMsgMap">
+    	SELECT u.f_default_room_id defaultRoomId,RHCN.t_user_id userId,CNL.f_id id,CNL.t_car_num platenumber,date_format(CNL.f_expire_date,'%Y-%m-%d %T') expiredate,
+    	 CNL.f_fee/100 fee,CNL.f_status carStatus, GB.f_name groupbuildingName
+    	FROM t_room_has_car_num RHCN 
+    	INNER JOIN t_car_num_list CNL ON RHCN.t_car_num_list_f_id = CNL.f_id AND CNL.f_sys0_del_state=0
+    	INNER JOIN t_user u ON u.f_id = RHCN.t_user_id
+    	INNER JOIN t_group_building GB ON GB.f_id = CNL.t_group_building_f_id
+		WHERE 1=1 
+		AND RHCN.f_sys0_del_state=0
+		AND RHCN.f_is_relieve=0
+		AND DATEDIFF(CNL.f_expire_date,NOW())IN(0,3,7)
+    </select>
+    <!-- 用户是否绑定过该车辆 -->
+    <select id="select_carbinded_info" parameterType="java.util.Map" resultMap="roomHasCarNumBase.roomHasCarNumBaseMap">
+        SELECT 
+        	<include refid="roomHasCarNumBase.queryHead" />
+        FROM
+        t_car_num_list CNL
+        INNER JOIN t_room_has_car_num RHCN ON RHCN.t_car_num_list_f_id=CNL.f_id
+        WHERE 1=1
+        AND CNL.t_car_num = #{plateNum}
+        AND RHCN.t_user_id = #{userId}
+        AND RHCN.f_sys0_del_state = 0
+    </select>
+    <!-- 更新车牌到期时间 -->
+    <update id="update_carpay_expire_date" parameterType="java.util.Map">
+		UPDATE t_car_num_list CNL
+		SET CNL.f_expire_date=#{expireDate}, CNL.f_lock_status=0 
+		WHERE CNL.f_id=#{carId}
+    </update>
+    <select id="getCache" parameterType="java.util.Map" resultMap="parkCacheBase.parkCacheBaseMap_AppendTable">
+        SELECT
+        <include refid="parkCacheBase.queryHead_AppendTable" />
+        <include refid="parkCacheBase.busiQueryCount" />
+        AND PC.f_trade_code like #{parkCode}
+        <if test="null != remains and remains.size() > 0 ">
+        AND PC.f_id NOT IN
+            <foreach item="item" collection="remains" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        AND PC.f_sys0_del_state = 0
+        ORDER BY
+        PC.f_sys0_add_time ASC
+    </select>
+    
+    <select id="select_gbId_and_carId_for_fee" parameterType="java.util.Map" resultType="java.util.Map">
+	    SELECT
+			PR.t_car_num_id AS carId,
+			PR.t_group_building_id AS gbId
+		FROM
+			t_parking_record PR
+		LEFT JOIN t_car_num_list CNL ON PR.t_car_num_id = CNL.f_id
+		AND CNL.f_sys0_del_state = 0
+		WHERE
+			CNL.t_car_num = #{carNum}
+		AND PR.f_sys0_del_state = 0
+		ORDER BY
+			PR.f_id
+		LIMIT 1
+    </select>
+    
+    <!-- 查询车禁缴费随机立减优惠金额 -->
+    <select id="getPayCarPrefer" parameterType="java.util.Map" resultMap="carPreferDtoMap">
+    	<choose>
+    		<when test="carTmpOpenStatus !=null and carTmpOpenStatus==2">
+    			<![CDATA[
+    			SELECT
+					(CASE WHEN (f_min IS NOT NULL AND f_max IS NOT NULL)
+					   THEN (CASE WHEN (f_discount*#{amount}>f_max or f_discount*#{amount}<f_min) THEN f_min
+								  ELSE f_discount*#{amount} END)
+				    WHEN (f_min IS NOT NULL AND f_max IS NULL)
+					   THEN IF(f_discount*#{amount}<f_min, f_min, f_discount*#{amount})
+				    WHEN (f_min IS NULL AND f_max IS NOT NULL)
+					   THEN IF(f_discount*#{amount}>f_max, f_max, f_discount*#{amount})
+				    ELSE f_discount*#{amount} END) AS f_amount
+				FROM
+					t_car_property_prefer
+				WHERE
+					t_group_building_f_id = #{gbId}
+					AND f_sys0_del_state=0
+				]]>
+    		</when>
+    		<otherwise>
+    			CALL sp_get_coupon_car(#{userId}, #{carId}, #{gbId}, #{payType}, #{payMonth}, #{amount})
+    		</otherwise>
+    	</choose>
+    	
+    </select>
+    
+    <!-- 根据orderId获取停车缴费支付备注。格式：{物业公司名称}车牌，缴费期间[停车费] -->
+    <select id="select_payNote_withCar_by_orderId" parameterType="java.math.BigInteger" resultType="string">
+	    SELECT
+			CONCAT('{', PC.f_name, '}', CNL.t_car_num, '，', IF (CNPL.f_pay_num > 0, CONCAT(DATE_FORMAT(CNL.f_expire_date, '%Y-%m-%d'), '至', DATE_FORMAT(DATE_ADD(CNL.f_expire_date,INTERVAL CNPL.f_pay_num MONTH),'%Y-%m-%d')), ''), '[停车费]')
+		FROM
+			t_car_num_pay_log CNPL
+		LEFT JOIN t_car_num_list CNL ON CNPL.t_car_num_id = CNL.f_id
+		LEFT JOIN t_group_building GB ON GB.f_id =
+		IF (
+			CNPL.t_group_building_f_id IS NOT NULL,
+			CNPL.t_group_building_f_id,
+			CNL.t_group_building_f_id
+		)
+		LEFT JOIN t_property_company PC ON PC.f_id = GB.t_property_company_f_id
+		WHERE
+			CNPL.t_ebuy_order_id = #{orderId}
+		LIMIT 1
+    </select>
+    
+    <!-- 查询物业缴费处车辆缴费卡 -->
+    <select id="select_car_bill" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.access.entity.CarBill">
+        SELECT 
+			CNL.t_car_num AS tCarNum,			
+			IFNULL(CNL.f_fee, 0) AS fee,
+			GB.f_name AS gbName,
+			DATE_FORMAT(
+				CNL.f_expire_date,
+				'%Y-%m-%d %H:%i:%s'
+			) AS expireDate,
+			IF (
+				(
+					SELECT
+						EO.f_id
+					FROM
+						t_car_num_pay_log CNPL
+					INNER JOIN t_ebuy_order EO ON EO.f_id = CNPL.t_ebuy_order_id
+					WHERE
+						CNPL.t_car_num_id = CNL.f_id
+					AND EO.f_status = 1
+					AND EO.f_client_pay_status = 2
+					AND CNPL.f_pay_num > 0
+					AND CNPL.f_sys0_del_state = 0
+					AND EO.f_sys0_del_state = 0
+					ORDER BY
+						EO.f_id DESC
+					LIMIT 1
+				) IS NULL,
+				FALSE,
+				TRUE
+			) AS confirmPay,
+			GB.f_id AS tGroupBuildingFId
+		FROM
+			t_car_num_list CNL
+		INNER JOIN t_room_has_car_num RHCN ON RHCN.t_car_num_list_f_id = CNL.f_id
+		AND RHCN.f_sys0_del_state = 0
+		AND RHCN.f_is_relieve = 0
+		INNER JOIN t_group_building GB ON GB.F_ID = CNL.t_group_building_f_id
+		AND GB.f_sys0_del_state = 0
+		WHERE
+			RHCN.t_user_id = #{userId}
+		AND GB.f_id = #{gbId}
+		AND CNL.f_status = 1
+		AND DATEDIFF(CNL.f_expire_date, NOW()) <![CDATA[<=]]> 30
+		AND CNL.f_sys0_del_state = 0
+    </select>
+    
+    <select id="queryCarNumListByCondition" parameterType="java.util.Map" resultMap="carNumListBase.carNumListExtendMap">
+    	SELECT <include refid="carNumListBase.queryHead"/>
+    	FROM t_car_num_list CNL
+    	WHERE CNL.t_car_num=#{carNum} AND CNL.t_group_building_f_id=#{gbId} 
+    </select>
+    
+    <!-- 月卡车缴费推送 -->
+    <select id="select_push_monthCar_info" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.access.entity.NotifyCarPaySuccessParam">
+    	SELECT
+			cnpl.f_id cnplId,
+			cnl.t_group_building_f_id gbId,
+			cnl.t_car_num carNum,
+			IFNULL(
+				eo.f_pay_time,
+				cnpl.f_pay_time
+			) chargeTime,
+			cnpl.f_pay_num payNum,
+			cast(
+				cnpl.f_fee / 100 AS DECIMAL (28, 2)
+			) actualFee,
+			cast(
+				IFNULL(cnpl.f_receivable_fee, 0) / 100 AS DECIMAL (28, 2)
+			) receivableFee,
+			DATE_FORMAT(
+				cnpl.f_pay_start_date,
+				'%Y-%m-%d'
+			) starttime,
+			DATE_FORMAT(
+				cnpl.f_pay_end_date,
+				'%Y-%m-%d'
+			) endtime,
+			cnpl.f_push_times pushTimes
+		FROM
+			t_car_num_list cnl
+			INNER JOIN t_car_num_pay_log cnpl ON cnl.f_id = cnpl.t_car_num_id
+				AND (
+					cnpl.f_status = 0
+					OR cnpl.f_status = 2
+				)
+				AND cnpl.f_pay_time IS NOT NULL
+				AND cnpl.f_sys0_del_state = 0
+			LEFT JOIN t_ebuy_order eo ON cnl.t_car_num = eo.f_id
+		WHERE
+			cnl.t_group_building_f_id = #{gbId}
+			AND cnpl.f_push_status=0
+			AND cnpl.f_pay_num>0
+			<![CDATA[AND (cnpl.f_push_times<=10 OR cnpl.f_push_times IS NULL) ]]>
+    		<![CDATA[AND IF((cnpl.f_send_time IS NULL), TRUE, (cnpl.f_send_time <= NOW())) ]]>
+			AND cnl.f_sys0_del_state = 0
+		ORDER BY cnpl.f_pay_time DESC
+		LIMIT 100
+    </select>
+    
+    <!-- 临停车缴费推送 -->
+    <select id="select_push_tempCar_info" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.access.entity.NotifyCarPaySuccessParam">
+	    SELECT
+			cnpl.f_id cnplId,
+			cnpl.t_group_building_f_id gbId,
+			cnl.t_car_num carNum,
+			IFNULL(
+				eo.f_pay_time,
+				cnpl.f_pay_time
+			) chargeTime,
+			cast(
+				(cnpl.f_fee-IFNULL(eoe.f_wy_coupon_amount, 0)) / 100 AS DECIMAL (28, 2)
+			) actualFee,
+			cast(
+				IFNULL(cnpl.f_receivable_fee, 0) / 100 AS DECIMAL (28, 2)
+			) receivableFee,
+			cnpl.f_cardsn cardsn,
+			cnpl.f_push_times pushTimes
+		FROM
+			t_car_num_pay_log cnpl
+			INNER JOIN t_car_num_list cnl ON cnpl.t_car_num_id = cnl.f_id
+			LEFT JOIN t_ebuy_order eo ON cnpl.t_ebuy_order_id = eo.f_id
+			LEFT JOIN t_ebuy_order_ext eoe ON eoe.t_ebuy_order_f_id=eo.f_id
+		WHERE
+			cnpl.t_group_building_f_id = #{gbId}
+			AND cnpl.f_push_status=0
+			AND (
+				cnpl.f_status = 0
+				OR cnpl.f_status = 2
+			)
+			AND cnpl.f_pay_time IS NOT NULL
+			<![CDATA[AND (cnpl.f_push_times<=10 OR cnpl.f_push_times IS NULL) ]]>
+    		<![CDATA[AND IF((cnpl.f_send_time IS NULL), TRUE, (cnpl.f_send_time <= NOW())) ]]>
+			AND cnpl.f_sys0_del_state = 0
+		ORDER BY cnpl.f_pay_time DESC
+		LIMIT 100
+    </select>
+    
+    <!-- 查询小区对应的车牌前缀 -->
+    <select id="selectCarNumPrefixByGbId" parameterType="java.math.BigInteger" resultType="java.lang.String">
+	    SELECT
+			_tmp.carNum
+		FROM
+			(
+				SELECT
+					count(*) c,
+					TCNL.t_car_num AS carNum
+				FROM
+					t_car_num_pay_log TCNPL
+				INNER JOIN t_car_num_list TCNL ON TCNPL.t_car_num_id = TCNL.f_id
+					AND IFNULL(
+						TCNPL.t_group_building_f_id,
+						TCNL.t_group_building_f_id
+					) = #{gbId}
+					AND TCNL.f_sys0_del_state = 0
+				WHERE
+					TCNPL.f_sys0_del_state = 0
+					AND TCNPL.f_pay_time IS NOT NULL
+					AND TCNL.t_car_num != ''
+				GROUP BY
+					TCNL.t_car_num
+			) _tmp
+		WHERE
+			LEFT (_tmp.carNum, 1) IN ('京', '沪', '津', '渝', '冀', '晋', '蒙', '辽', '吉', '黑', '苏', '浙', '皖', '闽', '赣', '鲁', '豫', '鄂', '湘', '粤', '桂', '琼', '川', '贵', '云', '藏', '陕', '甘', '青', '宁', '新')
+		ORDER BY
+			_tmp.c DESC
+		LIMIT 1
+    </select>
+    
+    <!-- 查询小区对应的车牌前缀 -->
+    <select id="selectCarNumPrefixList" resultType="com.cnfantasia.server.api.access.entity.CarNumPrefixEntity">
+	    SELECT
+			_tmp.gbId gbId, 
+			_tmp.carNum carNum
+		FROM
+			(
+				SELECT
+					count(*) c,
+					TCNL.t_car_num AS carNum,
+					IFNULL(
+						TCNPL.t_group_building_f_id,
+						TCNL.t_group_building_f_id
+					) gbId
+				FROM
+					t_car_num_pay_log TCNPL
+				INNER JOIN t_car_num_list TCNL ON TCNPL.t_car_num_id = TCNL.f_id
+				AND TCNL.f_sys0_del_state = 0
+				WHERE
+					TCNPL.f_sys0_del_state = 0
+				AND TCNPL.f_pay_time IS NOT NULL
+				AND LEFT (TCNL.t_car_num, 1) IN ('京', '沪', '津', '渝', '冀', '晋', '蒙', '辽', '吉', '黑', '苏', '浙', '皖', '闽', '赣', '鲁', '豫', '鄂', '湘', '粤', '桂', '琼', '川', '贵', '云', '藏', '陕', '甘', '青', '宁', '新')
+				GROUP BY
+					gbId,
+					TCNL.t_car_num
+				ORDER BY
+					gbId,
+					c DESC
+			) _tmp
+		GROUP BY
+			_tmp.gbId
+    </select>
+
+    <!--根据车牌号获取当前停车小区id-->
+    <select id="getGbIdByCarNum" parameterType="java.lang.String" resultType="java.math.BigInteger">
+        SELECT
+			pr.t_group_building_id gbId
+		FROM
+			t_parking_record pr
+		INNER JOIN t_car_num_list cnl ON pr.t_car_num_id = cnl.f_id
+		WHERE
+			pr.f_sys0_del_state = 0
+			AND cnl.f_sys0_del_state = 0
+			AND cnl.f_status = 0
+			AND pr.f_parking_end_time IS NULL
+			AND cnl.t_car_num = #{carNum}
+			AND pr.f_sys0_add_time > DATE_SUB(NOW(), INTERVAL 1 DAY)
+		ORDER BY
+			pr.f_parking_start_time DESC
+		LIMIT 1
+    </select>
+    
+    <select id="selectJFQPlots" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.access.entity.JfqPlotEntity">
+		SELECT
+			gb.f_name plotName,
+			gb.f_id plotId,
+			hcg.f_code `code`
+		FROM
+			t_ht_car_gb hcg
+		INNER JOIN t_group_building gb ON gb.f_id = hcg.t_group_building_f_id AND gb.f_sys0_del_state=0
+		WHERE hcg.f_sys0_del_state=0 
+		<if test="name != null and !name.equals('') ">
+			AND locate(#{name}, gb.f_name) > 0 
+		</if>
+		<!-- LIMIT 10 -->
+		ORDER BY hcg.f_order ASC
+    </select>
+    
+    <select id="selectPlots" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.access.entity.PlotInfo">
+		SELECT
+			gb.f_name name,
+			CONCAT(
+				ap.f_name,
+				ac.f_name,
+				ab.f_name,
+				f_address_desc
+			) address,
+			gb.f_baidu_locat_lng longitude,
+			gb.f_baidu_locat_lat latitude
+		FROM
+			t_ht_car_gb hcg
+		INNER JOIN t_group_building gb ON gb.f_id = hcg.t_group_building_f_id
+		AND gb.f_sys0_del_state = 0
+		LEFT JOIN t_address_block ab ON ab.f_id = gb.t_block_f_id
+		LEFT JOIN t_address_city ac ON ac.f_id = ab.t_city_f_id
+		LEFT JOIN t_address_province ap ON ap.f_id = ac.t_province_f_id
+		WHERE
+			hcg.f_sys0_del_state = 0
+			<if test="city != null and !city.equals('') ">
+				AND locate(#{city}, ac.f_name) > 0 
+			</if>
+			<if test="plotName != null and !plotName.equals('') ">
+				AND locate(#{plotName}, gb.f_name) > 0 
+			</if>
+		ORDER BY
+			hcg.f_order ASC
+    </select>
+
+</mapper>

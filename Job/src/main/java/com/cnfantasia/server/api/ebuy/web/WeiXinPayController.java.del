@@ -1,0 +1,242 @@
+/**   
+ * Filename:    WeiXinPayController.java   
+ * @version:    1.0  
+ * Create at:   2014年6月12日 下午12:21:00   
+ * Description:  
+ *   
+ * Modification History:   
+ * Date        Author      Version     Description   
+ * ----------------------------------------------------------------- 
+ * 2014年6月12日    shiyl      1.0         1.0 Version   
+ */
+package com.cnfantasia.server.api.ebuy.web;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.cnfantasia.server.api.ebuy.entity.WeiXinNotifyEntity;
+import com.cnfantasia.server.api.ebuy.service.IEbuyPayService;
+import com.cnfantasia.server.api.pub.BaseController;
+import com.cnfantasia.server.api.pub.session.UserContext;
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+import com.cnfantasia.server.common.json.JsonResponse;
+import com.tenpay.ClientRequestHandler;
+import com.tenpay.PackageRequestHandler;
+import com.tenpay.PrepayIdRequestHandler;
+import com.tenpay.RequestHandler;
+import com.tenpay.ResponseHandler;
+import com.tenpay.client.ClientResponseHandler;
+import com.tenpay.client.TenpayHttpClient;
+import com.tenpay.util.ConstantUtil;
+
+/**
+ * Filename: WeiXinPayController.java
+ * 
+ * @version: 1.0.0 Create at: 2014年6月12日 下午12:21:00 Description:微信支付处理
+ *           Modification History: Date Author Version Description
+ *           ------------------------------------------------------------------
+ *           2014年6月12日 shiyl 1.0 1.0 Version
+ */
+@Controller
+@RequestMapping("/weixinPay")
+public class WeiXinPayController extends BaseController {
+	private Log logger = LogFactory.getLog(getClass());
+	private static final String NOTIFY_URL = "weixinPay/payNotify.json?";
+	
+	
+	private IEbuyPayService ebuyPayService;
+	public void setEbuyPayService(IEbuyPayService ebuyPayService) {
+		this.ebuyPayService = ebuyPayService;
+	}
+
+	/**
+	 * 支付请求
+	 * @param request
+	 */
+	@RequestMapping("/prePayRequest.json")
+	@ResponseBody
+	public JsonResponse prePayRequest(HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("WeiXinPayController prePayRequest start..");
+		JsonResponse jsonResponse = new JsonResponse();
+		// 1.搜集参数
+		BigInteger orderId = new BigInteger(request.getParameter("orderId"));
+		BigInteger userId = UserContext.getOperIdMustExistBigInteger();
+		// 接收财付通通知的URL
+		// String notify_url =
+		// "http://127.0.0.1:8180/tenpay_api_b2c/payNotifyUrl.jsp";
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path
+				+ "/";
+		String notify_url = basePath + NOTIFY_URL;
+	// // ---------------生成订单号 开始------------------------
+		// // 当前时间 yyyyMMddHHmmss
+		// String currTime = TenpayUtil.getCurrTime();
+		// // 8位日期
+		// String strTime = currTime.substring(8, currTime.length());
+		// // 四位随机数
+		// String strRandom = TenpayUtil.buildRandom(4) + "";
+		// // 10位序列号,可以自行调整。
+		// String strReq = strTime + strRandom;
+		// // 订单号，此处用时间加随机数生成，商户根据自己情况调整，只要保持全局唯一就行
+		// String out_trade_no = strReq;
+		// // ---------------生成订单号 结束------------------------
+
+		PackageRequestHandler packageReqHandler = new PackageRequestHandler(request, response);// 生成package的请求类
+		PrepayIdRequestHandler prepayReqHandler = new PrepayIdRequestHandler(request, response);// 获取prepayid的请求类
+		ClientRequestHandler clientHandler = new ClientRequestHandler(request, response);// 返回客户端支付参数的请求类
+		String remoteAddr = request.getRemoteAddr();
+		Map<String,Object> resMap = ebuyPayService.weixinPrePay(userId, orderId, notify_url, remoteAddr, packageReqHandler, prepayReqHandler, clientHandler);
+		jsonResponse.setDataValue(resMap);
+		logger.debug("WeiXinPayController prePayRequest end..");
+		return jsonResponse;
+	}
+	
+
+	@RequestMapping("/payNotify.json")
+	@ResponseBody
+	public JsonResponse payNotify(HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("WeiXinPayController payNotify start..");
+		JsonResponse jsonResponse = new JsonResponse();
+		// 1.搜集参数
+		BigInteger userId = UserContext.getOperIdBigInteger();
+		// 2.交互
+		{
+			// ---------------------------------------------------------
+			// 财付通支付通知（后台通知）示例，商户按照此文档进行开发即可
+			// ---------------------------------------------------------
+			// 商户号
+			String partner = ConstantUtil.PARTNER;
+
+			// 密钥
+			String key = ConstantUtil.PARTNER_KEY;
+
+			// 创建支付应答对象
+			ResponseHandler resHandler = new ResponseHandler(request, response);
+			resHandler.setKey(key);
+
+			// 判断签名
+			if (resHandler.isTenpaySign()) {
+
+				// 通知id
+				String notify_id = resHandler.getParameter("notify_id");
+
+				// 创建请求对象
+				RequestHandler queryReq = new RequestHandler(null, null);
+				// 通信对象
+				TenpayHttpClient httpClient = new TenpayHttpClient();
+				// 应答对象
+				ClientResponseHandler queryRes = new ClientResponseHandler();
+
+				// 通过通知ID查询，确保通知来至财付通
+				queryReq.init();
+				queryReq.setKey(key);
+				queryReq.setGateUrl("https://gw.tenpay.com/gateway/verifynotifyid.xml");
+				queryReq.setParameter("partner", partner);
+				queryReq.setParameter("notify_id", notify_id);
+
+				// 通信对象
+				httpClient.setTimeOut(5);
+				// 设置请求内容
+				try {
+					String requestURL = queryReq.getRequestURL();
+					httpClient.setReqContent(requestURL);
+					logger.debug("queryReq.requestURL:"+requestURL);
+				} catch (UnsupportedEncodingException e) {
+					throw new BusinessRuntimeException("WeiXinPayController.payNotify.httpClient.setReqContent.error",e);
+				}
+				// 后台调用
+				if (httpClient.call()) {
+					// 设置结果参数
+					try {
+						String resContent = httpClient.getResContent();
+						queryRes.setContent(resContent);
+						logger.debug("queryRes.resContent:"+resContent);
+					} catch (Exception e) {
+						throw new BusinessRuntimeException("WeiXinPayController.payNotify.httpClient.getResContent.error",e);
+					}
+					queryRes.setKey(key);
+
+					// 获取返回参数
+					WeiXinNotifyEntity currWeiXinNotifyEntity = WeiXinNotifyEntity.loadData(queryRes);
+					String retcode = currWeiXinNotifyEntity.getRetcode();//交易返回码
+					Integer trade_state = currWeiXinNotifyEntity.getTrade_state();//交易状态
+					Integer trade_mode = currWeiXinNotifyEntity.getTrade_mode();
+
+					// 判断签名及结果
+					if (queryRes.isTenpaySign() && "0".equals(retcode) && (trade_state!=null&& 0==trade_state) && (trade_mode!=null&&1==trade_mode)) {
+						logger.debug("order query success !");//订单查询成功
+						// 取结果参数做业务处理
+						logger.debug("out_trade_no:" + queryRes.getParameter("out_trade_no") + " transaction_id:"+ queryRes.getParameter("transaction_id"));
+						logger.debug("trade_state:" + queryRes.getParameter("trade_state") + " total_fee:"+ queryRes.getParameter("total_fee"));
+						// 如果有使用折扣券，discount有值，total_fee+discount=原请求的total_fee
+						logger.debug("discount:" + queryRes.getParameter("discount") + " time_end:"+ queryRes.getParameter("time_end"));
+						// ------------------------------
+						// 处理业务开始
+						// ------------------------------
+						{
+							ebuyPayService.payNotify(userId, currWeiXinNotifyEntity);//处理失败则抛出异常
+							//处理重复通知的情况
+							// 处理数据库逻辑
+							// 注意交易单不要重复处理
+							// 注意判断返回金额
+						}
+						// ------------------------------
+						// 处理业务完毕
+						// ------------------------------
+						
+						try {//返回处理结果给财付通服务器，成功或者失败
+							resHandler.sendToCFT("Success");
+						} catch (IOException e) {
+							logger.debug("sendToCFT.errorr",e);
+							throw new BusinessRuntimeException("WeiXinPayController.payNotify.resHandler.sendToCFT.error",e);
+						}
+					} else {//查询验证签名失败或业务错误
+						// 错误时，返回结果未签名，记录retcode、retmsg看失败详情。
+						logger.debug("qrysign Or Business Error");
+						logger.debug("retcode:" + queryRes.getParameter("retcode") + " retmsg:"+ queryRes.getParameter("retmsg"));
+						//增加支付记录
+						String payErrInfo = "qrysign Or Business Error,retcode:" + queryRes.getParameter("retcode") + " retmsg:"+ queryRes.getParameter("retmsg");
+//						String orderNo = currWeiXinNotifyEntity.getOut_trade_no();
+						try {
+							ebuyPayService.addNotifyRecord(currWeiXinNotifyEntity, payErrInfo,null);
+						} catch (Exception e) {
+							logger.debug("WeiXinPayController payNotify addNotifyRecord cause error:",e);
+						}
+						throw new BusinessRuntimeException("WeiXinPayController.payNotify.qrysignOrBusinessError.error");
+					}
+				} else {//后台调用通信失败,有可能因为网络原因，请求已经处理，但未收到应答。
+					logger.debug("back Call Communicate failed.");
+					logger.debug(httpClient.getResponseCode());
+					logger.debug(httpClient.getErrInfo());
+					throw new BusinessRuntimeException("WeiXinPayController.payNotify.backCallCommunicate.failed");
+				}
+			} else {//通知签名验证失败
+				logger.debug("payNotify.notifySign.validate.failed");
+				throw new BusinessRuntimeException("WeiXinPayController.payNotify.notifySign.validate.failed");
+			}
+		}
+		// 3.结果返回
+		logger.debug("WeiXinPayController payNotify end..");
+		return jsonResponse;
+	}
+	
+
+	/**
+	 * // Enumeration params = request.getParameterNames(); // while
+	 * (params.hasMoreElements()) { // String name = (String)
+	 * params.nextElement(); // System.out.println(name + "=" +
+	 * request.getParameter(name)); // }
+	 */
+	
+}

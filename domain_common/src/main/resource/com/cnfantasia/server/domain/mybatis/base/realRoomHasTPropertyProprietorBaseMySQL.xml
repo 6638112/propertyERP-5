@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:房间业主信息表 t_real_room_has_t_property_proprietor -->
+<mapper namespace="realRoomHasTPropertyProprietorBase">
+	<resultMap type="RealRoomHasTPropertyProprietor" id="realRoomHasTPropertyProprietorBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_real_room_f_id" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->        <result column="t_property_proprietor_f_id" javaType="java.math.BigInteger" property="tPropertyProprietorFId"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="RealRoomHasTPropertyProprietor" id="realRoomHasTPropertyProprietorExtendMap" extends="realRoomHasTPropertyProprietorBaseMap">
+	</resultMap>
+	<resultMap type="RealRoomHasTPropertyProprietor" id="realRoomHasTPropertyProprietorBaseMap_AppendTable">
+        <id column="RRHTPPid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="RRHTPPtRealRoomFId" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->        <result column="RRHTPPtPropertyProprietorFId" javaType="java.math.BigInteger" property="tPropertyProprietorFId"/>  <!--  -->        <result column="RRHTPPsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="RRHTPPsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="RRHTPPsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="RRHTPPsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="RRHTPPsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="RRHTPPsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="RRHTPPsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="RealRoomHasTPropertyProprietor" id="realRoomHasTPropertyProprietorBaseMap_AppendTable1">
+        <id column="RRHTPP1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="RRHTPP1tRealRoomFId" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->        <result column="RRHTPP1tPropertyProprietorFId" javaType="java.math.BigInteger" property="tPropertyProprietorFId"/>  <!--  -->        <result column="RRHTPP1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="RRHTPP1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="RRHTPP1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="RRHTPP1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="RRHTPP1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="RRHTPP1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="RRHTPP1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		RRHTPP.f_id,RRHTPP.t_real_room_f_id,RRHTPP.t_property_proprietor_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		RRHTPP.f_id as RRHTPPid,RRHTPP.t_real_room_f_id as RRHTPPtRealRoomFId,RRHTPP.t_property_proprietor_f_id as RRHTPPtPropertyProprietorFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		RRHTPP1.f_id as RRHTPP1id,RRHTPP1.t_real_room_f_id as RRHTPP1tRealRoomFId,RRHTPP1.t_property_proprietor_f_id as RRHTPP1tPropertyProprietorFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (RRHTPP.f_id = #{id} ) </if>        <if test="tRealRoomFId != null">  and (RRHTPP.t_real_room_f_id = #{tRealRoomFId} ) </if>        <if test="tPropertyProprietorFId != null">  and (RRHTPP.t_property_proprietor_f_id = #{tPropertyProprietorFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (RRHTPP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (RRHTPP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (RRHTPP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (RRHTPP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (RRHTPP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (RRHTPP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (RRHTPP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (RRHTPP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (RRHTPP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (RRHTPP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (RRHTPP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (RRHTPP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (RRHTPP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (RRHTPP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (RRHTPP.f_id = #{id} ) </if>        <if test="tRealRoomFId != null and !tRealRoomFId.equals('')  ">  and (RRHTPP.t_real_room_f_id = #{tRealRoomFId} ) </if>        <if test="tPropertyProprietorFId != null and !tPropertyProprietorFId.equals('')  ">  and (RRHTPP.t_property_proprietor_f_id = #{tPropertyProprietorFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (RRHTPP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (RRHTPP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (RRHTPP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (RRHTPP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (RRHTPP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (RRHTPP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (RRHTPP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (RRHTPP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (RRHTPP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (RRHTPP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (RRHTPP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (RRHTPP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (RRHTPP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (RRHTPP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="realRoomHasTPropertyProprietorBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="realRoomHasTPropertyProprietorBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="realRoomHasTPropertyProprietorBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="realRoomHasTPropertyProprietorBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_real_room_has_t_property_proprietor RRHTPP    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(房间业主信息表)信息。 -->
+	<sql id="select_realRoomHasTPropertyProprietor">
+		SELECT <include refid="realRoomHasTPropertyProprietorBase.queryHead"/>
+		<include refid="realRoomHasTPropertyProprietorBase.busiQueryCondition"/>
+		<include refid="realRoomHasTPropertyProprietorBase.dimCheckSql"/>
+		ORDER BY RRHTPP.f_id DESC
+	</sql>
+	<select id="select_realRoomHasTPropertyProprietor" parameterType="java.util.Map" resultMap="realRoomHasTPropertyProprietorBase.realRoomHasTPropertyProprietorExtendMap">
+		<include refid="realRoomHasTPropertyProprietorBase.select_realRoomHasTPropertyProprietor"/>
+	</select>
+	
+	<!-- 根据条件分页查询(房间业主信息表)信息  -->
+	<sql id="select_realRoomHasTPropertyProprietor_withPage">
+		SELECT <include refid="realRoomHasTPropertyProprietorBase.queryHead"/>
+		<include refid="realRoomHasTPropertyProprietorBase.busiQueryCondition"/>
+		<include refid="realRoomHasTPropertyProprietorBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_realRoomHasTPropertyProprietor_withPage" resultMap="realRoomHasTPropertyProprietorBase.realRoomHasTPropertyProprietorExtendMap" parameterType="java.util.Map">
+		<include refid="realRoomHasTPropertyProprietorBase.select_realRoomHasTPropertyProprietor_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(房间业主信息表)信息。 -->
+	<sql id="select_realRoomHasTPropertyProprietor_bySeqId">
+		SELECT <include refid="realRoomHasTPropertyProprietorBase.queryHead"/>
+		<include refid="realRoomHasTPropertyProprietorBase.busiQueryCondition"/>
+		 and RRHTPP.f_id = #{_parameter}
+	</sql>
+	<select id="select_realRoomHasTPropertyProprietor_bySeqId" parameterType="java.math.BigInteger" resultMap="realRoomHasTPropertyProprietorBase.realRoomHasTPropertyProprietorBaseMap">
+		<include refid="realRoomHasTPropertyProprietorBase.select_realRoomHasTPropertyProprietor_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(房间业主信息表)记录数  -->
+	<sql id="select_realRoomHasTPropertyProprietor_count">
+		SELECT COUNT(*)
+		<include refid="realRoomHasTPropertyProprietorBase.busiQueryCount"/>
+		<include refid="realRoomHasTPropertyProprietorBase.dimCheckSql"/>
+	</sql>
+	<select id="select_realRoomHasTPropertyProprietor_count" resultType="java.lang.Integer">
+		<include refid="realRoomHasTPropertyProprietorBase.select_realRoomHasTPropertyProprietor_count"/>
+	</select>
+	
+	 <!-- 往(房间业主信息表)新增一条记录。 -->
+	 <sql id="insert_realRoomHasTPropertyProprietor">
+		INSERT INTO t_real_room_has_t_property_proprietor 
+		(f_id,t_real_room_f_id,t_property_proprietor_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tRealRoomFId},#{tPropertyProprietorFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_realRoomHasTPropertyProprietor" parameterType="RealRoomHasTPropertyProprietor">
+		<include refid="realRoomHasTPropertyProprietorBase.insert_realRoomHasTPropertyProprietor"/>
+    </insert>
+    
+	<!-- 批量新增(房间业主信息表)信息 -->
+    <insert id="insert_realRoomHasTPropertyProprietor_Batch" parameterType="java.util.List">
+    	INSERT INTO t_real_room_has_t_property_proprietor 
+		(f_id,t_real_room_f_id,t_property_proprietor_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tRealRoomFId},#{item.tPropertyProprietorFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(房间业主信息表)信息。 -->
+    <sql id="update_realRoomHasTPropertyProprietor">
+		UPDATE t_real_room_has_t_property_proprietor		<trim prefix="SET" prefixOverrides=","> 		<if test="tRealRoomFId != null and !tRealRoomFId.equals('') "> ,t_real_room_f_id=#{tRealRoomFId}</if> 		<if test="tPropertyProprietorFId != null and !tPropertyProprietorFId.equals('') "> ,t_property_proprietor_f_id=#{tPropertyProprietorFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_realRoomHasTPropertyProprietor" parameterType="RealRoomHasTPropertyProprietor">
+		<include refid="realRoomHasTPropertyProprietorBase.update_realRoomHasTPropertyProprietor"/>
+    </update>
+    
+    <!-- 批量更新(房间业主信息表)信息。 -->
+    <update id="update_realRoomHasTPropertyProprietor_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_real_room_has_t_property_proprietor		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tRealRoomFId != null and !item.tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{item.tRealRoomFId}</if> 		<if test="item.tPropertyProprietorFId != null and !item.tPropertyProprietorFId.equals('')  "> ,t_property_proprietor_f_id=#{item.tPropertyProprietorFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(房间业主信息表)信息_逻辑删除。 -->
+    <sql id="delete_realRoomHasTPropertyProprietor_Logic">
+		UPDATE t_real_room_has_t_property_proprietor		<trim prefix="SET" prefixOverrides=","> 		<if test="tRealRoomFId != null and !tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{tRealRoomFId}</if> 		<if test="tPropertyProprietorFId != null and !tPropertyProprietorFId.equals('')  "> ,t_property_proprietor_f_id=#{tPropertyProprietorFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_realRoomHasTPropertyProprietor_Logic" parameterType="RealRoomHasTPropertyProprietor">
+		<include refid="realRoomHasTPropertyProprietorBase.delete_realRoomHasTPropertyProprietor_Logic"/>
+    </update>
+    
+    <!-- 批量删除(房间业主信息表)信息_逻辑删除 -->
+    <update id="delete_realRoomHasTPropertyProprietor_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_real_room_has_t_property_proprietor		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tRealRoomFId != null and !item.tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{item.tRealRoomFId}</if> 		<if test="item.tPropertyProprietorFId != null and !item.tPropertyProprietorFId.equals('')  "> ,t_property_proprietor_f_id=#{item.tPropertyProprietorFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(房间业主信息表)信息。 -->
+    <sql id="delete_realRoomHasTPropertyProprietor">
+		DELETE FROM t_real_room_has_t_property_proprietor WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_realRoomHasTPropertyProprietor" parameterType="java.lang.String">
+		<include refid="realRoomHasTPropertyProprietorBase.delete_realRoomHasTPropertyProprietor"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(房间业主信息表)信息。 -->
+    <delete id="delete_realRoomHasTPropertyProprietor_Batch" parameterType="java.util.List">
+		DELETE FROM t_real_room_has_t_property_proprietor WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

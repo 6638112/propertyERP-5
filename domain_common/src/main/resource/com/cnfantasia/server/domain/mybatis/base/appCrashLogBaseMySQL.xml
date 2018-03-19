@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:app崩溃日志 t_app_crash_log -->
+<mapper namespace="appCrashLogBase">
+	<resultMap type="AppCrashLog" id="appCrashLogBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!--  -->        <result column="f_phone_model" javaType="java.lang.String" property="phoneModel"/>  <!-- 手机机型 -->        <result column="f_version" javaType="java.lang.String" property="version"/>  <!-- 当前版本号,a.b.c -->        <result column="f_operating_system" javaType="java.lang.String" property="operatingSystem"/>  <!-- 手机系统 -->        <result column="f_network_signal" javaType="java.lang.String" property="networkSignal"/>  <!-- 网络信号（2G,3G,4G,WIFI） -->        <result column="f_crash_content" javaType="java.lang.String" property="crashContent"/>  <!-- 崩溃描述 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AppCrashLog" id="appCrashLogExtendMap" extends="appCrashLogBaseMap">
+	</resultMap>
+	<resultMap type="AppCrashLog" id="appCrashLogBaseMap_AppendTable">
+        <id column="ACLid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ACLuserId" javaType="java.math.BigInteger" property="userId"/>  <!--  -->        <result column="ACLphoneModel" javaType="java.lang.String" property="phoneModel"/>  <!-- 手机机型 -->        <result column="ACLversion" javaType="java.lang.String" property="version"/>  <!-- 当前版本号,a.b.c -->        <result column="ACLoperatingSystem" javaType="java.lang.String" property="operatingSystem"/>  <!-- 手机系统 -->        <result column="ACLnetworkSignal" javaType="java.lang.String" property="networkSignal"/>  <!-- 网络信号（2G,3G,4G,WIFI） -->        <result column="ACLcrashContent" javaType="java.lang.String" property="crashContent"/>  <!-- 崩溃描述 -->        <result column="ACLsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="ACLsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ACLsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ACLsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ACLsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ACLsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ACLsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AppCrashLog" id="appCrashLogBaseMap_AppendTable1">
+        <id column="ACL1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ACL1userId" javaType="java.math.BigInteger" property="userId"/>  <!--  -->        <result column="ACL1phoneModel" javaType="java.lang.String" property="phoneModel"/>  <!-- 手机机型 -->        <result column="ACL1version" javaType="java.lang.String" property="version"/>  <!-- 当前版本号,a.b.c -->        <result column="ACL1operatingSystem" javaType="java.lang.String" property="operatingSystem"/>  <!-- 手机系统 -->        <result column="ACL1networkSignal" javaType="java.lang.String" property="networkSignal"/>  <!-- 网络信号（2G,3G,4G,WIFI） -->        <result column="ACL1crashContent" javaType="java.lang.String" property="crashContent"/>  <!-- 崩溃描述 -->        <result column="ACL1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="ACL1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ACL1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ACL1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ACL1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ACL1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ACL1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		ACL.f_id,ACL.f_user_id,ACL.f_phone_model,ACL.f_version,ACL.f_operating_system,ACL.f_network_signal,ACL.f_crash_content
+	</sql>
+	<sql id="queryHead_AppendTable">
+		ACL.f_id as ACLid,ACL.f_user_id as ACLuserId,ACL.f_phone_model as ACLphoneModel,ACL.f_version as ACLversion,ACL.f_operating_system as ACLoperatingSystem,ACL.f_network_signal as ACLnetworkSignal,ACL.f_crash_content as ACLcrashContent
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		ACL1.f_id as ACL1id,ACL1.f_user_id as ACL1userId,ACL1.f_phone_model as ACL1phoneModel,ACL1.f_version as ACL1version,ACL1.f_operating_system as ACL1operatingSystem,ACL1.f_network_signal as ACL1networkSignal,ACL1.f_crash_content as ACL1crashContent
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (ACL.f_id = #{id} ) </if>        <if test="userId != null">  and (ACL.f_user_id = #{userId} ) </if>        <if test="phoneModel != null">  and (ACL.f_phone_model = #{phoneModel} ) </if>        <if test="version != null">  and (ACL.f_version = #{version} ) </if>        <if test="operatingSystem != null">  and (ACL.f_operating_system = #{operatingSystem} ) </if>        <if test="networkSignal != null">  and (ACL.f_network_signal = #{networkSignal} ) </if>        <if test="crashContent != null">  and (ACL.f_crash_content = #{crashContent} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (ACL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (ACL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (ACL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ACL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (ACL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (ACL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (ACL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (ACL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (ACL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (ACL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (ACL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (ACL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (ACL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (ACL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (ACL.f_id = #{id} ) </if>        <if test="userId != null and !userId.equals('')  ">  and (ACL.f_user_id = #{userId} ) </if>        <if test="phoneModel != null and !phoneModel.equals('')  ">  and (ACL.f_phone_model like CONCAT('%',#{phoneModel},'%') ) </if>        <if test="version != null and !version.equals('')  ">  and (ACL.f_version like CONCAT('%',#{version},'%') ) </if>        <if test="operatingSystem != null and !operatingSystem.equals('')  ">  and (ACL.f_operating_system like CONCAT('%',#{operatingSystem},'%') ) </if>        <if test="networkSignal != null and !networkSignal.equals('')  ">  and (ACL.f_network_signal like CONCAT('%',#{networkSignal},'%') ) </if>        <if test="crashContent != null and !crashContent.equals('')  ">  and (ACL.f_crash_content like CONCAT('%',#{crashContent},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (ACL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (ACL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (ACL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ACL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (ACL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (ACL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (ACL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (ACL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (ACL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (ACL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (ACL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (ACL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (ACL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (ACL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="appCrashLogBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="appCrashLogBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="appCrashLogBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="appCrashLogBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_app_crash_log ACL    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(app崩溃日志)信息。 -->
+	<sql id="select_appCrashLog">
+		SELECT <include refid="appCrashLogBase.queryHead"/>
+		<include refid="appCrashLogBase.busiQueryCondition"/>
+		<include refid="appCrashLogBase.dimCheckSql"/>
+		ORDER BY ACL.f_id DESC
+	</sql>
+	<select id="select_appCrashLog" parameterType="java.util.Map" resultMap="appCrashLogBase.appCrashLogExtendMap">
+		<include refid="appCrashLogBase.select_appCrashLog"/>
+	</select>
+	
+	<!-- 根据条件分页查询(app崩溃日志)信息  -->
+	<sql id="select_appCrashLog_withPage">
+		SELECT <include refid="appCrashLogBase.queryHead"/>
+		<include refid="appCrashLogBase.busiQueryCondition"/>
+		<include refid="appCrashLogBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_appCrashLog_withPage" resultMap="appCrashLogBase.appCrashLogExtendMap" parameterType="java.util.Map">
+		<include refid="appCrashLogBase.select_appCrashLog_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(app崩溃日志)信息。 -->
+	<sql id="select_appCrashLog_bySeqId">
+		SELECT <include refid="appCrashLogBase.queryHead"/>
+		<include refid="appCrashLogBase.busiQueryCondition"/>
+		 and ACL.f_id = #{_parameter}
+	</sql>
+	<select id="select_appCrashLog_bySeqId" parameterType="java.math.BigInteger" resultMap="appCrashLogBase.appCrashLogBaseMap">
+		<include refid="appCrashLogBase.select_appCrashLog_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(app崩溃日志)记录数  -->
+	<sql id="select_appCrashLog_count">
+		SELECT COUNT(*)
+		<include refid="appCrashLogBase.busiQueryCount"/>
+		<include refid="appCrashLogBase.dimCheckSql"/>
+	</sql>
+	<select id="select_appCrashLog_count" resultType="java.lang.Integer">
+		<include refid="appCrashLogBase.select_appCrashLog_count"/>
+	</select>
+	
+	 <!-- 往(app崩溃日志)新增一条记录。 -->
+	 <sql id="insert_appCrashLog">
+		INSERT INTO t_app_crash_log 
+		(f_id,f_user_id,f_phone_model,f_version,f_operating_system,f_network_signal,f_crash_content,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{userId},#{phoneModel,jdbcType=VARCHAR},#{version,jdbcType=VARCHAR},#{operatingSystem,jdbcType=VARCHAR},#{networkSignal,jdbcType=VARCHAR},#{crashContent,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_appCrashLog" parameterType="AppCrashLog">
+		<include refid="appCrashLogBase.insert_appCrashLog"/>
+    </insert>
+    
+	<!-- 批量新增(app崩溃日志)信息 -->
+    <insert id="insert_appCrashLog_Batch" parameterType="java.util.List">
+    	INSERT INTO t_app_crash_log 
+		(f_id,f_user_id,f_phone_model,f_version,f_operating_system,f_network_signal,f_crash_content,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.userId},#{item.phoneModel,jdbcType=VARCHAR},#{item.version,jdbcType=VARCHAR},#{item.operatingSystem,jdbcType=VARCHAR},#{item.networkSignal,jdbcType=VARCHAR},#{item.crashContent,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(app崩溃日志)信息。 -->
+    <sql id="update_appCrashLog">
+		UPDATE t_app_crash_log		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="phoneModel != null and !phoneModel.equals('') "> ,f_phone_model=#{phoneModel}</if> 		<if test="version != null and !version.equals('') "> ,f_version=#{version}</if> 		<if test="operatingSystem != null and !operatingSystem.equals('') "> ,f_operating_system=#{operatingSystem}</if> 		<if test="networkSignal != null and !networkSignal.equals('') "> ,f_network_signal=#{networkSignal}</if> 		<if test="crashContent != null and !crashContent.equals('') "> ,f_crash_content=#{crashContent}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_appCrashLog" parameterType="AppCrashLog">
+		<include refid="appCrashLogBase.update_appCrashLog"/>
+    </update>
+    
+    <!-- 批量更新(app崩溃日志)信息。 -->
+    <update id="update_appCrashLog_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_app_crash_log		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.phoneModel != null and !item.phoneModel.equals('')  "> ,f_phone_model=#{item.phoneModel}</if> 		<if test="item.version != null and !item.version.equals('')  "> ,f_version=#{item.version}</if> 		<if test="item.operatingSystem != null and !item.operatingSystem.equals('')  "> ,f_operating_system=#{item.operatingSystem}</if> 		<if test="item.networkSignal != null and !item.networkSignal.equals('')  "> ,f_network_signal=#{item.networkSignal}</if> 		<if test="item.crashContent != null and !item.crashContent.equals('')  "> ,f_crash_content=#{item.crashContent}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(app崩溃日志)信息_逻辑删除。 -->
+    <sql id="delete_appCrashLog_Logic">
+		UPDATE t_app_crash_log		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="phoneModel != null and !phoneModel.equals('')  "> ,f_phone_model=#{phoneModel}</if> 		<if test="version != null and !version.equals('')  "> ,f_version=#{version}</if> 		<if test="operatingSystem != null and !operatingSystem.equals('')  "> ,f_operating_system=#{operatingSystem}</if> 		<if test="networkSignal != null and !networkSignal.equals('')  "> ,f_network_signal=#{networkSignal}</if> 		<if test="crashContent != null and !crashContent.equals('')  "> ,f_crash_content=#{crashContent}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_appCrashLog_Logic" parameterType="AppCrashLog">
+		<include refid="appCrashLogBase.delete_appCrashLog_Logic"/>
+    </update>
+    
+    <!-- 批量删除(app崩溃日志)信息_逻辑删除 -->
+    <update id="delete_appCrashLog_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_app_crash_log		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.phoneModel != null and !item.phoneModel.equals('')  "> ,f_phone_model=#{item.phoneModel}</if> 		<if test="item.version != null and !item.version.equals('')  "> ,f_version=#{item.version}</if> 		<if test="item.operatingSystem != null and !item.operatingSystem.equals('')  "> ,f_operating_system=#{item.operatingSystem}</if> 		<if test="item.networkSignal != null and !item.networkSignal.equals('')  "> ,f_network_signal=#{item.networkSignal}</if> 		<if test="item.crashContent != null and !item.crashContent.equals('')  "> ,f_crash_content=#{item.crashContent}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(app崩溃日志)信息。 -->
+    <sql id="delete_appCrashLog">
+		DELETE FROM t_app_crash_log WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_appCrashLog" parameterType="java.lang.String">
+		<include refid="appCrashLogBase.delete_appCrashLog"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(app崩溃日志)信息。 -->
+    <delete id="delete_appCrashLog_Batch" parameterType="java.util.List">
+		DELETE FROM t_app_crash_log WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

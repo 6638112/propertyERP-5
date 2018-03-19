@@ -1,0 +1,1818 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:收益中心 -->
+<mapper namespace="revenue">
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.EbuyOrderRevenue" id="EbuyOrderRevenueMap">
+		<id column="f_deliv_order_id" javaType="java.math.BigInteger" property="delivOrderId"/>
+		<id column="f_supply_id" javaType="java.math.BigInteger" property="supplyId"/>
+		<id column="f_supply_name" javaType="java.lang.String" property="supplyName"/>
+		<id column="smRevenueType" javaType="java.lang.Integer" property="smRevenueType"/>
+		<id column="smRevenueRate" javaType="java.lang.Double" property="smRevenueRate"/>
+		<id column="f_deliv_fee" javaType="java.lang.Long" property="delivFee"/>
+		<id column="f_rec_tm" javaType="java.util.Date" property="recTm"/>
+		<id column="f_pay_time" javaType="java.util.Date" property="payTime"/>
+		<id column="f_pay_type" javaType="java.lang.Integer" property="payType"/>
+		<id column="f_discount_money" javaType="java.lang.Long" property="discountMoney"/>
+		<id column="f_refund_money" javaType="java.lang.Long" property="refundMoney"/>
+		<id column="f_amount_order_real" javaType="java.lang.Long" property="amountOrderReal"/>
+		<id column="f_user_id" javaType="java.math.BigInteger" property="userId"/>
+		<id column="f_hua_id" javaType="java.lang.String" property="huaId"/>
+		<id column="f_groupbuilding_id" javaType="java.math.BigInteger" property="groupBuildingId"/>
+		<id column="f_groupbuilding_name" javaType="java.lang.String" property="groupBuildingName"/>
+		<id column="f_flow_no" javaType="java.lang.String" property="flowNo"/>
+		<id column="pcId" javaType="java.math.BigInteger" property="pcId"/>
+		<id column="agentId" javaType="java.math.BigInteger" property="agentId"/>
+		<id column="pcName" javaType="java.lang.String" property="pcName"/>
+		<id column="agentName" javaType="java.lang.String" property="agentName"/>
+		<id column="gbId" javaType="java.math.BigInteger" property="gbId"/>
+		<id column="propertyManagementId" javaType="java.math.BigInteger" property="propertyManagementId"/>
+		<collection property="ebuyProdRevenueList" column="f_prod_id" resultMap="EbuyProdRevenueMap"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.EbuyProdRevenue" id="EbuyProdRevenueMap">
+		<id column="f_prod_id" javaType="java.math.BigInteger" property="prodId"/>
+		<result column="f_prod_price" javaType="java.lang.Long" property="prodPrice"/>
+		<result column="f_prod_qty" javaType="java.lang.Long" property="prodQty"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.EbuyRevenueSignalAmount" id="EbuyRevenueSignalAmountMap" extends="revenueSignalAmountBase.revenueSignalAmountBaseMap_AppendTable">
+		<result column="RSAamountAgent" javaType="java.lang.Double" property="amountAgent"/>  <!-- 该项可提款金额(初始为空) -->
+        <result column="RSAtkStatusAgent" javaType="java.lang.Integer" property="tkStatusAgent"/>  <!-- 提款状态 -->
+        <result column="RSAamountWy" javaType="java.lang.Double" property="amountWy"/>  <!-- 该项可提款金额(初始为空) -->
+        <result column="RSAtkStatusWy" javaType="java.lang.Integer" property="tkStatusWy"/>  <!-- 提款状态 -->
+        <result column="RSAamountPlatform" javaType="java.lang.Double" property="amountPlatform"/>  <!-- 该项可提款金额(初始为空) -->
+        <result column="RSAtkStatusPlatform" javaType="java.lang.Integer" property="tkStatusPlatform"/>  <!-- 提款状态 -->
+        <result column="RSAamountSupply" javaType="java.lang.Double" property="amountSupply"/>  <!-- 该项可提款金额(初始为空) -->
+        <result column="RSAtkStatusSupply" javaType="java.lang.Integer" property="tkStatusSupply"/>  <!-- 提款状态 -->
+        <result column="orderNo" javaType="java.lang.String" property="orderNo"/>  <!-- 提款状态 -->
+        <result column="supplyName" javaType="java.lang.String" property="supplyName" />
+		<association property="revenueSignalAmountEbuy" resultMap="revenueSignalAmountEbuyBase.revenueSignalAmountEbuyBaseMap_AppendTable"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.EbuyRevenueSignalAmount" id="EbuyRevenueSignalAmountExportMap" extends="EbuyRevenueSignalAmountMap">
+		<result column="deliveAddress" javaType="java.lang.String" property="deliveAddress"/>
+       	<result column="delivePhone" javaType="java.lang.String" property="delivePhone"/>
+       	<result column="delivePeople" javaType="java.lang.String" property="delivePeople"/>
+		<collection property="ebuyRevenueProdList"  ofType="com.cnfantasia.server.ms.revenue.entity.EbuyRevenueProd">
+        	<result column="productName" javaType="java.lang.String" property="productName"/>
+        	<result column="qty" javaType="java.lang.Integer" property="qty"/>
+        	<result column="salePrice" javaType="java.lang.Double" property="salePrice"/>
+        	<result column="settlementPrice" javaType="java.lang.Double" property="settlementPrice"/>
+        	<result column="deliveFee" javaType="java.lang.Double" property="deliveFee"/>
+        	<result column="jfqFee" javaType="java.lang.Double" property="jfqFee"/>
+        </collection>
+	</resultMap>
+
+	<!-- 为管理员返回所有物业公司信息列表 -->
+	<select id="select_revenueList" parameterType="java.util.HashMap" resultType="java.util.Map">
+		SELECT
+			pc.f_name pcName,
+			gb.f_name gbName,
+			'系统模块' modelName,
+			DATE_FORMAT(rv.f_sys0_add_time, '%Y-%m') settleMonth,
+			'认证门牌数' revItem,
+			20 f_unit,
+			count(DISTINCT rr.f_id) settleCount,
+			count(DISTINCT rr.f_id) * 20 revAmount
+		FROM
+			t_real_room rr
+		JOIN t_building b ON rr.t_building_f_id = b.f_id
+		JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id
+		JOIN t_property_company pc ON pc.f_id = gb.t_property_company_f_id
+		JOIN (
+			SELECT
+				tr.t_real_room_f_id,
+				rv.f_verify_status,
+				min(rv.f_sys0_add_time) f_sys0_add_time
+			FROM
+				t_room tr
+			LEFT JOIN t_room_validate rv ON rv.t_room_f_id = tr.f_id
+			WHERE
+				rv.f_verify_status = 4
+			GROUP BY
+				tr.t_real_room_f_id,
+				rv.f_verify_status
+		) rv ON rr.f_id = rv.t_real_room_f_id
+		WHERE
+			rv.f_verify_status = 4
+		<if test="isadmin !=null and isadmin == 0" >and pc.f_admin_id = #{omsUserId}</if> <!-- 当isadmin == 1 ，即解放区后台管理员 要看到所有,其它的只能看到所管辖的 -->
+		<if test="isChannelPartner !=null and isChannelPartner == 1" >
+			and pc.f_name in (select cpr.f_pc_name from t_channel_partner cp 
+			left join t_channel_partner_recommend cpr on cpr.t_channel_partner_f_id = cp.f_id
+			where cp.t_oms_user_f_id = #{omsUserId}
+			and cp.f_partnerType = 'company')</if> <!-- 公司代理，要看代理物业公司的收益状况 -->
+		<if test="pcName != null and pcName != '' "> and pc.f_name like CONCAT('%', #{pcName}, '%') </if>
+    	<if test="gbName != null and gbName != '' "> and gb.f_name like CONCAT('%', #{gbName}, '%') </if>
+		<if test="startTime != null and startTime != '' ">  and (rv.f_sys0_add_time &gt;= CONCAT(#{startTime},'-01 00:00:00' )) </if>
+		<if test="endTime != null and endTime != '' ">  and (rv.f_sys0_add_time &lt;= CONCAT(#{endTime},'-31 23:59:59' )) </if>
+		GROUP BY
+			pc.f_name,
+			gb.f_id,
+			gb.f_name,
+			DATE_FORMAT(rv.f_sys0_add_time, '%Y-%m')
+		ORDER BY DATE_FORMAT(rv.f_sys0_add_time, '%Y-%m') DESC
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.RevenueProjectInfo" id="revenueProjectInfo_Map">
+		<result column="f_prj_projectType"  javaType="java.lang.Integer" property="projectType"/>
+		<result column="f_prj_configCount" javaType="java.lang.Integer" property="configCount"/>
+		<result column="f_prj_startTime" javaType="java.lang.String" property="startTime"/>
+	</resultMap>
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.PropCompanyWithRevenue" id="propCompanyWithRevenue_Map">
+		<id column="f_companyId" javaType="java.math.BigInteger" property="companyId"/>
+		<result column="f_companyName" javaType="java.lang.String" property="companyName"/>
+		<result column="f_agentName" javaType="java.lang.String" property="agentName"/>
+		<collection property="projectInfoList" resultMap="revenueProjectInfo_Map"/>
+	</resultMap>
+	
+	<!-- 查询物业公司列表,返回收益配置信息,分页 -->
+	<select id="select_PropCompanyWithRevenue_List_page" parameterType="java.util.Map" resultMap="propCompanyWithRevenue_Map">
+		SELECT
+			PC.f_id AS f_companyId,
+			PC.f_name AS f_companyName,
+			RC_group.f_project_type AS f_prj_projectType,
+			RC_group.configCount AS f_prj_configCount,
+			date_format(RC_group.miniStartDate,'%Y-%m-%d %T')  AS f_prj_startTime,
+			(
+				SELECT
+					IFNULL(
+						CP.f_company_name,
+						CP.f_name
+					)
+				FROM
+					t_channel_partner_recommend CPR
+				INNER JOIN t_channel_partner CP ON CP.f_sys0_del_state = 0 AND CP.f_id = CPR.t_channel_partner_f_id
+				WHERE
+					1 = 1
+				AND CPR.f_sys0_del_state = 0
+				AND CPR.f_pc_name = PC.f_name
+				LIMIT 1
+			) AS f_agentName
+		FROM
+			t_property_company PC
+			LEFT JOIN (
+				SELECT RC.f_company_id,RC.f_project_type,MIN(RC.f_start_date) miniStartDate,COUNT(RC.f_id) configCount
+				FROM t_revenue_config RC
+				WHERE 1=1
+				AND RC.f_sys0_del_state = 0
+				GROUP BY RC.f_company_id,RC.f_project_type
+			) AS RC_group ON RC_group.f_company_id = PC.f_id
+		WHERE
+			1 = 1
+		AND PC.f_sys0_del_state = 0
+		<choose>
+			<when test="companyId != null and !companyId.equals('')">
+				AND PC.f_id = #{companyId}
+			</when>
+			<otherwise>
+				<if test="companyName != null and !companyName.equals('')  ">  AND (PC.f_name like CONCAT('%',#{companyName},'%') ) </if>
+			</otherwise>
+		</choose>
+		and EXISTS (select 1 from t_group_building GB where GB.t_property_company_f_id = PC.f_id <include refid="permiOos.dataPermissionCondition" />)
+		ORDER BY RC_group.configCount DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	
+	<select id="select_PropCompanyWithRevenue_List_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		FROM t_property_company PC
+		WHERE 1 = 1
+		AND PC.f_sys0_del_state = 0
+		<choose>
+			<when test="companyId != null and !companyId.equals('')">
+				AND PC.f_id = #{companyId}
+			</when>
+			<otherwise>
+				<if test="companyName != null and !companyName.equals('')  ">  AND (PC.f_name like CONCAT('%',#{companyName},'%') ) </if>
+			</otherwise>
+		</choose>
+		and EXISTS (select 1 from t_group_building GB where GB.t_property_company_f_id = PC.f_id <include refid="permiOos.dataPermissionCondition" />)
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.RevenueConfigListByType" id="revenueConfigListByType_Map_Append">
+		<id column="ext_projectType" javaType="java.lang.Integer" property="projectType"/>
+		<id column="ext_companyId" javaType="java.math.BigInteger" property="companyId"/>
+		<collection property="revenueConfigList" resultMap="revenueConfigBase.revenueConfigBaseMap_AppendTable"/>
+	</resultMap>
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.RevenueConfigForList" id="revenueConfigForList_Map_Append">
+		<id column="PCid" javaType="java.math.BigInteger" property="companyId"/>
+		<result column="PCname" javaType="java.lang.String" property="companyName"/>
+		<collection property="typeGpList" resultMap="revenueConfigListByType_Map_Append"/>
+	</resultMap>
+	
+	<sql id="select_RevenueConfig_List_base">
+		FROM t_property_company PC
+		WHERE 1=1
+		AND PC.f_sys0_del_state = 0
+		<if test="companyId != null and !companyId.equals('')">
+			AND PC.f_id = #{companyId}
+		</if>
+		<if test="companyId == null or companyId.equals('')  ">
+			<!-- <if test="companyName != null and !companyName.equals('')  ">
+				AND (PC.f_name like CONCAT('%',#{companyName},'%') )
+			</if> -->
+			<if test="companyName != null and !companyName.equals('')  ">
+				AND (PC.f_name like CONCAT('%',#{companyName},'%') )
+			</if>
+		</if>
+		AND EXISTS (
+			SELECT RC.f_id 
+			FROM t_revenue_config RC 
+			WHERE 1=1 
+			AND RC.f_company_id = PC.f_id AND RC.f_sys0_del_state = 0
+			<if test="companyId != null and !companyId.equals('')">
+				AND RC.f_company_id = #{companyId}
+			</if>
+			<if test="projectType != null and !projectType.equals('')">
+				AND RC.f_project_type = #{projectType}
+			</if>
+		)
+	</sql>
+	<!-- 查询收益配置列表,分页 -->
+	<select id="select_RevenueConfig_List_page" parameterType="java.util.Map" resultMap="revenueConfigForList_Map_Append">
+		SELECT <include refid="revenueConfigBase.queryHead_AppendTable"/>
+			,_tmp.*
+			,RC.f_company_id AS ext_companyId
+			,RC.f_project_type AS ext_projectType
+		FROM (
+			SELECT PC.f_id AS PCid,PC.f_name AS PCname
+			<include refid="select_RevenueConfig_List_base"/>
+			ORDER BY PC.f_id DESC
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		) AS _tmp 
+		INNER JOIN t_revenue_config RC ON RC.f_company_id = _tmp.PCid AND RC.f_sys0_del_state = 0
+			<if test="companyId != null and !companyId.equals('')">
+				AND RC.f_company_id = #{companyId}
+			</if>
+			<if test="projectType != null and !projectType.equals('')">
+				AND RC.f_project_type = #{projectType}
+			</if>
+		WHERE 1=1
+		ORDER BY RC.f_company_id DESC,RC.f_project_type ASC,RC.f_start_date
+	</select>
+	
+	<select id="select_RevenueConfig_List_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		<include refid="select_RevenueConfig_List_base"/>
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.UserWithPropCompany" id="userWithPropCompany_Map_Append"
+		extends="omsUserBase.omsUserBaseMap_AppendTable">
+		<association property="propertyCompany" resultMap="propertyCompanyBase.propertyCompanyBaseMap_AppendTable"/>
+	</resultMap>
+	<select id="select_UserWithPropCompany_ByUserId" parameterType="java.util.Map" resultMap="userWithPropCompany_Map_Append">
+		SELECT <include refid="omsUserBase.queryHead_AppendTable"/>
+			,<include refid="propertyCompanyBase.queryHead_AppendTable"/>
+		FROM t_oms_user OU
+			LEFT JOIN t_property_company PC ON PC.f_admin_id = #{omsUserId}  AND PC.f_sys0_del_state = 0
+		WHERE 1=1
+		AND OU.f_id = #{omsUserId}
+		AND OU.f_sys0_del_state = 0
+		LIMIT 1
+	</select>
+	
+	<select id="select_PropCompany_List" parameterType="java.util.Map" resultMap="propertyCompanyBase.propertyCompanyBaseMap_AppendTable">
+		SELECT <include refid="propertyCompanyBase.queryHead_AppendTable"/>
+		FROM t_property_company PC
+		WHERE 1=1
+		AND PC.f_sys0_del_state = 0
+		<if test="companyName != null and !companyName.equals('')  ">
+			AND (PC.f_name like CONCAT('%',#{companyName},'%') )
+		</if>
+		LIMIT 50
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.RevenueConfigDetail" id="revenueConfigDetail_Map_Append"
+		extends="revenueConfigBase.revenueConfigBaseMap_AppendTable">
+		<result column="ext_companyName" javaType="java.lang.String" property="companyName"/>
+	</resultMap>
+	<!-- 根据Id查询单个配置的详情 -->
+	<select id="select_RevenueConfig_Detail" parameterType="java.util.Map" resultMap="revenueConfigDetail_Map_Append">
+		SELECT <include refid="revenueConfigBase.queryHead_AppendTable"/>
+			,PC.f_name AS ext_companyName
+		FROM t_revenue_config RC
+			INNER JOIN t_property_company PC ON PC.f_id = RC.f_company_id AND RC.f_sys0_del_state = 0
+		WHERE 1=1
+		AND RC.f_sys0_del_state = 0
+		AND RC.f_id = #{dataId}
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.MinMaxDate" id="minMaxDate_Map">
+		<id column="f_company_id" javaType="java.math.BigInteger" property="companyId"/>
+		<id column="f_project_type" javaType="java.lang.Integer" property="projectType"/>
+		<result column="ext_minStartDate" javaType="java.lang.String" property="minStartDate"/>
+		<result column="ext_maxEndDate" javaType="java.lang.String" property="maxEndDate"/>
+	</resultMap>
+	<!-- 查询最早和最晚时间 -->
+	<select id="select_MinMaxDate" parameterType="java.util.Map" resultMap="minMaxDate_Map">
+		SELECT RC.f_company_id,RC.f_project_type
+		,date_format(MIN(f_start_date),'%Y-%m-%d') AS ext_minStartDate
+		,date_format(MAX(f_end_date),'%Y-%m-%d') AS ext_maxEndDate
+		FROM t_revenue_config RC
+		WHERE 1=1
+		AND RC.f_sys0_del_state = 0
+		AND RC.f_company_id = #{companyId}
+		AND RC.f_project_type = #{projectType}
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.RevenueAmountInfo" id="revenueAmountInfo_Map">
+		<result column="ext_projectType"  javaType="java.lang.Integer" property="projectType"/>
+		<result column="ext_totalAmount" javaType="java.math.BigDecimal" property="totalAmount"/>
+		<result column="ext_setedAmount" javaType="java.math.BigDecimal" property="setedAmount"/>
+		<result column="ext_toSetAmount" javaType="java.math.BigDecimal" property="toSetAmount"/>
+		<result column="ext_settingAmount" javaType="java.math.BigDecimal" property="settingAmount"/>
+	</resultMap>
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.RevenueAmountPrevEntity" id="revenueAmountPrevEntity_Map">
+		<id column="ext_roleType" javaType="java.lang.Integer" property="roleType"/>
+		<id column="ext_roleId" javaType="java.math.BigInteger" property="roleId"/>
+		<result column="ext_roleName" javaType="java.lang.String" property="roleName"/>
+		<collection property="amountInfoList" resultMap="revenueAmountInfo_Map"/>
+	</resultMap>
+	
+	
+	<!-- 查询收益总额列表信息,分页 -->
+	<sql id="select_RevenueAmountPrev_List_comm">
+		FROM t_revenue_signal_amount RSA
+		WHERE 1=1
+		AND RSA.f_sys0_del_state = 0
+		<choose><!-- //queryType 1.拥有查询全部数据的权限;2.多个Id;3.单个Id -->
+			<when test="queryType == 1">
+				<if test="searchName != null and !searchName.equals('')  ">  AND (RSA.f_role_name like CONCAT('%',#{searchName},'%') ) </if>
+				and EXISTS (select 1 from t_group_building GB where GB.f_id = RSA.t_group_building_id <include refid="permiOos.dataPermissionCondition" />)
+			</when>
+			<when test="queryType == 2">
+				AND RSA.f_mini_role_type =#{miniRoleType}
+				AND RSA.f_mini_role_id IN 
+				<foreach item="item" collection="miniRoleIdList" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+				<if test="searchName != null and !searchName.equals('')  ">  AND (RSA.f_role_name like CONCAT('%',#{searchName},'%') ) </if>
+			</when>
+			<when test="queryType == 3">
+				<choose>
+					<when test="miniRoleType == 13">
+						AND RSA.f_mini_role_type = 2
+						AND RSA.t_property_management_f_id = #{miniRoleId}
+					</when>
+					<otherwise>
+						AND RSA.f_mini_role_type =#{miniRoleType}
+						AND RSA.f_mini_role_id = #{miniRoleId}
+					</otherwise>
+				</choose>
+				<if test="searchName != null and !searchName.equals('')  ">  AND (RSA.f_role_name like CONCAT('%',#{searchName},'%') ) </if>
+			</when>
+			<otherwise> AND 1=2 </otherwise>
+		</choose>
+		AND NOW() >= RSA.f_goal_rev_time <!-- 2015-12-8 13:20:47增加时间条件 -->
+	</sql>
+	<!-- 查询收益总额列表信息,分页 管理处 -->
+	<sql id="select_RevenueAmountManagementPrev_List_comm">
+		FROM t_revenue_signal_amount RSA
+		INNER JOIN 
+			t_group_building GB ON GB.f_id =RSA.t_group_building_id AND GB.f_sys0_del_state = 0
+		INNER JOIN
+			t_property_management PM ON PM.f_id = GB.t_property_management_f_id AND PM.f_is_edit = 1 <!-- 已经审核 -->
+		INNER JOIN
+			t_property_management_has_oms_user PMHOU ON PMHOU.t_property_management_f_id = PM.f_id AND PMHOU.f_sys0_del_state = 0 AND PMHOU.t_oms_user_f_id = #{omsUserId}
+		WHERE 1=1
+		AND RSA.f_sys0_del_state = 0
+		AND NOW() >= RSA.f_goal_rev_time <!-- 2015-12-8 13:20:47增加时间条件 -->
+		<if test="searchName != null and !searchName.equals('')  ">  AND (GB.f_name like CONCAT('%',#{searchName},'%') ) </if>
+		GROUP BY RSA.t_group_building_id,RSA.f_goal_type
+		<!-- 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","6":"车禁费用","7":"其他代收费用","15":"物业补贴"} -->
+		ORDER BY
+		RSA.t_group_building_id,
+		CASE
+			WHEN RSA.f_goal_type = 5 THEN 1 
+			WHEN RSA.f_goal_type = 6 THEN 2 
+			WHEN RSA.f_goal_type = 7 THEN 3 
+			WHEN RSA.f_goal_type = 15 THEN 4 
+			WHEN RSA.f_goal_type = 2 THEN 6 
+			WHEN RSA.f_goal_type = 3 THEN 7 
+			WHEN RSA.f_goal_type = 4 THEN 8 
+			ELSE 100 END ASC
+	</sql>
+	<select id="select_RevenueAmountPrev_List_page" parameterType="java.util.Map" resultMap="revenueAmountPrevEntity_Map">
+		SELECT 
+			<choose>
+				<when test="miniRoleType == 13">
+					13 AS ext_roleType, RSA.t_property_management_f_id AS ext_roleId
+				</when>
+				<otherwise>
+					RSA.f_mini_role_type AS ext_roleType, RSA.f_mini_role_id AS ext_roleId
+				</otherwise>
+			</choose>		
+			,RSA.f_role_name AS ext_roleName
+			,RSA.f_goal_type AS ext_projectType
+			,SUM(RSA.f_amount) AS ext_totalAmount
+			,SUM(IF(RSA.f_tk_status=1,RSA.f_amount,0)) AS ext_toSetAmount
+			,SUM(IF(RSA.f_tk_status=2,RSA.f_amount,0)) AS ext_settingAmount
+			,SUM(IF(RSA.f_tk_status=3,RSA.f_amount,0)) AS ext_setedAmount
+		<include refid="select_RevenueAmountPrev_List_comm"/>
+		<!--为了能够进行分页处理做此修改：分页信息是按照“对象名称”进行分页的，并不是安装收益明细进行分页，所以增加了一个条件，在条件里进行分页；
+		同时修改了“<include refid="select_RevenueAmountPrev_List_comm"/>”将分组和排序的代码拿了出来，
+		因为查询总数的时候和列表是共用的，所以分页条件不能共用，只能
+		单独提取出来；注：此修改查询效率比原来慢了一半-->
+		AND RSA.f_role_name IN(
+			SELECT t.f_role_name FROM(
+				SELECT DISTINCT RSA.f_role_name
+				<include refid="select_RevenueAmountPrev_List_comm"/>
+				ORDER BY
+				RSA.f_mini_role_id,
+				CASE
+				WHEN RSA.f_goal_type = 5 THEN 1
+				WHEN RSA.f_goal_type = 6 THEN 2
+				WHEN RSA.f_goal_type = 7 THEN 3
+				WHEN RSA.f_goal_type = 15 THEN 4
+				WHEN RSA.f_goal_type = 2 THEN 6
+				WHEN RSA.f_goal_type = 3 THEN 7
+				WHEN RSA.f_goal_type = 4 THEN 8
+				ELSE 100 END ASC
+				<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+			) AS t
+		)
+
+		GROUP BY RSA.f_mini_role_type,RSA.f_goal_type,RSA.f_mini_role_id
+		<!-- 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","6":"车禁费用","7":"其他代收费用","15":"物业补贴"} -->
+		ORDER BY
+		RSA.f_mini_role_id,
+		CASE
+		WHEN RSA.f_goal_type = 5 THEN 1
+		WHEN RSA.f_goal_type = 6 THEN 2
+		WHEN RSA.f_goal_type = 7 THEN 3
+		WHEN RSA.f_goal_type = 15 THEN 4
+		WHEN RSA.f_goal_type = 2 THEN 6
+		WHEN RSA.f_goal_type = 3 THEN 7
+		WHEN RSA.f_goal_type = 4 THEN 8
+		ELSE 100 END ASC
+	</select>
+	<select id="select_RevenueAmountPrev_List_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		FROM (
+			SELECT DISTINCT RSA.f_role_name
+			<include refid="select_RevenueAmountPrev_List_comm"/>
+			GROUP BY RSA.f_mini_role_type,RSA.f_goal_type,RSA.f_mini_role_id
+		)AS TMP
+	</select>
+	
+	<select id="select_RevenueAmountManagementPrev_List_page" parameterType="java.util.Map" resultMap="revenueAmountPrevEntity_Map">
+		SELECT 8 AS ext_roleType<!-- 因为没有管理处角色信息，所以写死为8 -->
+			,RSA.f_mini_role_id AS ext_roleId
+			,GB.f_name AS ext_roleName
+			,RSA.f_goal_type AS ext_projectType
+			,SUM(RSA.f_amount) AS ext_totalAmount
+			,SUM(IF(RSA.f_tk_status=1,RSA.f_amount,0)) AS ext_toSetAmount
+			,SUM(IF(RSA.f_tk_status=2,RSA.f_amount,0)) AS ext_settingAmount
+			,SUM(IF(RSA.f_tk_status=3,RSA.f_amount,0)) AS ext_setedAmount
+		<include refid="select_RevenueAmountManagementPrev_List_comm"/>
+	</select>
+	<select id="select_RevenueAmountManagementPrev_List_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		FROM (
+			SELECT 1
+			<include refid="select_RevenueAmountManagementPrev_List_comm"/>
+		)AS TMP
+	</select>
+	
+	<!-- <select id="select_RevenueAmountPrev_List_page" parameterType="java.util.Map" resultMap="propCompanyWithAmount_Map">
+		SELECT
+			PC.f_id AS f_companyId,
+			PC.f_name AS f_companyName,
+			RC_group.f_project_type AS f_prj_projectType,
+			(
+				SELECT
+					IFNULL(
+						CP.f_company_name,
+						CP.f_name
+					)
+				FROM
+					t_channel_partner_recommend CPR
+				INNER JOIN t_channel_partner CP ON CP.f_sys0_del_state = 0 AND CP.f_id = CPR.t_channel_partner_f_id
+				WHERE
+					1 = 1
+				AND CPR.f_sys0_del_state = 0
+				AND CPR.f_pc_name = PC.f_name
+				LIMIT 1
+			) AS f_agentName
+		FROM
+			t_property_company PC
+			LEFT JOIN (
+				SELECT RC.f_company_id,RC.f_project_type,MIN(RC.f_start_date) miniStartDate,COUNT(RC.f_id) configCount
+				FROM t_revenue_config RC
+				WHERE 1=1
+				AND RC.f_sys0_del_state = 0
+				GROUP BY RC.f_company_id,RC.f_project_type
+			) AS RC_group ON RC_group.f_company_id = PC.f_id
+		WHERE
+			1 = 1
+		AND PC.f_sys0_del_state = 0
+		<choose>
+			<when test="companyId != null and !companyId.equals('')">
+				AND PC.f_id = #{companyId}
+			</when>
+			<otherwise>
+				<if test="companyName != null and !companyName.equals('')  ">  AND (PC.f_name like CONCAT('%',#{companyName},'%') ) </if>
+			</otherwise>
+		</choose>
+		ORDER BY RC_group.configCount DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	<select id="select_RevenueAmountPrev_List_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		FROM t_property_company PC
+		WHERE 1 = 1
+		AND PC.f_sys0_del_state = 0
+		<choose>
+			<when test="companyId != null and !companyId.equals('')">
+				AND PC.f_id = #{companyId}
+			</when>
+			<otherwise>
+				<if test="companyName != null and !companyName.equals('')  ">  AND (PC.f_name like CONCAT('%',#{companyName},'%') ) </if>
+			</otherwise>
+		</choose>
+	</select> -->
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.RevenueConfigByTime" id="revenueConfigByTime_Map_Append">
+		<id column="ext_startTime" javaType="java.lang.String" property="startTime" />
+		<id column="ext_endTime" javaType="java.lang.String" property="endTime" />
+		<association property="revenueConfig" resultMap="revenueConfigBase.revenueConfigBaseMap_AppendTable"/>
+	</resultMap>
+	<!-- 根据物业公司ID计算某个时间段的配置信息 -->
+	<select id="select_RevenueConfigByTimeList_ByCompanyId" parameterType="java.util.Map" resultMap="revenueConfigByTime_Map_Append">
+		SELECT <include refid="revenueConfigBase.queryHead_AppendTable"/>
+			,CASE WHEN #{startTime} > RC.f_start_date THEN #{startTime} ELSE DATE_FORMAT(RC.f_start_date,'%Y-%m-%d %T') END AS ext_startTime
+			,CASE WHEN RC.f_end_date > #{endTime} THEN #{endTime} ELSE DATE_FORMAT(ADDDATE(RC.f_end_date, INTERVAL +1 DAY),'%Y-%m-%d %T') END AS ext_endTime
+		FROM t_revenue_config RC
+    	WHERE 1=1
+    	AND RC.f_sys0_del_state = 0
+    	AND RC.f_project_type = #{projectType}
+    	AND RC.f_company_id = #{companyId}
+    	AND RC.f_active_status = 1 <!-- 有效状态=={"1":"开启","2":"关闭"} -->
+    	AND #{endTime} >= RC.f_start_date
+		AND RC.f_end_date > ADDDATE(#{startTime}, INTERVAL -1 DAY)
+		ORDER BY RC.f_start_date ASC
+	</select>
+	
+	<!-- 根据代理商ID,查询下属的物业公司Id列表 -->
+	<select id="select_CompanyIdList_ByAgentId" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		 SELECT DISTINCT PC.f_id
+		 FROM t_channel_partner CP
+		 	INNER JOIN t_channel_partner_recommend CPR ON CPR.f_sys0_del_state = 0 AND CP.f_id = CPR.t_channel_partner_f_id
+		 	INNER JOIN t_property_company PC ON PC.f_sys0_del_state = 0 AND CPR.f_pc_name = PC.f_name
+		 WHERE 1=1
+		 AND CP.f_sys0_del_state = 0
+		 AND CP.f_id = #{agentId}
+	</select>
+	
+	<!-- 查询物业公司对应类别已生效规则列表 -->
+	<sql id="select_Active_RevenueConfig_List_base">
+		SELECT <include refid="revenueConfigBase.queryHead_AppendTable"/>
+			,DATE_FORMAT(RC.f_start_date,'%Y-%m-%d %T') AS ext_startTime
+			,DATE_FORMAT(ADDDATE(RC.f_end_date, INTERVAL +1 DAY),'%Y-%m-%d %T') AS ext_endTime
+		FROM t_revenue_config RC
+    	WHERE 1=1
+    	AND RC.f_sys0_del_state = 0
+    	AND RC.f_project_type = #{projectType}
+    	AND RC.f_active_status = 1 <!-- 有效状态=={"1":"开启","2":"关闭"} -->
+	</sql>
+	<select id="select_Active_RevenueConfig_List" parameterType="java.util.Map" resultMap="revenueConfigByTime_Map_Append">
+		<include refid="select_Active_RevenueConfig_List_base"/>
+    	AND RC.f_company_id = #{companyId}
+	</select>
+	<select id="select_Active_RevenueConfig_List_Multi"  parameterType="java.util.Map" resultMap="revenueConfigByTime_Map_Append">
+		<include refid="select_Active_RevenueConfig_List_base"/>
+    	AND RC.f_company_id IN 
+		<foreach item="item" collection="companyIdList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<sql id="select_ToSig_PayBill_List_base">
+		SELECT <include refid="payBillBase.queryHead_AppendTable"/>
+			,(
+				SELECT IFNULL(EPR.f_flow_no,EO.f_order_no) <!-- 流水号为空则取订单编号,方便查账 -->
+				FROM t_ebuy_order_has_t_pay_bill EOHTP
+					INNER JOIN t_ebuy_order EO ON EO.f_id = EOHTP.t_ebuy_order_f_id AND EO.f_sys0_del_state = 0
+					LEFT JOIN t_ebuy_pay_record EPR ON EPR.t_ebuy_order_f_id = EO.f_id AND EPR.f_sys0_del_state = 0
+						AND EPR.f_pay_status = 2
+				WHERE 1=1
+				AND EOHTP.f_sys0_del_state = 0
+				AND EOHTP.t_pay_bill_f_id = PB.f_id
+				LIMIT 1
+			)AS ext_payFlowNo
+			,(
+				SELECT EO.f_pay_method  <!-- 支付方式 -->
+				FROM t_ebuy_order_has_t_pay_bill EOHTP
+					INNER JOIN t_ebuy_order EO ON EO.f_id = EOHTP.t_ebuy_order_f_id AND EO.f_sys0_del_state = 0
+					LEFT JOIN t_ebuy_pay_record EPR ON EPR.t_ebuy_order_f_id = EO.f_id AND EPR.f_sys0_del_state = 0
+						AND EPR.f_pay_status = 2
+				WHERE 1=1
+				AND EOHTP.f_sys0_del_state = 0
+				AND EOHTP.t_pay_bill_f_id = PB.f_id
+				LIMIT 1
+			)AS ext_payMethod, GB.f_id gbId, GB.t_property_management_f_id propManagerId,
+			IFNULL(if(PB.f_payment_way = 3, 
+			  (SELECT sum(ifnull(_pcd.f_real_pay_amt, 0))FROM t_property_card_deduction_detail _pcd WHERE _pcd.t_pay_bill_f_id=PB.f_id AND _pcd.f_sys0_del_state = 0), 
+			   0), 0)as	wyAmountUsrReal,
+			IFNULL(if(PB.f_payment_way = 3, 
+			  (SELECT sum(ifnull(_pcd.f_ptbt_amt, 0))FROM t_property_card_deduction_detail _pcd WHERE _pcd.t_pay_bill_f_id=PB.f_id AND _pcd.f_sys0_del_state = 0), 
+			   0), 0)as	wyAmountPtbt,
+			PB.f_payment_way payWay
+		FROM t_property_company PC
+			INNER JOIN t_group_building GB ON GB.t_property_company_f_id = #{companyId} AND GB.f_sys0_del_state = 0
+			INNER JOIN t_building B ON GB.f_id = B.t_group_building_f_id AND B.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON B.f_id = RR.t_building_f_id AND RR.f_sys0_del_state = 0
+			INNER JOIN t_pay_bill PB ON RR.f_id = PB.t_real_room_f_id AND PB.f_sys0_del_state = 0
+				AND PB.f_is_pay = 1 <!-- 缴费状态=={"1":"已缴费","2":"未缴费"} -->
+				AND PB.f_payment_way in (1, 3) <!-- 缴费方式=={"1":"在解放区缴费","2":"物业公司手工标记","3":"缴费卡代扣"} -->
+				
+				<choose>
+					<when test="isPropFee == 2"> <!-- 其他代收费用 -->
+						AND PB.f_is_prop_fee = #{isPropFee} <!-- 是否为物业费(冗余)=={"1":"是","2":"否"} -->
+					</when>
+					<otherwise> <!-- 物业费暂时只处理月度缴费的 -->
+						<!-- AND PB.f_paytime_type = 1 --> <!-- 缴费时间方式=={"1":"月度缴费","2":"周期缴费"} -->
+						AND PB.f_is_prop_fee = #{isPropFee} <!-- 是否为物业费(冗余)=={"1":"是","2":"否"} -->
+					</otherwise>
+				</choose>
+				
+				AND PB.f_sys0_upd_time >= #{startTime} 
+				AND #{endTime} > PB.f_sys0_upd_time
+				
+				AND NOT EXISTS(
+					SELECT RSA.f_id
+					FROM t_revenue_signal_amount RSA
+					WHERE 1=1
+					AND RSA.f_sys0_del_state = 0
+					AND RSA.f_mini_role_type = 2 <!-- 所属最小粒度角色类型=={"1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主"} -->
+					AND RSA.f_goal_type = #{projectType} <!-- 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"} -->
+					<!-- AND f_mini_role_id = #{companyId} -->
+					AND RSA.f_goal_id = PB.f_id
+				)
+		WHERE 1=1
+		AND PC.f_sys0_del_state = 0
+		AND PC.f_id = #{companyId}
+	</sql>
+	
+	<!-- 查询各个时间段内属于该物业公司的且缴费成功的账单,且未生成过sig对应类别的物业账单=用户实缴 -->
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.PayBillForRevenue" id="payBillForRevenue_Map_Append">
+		<id column="PBid" javaType="java.math.BigInteger" property="uniqueId" />
+		<result column="ext_payFlowNo" javaType="java.lang.String" property="payFlowNo" />
+		<result column="ext_payMethod" javaType="java.lang.Integer" property="payMethod" />
+		<result column="gbId" javaType="java.math.BigInteger" property="gbId" />
+		<result column="propManagerId" javaType="java.math.BigInteger" property="propManagerId" />
+		<result column="wyAmountUsrReal" javaType="java.math.BigDecimal" property="wyAmountUsrReal" />
+		<result column="wyAmountPtbt" javaType="java.math.BigDecimal" property="wyAmountPtbt" />
+		<result column="payWay" javaType="java.math.BigInteger" property="payWay" />
+		<association property="payBill" resultMap="payBillBase.payBillBaseMap_AppendTable"/>
+	</resultMap>
+	<select id="select_ToSig_PayBill_List" parameterType="java.util.Map" resultMap="payBillForRevenue_Map_Append">
+		<include refid="select_ToSig_PayBill_List_base"/>
+	</select>
+	
+	<!-- 查询各个时间段内属于该物业公司的且缴费成功的账单,且未生成过sig对应类别的物业账单=用户平台补贴 -->
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.PayBillForRevenueSubsidy" id="payBillForRevenueSubsidy_Map_Append">
+		<id column="PBid" javaType="java.math.BigInteger" property="uniqueId" />
+		<result column="gbId" javaType="java.math.BigInteger" property="gbId" />
+		<result column="propManagerId" javaType="java.math.BigInteger" property="propManagerId" />
+		<result column="wyAmountUsrReal" javaType="java.math.BigDecimal" property="wyAmountUsrReal" />
+		<result column="wyAmountPtbt" javaType="java.math.BigDecimal" property="wyAmountPtbt" />
+		<result column="payWay" javaType="java.math.BigInteger" property="payWay" />
+		<association property="payBill" resultMap="payBillBase.payBillBaseMap_AppendTable"/>
+	</resultMap>
+	<select id="select_ToSig_PayBillSubsidy_List" parameterType="java.util.Map" resultMap="payBillForRevenueSubsidy_Map_Append">
+		<include refid="select_ToSig_PayBill_List_base"/>
+	</select>
+	
+	<!-- 查询各个时间段内属于该物业公司的且缴费成功的账单,且未生成过sig对应类别的物业账单=其他代收费用 -->
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.PayBillForRevenueOtherFee" id="payBillForRevenueOtherFee_Map_Append">
+		<id column="PBid" javaType="java.math.BigInteger" property="uniqueId" />
+		<result column="ext_payFlowNo" javaType="java.lang.String" property="payFlowNo" />
+		<result column="ext_payMethod" javaType="java.lang.Integer" property="payMethod" />
+		<result column="gbId" javaType="java.math.BigInteger" property="gbId" />
+		<result column="propManagerId" javaType="java.math.BigInteger" property="propManagerId" />
+		<result column="wyAmountUsrReal" javaType="java.math.BigDecimal" property="wyAmountUsrReal" />
+		<result column="wyAmountPtbt" javaType="java.math.BigDecimal" property="wyAmountPtbt" />
+		<result column="payWay" javaType="java.math.BigInteger" property="payWay" />
+		<association property="payBill" resultMap="payBillBase.payBillBaseMap_AppendTable"/>
+	</resultMap>
+	<select id="select_ToSig_PayBillOtherFee_List" parameterType="java.util.Map" resultMap="payBillForRevenueOtherFee_Map_Append">
+		<include refid="select_ToSig_PayBill_List_base"/>
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.DredgeBillForRevenue" id="dredgeBillForRevenue_Map_Append">
+		<result column="amountPtbt" property="amountPtbt" javaType="java.math.BigDecimal"/>
+		<result column="amountUsrReal" property="amountUsrReal" javaType="java.math.BigDecimal"/>
+		<association property="dredgeBill" resultMap="dredgeBillBase.dredgeBillBaseMap_AppendTable"/>
+	</resultMap>
+	<!-- 查询各个时间段内属于该物业公司的且缴费成功的账单,且未生成过sig对应类别的物业账单 -->
+	<select id="select_ToSig_DredgeBill_List" parameterType="java.util.Map" resultMap="dredgeBillForRevenue_Map_Append">
+		SELECT <include refid="dredgeBillBase.queryHead_AppendTable"/>, date_format(eo.f_pay_time,'%Y-%m-%d %T') DBsys0UpdTime
+		, eo.f_total_coupon_amount/100 amountPtbt, eo.f_amount/100 amountUsrReal
+		FROM
+		    t_dredge_bill db
+		    join t_ebuy_order eo on eo.f_id = db.t_ebuy_order_f_id
+		WHERE
+    	db.f_status IN (3 , 5) <!-- 已付款未评价，已付款已评价 -->
+    	and db.t_worker_f_id = #{masterUserId}
+        AND db.f_sys0_upd_time >= #{startTime}
+        AND #{endTime} > db.f_sys0_upd_time 
+        AND NOT EXISTS( SELECT 
+            RSA.f_id
+        FROM
+            t_revenue_signal_amount RSA
+        WHERE
+            RSA.f_sys0_del_state = 0
+                AND RSA.f_mini_role_type = 6 <!-- 所属最小粒度角色类型=={"1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主", "6":"维修服务"} -->
+                AND RSA.f_goal_type = #{projectType}
+                AND RSA.f_goal_id = db.f_id)
+        AND db.f_sys0_del_state = 0
+        and eo.f_pay_time is not null;
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.RoomValidateForRevenue" id="roomValidateForRevenue_Map_Append">
+		<result column="gbId" javaType="java.math.BigInteger" property="gbId" />
+		<result column="propManagerId" javaType="java.math.BigInteger" property="propManagerId" />
+		<association property="realRoom" resultMap="realRoomBase.realRoomBaseMap_AppendTable"/>
+	</resultMap>
+	<!-- 查询各个时间段内属于该物业公司的且验证通过的门牌,且未生成过sig对应类别的 -->
+	<sql id="select_ToSig_RoomValidate_List_base">
+		SELECT <include refid="realRoomBase.queryHead_AppendTable"/>, GB.f_id gbId, GB.t_property_management_f_id propManagerId
+		FROM t_property_company PC
+			INNER JOIN t_group_building GB ON GB.t_property_company_f_id = PC.f_id AND GB.f_sys0_del_state = 0
+			INNER JOIN t_building B ON GB.f_id = B.t_group_building_f_id AND B.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON B.f_id = RR.t_building_f_id AND RR.f_sys0_del_state = 0
+				AND RR.f_validate_status = 5 <!-- 用户对真实门牌的验证状态=={"1":"未验证","5":"已验证"} -->
+				AND RR.f_validate_time >= #{startTime} 
+				AND #{endTime} > RR.f_validate_time
+				AND NOT EXISTS(
+					SELECT RSA.f_id
+					FROM t_revenue_signal_amount RSA
+					WHERE 1=1
+					AND RSA.f_sys0_del_state = 0
+					AND RSA.f_mini_role_type = 2 <!-- 所属最小粒度角色类型=={"1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主"} -->
+					AND RSA.f_goal_type = #{projectType} <!-- 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"} -->
+					<!-- AND f_mini_role_id = #{companyId} -->
+					AND RSA.f_goal_id = RR.f_id
+				)
+		WHERE 1=1
+		AND PC.f_sys0_del_state = 0
+	</sql>
+	<select id="select_ToSig_RoomValidate_List" parameterType="java.util.Map" resultMap="roomValidateForRevenue_Map_Append">
+		<include refid="select_ToSig_RoomValidate_List_base"/>
+		AND PC.f_id = #{companyId}
+	</select>
+	<select id="select_ToSig_RoomValidate_List_Multi" parameterType="java.util.Map" resultMap="roomValidateForRevenue_Map_Append">
+		<include refid="select_ToSig_RoomValidate_List_base"/>
+		AND PC.f_id IN 
+		<foreach item="item" collection="companyIdList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 根据起止时间 获取对应时间段的 对应角色对应收益项目 的单个收益额列表 -->
+	<!-- <select id="select_RevenueSignal_AmountList" parameterType="java.util.Map" resultMap="revenueSignalAmountBase.revenueSignalAmountBaseMap_AppendTable">
+		SELECT <include refid="revenueSignalAmountBase.queryHead_AppendTable"/>
+		FROM t_revenue_signal_amount RSA
+    	WHERE 1=1
+    	AND RSA.f_sys0_del_state = 0
+    	AND RSA.f_mini_role_type = #{miniRoleType} 所属最小粒度角色类型=={"1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主"}
+		AND RSA.f_goal_type = #{projectType} 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"}
+		AND RSA.f_mini_role_id = #{miniRoleId}
+	</select> -->
+	
+	<!-- 根据物业公司Id查询对应时间段的门牌认证数 -->
+	<select id="select_RoomValidCount_ByPropertyCompanyId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		FROM t_revenue_signal_amount RSA
+    	WHERE 1=1
+    	AND RSA.f_sys0_del_state = 0
+    	AND RSA.f_mini_role_type = #{miniRoleType} <!-- 所属最小粒度角色类型=={"1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主"} -->
+		AND RSA.f_goal_type = 1 <!-- 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"} -->
+		AND RSA.f_mini_role_id = #{miniRoleId}
+		AND RSA.f_goal_rev_time >= #{startTime} 
+		AND #{endTime} > RSA.f_goal_rev_time
+	</select>
+	
+	<!--  -->
+	<select id="select_Revenue_MoneyTotal_ByGoalType" parameterType="java.util.Map" resultType="java.lang.Double">
+		SELECT SUM(RSA.f_src_money)
+		FROM t_revenue_signal_amount RSA
+    	WHERE 1=1
+    	AND RSA.f_sys0_del_state = 0
+		AND RSA.f_goal_type = #{goalType} <!-- 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"} -->
+		<choose>
+			<when test="miniRoleType == 13">
+				AND RSA.f_mini_role_type = 2
+				and RSA.t_property_management_f_id = #{roleId}
+			</when>
+			<otherwise>
+		    	AND RSA.f_mini_role_type = #{miniRoleType} <!-- 所属最小粒度角色类型=={"1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主"} -->
+				AND RSA.f_mini_role_id = #{miniRoleId}
+			</otherwise>
+		</choose>
+							
+		AND RSA.f_goal_rev_time >= #{startTime} 
+		AND #{endTime} > RSA.f_goal_rev_time
+	</select>
+	<!-- 查询物业公司对应某时间段的用户实际缴费金额总额 -->
+	<!-- <select id="select_PayBill_RealPayMoney_Total" parameterType="java.util.Map" resultType="java.lang.Double">
+		SELECT SUM(RSA.f_src_money)
+		FROM t_revenue_signal_amount RSA
+    	WHERE 1=1
+    	AND RSA.f_sys0_del_state = 0
+    	AND RSA.f_mini_role_type = #{miniRoleType} 所属最小粒度角色类型=={"1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主"}
+		AND RSA.f_goal_type = 5 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"}
+		AND RSA.f_mini_role_id = #{miniRoleId}
+		AND RSA.f_goal_rev_time >= #{startTime} 
+		AND #{endTime} > RSA.f_goal_rev_time
+	</select> -->
+	
+	<!-- 查询物业公司对应某时间段的补贴金额总额 -->
+	<!-- <select id="select_PayBill_SubsidyMoney_Total" parameterType="java.util.Map" resultType="java.lang.Double">
+		SELECT SUM(RSA.f_src_money)
+		FROM t_revenue_signal_amount RSA
+    	WHERE 1=1
+    	AND RSA.f_sys0_del_state = 0
+    	AND RSA.f_mini_role_type = #{miniRoleType} 所属最小粒度角色类型=={"1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主"}
+		AND RSA.f_goal_type = 15 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"}
+		AND RSA.f_mini_role_id = #{miniRoleId}
+		AND RSA.f_goal_rev_time >= #{startTime} 
+		AND #{endTime} > RSA.f_goal_rev_time
+	</select> -->
+	
+	<!--维修项目： 查询对应某时间段的用户实际缴费金额总额 -->
+	<!-- <select id="select_DredgePayMoney_Total" parameterType="java.util.Map" resultType="java.lang.Double">
+		SELECT SUM(RSA.f_src_money)
+		FROM t_revenue_signal_amount RSA
+    	WHERE 1=1
+    	AND RSA.f_sys0_del_state = 0
+    	AND RSA.f_mini_role_type = #{miniRoleType} 所属最小粒度角色类型=={"1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主"}
+		AND RSA.f_goal_type = 2 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"}
+		AND RSA.f_mini_role_id = #{miniRoleId}
+		AND RSA.f_goal_rev_time >= #{startTime} 
+		AND #{endTime} > RSA.f_goal_rev_time
+	</select> -->
+	
+	<!-- 查询所有包含开启配置项的物业公司Id列表 -->
+	<select id="select_RevConfig_CompanyIdList" resultType="java.math.BigInteger">
+		<!-- 对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"} -->
+		<!-- 角色类型=={"1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主"} -->
+		<choose>
+			<when test="projectType==5 or projectType==15 or projectType==7">
+			SELECT DISTINCT PC.f_id 
+			FROM t_property_company PC
+				INNER JOIN t_group_building GB ON GB.f_sys0_del_state = 0 AND GB.t_property_company_f_id = PC.f_id
+			WHERE 1=1
+			AND PC.f_sys0_del_state = 0
+			AND PC.f_is_audited = 1 <!-- 审核状态=={"0":"未审核","1":"已审核"} -->
+			</when>
+			<otherwise>
+			SELECT DISTINCT f_company_id 
+			FROM t_revenue_config
+			WHERE 1=1
+			AND f_sys0_del_state = 0
+			AND f_active_status = 1 <!-- 有效状态=={"1":"开启","2":"关闭"} -->
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 查询所有包含开启配置项的代理商Id列表 -->
+	<select id="select_RevConfig_AgentIdList" resultType="java.math.BigInteger">
+		SELECT DISTINCT CP.f_id
+		FROM t_channel_partner CP
+			INNER JOIN t_channel_partner_recommend CPR ON CPR.f_sys0_del_state = 0 AND CP.f_id = CPR.t_channel_partner_f_id
+			INNER JOIN t_property_company PC ON PC.f_sys0_del_state = 0 AND CPR.f_pc_name = PC.f_name
+			<choose>
+				<when test="projectType==5 or projectType==15 or projectType==7">
+				</when>
+				<otherwise>
+				AND EXISTS (
+					SELECT RC.f_id 
+					FROM t_revenue_config RC
+					WHERE 1=1
+					AND RC.f_sys0_del_state = 0
+					AND RC.f_active_status = 1 <!-- 有效状态=={"1":"开启","2":"关闭"} -->
+					AND RC.f_company_id = PC.f_id
+				)
+				</otherwise>
+			</choose>
+		WHERE 1=1
+		AND CP.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 根据omsUserId查询对应的拥有的角色 -->
+	<resultMap type="com.cnfantasia.server.ms.revenue.dao.EachRoleCount" id="eachRoleCount_Map">
+		<result column="adminCount" javaType="java.lang.Integer" property="adminCount"  />
+		<result column="companyCount" javaType="java.lang.Integer" property="companyCount"  />
+		<result column="agentCount" javaType="java.lang.Integer" property="agentCount"  />
+		<result column="financeCount" javaType="java.lang.Integer" property="financeCount"  />
+		<result column="downStarCount" javaType="java.lang.Integer" property="downStarCount"  />
+		<result column="pcManagermentCount" javaType="java.lang.Integer" property="pcManagermentCount"  />
+	</resultMap>
+	<select id="select_OmsUserRoleList_ByUserId" parameterType="java.util.Map" resultMap="eachRoleCount_Map">
+		CALL sp_get_roleList_by_oms_user(#{omsUserId})
+	</select>
+	
+	<select id="select_Rev_applyList" parameterType="map" resultType="com.cnfantasia.server.ms.revenue.entity.RevenueSettlement">
+		SELECT 
+		ra.f_id applyId,
+	    f_apply_no tkNo,
+	    date_format(ra.f_apply_time,'%Y-%m-%d %T') applyTime,
+	    f_total_amount totalAmount,
+	    f_tk_status tkStatus,
+	    ra.f_goal_type goalType
+		FROM
+	    t_revenue_apply ra
+	    where ra.f_visible_type = 2  <!-- 非财务（admin）可见 -->
+	    and (
+	    <choose><!-- //queryType 1.拥有查询全部数据的权限;2.多个Id;3.单个Id -->
+			<when test="queryType == 1">
+			</when>
+			<when test="queryType == 2">
+				(ra.f_mini_role_type =#{miniRoleType}
+				AND ra.f_mini_role_id IN 
+				<foreach item="item" collection="miniRoleIdList" open="(" separator="," close=")">
+					#{item}
+				</foreach>)
+			</when>
+			<when test="queryType == 3">
+				(ra.f_mini_role_type =#{miniRoleType}
+				AND ra.f_mini_role_id = #{miniRoleId})
+			</when>
+			<otherwise> (1=2) </otherwise>
+		</choose>
+		
+		<!-- 追加管理处的收益数据 -->
+			<if test="pmIdList !=null and pmIdList.size() > 0">
+				or (ra.f_mini_role_type =13
+					AND ra.t_property_management_f_id in 
+					<foreach item="item" collection="pmIdList" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				)
+			</if>
+		)
+		
+	    AND ra.f_sys0_del_state = 0
+	    <if test="date01 != null and date01!='' "> and ra.f_apply_time &gt; #{date01} </if>
+	    <if test="date02 != null and date02 !='' "> and ra.f_apply_time &lt; #{date02} </if>
+	    <if test="tkNo != null and tkNo!=''"> and ra.f_apply_no like concat('%', #{tkNo}, '%') </if>
+	    <if test="tkStatus != null and tkStatus>0"> and ra.f_tk_status = #{tkStatus}</if>
+	    order by f_apply_time desc
+	</select>
+	
+	<select id="select_Rev_apply_Manage_List" parameterType="map" resultType="com.cnfantasia.server.ms.revenue.entity.RevenueSettlement">
+		SELECT 
+		ra.f_id applyId,
+	    f_apply_no tkNo,
+	    date_format(ra.f_apply_time,'%Y-%m-%d %T') applyTime,
+	    f_total_amount totalAmount,
+	    f_tk_status tkStatus,
+	    ra.f_goal_type goalType
+		FROM
+	    t_revenue_apply ra
+	    <if test="queryType == 3">
+	    	 left join t_group_building gb on ra.t_gb_id = gb.f_id
+			 left join t_property_company pc on gb.t_property_company_f_id = pc.f_id
+			 left join t_property_management pm on pm.t_property_company_f_id = pc.f_id
+			 left join t_property_management_has_oms_user pmu on pmu.t_property_management_f_id = pm.f_id
+		</if>
+	    where 1=1
+	    <choose><!-- //queryType 1.拥有查询全部数据的权限;2.多个Id;3.单个Id -->
+			<when test="queryType == 1">
+			</when>
+			<when test="queryType == 2">
+				AND ra.f_mini_role_type =#{miniRoleType}
+				AND ra.f_mini_role_id IN 
+				<foreach item="item" collection="miniRoleIdList" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</when>
+			<when test="queryType == 3">
+				AND ra.f_mini_role_type =#{miniRoleType}
+				AND pmu.t_oms_user_f_id = #{miniRoleId}
+			</when>
+			<otherwise> AND 1=2 </otherwise>
+		</choose>
+	    AND ra.f_sys0_del_state = 0
+	    <if test="date01 != null and date01!='' "> and ra.f_apply_time &gt; #{date01} </if>
+	    <if test="date02 != null and date02 !='' "> and ra.f_apply_time &lt; #{date02} </if>
+	    <if test="tkNo != null and tkNo!=''"> and ra.f_apply_no like concat('%', #{tkNo}, '%') </if>
+	    <if test="tkStatus != null and tkStatus>0"> and ra.f_tk_status = #{tkStatus}</if>
+	    order by f_apply_time desc
+	</select>
+	
+	
+	<sql id="select_RevenueApplyList_Finance_comm">
+		<if test="roleType != null and roleType!=''"> 
+			<if test="roleType=='2'.toString()">
+				AND (RA.f_mini_role_type = 2 or RA.f_mini_role_type = 13)
+			</if>
+			<if test="roleType=='5'.toString()">
+				AND (RA.f_mini_role_type = 5 or RA.f_mini_role_type = 12)
+			</if>
+			<if test="roleType!='2'.toString() and roleType!='5'.toString()">
+				AND RA.f_mini_role_type = #{roleType}
+			</if>
+		</if>
+	    <if test="goalType != null and goalType!=''"> 
+	    	<if test="goalType=='100'.toString()">
+	    		AND (RA.f_goal_type=15 OR RA.f_goal_type=17
+	    			 OR (RA.f_goal_type=7 AND RA.f_amount_ptbt>0) 
+	    			 OR (RA.f_goal_type=2 AND RA.f_mini_role_type=6 AND RA.f_amount_ptbt>0)
+	    			 OR (RA.f_mini_role_type=5 AND (RA.f_goal_type=4 OR RA.f_goal_type=16) AND RA.f_amount_ptbt>0))
+	    	</if>
+	    	<if test="goalType!='100'.toString()">
+	    		AND RA.f_goal_type = #{goalType}
+	    	</if>
+	    </if>
+	    <if test="roleName != null and roleName!=''"> AND RA.f_role_name like CONCAT('%', #{roleName}, '%') </if>
+    	AND  RA.f_sys0_del_state = 0
+    	AND  RA.f_visible_type = 1
+    	<if test="date01 != null and date01!='' "> AND RA.f_apply_time &gt; #{date01} </if>
+	    <if test="date02 != null and date02 !='' "> AND RA.f_apply_time &lt; #{date02} </if>
+	    <if test="tkNo != null and tkNo!=''"> AND RA.f_apply_no like CONCAT('%', #{tkNo}, '%') </if>
+	    <if test="tkStatus != null and tkStatus>0"> AND RA.f_tk_status = #{tkStatus}</if>
+	    AND (RA.f_audit_status IS NULL OR RA.f_audit_status=3)
+	</sql>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.RevenueApply4Export" id="revenueApply4ExportMap" extends="revenueApplyBase.revenueApplyBaseMap_AppendTable">
+		<collection property="mergedRevenueNOs" javaType="list" ofType="string">
+			<result property="mergedRevenueNOs" column="mergedRevenueNO"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 财务管理—》结算中心，导出功能 准备数据 -->
+	<select id="select_RevenueApplyList_Finance_for_export" parameterType="java.util.Map" resultMap="revenueApply4ExportMap">
+		SELECT ra_detail.f_apply_no mergedRevenueNO,<include refid="revenueApplyBase.queryHead_AppendTable"/>
+		FROM t_revenue_apply RA
+		left JOIN t_revenue_apply ra_detail on RA.f_id = ra_detail.f_rev_apply_finance_id
+		where RA.f_visible_type = 1 
+	    <include refid="select_RevenueApplyList_Finance_comm"/>
+	    ORDER BY RA.f_apply_time DESC
+	    <if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<select id="select_RevenueApplyList_Finance_page" parameterType="java.util.Map" resultMap="revenueApplyBase.revenueApplyBaseMap_AppendTable">
+		SELECT <include refid="revenueApplyBase.queryHead_AppendTable"/>
+		FROM t_revenue_apply RA
+    	WHERE 1=1
+	    <include refid="select_RevenueApplyList_Finance_comm"/>
+	    ORDER BY RA.f_apply_time DESC
+	    <if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	<select id="select_RevenueApplyList_Finance_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		FROM t_revenue_apply RA
+    	WHERE 1=1
+	    <include refid="select_RevenueApplyList_Finance_comm"/>
+	</select>
+	<!-- 查询满足条件的结算金额总计 -->
+	<select id="select_TotalAmount_All_Finance" parameterType="java.util.Map" resultType="java.lang.Double">
+		SELECT IFNULL(SUM(RA.f_total_amount),0)
+		FROM t_revenue_apply RA
+    	WHERE 1=1
+	    <include refid="select_RevenueApplyList_Finance_comm"/>
+	</select>
+	
+	<select id="select_PropCompanyId_ByOmsUserId" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT f_id FROM t_property_company where f_admin_id = #{omsUserId}
+	</select>
+	<select id="select_PCManagementId_ByOmsUserId" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT pmos.t_property_management_f_id from t_property_management_has_oms_user pmos where pmos.t_oms_user_f_id = #{omsUserId};
+	</select>
+	
+	<select id="select_GroupBuildingId_ByOmsUserId" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT f_id FROM t_property_company where f_admin_id = #{omsUserId}
+	</select>
+	<select id="select_PropAgentId_ByOmsUserId" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT f_id FROM t_channel_partner where t_oms_user_f_id = #{omsUserId}
+	</select>
+	
+	<select id="selectDownstairStoreIdByOmsUserId" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		select t.t_ebuy_supply_merchant_id from t_oms_user_has_t_ebuy_supply_merchant t where t.t_oms_user_id = #{omsUserId}
+	</select>
+	
+	<!-- 楼下店等超市收益中心结算 开始 -->
+	<update id="updateForEbuyRevenue" parameterType="java.util.Map">
+		update t_ebuy_delivery_order t set t.f_revenue_status = t.f_revenue_status + 1, t.f_sys0_upd_time = #{currentDate}
+ 			where t.f_status = 3 and t.f_revenue_status = 0
+ 			 and EXISTS (select 1 from t_ebuy_supply_merchant sm where sm.f_id = t.t_supply_merchant_f_id and sm.f_type = 2)
+ 			 and exists(select 1 from t_ebuy_product_settle_apply_log sal,t_revenue_apply ra where sal.t_ebuy_delivery_order_f_id = t.f_id and sal.t_revenue_apply_f_id = ra.f_id and ra.f_audit_status = 3)
+ 			 limit 100
+	</update>
+	
+	<update id="updateDeliveryRevenueStatus" parameterType="java.util.Map">
+		update t_ebuy_delivery_order t set t.f_revenue_status = #{revenueStatusTo}, t.f_sys0_upd_time = now()
+ 		  <where>
+ 			<if test="deliverId != null">and t.f_id = #{deliverId}</if>
+ 			<if test="revenueStatus != null">and t.f_revenue_status = #{revenueStatus} </if>
+ 			<![CDATA[ and t.f_revenue_status < 99 ]]>
+ 		  </where>
+	</update>
+	
+	<select id="selectEbuyRevenueList" parameterType="java.util.Map" resultMap="EbuyOrderRevenueMap">
+		select  <![CDATA[ 
+				edo.f_id f_deliv_order_id, sm.f_id f_supply_id, sm.f_name f_supply_name, ifnull(sm.f_revenue_type, 0) smRevenueType, sm.f_revenue_rate smRevenueRate,
+				edo.f_delivery_real_fee f_deliv_fee, ifnull(ifnull(edo.f_receive_time, edo.f_sys0_upd_time), now()) f_rec_tm,
+				o.f_pay_time f_pay_time, o.f_pay_method f_pay_type, ifnull(o.f_total_coupon_amount - ifnull(db.f_ptbt_amount, 0), 0) f_discount_money,
+				ifnull(ero.f_refund_fee*100, 0) f_refund_money, ifnull(o.f_amount - ifnull(db.f_pay_amount, 0), 0) f_amount_order_real,
+		  		u.f_id f_user_id, u.f_hua_id f_hua_id, gb.f_id f_groupbuilding_id, gb.f_name f_groupbuilding_name, gb.t_property_management_f_id propertyManagementId,
+		  		epr.f_flow_no f_flow_no, pc.f_id pcId, cp.f_id agentId, pc.f_name pcName, cp.f_name agentName,
+				eoep.f_id f_prod_id, eoep.f_product_price f_prod_price, eoep.f_product_qty f_prod_qty, gb.f_id gbId
+				]]>
+		  from t_ebuy_order o
+				LEFT JOIN t_dredge_bill db on db.t_ebuy_order_f_id = o.f_id and db.f_sys0_del_state = 0
+		  		inner join t_ebuy_delivery_order edo on o.f_id = edo.t_ebuy_order_f_id
+				inner join t_ebuy_delivery_order_product edop on edop.t_ebuy_delivery_order_f_id = edo.f_id
+		  		inner join t_ebuy_order_has_t_ebuy_product eoep on edop.t_ebuy_order_has_t_ebuy_product_f_id = eoep.f_id
+				inner join t_ebuy_supply_merchant sm on edo.t_supply_merchant_f_id = sm.f_id
+				left join t_ebuy_refund_order ero on ero.t_ebuy_delivery_order_f_id = edo.f_id and ero.f_refund_status = 2
+				left join t_ebuy_pay_record epr on epr.t_ebuy_order_f_id = o.f_id and epr.f_pay_status = 2
+				inner join t_user u on u.f_id = o.f_buyer_id
+				left join t_room r on o.f_curr_room_id = r.f_id
+				left join t_real_room rr on r.t_real_room_f_id = rr.f_id
+				left join t_building b on rr.t_building_f_id = b.f_id
+				left join t_group_building gb on b.t_group_building_f_id = gb.f_id
+				left join t_property_company pc on gb.t_property_company_f_id = pc.f_id
+				left join t_channel_partner_recommend pr on pr.f_pc_name = pc.f_name
+				left join t_channel_partner cp on pr.t_channel_partner_f_id = cp.f_id
+		where		
+			edo.f_status = 3 
+			and edo.f_revenue_status &lt; 4 and sm.f_type = 2
+			and exists(select 1 from t_ebuy_product_settle_apply_log sal,t_revenue_apply ra where sal.t_ebuy_delivery_order_f_id = edo.f_id and sal.t_revenue_apply_f_id = ra.f_id and ra.f_audit_status = 3)
+			<!-- and edo.f_sys0_upd_time = #{currentDate} -->
+	</select>
+	
+	<update id="updateForEbuyRevenueProccessed" parameterType="java.math.BigInteger">
+		update t_ebuy_delivery_order t set t.f_revenue_status = 99, t.f_sys0_upd_time = now()
+ 			where t.f_id = #{deliverOrderId}
+ 			<![CDATA[ and t.f_revenue_status < 99 ]]>
+	</update>
+	
+	<select id="getEbuyDelivDiscountList" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.revenue.entity.EbuyDelivDiscount">
+		select eo.f_id deliverId, o.f_total_coupon_amount totalCouponAmount, eo.f_delivery_real_fee + sum(eoep.f_product_price * eoep.f_product_qty) prodPrice
+		 from t_ebuy_delivery_order edo
+		 inner join t_ebuy_order o on edo.t_ebuy_order_f_id = o.f_id
+		 inner join t_ebuy_delivery_order eo on o.f_id = eo.t_ebuy_order_f_id
+		 inner join t_ebuy_delivery_order_product edop on edop.t_ebuy_delivery_order_f_id = eo.f_id
+		 inner join t_ebuy_order_has_t_ebuy_product eoep on edop.t_ebuy_order_has_t_ebuy_product_f_id = eoep.f_id
+		where edo.f_id = #{delivId}
+		group by eo.f_id, o.f_total_coupon_amount, eo.f_delivery_real_fee
+		order by prodPrice desc
+	</select>
+	
+	<sql id="ebuyRevenueWhere">
+		where RSA.f_sys0_del_state = 0 and RSA.f_goal_type = 4 <![CDATA[ and RSA.f_goal_rev_time <= now() ]]>
+			<if test="(roleType == 1) and applyId == null and roleId == null"> and RSA.f_mini_role_type = 5 </if>
+			<if test="(roleType == 3) and applyId == null and roleId == null"> and RSA.f_mini_role_type = 5 </if>
+			<if test="supplyName != null and supplyName != ''">
+				AND (RSA.f_role_name like CONCAT('%',#{supplyName},'%') )
+			</if>
+			<if test="roleId != null and roleId != '' and applyId == null">
+				<choose>
+					<when test="roleType == 13"><!-- 管理处 -->
+						AND RSA.f_mini_role_type = 2
+						and RSA.t_property_management_f_id = #{roleId}
+					</when>
+					<otherwise>
+						<if test="roleType != 1 and applyId == null"> and RSA.f_mini_role_type = #{roleType} </if>
+						AND RSA.f_mini_role_id = #{roleId}
+					</otherwise>
+				</choose>
+			</if>
+			<if test="smId != null and smId != '' and applyId == null">
+				AND RSA.f_mini_role_id = #{smId}
+			</if>
+			<if test="smIdList and smIdList.size() != 0 and applyId == null">
+                and RSA.f_mini_role_id in
+                <foreach collection="smIdList" item="supplyId"
+                    index="index" open="(" close=")" separator=",">
+                    #{supplyId}
+                </foreach>
+            </if>
+			<if test="groupBuildingName != null and groupBuildingName != ''">
+				AND (RSAE.f_group_building_name like CONCAT('%',#{groupBuildingName},'%') )
+			</if>
+			<if test="payTmStart != null and payTmStart != ''">
+				<![CDATA[ AND RSAE.f_pay_tm >= #{payTmStart} ]]>
+			</if>
+			<if test="payTmEnd != null and payTmEnd != ''">
+				<![CDATA[ AND RSAE.f_pay_tm <= #{payTmEnd} ]]>
+			</if>
+			<if test="tkStatus != null and tkStatus != ''">
+				AND RSA.f_tk_status = #{tkStatus}
+			</if>
+			<if test="applyId != null and applyId != ''">
+				AND (RSA.f_rev_apply_id = #{applyId} or RSA.f_rev_apply_finance_id = #{applyId})
+			</if>
+			<if test="tkStatusWy != null and tkStatusWy != ''">
+				AND RSA2.f_tk_status = #{tkStatusWy}
+			</if>
+			<if test="tkStatusAgent != null and tkStatusAgent != ''">
+				AND RSA3.f_tk_status = #{tkStatusAgent}
+			</if>
+			<if test="tkStatusSupply != null and tkStatusSupply != ''">
+				AND RSA5.f_tk_status = #{tkStatusSupply}
+			</if>
+			<if test="tkStatusPlatform != null and tkStatusPlatform != ''">
+				AND RSA4.f_tk_status = #{tkStatusPlatform}
+			</if>
+			<if test="recommenderName != null and recommenderName != ''">
+				AND RSA6.f_role_name like CONCAT('%',#{recommenderName},'%')
+			</if>
+			<if test="wyOrAgentName != null">
+				and (RSAE.f_pc_name like CONCAT('%',#{wyOrAgentName},'%') or RSAE.f_agent_name like CONCAT('%',#{wyOrAgentName},'%'))
+			</if>
+			and EXISTS (select 1 from t_group_building GB where GB.f_id = RSA.t_group_building_id <include refid="permiOos.dataPermissionCondition" />)
+	</sql>
+	
+	<select id="selectEbuyRevenueSignalAmountList" parameterType="java.util.Map" resultMap="EbuyRevenueSignalAmountMap">
+		SELECT distinct <include refid="revenueSignalAmountBase.queryHead_AppendTable"/>
+			,<include refid="revenueSignalAmountEbuyBase.queryHead_AppendTable"/>
+			,RSA2.f_tk_status RSAtkStatusWy, RSA2.f_amount RSAamountWy, RSA3.f_tk_status RSAtkStatusAgent, RSA3.f_amount RSAamountAgent, o.f_order_no orderNo,
+			RSA4.f_tk_status RSAtkStatusPlatform, RSA4.f_amount RSAamountPlatform, RSA5.f_tk_status RSAtkStatusSupply, RSA5.f_amount RSAamountSupply,
+			RSA5.f_role_name supplyName
+		FROM t_revenue_signal_amount RSA
+			INNER JOIN t_revenue_signal_amount_ebuy RSAE ON RSA.f_id = RSAE.t_revenue_signal_amount_id and RSAE.f_sys0_del_state = 0
+			 left join t_revenue_signal_amount RSA2 on RSA.f_goal_id = RSA2.f_goal_id and RSA.f_goal_type = RSA2.f_goal_type and RSA2.f_mini_role_type = 2 <!-- 物业 -->
+			 left join t_revenue_signal_amount RSA3 on RSA.f_goal_id = RSA3.f_goal_id and RSA.f_goal_type = RSA3.f_goal_type and RSA3.f_mini_role_type = 3 <!-- 代理 -->
+			 left join t_revenue_signal_amount RSA4 on RSA.f_goal_id = RSA4.f_goal_id and RSA.f_goal_type = RSA4.f_goal_type and RSA4.f_mini_role_type = 1 <!-- 管理员即平台 -->
+			 left join t_revenue_signal_amount RSA5 on RSA.f_goal_id = RSA5.f_goal_id and RSA.f_goal_type = RSA5.f_goal_type and RSA5.f_mini_role_type = 5 <!-- 店主 -->
+			 inner join t_ebuy_delivery_order d on d.f_id = RSA.f_goal_id
+			 inner join t_ebuy_order o on d.t_ebuy_order_f_id = o.f_id
+		<include refid="ebuyRevenueWhere" />
+		order by RSA.f_goal_rev_time desc
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<select id="selectEbuyRevenueSignalAmountExportList" parameterType="java.util.Map" resultMap="EbuyRevenueSignalAmountExportMap">
+		SELECT distinct <include refid="revenueSignalAmountBase.queryHead_AppendTable"/>
+			,<include refid="revenueSignalAmountEbuyBase.queryHead_AppendTable"/>
+			,RSA2.f_tk_status RSAtkStatusWy, RSA2.f_amount RSAamountWy, RSA3.f_tk_status RSAtkStatusAgent, RSA3.f_amount RSAamountAgent, o.f_order_no orderNo,
+			RSA4.f_tk_status RSAtkStatusPlatform, RSA4.f_amount RSAamountPlatform, RSA5.f_tk_status RSAtkStatusSupply, RSA5.f_amount RSAamountSupply,
+			RSA5.f_role_name supplyName,
+			<!-- p.f_id productId, --> p.f_name productName, ohp.f_product_qty qty, ohp.f_product_price/100 salePrice,
+			ohp.f_purchase_price/100 settlementPrice, <!-- ohp.f_delivery_real_fee deliveFee,-->
+			d.f_delivery_real_fee/100 jfqFee, d.f_delivery_settlement_fee/100 deliveFee,
+			o.f_deliv_address_detail deliveAddress, o.f_deliv_phone delivePhone, o.f_deliv_people_name delivePeople
+		FROM t_revenue_signal_amount RSA
+			INNER JOIN t_revenue_signal_amount_ebuy RSAE ON RSA.f_id = RSAE.t_revenue_signal_amount_id and RSAE.f_sys0_del_state = 0
+			left join t_revenue_signal_amount RSA2 on RSA.f_goal_id = RSA2.f_goal_id and RSA.f_goal_type = RSA2.f_goal_type and RSA2.f_mini_role_type = 2
+			 left join t_revenue_signal_amount RSA3 on RSA.f_goal_id = RSA3.f_goal_id and RSA.f_goal_type = RSA3.f_goal_type and RSA3.f_mini_role_type = 3
+			 left join t_revenue_signal_amount RSA4 on RSA.f_goal_id = RSA4.f_goal_id and RSA.f_goal_type = RSA4.f_goal_type and RSA4.f_mini_role_type = 1 <!-- 管理员即平台 -->
+			 left join t_revenue_signal_amount RSA5 on RSA.f_goal_id = RSA5.f_goal_id and RSA.f_goal_type = RSA5.f_goal_type and RSA5.f_mini_role_type = 5
+			 inner join t_ebuy_delivery_order d on d.f_id = RSA.f_goal_id
+			 inner join t_ebuy_order o on d.t_ebuy_order_f_id = o.f_id
+			 inner join t_ebuy_delivery_order_product dop on dop.t_ebuy_delivery_order_f_id = d.f_id
+			 inner join t_ebuy_order_has_t_ebuy_product ohp on ohp.f_id = dop.t_ebuy_order_has_t_ebuy_product_f_id
+			 inner join t_ebuy_product_shelf ps on ps.f_id = ohp.t_ebuy_product_f_id
+			 inner join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id
+		<include refid="ebuyRevenueWhere" />
+		order by RSA.f_goal_rev_time desc
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<select id="selectEbuyRevenueSignalAmountCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT count(distinct RSA.f_id)
+		FROM t_revenue_signal_amount RSA
+			INNER JOIN t_revenue_signal_amount_ebuy RSAE ON RSA.f_id = RSAE.t_revenue_signal_amount_id and RSAE.f_sys0_del_state = 0
+			left join t_revenue_signal_amount RSA2 on RSA.f_goal_id = RSA2.f_goal_id and RSA.f_goal_type = RSA2.f_goal_type and RSA2.f_mini_role_type = 2
+			 left join t_revenue_signal_amount RSA3 on RSA.f_goal_id = RSA3.f_goal_id and RSA.f_goal_type = RSA3.f_goal_type and RSA3.f_mini_role_type = 3
+			 left join t_revenue_signal_amount RSA4 on RSA.f_goal_id = RSA4.f_goal_id and RSA.f_goal_type = RSA4.f_goal_type and RSA4.f_mini_role_type = 1 <!-- 管理员即平台 -->
+			 left join t_revenue_signal_amount RSA5 on RSA.f_goal_id = RSA5.f_goal_id and RSA.f_goal_type = RSA5.f_goal_type and RSA5.f_mini_role_type = 5
+			 inner join t_ebuy_delivery_order d on d.f_id = RSA.f_goal_id
+			 inner join t_ebuy_order o on d.t_ebuy_order_f_id = o.f_id
+		<include refid="ebuyRevenueWhere" />
+	</select>
+	
+	<select id="selectEbuyRevenueTotal" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.revenue.entity.EbuyRevenueTotal">
+		select
+				sum(f_amount_total) totalAmountDiscount,
+				sum(f_amount_refund) totalAmountReal,
+				sum(f_amout_deduct) totalPlatformUse,
+				sum(RSA.f_amount) totalAmount,
+				sum(RSA2.f_amount) totalWy,
+				sum(RSA3.f_amount) totalAgent,
+				sum(RSA4.f_amount) totalPlatform,
+				sum(RSA5.f_amount) totalSupply,
+				sum(RSAE.f_amount_discount) totalOrderDiscount, 
+				sum(RSAE.f_amount_real) totalOrderReal
+		    FROM t_revenue_signal_amount RSA
+			  INNER JOIN t_revenue_signal_amount_ebuy RSAE ON RSA.f_id = RSAE.t_revenue_signal_amount_id and RSAE.f_sys0_del_state = 0
+			  left join t_revenue_signal_amount RSA2 on RSA.f_goal_id = RSA2.f_goal_id and RSA.f_goal_type = RSA2.f_goal_type and RSA2.f_mini_role_type = 2
+			 left join t_revenue_signal_amount RSA3 on RSA.f_goal_id = RSA3.f_goal_id and RSA.f_goal_type = RSA3.f_goal_type and RSA3.f_mini_role_type = 3
+			 left join t_revenue_signal_amount RSA4 on RSA.f_goal_id = RSA4.f_goal_id and RSA.f_goal_type = RSA4.f_goal_type and RSA4.f_mini_role_type = 1 <!-- 管理员即平台 -->
+			 left join t_revenue_signal_amount RSA5 on RSA.f_goal_id = RSA5.f_goal_id and RSA.f_goal_type = RSA5.f_goal_type and RSA5.f_mini_role_type = 5
+			 inner join t_ebuy_delivery_order d on d.f_id = RSA.f_goal_id
+			 inner join t_ebuy_order o on d.t_ebuy_order_f_id = o.f_id
+		<include refid="ebuyRevenueWhere" />	
+	</select>
+	
+	<select id="selectRevenueSignalAmountCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT count(*)
+		FROM t_revenue_signal_amount RSA
+		where RSA.f_sys0_del_state = 0
+		<if test="projectType != null"> and RSA.f_goal_type = #{projectType} </if>
+		<choose>
+			<when test="userRole == 13">
+				<if test="userRole != null"> and RSA.f_mini_role_type = 2 </if>
+				<if test="roleId != null"> and RSA.t_property_management_f_id = #{roleId} </if>
+			</when>
+			<otherwise>
+				<if test="userRole != null"> and RSA.f_mini_role_type = #{userRole} </if>
+				<if test="roleId != null"> and RSA.f_mini_role_id = #{roleId} </if>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="isPropertyManagerRevenuet" parameterType="java.util.Map" resultType="Integer">
+		select count(*) from t_property_management t
+ 			where t.f_is_open_receivables = 1
+		<if test="roleId != null"> and t.f_id  = #{roleId} </if>
+	</select>
+	
+	<!-- 楼下店等超市收益中心结算  结束 -->
+	
+	<update id="update_RevenueSignalAmount_RoleName_PropertyCompany">
+		UPDATE t_revenue_signal_amount RSA
+			INNER JOIN t_property_company PC ON RSA.f_mini_role_id = PC.f_id AND PC.f_sys0_del_state = 0
+		SET RSA.f_role_name = IFNULL(PC.f_name,'')
+		WHERE 1=1
+		AND RSA.f_mini_role_type = 2
+		AND RSA.f_sys0_del_state = 0
+		AND RSA.f_role_name = ''
+	</update>
+	<update id="update_RevenueSignalAmount_RoleName_PropertyAgent">
+		UPDATE t_revenue_signal_amount RSA
+			INNER JOIN t_channel_partner CP ON RSA.f_mini_role_id = CP.f_id AND CP.f_sys0_del_state = 0
+		SET RSA.f_role_name = IFNULL(CP.f_company_name,IFNULL(CP.f_name,''))
+		WHERE 1=1
+		AND RSA.f_mini_role_type = 3
+		AND RSA.f_sys0_del_state = 0
+		AND RSA.f_role_name = ''
+	</update>
+	
+	<!-- 获取最近申请提款截止的时间 -->
+	<select id="select_Last_ApplyGoalEndTime" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT date_format(MAX(RA.f_goal_end_time),'%Y-%m-%d %T')
+		FROM t_revenue_apply RA
+		WHERE 1=1
+		AND RA.f_mini_role_type = #{miniRoleType} <!-- 所属最小粒度角色类型=="1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主" -->
+		AND RA.f_goal_type = #{goalType} <!-- 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"} -->
+		<choose>
+			<when test="miniRoleType == 13">
+				AND RA.t_property_management_f_id = #{miniRoleId}
+			</when>
+			<otherwise>
+				AND RA.f_mini_role_id = #{miniRoleId}
+			</otherwise>
+		</choose>
+		AND RA.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 标记sig提款状态为提款中 -->
+	<update id="update_RevenueSignalAmount_AsDoing" parameterType="java.util.Map">
+		UPDATE t_revenue_signal_amount RSA
+		 <if test="miniRoleType == 2 or miniRoleType == 13">
+		 	left join t_group_building gb on gb.f_id=RSA.t_group_building_id
+			left join t_property_management pm on pm.f_id=gb.t_property_management_f_id
+		 </if>
+		SET RSA.f_tk_status = 2 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+			,RSA.f_rev_apply_id = #{applyAddId}
+			,RSA.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		<!-- 所属最小粒度角色类型=="1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主" -->
+       	<if test="miniRoleType == 2">
+       		AND RSA.f_mini_role_type = 2
+			AND (pm.f_is_open_receivables=0 OR pm.f_is_open_receivables IS NULL)
+		</if>
+       	<if test="miniRoleType == 13">
+        	AND RSA.f_mini_role_type = 2
+			AND pm.f_is_open_receivables=1
+       	</if>
+       	<if test="miniRoleType != 2 and miniRoleType != 13">
+       		AND RSA.f_mini_role_type = #{miniRoleType}
+       	</if>
+		AND RSA.f_goal_type = #{goalType} <!-- 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"} -->
+		<choose>
+			<when test="miniRoleType == 13 and applyAddId == -1">AND RSA.t_group_building_id = #{gdId}</when>
+			<when test="miniRoleType == 13 and applyAddId != -1">AND RSA.t_property_management_f_id = #{miniRoleId}</when>
+			<otherwise>AND RSA.f_mini_role_id = #{miniRoleId}</otherwise>
+		</choose>
+		<if test="goalStartTime != null and goalStartTime!='' "> AND RSA.f_goal_rev_time >= DATE_SUB(#{goalStartTime}, INTERVAL 15 DAY)  </if> <!-- 最后一次产生收益之前15天之后的才可以提，之前的历史数据不处理了 Added by wenfq 添加的注释 -->
+		AND #{goalEndTime} > RSA.f_goal_rev_time
+		AND RSA.f_tk_status = 1 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+		<if test="optType == 1"><!-- 操作类型=={"1":"用户手工操作","2":"系统自动创建"} -->
+			AND RSA.f_goal_type != 15 
+		</if>
+		AND RSA.f_sys0_del_state = 0
+	</update>
+	
+	<!-- 从明细中查询对应提款单总额 -->
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.RevenueMoneyShow" id="revenueMoneyShow_Map">
+		<result column="ext_totalAmount" javaType="java.lang.Double" property="totalAmount"/>
+		<result column="ext_amountPtbt" javaType="java.lang.Double" property="amountPtbt"/>
+		<result column="ext_amountUsrReal" javaType="java.lang.Double" property="amountUsrReal"/>
+		<result column="refundAmount" javaType="java.lang.Double" property="refundAmount" />
+	</resultMap>
+	<select id="select_RevenueApplyTotal_FromDetail" parameterType="java.util.Map" resultMap="revenueMoneyShow_Map">
+		SELECT 
+		IFNULL(SUM(RSA.f_amount),0) AS ext_totalAmount
+		,IFNULL(SUM(RSA.f_amount_ptbt),0) AS ext_amountPtbt
+		,IFNULL(SUM(RSA.f_amount_usr_real),0) AS ext_amountUsrReal
+		,IFNULL(SUM(RSAE.f_amount_refund),0) AS refundAmount
+		FROM t_revenue_signal_amount RSA
+			left join t_revenue_signal_amount_ebuy RSAE on RSAE.t_revenue_signal_amount_id = RSA.f_id
+		WHERE 1=1
+		AND RSA.f_rev_apply_id = #{applyAddId}
+		AND RSA.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 从明细中查询对应提款单总额 -->
+	<select id="select_RevenueApplyTotal_ByTime" parameterType="java.util.Map" resultType="java.lang.Double">
+		SELECT IFNULL(SUM(RSA.f_amount),0)
+		FROM t_revenue_signal_amount RSA
+		WHERE 1=1
+		AND RSA.f_goal_type = #{goalType} <!-- 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"} -->
+		<choose>
+			<when test="miniRoleType == 13">
+				AND RSA.t_property_management_f_id = #{miniRoleId}
+				AND RSA.f_mini_role_type = 2 <!-- 所属最小粒度角色类型=="1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主" -->
+			</when>
+			<otherwise>
+				AND RSA.f_mini_role_id = #{miniRoleId}
+				AND RSA.f_mini_role_type = #{miniRoleType} <!-- 所属最小粒度角色类型=="1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主" -->
+			</otherwise>
+		</choose>
+		<!-- <if test="goalStartTime != null and goalStartTime!='' "> AND RSA.f_goal_rev_time >= #{goalStartTime} </if> -->
+		AND #{goalEndTime} > RSA.f_goal_rev_time
+		AND RSA.f_tk_status = 1 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+		AND RSA.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 提款中转为已结算 -->
+	<update id="update_RevenueApply_AsFinished" parameterType="java.util.Map">
+		UPDATE t_revenue_apply RA
+			INNER JOIN t_revenue_signal_amount RSA ON RSA.f_rev_apply_id = #{applyId} AND RSA.f_sys0_del_state = 0
+				AND RSA.f_tk_status = 2 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+		SET RA.f_tk_status = 3 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+			,RA.f_sys0_upd_user = #{operUserId}
+			,RA.f_tk_succ_time = NOW()
+			,RSA.f_tk_status = 3
+			,RSA.f_sys0_upd_user = #{operUserId}
+			,RSA.f_tk_succ_time = NOW()
+		WHERE 1=1
+		AND RA.f_id = #{applyId}
+		AND RA.f_tk_status = 2 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+		AND RA.f_sys0_del_state = 0
+	</update>
+	
+	<!-- 提款中转为已结算 -->
+	<update id="update_RevenueApply_AsFinished_Batch" parameterType="java.util.Map">
+		UPDATE t_revenue_apply RA
+			INNER JOIN t_revenue_signal_amount RSA ON RSA.f_rev_apply_finance_id = RA.f_id AND RSA.f_sys0_del_state = 0
+				AND RSA.f_tk_status = 2 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+			inner join t_revenue_apply ra2 on ra2.f_rev_apply_finance_id = ra.f_id and ra2.f_sys0_del_state = 0
+				and ra2.f_tk_status = 2 and ra2.f_visible_type = 2
+		SET RA.f_tk_status = 3 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+			,RA.f_sys0_upd_user = #{operUserId}
+			,RA.f_tk_succ_time = NOW()
+			,ra2.f_tk_status = 3 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+			,ra2.f_sys0_upd_user = #{operUserId}
+			,ra2.f_tk_succ_time = NOW()
+			,RSA.f_tk_status = 3
+			,RSA.f_sys0_upd_user = #{operUserId}
+			,RSA.f_tk_succ_time = NOW()
+		WHERE 1=1
+		AND RA.f_id IN 
+		<foreach item="item" collection="applyIdList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		AND RA.f_tk_status = 2 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+		AND RA.f_sys0_del_state = 0
+		and RA.f_visible_type = 1
+	</update>
+	
+	<!-- 购销电商供应商提款中转为已结算 -->
+	<update id="update_revenueApply_with_merchant" parameterType="java.util.Map">
+		UPDATE t_revenue_apply RA
+		SET RA.f_tk_status = 3 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+			,RA.f_sys0_upd_user = #{operUserId}
+			,RA.f_tk_succ_time = NOW()			
+		WHERE 1=1
+		AND RA.f_id IN 
+		<foreach item="item" collection="applyIdList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		AND RA.f_tk_status = 2 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+		AND RA.f_sys0_del_state = 0
+	</update>
+	
+	<!-- 更新apply的备份信息 -->
+	<update id="update_RevenueApply_BakInfo_PropertyCompany" parameterType="java.util.Map">
+		UPDATE t_revenue_apply RA
+			INNER JOIN t_property_company PC ON RA.f_mini_role_id = PC.f_id AND PC.f_sys0_del_state = 0
+		SET RA.f_role_name = IFNULL(PC.f_name,'') 
+			,RA.f_b_phone = IFNULL(f_mobile_phone,IFNULL(PC.f_tel,''))  
+			,RA.f_b_connect_name = IFNULL(PC.f_linkMan,'')
+			,RA.f_b_bank_no = IFNULL(PC.f_account_no,'')
+			,RA.f_account_name = IFNULL(PC.f_account_name,'')
+			,RA.f_b_bank_name = IFNULL(PC.f_bank_name,'')
+			,RA.f_bank_branch = IFNULL(PC.f_bank_branch,'')
+			,RA.f_bank_province = IFNULL(PC.f_bank_province,'')
+			,RA.f_bank_city = IFNULL(PC.f_bank_city,'')
+		WHERE RA.f_id = #{applyId}
+		AND RA.f_mini_role_type = 2
+		AND RA.f_sys0_del_state = 0
+	</update>
+	<update id="update_RevenueApply_BakInfo_PropertyManagement" parameterType="java.util.Map">
+		UPDATE t_revenue_apply RA
+		INNER JOIN (
+			SELECT
+				_RSA.*
+			FROM
+				t_revenue_signal_amount _RSA
+			WHERE
+				_RSA.f_rev_apply_id = #{applyId}
+				AND _RSA.t_group_building_id IS NOT NULL
+			LIMIT 1
+		) RSA
+		INNER join t_group_building GB on GB.f_id=RSA.t_group_building_id
+		INNER join t_property_management PM on PM.f_id=GB.t_property_management_f_id
+		LEFT JOIN t_property_company PC ON PC.f_id=PM.t_property_company_f_id
+		<!-- 管理处的提款单：角色写成物业公司，银行卡号取管理处的卡号 -->
+		SET RA.f_role_name = IFNULL(PC.f_name,'') 
+			,RA.f_b_phone = IFNULL(PM.f_tel,'')  
+			,RA.f_b_connect_name = IFNULL(PM.f_person_charge_name,'')
+			,RA.f_b_bank_no = IFNULL(PM.f_account_no,'')
+			,RA.f_account_name = IFNULL(PM.f_account_name,'')
+			,RA.f_b_bank_name = IFNULL(PM.f_bank_name,'')
+			,RA.f_bank_branch = IFNULL(PM.f_bank_branch,'')
+			,RA.f_bank_province = IFNULL(PM.f_bank_province,'')
+			,RA.f_bank_city = IFNULL(PM.f_bank_city,'')
+		WHERE RA.f_id = #{applyId}
+	</update>
+	<update id="update_RevenueApply_BakInfo_PropertyAgent" parameterType="java.util.Map">
+		UPDATE t_revenue_apply RA
+			INNER JOIN t_channel_partner CP ON RA.f_mini_role_id = CP.f_id AND CP.f_sys0_del_state = 0
+		SET RA.f_role_name = IFNULL(CP.f_company_name,IFNULL(CP.f_name,''))
+			,RA.f_b_phone = IFNULL(CP.f_phone,'')
+			,RA.f_b_connect_name = IFNULL(CP.f_name,'')
+			,RA.f_b_bank_no = IFNULL(CP.f_bank_card_no,'')
+			,RA.f_account_name = IFNULL(CP.f_bank_account_name,'')
+			,RA.f_b_bank_name = IFNULL(CP.f_bank_name,'')
+			,RA.f_bank_branch = IFNULL(CP.f_bank_branch,'')
+			,RA.f_bank_province = IFNULL(CP.f_bank_province,'')
+			,RA.f_bank_city = IFNULL(CP.f_bank_city,'')
+		WHERE RA.f_id = #{applyId}
+		AND RA.f_mini_role_type = 3
+		AND RA.f_sys0_del_state = 0
+	</update>
+	<update id="update_RevenueApply_BakInfo_DownstairStore" parameterType="java.util.Map">
+		UPDATE t_revenue_apply RA
+			INNER JOIN t_ebuy_supply_merchant SM ON RA.f_mini_role_id = SM.f_id AND SM.f_sys0_del_state = 0
+			LEFT JOIN t_ebuy_supply_merchant_bank_account SMBA on SMBA.t_supply_merchant_id = SM.f_id
+		SET RA.f_role_name = IFNULL(SM.f_name,'')
+			,RA.f_b_phone = IFNULL(SM.f_tel,'')
+			,RA.f_b_connect_name = IFNULL(SM.f_link_name,'')
+			,RA.f_b_bank_no = IFNULL(SMBA.f_account_bank,'')
+			,RA.f_account_name = IFNULL(SMBA.f_account_name,'')
+			,RA.f_b_bank_name = IFNULL(SMBA.f_bank_name,'')
+			,RA.f_bank_branch = IFNULL(SMBA.f_bank_branch,'')
+			,RA.f_bank_province = IFNULL(SMBA.f_bank_province,'')
+			,RA.f_bank_city = IFNULL(SMBA.f_bank_city,'')
+		WHERE RA.f_id = #{applyId}
+		AND RA.f_mini_role_type = 5
+		AND RA.f_sys0_del_state = 0
+	</update>
+	
+	<update id="update_RevenueApply_BakInfo_RepairMaster" parameterType="java.util.Map">
+       	UPDATE t_revenue_apply RA
+		JOIN t_user U ON RA.f_mini_role_id = U.f_id
+		AND U.f_sys0_del_state = 0
+		JOIN t_dredge_worker DW ON DW.t_user_f_id = U.f_id
+		JOIN t_dredge_bank_card DBC ON DBC.t_user_f_id = U.f_id
+		AND DBC.f_is_default = 1
+		SET RA.f_role_name = IFNULL(DW.f_real_name, ''),
+		 RA.f_b_phone = IFNULL(U.f_mobile, ''),
+		 RA.f_b_connect_name = IFNULL(DW.f_real_name, ''),
+		 RA.f_account_name = IFNULL(DBC.f_owner_name, ''),
+		 RA.f_b_bank_no = IFNULL(DBC.f_bank_no, ''),
+		 RA.f_b_bank_name = DBC.f_bank_name,
+		 RA.f_bank_branch = DBC.f_bank_branch_name,
+		 RA.f_bank_province = DBC.f_bank_province,
+		 RA.f_bank_city = DBC.f_bank_city
+		WHERE
+			1 = 1
+		AND RA.f_id = #{applyId}
+		AND RA.f_mini_role_type = 6
+		AND RA.f_sys0_del_state = 0;
+	</update>
+	
+	<update id="update_RevenueApply_BakInfo_RepairRecommend" parameterType="java.util.Map">
+		UPDATE t_revenue_apply RA
+		JOIN t_user U ON RA.f_mini_role_id = U.f_id
+		AND U.f_sys0_del_state = 0
+		JOIN t_dredge_bank_card DBC ON DBC.t_user_f_id = U.f_id
+		AND DBC.f_is_default = 1
+		SET RA.f_role_name = IFNULL(U.f_mobile, ''),
+		 RA.f_b_phone = IFNULL(U.f_mobile, ''),
+		 RA.f_b_connect_name = IFNULL(DBC.f_owner_name, ''),
+		 RA.f_account_name = IFNULL(DBC.f_owner_name, ''),
+		 RA.f_b_bank_no = IFNULL(DBC.f_bank_no, ''),
+		 RA.f_b_bank_name = DBC.f_bank_name,
+		 RA.f_bank_branch = DBC.f_bank_branch_name,
+		 RA.f_bank_province = DBC.f_bank_province,
+		 RA.f_bank_city = DBC.f_bank_city
+		WHERE
+			1 = 1
+		AND RA.f_id = #{applyId}
+		AND RA.f_mini_role_type = 7
+		AND RA.f_sys0_del_state = 0;
+	</update>
+	
+	<update id="update_RevenueApply_BakInfo_LivingFeePay" parameterType="map">
+		UPDATE t_revenue_apply RA
+		JOIN t_oms_user ou ON RA.f_mini_role_id = ou.f_id AND ou.f_sys0_del_state = 0
+		JOIN t_oms_user_bank_info b on b.t_oms_user_f_id = ou.f_id
+		SET RA.f_role_name = IFNULL(ou.f_real_name, ''),
+		 RA.f_b_phone = IFNULL(ou.f_tel_phone, ''),
+		 RA.f_b_connect_name = IFNULL(ou.f_real_name, ''),
+		 RA.f_account_name = IFNULL(b.f_bank_account_name, ''),
+		 RA.f_b_bank_no = IFNULL(b.f_bank_card_no, ''),
+		 RA.f_b_bank_name = b.f_bank_name,
+		 RA.f_bank_branch = b.f_bank_branch,
+		 RA.f_bank_province = b.f_bank_province,
+		 RA.f_bank_city = b.f_bank_city
+		WHERE
+			1 = 1
+		AND RA.f_id = #{applyId}
+		And RA.f_goal_type = 18
+		AND RA.f_sys0_del_state = 0;
+	</update>
+	
+	<!-- 查询系统可提补贴款的物业公司Id列表，且当前日期是小区缴费周期的前一天或当天 -->
+	<select id="select_SysApply_ToDo_Company_List" resultType="java.math.BigInteger">
+		SELECT DISTINCT RSA.f_mini_role_id
+		FROM t_revenue_signal_amount RSA
+			INNER JOIN t_group_building GB ON GB.t_property_company_f_id = RSA.f_mini_role_id AND GB.f_sys0_del_state = 0
+				AND (GB.f_pay_period_end =DATE_FORMAT(date_add(CURDATE(),interval -1 day),"%d")) <!-- 缴费第二天 -->
+		WHERE 1=1
+		AND RSA.f_mini_role_type = 2 <!-- 所属最小粒度角色类型=="1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主" -->
+		AND RSA.f_goal_type = 15 <!-- 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"} -->
+		AND RSA.f_tk_status = 1 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+		AND RSA.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询系统可提补贴款的物业公司或代理Id列表 -->
+	<select id="select_SysApply_ToDo_List" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT 
+		<choose>
+			<when test="pcType != null and pcType == false">DISTINCT RSA.t_group_building_id f_mini_role_id</when> <!-- 物业管理处 把小区ID返回为miniRoleId -->
+			<otherwise>DISTINCT RSA.f_mini_role_id</otherwise>
+		</choose>
+		FROM t_revenue_signal_amount RSA
+		  <if test="isPc != null and isPc == true">
+			inner join t_property_company pc on RSA.f_mini_role_id = pc.f_id AND pc.f_sys0_del_state = 0
+			left join t_group_building gb on gb.f_id=RSA.t_group_building_id
+			left join t_property_management pm on pm.f_id=gb.t_property_management_f_id
+		  </if>
+		  <if test="isAgent != null and isAgent == true">
+			inner join t_channel_partner cp on RSA.f_mini_role_id = cp.f_id AND cp.f_sys0_del_state = 0
+			left join t_group_building gb on gb.f_id=RSA.t_group_building_id
+		  </if>
+		<where>
+			<if test="roleType">and RSA.f_mini_role_type = #{roleType} </if> <!-- 所属最小粒度角色类型=="1":"系统管理员","2":"物业公司角色","3":"代理商","4":"财务人员","5":"楼下店铺店主" -->
+			<if test="goalType">and RSA.f_goal_type = #{goalType} </if> <!-- 提款对象类型=={"1":"认证门牌","2":"服务类订单","3":"物业宝佣金","4":"超市收益","5":"物业费实收","15":"物业补贴"} -->
+			AND RSA.f_tk_status = 1 <!-- 提款状态=={"1":"未提款","2":"提款中","3":"已结算"} -->
+			AND RSA.f_sys0_del_state = 0
+			<choose>
+				<when test="pcType != null and pcType == false"> <!-- 物业管理处 -->
+					AND pm.f_is_open_receivables=1 
+					<!-- 物业管理处银行卡信息不能为空 begin -->
+					AND (pm.f_account_no is not null and pm.f_account_no!='')
+					AND (pm.f_account_name is not null and pm.f_account_name!='')
+					AND (pm.f_bank_name is not null and pm.f_bank_name!='')
+					AND (pm.f_bank_branch is not null and pm.f_bank_branch!='')
+					<!-- 物业管理处银行卡信息不能为空 end -->
+					and (pm.f_settlement_day is not null and ((pm.f_settlement_day > day(last_DAY(now())) and day(now()) = day(last_DAY(now()))) or (pm.f_settlement_day = day(now())))
+						or (pm.f_settlement_day is null 
+						    and ((ifnull(pc.f_revenue_date, 25) > day(last_DAY(now())) and day(now()) = day(last_DAY(now())))
+						         or(ifnull(pc.f_revenue_date, 25) = day(now())))
+						    )
+					)
+				</when>
+				<when test="pcType != null and pcType == true"> <!-- 物业公司 -->
+					AND (pm.f_is_open_receivables=0 OR pm.f_is_open_receivables IS NULL) 
+					<!-- 物业公司银行卡信息为空，不能提款：过滤掉 begin -->
+					AND (pc.f_account_no IS NOT NULL AND pc.f_account_no !='')
+					AND (pc.f_account_name IS NOT NULL AND pc.f_account_name !='')
+					AND (pc.f_bank_name IS NOT NULL AND pc.f_bank_name !='')
+					AND (pc.f_bank_branch IS NOT NULL AND pc.f_bank_branch !='')
+					<!-- 物业公司银行卡信息为空，不能提款：过滤掉 end -->
+					and ((ifnull(pc.f_revenue_date, 25) > day(last_DAY(now())) and day(now()) = day(last_DAY(now()))) or (ifnull(pc.f_revenue_date, 25)) = day(now()))
+				</when>
+			</choose>
+			<!-- 
+			<if test="isPc != null and isPc == true">  物业或管理处 
+			 如果小区有“自动结算日”，则取小区“自动结算日”；如果没有，则取物业“自动结算日”；如果物业也没有，则取25号
+			<![CDATA[
+				and ((gb.f_settlement_day is not null and ((gb.f_settlement_day > day(last_DAY(now())) and day(now()) = day(last_DAY(now()))) or (gb.f_settlement_day = day(now())))
+				     or 
+			]]>
+			</if>
+			 -->
+			<if test="isAgent != null and isAgent == true">
+				<!-- 代理商银行卡信息为空，不能提款：过滤掉 begin -->
+				AND (cp.f_bank_card_no IS NOT NULL AND cp.f_bank_card_no!='')
+				AND (cp.f_bank_account_name IS NOT NULL AND cp.f_bank_account_name!='')
+				AND (cp.f_bank_name IS NOT NULL AND cp.f_bank_name!='')
+				AND (cp.f_bank_branch IS NOT NULL AND cp.f_bank_branch!='')
+				<!-- 代理商银行卡信息为空，不能提款：过滤掉 end -->
+				<![CDATA[
+					and (ifnull(cp.f_revenue_date, 25) > day(last_DAY(now())) and day(now()) = day(last_DAY(now()))) or (ifnull(cp.f_revenue_date, 25)) = day(now())
+				]]>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 获取物业公司的历史未标记结算的实收账单起止月份 -->
+	<select id="select_PropertyRealPay_History_Month" parameterType="java.util.Map"
+		resultType="com.cnfantasia.server.ms.revenue.entity.BeginEndDate">
+		SELECT MIN(PB.f_sys0_upd_time) AS begin,MAX(PB.f_sys0_upd_time) AS end
+		FROM t_property_company PC
+			INNER JOIN t_group_building GB ON GB.t_property_company_f_id = #{companyId} AND GB.f_sys0_del_state = 0
+			INNER JOIN t_building B ON GB.f_id = B.t_group_building_f_id AND B.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON B.f_id = RR.t_building_f_id AND RR.f_sys0_del_state = 0
+			INNER JOIN t_pay_bill PB ON RR.f_id = PB.t_real_room_f_id AND PB.f_sys0_del_state = 0
+				AND PB.f_is_pay = 1 <!-- 缴费状态=={"1":"已缴费","2":"未缴费"} -->
+				AND PB.f_payment_way in (1, 3) <!-- 缴费方式=={"1":"在解放区缴费","2":"物业公司手工标记","3":"缴费卡代扣"} -->
+				AND PB.f_paytime_type = 1 <!-- 缴费时间方式=={"1":"月度缴费","2":"周期缴费"} -->
+				AND DATE_SUB(CURDATE(), INTERVAL 1 MONTH) >= PB.f_sys0_upd_time <!-- 上个月缴费及之前的月份 -->
+				AND NOT EXISTS(
+					SELECT RSA.f_id
+					FROM t_revenue_signal_amount RSA
+					WHERE 1=1
+					AND RSA.f_sys0_del_state = 0
+					AND RSA.f_mini_role_type = 2 <!-- 所属最小粒度角色类型=={"2":"物业公司角色"} -->
+					AND RSA.f_goal_type = 5 <!-- 提款对象类型=={"5":"物业费实收"} -->
+					AND RSA.f_goal_id = PB.f_id
+				)
+		WHERE 1=1
+		AND PC.f_sys0_del_state = 0
+		AND PC.f_id = #{companyId}
+	</select>
+	
+	<!-- 根据物业公司查询对应的小区跨越月份 -->
+	<!-- <select id="select_GbMonthChange_ByCompanyId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		
+	</select> -->
+	
+	<!-- 查询物业代收类提款单所对应的 账单id列表 -->
+	<select id="selectPayBill_idList" parameterType="java.math.BigInteger" resultType="java.math.BigInteger">
+		SELECT
+		pb.f_id
+		FROM
+			t_pay_bill pb
+		JOIN t_revenue_signal_amount rsa ON rsa.f_goal_id = pb.f_id
+		JOIN t_revenue_apply ra ON ra.f_id = rsa.f_rev_apply_id
+		WHERE
+			rsa.f_amount &gt; 0
+			and (ra.f_id = #{raId} or ra.f_rev_apply_finance_id = #{raId}) 
+			and ra.f_goal_type in (5,7,15);
+	</select>
+	
+		
+	<!-- 查询师傅补贴金额 -->
+	<select id="select_dredge_amount_ptbt" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.ms.revenue.entity.DredgeRevenue">
+		SELECT
+			IFNULL(RSAE.f_amount_order_real, 0) AS amountOrderReal, IFNULL(RSA.f_src_money, 0) AS srcMoney, IFNULL(RSA4.f_amount, 0) AS amountRepair
+		FROM
+			t_revenue_signal_amount RSA
+			INNER JOIN t_dredge_bill DB ON DB.f_id = RSA.f_goal_id
+			INNER JOIN t_revenue_signal_amount_ebuy RSAE ON RSA.f_id = RSAE.t_revenue_signal_amount_id AND RSAE.f_sys0_del_state = 0
+			LEFT JOIN t_revenue_signal_amount RSA4 ON DB.f_id = RSA4.f_goal_id AND RSA4.f_mini_role_type = 6 AND RSA4.f_goal_type = 2 AND RSA.f_goal_detail_type = RSA4.f_goal_detail_type
+		WHERE
+			RSA.f_rev_apply_id = #{applyId}
+			AND RSA.f_sys0_del_state = 0
+	</select>
+
+	<!-- 付款到物业公司的账单，将其收益明细直接标为“已结算” -->
+	<update id="updateRevnueSignalAmountToSettled">
+		update t_revenue_signal_amount rsa
+		JOIN t_pay_bill pb on pb.f_id = rsa.f_goal_id and pb.f_sys0_del_state = 0
+		JOIN t_ebuy_order_has_t_pay_bill eopb on eopb.t_pay_bill_f_id = pb.f_id and eopb.f_sys0_del_state = 0
+		JOIN t_ebuy_order eo on eo.f_id = eopb.t_ebuy_order_f_id and eo.f_sys0_del_state = 0 and eo.f_pay_status = 2
+		JOIN t_ebuy_order_relation eor on eor.f_sub_id = eo.f_id and eor.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_order_ext eoe ON eoe.t_ebuy_order_f_id = eor.f_parent_id and eoe.f_sys0_del_state = 0
+		set rsa.f_tk_status = 3, rsa.f_sys0_upd_time = SYSDATE(), rsa.f_sys0_upd_user = 1
+		where rsa.f_sys0_del_state = 0
+		and rsa.f_mini_role_type in (2, 13) and rsa.f_goal_type in (5,6,7)
+		and rsa.f_tk_status = 1
+		and eoe.f_payment_to in (1,2)
+	</update>
+</mapper>

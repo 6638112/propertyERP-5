@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:OMS功能表 t_oms_permi_function -->
+<mapper namespace="omsPermiFunctionBase">
+	<resultMap type="OmsPermiFunction" id="omsPermiFunctionBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 功能名称 -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 功能描述 -->        <result column="f_action" javaType="java.lang.String" property="action"/>  <!-- 功能入口 -->        <result column="f_param" javaType="java.lang.String" property="param"/>  <!-- 参数信息 -->        <result column="f_status" javaType="java.lang.Integer" property="status"/>  <!-- 功能状态 -->        <result column="f_menu_flag" javaType="java.lang.Integer" property="menuFlag"/>  <!-- 是否为菜单 -->        <result column="f_level" javaType="java.lang.Integer" property="level"/>  <!-- 功能级次，默认为根级（1级） -->        <result column="f_parnetId" javaType="java.math.BigInteger" property="parnetid"/>  <!-- 父级功能菜单ID -->        <result column="f_number" javaType="java.lang.String" property="number"/>  <!-- 编码 -->        <result column="f_longNumber" javaType="java.lang.String" property="longnumber"/>  <!-- 长编码，= 父级长编码!本级编码，用于菜单排序 -->        <result column="f_isLeaf" javaType="java.lang.Integer" property="isleaf"/>  <!-- 是否为叶子 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="OmsPermiFunction" id="omsPermiFunctionExtendMap" extends="omsPermiFunctionBaseMap">
+	</resultMap>
+	<resultMap type="OmsPermiFunction" id="omsPermiFunctionBaseMap_AppendTable">
+        <id column="omsPermiFunction_f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="omsPermiFunction_f_name" javaType="java.lang.String" property="name"/>  <!-- 功能名称 -->        <result column="omsPermiFunction_f_desc" javaType="java.lang.String" property="desc"/>  <!-- 功能描述 -->        <result column="omsPermiFunction_f_action" javaType="java.lang.String" property="action"/>  <!-- 功能入口 -->        <result column="omsPermiFunction_f_param" javaType="java.lang.String" property="param"/>  <!-- 参数信息 -->        <result column="omsPermiFunction_f_status" javaType="java.lang.Integer" property="status"/>  <!-- 功能状态 -->        <result column="omsPermiFunction_f_menu_flag" javaType="java.lang.Integer" property="menuFlag"/>  <!-- 是否为菜单 -->        <result column="omsPermiFunction_f_level" javaType="java.lang.Integer" property="level"/>  <!-- 功能级次，默认为根级（1级） -->        <result column="omsPermiFunction_f_parnetId" javaType="java.math.BigInteger" property="parnetid"/>  <!-- 父级功能菜单ID -->        <result column="omsPermiFunction_f_number" javaType="java.lang.String" property="number"/>  <!-- 编码 -->        <result column="omsPermiFunction_f_longNumber" javaType="java.lang.String" property="longnumber"/>  <!-- 长编码，= 父级长编码!本级编码，用于菜单排序 -->        <result column="omsPermiFunction_f_isLeaf" javaType="java.lang.Integer" property="isleaf"/>  <!-- 是否为叶子 -->        <result column="omsPermiFunction_f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="omsPermiFunction_f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="omsPermiFunction_f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="omsPermiFunction_f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="omsPermiFunction_f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="omsPermiFunction_f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="omsPermiFunction_f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		OPF.f_id,OPF.f_name,OPF.f_desc,OPF.f_action,OPF.f_param,OPF.f_status,OPF.f_menu_flag,OPF.f_level,OPF.f_parnetId,OPF.f_number,OPF.f_longNumber,OPF.f_isLeaf,date_format(OPF.f_sys0_add_time,'%Y-%m-%d %T') as f_sys0_add_time,date_format(OPF.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time,date_format(OPF.f_sys0_del_time,'%Y-%m-%d %T') as f_sys0_del_time,OPF.f_sys0_add_user,OPF.f_sys0_upd_user,OPF.f_sys0_del_user,OPF.f_sys0_del_state
+	</sql>
+	<sql id="queryHead_AppendTable">
+		OPF.f_id as omsPermiFunction_f_id,OPF.f_name as omsPermiFunction_f_name,OPF.f_desc as omsPermiFunction_f_desc,OPF.f_action as omsPermiFunction_f_action,OPF.f_param as omsPermiFunction_f_param,OPF.f_status as omsPermiFunction_f_status,OPF.f_menu_flag as omsPermiFunction_f_menu_flag,OPF.f_level as omsPermiFunction_f_level,OPF.f_parnetId as omsPermiFunction_f_parnetId,OPF.f_number as omsPermiFunction_f_number,OPF.f_longNumber as omsPermiFunction_f_longNumber,OPF.f_isLeaf as omsPermiFunction_f_isLeaf,date_format(OPF.f_sys0_add_time,'%Y-%m-%d %T') as omsPermiFunction_f_sys0_add_time,date_format(OPF.f_sys0_upd_time,'%Y-%m-%d %T') as omsPermiFunction_f_sys0_upd_time,date_format(OPF.f_sys0_del_time,'%Y-%m-%d %T') as omsPermiFunction_f_sys0_del_time,OPF.f_sys0_add_user as omsPermiFunction_f_sys0_add_user,OPF.f_sys0_upd_user as omsPermiFunction_f_sys0_upd_user,OPF.f_sys0_del_user as omsPermiFunction_f_sys0_del_user,OPF.f_sys0_del_state as omsPermiFunction_f_sys0_del_state
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (OPF.f_id = #{id} ) </if>        <if test="name != null">  and (OPF.f_name = #{name} ) </if>        <if test="desc != null">  and (OPF.f_desc = #{desc} ) </if>        <if test="action != null">  and (OPF.f_action = #{action} ) </if>        <if test="param != null">  and (OPF.f_param = #{param} ) </if>        <if test="status != null">  and (OPF.f_status = #{status} ) </if>        <if test="menuFlag != null">  and (OPF.f_menu_flag = #{menuFlag} ) </if>        <if test="level != null">  and (OPF.f_level = #{level} ) </if>        <if test="parnetid != null">  and (OPF.f_parnetId = #{parnetid} ) </if>        <if test="number != null">  and (OPF.f_number = #{number} ) </if>        <if test="longnumber != null">  and (OPF.f_longNumber = #{longnumber} ) </if>        <if test="isleaf != null">  and (OPF.f_isLeaf = #{isleaf} ) </if>        <if test="sys0AddTime != null and sys0AddTime != '' ">  and (OPF.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and sys0AddTime_START != '' ">              <![CDATA[ and (OPF.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and sys0AddTime_END != '' ">            <![CDATA[ and (OPF.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and sys0UpdTime != '' ">  and (OPF.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and sys0UpdTime_START != '' ">              <![CDATA[ and (OPF.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and sys0UpdTime_END != '' ">            <![CDATA[ and (OPF.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and sys0DelTime != '' ">  and (OPF.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and sys0DelTime_START != '' ">              <![CDATA[ and (OPF.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and sys0DelTime_END != '' ">            <![CDATA[ and (OPF.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (OPF.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (OPF.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (OPF.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (OPF.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (OPF.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and id != '' ">  and (OPF.f_id = #{id} ) </if>        <if test="name != null and name != '' ">  and (OPF.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="desc != null and desc != '' ">  and (OPF.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="action != null and action != '' ">  and (OPF.f_action like CONCAT('%',#{action},'%') ) </if>        <if test="param != null and param != '' ">  and (OPF.f_param like CONCAT('%',#{param},'%') ) </if>        <if test="status != null and status != '' ">  and (OPF.f_status = #{status} ) </if>        <if test="menuFlag != null and menuFlag != '' ">  and (OPF.f_menu_flag = #{menuFlag} ) </if>        <if test="level != null and level != '' ">  and (OPF.f_level = #{level} ) </if>        <if test="parnetid != null and parnetid != '' ">  and (OPF.f_parnetId = #{parnetid} ) </if>        <if test="number != null and number != '' ">  and (OPF.f_number like CONCAT('%',#{number},'%') ) </if>        <if test="longnumber != null and longnumber != '' ">  and (OPF.f_longNumber like CONCAT('%',#{longnumber},'%') ) </if>        <if test="isleaf != null and isleaf != '' ">  and (OPF.f_isLeaf = #{isleaf} ) </if>        <if test="sys0AddTime != null and sys0AddTime != '' ">  and (OPF.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and sys0AddTime_START != '' ">              <![CDATA[ and (OPF.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and sys0AddTime_END != '' ">            <![CDATA[ and (OPF.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and sys0UpdTime != '' ">  and (OPF.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and sys0UpdTime_START != '' ">              <![CDATA[ and (OPF.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and sys0UpdTime_END != '' ">            <![CDATA[ and (OPF.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and sys0DelTime != '' ">  and (OPF.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and sys0DelTime_START != '' ">              <![CDATA[ and (OPF.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and sys0DelTime_END != '' ">            <![CDATA[ and (OPF.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and sys0AddUser != '' ">  and (OPF.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and sys0UpdUser != '' ">  and (OPF.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and sys0DelUser != '' ">  and (OPF.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and sys0DelState != '' ">  and (OPF.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (OPF.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="omsPermiFunctionBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="omsPermiFunctionBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="omsPermiFunctionBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="omsPermiFunctionBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_oms_permi_function OPF    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(OMS功能表)信息。 -->
+	<sql id="select_omsPermiFunction">
+		SELECT <include refid="omsPermiFunctionBase.queryHead"/>
+		<include refid="omsPermiFunctionBase.busiQueryCondition"/>
+		<include refid="omsPermiFunctionBase.dimCheckSql"/>
+		ORDER BY OPF.f_id DESC
+	</sql>
+	<select id="select_omsPermiFunction" parameterType="java.util.Map" resultMap="omsPermiFunctionBase.omsPermiFunctionExtendMap">
+		<include refid="omsPermiFunctionBase.select_omsPermiFunction"/>
+	</select>
+	
+	<!-- 根据条件分页查询(OMS功能表)信息  -->
+	<sql id="select_omsPermiFunction_withPage">
+		SELECT <include refid="omsPermiFunctionBase.queryHead"/>
+		<include refid="omsPermiFunctionBase.busiQueryCondition"/>
+		<include refid="omsPermiFunctionBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_omsPermiFunction_withPage" resultMap="omsPermiFunctionBase.omsPermiFunctionExtendMap" parameterType="java.util.Map">
+		<include refid="omsPermiFunctionBase.select_omsPermiFunction_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(OMS功能表)信息。 -->
+	<sql id="select_omsPermiFunction_bySeqId">
+		SELECT <include refid="omsPermiFunctionBase.queryHead"/>
+		<include refid="omsPermiFunctionBase.busiQueryCondition"/>
+		 and OPF.f_id = #{_parameter}
+	</sql>
+	<select id="select_omsPermiFunction_bySeqId" parameterType="java.math.BigInteger" resultMap="omsPermiFunctionBase.omsPermiFunctionBaseMap">
+		<include refid="omsPermiFunctionBase.select_omsPermiFunction_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(OMS功能表)记录数  -->
+	<sql id="select_omsPermiFunction_count">
+		SELECT COUNT(*)
+		<include refid="omsPermiFunctionBase.busiQueryCount"/>
+		<include refid="omsPermiFunctionBase.dimCheckSql"/>
+	</sql>
+	<select id="select_omsPermiFunction_count" resultType="java.lang.Integer">
+		<include refid="omsPermiFunctionBase.select_omsPermiFunction_count"/>
+	</select>
+	
+	 <!-- 往(OMS功能表)新增一条记录。 -->
+	 <sql id="insert_omsPermiFunction">
+		INSERT INTO t_oms_permi_function 
+		(f_id,f_name,f_desc,f_action,f_param,f_status,f_menu_flag,f_level,f_parnetId,f_number,f_longNumber,f_isLeaf,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR},#{action,jdbcType=VARCHAR},#{param,jdbcType=VARCHAR},#{status},#{menuFlag},#{level},#{parnetid},#{number,jdbcType=VARCHAR},#{longnumber,jdbcType=VARCHAR},#{isleaf},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_omsPermiFunction" parameterType="OmsPermiFunction">
+		<include refid="omsPermiFunctionBase.insert_omsPermiFunction"/>
+    </insert>
+    
+	<!-- 批量新增(OMS功能表)信息 -->
+    <insert id="insert_omsPermiFunction_Batch" parameterType="java.util.List">
+    	INSERT INTO t_oms_permi_function 
+		(f_id,f_name,f_desc,f_action,f_param,f_status,f_menu_flag,f_level,f_parnetId,f_number,f_longNumber,f_isLeaf,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.desc,jdbcType=VARCHAR},#{item.action,jdbcType=VARCHAR},#{item.param,jdbcType=VARCHAR},#{item.status},#{item.menuFlag},#{item.level},#{item.parnetid},#{item.number,jdbcType=VARCHAR},#{item.longnumber,jdbcType=VARCHAR},#{item.isleaf},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(OMS功能表)信息。 -->
+    <sql id="update_omsPermiFunction">
+		UPDATE t_oms_permi_function SET f_id=#{id} 		<if test="name != null and name != '' "> ,f_name=#{name}</if> 		<if test="desc != null and desc != '' "> ,f_desc=#{desc}</if> 		<if test="action != null and action != '' "> ,f_action=#{action}</if> 		<if test="param != null and param != '' "> ,f_param=#{param}</if> 		<if test="status != null and status != '' "> ,f_status=#{status}</if> 		<if test="menuFlag != null and menuFlag != '' "> ,f_menu_flag=#{menuFlag}</if> 		<if test="level != null and level != '' "> ,f_level=#{level}</if> 		<if test="parnetid != null and parnetid != '' "> ,f_parnetId=#{parnetid}</if> 		<if test="number != null and number != '' "> ,f_number=#{number}</if> 		<if test="longnumber != null and longnumber != '' "> ,f_longNumber=#{longnumber}</if> 		<if test="isleaf != null and isleaf != '' "> ,f_isLeaf=#{isleaf}</if> 		<if test="sys0AddTime != null and sys0AddTime != '' "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and sys0UpdTime != '' "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and sys0DelTime != '' "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and sys0AddUser != '' "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and sys0UpdUser != '' "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and sys0DelUser != '' "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and sys0DelState != '' "> ,f_sys0_del_state=#{sys0DelState}</if>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_omsPermiFunction" parameterType="OmsPermiFunction">
+		<include refid="omsPermiFunctionBase.update_omsPermiFunction"/>
+    </update>
+    
+    <!-- 批量更新(OMS功能表)信息。 -->
+    <update id="update_omsPermiFunction_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_oms_permi_function SET f_id=#{item.id} 		<if test="item.name != null and item.name != '' "> ,f_name=#{item.name}</if> 		<if test="item.desc != null and item.desc != '' "> ,f_desc=#{item.desc}</if> 		<if test="item.action != null and item.action != '' "> ,f_action=#{item.action}</if> 		<if test="item.param != null and item.param != '' "> ,f_param=#{item.param}</if> 		<if test="item.status != null and item.status != '' "> ,f_status=#{item.status}</if> 		<if test="item.menuFlag != null and item.menuFlag != '' "> ,f_menu_flag=#{item.menuFlag}</if> 		<if test="item.level != null and item.level != '' "> ,f_level=#{item.level}</if> 		<if test="item.parnetid != null and item.parnetid != '' "> ,f_parnetId=#{item.parnetid}</if> 		<if test="item.number != null and item.number != '' "> ,f_number=#{item.number}</if> 		<if test="item.longnumber != null and item.longnumber != '' "> ,f_longNumber=#{item.longnumber}</if> 		<if test="item.isleaf != null and item.isleaf != '' "> ,f_isLeaf=#{item.isleaf}</if> 		<if test="item.sys0AddTime != null and item.sys0AddTime != '' "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and item.sys0UpdTime != '' "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and item.sys0DelTime != '' "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and item.sys0AddUser != '' "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and item.sys0UpdUser != '' "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and item.sys0DelUser != '' "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and item.sys0DelState != '' "> ,f_sys0_del_state=#{item.sys0DelState}</if>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(OMS功能表)信息_逻辑删除。 -->
+    <sql id="delete_omsPermiFunction_Logic">
+		UPDATE t_oms_permi_function SET f_id=#{id} 		<if test="id != null and id != '' "> ,f_id=#{id}</if> 		<if test="name != null and name != '' "> ,f_name=#{name}</if> 		<if test="desc != null and desc != '' "> ,f_desc=#{desc}</if> 		<if test="action != null and action != '' "> ,f_action=#{action}</if> 		<if test="param != null and param != '' "> ,f_param=#{param}</if> 		<if test="status != null and status != '' "> ,f_status=#{status}</if> 		<if test="menuFlag != null and menuFlag != '' "> ,f_menu_flag=#{menuFlag}</if> 		<if test="level != null and level != '' "> ,f_level=#{level}</if> 		<if test="parnetid != null and parnetid != '' "> ,f_parnetId=#{parnetid}</if> 		<if test="number != null and number != '' "> ,f_number=#{number}</if> 		<if test="longnumber != null and longnumber != '' "> ,f_longNumber=#{longnumber}</if> 		<if test="isleaf != null and isleaf != '' "> ,f_isLeaf=#{isleaf}</if> 		<if test="sys0AddTime != null and sys0AddTime != '' "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and sys0UpdTime != '' "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and sys0DelTime != '' "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and sys0AddUser != '' "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and sys0UpdUser != '' "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and sys0DelUser != '' "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_omsPermiFunction_Logic" parameterType="OmsPermiFunction">
+		<include refid="omsPermiFunctionBase.delete_omsPermiFunction_Logic"/>
+    </update>
+    
+    <!-- 批量删除(OMS功能表)信息_逻辑删除 -->
+    <update id="delete_omsPermiFunction_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_oms_permi_function SET f_id=#{item.id} 		<if test="item.id != null and item.id != '' "> ,f_id=#{item.id}</if> 		<if test="item.name != null and item.name != '' "> ,f_name=#{item.name}</if> 		<if test="item.desc != null and item.desc != '' "> ,f_desc=#{item.desc}</if> 		<if test="item.action != null and item.action != '' "> ,f_action=#{item.action}</if> 		<if test="item.param != null and item.param != '' "> ,f_param=#{item.param}</if> 		<if test="item.status != null and item.status != '' "> ,f_status=#{item.status}</if> 		<if test="item.menuFlag != null and item.menuFlag != '' "> ,f_menu_flag=#{item.menuFlag}</if> 		<if test="item.level != null and item.level != '' "> ,f_level=#{item.level}</if> 		<if test="item.parnetid != null and item.parnetid != '' "> ,f_parnetId=#{item.parnetid}</if> 		<if test="item.number != null and item.number != '' "> ,f_number=#{item.number}</if> 		<if test="item.longnumber != null and item.longnumber != '' "> ,f_longNumber=#{item.longnumber}</if> 		<if test="item.isleaf != null and item.isleaf != '' "> ,f_isLeaf=#{item.isleaf}</if> 		<if test="item.sys0AddTime != null and item.sys0AddTime != '' "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and item.sys0UpdTime != '' "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and item.sys0DelTime != '' "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and item.sys0AddUser != '' "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and item.sys0UpdUser != '' "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and item.sys0DelUser != '' "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(OMS功能表)信息。 -->
+    <sql id="delete_omsPermiFunction">
+		DELETE FROM t_oms_permi_function WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_omsPermiFunction" parameterType="java.lang.String">
+		<include refid="omsPermiFunctionBase.delete_omsPermiFunction"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(OMS功能表)信息。 -->
+    <delete id="delete_omsPermiFunction_Batch" parameterType="java.util.List">
+		DELETE FROM t_oms_permi_function WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

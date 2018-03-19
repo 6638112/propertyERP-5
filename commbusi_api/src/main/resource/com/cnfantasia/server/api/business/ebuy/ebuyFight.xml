@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+	<bean id="groupPurchaseDao" class="com.cnfantasia.server.api.ebuy.dao.GroupPurchaseDao">
+		<property name="sqlSession" ref="sqlSessionTemplate"/>
+	</bean>
+	<bean id="groupPurchaseService" class="com.cnfantasia.server.api.ebuy.service.GroupPurchaseService">
+		<property name="groupPurchaseDao" ref="groupPurchaseDao"/>
+		<property name="uuidManager" ref="uuidManager"/>
+		<property name="dualDao" ref="dualDao"/>
+		<property name="ebuyDao" ref="ebuyDao"/>
+		<property name="ebuyOrderBaseDao" ref="ebuyOrderBaseDao"/>
+		<property name="userBaseDao" ref="userBaseDao"/>
+		<property name="ebuyFightOrderBaseService" ref="ebuyFightOrderBaseService"/>
+		<property name="ebuyDeliveryOrderProductBaseDao" ref="ebuyDeliveryOrderProductBaseDao"/>
+		<property name="ebuyOrderHasTEbuyProductBaseDao" ref="ebuyOrderHasTEbuyProductBaseDao"/>
+		<property name="ebuyDeliveryOrderBaseDao" ref="ebuyDeliveryOrderBaseDao"/>
+		<property name="ebuyHandleAddressBaseDao" ref="ebuyHandleAddressBaseDao"/>
+		<property name="commonEbuyService" ref="commonEbuyService"/>
+		<property name="commMobileService" ref="commMobileService"/>
+		<property name="ebuyorderService" ref="ebuyorderService"/>
+	</bean>
+</beans>

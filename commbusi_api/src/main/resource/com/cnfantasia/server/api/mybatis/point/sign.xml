@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 积分模块 -->
+<mapper namespace="sign">
+	
+	
+	<!-- 查询最近一次签到信息 -->
+	<select id="select_Last_CommSignRecord" parameterType="java.util.Map" 
+		resultMap="commSignRecordBase.commSignRecordBaseMap_AppendTable">
+		SELECT <include refid="commSignRecordBase.queryHead_AppendTable"/>
+		FROM t_comm_sign_record CSR
+    	WHERE 1=1
+    	AND CSR.f_sys0_del_state = 0
+    	AND CSR.f_user_id = #{userId}
+    	ORDER BY f_time DESC 
+    	LIMIT 0,1
+	</select>
+	
+</mapper>

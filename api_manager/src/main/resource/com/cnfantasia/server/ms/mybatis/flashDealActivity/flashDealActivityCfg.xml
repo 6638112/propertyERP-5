@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  幸运购活动 -->
+<mapper namespace="flashDealActivityCfg">
+    <resultMap id="getFlashDealActivityListMap" type="com.cnfantasia.server.ms.flashDealActivity.entity.FlashDealActivityCfgParam">
+        <result column="id" javaType="java.math.BigInteger" property="id"/>
+        <result column="tEbuyProductFId" javaType="java.math.BigInteger" property="tEbuyProductFId"/>
+        <result column="title" javaType="java.lang.String" property="title"/>
+        <result column="prizeCount" javaType="java.lang.Long" property="prizeCount"/>
+        <result column="activityStartTime" javaType="java.lang.String" property="activityStartTime"/>
+        <result column="activityEndTime" javaType="java.lang.String" property="activityEndTime"/>
+        <result column="merchantName" javaType="java.lang.String" property="merchantName"/>
+        <result column="productName" javaType="java.lang.String" property="productName"/>
+        <result column="addMan" javaType="java.lang.String" property="addMan"/>
+        <result column="updateMan" javaType="java.lang.String" property="updateMan"/>
+        <result column="introduceContent" javaType="java.lang.String" property="introduceContent"/>
+        <result column="startStatus" javaType="java.lang.Integer" property="startStatus"/>
+        <result column="endStatus" javaType="java.lang.Integer" property="endStatus"/>
+        <result column="activityPrice" javaType="java.lang.Long" property="activityPrice"/>
+    </resultMap>
+
+    <!--运营后台  幸运购活动列表-->
+    <select id="getFlashDealActivityList" parameterType="java.util.Map" resultMap="getFlashDealActivityListMap">
+        SELECT
+            FDA.f_id AS id,
+            EP.f_id AS tEbuyProductFId,
+            ESM.f_name AS merchantName,
+            EP.f_name AS productName,
+            FDA.f_title AS title,
+            FDA.f_prize_count AS prizeCount,
+            FDA.f_introduce_content AS introduceContent,
+            date_format(FDA.f_activity_start_time,'%Y-%m-%d %T') AS activityStartTime,
+            date_format(FDA.f_activity_end_time,'%Y-%m-%d %T') AS activityEndTime,
+            <![CDATA[(now()<FDA.f_activity_start_time)]]> AS startStatus,
+            (now()>FDA.f_activity_end_time) AS endStatus,
+            IF (
+                ADDOU.f_real_name IS NULL
+                OR ADDOU.f_real_name = '',
+                ADDOU.f_user_account,
+                ADDOU.f_real_name
+            ) AS addMan,
+            IF (
+                UPDATEOU.f_real_name IS NULL
+                OR UPDATEOU.f_real_name = '',
+                UPDATEOU.f_user_account,
+                UPDATEOU.f_real_name
+            ) AS updateMan
+        FROM
+            t_flash_deal_activity FDA
+            INNER JOIN t_ebuy_product EP ON EP.f_id = FDA.t_ebuy_product_f_id
+            AND EP.f_sys0_del_state = 0
+            AND EP.f_status = 0
+            LEFT JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id
+            AND ESM.f_sys0_del_state = 0
+            LEFT JOIN t_oms_user ADDOU ON ADDOU.f_id = FDA.f_sys0_add_user
+            LEFT JOIN t_oms_user UPDATEOU ON UPDATEOU.f_id = FDA.f_sys0_upd_user
+        WHERE
+          FDA.f_sys0_del_state = 0
+        <if test="tEbuyProductFId != null and tEbuyProductFId != ''">
+            AND EP.f_id = #{tEbuyProductFId}
+        </if>
+        <if test="productName != null and productName != ''">
+            AND EP.f_name like concat('%', #{productName}, '%')
+        </if>
+        <if test="merchantName != null and merchantName != ''">
+            AND ESM.f_name like concat('%', #{merchantName}, '%')
+        </if>
+        <if test="activityEndTime != null and !activityEndTime.equals('')  ">
+            <![CDATA[ and (FDA.f_activity_end_time <= #{activityEndTime}) ]]>
+        </if>
+        <if test="status != null and !status.equals('')  ">
+            <if test="status == 1">
+                <![CDATA[ and (now()<FDA.f_activity_end_time) and  (now()>=FDA.f_activity_start_time)]]>
+            </if>
+            <if test="status == 0">
+                <![CDATA[ and (now()>=FDA.f_activity_end_time) ]]>
+            </if>
+            <if test="status == 2">
+                <![CDATA[ and (now()<FDA.f_activity_start_time) ]]>
+            </if>
+        </if>
+        ORDER BY FDA.f_activity_start_time ASC
+        <if test="_begin != null and _length != null">
+            limit #{_begin}, #{_length}
+        </if>
+    </select>
+
+    <select id="getFlashDealActivityListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM
+        t_flash_deal_activity FDA
+        INNER JOIN t_ebuy_product EP ON EP.f_id = FDA.t_ebuy_product_f_id
+        AND EP.f_sys0_del_state = 0
+        AND EP.f_status = 0
+        LEFT JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id
+        AND ESM.f_sys0_del_state = 0
+        LEFT JOIN t_oms_user ADDOU ON ADDOU.f_id = FDA.f_sys0_add_user
+        LEFT JOIN t_oms_user UPDATEOU ON UPDATEOU.f_id = FDA.f_sys0_upd_user
+        WHERE
+        FDA.f_sys0_del_state = 0
+        <if test="tEbuyProductFId != null and tEbuyProductFId != ''">
+            AND EP.f_id = #{EP.tEbuyProductFId}
+        </if>
+        <if test="productName != null and productName != ''">
+            AND EP.f_name like concat('%', #{productName}, '%')
+        </if>
+        <if test="merchantName != null and merchantName != ''">
+            AND ESM.f_name like concat('%', #{merchantName}, '%')
+        </if>
+        <if test="activityEndTime != null and !activityEndTime.equals('')  ">
+            <![CDATA[ AND (FDA.f_activity_end_time <= #{activityEndTime}) ]]>
+        </if>
+    </select>
+
+    <!--活动详情-->
+    <select id="getFlashDealActivityDetail" parameterType="java.math.BigInteger" resultMap="getFlashDealActivityListMap">
+        SELECT
+        EP.f_id AS tEbuyProductFId,
+        ESM.f_name AS merchantName,
+        EP.f_name AS productName,
+        FDA.f_title AS title,
+        FDA.f_prize_count AS prizeCount,
+        FDA.f_introduce_content AS introduceContent,
+        FDA.f_activity_price AS activityPrice,
+        date_format(FDA.f_activity_start_time,'%Y-%m-%d %T') AS activityStartTime,
+        date_format(FDA.f_activity_end_time,'%Y-%m-%d %T') AS activityEndTime,
+        <![CDATA[(now()<FDA.f_activity_start_time)]]> AS startStatus,
+        (now()>FDA.f_activity_end_time) AS endStatus,
+        IF (
+        ADDOU.f_real_name IS NULL
+        OR ADDOU.f_real_name = '',
+        ADDOU.f_user_account,
+        ADDOU.f_real_name
+        ) AS addMan,
+        IF (
+        UPDATEOU.f_real_name IS NULL
+        OR UPDATEOU.f_real_name = '',
+        UPDATEOU.f_user_account,
+        UPDATEOU.f_real_name
+        ) AS updateMan
+        FROM
+        t_flash_deal_activity FDA
+        INNER JOIN t_ebuy_product EP ON EP.f_id = FDA.t_ebuy_product_f_id
+        AND EP.f_sys0_del_state = 0
+        AND EP.f_status = 0
+        LEFT JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id
+        AND ESM.f_sys0_del_state = 0
+        LEFT JOIN t_oms_user ADDOU ON ADDOU.f_id = FDA.f_sys0_add_user
+        LEFT JOIN t_oms_user UPDATEOU ON UPDATEOU.f_id = FDA.f_sys0_upd_user
+        WHERE
+        FDA.f_sys0_del_state = 0 AND FDA.f_id = #{flashDealActivityId};
+    </select>
+
+</mapper>

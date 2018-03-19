@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 世外桃源 -->
+<mapper namespace="xanadu">
+	
+	<!-- 查询用户属于世外桃源的记录数 -->
+	<select id="select_Xanadu_TrueCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_user_xanadu_record UXR
+		WHERE 1=1
+		AND UXR.f_sys0_del_state = 0
+		AND UXR.f_user_id = #{userId}
+		AND UXR.f_status = 1 <!-- 是否在室外桃园=={"1":"是","2":"否"} -->
+	</select>
+	
+	<select id="select_XanaduRecord_List" parameterType="java.util.Map" resultMap="userXanaduRecordBase.userXanaduRecordBaseMap_AppendTable">
+		SELECT <include refid="userXanaduRecordBase.queryHead_AppendTable"/>
+		FROM t_user_xanadu_record UXR
+   	 	WHERE 1=1
+   	 	AND UXR.f_sys0_del_state = 0
+		AND UXR.f_user_id = #{userId}
+	</select>
+</mapper>

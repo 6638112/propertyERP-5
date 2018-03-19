@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:广告点击表 t_advertise_click_record -->
+<mapper namespace="advertiseClickRecordBase">
+	<resultMap type="AdvertiseClickRecord" id="advertiseClickRecordBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!-- id -->        <result column="f_advertise_id" javaType="java.math.BigInteger" property="advertiseId"/>  <!-- 广告ID -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户ID -->        <result column="f_click_date" javaType="java.lang.String" property="clickDate"/>  <!-- 点击时间 -->        <result column="f_position_type" javaType="java.lang.Long" property="positionType"/>  <!-- 位置，1首页，2街坊，3社区店到家 -->        <result column="f_room_id" javaType="java.math.BigInteger" property="roomId"/>  <!-- 点击时的房间号 -->        <result column="f_adv_title" javaType="java.lang.String" property="advTitle"/>  <!-- 广告标题 -->        <result column="f_adv_link" javaType="java.lang.String" property="advLink"/>  <!-- 广告链接 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AdvertiseClickRecord" id="advertiseClickRecordExtendMap" extends="advertiseClickRecordBaseMap">
+	</resultMap>
+	<resultMap type="AdvertiseClickRecord" id="advertiseClickRecordBaseMap_AppendTable">
+        <id column="ACRid" javaType="java.math.BigInteger" property="id"/>  <!-- id -->        <result column="ACRadvertiseId" javaType="java.math.BigInteger" property="advertiseId"/>  <!-- 广告ID -->        <result column="ACRuserId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户ID -->        <result column="ACRclickDate" javaType="java.lang.String" property="clickDate"/>  <!-- 点击时间 -->        <result column="ACRpositionType" javaType="java.lang.Long" property="positionType"/>  <!-- 位置，1首页，2街坊，3社区店到家 -->        <result column="ACRroomId" javaType="java.math.BigInteger" property="roomId"/>  <!-- 点击时的房间号 -->        <result column="ACRadvTitle" javaType="java.lang.String" property="advTitle"/>  <!-- 广告标题 -->        <result column="ACRadvLink" javaType="java.lang.String" property="advLink"/>  <!-- 广告链接 -->        <result column="ACRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="ACRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ACRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ACRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ACRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ACRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ACRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AdvertiseClickRecord" id="advertiseClickRecordBaseMap_AppendTable1">
+        <id column="ACR1id" javaType="java.math.BigInteger" property="id"/>  <!-- id -->        <result column="ACR1advertiseId" javaType="java.math.BigInteger" property="advertiseId"/>  <!-- 广告ID -->        <result column="ACR1userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户ID -->        <result column="ACR1clickDate" javaType="java.lang.String" property="clickDate"/>  <!-- 点击时间 -->        <result column="ACR1positionType" javaType="java.lang.Long" property="positionType"/>  <!-- 位置，1首页，2街坊，3社区店到家 -->        <result column="ACR1roomId" javaType="java.math.BigInteger" property="roomId"/>  <!-- 点击时的房间号 -->        <result column="ACR1advTitle" javaType="java.lang.String" property="advTitle"/>  <!-- 广告标题 -->        <result column="ACR1advLink" javaType="java.lang.String" property="advLink"/>  <!-- 广告链接 -->        <result column="ACR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="ACR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ACR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ACR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ACR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ACR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ACR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		ACR.f_id,ACR.f_advertise_id,ACR.f_user_id,date_format(ACR.f_click_date,'%Y-%m-%d %T') as f_click_date,ACR.f_position_type,ACR.f_room_id,ACR.f_adv_title,ACR.f_adv_link
+	</sql>
+	<sql id="queryHead_AppendTable">
+		ACR.f_id as ACRid,ACR.f_advertise_id as ACRadvertiseId,ACR.f_user_id as ACRuserId,date_format(ACR.f_click_date,'%Y-%m-%d %T') as ACRclickDate,ACR.f_position_type as ACRpositionType,ACR.f_room_id as ACRroomId,ACR.f_adv_title as ACRadvTitle,ACR.f_adv_link as ACRadvLink
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		ACR1.f_id as ACR1id,ACR1.f_advertise_id as ACR1advertiseId,ACR1.f_user_id as ACR1userId,date_format(ACR1.f_click_date,'%Y-%m-%d %T') as ACR1clickDate,ACR1.f_position_type as ACR1positionType,ACR1.f_room_id as ACR1roomId,ACR1.f_adv_title as ACR1advTitle,ACR1.f_adv_link as ACR1advLink
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (ACR.f_id = #{id} ) </if>        <if test="advertiseId != null">  and (ACR.f_advertise_id = #{advertiseId} ) </if>        <if test="userId != null">  and (ACR.f_user_id = #{userId} ) </if>        <if test="clickDate != null and !clickDate.equals('')  ">  and (ACR.f_click_date = str_to_date(#{clickDate},'%Y-%m-%d %T') ) </if>        <if test="clickDate_START != null and !clickDate_START.equals('')  ">              <![CDATA[ and (ACR.f_click_date >= str_to_date(#{clickDate_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="clickDate_END != null and !clickDate_END.equals('')  ">            <![CDATA[ and (ACR.f_click_date <= str_to_date(#{clickDate_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="positionType != null">  and (ACR.f_position_type = #{positionType} ) </if>        <if test="roomId != null">  and (ACR.f_room_id = #{roomId} ) </if>        <if test="advTitle != null">  and (ACR.f_adv_title = #{advTitle} ) </if>        <if test="advLink != null">  and (ACR.f_adv_link = #{advLink} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (ACR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (ACR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (ACR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ACR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (ACR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (ACR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (ACR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (ACR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (ACR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (ACR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (ACR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (ACR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (ACR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (ACR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (ACR.f_id = #{id} ) </if>        <if test="advertiseId != null and !advertiseId.equals('')  ">  and (ACR.f_advertise_id = #{advertiseId} ) </if>        <if test="userId != null and !userId.equals('')  ">  and (ACR.f_user_id = #{userId} ) </if>        <if test="clickDate != null and !clickDate.equals('')  ">  and (ACR.f_click_date = str_to_date(#{clickDate},'%Y-%m-%d %T') ) </if>        <if test="clickDate_START != null and !clickDate_START.equals('')  ">              <![CDATA[ and (ACR.f_click_date >= str_to_date(#{clickDate_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="clickDate_END != null and !clickDate_END.equals('')  ">            <![CDATA[ and (ACR.f_click_date <= str_to_date(#{clickDate_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="positionType != null and !positionType.equals('')  ">  and (ACR.f_position_type = #{positionType} ) </if>        <if test="roomId != null and !roomId.equals('')  ">  and (ACR.f_room_id = #{roomId} ) </if>        <if test="advTitle != null and !advTitle.equals('')  ">  and (ACR.f_adv_title like CONCAT('%',#{advTitle},'%') ) </if>        <if test="advLink != null and !advLink.equals('')  ">  and (ACR.f_adv_link like CONCAT('%',#{advLink},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (ACR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (ACR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (ACR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ACR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (ACR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (ACR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (ACR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (ACR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (ACR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (ACR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (ACR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (ACR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (ACR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (ACR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="advertiseClickRecordBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="advertiseClickRecordBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="advertiseClickRecordBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="advertiseClickRecordBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_advertise_click_record ACR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(广告点击表)信息。 -->
+	<sql id="select_advertiseClickRecord">
+		SELECT <include refid="advertiseClickRecordBase.queryHead"/>
+		<include refid="advertiseClickRecordBase.busiQueryCondition"/>
+		<include refid="advertiseClickRecordBase.dimCheckSql"/>
+		ORDER BY ACR.f_id DESC
+	</sql>
+	<select id="select_advertiseClickRecord" parameterType="java.util.Map" resultMap="advertiseClickRecordBase.advertiseClickRecordExtendMap">
+		<include refid="advertiseClickRecordBase.select_advertiseClickRecord"/>
+	</select>
+	
+	<!-- 根据条件分页查询(广告点击表)信息  -->
+	<sql id="select_advertiseClickRecord_withPage">
+		SELECT <include refid="advertiseClickRecordBase.queryHead"/>
+		<include refid="advertiseClickRecordBase.busiQueryCondition"/>
+		<include refid="advertiseClickRecordBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_advertiseClickRecord_withPage" resultMap="advertiseClickRecordBase.advertiseClickRecordExtendMap" parameterType="java.util.Map">
+		<include refid="advertiseClickRecordBase.select_advertiseClickRecord_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(广告点击表)信息。 -->
+	<sql id="select_advertiseClickRecord_bySeqId">
+		SELECT <include refid="advertiseClickRecordBase.queryHead"/>
+		<include refid="advertiseClickRecordBase.busiQueryCondition"/>
+		 and ACR.f_id = #{_parameter}
+	</sql>
+	<select id="select_advertiseClickRecord_bySeqId" parameterType="java.math.BigInteger" resultMap="advertiseClickRecordBase.advertiseClickRecordBaseMap">
+		<include refid="advertiseClickRecordBase.select_advertiseClickRecord_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(广告点击表)记录数  -->
+	<sql id="select_advertiseClickRecord_count">
+		SELECT COUNT(*)
+		<include refid="advertiseClickRecordBase.busiQueryCount"/>
+		<include refid="advertiseClickRecordBase.dimCheckSql"/>
+	</sql>
+	<select id="select_advertiseClickRecord_count" resultType="java.lang.Integer">
+		<include refid="advertiseClickRecordBase.select_advertiseClickRecord_count"/>
+	</select>
+	
+	 <!-- 往(广告点击表)新增一条记录。 -->
+	 <sql id="insert_advertiseClickRecord">
+		INSERT INTO t_advertise_click_record 
+		(f_id,f_advertise_id,f_user_id,f_click_date,f_position_type,f_room_id,f_adv_title,f_adv_link,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{advertiseId},#{userId},str_to_date(#{clickDate,jdbcType=DATE},'%Y-%m-%d %T'),#{positionType},#{roomId},#{advTitle,jdbcType=VARCHAR},#{advLink,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_advertiseClickRecord" parameterType="AdvertiseClickRecord">
+		<include refid="advertiseClickRecordBase.insert_advertiseClickRecord"/>
+    </insert>
+    
+	<!-- 批量新增(广告点击表)信息 -->
+    <insert id="insert_advertiseClickRecord_Batch" parameterType="java.util.List">
+    	INSERT INTO t_advertise_click_record 
+		(f_id,f_advertise_id,f_user_id,f_click_date,f_position_type,f_room_id,f_adv_title,f_adv_link,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.advertiseId},#{item.userId},str_to_date(#{item.clickDate,jdbcType=DATE},'%Y-%m-%d %T'),#{item.positionType},#{item.roomId},#{item.advTitle,jdbcType=VARCHAR},#{item.advLink,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(广告点击表)信息。 -->
+    <sql id="update_advertiseClickRecord">
+		UPDATE t_advertise_click_record		<trim prefix="SET" prefixOverrides=","> 		<if test="advertiseId != null and !advertiseId.equals('') "> ,f_advertise_id=#{advertiseId}</if> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="clickDate != null and !clickDate.equals('') "> ,f_click_date=str_to_date(#{clickDate},'%Y-%m-%d %T')</if> 		<if test="positionType != null and !positionType.equals('') "> ,f_position_type=#{positionType}</if> 		<if test="roomId != null and !roomId.equals('') "> ,f_room_id=#{roomId}</if> 		<if test="advTitle != null and !advTitle.equals('') "> ,f_adv_title=#{advTitle}</if> 		<if test="advLink != null and !advLink.equals('') "> ,f_adv_link=#{advLink}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_advertiseClickRecord" parameterType="AdvertiseClickRecord">
+		<include refid="advertiseClickRecordBase.update_advertiseClickRecord"/>
+    </update>
+    
+    <!-- 批量更新(广告点击表)信息。 -->
+    <update id="update_advertiseClickRecord_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_advertise_click_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.advertiseId != null and !item.advertiseId.equals('')  "> ,f_advertise_id=#{item.advertiseId}</if> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.clickDate != null and !item.clickDate.equals('')  "> ,f_click_date=str_to_date(#{item.clickDate},'%Y-%m-%d %T')</if> 		<if test="item.positionType != null and !item.positionType.equals('')  "> ,f_position_type=#{item.positionType}</if> 		<if test="item.roomId != null and !item.roomId.equals('')  "> ,f_room_id=#{item.roomId}</if> 		<if test="item.advTitle != null and !item.advTitle.equals('')  "> ,f_adv_title=#{item.advTitle}</if> 		<if test="item.advLink != null and !item.advLink.equals('')  "> ,f_adv_link=#{item.advLink}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(广告点击表)信息_逻辑删除。 -->
+    <sql id="delete_advertiseClickRecord_Logic">
+		UPDATE t_advertise_click_record		<trim prefix="SET" prefixOverrides=","> 		<if test="advertiseId != null and !advertiseId.equals('')  "> ,f_advertise_id=#{advertiseId}</if> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="clickDate != null and !clickDate.equals('')  "> ,f_click_date=str_to_date(#{clickDate},'%Y-%m-%d %T')</if> 		<if test="positionType != null and !positionType.equals('')  "> ,f_position_type=#{positionType}</if> 		<if test="roomId != null and !roomId.equals('')  "> ,f_room_id=#{roomId}</if> 		<if test="advTitle != null and !advTitle.equals('')  "> ,f_adv_title=#{advTitle}</if> 		<if test="advLink != null and !advLink.equals('')  "> ,f_adv_link=#{advLink}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_advertiseClickRecord_Logic" parameterType="AdvertiseClickRecord">
+		<include refid="advertiseClickRecordBase.delete_advertiseClickRecord_Logic"/>
+    </update>
+    
+    <!-- 批量删除(广告点击表)信息_逻辑删除 -->
+    <update id="delete_advertiseClickRecord_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_advertise_click_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.advertiseId != null and !item.advertiseId.equals('')  "> ,f_advertise_id=#{item.advertiseId}</if> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.clickDate != null and !item.clickDate.equals('')  "> ,f_click_date=str_to_date(#{item.clickDate},'%Y-%m-%d %T')</if> 		<if test="item.positionType != null and !item.positionType.equals('')  "> ,f_position_type=#{item.positionType}</if> 		<if test="item.roomId != null and !item.roomId.equals('')  "> ,f_room_id=#{item.roomId}</if> 		<if test="item.advTitle != null and !item.advTitle.equals('')  "> ,f_adv_title=#{item.advTitle}</if> 		<if test="item.advLink != null and !item.advLink.equals('')  "> ,f_adv_link=#{item.advLink}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(广告点击表)信息。 -->
+    <sql id="delete_advertiseClickRecord">
+		DELETE FROM t_advertise_click_record WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_advertiseClickRecord" parameterType="java.lang.String">
+		<include refid="advertiseClickRecordBase.delete_advertiseClickRecord"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(广告点击表)信息。 -->
+    <delete id="delete_advertiseClickRecord_Batch" parameterType="java.util.List">
+		DELETE FROM t_advertise_click_record WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:拼单预定信息 t_community_pinyipin_reserve -->
+<mapper namespace="communityPinyipinReserveBase">
+	<resultMap type="CommunityPinyipinReserve" id="communityPinyipinReserveBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!-- 预定的用户Id -->        <result column="t_community_pinyipin_content_f_id" javaType="java.math.BigInteger" property="tCommunityPinyipinContentFId"/>  <!-- 拼单Id -->        <result column="t_ebuy_delivery_address_f_id" javaType="java.math.BigInteger" property="tEbuyDeliveryAddressFId"/>  <!-- 拼单人地址 -->        <result column="f_count" javaType="java.lang.Long" property="count"/>  <!-- 预定的数量 -->        <result column="f_claim_status" javaType="java.lang.Integer" property="claimStatus"/>  <!-- 领取状态 -->        <result column="f_cancle_staus" javaType="java.lang.Integer" property="cancleStaus"/>  <!-- 取消状态 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommunityPinyipinReserve" id="communityPinyipinReserveExtendMap" extends="communityPinyipinReserveBaseMap">
+	</resultMap>
+	<resultMap type="CommunityPinyipinReserve" id="communityPinyipinReserveBaseMap_AppendTable">
+        <id column="CPRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CPRuserId" javaType="java.math.BigInteger" property="userId"/>  <!-- 预定的用户Id -->        <result column="CPRtCommunityPinyipinContentFId" javaType="java.math.BigInteger" property="tCommunityPinyipinContentFId"/>  <!-- 拼单Id -->        <result column="CPRtEbuyDeliveryAddressFId" javaType="java.math.BigInteger" property="tEbuyDeliveryAddressFId"/>  <!-- 拼单人地址 -->        <result column="CPRcount" javaType="java.lang.Long" property="count"/>  <!-- 预定的数量 -->        <result column="CPRclaimStatus" javaType="java.lang.Integer" property="claimStatus"/>  <!-- 领取状态 -->        <result column="CPRcancleStaus" javaType="java.lang.Integer" property="cancleStaus"/>  <!-- 取消状态 -->        <result column="CPRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CPRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CPRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CPRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CPRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CPRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CPRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommunityPinyipinReserve" id="communityPinyipinReserveBaseMap_AppendTable1">
+        <id column="CPR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CPR1userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 预定的用户Id -->        <result column="CPR1tCommunityPinyipinContentFId" javaType="java.math.BigInteger" property="tCommunityPinyipinContentFId"/>  <!-- 拼单Id -->        <result column="CPR1tEbuyDeliveryAddressFId" javaType="java.math.BigInteger" property="tEbuyDeliveryAddressFId"/>  <!-- 拼单人地址 -->        <result column="CPR1count" javaType="java.lang.Long" property="count"/>  <!-- 预定的数量 -->        <result column="CPR1claimStatus" javaType="java.lang.Integer" property="claimStatus"/>  <!-- 领取状态 -->        <result column="CPR1cancleStaus" javaType="java.lang.Integer" property="cancleStaus"/>  <!-- 取消状态 -->        <result column="CPR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CPR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CPR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CPR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CPR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CPR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CPR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CPR.f_id,CPR.f_user_id,CPR.t_community_pinyipin_content_f_id,CPR.t_ebuy_delivery_address_f_id,CPR.f_count,CPR.f_claim_status,CPR.f_cancle_staus,date_format(CPR.f_sys0_add_time,'%Y-%m-%d %T') as f_sys0_add_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CPR.f_id as CPRid,CPR.f_user_id as CPRuserId,CPR.t_community_pinyipin_content_f_id as CPRtCommunityPinyipinContentFId,CPR.t_ebuy_delivery_address_f_id as CPRtEbuyDeliveryAddressFId,CPR.f_count as CPRcount,CPR.f_claim_status as CPRclaimStatus,CPR.f_cancle_staus as CPRcancleStaus,date_format(CPR.f_sys0_add_time,'%Y-%m-%d %T') as CPRsys0AddTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CPR1.f_id as CPR1id,CPR1.f_user_id as CPR1userId,CPR1.t_community_pinyipin_content_f_id as CPR1tCommunityPinyipinContentFId,CPR1.t_ebuy_delivery_address_f_id as CPR1tEbuyDeliveryAddressFId,CPR1.f_count as CPR1count,CPR1.f_claim_status as CPR1claimStatus,CPR1.f_cancle_staus as CPR1cancleStaus,date_format(CPR1.f_sys0_add_time,'%Y-%m-%d %T') as CPR1sys0AddTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CPR.f_id = #{id} ) </if>        <if test="userId != null">  and (CPR.f_user_id = #{userId} ) </if>        <if test="tCommunityPinyipinContentFId != null">  and (CPR.t_community_pinyipin_content_f_id = #{tCommunityPinyipinContentFId} ) </if>        <if test="tEbuyDeliveryAddressFId != null">  and (CPR.t_ebuy_delivery_address_f_id = #{tEbuyDeliveryAddressFId} ) </if>        <if test="count != null">  and (CPR.f_count = #{count} ) </if>        <if test="claimStatus != null">  and (CPR.f_claim_status = #{claimStatus} ) </if>        <if test="cancleStaus != null">  and (CPR.f_cancle_staus = #{cancleStaus} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CPR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CPR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CPR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CPR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CPR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CPR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CPR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CPR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CPR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (CPR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (CPR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (CPR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (CPR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (CPR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CPR.f_id = #{id} ) </if>        <if test="userId != null and !userId.equals('')  ">  and (CPR.f_user_id = #{userId} ) </if>        <if test="tCommunityPinyipinContentFId != null and !tCommunityPinyipinContentFId.equals('')  ">  and (CPR.t_community_pinyipin_content_f_id = #{tCommunityPinyipinContentFId} ) </if>        <if test="tEbuyDeliveryAddressFId != null and !tEbuyDeliveryAddressFId.equals('')  ">  and (CPR.t_ebuy_delivery_address_f_id = #{tEbuyDeliveryAddressFId} ) </if>        <if test="count != null and !count.equals('')  ">  and (CPR.f_count = #{count} ) </if>        <if test="claimStatus != null and !claimStatus.equals('')  ">  and (CPR.f_claim_status = #{claimStatus} ) </if>        <if test="cancleStaus != null and !cancleStaus.equals('')  ">  and (CPR.f_cancle_staus = #{cancleStaus} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CPR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CPR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CPR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CPR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CPR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CPR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CPR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CPR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CPR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CPR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CPR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CPR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CPR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (CPR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="communityPinyipinReserveBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="communityPinyipinReserveBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="communityPinyipinReserveBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="communityPinyipinReserveBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_community_pinyipin_reserve CPR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(拼单预定信息)信息。 -->
+	<sql id="select_communityPinyipinReserve">
+		SELECT <include refid="communityPinyipinReserveBase.queryHead"/>
+		<include refid="communityPinyipinReserveBase.busiQueryCondition"/>
+		<include refid="communityPinyipinReserveBase.dimCheckSql"/>
+		ORDER BY CPR.f_id DESC
+	</sql>
+	<select id="select_communityPinyipinReserve" parameterType="java.util.Map" resultMap="communityPinyipinReserveBase.communityPinyipinReserveExtendMap">
+		<include refid="communityPinyipinReserveBase.select_communityPinyipinReserve"/>
+	</select>
+	
+	<!-- 根据条件分页查询(拼单预定信息)信息  -->
+	<sql id="select_communityPinyipinReserve_withPage">
+		SELECT <include refid="communityPinyipinReserveBase.queryHead"/>
+		<include refid="communityPinyipinReserveBase.busiQueryCondition"/>
+		<include refid="communityPinyipinReserveBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_communityPinyipinReserve_withPage" resultMap="communityPinyipinReserveBase.communityPinyipinReserveExtendMap" parameterType="java.util.Map">
+		<include refid="communityPinyipinReserveBase.select_communityPinyipinReserve_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(拼单预定信息)信息。 -->
+	<sql id="select_communityPinyipinReserve_bySeqId">
+		SELECT <include refid="communityPinyipinReserveBase.queryHead"/>
+		<include refid="communityPinyipinReserveBase.busiQueryCondition"/>
+		 and CPR.f_id = #{_parameter}
+	</sql>
+	<select id="select_communityPinyipinReserve_bySeqId" parameterType="java.math.BigInteger" resultMap="communityPinyipinReserveBase.communityPinyipinReserveBaseMap">
+		<include refid="communityPinyipinReserveBase.select_communityPinyipinReserve_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(拼单预定信息)记录数  -->
+	<sql id="select_communityPinyipinReserve_count">
+		SELECT COUNT(*)
+		<include refid="communityPinyipinReserveBase.busiQueryCount"/>
+		<include refid="communityPinyipinReserveBase.dimCheckSql"/>
+	</sql>
+	<select id="select_communityPinyipinReserve_count" resultType="java.lang.Integer">
+		<include refid="communityPinyipinReserveBase.select_communityPinyipinReserve_count"/>
+	</select>
+	
+	 <!-- 往(拼单预定信息)新增一条记录。 -->
+	 <sql id="insert_communityPinyipinReserve">
+		INSERT INTO t_community_pinyipin_reserve 
+		(f_id,f_user_id,t_community_pinyipin_content_f_id,t_ebuy_delivery_address_f_id,f_count,f_claim_status,f_cancle_staus,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{userId},#{tCommunityPinyipinContentFId},#{tEbuyDeliveryAddressFId},#{count},#{claimStatus},#{cancleStaus},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_communityPinyipinReserve" parameterType="CommunityPinyipinReserve">
+		<include refid="communityPinyipinReserveBase.insert_communityPinyipinReserve"/>
+    </insert>
+    
+	<!-- 批量新增(拼单预定信息)信息 -->
+    <insert id="insert_communityPinyipinReserve_Batch" parameterType="java.util.List">
+    	INSERT INTO t_community_pinyipin_reserve 
+		(f_id,f_user_id,t_community_pinyipin_content_f_id,t_ebuy_delivery_address_f_id,f_count,f_claim_status,f_cancle_staus,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.userId},#{item.tCommunityPinyipinContentFId},#{item.tEbuyDeliveryAddressFId},#{item.count},#{item.claimStatus},#{item.cancleStaus},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(拼单预定信息)信息。 -->
+    <sql id="update_communityPinyipinReserve">
+		UPDATE t_community_pinyipin_reserve		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="tCommunityPinyipinContentFId != null and !tCommunityPinyipinContentFId.equals('') "> ,t_community_pinyipin_content_f_id=#{tCommunityPinyipinContentFId}</if> 		<if test="tEbuyDeliveryAddressFId != null and !tEbuyDeliveryAddressFId.equals('') "> ,t_ebuy_delivery_address_f_id=#{tEbuyDeliveryAddressFId}</if> 		<if test="count != null and !count.equals('') "> ,f_count=#{count}</if> 		<if test="claimStatus != null and !claimStatus.equals('') "> ,f_claim_status=#{claimStatus}</if> 		<if test="cancleStaus != null and !cancleStaus.equals('') "> ,f_cancle_staus=#{cancleStaus}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_communityPinyipinReserve" parameterType="CommunityPinyipinReserve">
+		<include refid="communityPinyipinReserveBase.update_communityPinyipinReserve"/>
+    </update>
+    
+    <!-- 批量更新(拼单预定信息)信息。 -->
+    <update id="update_communityPinyipinReserve_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_community_pinyipin_reserve		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.tCommunityPinyipinContentFId != null and !item.tCommunityPinyipinContentFId.equals('')  "> ,t_community_pinyipin_content_f_id=#{item.tCommunityPinyipinContentFId}</if> 		<if test="item.tEbuyDeliveryAddressFId != null and !item.tEbuyDeliveryAddressFId.equals('')  "> ,t_ebuy_delivery_address_f_id=#{item.tEbuyDeliveryAddressFId}</if> 		<if test="item.count != null and !item.count.equals('')  "> ,f_count=#{item.count}</if> 		<if test="item.claimStatus != null and !item.claimStatus.equals('')  "> ,f_claim_status=#{item.claimStatus}</if> 		<if test="item.cancleStaus != null and !item.cancleStaus.equals('')  "> ,f_cancle_staus=#{item.cancleStaus}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(拼单预定信息)信息_逻辑删除。 -->
+    <sql id="delete_communityPinyipinReserve_Logic">
+		UPDATE t_community_pinyipin_reserve		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="tCommunityPinyipinContentFId != null and !tCommunityPinyipinContentFId.equals('')  "> ,t_community_pinyipin_content_f_id=#{tCommunityPinyipinContentFId}</if> 		<if test="tEbuyDeliveryAddressFId != null and !tEbuyDeliveryAddressFId.equals('')  "> ,t_ebuy_delivery_address_f_id=#{tEbuyDeliveryAddressFId}</if> 		<if test="count != null and !count.equals('')  "> ,f_count=#{count}</if> 		<if test="claimStatus != null and !claimStatus.equals('')  "> ,f_claim_status=#{claimStatus}</if> 		<if test="cancleStaus != null and !cancleStaus.equals('')  "> ,f_cancle_staus=#{cancleStaus}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_communityPinyipinReserve_Logic" parameterType="CommunityPinyipinReserve">
+		<include refid="communityPinyipinReserveBase.delete_communityPinyipinReserve_Logic"/>
+    </update>
+    
+    <!-- 批量删除(拼单预定信息)信息_逻辑删除 -->
+    <update id="delete_communityPinyipinReserve_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_community_pinyipin_reserve		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.tCommunityPinyipinContentFId != null and !item.tCommunityPinyipinContentFId.equals('')  "> ,t_community_pinyipin_content_f_id=#{item.tCommunityPinyipinContentFId}</if> 		<if test="item.tEbuyDeliveryAddressFId != null and !item.tEbuyDeliveryAddressFId.equals('')  "> ,t_ebuy_delivery_address_f_id=#{item.tEbuyDeliveryAddressFId}</if> 		<if test="item.count != null and !item.count.equals('')  "> ,f_count=#{item.count}</if> 		<if test="item.claimStatus != null and !item.claimStatus.equals('')  "> ,f_claim_status=#{item.claimStatus}</if> 		<if test="item.cancleStaus != null and !item.cancleStaus.equals('')  "> ,f_cancle_staus=#{item.cancleStaus}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(拼单预定信息)信息。 -->
+    <sql id="delete_communityPinyipinReserve">
+		DELETE FROM t_community_pinyipin_reserve WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_communityPinyipinReserve" parameterType="java.lang.String">
+		<include refid="communityPinyipinReserveBase.delete_communityPinyipinReserve"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(拼单预定信息)信息。 -->
+    <delete id="delete_communityPinyipinReserve_Batch" parameterType="java.util.List">
+		DELETE FROM t_community_pinyipin_reserve WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

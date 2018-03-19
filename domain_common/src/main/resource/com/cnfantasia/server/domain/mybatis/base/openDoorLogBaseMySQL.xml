@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:门禁开门记录表 t_open_door_log -->
+<mapper namespace="openDoorLogBase">
+	<resultMap type="OpenDoorLog" id="openDoorLogBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_os" javaType="java.lang.String" property="os"/>  <!-- 操作系统信息 -->        <result column="f_status" javaType="java.lang.Integer" property="status"/>  <!-- 开门状态 -->        <result column="f_phone_device" javaType="java.lang.Integer" property="phoneDevice"/>  <!-- 手机 -->        <result column="f_fail_reason" javaType="java.lang.String" property="failReason"/>  <!-- 锁定状态 -->        <result column="t_building_f_id" javaType="java.math.BigInteger" property="tBuildingFId"/>  <!-- 楼栋id -->        <result column="t_user_id" javaType="java.math.BigInteger" property="tUserId"/>  <!-- 开锁人id -->        <result column="f_open_door_time" javaType="java.lang.String" property="openDoorTime"/>  <!-- 开门日期 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 申请时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="OpenDoorLog" id="openDoorLogExtendMap" extends="openDoorLogBaseMap">
+	</resultMap>
+	<resultMap type="OpenDoorLog" id="openDoorLogBaseMap_AppendTable">
+        <id column="ODLid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ODLos" javaType="java.lang.String" property="os"/>  <!-- 操作系统信息 -->        <result column="ODLstatus" javaType="java.lang.Integer" property="status"/>  <!-- 开门状态 -->        <result column="ODLphoneDevice" javaType="java.lang.Integer" property="phoneDevice"/>  <!-- 手机 -->        <result column="ODLfailReason" javaType="java.lang.String" property="failReason"/>  <!-- 锁定状态 -->        <result column="ODLtBuildingFId" javaType="java.math.BigInteger" property="tBuildingFId"/>  <!-- 楼栋id -->        <result column="ODLtUserId" javaType="java.math.BigInteger" property="tUserId"/>  <!-- 开锁人id -->        <result column="ODLopenDoorTime" javaType="java.lang.String" property="openDoorTime"/>  <!-- 开门日期 -->        <result column="ODLsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 申请时间 -->        <result column="ODLsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ODLsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ODLsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ODLsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ODLsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ODLsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="OpenDoorLog" id="openDoorLogBaseMap_AppendTable1">
+        <id column="ODL1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ODL1os" javaType="java.lang.String" property="os"/>  <!-- 操作系统信息 -->        <result column="ODL1status" javaType="java.lang.Integer" property="status"/>  <!-- 开门状态 -->        <result column="ODL1phoneDevice" javaType="java.lang.Integer" property="phoneDevice"/>  <!-- 手机 -->        <result column="ODL1failReason" javaType="java.lang.String" property="failReason"/>  <!-- 锁定状态 -->        <result column="ODL1tBuildingFId" javaType="java.math.BigInteger" property="tBuildingFId"/>  <!-- 楼栋id -->        <result column="ODL1tUserId" javaType="java.math.BigInteger" property="tUserId"/>  <!-- 开锁人id -->        <result column="ODL1openDoorTime" javaType="java.lang.String" property="openDoorTime"/>  <!-- 开门日期 -->        <result column="ODL1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 申请时间 -->        <result column="ODL1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ODL1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ODL1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ODL1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ODL1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ODL1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		ODL.f_id,ODL.f_os,ODL.f_status,ODL.f_phone_device,ODL.f_fail_reason,ODL.t_building_f_id,ODL.t_user_id,date_format(ODL.f_open_door_time,'%Y-%m-%d %T') as f_open_door_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		ODL.f_id as ODLid,ODL.f_os as ODLos,ODL.f_status as ODLstatus,ODL.f_phone_device as ODLphoneDevice,ODL.f_fail_reason as ODLfailReason,ODL.t_building_f_id as ODLtBuildingFId,ODL.t_user_id as ODLtUserId,date_format(ODL.f_open_door_time,'%Y-%m-%d %T') as ODLopenDoorTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		ODL1.f_id as ODL1id,ODL1.f_os as ODL1os,ODL1.f_status as ODL1status,ODL1.f_phone_device as ODL1phoneDevice,ODL1.f_fail_reason as ODL1failReason,ODL1.t_building_f_id as ODL1tBuildingFId,ODL1.t_user_id as ODL1tUserId,date_format(ODL1.f_open_door_time,'%Y-%m-%d %T') as ODL1openDoorTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (ODL.f_id = #{id} ) </if>        <if test="os != null">  and (ODL.f_os = #{os} ) </if>        <if test="status != null">  and (ODL.f_status = #{status} ) </if>        <if test="phoneDevice != null">  and (ODL.f_phone_device = #{phoneDevice} ) </if>        <if test="failReason != null">  and (ODL.f_fail_reason = #{failReason} ) </if>        <if test="tBuildingFId != null">  and (ODL.t_building_f_id = #{tBuildingFId} ) </if>        <if test="tUserId != null">  and (ODL.t_user_id = #{tUserId} ) </if>        <if test="openDoorTime != null and !openDoorTime.equals('')  ">  and (ODL.f_open_door_time = str_to_date(#{openDoorTime},'%Y-%m-%d %T') ) </if>        <if test="openDoorTime_START != null and !openDoorTime_START.equals('')  ">              <![CDATA[ and (ODL.f_open_door_time >= str_to_date(#{openDoorTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="openDoorTime_END != null and !openDoorTime_END.equals('')  ">            <![CDATA[ and (ODL.f_open_door_time <= str_to_date(#{openDoorTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (ODL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (ODL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (ODL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ODL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (ODL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (ODL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (ODL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (ODL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (ODL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (ODL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (ODL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (ODL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (ODL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (ODL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (ODL.f_id = #{id} ) </if>        <if test="os != null and !os.equals('')  ">  and (ODL.f_os like CONCAT('%',#{os},'%') ) </if>        <if test="status != null and !status.equals('')  ">  and (ODL.f_status = #{status} ) </if>        <if test="phoneDevice != null and !phoneDevice.equals('')  ">  and (ODL.f_phone_device = #{phoneDevice} ) </if>        <if test="failReason != null and !failReason.equals('')  ">  and (ODL.f_fail_reason like CONCAT('%',#{failReason},'%') ) </if>        <if test="tBuildingFId != null and !tBuildingFId.equals('')  ">  and (ODL.t_building_f_id = #{tBuildingFId} ) </if>        <if test="tUserId != null and !tUserId.equals('')  ">  and (ODL.t_user_id = #{tUserId} ) </if>        <if test="openDoorTime != null and !openDoorTime.equals('')  ">  and (ODL.f_open_door_time = str_to_date(#{openDoorTime},'%Y-%m-%d %T') ) </if>        <if test="openDoorTime_START != null and !openDoorTime_START.equals('')  ">              <![CDATA[ and (ODL.f_open_door_time >= str_to_date(#{openDoorTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="openDoorTime_END != null and !openDoorTime_END.equals('')  ">            <![CDATA[ and (ODL.f_open_door_time <= str_to_date(#{openDoorTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (ODL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (ODL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (ODL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ODL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (ODL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (ODL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (ODL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (ODL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (ODL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (ODL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (ODL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (ODL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (ODL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (ODL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="openDoorLogBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="openDoorLogBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="openDoorLogBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="openDoorLogBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_open_door_log ODL    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(门禁开门记录表)信息。 -->
+	<sql id="select_openDoorLog">
+		SELECT <include refid="openDoorLogBase.queryHead"/>
+		<include refid="openDoorLogBase.busiQueryCondition"/>
+		<include refid="openDoorLogBase.dimCheckSql"/>
+		ORDER BY ODL.f_id DESC
+	</sql>
+	<select id="select_openDoorLog" parameterType="java.util.Map" resultMap="openDoorLogBase.openDoorLogExtendMap">
+		<include refid="openDoorLogBase.select_openDoorLog"/>
+	</select>
+	
+	<!-- 根据条件分页查询(门禁开门记录表)信息  -->
+	<sql id="select_openDoorLog_withPage">
+		SELECT <include refid="openDoorLogBase.queryHead"/>
+		<include refid="openDoorLogBase.busiQueryCondition"/>
+		<include refid="openDoorLogBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_openDoorLog_withPage" resultMap="openDoorLogBase.openDoorLogExtendMap" parameterType="java.util.Map">
+		<include refid="openDoorLogBase.select_openDoorLog_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(门禁开门记录表)信息。 -->
+	<sql id="select_openDoorLog_bySeqId">
+		SELECT <include refid="openDoorLogBase.queryHead"/>
+		<include refid="openDoorLogBase.busiQueryCondition"/>
+		 and ODL.f_id = #{_parameter}
+	</sql>
+	<select id="select_openDoorLog_bySeqId" parameterType="java.math.BigInteger" resultMap="openDoorLogBase.openDoorLogBaseMap">
+		<include refid="openDoorLogBase.select_openDoorLog_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(门禁开门记录表)记录数  -->
+	<sql id="select_openDoorLog_count">
+		SELECT COUNT(*)
+		<include refid="openDoorLogBase.busiQueryCount"/>
+		<include refid="openDoorLogBase.dimCheckSql"/>
+	</sql>
+	<select id="select_openDoorLog_count" resultType="java.lang.Integer">
+		<include refid="openDoorLogBase.select_openDoorLog_count"/>
+	</select>
+	
+	 <!-- 往(门禁开门记录表)新增一条记录。 -->
+	 <sql id="insert_openDoorLog">
+		INSERT INTO t_open_door_log 
+		(f_id,f_os,f_status,f_phone_device,f_fail_reason,t_building_f_id,t_user_id,f_open_door_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{os,jdbcType=VARCHAR},#{status},#{phoneDevice},#{failReason,jdbcType=VARCHAR},#{tBuildingFId},#{tUserId},str_to_date(#{openDoorTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_openDoorLog" parameterType="OpenDoorLog">
+		<include refid="openDoorLogBase.insert_openDoorLog"/>
+    </insert>
+    
+	<!-- 批量新增(门禁开门记录表)信息 -->
+    <insert id="insert_openDoorLog_Batch" parameterType="java.util.List">
+    	INSERT INTO t_open_door_log 
+		(f_id,f_os,f_status,f_phone_device,f_fail_reason,t_building_f_id,t_user_id,f_open_door_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.os,jdbcType=VARCHAR},#{item.status},#{item.phoneDevice},#{item.failReason,jdbcType=VARCHAR},#{item.tBuildingFId},#{item.tUserId},str_to_date(#{item.openDoorTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(门禁开门记录表)信息。 -->
+    <sql id="update_openDoorLog">
+		UPDATE t_open_door_log		<trim prefix="SET" prefixOverrides=","> 		<if test="os != null and !os.equals('') "> ,f_os=#{os}</if> 		<if test="status != null and !status.equals('') "> ,f_status=#{status}</if> 		<if test="phoneDevice != null and !phoneDevice.equals('') "> ,f_phone_device=#{phoneDevice}</if> 		<if test="failReason != null and !failReason.equals('') "> ,f_fail_reason=#{failReason}</if> 		<if test="tBuildingFId != null and !tBuildingFId.equals('') "> ,t_building_f_id=#{tBuildingFId}</if> 		<if test="tUserId != null and !tUserId.equals('') "> ,t_user_id=#{tUserId}</if> 		<if test="openDoorTime != null and !openDoorTime.equals('') "> ,f_open_door_time=str_to_date(#{openDoorTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_openDoorLog" parameterType="OpenDoorLog">
+		<include refid="openDoorLogBase.update_openDoorLog"/>
+    </update>
+    
+    <!-- 批量更新(门禁开门记录表)信息。 -->
+    <update id="update_openDoorLog_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_open_door_log		<trim prefix="SET" prefixOverrides=","> 		<if test="item.os != null and !item.os.equals('')  "> ,f_os=#{item.os}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.phoneDevice != null and !item.phoneDevice.equals('')  "> ,f_phone_device=#{item.phoneDevice}</if> 		<if test="item.failReason != null and !item.failReason.equals('')  "> ,f_fail_reason=#{item.failReason}</if> 		<if test="item.tBuildingFId != null and !item.tBuildingFId.equals('')  "> ,t_building_f_id=#{item.tBuildingFId}</if> 		<if test="item.tUserId != null and !item.tUserId.equals('')  "> ,t_user_id=#{item.tUserId}</if> 		<if test="item.openDoorTime != null and !item.openDoorTime.equals('')  "> ,f_open_door_time=str_to_date(#{item.openDoorTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(门禁开门记录表)信息_逻辑删除。 -->
+    <sql id="delete_openDoorLog_Logic">
+		UPDATE t_open_door_log		<trim prefix="SET" prefixOverrides=","> 		<if test="os != null and !os.equals('')  "> ,f_os=#{os}</if> 		<if test="status != null and !status.equals('')  "> ,f_status=#{status}</if> 		<if test="phoneDevice != null and !phoneDevice.equals('')  "> ,f_phone_device=#{phoneDevice}</if> 		<if test="failReason != null and !failReason.equals('')  "> ,f_fail_reason=#{failReason}</if> 		<if test="tBuildingFId != null and !tBuildingFId.equals('')  "> ,t_building_f_id=#{tBuildingFId}</if> 		<if test="tUserId != null and !tUserId.equals('')  "> ,t_user_id=#{tUserId}</if> 		<if test="openDoorTime != null and !openDoorTime.equals('')  "> ,f_open_door_time=str_to_date(#{openDoorTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_openDoorLog_Logic" parameterType="OpenDoorLog">
+		<include refid="openDoorLogBase.delete_openDoorLog_Logic"/>
+    </update>
+    
+    <!-- 批量删除(门禁开门记录表)信息_逻辑删除 -->
+    <update id="delete_openDoorLog_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_open_door_log		<trim prefix="SET" prefixOverrides=","> 		<if test="item.os != null and !item.os.equals('')  "> ,f_os=#{item.os}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.phoneDevice != null and !item.phoneDevice.equals('')  "> ,f_phone_device=#{item.phoneDevice}</if> 		<if test="item.failReason != null and !item.failReason.equals('')  "> ,f_fail_reason=#{item.failReason}</if> 		<if test="item.tBuildingFId != null and !item.tBuildingFId.equals('')  "> ,t_building_f_id=#{item.tBuildingFId}</if> 		<if test="item.tUserId != null and !item.tUserId.equals('')  "> ,t_user_id=#{item.tUserId}</if> 		<if test="item.openDoorTime != null and !item.openDoorTime.equals('')  "> ,f_open_door_time=str_to_date(#{item.openDoorTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(门禁开门记录表)信息。 -->
+    <sql id="delete_openDoorLog">
+		DELETE FROM t_open_door_log WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_openDoorLog" parameterType="java.lang.String">
+		<include refid="openDoorLogBase.delete_openDoorLog"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(门禁开门记录表)信息。 -->
+    <delete id="delete_openDoorLog_Batch" parameterType="java.util.List">
+		DELETE FROM t_open_door_log WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:商品审核不通过原因 t_ebuy_refund_audit -->
+<mapper namespace="ebuyRefundAuditBase">
+	<resultMap type="EbuyRefundAudit" id="ebuyRefundAuditBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键,同t_ebuy_product.f_id -->        <result column="f_reason" javaType="java.lang.String" property="reason"/>  <!-- 退款原因 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="f_refund_ratio" javaType="java.lang.Long" property="refundRatio"/>  <!-- 退款比例 -->
+	</resultMap>
+	<resultMap type="EbuyRefundAudit" id="ebuyRefundAuditExtendMap" extends="ebuyRefundAuditBaseMap">
+	</resultMap>
+	<resultMap type="EbuyRefundAudit" id="ebuyRefundAuditBaseMap_AppendTable">
+        <id column="ERAid" javaType="java.math.BigInteger" property="id"/>  <!-- 主键,同t_ebuy_product.f_id -->        <result column="ERAreason" javaType="java.lang.String" property="reason"/>  <!-- 退款原因 -->        <result column="ERAsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="ERArefundRatio" javaType="java.lang.Long" property="refundRatio"/>  <!-- 退款比例 -->
+	</resultMap>
+	<resultMap type="EbuyRefundAudit" id="ebuyRefundAuditBaseMap_AppendTable1">
+        <id column="ERA1id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键,同t_ebuy_product.f_id -->        <result column="ERA1reason" javaType="java.lang.String" property="reason"/>  <!-- 退款原因 -->        <result column="ERA1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="ERA1refundRatio" javaType="java.lang.Long" property="refundRatio"/>  <!-- 退款比例 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		ERA.f_id,ERA.f_reason,ERA.f_refund_ratio
+	</sql>
+	<sql id="queryHead_AppendTable">
+		ERA.f_id as ERAid,ERA.f_reason as ERAreason,ERA.f_refund_ratio as ERArefundRatio
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		ERA1.f_id as ERA1id,ERA1.f_reason as ERA1reason,ERA1.f_refund_ratio as ERA1refundRatio
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (ERA.f_id = #{id} ) </if>        <if test="reason != null">  and (ERA.f_reason = #{reason} ) </if>        <if test="sys0DelState != null">  and (ERA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (ERA.f_sys0_del_state = 0 ) </if>        <if test="refundRatio != null">  and (ERA.f_refund_ratio = #{refundRatio} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (ERA.f_id = #{id} ) </if>        <if test="reason != null and !reason.equals('')  ">  and (ERA.f_reason like CONCAT('%',#{reason},'%') ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (ERA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (ERA.f_sys0_del_state = 0 ) </if>        <if test="refundRatio != null and !refundRatio.equals('')  ">  and (ERA.f_refund_ratio = #{refundRatio} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyRefundAuditBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyRefundAuditBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyRefundAuditBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyRefundAuditBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_refund_audit ERA    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(商品审核不通过原因)信息。 -->
+	<sql id="select_ebuyRefundAudit">
+		SELECT <include refid="ebuyRefundAuditBase.queryHead"/>
+		<include refid="ebuyRefundAuditBase.busiQueryCondition"/>
+		<include refid="ebuyRefundAuditBase.dimCheckSql"/>
+		ORDER BY ERA.f_id DESC
+	</sql>
+	<select id="select_ebuyRefundAudit" parameterType="java.util.Map" resultMap="ebuyRefundAuditBase.ebuyRefundAuditExtendMap">
+		<include refid="ebuyRefundAuditBase.select_ebuyRefundAudit"/>
+	</select>
+	
+	<!-- 根据条件分页查询(商品审核不通过原因)信息  -->
+	<sql id="select_ebuyRefundAudit_withPage">
+		SELECT <include refid="ebuyRefundAuditBase.queryHead"/>
+		<include refid="ebuyRefundAuditBase.busiQueryCondition"/>
+		<include refid="ebuyRefundAuditBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyRefundAudit_withPage" resultMap="ebuyRefundAuditBase.ebuyRefundAuditExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyRefundAuditBase.select_ebuyRefundAudit_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(商品审核不通过原因)信息。 -->
+	<sql id="select_ebuyRefundAudit_bySeqId">
+		SELECT <include refid="ebuyRefundAuditBase.queryHead"/>
+		<include refid="ebuyRefundAuditBase.busiQueryCondition"/>
+		 and ERA.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyRefundAudit_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyRefundAuditBase.ebuyRefundAuditBaseMap">
+		<include refid="ebuyRefundAuditBase.select_ebuyRefundAudit_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(商品审核不通过原因)记录数  -->
+	<sql id="select_ebuyRefundAudit_count">
+		SELECT COUNT(*)
+		<include refid="ebuyRefundAuditBase.busiQueryCount"/>
+		<include refid="ebuyRefundAuditBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyRefundAudit_count" resultType="java.lang.Integer">
+		<include refid="ebuyRefundAuditBase.select_ebuyRefundAudit_count"/>
+	</select>
+	
+	 <!-- 往(商品审核不通过原因)新增一条记录。 -->
+	 <sql id="insert_ebuyRefundAudit">
+		INSERT INTO t_ebuy_refund_audit 
+		(f_id,f_reason,f_sys0_del_state,f_refund_ratio) VALUES 
+		(#{id},#{reason,jdbcType=VARCHAR},0,#{refundRatio})
+	 </sql>
+    <insert id="insert_ebuyRefundAudit" parameterType="EbuyRefundAudit">
+		<include refid="ebuyRefundAuditBase.insert_ebuyRefundAudit"/>
+    </insert>
+    
+	<!-- 批量新增(商品审核不通过原因)信息 -->
+    <insert id="insert_ebuyRefundAudit_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_refund_audit 
+		(f_id,f_reason,f_sys0_del_state,f_refund_ratio) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.reason,jdbcType=VARCHAR},0,#{item.refundRatio})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(商品审核不通过原因)信息。 -->
+    <sql id="update_ebuyRefundAudit">
+		UPDATE t_ebuy_refund_audit		<trim prefix="SET" prefixOverrides=","> 		<if test="reason != null and !reason.equals('') "> ,f_reason=#{reason}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if> 		<if test="refundRatio != null and !refundRatio.equals('') "> ,f_refund_ratio=#{refundRatio}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyRefundAudit" parameterType="EbuyRefundAudit">
+		<include refid="ebuyRefundAuditBase.update_ebuyRefundAudit"/>
+    </update>
+    
+    <!-- 批量更新(商品审核不通过原因)信息。 -->
+    <update id="update_ebuyRefundAudit_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_refund_audit		<trim prefix="SET" prefixOverrides=","> 		<if test="item.reason != null and !item.reason.equals('')  "> ,f_reason=#{item.reason}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if> 		<if test="item.refundRatio != null and !item.refundRatio.equals('')  "> ,f_refund_ratio=#{item.refundRatio}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(商品审核不通过原因)信息_逻辑删除。 -->
+    <sql id="delete_ebuyRefundAudit_Logic">
+		UPDATE t_ebuy_refund_audit		<trim prefix="SET" prefixOverrides=","> 		<if test="reason != null and !reason.equals('')  "> ,f_reason=#{reason}</if> 		<if test="refundRatio != null and !refundRatio.equals('')  "> ,f_refund_ratio=#{refundRatio}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyRefundAudit_Logic" parameterType="EbuyRefundAudit">
+		<include refid="ebuyRefundAuditBase.delete_ebuyRefundAudit_Logic"/>
+    </update>
+    
+    <!-- 批量删除(商品审核不通过原因)信息_逻辑删除 -->
+    <update id="delete_ebuyRefundAudit_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_refund_audit		<trim prefix="SET" prefixOverrides=","> 		<if test="item.reason != null and !item.reason.equals('')  "> ,f_reason=#{item.reason}</if> 		<if test="item.refundRatio != null and !item.refundRatio.equals('')  "> ,f_refund_ratio=#{item.refundRatio}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(商品审核不通过原因)信息。 -->
+    <sql id="delete_ebuyRefundAudit">
+		DELETE FROM t_ebuy_refund_audit WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyRefundAudit" parameterType="java.lang.String">
+		<include refid="ebuyRefundAuditBase.delete_ebuyRefundAudit"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(商品审核不通过原因)信息。 -->
+    <delete id="delete_ebuyRefundAudit_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_refund_audit WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

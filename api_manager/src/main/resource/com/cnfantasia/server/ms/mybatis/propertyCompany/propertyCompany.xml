@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:业主表 t_property_company -->
+<mapper namespace="propertyCompany">
+	<resultMap type="com.cnfantasia.server.ms.propertyCompany.entity.PropertyCompanyEntity" id="propertyCompanyEntity" extends="propertyCompanyBase.propertyCompanyBaseMap">
+		<result property="lastLoginTime" javaType="java.lang.String" column="lastLoginTime" />
+		<result property="isLocked" javaType="int" column="isLocked" />
+		<result property="pmIsAudited" javaType="int" column="pmIsAudited" />
+		<result property="propertyManagementId" javaType="java.math.BigInteger" column="propertyManagementId" />
+		<result property="pmSys0UpdTime" javaType="java.lang.String" column="pmSys0UpdTime" />
+	</resultMap>
+	<!-- 物业管理工作台对象 -->
+	<resultMap type="com.cnfantasia.server.ms.propertyCompany.entity.PropertyCompanyWorkbenchEntity" id="propertyCompanyWorkbenchEntity" extends="propertyCompanyEntity">
+	</resultMap>
+	
+	<!-- 根据 登录用户Id，找 所属 物业公司的 信息  -->
+    <select id="select_pcInfo_ByOmsUserId" parameterType="java.math.BigInteger" resultMap="propertyCompanyEntity">
+    	select <include refid="propertyCompanyBase.queryHead_AppendTable"/>
+    	FROM t_property_company PC
+    	inner join t_oms_user OU on OU.f_id = PC.f_admin_id
+    	WHERE 1=1 
+    	<if test="_parameter != null and _parameter != 1 "> and OU.f_id = #{_parameter}</if><!-- 管理员要看到所有 -->
+	</select>
+	
+	<!-- 根据 登录用户Id，找 所管辖的 小区的列表  -->
+    <select id="select_gbList_ByOmsUserId" parameterType="java.math.BigInteger" resultMap="groupBuilding.GroupBuildingSimpleEntity_Map_Append">
+    	select <include refid="groupBuildingBase.queryHead_AppendTable"/>,AB.f_name AS t_address_block, ac.f_name as t_address_city, ap.f_name as t_address_province
+    	FROM t_group_building GB
+    	INNER JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id AND AB.f_sys0_del_state = 0
+   		inner join t_address_city ac on ac.f_id = AB.t_city_f_id and ac.f_sys0_del_state = 0 
+   		inner join t_address_province ap on ap.f_id = ac.t_province_f_id and ap.f_sys0_del_state = 0 
+   		inner join t_property_company pc on pc.f_id = GB.t_property_company_f_id 
+   	 	WHERE 1=1
+   	 	AND GB.f_sys0_del_state = 0
+    	<if test="#{_parameter} != null and #{_parameter} != '' " > and pc.f_admin_id = #{_parameter}</if>
+	</select>
+	
+	<!-- 根据 物业公司Id，找到注册时录入小区 列表  -->
+    <select id="select_gbrList_ByPCId" parameterType="java.math.BigInteger" resultType="java.util.Map">
+    	select gbr.f_name as gbrName, gbr.f_address_desc gbrAddressdesc, 
+		ab.f_name abName, ab.f_id abId, ac.f_name acName, ap.f_name apName from t_group_building_register gbr 
+		inner join t_address_block ab on ab.f_id = gbr.t_address_block_f_id
+		inner join t_address_city ac on ac.f_id = ab.t_city_f_id
+		inner join t_address_province ap on ap.f_id = ac.t_province_f_id 
+		where gbr.t_property_company_f_id = #{_parameter}
+	</select>
+	
+	<!--根据物业公司id查询小区信息  -->
+    <select id="select_gbList_ByPCId" parameterType="java.math.BigInteger" resultType="java.util.Map">
+    	select gb.f_name as gbrName, gb.f_address_desc gbrAddressdesc, 
+		ab.f_name abName, ab.f_id abId, ac.f_name acName, ap.f_name apName from t_group_building gb
+		inner join t_address_block ab on ab.f_id = gb.t_block_f_id
+		inner join t_address_city ac on ac.f_id = ab.t_city_f_id
+		inner join t_address_province ap on ap.f_id = ac.t_province_f_id 
+		where gb.t_property_company_f_id = #{_parameter}
+	</select>
+	
+	<!-- 为管理员返回所有物业公司信息列表 -->
+	<select id="select_pcList_forAdmin" parameterType="java.util.HashMap" resultMap="propertyCompanyEntity">
+    	select <include refid="propertyCompanyBase.queryHead"/>,
+    	OU.f_last_login_time lastLoginTime, 
+    	case when CPR.f_id is null then 0 else 1 end as isLocked,
+    	PC.f_sys0_add_time sys0AddTime
+    	FROM t_property_company PC
+    	LEFT JOIN t_oms_user OU on PC.f_admin_id = OU.f_id and OU.f_sys0_del_state = 0 
+    	LEFT JOIN t_channel_partner_recommend CPR on CPR.f_pc_name = PC.f_name and date_add(CPR.f_sys0_add_time, interval 60 day) > now()
+   	 	WHERE 1=1 
+   	 	AND PC.f_sys0_del_state = 0
+   	 	 <if test="pcName!=null and pcName!='' ">  and PC.f_name like CONCAT('%',#{pcName},'%') </if>
+   	 	 <if test="startTime != null and startTime != '' ">  and (PC.f_sys0_add_time &gt;= #{startTime} ) </if>
+    	 <if test="endTime != null and endTime != '' ">  and (PC.f_sys0_add_time &lt;= #{endTime}  ) </if>
+    	 <if test="isAudited != null and isAudited != '' ">  and (PC.f_is_audited = #{isAudited}  ) </if>
+    	 <if test="userRealName!='管理员' and userRealName!='张倩' and userRealName!='吴阳' and userRealName!='桂青' and userRealName!='赖周瑜' ">  and PC.f_follower = #{userRealName} </if>
+   	 	order by PC.f_sys0_add_time desc
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<!-- 物业公司登录展示的工作台信息 -->
+	<select id="select_Workbench_forPC" parameterType="java.math.BigInteger" resultMap="propertyCompanyWorkbenchEntity">
+    	SELECT 
+			<include refid="propertyCompanyBase.queryHead"/>
+		FROM t_property_company PC
+		WHERE PC.f_sys0_del_state = 0
+		AND PC.f_admin_id=#{_parameter};
+	</select>
+	
+	<!-- 物业公司申请高级合作查询 -->
+	<select id="select_propertyCompany_forApply" resultMap="propertyCompanyEntity">
+    	SELECT 
+			<include refid="propertyCompanyBase.queryHead"/>,
+			(CASE WHEN PC.f_is_all_cooperation IS NOT NULL THEN  PC.f_all_cooperation_time
+			      WHEN PC.f_is_high_cooperation IS NOT NULL THEN PC.f_high_cooperation_time
+			      ELSE PC.f_light_cooperation_time END
+			)AS subTime
+		FROM t_property_company PC
+		WHERE PC.f_sys0_del_state = 0
+		AND PC.f_is_high_cooperation IS NOT NULL
+		<if test="pcName != null and pcName != '' ">  and PC.f_name like CONCAT('%',#{pcName}, '%')</if>
+		<if test="auditStatus != null and auditStatus != '' ">  and PC.f_is_high_cooperation = #{auditStatus}</if>
+		ORDER BY subTime DESC 
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<select id="selectValidPropertyCompanyByPcName" parameterType="string" resultType="int">
+		select count(1) from t_property_company
+		where f_sys0_del_state = 0
+		and f_is_audited = 1
+		and f_name = #{pcName};
+	</select>
+	<!-- 查询修改物业公司的列表 -->
+	<select id="selectpropertycompanyedit" parameterType="java.util.HashMap" resultMap="propertyCompanyEntity">
+		SELECT <include refid="propertyCompanyBase.queryHead"/>,
+		PC.f_sys0_edit_time sys0EditTime,'' as propertyManagementId,PC.f_sys0_edit_time as pmSys0UpdTime,'' as pmIsAudited
+		    	FROM t_property_company PC
+    	LEFT JOIN t_oms_user OU on PC.f_admin_id = OU.f_id and OU.f_sys0_del_state = 0 
+    	LEFT JOIN t_channel_partner_recommend CPR on CPR.f_pc_name = PC.f_name and date_add(CPR.f_sys0_add_time, interval 60 day) > now()
+   	 	WHERE 1=1 
+   	 	AND PC.f_sys0_del_state = 0
+   	 	AND PC.f_is_edit IS NOT NULL
+   	 	 <if test="pcName!=null and pcName!='' ">  and PC.f_name like CONCAT('%',#{pcName},'%') </if>
+   	 	 <if test="startTime != null and startTime != '' ">  and (PC.f_sys0_edit_time &gt;= #{startTime} ) </if>
+    	 <if test="endTime != null and endTime != '' ">  and (PC.f_sys0_edit_time &lt;= #{endTime}  ) </if>
+    	 <if test="isEdit != null and isEdit != '' ">  and (PC.f_is_edit = #{isEdit}  ) </if>
+		
+		UNION
+		
+		SELECT 	PC1.f_id,PC1.f_name,PC1.f_edit_name,PC1.f_bank_name,PC1.f_account_no,PC1.f_account_name,PC1.f_bank_branch,
+		PC1.f_bank_province,PC1.f_bank_city,PC1.f_revenue_date,PC1.f_edit_bank_name,
+		PC1.f_edit_account_no,PC1.f_edit_account_name,PC1.f_edit_bank_branch,
+		PC1.f_edit_bank_province,PC1.f_edit_bank_city,PC1.f_edit_revenue_date,
+		PC1.f_tel,PC1.f_edit_tel,PC1.f_desc,PC1.f_admin_id,PC1.f_email,
+		PC1.f_mobile_phone,PC1.f_edit_mobile_phone,PC1.f_linkMan,
+		PC1.f_edit_linkMan,PC1.f_photo_credentials,PC1.f_photo_business_license,
+		PC1.f_is_audited,PC1.f_is_edit,PC1.f_audit_result,PC1.f_cooperation_type,
+		PC1.f_edit_result,date_format(PC1.f_light_cooperation_time,'%Y-%m-%d %T') as f_light_cooperation_time,
+		PC1.f_is_light_cooperation,date_format(PC1.f_high_cooperation_time,'%Y-%m-%d %T') as f_high_cooperation_time,
+		PC1.f_is_high_cooperation,date_format(PC1.f_all_cooperation_time,'%Y-%m-%d %T') as f_all_cooperation_time,
+		PC1.f_is_all_cooperation,PC1.f_caropen__status,PC1.f_photo_url,PC1.f_follower,
+		PC1.f_sys0_edit_time sys0EditTime,PM1.f_id propertyManagementId,PM1.f_sys0_upd_time pmSys0UpdTime, PM1.f_is_edit pmIsAudited
+		    	FROM t_property_management PM1
+		INNER JOIN t_property_company PC1 ON PM1.t_property_company_f_id = PC1.f_id AND PC1.f_sys0_del_state = 0
+   	 	WHERE 1=1 
+   	 	AND PM1.f_sys0_del_state = 0
+   	 	 <if test="pcName!=null and pcName!='' ">  and PC1.f_name like CONCAT('%',#{pcName},'%') </if>
+   	 	 <if test="startTime != null and startTime != '' ">  and (PM1.f_sys0_upd_time &gt;= #{startTime} ) </if>
+    	 <if test="endTime != null and endTime != '' ">  and (PM1.f_sys0_upd_time &lt;= #{endTime}  ) </if>
+    	 <if test="isEdit != null and isEdit != '' ">  and (PM1.f_is_edit = #{isEdit}  ) </if>
+   	 	order by pmSys0UpdTime desc
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+
+	<select id="selectpropertycompanyeditcount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT SUM(t.num) FROM(
+			SELECT COUNT(*) num
+			FROM t_property_company PC
+	    	LEFT JOIN t_oms_user OU on PC.f_admin_id = OU.f_id and OU.f_sys0_del_state = 0 
+	    	LEFT JOIN t_channel_partner_recommend CPR on CPR.f_pc_name = PC.f_name and date_add(CPR.f_sys0_add_time, interval 60 day) > now()
+	   	 	WHERE 1=1 
+	   	 	AND PC.f_sys0_del_state = 0
+	   	 	AND PC.f_is_edit IS NOT NULL
+	   	 	 <if test="pcName!=null and pcName!='' ">  and PC.f_name like CONCAT('%',#{pcName},'%') </if>
+	   	 	 <if test="startTime != null and startTime != '' ">  and (PC.f_sys0_edit_time &gt;= #{startTime} ) </if>
+	    	 <if test="endTime != null and endTime != '' ">  and (PC.f_sys0_edit_time &lt;= #{endTime}  ) </if>
+	    	 <if test="isEdit != null and isEdit != '' ">  and (PC.f_is_edit = #{isEdit}  ) </if>
+			
+			UNION ALL
+			
+			SELECT COUNT(*) num
+			FROM t_property_management PM1
+			INNER JOIN t_property_company PC1 ON PM1.t_property_company_f_id = PC1.f_id AND PC1.f_sys0_del_state = 0
+	    	LEFT JOIN t_oms_user OU1 on PC1.f_admin_id = OU1.f_id and OU1.f_sys0_del_state = 0 
+	    	LEFT JOIN t_channel_partner_recommend CPR1 on CPR1.f_pc_name = PC1.f_name and date_add(CPR1.f_sys0_add_time, interval 60 day) > now()
+	   	 	WHERE 1=1 
+	   	 	AND PM1.f_sys0_del_state = 0
+	   	 	 <if test="pcName!=null and pcName!='' ">  and PC1.f_name like CONCAT('%',#{pcName},'%') </if>
+	   	 	 <if test="startTime != null and startTime != '' ">  and (PM1.f_sys0_upd_time &gt;= #{startTime} ) </if>
+    	 	<if test="endTime != null and endTime != '' ">  and (PM1.f_sys0_upd_time &lt;= #{endTime}  ) </if>
+    	 	<if test="isEdit != null and isEdit != '' ">  and (PM1.f_is_edit = #{isEdit}  ) </if>
+    	 ) t
+	</select>
+	
+	<select id="selectpropertycompanyedit_company" parameterType="java.util.HashMap" resultMap="propertyCompanyEntity">
+		SELECT <include refid="propertyCompanyBase.queryHead"/>,
+		PC.f_sys0_edit_time sys0EditTime,'' as propertyManagementId,PC.f_sys0_edit_time as pmSys0UpdTime,'' as pmIsAudited
+		    	FROM t_property_company PC
+    	LEFT JOIN t_oms_user OU on PC.f_admin_id = OU.f_id and OU.f_sys0_del_state = 0 
+    	LEFT JOIN t_channel_partner_recommend CPR on CPR.f_pc_name = PC.f_name and date_add(CPR.f_sys0_add_time, interval 60 day) > now()
+   	 	WHERE 1=1 
+   	 	AND PC.f_sys0_del_state = 0
+   	 	AND PC.f_is_edit IS NOT NULL
+   	 	 <if test="pcName!=null and pcName!='' ">  and PC.f_name like CONCAT('%',#{pcName},'%') </if>
+   	 	 <if test="startTime != null and startTime != '' ">  and (PC.f_sys0_edit_time &gt;= #{startTime} ) </if>
+    	 <if test="endTime != null and endTime != '' ">  and (PC.f_sys0_edit_time &lt;= #{endTime}  ) </if>
+    	 <if test="isEdit != null and isEdit != '' ">  and (PC.f_is_edit = #{isEdit}  ) </if>
+   	 	order by PC.f_sys0_edit_time desc
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	<select id="selectpropertycompanyedit_companycount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		    FROM t_property_company PC
+    	LEFT JOIN t_oms_user OU on PC.f_admin_id = OU.f_id and OU.f_sys0_del_state = 0 
+    	LEFT JOIN t_channel_partner_recommend CPR on CPR.f_pc_name = PC.f_name and date_add(CPR.f_sys0_add_time, interval 60 day) > now()
+   	 	WHERE 1=1 
+   	 	AND PC.f_sys0_del_state = 0
+   	 	AND PC.f_is_edit IS NOT NULL
+   	 	 <if test="pcName!=null and pcName!='' ">  and PC.f_name like CONCAT('%',#{pcName},'%') </if>
+   	 	 <if test="startTime != null and startTime != '' ">  and (PC.f_sys0_upd_time &gt;= #{startTime} ) </if>
+    	 <if test="endTime != null and endTime != '' ">  and (PC.f_sys0_upd_time &lt;= #{endTime}  ) </if>
+    	 <if test="isEdit != null and isEdit != '' ">  and (PC.f_is_edit = #{isEdit}  ) </if>
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	<select id="selectpropertycompanyedit_management" parameterType="java.util.HashMap" resultMap="propertyCompanyEntity">
+		SELECT <include refid="propertyCompanyBase.queryHead"/>,
+		PC.f_sys0_edit_time sys0EditTime,PM.f_id propertyManagementId,PM.f_sys0_upd_time pmSys0UpdTime, PM.f_is_edit pmIsAudited
+		    	FROM t_property_management PM
+		INNER JOIN t_property_company PC ON PM.t_property_company_f_id = PC.f_id AND PC.f_sys0_del_state = 0 AND PC.f_is_edit IS NOT NULL
+    	LEFT JOIN t_oms_user OU on PC.f_admin_id = OU.f_id and OU.f_sys0_del_state = 0 
+    	LEFT JOIN t_channel_partner_recommend CPR on CPR.f_pc_name = PC.f_name and date_add(CPR.f_sys0_add_time, interval 60 day) > now()
+   	 	WHERE 1=1 
+   	 	AND PM.f_sys0_del_state = 0
+   	 	 <if test="pcName!=null and pcName!='' ">  and PC.f_name like CONCAT('%',#{pcName},'%') </if>
+   	 	 <if test="startTime != null and startTime != '' ">  and (PM.f_sys0_upd_time &gt;= #{startTime} ) </if>
+    	 <if test="endTime != null and endTime != '' ">  and (PM.f_sys0_upd_time &lt;= #{endTime}  ) </if>
+    	 <if test="isEdit != null and isEdit != '' ">  and (PM.f_is_edit = #{isEdit}  ) </if>
+   	 	order by pmSys0UpdTime desc
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	<select id="selectpropertycompanyedit_managementcount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+			FROM t_property_management PM1
+			INNER JOIN t_property_company PC1 ON PM1.t_property_company_f_id = PC1.f_id AND PC1.f_sys0_del_state = 0 AND PC1.f_is_edit IS NOT NULL
+	    	LEFT JOIN t_oms_user OU1 on PC1.f_admin_id = OU1.f_id and OU1.f_sys0_del_state = 0 
+	    	LEFT JOIN t_channel_partner_recommend CPR1 on CPR1.f_pc_name = PC1.f_name and date_add(CPR1.f_sys0_add_time, interval 60 day) > now()
+	   	 	WHERE 1=1 
+	   	 	AND PM1.f_sys0_del_state = 0
+	   	 	 <if test="pcName!=null and pcName!='' ">  and PC1.f_name like CONCAT('%',#{pcName},'%') </if>
+	   	 	 <if test="startTime != null and startTime != '' ">  and (PM1.f_sys0_upd_time &gt;= #{startTime} ) </if>
+    	 	<if test="endTime != null and endTime != '' ">  and (PM1.f_sys0_upd_time &lt;= #{endTime}  ) </if>
+    	 	<if test="isEdit != null and isEdit != '' ">  and (PM1.f_is_edit = #{isEdit}  ) </if>
+	</select>
+	
+	<select id="select_channel_partner_ByPcName" parameterType="java.lang.String" resultMap="channelPartnerBase.channelPartnerBaseMap_AppendTable">
+		SELECT DISTINCT <include refid="channelPartnerBase.queryHead_AppendTable"/> FROM t_channel_partner CP 
+		INNER JOIN 
+		t_channel_partner_recommend CPR ON CPR.t_channel_partner_f_id = CP.f_id AND CPR.f_is_relevance = 1
+		WHERE CPR.f_pc_name = #{pcName} AND CP.f_sys0_del_state = 0 AND CPR.f_sys0_del_state = 0;
+	</select>
+</mapper>

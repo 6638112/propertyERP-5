@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN: t_group_building_bill_cycle_config -->
+<mapper namespace="groupBuildingBillCycleConfigBase">
+	<resultMap type="GroupBuildingBillCycleConfig" id="groupBuildingBillCycleConfigBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="t_gb_id" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->
+        <result column="f_bill_name" javaType="java.lang.String" property="billName"/>  <!-- 账单名称 -->
+        <result column="f_charging_mode" javaType="java.lang.Integer" property="chargingMode"/>  <!-- 收费模式（1定期，2选择周期，3预存收费） -->
+        <result column="f_bill_month_start" javaType="java.lang.String" property="billMonthStart"/>  <!-- 账单开始时间 -->
+        <result column="f_bill_month_end" javaType="java.lang.String" property="billMonthEnd"/>  <!-- 账单结束时间 -->
+        <result column="f_bill_pay_start" javaType="java.lang.String" property="billPayStart"/>  <!-- 缴费开始时间 -->
+        <result column="f_bill_pay_end" javaType="java.lang.String" property="billPayEnd"/>  <!-- 缴费结束时间 -->
+        <result column="f_fee_type" javaType="java.lang.String" property="feeType"/>  <!-- 包含费用项（1,2,3）逗号分隔存储，1 -->
+        <result column="f_arrears_transfer" javaType="java.lang.Integer" property="arrearsTransfer"/>  <!-- 是否收取欠费（1暂时不做处理；2收取） -->
+        <result column="f_period_months" javaType="java.lang.String" property="periodMonths"/>  <!-- 选择周期月份数（使用逗号分隔 -->
+        <result column="f_min_recharge" javaType="java.lang.Double" property="minRecharge"/>  <!-- 最小收费金额（单位 -->
+        <result column="f_max_recharge" javaType="java.lang.Double" property="maxRecharge"/>  <!-- 最大收费金额（单位 -->
+        <result column="f_start_day" javaType="java.lang.Integer" property="startDay"/>  <!-- 收费期限开始天数 -->
+        <result column="f_end_day" javaType="java.lang.Integer" property="endDay"/>  <!-- 收费期限截止天数 -->
+        <result column="f_recharge_month_mode" javaType="java.lang.Long" property="rechargeMonthMode"/>  <!-- 充值月数（0 -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="f_bank_collection_status" javaType="java.lang.Integer" property="bankCollectionStatus"/>  <!-- 是否银行托收（1托收，2不托收） -->
+	</resultMap>
+	<resultMap type="GroupBuildingBillCycleConfig" id="groupBuildingBillCycleConfigExtendMap" extends="groupBuildingBillCycleConfigBaseMap">
+	</resultMap>
+	<resultMap type="GroupBuildingBillCycleConfig" id="groupBuildingBillCycleConfigBaseMap_AppendTable">
+        <id column="GBBCCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="GBBCCtGbId" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->
+        <result column="GBBCCbillName" javaType="java.lang.String" property="billName"/>  <!-- 账单名称 -->
+        <result column="GBBCCchargingMode" javaType="java.lang.Integer" property="chargingMode"/>  <!-- 收费模式（1定期，2选择周期，3预存收费） -->
+        <result column="GBBCCbillMonthStart" javaType="java.lang.String" property="billMonthStart"/>  <!-- 账单开始时间 -->
+        <result column="GBBCCbillMonthEnd" javaType="java.lang.String" property="billMonthEnd"/>  <!-- 账单结束时间 -->
+        <result column="GBBCCbillPayStart" javaType="java.lang.String" property="billPayStart"/>  <!-- 缴费开始时间 -->
+        <result column="GBBCCbillPayEnd" javaType="java.lang.String" property="billPayEnd"/>  <!-- 缴费结束时间 -->
+        <result column="GBBCCfeeType" javaType="java.lang.String" property="feeType"/>  <!-- 包含费用项（1,2,3）逗号分隔存储，1 -->
+        <result column="GBBCCarrearsTransfer" javaType="java.lang.Integer" property="arrearsTransfer"/>  <!-- 是否收取欠费（1暂时不做处理；2收取） -->
+        <result column="GBBCCperiodMonths" javaType="java.lang.String" property="periodMonths"/>  <!-- 选择周期月份数（使用逗号分隔 -->
+        <result column="GBBCCminRecharge" javaType="java.lang.Double" property="minRecharge"/>  <!-- 最小收费金额（单位 -->
+        <result column="GBBCCmaxRecharge" javaType="java.lang.Double" property="maxRecharge"/>  <!-- 最大收费金额（单位 -->
+        <result column="GBBCCstartDay" javaType="java.lang.Integer" property="startDay"/>  <!-- 收费期限开始天数 -->
+        <result column="GBBCCendDay" javaType="java.lang.Integer" property="endDay"/>  <!-- 收费期限截止天数 -->
+        <result column="GBBCCrechargeMonthMode" javaType="java.lang.Long" property="rechargeMonthMode"/>  <!-- 充值月数（0 -->
+        <result column="GBBCCsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="GBBCCsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="GBBCCsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="GBBCCsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="GBBCCsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="GBBCCsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="GBBCCsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="GBBCCbankCollectionStatus" javaType="java.lang.Integer" property="bankCollectionStatus"/>  <!-- 是否银行托收（1托收，2不托收） -->
+	</resultMap>
+	<resultMap type="GroupBuildingBillCycleConfig" id="groupBuildingBillCycleConfigBaseMap_AppendTable1">
+        <id column="GBBCC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="GBBCC1tGbId" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->
+        <result column="GBBCC1billName" javaType="java.lang.String" property="billName"/>  <!-- 账单名称 -->
+        <result column="GBBCC1chargingMode" javaType="java.lang.Integer" property="chargingMode"/>  <!-- 收费模式（1定期，2选择周期，3预存收费） -->
+        <result column="GBBCC1billMonthStart" javaType="java.lang.String" property="billMonthStart"/>  <!-- 账单开始时间 -->
+        <result column="GBBCC1billMonthEnd" javaType="java.lang.String" property="billMonthEnd"/>  <!-- 账单结束时间 -->
+        <result column="GBBCC1billPayStart" javaType="java.lang.String" property="billPayStart"/>  <!-- 缴费开始时间 -->
+        <result column="GBBCC1billPayEnd" javaType="java.lang.String" property="billPayEnd"/>  <!-- 缴费结束时间 -->
+        <result column="GBBCC1feeType" javaType="java.lang.String" property="feeType"/>  <!-- 包含费用项（1,2,3）逗号分隔存储，1 -->
+        <result column="GBBCC1arrearsTransfer" javaType="java.lang.Integer" property="arrearsTransfer"/>  <!-- 是否收取欠费（1暂时不做处理；2收取） -->
+        <result column="GBBCC1periodMonths" javaType="java.lang.String" property="periodMonths"/>  <!-- 选择周期月份数（使用逗号分隔 -->
+        <result column="GBBCC1minRecharge" javaType="java.lang.Double" property="minRecharge"/>  <!-- 最小收费金额（单位 -->
+        <result column="GBBCC1maxRecharge" javaType="java.lang.Double" property="maxRecharge"/>  <!-- 最大收费金额（单位 -->
+        <result column="GBBCC1startDay" javaType="java.lang.Integer" property="startDay"/>  <!-- 收费期限开始天数 -->
+        <result column="GBBCC1endDay" javaType="java.lang.Integer" property="endDay"/>  <!-- 收费期限截止天数 -->
+        <result column="GBBCC1rechargeMonthMode" javaType="java.lang.Long" property="rechargeMonthMode"/>  <!-- 充值月数（0 -->
+        <result column="GBBCC1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="GBBCC1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="GBBCC1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="GBBCC1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="GBBCC1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="GBBCC1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="GBBCC1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="GBBCC1bankCollectionStatus" javaType="java.lang.Integer" property="bankCollectionStatus"/>  <!-- 是否银行托收（1托收，2不托收） -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		GBBCC.f_id,GBBCC.t_gb_id,GBBCC.f_bill_name,GBBCC.f_charging_mode,date_format(GBBCC.f_bill_month_start,'%Y-%m-%d %T') as f_bill_month_start,date_format(GBBCC.f_bill_month_end,'%Y-%m-%d %T') as f_bill_month_end,date_format(GBBCC.f_bill_pay_start,'%Y-%m-%d %T') as f_bill_pay_start,date_format(GBBCC.f_bill_pay_end,'%Y-%m-%d %T') as f_bill_pay_end,GBBCC.f_fee_type,GBBCC.f_arrears_transfer,GBBCC.f_period_months,GBBCC.f_min_recharge,GBBCC.f_max_recharge,GBBCC.f_start_day,GBBCC.f_end_day,GBBCC.f_recharge_month_mode,GBBCC.f_bank_collection_status
+	</sql>
+	<sql id="queryHead_AppendTable">
+		GBBCC.f_id as GBBCCid,GBBCC.t_gb_id as GBBCCtGbId,GBBCC.f_bill_name as GBBCCbillName,GBBCC.f_charging_mode as GBBCCchargingMode,date_format(GBBCC.f_bill_month_start,'%Y-%m-%d %T') as GBBCCbillMonthStart,date_format(GBBCC.f_bill_month_end,'%Y-%m-%d %T') as GBBCCbillMonthEnd,date_format(GBBCC.f_bill_pay_start,'%Y-%m-%d %T') as GBBCCbillPayStart,date_format(GBBCC.f_bill_pay_end,'%Y-%m-%d %T') as GBBCCbillPayEnd,GBBCC.f_fee_type as GBBCCfeeType,GBBCC.f_arrears_transfer as GBBCCarrearsTransfer,GBBCC.f_period_months as GBBCCperiodMonths,GBBCC.f_min_recharge as GBBCCminRecharge,GBBCC.f_max_recharge as GBBCCmaxRecharge,GBBCC.f_start_day as GBBCCstartDay,GBBCC.f_end_day as GBBCCendDay,GBBCC.f_recharge_month_mode as GBBCCrechargeMonthMode,GBBCC.f_bank_collection_status as GBBCCbankCollectionStatus
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		GBBCC1.f_id as GBBCC1id,GBBCC1.t_gb_id as GBBCC1tGbId,GBBCC1.f_bill_name as GBBCC1billName,GBBCC1.f_charging_mode as GBBCC1chargingMode,date_format(GBBCC1.f_bill_month_start,'%Y-%m-%d %T') as GBBCC1billMonthStart,date_format(GBBCC1.f_bill_month_end,'%Y-%m-%d %T') as GBBCC1billMonthEnd,date_format(GBBCC1.f_bill_pay_start,'%Y-%m-%d %T') as GBBCC1billPayStart,date_format(GBBCC1.f_bill_pay_end,'%Y-%m-%d %T') as GBBCC1billPayEnd,GBBCC1.f_fee_type as GBBCC1feeType,GBBCC1.f_arrears_transfer as GBBCC1arrearsTransfer,GBBCC1.f_period_months as GBBCC1periodMonths,GBBCC1.f_min_recharge as GBBCC1minRecharge,GBBCC1.f_max_recharge as GBBCC1maxRecharge,GBBCC1.f_start_day as GBBCC1startDay,GBBCC1.f_end_day as GBBCC1endDay,GBBCC1.f_recharge_month_mode as GBBCC1rechargeMonthMode,GBBCC1.f_bank_collection_status as GBBCC1bankCollectionStatus
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (GBBCC.f_id = #{id} ) </if>
+        <if test="tGbId != null">  and (GBBCC.t_gb_id = #{tGbId} ) </if>
+        <if test="billName != null">  and (GBBCC.f_bill_name = #{billName} ) </if>
+        <if test="chargingMode != null">  and (GBBCC.f_charging_mode = #{chargingMode} ) </if>
+        <if test="billMonthStart != null and !billMonthStart.equals('')  ">  and (GBBCC.f_bill_month_start = str_to_date(#{billMonthStart},'%Y-%m-%d %T') ) </if>
+        <if test="billMonthStart_START != null and !billMonthStart_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_bill_month_start >= str_to_date(#{billMonthStart_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonthStart_END != null and !billMonthStart_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_bill_month_start <= str_to_date(#{billMonthStart_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonthEnd != null and !billMonthEnd.equals('')  ">  and (GBBCC.f_bill_month_end = str_to_date(#{billMonthEnd},'%Y-%m-%d %T') ) </if>
+        <if test="billMonthEnd_START != null and !billMonthEnd_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_bill_month_end >= str_to_date(#{billMonthEnd_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonthEnd_END != null and !billMonthEnd_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_bill_month_end <= str_to_date(#{billMonthEnd_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billPayStart != null and !billPayStart.equals('')  ">  and (GBBCC.f_bill_pay_start = str_to_date(#{billPayStart},'%Y-%m-%d %T') ) </if>
+        <if test="billPayStart_START != null and !billPayStart_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_bill_pay_start >= str_to_date(#{billPayStart_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billPayStart_END != null and !billPayStart_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_bill_pay_start <= str_to_date(#{billPayStart_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billPayEnd != null and !billPayEnd.equals('')  ">  and (GBBCC.f_bill_pay_end = str_to_date(#{billPayEnd},'%Y-%m-%d %T') ) </if>
+        <if test="billPayEnd_START != null and !billPayEnd_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_bill_pay_end >= str_to_date(#{billPayEnd_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billPayEnd_END != null and !billPayEnd_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_bill_pay_end <= str_to_date(#{billPayEnd_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="feeType != null">  and (GBBCC.f_fee_type = #{feeType} ) </if>
+        <if test="arrearsTransfer != null">  and (GBBCC.f_arrears_transfer = #{arrearsTransfer} ) </if>
+        <if test="periodMonths != null">  and (GBBCC.f_period_months = #{periodMonths} ) </if>
+        <if test="minRecharge != null">  and (GBBCC.f_min_recharge = #{minRecharge} ) </if>
+        <if test="maxRecharge != null">  and (GBBCC.f_max_recharge = #{maxRecharge} ) </if>
+        <if test="startDay != null">  and (GBBCC.f_start_day = #{startDay} ) </if>
+        <if test="endDay != null">  and (GBBCC.f_end_day = #{endDay} ) </if>
+        <if test="rechargeMonthMode != null">  and (GBBCC.f_recharge_month_mode = #{rechargeMonthMode} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (GBBCC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (GBBCC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (GBBCC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (GBBCC.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (GBBCC.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (GBBCC.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (GBBCC.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (GBBCC.f_sys0_del_state = 0 ) </if>
+        <if test="bankCollectionStatus != null">  and (GBBCC.f_bank_collection_status = #{bankCollectionStatus} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (GBBCC.f_id = #{id} ) </if>
+        <if test="tGbId != null and !tGbId.equals('')  ">  and (GBBCC.t_gb_id = #{tGbId} ) </if>
+        <if test="billName != null and !billName.equals('')  ">  and (GBBCC.f_bill_name like CONCAT('%',#{billName},'%') ) </if>
+        <if test="chargingMode != null and !chargingMode.equals('')  ">  and (GBBCC.f_charging_mode = #{chargingMode} ) </if>
+        <if test="billMonthStart != null and !billMonthStart.equals('')  ">  and (GBBCC.f_bill_month_start = str_to_date(#{billMonthStart},'%Y-%m-%d %T') ) </if>
+        <if test="billMonthStart_START != null and !billMonthStart_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_bill_month_start >= str_to_date(#{billMonthStart_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonthStart_END != null and !billMonthStart_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_bill_month_start <= str_to_date(#{billMonthStart_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonthEnd != null and !billMonthEnd.equals('')  ">  and (GBBCC.f_bill_month_end = str_to_date(#{billMonthEnd},'%Y-%m-%d %T') ) </if>
+        <if test="billMonthEnd_START != null and !billMonthEnd_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_bill_month_end >= str_to_date(#{billMonthEnd_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonthEnd_END != null and !billMonthEnd_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_bill_month_end <= str_to_date(#{billMonthEnd_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billPayStart != null and !billPayStart.equals('')  ">  and (GBBCC.f_bill_pay_start = str_to_date(#{billPayStart},'%Y-%m-%d %T') ) </if>
+        <if test="billPayStart_START != null and !billPayStart_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_bill_pay_start >= str_to_date(#{billPayStart_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billPayStart_END != null and !billPayStart_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_bill_pay_start <= str_to_date(#{billPayStart_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billPayEnd != null and !billPayEnd.equals('')  ">  and (GBBCC.f_bill_pay_end = str_to_date(#{billPayEnd},'%Y-%m-%d %T') ) </if>
+        <if test="billPayEnd_START != null and !billPayEnd_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_bill_pay_end >= str_to_date(#{billPayEnd_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billPayEnd_END != null and !billPayEnd_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_bill_pay_end <= str_to_date(#{billPayEnd_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="feeType != null and !feeType.equals('')  ">  and (GBBCC.f_fee_type like CONCAT('%',#{feeType},'%') ) </if>
+        <if test="arrearsTransfer != null and !arrearsTransfer.equals('')  ">  and (GBBCC.f_arrears_transfer = #{arrearsTransfer} ) </if>
+        <if test="periodMonths != null and !periodMonths.equals('')  ">  and (GBBCC.f_period_months like CONCAT('%',#{periodMonths},'%') ) </if>
+        <if test="minRecharge != null and !minRecharge.equals('')  ">  and (GBBCC.f_min_recharge = #{minRecharge} ) </if>
+        <if test="maxRecharge != null and !maxRecharge.equals('')  ">  and (GBBCC.f_max_recharge = #{maxRecharge} ) </if>
+        <if test="startDay != null and !startDay.equals('')  ">  and (GBBCC.f_start_day = #{startDay} ) </if>
+        <if test="endDay != null and !endDay.equals('')  ">  and (GBBCC.f_end_day = #{endDay} ) </if>
+        <if test="rechargeMonthMode != null and !rechargeMonthMode.equals('')  ">  and (GBBCC.f_recharge_month_mode = #{rechargeMonthMode} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (GBBCC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (GBBCC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (GBBCC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (GBBCC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (GBBCC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (GBBCC.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (GBBCC.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (GBBCC.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (GBBCC.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (GBBCC.f_sys0_del_state = 0 ) </if>
+        <if test="bankCollectionStatus != null and !bankCollectionStatus.equals('')  ">  and (GBBCC.f_bank_collection_status = #{bankCollectionStatus} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="groupBuildingBillCycleConfigBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="groupBuildingBillCycleConfigBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="groupBuildingBillCycleConfigBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="groupBuildingBillCycleConfigBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_group_building_bill_cycle_config GBBCC
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询()信息。 -->
+	<sql id="select_groupBuildingBillCycleConfig">
+		SELECT <include refid="groupBuildingBillCycleConfigBase.queryHead"/>
+		<include refid="groupBuildingBillCycleConfigBase.busiQueryCondition"/>
+		<include refid="groupBuildingBillCycleConfigBase.dimCheckSql"/>
+		ORDER BY GBBCC.f_id DESC
+	</sql>
+	<select id="select_groupBuildingBillCycleConfig" parameterType="java.util.Map" resultMap="groupBuildingBillCycleConfigBase.groupBuildingBillCycleConfigExtendMap">
+		<include refid="groupBuildingBillCycleConfigBase.select_groupBuildingBillCycleConfig"/>
+	</select>
+	
+	<!-- 根据条件分页查询()信息  -->
+	<sql id="select_groupBuildingBillCycleConfig_withPage">
+		SELECT <include refid="groupBuildingBillCycleConfigBase.queryHead"/>
+		<include refid="groupBuildingBillCycleConfigBase.busiQueryCondition"/>
+		<include refid="groupBuildingBillCycleConfigBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_groupBuildingBillCycleConfig_withPage" resultMap="groupBuildingBillCycleConfigBase.groupBuildingBillCycleConfigExtendMap" parameterType="java.util.Map">
+		<include refid="groupBuildingBillCycleConfigBase.select_groupBuildingBillCycleConfig_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个()信息。 -->
+	<sql id="select_groupBuildingBillCycleConfig_bySeqId">
+		SELECT <include refid="groupBuildingBillCycleConfigBase.queryHead"/>
+		<include refid="groupBuildingBillCycleConfigBase.busiQueryCondition"/>
+		 and GBBCC.f_id = #{_parameter}
+	</sql>
+	<select id="select_groupBuildingBillCycleConfig_bySeqId" parameterType="java.math.BigInteger" resultMap="groupBuildingBillCycleConfigBase.groupBuildingBillCycleConfigBaseMap">
+		<include refid="groupBuildingBillCycleConfigBase.select_groupBuildingBillCycleConfig_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的()记录数  -->
+	<sql id="select_groupBuildingBillCycleConfig_count">
+		SELECT COUNT(*)
+		<include refid="groupBuildingBillCycleConfigBase.busiQueryCount"/>
+		<include refid="groupBuildingBillCycleConfigBase.dimCheckSql"/>
+	</sql>
+	<select id="select_groupBuildingBillCycleConfig_count" resultType="java.lang.Integer">
+		<include refid="groupBuildingBillCycleConfigBase.select_groupBuildingBillCycleConfig_count"/>
+	</select>
+	
+	 <!-- 往()新增一条记录。 -->
+	 <sql id="insert_groupBuildingBillCycleConfig">
+		INSERT INTO t_group_building_bill_cycle_config 
+		(f_id,t_gb_id,f_bill_name,f_charging_mode,f_bill_month_start,f_bill_month_end,f_bill_pay_start,f_bill_pay_end,f_fee_type,f_arrears_transfer,f_period_months,f_min_recharge,f_max_recharge,f_start_day,f_end_day,f_recharge_month_mode,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_bank_collection_status) VALUES 
+		(#{id},#{tGbId},#{billName,jdbcType=VARCHAR},#{chargingMode},str_to_date(#{billMonthStart,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{billMonthEnd,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{billPayStart,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{billPayEnd,jdbcType=DATE},'%Y-%m-%d %T'),#{feeType,jdbcType=VARCHAR},#{arrearsTransfer},#{periodMonths,jdbcType=VARCHAR},#{minRecharge},#{maxRecharge},#{startDay},#{endDay},#{rechargeMonthMode},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0,#{bankCollectionStatus})
+	 </sql>
+    <insert id="insert_groupBuildingBillCycleConfig" parameterType="GroupBuildingBillCycleConfig">
+		<include refid="groupBuildingBillCycleConfigBase.insert_groupBuildingBillCycleConfig"/>
+    </insert>
+    
+	<!-- 批量新增()信息 -->
+    <insert id="insert_groupBuildingBillCycleConfig_Batch" parameterType="java.util.List">
+    	INSERT INTO t_group_building_bill_cycle_config 
+		(f_id,t_gb_id,f_bill_name,f_charging_mode,f_bill_month_start,f_bill_month_end,f_bill_pay_start,f_bill_pay_end,f_fee_type,f_arrears_transfer,f_period_months,f_min_recharge,f_max_recharge,f_start_day,f_end_day,f_recharge_month_mode,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_bank_collection_status) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tGbId},#{item.billName,jdbcType=VARCHAR},#{item.chargingMode},str_to_date(#{item.billMonthStart,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.billMonthEnd,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.billPayStart,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.billPayEnd,jdbcType=DATE},'%Y-%m-%d %T'),#{item.feeType,jdbcType=VARCHAR},#{item.arrearsTransfer},#{item.periodMonths,jdbcType=VARCHAR},#{item.minRecharge},#{item.maxRecharge},#{item.startDay},#{item.endDay},#{item.rechargeMonthMode},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0,#{item.bankCollectionStatus})
+		</foreach>
+    </insert>
+    
+    <!-- 更新()信息。 -->
+    <sql id="update_groupBuildingBillCycleConfig">
+		UPDATE t_group_building_bill_cycle_config
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tGbId != null and !tGbId.equals('') "> ,t_gb_id=#{tGbId}</if>
+ 		<if test="billName != null and !billName.equals('') "> ,f_bill_name=#{billName}</if>
+ 		<if test="chargingMode != null and !chargingMode.equals('') "> ,f_charging_mode=#{chargingMode}</if>
+ 		<if test="billMonthStart != null and !billMonthStart.equals('') "> ,f_bill_month_start=str_to_date(#{billMonthStart},'%Y-%m-%d %T')</if>
+ 		<if test="billMonthEnd != null and !billMonthEnd.equals('') "> ,f_bill_month_end=str_to_date(#{billMonthEnd},'%Y-%m-%d %T')</if>
+ 		<if test="billPayStart != null and !billPayStart.equals('') "> ,f_bill_pay_start=str_to_date(#{billPayStart},'%Y-%m-%d %T')</if>
+ 		<if test="billPayEnd != null and !billPayEnd.equals('') "> ,f_bill_pay_end=str_to_date(#{billPayEnd},'%Y-%m-%d %T')</if>
+ 		<if test="feeType != null and !feeType.equals('') "> ,f_fee_type=#{feeType}</if>
+ 		<if test="arrearsTransfer != null and !arrearsTransfer.equals('') "> ,f_arrears_transfer=#{arrearsTransfer}</if>
+ 		<if test="periodMonths != null and !periodMonths.equals('') "> ,f_period_months=#{periodMonths}</if>
+ 		<if test="minRecharge != null and !minRecharge.equals('') "> ,f_min_recharge=#{minRecharge}</if>
+ 		<if test="maxRecharge != null and !maxRecharge.equals('') "> ,f_max_recharge=#{maxRecharge}</if>
+ 		<if test="startDay != null and !startDay.equals('') "> ,f_start_day=#{startDay}</if>
+ 		<if test="endDay != null and !endDay.equals('') "> ,f_end_day=#{endDay}</if>
+ 		<if test="rechargeMonthMode != null and !rechargeMonthMode.equals('') "> ,f_recharge_month_mode=#{rechargeMonthMode}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+ 		<if test="bankCollectionStatus != null and !bankCollectionStatus.equals('') "> ,f_bank_collection_status=#{bankCollectionStatus}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_groupBuildingBillCycleConfig" parameterType="GroupBuildingBillCycleConfig">
+		<include refid="groupBuildingBillCycleConfigBase.update_groupBuildingBillCycleConfig"/>
+    </update>
+    
+    <!-- 批量更新()信息。 -->
+    <update id="update_groupBuildingBillCycleConfig_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_group_building_bill_cycle_config
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if>
+ 		<if test="item.billName != null and !item.billName.equals('')  "> ,f_bill_name=#{item.billName}</if>
+ 		<if test="item.chargingMode != null and !item.chargingMode.equals('')  "> ,f_charging_mode=#{item.chargingMode}</if>
+ 		<if test="item.billMonthStart != null and !item.billMonthStart.equals('')  "> ,f_bill_month_start=str_to_date(#{item.billMonthStart},'%Y-%m-%d %T')</if>
+ 		<if test="item.billMonthEnd != null and !item.billMonthEnd.equals('')  "> ,f_bill_month_end=str_to_date(#{item.billMonthEnd},'%Y-%m-%d %T')</if>
+ 		<if test="item.billPayStart != null and !item.billPayStart.equals('')  "> ,f_bill_pay_start=str_to_date(#{item.billPayStart},'%Y-%m-%d %T')</if>
+ 		<if test="item.billPayEnd != null and !item.billPayEnd.equals('')  "> ,f_bill_pay_end=str_to_date(#{item.billPayEnd},'%Y-%m-%d %T')</if>
+ 		<if test="item.feeType != null and !item.feeType.equals('')  "> ,f_fee_type=#{item.feeType}</if>
+ 		<if test="item.arrearsTransfer != null and !item.arrearsTransfer.equals('')  "> ,f_arrears_transfer=#{item.arrearsTransfer}</if>
+ 		<if test="item.periodMonths != null and !item.periodMonths.equals('')  "> ,f_period_months=#{item.periodMonths}</if>
+ 		<if test="item.minRecharge != null and !item.minRecharge.equals('')  "> ,f_min_recharge=#{item.minRecharge}</if>
+ 		<if test="item.maxRecharge != null and !item.maxRecharge.equals('')  "> ,f_max_recharge=#{item.maxRecharge}</if>
+ 		<if test="item.startDay != null and !item.startDay.equals('')  "> ,f_start_day=#{item.startDay}</if>
+ 		<if test="item.endDay != null and !item.endDay.equals('')  "> ,f_end_day=#{item.endDay}</if>
+ 		<if test="item.rechargeMonthMode != null and !item.rechargeMonthMode.equals('')  "> ,f_recharge_month_mode=#{item.rechargeMonthMode}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+ 		<if test="item.bankCollectionStatus != null and !item.bankCollectionStatus.equals('')  "> ,f_bank_collection_status=#{item.bankCollectionStatus}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除()信息_逻辑删除。 -->
+    <sql id="delete_groupBuildingBillCycleConfig_Logic">
+		UPDATE t_group_building_bill_cycle_config
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tGbId != null and !tGbId.equals('')  "> ,t_gb_id=#{tGbId}</if>
+ 		<if test="billName != null and !billName.equals('')  "> ,f_bill_name=#{billName}</if>
+ 		<if test="chargingMode != null and !chargingMode.equals('')  "> ,f_charging_mode=#{chargingMode}</if>
+ 		<if test="billMonthStart != null and !billMonthStart.equals('')  "> ,f_bill_month_start=str_to_date(#{billMonthStart},'%Y-%m-%d %T')</if>
+ 		<if test="billMonthEnd != null and !billMonthEnd.equals('')  "> ,f_bill_month_end=str_to_date(#{billMonthEnd},'%Y-%m-%d %T')</if>
+ 		<if test="billPayStart != null and !billPayStart.equals('')  "> ,f_bill_pay_start=str_to_date(#{billPayStart},'%Y-%m-%d %T')</if>
+ 		<if test="billPayEnd != null and !billPayEnd.equals('')  "> ,f_bill_pay_end=str_to_date(#{billPayEnd},'%Y-%m-%d %T')</if>
+ 		<if test="feeType != null and !feeType.equals('')  "> ,f_fee_type=#{feeType}</if>
+ 		<if test="arrearsTransfer != null and !arrearsTransfer.equals('')  "> ,f_arrears_transfer=#{arrearsTransfer}</if>
+ 		<if test="periodMonths != null and !periodMonths.equals('')  "> ,f_period_months=#{periodMonths}</if>
+ 		<if test="minRecharge != null and !minRecharge.equals('')  "> ,f_min_recharge=#{minRecharge}</if>
+ 		<if test="maxRecharge != null and !maxRecharge.equals('')  "> ,f_max_recharge=#{maxRecharge}</if>
+ 		<if test="startDay != null and !startDay.equals('')  "> ,f_start_day=#{startDay}</if>
+ 		<if test="endDay != null and !endDay.equals('')  "> ,f_end_day=#{endDay}</if>
+ 		<if test="rechargeMonthMode != null and !rechargeMonthMode.equals('')  "> ,f_recharge_month_mode=#{rechargeMonthMode}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="bankCollectionStatus != null and !bankCollectionStatus.equals('')  "> ,f_bank_collection_status=#{bankCollectionStatus}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_groupBuildingBillCycleConfig_Logic" parameterType="GroupBuildingBillCycleConfig">
+		<include refid="groupBuildingBillCycleConfigBase.delete_groupBuildingBillCycleConfig_Logic"/>
+    </update>
+    
+    <!-- 批量删除()信息_逻辑删除 -->
+    <update id="delete_groupBuildingBillCycleConfig_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_group_building_bill_cycle_config
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if>
+ 		<if test="item.billName != null and !item.billName.equals('')  "> ,f_bill_name=#{item.billName}</if>
+ 		<if test="item.chargingMode != null and !item.chargingMode.equals('')  "> ,f_charging_mode=#{item.chargingMode}</if>
+ 		<if test="item.billMonthStart != null and !item.billMonthStart.equals('')  "> ,f_bill_month_start=str_to_date(#{item.billMonthStart},'%Y-%m-%d %T')</if>
+ 		<if test="item.billMonthEnd != null and !item.billMonthEnd.equals('')  "> ,f_bill_month_end=str_to_date(#{item.billMonthEnd},'%Y-%m-%d %T')</if>
+ 		<if test="item.billPayStart != null and !item.billPayStart.equals('')  "> ,f_bill_pay_start=str_to_date(#{item.billPayStart},'%Y-%m-%d %T')</if>
+ 		<if test="item.billPayEnd != null and !item.billPayEnd.equals('')  "> ,f_bill_pay_end=str_to_date(#{item.billPayEnd},'%Y-%m-%d %T')</if>
+ 		<if test="item.feeType != null and !item.feeType.equals('')  "> ,f_fee_type=#{item.feeType}</if>
+ 		<if test="item.arrearsTransfer != null and !item.arrearsTransfer.equals('')  "> ,f_arrears_transfer=#{item.arrearsTransfer}</if>
+ 		<if test="item.periodMonths != null and !item.periodMonths.equals('')  "> ,f_period_months=#{item.periodMonths}</if>
+ 		<if test="item.minRecharge != null and !item.minRecharge.equals('')  "> ,f_min_recharge=#{item.minRecharge}</if>
+ 		<if test="item.maxRecharge != null and !item.maxRecharge.equals('')  "> ,f_max_recharge=#{item.maxRecharge}</if>
+ 		<if test="item.startDay != null and !item.startDay.equals('')  "> ,f_start_day=#{item.startDay}</if>
+ 		<if test="item.endDay != null and !item.endDay.equals('')  "> ,f_end_day=#{item.endDay}</if>
+ 		<if test="item.rechargeMonthMode != null and !item.rechargeMonthMode.equals('')  "> ,f_recharge_month_mode=#{item.rechargeMonthMode}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.bankCollectionStatus != null and !item.bankCollectionStatus.equals('')  "> ,f_bank_collection_status=#{item.bankCollectionStatus}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除()信息。 -->
+    <sql id="delete_groupBuildingBillCycleConfig">
+		DELETE FROM t_group_building_bill_cycle_config WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_groupBuildingBillCycleConfig" parameterType="java.lang.String">
+		<include refid="groupBuildingBillCycleConfigBase.delete_groupBuildingBillCycleConfig"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除()信息。 -->
+    <delete id="delete_groupBuildingBillCycleConfig_Batch" parameterType="java.util.List">
+		DELETE FROM t_group_building_bill_cycle_config WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

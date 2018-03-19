@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 物业代扣卡 -->
+<mapper namespace="propertycard">
+	
+	 <!-- 根据realRoomId找到当期未缴费的  -->
+	 <select id="qryPayBillByRealRoomId" parameterType="java.math.BigInteger" resultMap="payBillBase.payBillBaseMap">
+		SELECT
+			PB.f_id,PB.f_amount,date_format(PB.f_month,'%Y-%m-%d %T') as f_month,date_format(PB.f_bill_month,'%Y-%m-%d %T') as f_bill_month,PB.f_is_pay,PB.f_finance_status,PB.f_dedu_price,PB.f_payment_way,PB.t_real_room_f_id,PB.f_property_proprietor_id,PB.f_succ_pay_amount,PB.f_discount,PB.f_prize_record_id,date_format(PB.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time,PB.f_bill_time_cfg_id,PB.f_bill_type_id,PB.f_bill_type_name,PB.f_is_prop_fee,PB.f_paytime_type,PB.f_bill_month_size,date_format(PB.f_bill_month_start,'%Y-%m-%d %T') as f_bill_month_start,date_format(PB.f_bill_month_end,'%Y-%m-%d %T') as f_bill_month_end,date_format(PB.f_pay_day_start,'%Y-%m-%d %T') as f_pay_day_start,PB.f_hb_amount,PB.f_prefer_type,PB.t_bill_cycle_id
+			,date_format(DATE_ADD(IFNULL(PB.f_pay_day_end,GBBC.f_bill_pay_end),INTERVAL 1 DAY),'%Y-%m-%d %T') as f_pay_day_end
+		FROM
+		    t_pay_bill PB
+		        JOIN
+		    t_real_room rr ON rr.f_id = PB.t_real_room_f_id
+		        JOIN
+		    t_group_building_bill_cycle GBBC ON GBBC.f_id = PB.t_bill_cycle_id  AND GBBC.f_sys0_del_state = 0
+		WHERE
+		    PB.f_is_pay = 2
+		    <if test="checkBankCollection">
+				and (PB.f_bank_collection_status is null OR PB.f_bank_collection_status != 1)
+			</if>
+		    AND PB.f_sys0_del_state = 0
+	        AND GBBC.f_bill_pay_start &lt;= SYSDATE()
+	        AND DATE_ADD(GBBC.f_bill_pay_end,INTERVAL 1 DAY) &gt; SYSDATE()
+	        AND GBBC.f_id = PB.t_bill_cycle_id
+	        AND rr.f_id = #{realRoomId} 
+	 </select>
+	 
+	 <!-- 找到当期未缴费的账单下历史欠费未缴的 Addedy wenfq 2017-06-14 -->
+	 <select id="qryUnPaidPayBillByPayBillList" parameterType="java.math.BigInteger" resultMap="payBillBase.payBillBaseMap">
+		SELECT
+			PB.f_id,PB.f_amount,date_format(PB.f_month,'%Y-%m-%d %T') as f_month,date_format(PB.f_bill_month,'%Y-%m-%d %T') as f_bill_month,PB.f_is_pay,PB.f_finance_status,PB.f_dedu_price,PB.f_payment_way,PB.t_real_room_f_id,PB.f_property_proprietor_id,PB.f_succ_pay_amount,PB.f_discount,PB.f_prize_record_id,date_format(PB.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time,PB.f_bill_time_cfg_id,PB.f_bill_type_id,PB.f_bill_type_name,PB.f_is_prop_fee,PB.f_paytime_type,PB.f_bill_month_size,date_format(PB.f_bill_month_start,'%Y-%m-%d %T') as f_bill_month_start,date_format(PB.f_bill_month_end,'%Y-%m-%d %T') as f_bill_month_end,date_format(PB.f_pay_day_start,'%Y-%m-%d %T') as f_pay_day_start,PB.f_hb_amount,PB.f_prefer_type,PB.t_bill_cycle_id
+			,date_format(DATE_ADD(IFNULL(PB.f_pay_day_end,GBBC.f_bill_pay_end),INTERVAL 1 DAY),'%Y-%m-%d %T') as f_pay_day_end
+		FROM t_pay_bill PB
+	    JOIN t_group_building_bill_cycle GBBC ON GBBC.f_id = PB.t_bill_cycle_id AND GBBC.f_sys0_del_state = 0
+	    JOIN t_property_fee_detail_unpaid pfdu on pfdu.t_unpaid_pay_bill_id = PB.f_id		    
+		WHERE PB.f_is_pay = 2
+	    AND PB.f_sys0_del_state = 0
+	    <if test="checkBankCollection">
+			and (PB.f_bank_collection_status is null OR PB.f_bank_collection_status != 1)
+		</if>
+        AND pfdu.t_pay_bill_id in 
+        <foreach collection="payBillMonthList" item="pb" open="(" separator="," close=")">
+        	#{pb.id}
+        </foreach>
+	 </select>
+	 
+	 <!-- 根据groupBuildingId找到该小区下的所有物业划扣配置 -->
+	 <select id="qryDeductionConfigList" parameterType="java.math.BigInteger" resultMap="userSetRealroomDeductionConfigBase.userSetRealroomDeductionConfigBaseMap">
+		SELECT
+			<include refid="userSetRealroomDeductionConfigBase.queryHead" />
+		FROM
+		t_user_set_realroom_deduction_config USRDC
+		JOIN t_real_room rr ON rr.f_id = USRDC.t_real_room_f_id
+		JOIN t_building b ON b.f_id = rr.t_building_f_id
+		JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id
+		WHERE
+			USRDC.f_sys0_del_state = 0
+		AND USRDC.f_open_state = 1
+		AND	gb.f_id = #{gbId};
+	 </select>
+	 
+	 <!-- 查出所有设置了划扣的房间，要包含极致的房间  -->
+	 <select id="qryDeductionConfigAllList" parameterType="java.util.Map" resultMap="userSetRealroomDeductionConfigBase.userSetRealroomDeductionConfigBaseMap">
+	 	<choose>
+	 		<when test="isAll != null and isAll == true">
+			 	-- 特定日期（25号）找出所有开启划扣的房间
+	 			SELECT
+					DISTINCT <include refid="userSetRealroomDeductionConfigBase.queryHead" />
+				FROM
+				t_user_set_realroom_deduction_config USRDC
+				inner join t_property_account_info pai on pai.t_user_f_id = USRDC.t_user_f_id and pai.f_balance_amt > 0
+				inner JOIN t_real_room rr ON rr.f_id = USRDC.t_real_room_f_id
+				WHERE
+					USRDC.f_sys0_del_state = 0 
+				AND USRDC.f_open_state = 1
+	 		</when>
+	 		<otherwise>
+	 			-- 每天找出即期过期(过期前一天)的账单，且开启了划扣的房间，再推送
+				SELECT
+					DISTINCT <include refid="userSetRealroomDeductionConfigBase.queryHead" />
+				FROM
+				t_user_set_realroom_deduction_config USRDC
+				inner join t_property_account_info pai on pai.t_user_f_id = USRDC.t_user_f_id and pai.f_balance_amt > 0
+				inner JOIN t_real_room rr ON rr.f_id = USRDC.t_real_room_f_id
+				inner join t_pay_bill PB on PB.t_real_room_f_id = rr.f_id and PB.f_is_pay = 2 
+					and (PB.f_bank_collection_status is null OR PB.f_bank_collection_status != 1)
+					and PB.f_sys0_del_state = 0 
+		    	left join t_group_building_bill_cycle GBBC ON GBBC.f_id = PB.t_bill_cycle_id AND GBBC.f_sys0_del_state = 0
+				WHERE
+					USRDC.f_sys0_del_state = 0 
+				AND USRDC.f_open_state = 1
+				<![CDATA[ 
+				and	(DATEDIFF(GBBC.f_bill_pay_end, now()) = 1 -- 过期前一天
+					 or  
+					 	DATEDIFF(now(), IF(DATEDIFF(GBBC.f_bill_pay_start, PB.f_sys0_add_time)>0, GBBC.f_bill_pay_start, PB.f_sys0_add_time)) = 1 )  -- 代扣卡划扣新增触发逻辑：在账单缴费开始日或账单导入时间中，较晚的时间点第二天8:30进行划扣
+				and (GBBC.f_bill_pay_start < now())
+				and (GBBC.f_bill_pay_end > now())
+				 ]]>
+	 		</otherwise>
+	 	</choose>
+	 </select>
+
+	<select id="getTransLogListByUserId" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.propertycard.entity.TransLog">
+		SELECT tf.f_id AS id, tf.f_trans_no AS transNo, tf.f_trans_amt AS transAmt, tf.f_trans_type AS transType, tf.f_description AS transDescription,
+ 				DATE_FORMAT(tf.f_trans_time,'%Y-%m-%d %T') AS transTime, eo.f_pay_status AS transState, eo.f_pay_method AS payMethod, tf.f_sys0_add_time AS addTm
+		FROM t_property_card_transaction_flowing tf
+		LEFT JOIN t_ebuy_order eo ON tf.t_ebuy_order_f_id = eo.f_id
+		WHERE tf.t_user_f_id = #{userId}
+		UNION
+		SELECT tf.f_id AS id, tf.f_trans_no AS transNo, eo.f_amount AS transAmt, tf.f_trans_type AS transType, eo.f_deliv_address_detail AS transDescription,
+				DATE_FORMAT(eo.f_sys0_add_time,'%Y-%m-%d %T') AS transTime, 5 AS transState, eo.f_pay_method AS payMethod, eo.f_sys0_add_time AS addTm
+		FROM t_ebuy_order eo
+		LEFT JOIN t_property_card_transaction_flowing tf ON tf.t_ebuy_order_f_id = eo.f_id
+		WHERE eo.f_type = 6 AND eo.f_client_pay_status = 2 AND eo.f_status = 1 AND eo.f_buyer_id = #{userId}
+		ORDER BY addTm DESC
+		<if test="begin != null and length != null">
+			LIMIT #{begin},#{length}
+		</if>
+	</select>
+	
+	<!-- 根据orderId查询物业代扣卡的订单详情 -->
+	<select id="getTransLogByOrderId" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.propertycard.entity.TransLog">
+		SELECT 
+		    eo.f_amount transAmt,
+		    eo.f_deliv_address_detail transDescription,
+		    IF(eo.f_pay_status > 1,
+		        eo.f_pay_status,
+		        IF(eo.f_client_pay_status = 2, 5, 1)) AS transState,
+		    eo.f_pay_method payMethod,
+		    tf.f_trans_no transNo,
+		    tf.f_trans_type transType,
+		    DATE_FORMAT(tf.f_trans_time,'%Y-%m-%d %T') transTime
+		FROM
+		    t_ebuy_order eo
+		        LEFT JOIN
+		    t_property_card_transaction_flowing tf ON tf.t_ebuy_order_f_id = eo.f_id
+		WHERE
+		    eo.f_id = #{orderId};
+	</select>
+	
+		
+	<!-- 购买记录与划扣配置表 -->
+	 <resultMap type="com.cnfantasia.server.api.propertycard.entity.UserHasCardWithGroupBuildingNames" 
+	 	id="userHasCardWithGroupBuildingNames">
+	 	<id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="cardAmount" javaType="java.lang.Long" property="cardAmount"/>  <!-- 卡内金额 -->
+        <result column="discountAmt" javaType="java.lang.Long" property="discountAmt"/>  <!-- 优惠金额 -->
+        <result column="realPayAmt" javaType="java.lang.Long" property="realPayAmt"/>  <!-- 用户实付金额 -->
+        <result column="f_order_no" javaType="java.lang.String" property="orderNo"/>  <!-- 订单流水号 -->
+        <result column="t_ebuy_order_f_id" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!--  -->
+        <result column="balanceAmt" javaType="java.lang.Long" property="balanceAmt"/>  <!-- 划扣后的余额 -->
+        <result column="newBuyTime" javaType="java.lang.String" property="buyTime"/>  <!-- 购买时间 -->
+        <result column="t_user_f_id" javaType="java.math.BigInteger" property="tUserFId"/>  <!-- 购买用户id -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="t_property_card_f_id" javaType="java.math.BigInteger" property="tPropertyCardFId"/>  <!--  -->
+	 	<result column="f_notify_phone" property="notifyPhone"/>
+	 	<result column="gbName" property="gbName"/>
+	 	<result column="totalRedEnvelopeMoney" javaType="java.lang.Long" property="totalRedEnvelopeMoney"/>
+	 	<collection property="userRoomInfoList" column="t_user_f_id" select="getUserRoomInfoList" />
+	 </resultMap>
+	 
+	 <sql id="qryUserHasPropertyCard_from">
+		 FROM (
+				SELECT
+					pc.*,SUM(pc.f_card_amount) cardAmount, SUM(pc.f_discount_amt) discountAmt, SUM(pc.f_real_pay_amt) realPayAmt, 
+					SUM(pc.f_balance_amt) balanceAmt, MAX(pc.f_buy_time) newBuyTime,
+					(select sum(ifnull(f_amount_total, 0)) from t_pay_red_envelope pre where pre.f_user_id =pc.t_user_f_id and pre.f_from_type = 5 and pre.f_sys0_del_state = 0) AS totalRedEnvelopeMoney
+				FROM
+					t_user_has_property_card pc
+				WHERE
+					pc.f_sys0_del_state = 0
+				<if test="huaId !=null and !huaId.equals('')">AND pc.t_user_f_id = #{huaId}</if>
+				GROUP BY pc.t_user_f_id
+				<if test="!((buyTimeStart ==null or buyTimeStart.equals('')) 
+							and (buyTimeEnd ==null or buyTimeEnd.equals('')))">HAVING 1=1</if>
+				<if test="buyTimeStart !=null and !buyTimeStart.equals('')">AND newBuyTime &gt;= #{buyTimeStart}</if>
+				<if test="buyTimeEnd !=null and !buyTimeEnd.equals('')">AND newBuyTime &lt;= #{buyTimeEnd}</if>
+			)t
+		    LEFT JOIN t_user_set_realroom_deduction_config dc ON dc.t_user_f_id = t.t_user_f_id AND dc.f_open_state = 1
+			LEFT JOIN t_property_account_info pai on pai.t_user_f_id = t.t_user_f_id
+		    LEFT JOIN t_real_room rr ON rr.f_id = dc.t_real_room_f_id
+			LEFT JOIN t_building b ON b.f_id = rr.t_building_f_id
+			LEFT JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id
+			where 1=1
+				and EXISTS (select 1 from t_user_has_t_room ur 
+					  inner join t_room r on ur.t_room_f_id = r.f_id
+					  inner join t_real_room rr on r.t_real_room_f_id = rr.f_id
+					  inner join t_building b on rr.t_building_f_id = b.f_id
+					  inner join t_group_building GB on b.t_group_building_f_id = GB.f_id
+					 where ur.t_user_f_id =  t.t_user_f_id <include refid="permiOos.dataPermissionCondition" />)
+				<if test="pcToEnvelopeMoney !=null and pcToEnvelopeMoney.equals('greater0')">AND t.totalRedEnvelopeMoney>0</if>
+				<if test="pcToEnvelopeMoney !=null and pcToEnvelopeMoney.equals('equal0')">AND (t.totalRedEnvelopeMoney is null or t.totalRedEnvelopeMoney=0)</if>
+			GROUP BY t.f_id
+			<if test="gbName !=null and !gbName.equals('')">
+				HAVING locate(#{gbName},GROUP_CONCAT(DISTINCT gb.f_name)) > 0
+			</if>
+	 </sql>
+	 
+	<!-- 查询物业代扣卡购买列表 -->
+	<select id="qryUserHasPropertyCardList" parameterType="map" resultMap="userHasCardWithGroupBuildingNames">
+		SELECT 
+			t.*,
+			CONCAT(GROUP_CONCAT(DISTINCT gb.f_name)) gbName,
+			pai.f_notify_phone,
+			t.newBuyTime
+		<include refid="qryUserHasPropertyCard_from"/>
+		ORDER BY newBuyTime DESC
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<select id="getUserRoomInfoList" parameterType="java.lang.Long"  resultType="java.lang.String">
+		select distinct GB.f_name from t_user_has_t_room ur 
+		  inner join t_room r on ur.t_room_f_id = r.f_id
+		  inner join t_real_room rr on r.t_real_room_f_id = rr.f_id
+		  inner join t_building b on rr.t_building_f_id = b.f_id
+		  inner join t_group_building GB on b.t_group_building_f_id = GB.f_id
+		 where ur.t_user_f_id = #{t_user_f_id}
+		 and ur.f_sys0_del_state = 0 and r.f_sys0_del_state = 0
+		 and rr.f_sys0_del_state = 0 and b.f_sys0_del_state = 0
+		 and GB.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询物业代扣卡购买总数 -->
+	<select id="qryUserHasPropertyCardCount" parameterType="map" resultType="java.lang.Integer" >
+		SELECT COUNT(*)
+		FROM (
+			SELECT t.f_id
+			<include refid="qryUserHasPropertyCard_from"/>
+		) _tmp
+	</select>
+	
+	<select id="select_realRoom_showName_byRealRoomId" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.propertycard.entity.RealRoomShowNameAndPayEnd">
+		SELECT CONCAT(gb.f_name,b.f_name,'-',rr.f_num) realRoomShowName, gb.f_pay_period_end payEnd from t_real_room rr 
+		join t_building b on b.f_id = rr.t_building_f_id
+		join t_group_building gb on gb.f_id = b.t_group_building_f_id
+		where rr.f_id = #{realRoomId};
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.domainbase.userHasPropertyCard.entity.UserHasPropertyCard" 
+	 	id="userHasCardAmountSum">
+        <result column="cardAmount" javaType="java.lang.Long" property="cardAmount"/>  <!-- 卡内金额 -->
+        <result column="discountAmt" javaType="java.lang.Long" property="discountAmt"/>  <!-- 优惠金额 -->
+        <result column="realPayAmt" javaType="java.lang.Long" property="realPayAmt"/>  <!-- 用户实付金额 -->
+        <result column="balanceAmt" javaType="java.lang.Long" property="balanceAmt"/>  <!-- 划扣后的余额 -->
+	 </resultMap>
+	
+	<select id="qryUserHasPropertyCardAmtSum" parameterType="java.math.BigInteger" resultMap="userHasCardAmountSum">
+		SELECT
+			SUM(pc.f_card_amount) cardAmount, SUM(pc.f_discount_amt) discountAmt, SUM(pc.f_real_pay_amt) realPayAmt, 
+			SUM(pc.f_balance_amt) balanceAmt
+		FROM
+			t_user_has_property_card pc
+		WHERE
+			pc.f_sys0_del_state = 0
+		AND pc.t_user_f_id = #{userId}
+	</select>
+	
+	<select id="qryPropfeeCanPayRoomByUserId" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.propertycard.entity.RealRoomConfig">
+		SELECT DISTINCT IFNULL(rdc.f_id, -1) AS configId, rl.f_id AS realRoomId, CONCAT(gb.f_name,b.f_name,'-',rl.f_num) AS roomDesciption, IFNULL(rdc.f_open_state,0) AS isOpenService
+		FROM t_room r
+		INNER JOIN t_real_room rl ON r.t_real_room_f_id = rl.f_id
+		INNER JOIN t_building b ON rl.t_building_f_id = b.f_id
+		INNER JOIN t_group_building gb ON b.t_group_building_f_id = gb.f_id
+		LEFT JOIN t_user_set_realroom_deduction_config rdc ON rl.f_id = rdc.t_real_room_f_id and rdc.t_user_f_id = #{userId}
+		WHERE r.f_creater = #{userId} AND gb.f_sign_status = 1 AND gb.f_propfee_canpay = 1 AND (rdc.f_sys0_del_state IS NULL OR rdc.f_sys0_del_state = 0)
+	</select>
+	
+	<update id="updatePropCardStatusClose">
+		UPDATE t_user_set_realroom_deduction_config SET f_open_state = 0 WHERE t_user_f_id = #{userId}; 
+	</update>
+	
+	<!-- 根据用户id查询用户的门牌对应小区的平均账单金额 -->
+	<select id="qryGroupBuildingBillAmtAveByUserId"  parameterType="java.math.BigInteger" resultType="java.util.Map">
+		SELECT RV.f_verify_status verifyStatus,GB.f_bill_amt_avg amtAvg FROM t_user_has_t_room UHR
+		INNER JOIN t_room R ON R.f_id = UHR.t_room_f_id AND R.f_sys0_del_state = 0
+		INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id AND RR.f_sys0_del_state = 0
+		INNER JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0
+		INNER JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id AND GB.f_id > 0 AND GB.f_sys0_del_state = 0
+		LEFT JOIN t_room_validate RV ON UHR.t_room_f_id = RV.t_room_f_id AND UHR.t_user_f_id = RV.f_user_id AND RV.f_sys0_del_state = 0
+		WHERE 
+		UHR.t_user_f_id = #{userId}
+		AND UHR.f_sys0_del_state = 0
+		ORDER BY RV.f_verify_succ_time DESC
+	</select>
+	
+</mapper>

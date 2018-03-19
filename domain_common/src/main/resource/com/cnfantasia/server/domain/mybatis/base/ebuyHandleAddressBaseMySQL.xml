@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:手动输入的收货地址 t_ebuy_handle_address -->
+<mapper namespace="ebuyHandleAddressBase">
+	<resultMap type="EbuyHandleAddress" id="ebuyHandleAddressBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_address_detail" javaType="java.lang.String" property="addressDetail"/>  <!-- 详细地址 -->        <result column="t_group_building_f_id" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 所属小区Id(为空时从addressArea中获取地区信息) -->        <result column="f_gb_name" javaType="java.lang.String" property="gbName"/>  <!-- 小区名称，防止小区不存在时查的不对 -->        <result column="f_block_id" javaType="java.math.BigInteger" property="blockId"/>  <!-- 区id -->        <result column="f_address_area" javaType="java.lang.String" property="addressArea"/>  <!-- 地区信息 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyHandleAddress" id="ebuyHandleAddressExtendMap" extends="ebuyHandleAddressBaseMap">
+	</resultMap>
+	<resultMap type="EbuyHandleAddress" id="ebuyHandleAddressBaseMap_AppendTable">
+        <id column="EHAid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EHAaddressDetail" javaType="java.lang.String" property="addressDetail"/>  <!-- 详细地址 -->        <result column="EHAtGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 所属小区Id(为空时从addressArea中获取地区信息) -->        <result column="EHAgbName" javaType="java.lang.String" property="gbName"/>  <!-- 小区名称，防止小区不存在时查的不对 -->        <result column="EHAblockId" javaType="java.math.BigInteger" property="blockId"/>  <!-- 区id -->        <result column="EHAaddressArea" javaType="java.lang.String" property="addressArea"/>  <!-- 地区信息 -->        <result column="EHAsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EHAsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EHAsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EHAsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EHAsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EHAsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EHAsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyHandleAddress" id="ebuyHandleAddressBaseMap_AppendTable1">
+        <id column="EHA1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EHA1addressDetail" javaType="java.lang.String" property="addressDetail"/>  <!-- 详细地址 -->        <result column="EHA1tGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 所属小区Id(为空时从addressArea中获取地区信息) -->        <result column="EHA1gbName" javaType="java.lang.String" property="gbName"/>  <!-- 小区名称，防止小区不存在时查的不对 -->        <result column="EHA1blockId" javaType="java.math.BigInteger" property="blockId"/>  <!-- 区id -->        <result column="EHA1addressArea" javaType="java.lang.String" property="addressArea"/>  <!-- 地区信息 -->        <result column="EHA1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EHA1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EHA1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EHA1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EHA1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EHA1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EHA1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EHA.f_id,EHA.f_address_detail,EHA.t_group_building_f_id,EHA.f_gb_name,EHA.f_block_id,EHA.f_address_area
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EHA.f_id as EHAid,EHA.f_address_detail as EHAaddressDetail,EHA.t_group_building_f_id as EHAtGroupBuildingFId,EHA.f_gb_name as EHAgbName,EHA.f_block_id as EHAblockId,EHA.f_address_area as EHAaddressArea
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EHA1.f_id as EHA1id,EHA1.f_address_detail as EHA1addressDetail,EHA1.t_group_building_f_id as EHA1tGroupBuildingFId,EHA1.f_gb_name as EHA1gbName,EHA1.f_block_id as EHA1blockId,EHA1.f_address_area as EHA1addressArea
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EHA.f_id = #{id} ) </if>        <if test="addressDetail != null">  and (EHA.f_address_detail = #{addressDetail} ) </if>        <if test="tGroupBuildingFId != null">  and (EHA.t_group_building_f_id = #{tGroupBuildingFId} ) </if>        <if test="gbName != null">  and (EHA.f_gb_name = #{gbName} ) </if>        <if test="blockId != null">  and (EHA.f_block_id = #{blockId} ) </if>        <if test="addressArea != null">  and (EHA.f_address_area = #{addressArea} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EHA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EHA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EHA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EHA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EHA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EHA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EHA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EHA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EHA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EHA.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EHA.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EHA.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EHA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EHA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EHA.f_id = #{id} ) </if>        <if test="addressDetail != null and !addressDetail.equals('')  ">  and (EHA.f_address_detail like CONCAT('%',#{addressDetail},'%') ) </if>        <if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  ">  and (EHA.t_group_building_f_id = #{tGroupBuildingFId} ) </if>        <if test="gbName != null and !gbName.equals('')  ">  and (EHA.f_gb_name like CONCAT('%',#{gbName},'%') ) </if>        <if test="blockId != null and !blockId.equals('')  ">  and (EHA.f_block_id = #{blockId} ) </if>        <if test="addressArea != null and !addressArea.equals('')  ">  and (EHA.f_address_area like CONCAT('%',#{addressArea},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EHA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EHA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EHA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EHA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EHA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EHA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EHA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EHA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EHA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EHA.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EHA.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EHA.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EHA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EHA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyHandleAddressBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyHandleAddressBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyHandleAddressBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyHandleAddressBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_handle_address EHA    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(手动输入的收货地址)信息。 -->
+	<sql id="select_ebuyHandleAddress">
+		SELECT <include refid="ebuyHandleAddressBase.queryHead"/>
+		<include refid="ebuyHandleAddressBase.busiQueryCondition"/>
+		<include refid="ebuyHandleAddressBase.dimCheckSql"/>
+		ORDER BY EHA.f_id DESC
+	</sql>
+	<select id="select_ebuyHandleAddress" parameterType="java.util.Map" resultMap="ebuyHandleAddressBase.ebuyHandleAddressExtendMap">
+		<include refid="ebuyHandleAddressBase.select_ebuyHandleAddress"/>
+	</select>
+	
+	<!-- 根据条件分页查询(手动输入的收货地址)信息  -->
+	<sql id="select_ebuyHandleAddress_withPage">
+		SELECT <include refid="ebuyHandleAddressBase.queryHead"/>
+		<include refid="ebuyHandleAddressBase.busiQueryCondition"/>
+		<include refid="ebuyHandleAddressBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyHandleAddress_withPage" resultMap="ebuyHandleAddressBase.ebuyHandleAddressExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyHandleAddressBase.select_ebuyHandleAddress_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(手动输入的收货地址)信息。 -->
+	<sql id="select_ebuyHandleAddress_bySeqId">
+		SELECT <include refid="ebuyHandleAddressBase.queryHead"/>
+		<include refid="ebuyHandleAddressBase.busiQueryCondition"/>
+		 and EHA.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyHandleAddress_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyHandleAddressBase.ebuyHandleAddressBaseMap">
+		<include refid="ebuyHandleAddressBase.select_ebuyHandleAddress_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(手动输入的收货地址)记录数  -->
+	<sql id="select_ebuyHandleAddress_count">
+		SELECT COUNT(*)
+		<include refid="ebuyHandleAddressBase.busiQueryCount"/>
+		<include refid="ebuyHandleAddressBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyHandleAddress_count" resultType="java.lang.Integer">
+		<include refid="ebuyHandleAddressBase.select_ebuyHandleAddress_count"/>
+	</select>
+	
+	 <!-- 往(手动输入的收货地址)新增一条记录。 -->
+	 <sql id="insert_ebuyHandleAddress">
+		INSERT INTO t_ebuy_handle_address 
+		(f_id,f_address_detail,t_group_building_f_id,f_gb_name,f_block_id,f_address_area,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{addressDetail,jdbcType=VARCHAR},#{tGroupBuildingFId},#{gbName,jdbcType=VARCHAR},#{blockId},#{addressArea,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_ebuyHandleAddress" parameterType="EbuyHandleAddress">
+		<include refid="ebuyHandleAddressBase.insert_ebuyHandleAddress"/>
+    </insert>
+    
+	<!-- 批量新增(手动输入的收货地址)信息 -->
+    <insert id="insert_ebuyHandleAddress_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_handle_address 
+		(f_id,f_address_detail,t_group_building_f_id,f_gb_name,f_block_id,f_address_area,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.addressDetail,jdbcType=VARCHAR},#{item.tGroupBuildingFId},#{item.gbName,jdbcType=VARCHAR},#{item.blockId},#{item.addressArea,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(手动输入的收货地址)信息。 -->
+    <sql id="update_ebuyHandleAddress">
+		UPDATE t_ebuy_handle_address		<trim prefix="SET" prefixOverrides=","> 		<if test="addressDetail != null and !addressDetail.equals('') "> ,f_address_detail=#{addressDetail}</if> 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('') "> ,t_group_building_f_id=#{tGroupBuildingFId}</if> 		<if test="gbName != null and !gbName.equals('') "> ,f_gb_name=#{gbName}</if> 		<if test="blockId != null and !blockId.equals('') "> ,f_block_id=#{blockId}</if> 		<if test="addressArea != null and !addressArea.equals('') "> ,f_address_area=#{addressArea}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyHandleAddress" parameterType="EbuyHandleAddress">
+		<include refid="ebuyHandleAddressBase.update_ebuyHandleAddress"/>
+    </update>
+    
+    <!-- 批量更新(手动输入的收货地址)信息。 -->
+    <update id="update_ebuyHandleAddress_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_handle_address		<trim prefix="SET" prefixOverrides=","> 		<if test="item.addressDetail != null and !item.addressDetail.equals('')  "> ,f_address_detail=#{item.addressDetail}</if> 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if> 		<if test="item.gbName != null and !item.gbName.equals('')  "> ,f_gb_name=#{item.gbName}</if> 		<if test="item.blockId != null and !item.blockId.equals('')  "> ,f_block_id=#{item.blockId}</if> 		<if test="item.addressArea != null and !item.addressArea.equals('')  "> ,f_address_area=#{item.addressArea}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(手动输入的收货地址)信息_逻辑删除。 -->
+    <sql id="delete_ebuyHandleAddress_Logic">
+		UPDATE t_ebuy_handle_address		<trim prefix="SET" prefixOverrides=","> 		<if test="addressDetail != null and !addressDetail.equals('')  "> ,f_address_detail=#{addressDetail}</if> 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{tGroupBuildingFId}</if> 		<if test="gbName != null and !gbName.equals('')  "> ,f_gb_name=#{gbName}</if> 		<if test="blockId != null and !blockId.equals('')  "> ,f_block_id=#{blockId}</if> 		<if test="addressArea != null and !addressArea.equals('')  "> ,f_address_area=#{addressArea}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyHandleAddress_Logic" parameterType="EbuyHandleAddress">
+		<include refid="ebuyHandleAddressBase.delete_ebuyHandleAddress_Logic"/>
+    </update>
+    
+    <!-- 批量删除(手动输入的收货地址)信息_逻辑删除 -->
+    <update id="delete_ebuyHandleAddress_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_handle_address		<trim prefix="SET" prefixOverrides=","> 		<if test="item.addressDetail != null and !item.addressDetail.equals('')  "> ,f_address_detail=#{item.addressDetail}</if> 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if> 		<if test="item.gbName != null and !item.gbName.equals('')  "> ,f_gb_name=#{item.gbName}</if> 		<if test="item.blockId != null and !item.blockId.equals('')  "> ,f_block_id=#{item.blockId}</if> 		<if test="item.addressArea != null and !item.addressArea.equals('')  "> ,f_address_area=#{item.addressArea}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(手动输入的收货地址)信息。 -->
+    <sql id="delete_ebuyHandleAddress">
+		DELETE FROM t_ebuy_handle_address WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyHandleAddress" parameterType="java.lang.String">
+		<include refid="ebuyHandleAddressBase.delete_ebuyHandleAddress"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(手动输入的收货地址)信息。 -->
+    <delete id="delete_ebuyHandleAddress_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_handle_address WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

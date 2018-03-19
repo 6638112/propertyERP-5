@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:华鹏飞临停车cardsn t_car_hpf_cardsn -->
+<mapper namespace="carHpfCardsnBase">
+	<resultMap type="CarHpfCardsn" id="carHpfCardsnBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="t_carnum" javaType="java.lang.String" property="tCarnum"/>  <!--  -->
+        <result column="f_cardsn" javaType="java.lang.String" property="cardsn"/>  <!--  -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CarHpfCardsn" id="carHpfCardsnExtendMap" extends="carHpfCardsnBaseMap">
+	</resultMap>
+	<resultMap type="CarHpfCardsn" id="carHpfCardsnBaseMap_AppendTable">
+        <id column="CHCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="CHCtCarnum" javaType="java.lang.String" property="tCarnum"/>  <!--  -->
+        <result column="CHCcardsn" javaType="java.lang.String" property="cardsn"/>  <!--  -->
+        <result column="CHCsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->
+        <result column="CHCsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->
+        <result column="CHCsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->
+        <result column="CHCsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->
+        <result column="CHCsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->
+        <result column="CHCsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->
+        <result column="CHCsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CarHpfCardsn" id="carHpfCardsnBaseMap_AppendTable1">
+        <id column="CHC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="CHC1tCarnum" javaType="java.lang.String" property="tCarnum"/>  <!--  -->
+        <result column="CHC1cardsn" javaType="java.lang.String" property="cardsn"/>  <!--  -->
+        <result column="CHC1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->
+        <result column="CHC1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->
+        <result column="CHC1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->
+        <result column="CHC1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->
+        <result column="CHC1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->
+        <result column="CHC1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->
+        <result column="CHC1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CHC.f_id,CHC.t_carnum,CHC.f_cardsn
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CHC.f_id as CHCid,CHC.t_carnum as CHCtCarnum,CHC.f_cardsn as CHCcardsn
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CHC1.f_id as CHC1id,CHC1.t_carnum as CHC1tCarnum,CHC1.f_cardsn as CHC1cardsn
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CHC.f_id = #{id} ) </if>
+        <if test="tCarnum != null">  and (CHC.t_carnum = #{tCarnum} ) </if>
+        <if test="cardsn != null">  and (CHC.f_cardsn = #{cardsn} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CHC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (CHC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (CHC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CHC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (CHC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (CHC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CHC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (CHC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (CHC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (CHC.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (CHC.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (CHC.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (CHC.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (CHC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CHC.f_id = #{id} ) </if>
+        <if test="tCarnum != null and !tCarnum.equals('')  ">  and (CHC.t_carnum like CONCAT('%',#{tCarnum},'%') ) </if>
+        <if test="cardsn != null and !cardsn.equals('')  ">  and (CHC.f_cardsn like CONCAT('%',#{cardsn},'%') ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CHC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (CHC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (CHC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CHC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (CHC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (CHC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CHC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (CHC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (CHC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CHC.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CHC.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CHC.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CHC.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (CHC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="carHpfCardsnBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="carHpfCardsnBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="carHpfCardsnBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="carHpfCardsnBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_car_hpf_cardsn CHC
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(华鹏飞临停车cardsn)信息。 -->
+	<sql id="select_carHpfCardsn">
+		SELECT <include refid="carHpfCardsnBase.queryHead"/>
+		<include refid="carHpfCardsnBase.busiQueryCondition"/>
+		<include refid="carHpfCardsnBase.dimCheckSql"/>
+		ORDER BY CHC.f_id DESC
+	</sql>
+	<select id="select_carHpfCardsn" parameterType="java.util.Map" resultMap="carHpfCardsnBase.carHpfCardsnExtendMap">
+		<include refid="carHpfCardsnBase.select_carHpfCardsn"/>
+	</select>
+	
+	<!-- 根据条件分页查询(华鹏飞临停车cardsn)信息  -->
+	<sql id="select_carHpfCardsn_withPage">
+		SELECT <include refid="carHpfCardsnBase.queryHead"/>
+		<include refid="carHpfCardsnBase.busiQueryCondition"/>
+		<include refid="carHpfCardsnBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_carHpfCardsn_withPage" resultMap="carHpfCardsnBase.carHpfCardsnExtendMap" parameterType="java.util.Map">
+		<include refid="carHpfCardsnBase.select_carHpfCardsn_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(华鹏飞临停车cardsn)信息。 -->
+	<sql id="select_carHpfCardsn_bySeqId">
+		SELECT <include refid="carHpfCardsnBase.queryHead"/>
+		<include refid="carHpfCardsnBase.busiQueryCondition"/>
+		 and CHC.f_id = #{_parameter}
+	</sql>
+	<select id="select_carHpfCardsn_bySeqId" parameterType="java.math.BigInteger" resultMap="carHpfCardsnBase.carHpfCardsnBaseMap">
+		<include refid="carHpfCardsnBase.select_carHpfCardsn_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(华鹏飞临停车cardsn)记录数  -->
+	<sql id="select_carHpfCardsn_count">
+		SELECT COUNT(*)
+		<include refid="carHpfCardsnBase.busiQueryCount"/>
+		<include refid="carHpfCardsnBase.dimCheckSql"/>
+	</sql>
+	<select id="select_carHpfCardsn_count" resultType="java.lang.Integer">
+		<include refid="carHpfCardsnBase.select_carHpfCardsn_count"/>
+	</select>
+	
+	 <!-- 往(华鹏飞临停车cardsn)新增一条记录。 -->
+	 <sql id="insert_carHpfCardsn">
+		INSERT INTO t_car_hpf_cardsn 
+		(f_id,t_carnum,f_cardsn,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tCarnum,jdbcType=VARCHAR},#{cardsn,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_carHpfCardsn" parameterType="CarHpfCardsn">
+		<include refid="carHpfCardsnBase.insert_carHpfCardsn"/>
+    </insert>
+    
+	<!-- 批量新增(华鹏飞临停车cardsn)信息 -->
+    <insert id="insert_carHpfCardsn_Batch" parameterType="java.util.List">
+    	INSERT INTO t_car_hpf_cardsn 
+		(f_id,t_carnum,f_cardsn,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tCarnum,jdbcType=VARCHAR},#{item.cardsn,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(华鹏飞临停车cardsn)信息。 -->
+    <sql id="update_carHpfCardsn">
+		UPDATE t_car_hpf_cardsn
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tCarnum != null and !tCarnum.equals('') "> ,t_carnum=#{tCarnum}</if>
+ 		<if test="cardsn != null and !cardsn.equals('') "> ,f_cardsn=#{cardsn}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_carHpfCardsn" parameterType="CarHpfCardsn">
+		<include refid="carHpfCardsnBase.update_carHpfCardsn"/>
+    </update>
+    
+    <!-- 批量更新(华鹏飞临停车cardsn)信息。 -->
+    <update id="update_carHpfCardsn_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_car_hpf_cardsn
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tCarnum != null and !item.tCarnum.equals('')  "> ,t_carnum=#{item.tCarnum}</if>
+ 		<if test="item.cardsn != null and !item.cardsn.equals('')  "> ,f_cardsn=#{item.cardsn}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(华鹏飞临停车cardsn)信息_逻辑删除。 -->
+    <sql id="delete_carHpfCardsn_Logic">
+		UPDATE t_car_hpf_cardsn
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tCarnum != null and !tCarnum.equals('')  "> ,t_carnum=#{tCarnum}</if>
+ 		<if test="cardsn != null and !cardsn.equals('')  "> ,f_cardsn=#{cardsn}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_carHpfCardsn_Logic" parameterType="CarHpfCardsn">
+		<include refid="carHpfCardsnBase.delete_carHpfCardsn_Logic"/>
+    </update>
+    
+    <!-- 批量删除(华鹏飞临停车cardsn)信息_逻辑删除 -->
+    <update id="delete_carHpfCardsn_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_car_hpf_cardsn
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tCarnum != null and !item.tCarnum.equals('')  "> ,t_carnum=#{item.tCarnum}</if>
+ 		<if test="item.cardsn != null and !item.cardsn.equals('')  "> ,f_cardsn=#{item.cardsn}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(华鹏飞临停车cardsn)信息。 -->
+    <sql id="delete_carHpfCardsn">
+		DELETE FROM t_car_hpf_cardsn WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_carHpfCardsn" parameterType="java.lang.String">
+		<include refid="carHpfCardsnBase.delete_carHpfCardsn"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(华鹏飞临停车cardsn)信息。 -->
+    <delete id="delete_carHpfCardsn_Batch" parameterType="java.util.List">
+		DELETE FROM t_car_hpf_cardsn WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="carXmfMsg">
+	
+	<select id="select_carXmfMsg" parameterType="java.util.Map" resultMap="carXmfMsgBase.carXmfMsgExtendMap">
+		SELECT <include refid="carXmfMsgBase.queryHead"/>
+		FROM t_car_xmf_msg CXM
+    	WHERE 1=1
+    	AND CXM.f_car_type = #{carType} 
+    	AND CXM.f_pay_status=1
+    	AND CXM.f_push_status=0
+    	<![CDATA[AND (CXM.f_push_times<=10 OR CXM.f_push_times IS NULL) ]]>
+    	<![CDATA[AND IF((CXM.f_send_time IS NULL), TRUE, (CXM.f_send_time <= NOW())) ]]>
+    	AND CXM.f_sys0_del_state=0
+		ORDER BY CXM.f_id DESC
+	</select>
+
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:抽奖奖品编码表 t_ms_prize_gift_code -->
+<mapper namespace="msPrizeGiftCodeBase">
+	<resultMap type="MsPrizeGiftCode" id="msPrizeGiftCodeBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_pri_gift_id" javaType="java.math.BigInteger" property="priGiftId"/>  <!-- 所属奖品Id -->        <result column="f_uq_mark" javaType="java.lang.String" property="uqMark"/>  <!-- 标识码,用于作唯一性校验 -->        <result column="f_code_name" javaType="java.lang.String" property="codeName"/>  <!-- 兑换码对应名称 -->        <result column="f_value_code" javaType="java.lang.String" property="valueCode"/>  <!-- 价值码,例如兑换码 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MsPrizeGiftCode" id="msPrizeGiftCodeExtendMap" extends="msPrizeGiftCodeBaseMap">
+	</resultMap>
+	<resultMap type="MsPrizeGiftCode" id="msPrizeGiftCodeBaseMap_AppendTable">
+        <id column="MPGCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MPGCpriGiftId" javaType="java.math.BigInteger" property="priGiftId"/>  <!-- 所属奖品Id -->        <result column="MPGCuqMark" javaType="java.lang.String" property="uqMark"/>  <!-- 标识码,用于作唯一性校验 -->        <result column="MPGCcodeName" javaType="java.lang.String" property="codeName"/>  <!-- 兑换码对应名称 -->        <result column="MPGCvalueCode" javaType="java.lang.String" property="valueCode"/>  <!-- 价值码,例如兑换码 -->        <result column="MPGCsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MPGCsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MPGCsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MPGCsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MPGCsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MPGCsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MPGCsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MsPrizeGiftCode" id="msPrizeGiftCodeBaseMap_AppendTable1">
+        <id column="MPGC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MPGC1priGiftId" javaType="java.math.BigInteger" property="priGiftId"/>  <!-- 所属奖品Id -->        <result column="MPGC1uqMark" javaType="java.lang.String" property="uqMark"/>  <!-- 标识码,用于作唯一性校验 -->        <result column="MPGC1codeName" javaType="java.lang.String" property="codeName"/>  <!-- 兑换码对应名称 -->        <result column="MPGC1valueCode" javaType="java.lang.String" property="valueCode"/>  <!-- 价值码,例如兑换码 -->        <result column="MPGC1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MPGC1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MPGC1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MPGC1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MPGC1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MPGC1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MPGC1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		MPGC.f_id,MPGC.f_pri_gift_id,MPGC.f_uq_mark,MPGC.f_code_name,MPGC.f_value_code
+	</sql>
+	<sql id="queryHead_AppendTable">
+		MPGC.f_id as MPGCid,MPGC.f_pri_gift_id as MPGCpriGiftId,MPGC.f_uq_mark as MPGCuqMark,MPGC.f_code_name as MPGCcodeName,MPGC.f_value_code as MPGCvalueCode
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		MPGC1.f_id as MPGC1id,MPGC1.f_pri_gift_id as MPGC1priGiftId,MPGC1.f_uq_mark as MPGC1uqMark,MPGC1.f_code_name as MPGC1codeName,MPGC1.f_value_code as MPGC1valueCode
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (MPGC.f_id = #{id} ) </if>        <if test="priGiftId != null">  and (MPGC.f_pri_gift_id = #{priGiftId} ) </if>        <if test="uqMark != null">  and (MPGC.f_uq_mark = #{uqMark} ) </if>        <if test="codeName != null">  and (MPGC.f_code_name = #{codeName} ) </if>        <if test="valueCode != null">  and (MPGC.f_value_code = #{valueCode} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MPGC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MPGC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MPGC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MPGC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MPGC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MPGC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MPGC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MPGC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MPGC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (MPGC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (MPGC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (MPGC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (MPGC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (MPGC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (MPGC.f_id = #{id} ) </if>        <if test="priGiftId != null and !priGiftId.equals('')  ">  and (MPGC.f_pri_gift_id = #{priGiftId} ) </if>        <if test="uqMark != null and !uqMark.equals('')  ">  and (MPGC.f_uq_mark like CONCAT('%',#{uqMark},'%') ) </if>        <if test="codeName != null and !codeName.equals('')  ">  and (MPGC.f_code_name like CONCAT('%',#{codeName},'%') ) </if>        <if test="valueCode != null and !valueCode.equals('')  ">  and (MPGC.f_value_code like CONCAT('%',#{valueCode},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MPGC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MPGC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MPGC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MPGC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MPGC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MPGC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MPGC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MPGC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MPGC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (MPGC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (MPGC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (MPGC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (MPGC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (MPGC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="msPrizeGiftCodeBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="msPrizeGiftCodeBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="msPrizeGiftCodeBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="msPrizeGiftCodeBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ms_prize_gift_code MPGC    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(抽奖奖品编码表)信息。 -->
+	<sql id="select_msPrizeGiftCode">
+		SELECT <include refid="msPrizeGiftCodeBase.queryHead"/>
+		<include refid="msPrizeGiftCodeBase.busiQueryCondition"/>
+		<include refid="msPrizeGiftCodeBase.dimCheckSql"/>
+		ORDER BY MPGC.f_id DESC
+	</sql>
+	<select id="select_msPrizeGiftCode" parameterType="java.util.Map" resultMap="msPrizeGiftCodeBase.msPrizeGiftCodeExtendMap">
+		<include refid="msPrizeGiftCodeBase.select_msPrizeGiftCode"/>
+	</select>
+	
+	<!-- 根据条件分页查询(抽奖奖品编码表)信息  -->
+	<sql id="select_msPrizeGiftCode_withPage">
+		SELECT <include refid="msPrizeGiftCodeBase.queryHead"/>
+		<include refid="msPrizeGiftCodeBase.busiQueryCondition"/>
+		<include refid="msPrizeGiftCodeBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_msPrizeGiftCode_withPage" resultMap="msPrizeGiftCodeBase.msPrizeGiftCodeExtendMap" parameterType="java.util.Map">
+		<include refid="msPrizeGiftCodeBase.select_msPrizeGiftCode_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(抽奖奖品编码表)信息。 -->
+	<sql id="select_msPrizeGiftCode_bySeqId">
+		SELECT <include refid="msPrizeGiftCodeBase.queryHead"/>
+		<include refid="msPrizeGiftCodeBase.busiQueryCondition"/>
+		 and MPGC.f_id = #{_parameter}
+	</sql>
+	<select id="select_msPrizeGiftCode_bySeqId" parameterType="java.math.BigInteger" resultMap="msPrizeGiftCodeBase.msPrizeGiftCodeBaseMap">
+		<include refid="msPrizeGiftCodeBase.select_msPrizeGiftCode_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(抽奖奖品编码表)记录数  -->
+	<sql id="select_msPrizeGiftCode_count">
+		SELECT COUNT(*)
+		<include refid="msPrizeGiftCodeBase.busiQueryCount"/>
+		<include refid="msPrizeGiftCodeBase.dimCheckSql"/>
+	</sql>
+	<select id="select_msPrizeGiftCode_count" resultType="java.lang.Integer">
+		<include refid="msPrizeGiftCodeBase.select_msPrizeGiftCode_count"/>
+	</select>
+	
+	 <!-- 往(抽奖奖品编码表)新增一条记录。 -->
+	 <sql id="insert_msPrizeGiftCode">
+		INSERT INTO t_ms_prize_gift_code 
+		(f_id,f_pri_gift_id,f_uq_mark,f_code_name,f_value_code,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{priGiftId},#{uqMark,jdbcType=VARCHAR},#{codeName,jdbcType=VARCHAR},#{valueCode,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_msPrizeGiftCode" parameterType="MsPrizeGiftCode">
+		<include refid="msPrizeGiftCodeBase.insert_msPrizeGiftCode"/>
+    </insert>
+    
+	<!-- 批量新增(抽奖奖品编码表)信息 -->
+    <insert id="insert_msPrizeGiftCode_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ms_prize_gift_code 
+		(f_id,f_pri_gift_id,f_uq_mark,f_code_name,f_value_code,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.priGiftId},#{item.uqMark,jdbcType=VARCHAR},#{item.codeName,jdbcType=VARCHAR},#{item.valueCode,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(抽奖奖品编码表)信息。 -->
+    <sql id="update_msPrizeGiftCode">
+		UPDATE t_ms_prize_gift_code		<trim prefix="SET" prefixOverrides=","> 		<if test="priGiftId != null and !priGiftId.equals('') "> ,f_pri_gift_id=#{priGiftId}</if> 		<if test="uqMark != null and !uqMark.equals('') "> ,f_uq_mark=#{uqMark}</if> 		<if test="codeName != null and !codeName.equals('') "> ,f_code_name=#{codeName}</if> 		<if test="valueCode != null and !valueCode.equals('') "> ,f_value_code=#{valueCode}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_msPrizeGiftCode" parameterType="MsPrizeGiftCode">
+		<include refid="msPrizeGiftCodeBase.update_msPrizeGiftCode"/>
+    </update>
+    
+    <!-- 批量更新(抽奖奖品编码表)信息。 -->
+    <update id="update_msPrizeGiftCode_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ms_prize_gift_code		<trim prefix="SET" prefixOverrides=","> 		<if test="item.priGiftId != null and !item.priGiftId.equals('')  "> ,f_pri_gift_id=#{item.priGiftId}</if> 		<if test="item.uqMark != null and !item.uqMark.equals('')  "> ,f_uq_mark=#{item.uqMark}</if> 		<if test="item.codeName != null and !item.codeName.equals('')  "> ,f_code_name=#{item.codeName}</if> 		<if test="item.valueCode != null and !item.valueCode.equals('')  "> ,f_value_code=#{item.valueCode}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(抽奖奖品编码表)信息_逻辑删除。 -->
+    <sql id="delete_msPrizeGiftCode_Logic">
+		UPDATE t_ms_prize_gift_code		<trim prefix="SET" prefixOverrides=","> 		<if test="priGiftId != null and !priGiftId.equals('')  "> ,f_pri_gift_id=#{priGiftId}</if> 		<if test="uqMark != null and !uqMark.equals('')  "> ,f_uq_mark=#{uqMark}</if> 		<if test="codeName != null and !codeName.equals('')  "> ,f_code_name=#{codeName}</if> 		<if test="valueCode != null and !valueCode.equals('')  "> ,f_value_code=#{valueCode}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_msPrizeGiftCode_Logic" parameterType="MsPrizeGiftCode">
+		<include refid="msPrizeGiftCodeBase.delete_msPrizeGiftCode_Logic"/>
+    </update>
+    
+    <!-- 批量删除(抽奖奖品编码表)信息_逻辑删除 -->
+    <update id="delete_msPrizeGiftCode_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ms_prize_gift_code		<trim prefix="SET" prefixOverrides=","> 		<if test="item.priGiftId != null and !item.priGiftId.equals('')  "> ,f_pri_gift_id=#{item.priGiftId}</if> 		<if test="item.uqMark != null and !item.uqMark.equals('')  "> ,f_uq_mark=#{item.uqMark}</if> 		<if test="item.codeName != null and !item.codeName.equals('')  "> ,f_code_name=#{item.codeName}</if> 		<if test="item.valueCode != null and !item.valueCode.equals('')  "> ,f_value_code=#{item.valueCode}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(抽奖奖品编码表)信息。 -->
+    <sql id="delete_msPrizeGiftCode">
+		DELETE FROM t_ms_prize_gift_code WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_msPrizeGiftCode" parameterType="java.lang.String">
+		<include refid="msPrizeGiftCodeBase.delete_msPrizeGiftCode"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(抽奖奖品编码表)信息。 -->
+    <delete id="delete_msPrizeGiftCode_Batch" parameterType="java.util.List">
+		DELETE FROM t_ms_prize_gift_code WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

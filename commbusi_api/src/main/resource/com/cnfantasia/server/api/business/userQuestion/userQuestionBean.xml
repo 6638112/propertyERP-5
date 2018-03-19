@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="userQuestionDao" class="com.cnfantasia.server.api.userQuestion.dao.UserQuestionDao" parent="abstractBaseDao">
+
+    </bean>
+
+    <bean id="userQuestionService" class="com.cnfantasia.server.api.userQuestion.service.UserQuestionService">
+        <property name="userQuestionBaseService" ref="userQuestionBaseService"/>
+        <property name="uuidManager" ref="uuidManager"/>
+        <property name="sysParamManager" ref="sysParamManager"/>
+        <property name="fileServerService" ref="fileServerService"/>
+    </bean>
+
+</beans>

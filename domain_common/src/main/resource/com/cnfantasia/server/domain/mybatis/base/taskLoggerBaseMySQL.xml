@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:job记录表 t_task_logger -->
+<mapper namespace="taskLoggerBase">
+	<resultMap type="TaskLogger" id="taskLoggerBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_class_name" javaType="java.lang.String" property="className"/>  <!-- className -->        <result column="f_method_name" javaType="java.lang.Long" property="methodName"/>  <!-- 执行方法 -->        <result column="f_is_undefined_exception" javaType="java.lang.Integer" property="isUndefinedException"/>  <!-- 是否为未处理的异常 -->        <result column="f_excep_stack_info" javaType="java.lang.String" property="excepStackInfo"/>  <!-- 异常堆栈信息 -->        <result column="f_task_start_time" javaType="java.lang.String" property="taskStartTime"/>  <!-- 执行开始时间 -->        <result column="f_task_end_time" javaType="java.lang.String" property="taskEndTime"/>  <!-- 执行开始时间 -->        <result column="f_deal_time" javaType="java.lang.Long" property="dealTime"/>  <!-- 请求处理时间,毫秒 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+	</resultMap>
+	<resultMap type="TaskLogger" id="taskLoggerExtendMap" extends="taskLoggerBaseMap">
+	</resultMap>
+	<resultMap type="TaskLogger" id="taskLoggerBaseMap_AppendTable">
+        <id column="TLid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="TLclassName" javaType="java.lang.String" property="className"/>  <!-- className -->        <result column="TLmethodName" javaType="java.lang.Long" property="methodName"/>  <!-- 执行方法 -->        <result column="TLisUndefinedException" javaType="java.lang.Integer" property="isUndefinedException"/>  <!-- 是否为未处理的异常 -->        <result column="TLexcepStackInfo" javaType="java.lang.String" property="excepStackInfo"/>  <!-- 异常堆栈信息 -->        <result column="TLtaskStartTime" javaType="java.lang.String" property="taskStartTime"/>  <!-- 执行开始时间 -->        <result column="TLtaskEndTime" javaType="java.lang.String" property="taskEndTime"/>  <!-- 执行开始时间 -->        <result column="TLdealTime" javaType="java.lang.Long" property="dealTime"/>  <!-- 请求处理时间,毫秒 -->        <result column="TLsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+	</resultMap>
+	<resultMap type="TaskLogger" id="taskLoggerBaseMap_AppendTable1">
+        <id column="TL1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="TL1className" javaType="java.lang.String" property="className"/>  <!-- className -->        <result column="TL1methodName" javaType="java.lang.Long" property="methodName"/>  <!-- 执行方法 -->        <result column="TL1isUndefinedException" javaType="java.lang.Integer" property="isUndefinedException"/>  <!-- 是否为未处理的异常 -->        <result column="TL1excepStackInfo" javaType="java.lang.String" property="excepStackInfo"/>  <!-- 异常堆栈信息 -->        <result column="TL1taskStartTime" javaType="java.lang.String" property="taskStartTime"/>  <!-- 执行开始时间 -->        <result column="TL1taskEndTime" javaType="java.lang.String" property="taskEndTime"/>  <!-- 执行开始时间 -->        <result column="TL1dealTime" javaType="java.lang.Long" property="dealTime"/>  <!-- 请求处理时间,毫秒 -->        <result column="TL1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		TL.f_id,TL.f_class_name,TL.f_method_name,TL.f_is_undefined_exception,TL.f_excep_stack_info,date_format(TL.f_task_start_time,'%Y-%m-%d %T') as f_task_start_time,date_format(TL.f_task_end_time,'%Y-%m-%d %T') as f_task_end_time,TL.f_deal_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		TL.f_id as TLid,TL.f_class_name as TLclassName,TL.f_method_name as TLmethodName,TL.f_is_undefined_exception as TLisUndefinedException,TL.f_excep_stack_info as TLexcepStackInfo,date_format(TL.f_task_start_time,'%Y-%m-%d %T') as TLtaskStartTime,date_format(TL.f_task_end_time,'%Y-%m-%d %T') as TLtaskEndTime,TL.f_deal_time as TLdealTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		TL1.f_id as TL1id,TL1.f_class_name as TL1className,TL1.f_method_name as TL1methodName,TL1.f_is_undefined_exception as TL1isUndefinedException,TL1.f_excep_stack_info as TL1excepStackInfo,date_format(TL1.f_task_start_time,'%Y-%m-%d %T') as TL1taskStartTime,date_format(TL1.f_task_end_time,'%Y-%m-%d %T') as TL1taskEndTime,TL1.f_deal_time as TL1dealTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (TL.f_id = #{id} ) </if>        <if test="className != null">  and (TL.f_class_name = #{className} ) </if>        <if test="methodName != null">  and (TL.f_method_name = #{methodName} ) </if>        <if test="isUndefinedException != null">  and (TL.f_is_undefined_exception = #{isUndefinedException} ) </if>        <if test="excepStackInfo != null">  and (TL.f_excep_stack_info = #{excepStackInfo} ) </if>        <if test="taskStartTime != null and !taskStartTime.equals('')  ">  and (TL.f_task_start_time = str_to_date(#{taskStartTime},'%Y-%m-%d %T') ) </if>        <if test="taskStartTime_START != null and !taskStartTime_START.equals('')  ">              <![CDATA[ and (TL.f_task_start_time >= str_to_date(#{taskStartTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="taskStartTime_END != null and !taskStartTime_END.equals('')  ">            <![CDATA[ and (TL.f_task_start_time <= str_to_date(#{taskStartTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="taskEndTime != null and !taskEndTime.equals('')  ">  and (TL.f_task_end_time = str_to_date(#{taskEndTime},'%Y-%m-%d %T') ) </if>        <if test="taskEndTime_START != null and !taskEndTime_START.equals('')  ">              <![CDATA[ and (TL.f_task_end_time >= str_to_date(#{taskEndTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="taskEndTime_END != null and !taskEndTime_END.equals('')  ">            <![CDATA[ and (TL.f_task_end_time <= str_to_date(#{taskEndTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="dealTime != null">  and (TL.f_deal_time = #{dealTime} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (TL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (TL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (TL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (TL.f_id = #{id} ) </if>        <if test="className != null and !className.equals('')  ">  and (TL.f_class_name like CONCAT('%',#{className},'%') ) </if>        <if test="methodName != null and !methodName.equals('')  ">  and (TL.f_method_name = #{methodName} ) </if>        <if test="isUndefinedException != null and !isUndefinedException.equals('')  ">  and (TL.f_is_undefined_exception = #{isUndefinedException} ) </if>        <if test="excepStackInfo != null and !excepStackInfo.equals('')  ">  and (TL.f_excep_stack_info like CONCAT('%',#{excepStackInfo},'%') ) </if>        <if test="taskStartTime != null and !taskStartTime.equals('')  ">  and (TL.f_task_start_time = str_to_date(#{taskStartTime},'%Y-%m-%d %T') ) </if>        <if test="taskStartTime_START != null and !taskStartTime_START.equals('')  ">              <![CDATA[ and (TL.f_task_start_time >= str_to_date(#{taskStartTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="taskStartTime_END != null and !taskStartTime_END.equals('')  ">            <![CDATA[ and (TL.f_task_start_time <= str_to_date(#{taskStartTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="taskEndTime != null and !taskEndTime.equals('')  ">  and (TL.f_task_end_time = str_to_date(#{taskEndTime},'%Y-%m-%d %T') ) </if>        <if test="taskEndTime_START != null and !taskEndTime_START.equals('')  ">              <![CDATA[ and (TL.f_task_end_time >= str_to_date(#{taskEndTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="taskEndTime_END != null and !taskEndTime_END.equals('')  ">            <![CDATA[ and (TL.f_task_end_time <= str_to_date(#{taskEndTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="dealTime != null and !dealTime.equals('')  ">  and (TL.f_deal_time = #{dealTime} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (TL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (TL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (TL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="taskLoggerBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="taskLoggerBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="taskLoggerBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="taskLoggerBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_task_logger TL    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(job记录表)信息。 -->
+	<sql id="select_taskLogger">
+		SELECT <include refid="taskLoggerBase.queryHead"/>
+		<include refid="taskLoggerBase.busiQueryCondition"/>
+		<include refid="taskLoggerBase.dimCheckSql"/>
+		ORDER BY TL.f_id DESC
+	</sql>
+	<select id="select_taskLogger" parameterType="java.util.Map" resultMap="taskLoggerBase.taskLoggerExtendMap">
+		<include refid="taskLoggerBase.select_taskLogger"/>
+	</select>
+	
+	<!-- 根据条件分页查询(job记录表)信息  -->
+	<sql id="select_taskLogger_withPage">
+		SELECT <include refid="taskLoggerBase.queryHead"/>
+		<include refid="taskLoggerBase.busiQueryCondition"/>
+		<include refid="taskLoggerBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_taskLogger_withPage" resultMap="taskLoggerBase.taskLoggerExtendMap" parameterType="java.util.Map">
+		<include refid="taskLoggerBase.select_taskLogger_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(job记录表)信息。 -->
+	<sql id="select_taskLogger_bySeqId">
+		SELECT <include refid="taskLoggerBase.queryHead"/>
+		<include refid="taskLoggerBase.busiQueryCondition"/>
+		 and TL.f_id = #{_parameter}
+	</sql>
+	<select id="select_taskLogger_bySeqId" parameterType="java.math.BigInteger" resultMap="taskLoggerBase.taskLoggerBaseMap">
+		<include refid="taskLoggerBase.select_taskLogger_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(job记录表)记录数  -->
+	<sql id="select_taskLogger_count">
+		SELECT COUNT(*)
+		<include refid="taskLoggerBase.busiQueryCount"/>
+		<include refid="taskLoggerBase.dimCheckSql"/>
+	</sql>
+	<select id="select_taskLogger_count" resultType="java.lang.Integer">
+		<include refid="taskLoggerBase.select_taskLogger_count"/>
+	</select>
+	
+	 <!-- 往(job记录表)新增一条记录。 -->
+	 <sql id="insert_taskLogger">
+		INSERT INTO t_task_logger 
+		(f_id,f_class_name,f_method_name,f_is_undefined_exception,f_excep_stack_info,f_task_start_time,f_task_end_time,f_deal_time,f_sys0_add_time) VALUES 
+		(#{id},#{className,jdbcType=VARCHAR},#{methodName},#{isUndefinedException},#{excepStackInfo,jdbcType=VARCHAR},str_to_date(#{taskStartTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{taskEndTime,jdbcType=DATE},'%Y-%m-%d %T'),#{dealTime},sysdate())
+	 </sql>
+    <insert id="insert_taskLogger" parameterType="TaskLogger">
+		<include refid="taskLoggerBase.insert_taskLogger"/>
+    </insert>
+    
+	<!-- 批量新增(job记录表)信息 -->
+    <insert id="insert_taskLogger_Batch" parameterType="java.util.List">
+    	INSERT INTO t_task_logger 
+		(f_id,f_class_name,f_method_name,f_is_undefined_exception,f_excep_stack_info,f_task_start_time,f_task_end_time,f_deal_time,f_sys0_add_time) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.className,jdbcType=VARCHAR},#{item.methodName},#{item.isUndefinedException},#{item.excepStackInfo,jdbcType=VARCHAR},str_to_date(#{item.taskStartTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.taskEndTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.dealTime},sysdate())
+		</foreach>
+    </insert>
+    
+    <!-- 更新(job记录表)信息。 -->
+    <sql id="update_taskLogger">
+		UPDATE t_task_logger		<trim prefix="SET" prefixOverrides=","> 		<if test="className != null and !className.equals('') "> ,f_class_name=#{className}</if> 		<if test="methodName != null and !methodName.equals('') "> ,f_method_name=#{methodName}</if> 		<if test="isUndefinedException != null and !isUndefinedException.equals('') "> ,f_is_undefined_exception=#{isUndefinedException}</if> 		<if test="excepStackInfo != null and !excepStackInfo.equals('') "> ,f_excep_stack_info=#{excepStackInfo}</if> 		<if test="taskStartTime != null and !taskStartTime.equals('') "> ,f_task_start_time=str_to_date(#{taskStartTime},'%Y-%m-%d %T')</if> 		<if test="taskEndTime != null and !taskEndTime.equals('') "> ,f_task_end_time=str_to_date(#{taskEndTime},'%Y-%m-%d %T')</if> 		<if test="dealTime != null and !dealTime.equals('') "> ,f_deal_time=#{dealTime}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_taskLogger" parameterType="TaskLogger">
+		<include refid="taskLoggerBase.update_taskLogger"/>
+    </update>
+    
+    <!-- 批量更新(job记录表)信息。 -->
+    <update id="update_taskLogger_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_task_logger		<trim prefix="SET" prefixOverrides=","> 		<if test="item.className != null and !item.className.equals('')  "> ,f_class_name=#{item.className}</if> 		<if test="item.methodName != null and !item.methodName.equals('')  "> ,f_method_name=#{item.methodName}</if> 		<if test="item.isUndefinedException != null and !item.isUndefinedException.equals('')  "> ,f_is_undefined_exception=#{item.isUndefinedException}</if> 		<if test="item.excepStackInfo != null and !item.excepStackInfo.equals('')  "> ,f_excep_stack_info=#{item.excepStackInfo}</if> 		<if test="item.taskStartTime != null and !item.taskStartTime.equals('')  "> ,f_task_start_time=str_to_date(#{item.taskStartTime},'%Y-%m-%d %T')</if> 		<if test="item.taskEndTime != null and !item.taskEndTime.equals('')  "> ,f_task_end_time=str_to_date(#{item.taskEndTime},'%Y-%m-%d %T')</if> 		<if test="item.dealTime != null and !item.dealTime.equals('')  "> ,f_deal_time=#{item.dealTime}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(job记录表)信息_逻辑删除。 -->
+    <!-- <sql id="delete_taskLogger_Logic">
+		UPDATE t_task_logger		<trim prefix="SET" prefixOverrides=","> 		<if test="className != null and !className.equals('')  "> ,f_class_name=#{className}</if> 		<if test="methodName != null and !methodName.equals('')  "> ,f_method_name=#{methodName}</if> 		<if test="isUndefinedException != null and !isUndefinedException.equals('')  "> ,f_is_undefined_exception=#{isUndefinedException}</if> 		<if test="excepStackInfo != null and !excepStackInfo.equals('')  "> ,f_excep_stack_info=#{excepStackInfo}</if> 		<if test="taskStartTime != null and !taskStartTime.equals('')  "> ,f_task_start_time=str_to_date(#{taskStartTime},'%Y-%m-%d %T')</if> 		<if test="taskEndTime != null and !taskEndTime.equals('')  "> ,f_task_end_time=str_to_date(#{taskEndTime},'%Y-%m-%d %T')</if> 		<if test="dealTime != null and !dealTime.equals('')  "> ,f_deal_time=#{dealTime}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_taskLogger_Logic" parameterType="TaskLogger">
+		<include refid="taskLoggerBase.delete_taskLogger_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(job记录表)信息_逻辑删除 -->
+    <!-- <update id="delete_taskLogger_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_task_logger		<trim prefix="SET" prefixOverrides=","> 		<if test="item.className != null and !item.className.equals('')  "> ,f_class_name=#{item.className}</if> 		<if test="item.methodName != null and !item.methodName.equals('')  "> ,f_method_name=#{item.methodName}</if> 		<if test="item.isUndefinedException != null and !item.isUndefinedException.equals('')  "> ,f_is_undefined_exception=#{item.isUndefinedException}</if> 		<if test="item.excepStackInfo != null and !item.excepStackInfo.equals('')  "> ,f_excep_stack_info=#{item.excepStackInfo}</if> 		<if test="item.taskStartTime != null and !item.taskStartTime.equals('')  "> ,f_task_start_time=str_to_date(#{item.taskStartTime},'%Y-%m-%d %T')</if> 		<if test="item.taskEndTime != null and !item.taskEndTime.equals('')  "> ,f_task_end_time=str_to_date(#{item.taskEndTime},'%Y-%m-%d %T')</if> 		<if test="item.dealTime != null and !item.dealTime.equals('')  "> ,f_deal_time=#{item.dealTime}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(job记录表)信息。 -->
+    <sql id="delete_taskLogger">
+		DELETE FROM t_task_logger WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_taskLogger" parameterType="java.lang.String">
+		<include refid="taskLoggerBase.delete_taskLogger"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(job记录表)信息。 -->
+    <delete id="delete_taskLogger_Batch" parameterType="java.util.List">
+		DELETE FROM t_task_logger WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

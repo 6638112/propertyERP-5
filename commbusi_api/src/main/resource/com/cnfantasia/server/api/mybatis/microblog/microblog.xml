@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:微博模块 -->
+<mapper namespace="microblog">
+
+	<!-- 微博详情Map -->
+	<resultMap type="com.cnfantasia.server.api.microblog.entity.MicroblogContentEntity" id="microblogContentEntityMap_Append" 
+		extends="microblogContentBase.microblogContentBaseMap_AppendTable">
+		<result column="ext_isFavour" javaType="java.lang.Integer" property="extIsFavour"/><!-- 是否被当前用户收藏 -->
+		<result column="ext_favour_count" javaType="java.lang.Integer" property="extFavourCount"/><!-- 点赞总数 -->
+		<result column="ext_comment_count" javaType="java.lang.Integer" property="extCommentCount"/><!-- 评论总数 -->
+		<association property="microblogType" resultMap="microblogTypeBase.microblogTypeBaseMap_AppendTable"/><!-- 微博所属类别 -->
+		<association property="userInfo" resultMap="commonUser.userSimpleEntity_Map_Append"/><!-- 用户信息 -->
+		<collection property="microblogPicList" resultMap="microblogPicBase.microblogPicBaseMap_AppendTable"/><!-- 微博图片列表 -->
+	</resultMap>
+	
+	<sql id="select_microblog_list_select">
+		<include refid="microblogContentBase.queryHead_AppendTable"/>
+		,<include refid="microblogTypeBase.queryHead_AppendTable"/>
+		,<include refid="commonUser.userSimple_common_select"/>
+		,(SELECT CASE WHEN COUNT(S.f_id)>0 THEN 1 ELSE 0 END
+			FROM t_support S 
+			WHERE 1=1
+			AND S.f_target_type = 11 <!-- 11表示微博类别 -->
+			AND S.f_user_id = #{userId}
+			AND MC.f_id = S.f_target_id 
+			AND S.f_sys0_del_state = 0
+		) AS ext_isFavour <!-- 0未赞，1已赞 -->
+		,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END 
+			FROM t_common_gather_data CGD WHERE 1=1
+			AND CGD.f_target_type = 11 <!-- 11表示微博类别 -->
+			AND CGD.f_target_id = MC.f_id
+			AND CGD.f_sys0_del_state = 0
+		) AS ext_favour_count
+		,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_comment_count)) THEN 0 ELSE sum(CGD.f_total_comment_count) END 
+			FROM t_common_gather_data CGD WHERE 1=1
+			AND CGD.f_target_type = 11 <!-- 11表示微博类别 -->
+			AND CGD.f_target_id = MC.f_id
+			AND CGD.f_sys0_del_state = 0
+		) AS ext_comment_count
+	</sql>
+	<sql id="select_microblog_list_join">
+		INNER JOIN t_microblog_type MT ON MT.f_id = MC.t_microblog_type_f_id AND MT.f_sys0_del_state = 0
+		INNER JOIN t_user U ON U.f_id = MC.f_user_id AND U.f_sys0_del_state = 0
+		<include refid="commonUser.userSimple_common_from"/>
+	</sql>
+	<sql id="select_microblog_list_main_drive_condition">
+		SELECT MC.*
+		FROM t_microblog_content MC
+		WHERE 1=1
+   	 	AND MC.f_sys0_del_state = 0
+   	 	AND MC.t_group_building_f_id = #{groupBuildId}
+   	 	<if test="microBlogType != null and microBlogType != '' ">  AND (MC.t_microblog_type_f_id = #{microBlogType}) </if>
+	</sql>
+	<sql id="select_microblog_detail_main_drive_condition">
+		SELECT *
+		FROM t_microblog_content MC
+		WHERE 1=1
+   	 	AND MC.f_sys0_del_state = 0
+   	 	AND MC.f_id = #{microBolgId}
+	</sql>
+	
+	<select id="select_microblog_list_page" parameterType="java.util.Map" resultMap="microblogContentEntityMap_Append">
+		SELECT _tmp.* 
+			,<include refid="microblogPicBase.queryHead_AppendTable"/>
+		FROM (
+			SELECT <include refid="select_microblog_list_select"/>
+			FROM (<include refid="select_microblog_list_main_drive_condition"/> 
+				ORDER BY MC.f_create_time DESC
+				<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+			) MC
+			<include refid="select_microblog_list_join"/>
+			WHERE 1=1
+	   	 	ORDER BY MC.f_create_time DESC
+		) _tmp
+		LEFT JOIN t_microblog_pic MP ON MP.t_microblog_content_f_id = _tmp.MCid AND MP.f_sys0_del_state = 0
+	</select>
+	<select id="select_microblog_list_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		FROM (<include refid="select_microblog_list_main_drive_condition"/>) MC
+			<include refid="select_microblog_list_join"/>
+		WHERE 1=1
+	</select>
+	
+	<select id="select_microblog_detail" parameterType="java.util.Map" resultMap="microblogContentEntityMap_Append">
+		SELECT _tmp.* 
+			,<include refid="microblogPicBase.queryHead_AppendTable"/>
+		FROM (
+			SELECT <include refid="select_microblog_list_select"/>
+			FROM (<include refid="select_microblog_detail_main_drive_condition"/>) MC
+				<include refid="select_microblog_list_join"/>
+			WHERE 1=1
+		) _tmp
+		LEFT JOIN t_microblog_pic MP ON MP.t_microblog_content_f_id = _tmp.MCid AND MP.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询最热门微博 -->
+	<select id="select_mostHot_micblog" parameterType="java.util.Map" resultMap="microblogContentBase.microblogContentBaseMap_AppendTable">
+		SELECT <include refid="microblogContentBase.queryHead_AppendTable"/>
+		FROM t_microblog_content MC
+		WHERE 1=1
+   	 	AND MC.f_sys0_del_state = 0
+   	 	AND MC.f_id = (
+			SELECT max(f_id) 
+			FROM t_microblog_content 
+			WHERE 1=1 
+			AND f_sys0_del_state = 0
+			AND t_microblog_type_f_id = #{microBlogType}
+   	 		AND t_group_building_f_id = #{groupBuildId}
+			)
+	</select>
+	
+	<!-- 查询所有微博记录的最新更新时间 -->
+	<select id="select_All_Microblog_LastUpdTime" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT 
+		    date_format(MAX(greatest(CASE
+		                        WHEN NOT ISNULL(_tmp.maxTimeInside) THEN _tmp.maxTimeInside
+		                        ELSE 0
+		                    END,
+		                    CASE
+		                        WHEN NOT ISNULL(MP.f_sys0_upd_time) THEN MP.f_sys0_upd_time
+		                        ELSE 0
+		                    END,
+		                    CASE
+		                        WHEN NOT ISNULL(MP.f_sys0_upd_time) THEN MP.f_sys0_upd_time
+		                        ELSE 0
+		                    END,
+		                    CASE
+		                        WHEN NOT ISNULL(MP.f_sys0_upd_time) THEN MP.f_sys0_upd_time
+		                        ELSE 0
+		                    END)),
+		            '%Y-%m-%d %T') AS maxTime
+		FROM
+		    (SELECT 
+		        MC.f_id AS microblogContent_f_id,
+		            greatest(CASE
+		                WHEN NOT ISNULL(MC.f_sys0_add_time) THEN MC.f_sys0_add_time
+		                ELSE 0
+		            END, CASE
+		                WHEN NOT ISNULL(MC.f_sys0_upd_time) THEN MC.f_sys0_upd_time
+		                ELSE 0
+		            END, CASE
+		                WHEN NOT ISNULL(MC.f_sys0_del_time) THEN MC.f_sys0_del_time
+		                ELSE 0
+		            END, CASE
+		                WHEN NOT ISNULL(MT.f_sys0_add_time) THEN MT.f_sys0_add_time
+		                ELSE 0
+		            END, CASE
+		                WHEN NOT ISNULL(MT.f_sys0_upd_time) THEN MT.f_sys0_upd_time
+		                ELSE 0
+		            END, CASE
+		                WHEN NOT ISNULL(MT.f_sys0_del_time) THEN MT.f_sys0_del_time
+		                ELSE 0
+		            END, CASE
+		                WHEN NOT ISNULL(U.f_sys0_add_time) THEN U.f_sys0_add_time
+		                ELSE 0
+		            END, CASE
+		                WHEN NOT ISNULL(U.f_sys0_upd_time) THEN U.f_sys0_upd_time
+		                ELSE 0
+		            END, CASE
+		                WHEN NOT ISNULL(U.f_sys0_del_time) THEN U.f_sys0_del_time
+		                ELSE 0
+		            END
+		            , CASE
+		                WHEN NOT ISNULL(CGD.f_sys0_add_time) THEN CGD.f_sys0_add_time
+		                ELSE 0
+		            END, CASE
+		                WHEN NOT ISNULL(CGD.f_sys0_upd_time) THEN CGD.f_sys0_upd_time
+		                ELSE 0
+		            END, CASE
+		                WHEN NOT ISNULL(CGD.f_sys0_del_time) THEN CGD.f_sys0_del_time
+		                ELSE 0
+		            END
+					) AS maxTimeInside
+		    FROM
+		        t_microblog_content MC
+		    INNER JOIN t_microblog_type MT ON MT.f_id = MC.t_microblog_type_f_id
+		        AND MT.f_sys0_del_state = 0
+		    INNER JOIN t_user U ON U.f_id = MC.f_user_id
+		        AND U.f_sys0_del_state = 0
+		    LEFT JOIN t_common_gather_data CGD ON CGD.f_target_type =  11
+				AND CGD.f_target_id = MC.f_id
+				AND CGD.f_sys0_del_state = 0
+		   <!--  LEFT JOIN t_support S ON MC.f_id = S.f_target_id
+		        AND S.f_target_type = 11
+		        AND S.f_sys0_del_state = 0
+		    LEFT JOIN t_comments C ON MC.f_id = C.f_target_id
+				AND C.f_target_type = 11
+		        AND C.f_sys0_del_state = 0 -->
+		    WHERE
+		        1 = 1 AND MC.f_sys0_del_state = 0 
+		        <if test="microBlogType != null and microBlogType != '' ">  AND (MC.t_microblog_type_f_id = #{microBlogType}) </if>
+   	 			AND MC.t_group_building_f_id = #{groupBuildId}
+		    GROUP BY microblogContent_f_id) _tmp
+		        LEFT JOIN
+		    t_microblog_pic MP ON MP.t_microblog_content_f_id = _tmp.microblogContent_f_id
+		        AND MP.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询用户所在小区已经发布过微博的用户数量 -->
+	<select id="select_HaveSend_Blog_UserCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		    COUNT(*)
+		FROM
+		    (SELECT 
+		        f_user_id
+		    FROM
+		        t_microblog_content
+		    WHERE 1=1
+		    AND f_sys0_del_state = 0
+		    AND t_group_building_f_id = #{groupBuildId}
+		    GROUP BY f_user_id) AS userList
+	</select>
+	
+	<!-- 查询用户当天是否已经发过微博 huangzj2015-06-23 -->
+	<select id="select_User_Blog_For_Today" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(MC.f_id) FROM t_microblog_content MC WHERE MC.f_user_id=#{userId} 
+		AND MC.t_group_building_f_id =#{groupBuildId} AND date_format(MC.f_sys0_add_time,'%Y-%m-%d')=date_format(sysdate(),'%Y-%m-%d');
+	</select>
+	
+	<!-- 查看微博链接详情数据 -->
+	<select id="select_Microblog_LinkDetail" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT f_link_detail_json
+		FROM t_microblog_content
+		WHERE 1=1
+		AND f_id = #{microBolgId}
+	</select>
+	
+	<select id="selectXibaoGroupBuilding" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.microblog.entity.XibaoGroupBuilding">
+		select gb.f_name gbName, max(date_format(ifnull(ifnull(p.f_bill_month, f_month), p.f_sys0_upd_time),'%Y-%m')) pbDateStr,
+					count(*) userCount, max(p.f_hb_amount) maxHbAmount, sum(p.f_hb_amount) totalHbAmount
+				from t_pay_bill p
+				 inner join t_real_room rr on p.t_real_room_f_id = rr.f_id
+				 inner join t_building b on rr.t_building_f_id = b.f_id
+				 inner join t_group_building gb on b.t_group_building_f_id = gb.f_id
+				 inner join t_ebuy_order_has_t_pay_bill op on op.t_pay_bill_f_id = p.f_id
+		 		 inner join t_ebuy_order o on op.t_ebuy_order_f_id = o.f_id and o.f_sys0_del_state = 0
+				 <!-- left join t_pay_bill_time_cfg pc on p.f_bill_time_cfg_id = pc.f_id -->
+				where gb.f_id = #{groupBuildId}
+				and f_is_pay = 1 and p.f_hb_amount > 0 and o.f_pay_status = 2
+		limit 1
+	</select>
+	
+	<select id="selectXibaoList" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.microblog.entity.XibaoEntity">
+		select b.f_name buildName, o.f_buyer_id buyerId, p.f_hb_amount hbAmount, (p.f_hb_amount = p.f_amount) isFree, 
+		ifnull(ifnull(p.f_bill_month, f_month), p.f_sys0_upd_time)paybillDate, date_format(p.f_sys0_upd_time, '%Y.%m') paybillDateStr
+		from t_pay_bill p
+		 inner join t_real_room rr on p.t_real_room_f_id = rr.f_id
+		 inner join t_building b on rr.t_building_f_id = b.f_id
+		 inner join t_group_building gb on b.t_group_building_f_id = gb.f_id
+		 inner join t_ebuy_order_has_t_pay_bill op on op.t_pay_bill_f_id = p.f_id
+		 inner join t_ebuy_order o on op.t_ebuy_order_f_id = o.f_id and o.f_sys0_del_state = 0
+		 <!-- left join t_pay_bill_time_cfg pc on p.f_bill_time_cfg_id = pc.f_id -->
+		where gb.f_id = #{groupBuildId} and p.f_hb_amount > 0
+		and f_is_pay = 1 and p.f_sys0_del_state = 0 and o.f_pay_status = 2
+		and #{pbDateStr} >= date_format(ifnull(ifnull(p.f_bill_month, f_month), p.f_sys0_upd_time), '%Y-%m')
+		and date_format(ifnull(ifnull(p.f_bill_month, f_month), p.f_sys0_upd_time), '%Y-%m') >= DATE_FORMAT(DATE_SUB(#{pbDateEndStr},INTERVAL #{type} month),"%Y-%m")
+		 order by (p.f_hb_amount = p.f_amount) desc, p.f_hb_amount desc
+		limit #{beginData},#{pageSize}
+	</select>
+	
+	<select id="selectXibaoListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(0)
+		from t_pay_bill p
+		 inner join t_real_room rr on p.t_real_room_f_id = rr.f_id
+		 inner join t_building b on rr.t_building_f_id = b.f_id
+		 inner join t_group_building gb on b.t_group_building_f_id = gb.f_id
+		 inner join t_ebuy_order_has_t_pay_bill op on op.t_pay_bill_f_id = p.f_id
+		 inner join t_ebuy_order o on op.t_ebuy_order_f_id = o.f_id and o.f_sys0_del_state = 0
+		 <!-- left join t_pay_bill_time_cfg pc on p.f_bill_time_cfg_id = pc.f_id -->
+		where gb.f_id = #{groupBuildId} and p.f_hb_amount > 0
+		and f_is_pay = 1 and p.f_sys0_del_state = 0 and o.f_pay_status = 2
+		and #{pbDateStr} >= date_format(ifnull(ifnull(p.f_bill_month, f_month), p.f_sys0_upd_time), '%Y-%m')
+		and date_format(ifnull(ifnull(p.f_bill_month, f_month), p.f_sys0_upd_time), '%Y-%m') >= DATE_FORMAT(DATE_SUB(#{pbDateEndStr},INTERVAL #{type} month),"%Y-%m")
+		 order by (p.f_hb_amount = p.f_amount) desc, p.f_hb_amount desc
+	</select>
+	
+	<!-- 元宵灯谜活动，列出所有中奖名单 -->
+	<select id="select_Lantern_festival_prize_list" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.microblog.entity.LanternFestivalPrizeEntity">
+		SELECT lfp.f_riddle_no riddleNo, lfp.t_user_f_id userId, u.f_mobile userPhoneNum, lfp.f_status 'status' 
+		from t_lantern_festival_prize lfp
+		JOIN t_user u on u.f_id = lfp.t_user_f_id and u.f_sys0_del_state = 0
+		where lfp.f_sys0_del_state = 0 <!-- and gb.f_id = #{groupBuildId}  -->
+		ORDER BY lfp.f_riddle_no
+		limit #{beginData},#{pageSize}
+	</select>
+	
+	<select id="select_Lantern_festival_prize_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(lfp.f_id) from t_lantern_festival_prize lfp
+		JOIN t_user u on u.f_id = lfp.t_user_f_id and u.f_sys0_del_state = 0
+		where lfp.f_sys0_del_state = 0 <!-- and gb.f_id = #{groupBuildId}  -->
+	</select>
+</mapper>

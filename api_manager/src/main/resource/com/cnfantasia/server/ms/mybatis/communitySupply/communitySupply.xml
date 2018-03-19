@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户表 t_pay_bill -->
+<mapper namespace="communitySupply">
+	<resultMap type="com.cnfantasia.server.ms.communitySupply.entity.CommunitySupplyEntity" id="communitySupplyEntity"
+    	extends="communitySupplyBase.communitySupplyBaseMap_AppendTable">
+    </resultMap>
+    
+	<resultMap type="com.cnfantasia.server.ms.communitySupply.entity.CommunitySupplyTmpEntity" id="communitySupplyTmpEntity"
+    	extends="communitySupplyTmpBase.communitySupplyTmpBaseMap_AppendTable">
+    </resultMap>
+    
+	<resultMap type="com.cnfantasia.server.ms.communitySupply.entity.CommunitySupplyTmpViewEntity" id="communitySupplyTmpViewEntity"
+    	extends="communitySupplyTmpEntity">
+    </resultMap>   
+    
+	<resultMap type="com.cnfantasia.server.ms.communitySupply.entity.PropertySuggestCommsupplyEntity" id="propertySuggestCommsupplyEntity"
+    	extends="propertySuggestCommsupplyBase.propertySuggestCommsupplyBaseMap_AppendTable">
+    	<association property="communitySupply" resultMap="communitySupplyBase.communitySupplyBaseMap_AppendTable"></association>
+    	<association property="propertyCompany" resultMap="propertyCompanyBase.propertyCompanyBaseMap_AppendTable"></association>
+		<association property="communitySupplyType" resultMap="communitySupplyTypeBase.communitySupplyTypeBaseMap_AppendTable"/>
+    </resultMap>   
+    
+	<resultMap type="com.cnfantasia.server.ms.communitySupply.entity.CommunitySupplyBelongEntity" id="communitySupplyBelongEntity" extends="communitySupplyBelongBase.communitySupplyBelongBaseMap_AppendTable">
+    	<result column="abName" property="abName"/>
+    	<result column="acName" property="acName"/>
+    	<result column="apName" property="apName"/>
+    	<association property="communitySupplyType" resultMap="communitySupplyTypeBase.communitySupplyTypeBaseMap_AppendTable"></association>
+    	<association property="communitySupply" resultMap="communitySupplyBase.communitySupplyBaseMap_AppendTable"></association>
+    </resultMap>
+	<resultMap type="com.cnfantasia.server.ms.communitySupply.entity.CommunitySupplyBelongViewEntity" id="communitySupplyBelongViewEntity"
+    	extends="communitySupplyBelongEntity">
+    </resultMap>   
+    
+	<resultMap type="com.cnfantasia.server.ms.communitySupply.entity.CommunitySupplyDetailEntity" id="communitySupplyDetailEntity" extends="communitySupplyBase.communitySupplyBaseMap_AppendTable">
+		<association property="communitySupplyType" resultMap="communitySupplyTypeBase.communitySupplyTypeBaseMap_AppendTable"></association>
+    </resultMap>   
+    
+    <!-- 为解放区管理员查询所有物业推荐列表 -->
+    <select id="select_pscList" resultMap="propertySuggestCommsupplyEntity">
+    	select <include refid="propertySuggestCommsupplyBase.queryHead_AppendTable"/>
+    	,<include refid="communitySupplyBase.queryHead_AppendTable"/>
+    	,<include refid="propertyCompanyBase.queryHead_AppendTable"/>
+    	,<include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+    	FROM t_property_suggest_commsupply PSC
+    	LEFT JOIN t_community_supply CS ON CS.f_id = PSC.t_community_supply_f_id AND CS.f_sys0_del_state = 0
+    	LEFT JOIN t_community_supply_type CST ON CST.f_id = CS.t_community_supply_type_f_id AND CST.f_sys0_del_state = 0
+    	LEFT JOIN t_property_company PC ON PC.f_id = PSC.t_property_company_f_id AND PSC.f_sys0_del_state = 0
+    	WHERE PSC.f_sys0_del_state = 0
+    	<if test="csName != null and csName != '' "> and CS.f_name like CONCAT('%', #{csName}, '%') </if>
+    	<if test="cstId != null and cstId != '' "> and CST.f_id = #{cstId} </if>
+    	<if test="auditStatus != null and auditStatus != '' "> and PSC.f_audit_status = #{auditStatus} </if>
+    	order by PSC.f_sys0_add_time DESC
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+    </select>
+    
+    <!-- 查询物业推荐 详情 -->
+    <select id="select_PSC_detail" resultMap="propertySuggestCommsupplyEntity">
+    	select <include refid="propertySuggestCommsupplyBase.queryHead_AppendTable"/>
+    	,<include refid="communitySupplyBase.queryHead_AppendTable"/>
+    	,<include refid="propertyCompanyBase.queryHead_AppendTable"/>
+    	,<include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+    	FROM t_property_suggest_commsupply PSC
+    	LEFT JOIN t_community_supply CS ON CS.f_id = PSC.t_community_supply_f_id AND CS.f_sys0_del_state = 0
+    	LEFT JOIN t_community_supply_type CST ON CST.f_id = CS.t_community_supply_type_f_id AND CST.f_sys0_del_state = 0
+    	LEFT JOIN t_property_company PC ON PC.f_id = PSC.t_property_company_f_id AND PSC.f_sys0_del_state = 0
+    	WHERE PSC.f_id = #{id}
+    </select>
+    
+   <!-- 查询 店铺 详情-->
+    <select id="select_communitySupply_detail" resultMap="communitySupplyDetailEntity">
+    	select 	<include refid="communitySupplyBase.queryHead_AppendTable"/>
+    	,<include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+    	FROM t_community_supply CS
+		left join t_community_supply_type CST on CST.f_id = CS.t_community_supply_type_f_id and CST.f_sys0_del_state =0 
+		WHERE CS.f_id = #{id} 
+    </select>
+    
+    <!-- 根据登录用户查找所属的商家，例如登录用户是物业公司后台账户，那么就获得该物业公司下的所管辖的商家 -->
+    <select id="select_csList_byOmsUser" resultMap="communitySupplyEntity">
+    	select 	<include refid="communitySupplyBase.queryHead_AppendTable"/>
+    	,GB.f_name gbName,GB.f_id gbId, PC.f_id pcId, CST.f_name supplyType
+    	, PSC.f_time as suggestTime, PSC.f_groupbulid_id pscGbId, PSC.f_audit_status pscAuditStatus
+    	FROM t_community_supply CS
+    	inner join t_community_supply_type CST on CST.f_id = CS.t_community_supply_type_f_id
+    	inner join t_group_building_has_t_community_supply GBHTCS on GBHTCS.t_community_supply_f_id = CS.f_id
+    	inner join t_group_building GB on GBHTCS.t_group_building_f_id = GB.f_id AND GB.t_property_company_f_id IS NOT NULL
+    	inner join t_property_company PC on PC.f_id = GB.t_property_company_f_id
+    	inner join t_oms_user OU on OU.f_id = PC.f_admin_id 
+    	left join t_property_suggest_commsupply PSC on (PSC.t_community_supply_f_id = CS.f_id and PSC.f_groupbulid_id = GB.f_id
+        and PSC.f_sys0_del_state = 0)
+    	WHERE 1=1
+    	AND CS.f_sys0_del_state = 0 
+    	and CST.f_importance_level &gt;=1
+    	<if test="isadmin !=null and isadmin == 0" >and OU.f_id = #{omsUserId}</if> <!-- 当isadmin == 1 ，即解放区后台管理员 要看到所有,其它的只能看到所管辖的 -->
+    	<if test="supplyType != null and supplyType != '' "> and CST.f_name = #{supplyType} </if>
+    	<if test="csName != null and csName != '' "> and CS.f_name like CONCAT('%', #{csName}, '%') </if>
+    	<if test="gbName != null and gbName != '' "> and GB.f_name like CONCAT('%', #{gbName}, '%') </if>
+    	order by CS.f_sys0_add_time DESC
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+    </select>
+    
+    <!-- 为解放区管理员查找所有 临时申请的店铺 列表-->
+    <select id="select_csTmpList_forAdmin" resultMap="communitySupplyTmpEntity">
+    	select 	<include refid="communitySupplyTmpBase.queryHead_AppendTable"/>
+    	,CSType.f_name supplyType
+    	FROM t_community_supply_tmp CST
+    	left join t_community_supply_type CSType on CSType.f_id = CST.t_community_supply_type_f_id and CSType.f_sys0_del_state = 0
+    	WHERE 1=1
+    	AND CST.f_sys0_del_state = 0 
+    	and CSType.f_importance_level &gt;=1
+    	<if test="cstName != null and cstName != '' "> and CST.f_supply_name like CONCAT('%', #{cstName}, '%') </if>
+    	<if test="cstId != null and cstId != '' "> and CSType.f_id = #{cstId} </if>
+    	<if test="auditStatus != null and auditStatus != '' "> and CST.f_audit_status = #{auditStatus} </if>
+    	<if test="auditType != null and auditType != '' and auditType==3"> and CST.f_add_type = 3 </if>
+    	<if test="auditType == null or auditType == ''"> and (CST.f_add_type is null or CST.f_add_type != 3) </if>
+    	order by CST.f_sys0_add_time DESC
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+    </select>
+    
+    <!-- 为解放区管理员查找所有 认领店铺 列表-->
+    <select id="select_csBelongList_forAdmin" resultMap="communitySupplyBelongEntity">
+    	select 	<include refid="communitySupplyBelongBase.queryHead_AppendTable"/>
+    	,<include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+    	,<include refid="communitySupplyBase.queryHead_AppendTable"/>
+    	FROM t_community_supply_belong CSB
+    	left join t_community_supply CS on CS.f_id = CSB.f_community_supply_id and CS.f_sys0_del_state = 0 
+    	left join t_community_supply_type CST on CST.f_id = CS.t_community_supply_type_f_id and CST.f_sys0_del_state = 0
+    	WHERE 1=1
+    	and CST.f_importance_level &gt;=1
+    	<if test="csName != null and csName != '' "> and CS.f_name like CONCAT('%', #{csName}, '%') </if>
+    	<if test="cstId != null and cstId != '' "> and CST.f_id = #{cstId} </if>
+    	<if test="auditStatus != null and auditStatus != '' "> and CSB.f_audit_status = #{auditStatus} </if>
+    	order by CSB.f_sys0_add_time DESC
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+    </select>
+    
+   <!-- 为解放区管理员查出 认领的店铺 详情-->
+    <select id="select_csBelong_byId" parameterType="java.util.Map" resultMap="communitySupplyBelongViewEntity">
+    	select 	<include refid="communitySupplyBelongBase.queryHead_AppendTable"/>
+    	,<include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+    	,<include refid="communitySupplyBase.queryHead_AppendTable"/>
+    	, AB.f_name abName, AC.f_name acName, AP.f_name apName
+    	FROM t_community_supply_belong CSB
+    	left join t_community_supply CS on CS.f_id = CSB.f_community_supply_id and CS.f_sys0_del_state = 0 
+		left join t_community_supply_type CST on CST.f_id = CS.t_community_supply_type_f_id and CST.f_sys0_del_state =0 
+		left join t_group_building GB on GB.f_id = CSB.f_group_building_id and GB.f_sys0_del_state = 0
+		left join t_address_block AB on AB.f_id = GB.t_block_f_id and AB.f_sys0_del_state = 0
+		left join t_address_city AC on AC.f_id = AB.t_city_f_id and AC.f_sys0_del_state = 0
+		left join t_address_province AP on AP.f_id = AC.t_province_f_id and AP.f_sys0_del_state = 0
+		WHERE CSB.f_id = #{id} 
+    </select>
+    
+   <!-- 为解放区管理员查出 临时申请的店铺 详情-->
+    <select id="select_csTmp_byId" resultMap="communitySupplyTmpViewEntity">
+    	select 	<include refid="communitySupplyTmpBase.queryHead_AppendTable"/>
+    	,CSType.f_name supplyType, AB.f_name abName, AC.f_name acName, AP.f_name apName
+    	FROM t_community_supply_tmp CST
+		left join t_community_supply_type CSType on CSType.f_id = CST.t_community_supply_type_f_id and CSType.f_sys0_del_state =0 
+		left join t_address_block AB on AB.f_id = CST.f_address_block_id and AB.f_sys0_del_state = 0
+		left join t_address_city AC on AC.f_id = AB.t_city_f_id and AC.f_sys0_del_state = 0
+		left join t_address_province AP on AP.f_id = AC.t_province_f_id and AP.f_sys0_del_state = 0
+		WHERE CST.f_id = #{id} 
+    </select>
+    
+    <!-- 取消物业推荐 -->
+    <update id="deletePropertySuggestCommsupply_byCSId" parameterType="java.util.Map">
+		UPDATE t_property_suggest_commsupply SET f_sys0_del_state = 1,f_sys0_del_time= sysdate() 
+		WHERE t_community_supply_f_id=#{csId} and t_property_company_f_id = #{pcId} and f_groupbulid_id = #{gbId}
+		and f_sys0_del_state = 0
+    </update>
+    
+    <!-- 根据条件查询(社区商家类别)信息。 -->
+	<sql id="select_communitySupplyType">
+		SELECT <include refid="communitySupplyTypeBase.queryHead"/>
+		<include refid="communitySupplyTypeBase.busiQueryCondition"/>
+		and CST.f_sys0_del_state = 0 
+		and CST.f_importance_level &gt;=1
+		ORDER BY CST.f_sys0_add_time DESC
+	</sql>
+	
+	<select id="select_communitySupplyType" parameterType="java.util.Map" resultMap="communitySupplyTypeBase.communitySupplyTypeExtendMap">
+		<include refid="select_communitySupplyType"/>
+	</select>
+	
+	<select id="validateCSBelong_forCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(CSB.f_id) FROM t_community_supply_belong CSB 
+		WHERE CSB.f_sys0_del_state=0
+		AND CSB.f_community_supply_id=#{id}
+		AND f_audit_status=2
+	</select>
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<!--============================================= mina IoSession handler begin =============================================-->
+	<!-- 车禁 -->
+	<bean id="accessPublishHandler" class="com.cnfantasia.server.api.access.session.AccessPublishHandler">
+        <property name="redisTemplate" ref="redisTemplate" />
+    </bean>
+    
+    <!-- 刷缓存 -->
+	<bean id="cachePublishHandler" class="com.cnfantasia.server.api.cache.node.CachePublishHandler">
+        <property name="redisTemplate" ref="redisTemplate" />
+    </bean>
+    
+	<bean id="jdkSerializer" class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+	
+	<bean id="accessSubscribeHandler" class="com.cnfantasia.server.api.access.session.AccessSubscribeHandler">
+	</bean>
+	
+	<bean id="cacheSubscribeHandler" class="com.cnfantasia.server.api.cache.node.CacheSubscribeHandler">
+		<property name="sysParamManager" ref="sysParamManager" />
+		<property name="baseCarService" ref="baseCarService" />
+		<property name="thirdCarFactory" ref="thirdCarFactory" />
+	</bean>
+	
+	<bean id="carMessageListener" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter">
+        <property name="delegate" ref="accessSubscribeHandler" />
+        <property name="serializer" ref="jdkSerializer" />
+    </bean>
+    
+    <bean id="cacheMessageListener" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter">
+        <property name="delegate" ref="cacheSubscribeHandler" />
+        <property name="serializer" ref="jdkSerializer" />
+    </bean>
+    
+    <bean id="redisContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer" lazy-init="true">
+        <property name="connectionFactory" ref="jedisConnectionFactory"/>
+        <property name="messageListeners">
+            <!-- map of listeners and their associated topics (channels or/and patterns) -->
+            <map>
+                <entry key-ref="carMessageListener">
+                    <bean class="org.springframework.data.redis.listener.ChannelTopic">
+                        <constructor-arg value="access_yhs" />
+                    </bean>
+                </entry>
+                
+                <entry key-ref="cacheMessageListener">
+                    <bean class="org.springframework.data.redis.listener.ChannelTopic">
+                        <constructor-arg value="refresh_cache" />
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+	<!--============================================= mina IoSession handler end =============================================-->
+</beans>

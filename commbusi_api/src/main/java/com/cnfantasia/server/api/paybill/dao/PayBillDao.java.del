@@ -1,0 +1,52 @@
+/**   
+* Filename:    PayBillDao.java   
+* @version:    1.0  
+* Create at:   2014年6月3日 上午7:56:19   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年6月3日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.paybill.dao;
+
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.cnfantasia.server.api.plotproperty.entity.PayBillEntity;
+import com.cnfantasia.server.api.pub.dao.AbstractBaseDao;
+
+/**
+ * Filename:    PayBillDao.java
+ * @version:    1.0.0
+ * Create at:   2014年6月3日 上午7:56:19
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年6月3日       shiyl             1.0             1.0 Version
+ */
+public class PayBillDao extends AbstractBaseDao implements IPayBillDao{
+
+	@Override
+	public PayBillEntity selectPayBillByMonth(String yearMonth, BigInteger userId) {
+		Map<String,Object> tmpMap = new HashMap<String, Object>();
+		tmpMap.put("yearMonth", yearMonth);
+		tmpMap.put("userId", userId);
+		return sqlSession.selectOne("payBill.select_PayBill_ByMonth", tmpMap);
+	}
+
+	@Override
+	public List<PayBillEntity> selectPayBillByMonthMulti(String yearMonthStart, String yearMonthEnd, BigInteger userId) {
+		Map<String,Object> tmpMap = new HashMap<String, Object>();
+		tmpMap.put("yearMonthStart", yearMonthStart);
+		tmpMap.put("yearMonthEnd", yearMonthEnd);
+		tmpMap.put("userId", userId);
+		return sqlSession.selectList("payBill.select_PayBill_ByMonth_Multi", tmpMap);
+	}
+	
+}

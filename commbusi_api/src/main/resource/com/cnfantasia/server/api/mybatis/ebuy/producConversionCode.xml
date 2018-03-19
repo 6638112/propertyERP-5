@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 商品兑换码模块 -->
+<mapper namespace="producConversionCode">
+	
+	<!-- 查询为使用的兑换码列表 -->
+	<select id="select_ConversionCode_NotUsed" parameterType="java.util.Map" 
+		resultMap="ebuyProductConversionCodeBase.ebuyProductConversionCodeBaseMap_AppendTable">
+		SELECT <include refid="ebuyProductConversionCodeBase.queryHead_AppendTable"/>
+		FROM t_ebuy_product_conversion_code EPCC
+    	WHERE 1=1
+    	AND EPCC.f_sys0_del_state = 0
+    	AND EPCC.f_status = 1 <!-- 兑换码状态=={"1":"未兑换","2":"已锁定","3":"已兑换"} -->
+    	AND EPCC.f_ebuy_product_id = #{productId}
+    	<if test="productSpecId != null and productSpecId != '' ">
+    		AND EPCC.t_ebuy_product_spec_f_id = #{productSpecId}
+    	</if>
+    	<if test="productSpecId == null or productSpecId == '' ">
+    		AND ISNULL(EPCC.t_ebuy_product_spec_f_id)
+    	</if>
+    	ORDER BY EPCC.f_id ASC 
+    	LIMIT 0,#{size}
+	</select>
+	
+	<!-- 未使用的兑换码【"1":"未兑换","2":"已锁定"】标记为已使用 -->
+	<update id="update_ConversionCode_As_IsUsed" parameterType="java.util.Map">
+		UPDATE t_ebuy_product_conversion_code EPCC
+		SET EPCC.f_status = 3 <!-- 兑换码状态=={"1":"未兑换","2":"已锁定","3":"已兑换"} -->
+		WHERE 1=1
+		AND EPCC.f_sys0_del_state = 0
+		AND ((EPCC.f_status = 1) OR (EPCC.f_status = 2) ) <!-- 兑换码状态=={"1":"未兑换","2":"已锁定","3":"已兑换"} -->
+		AND EPCC.f_id = #{conversionCodeId}
+	</update>
+	
+	<!-- 未使用的兑换码【"1":"未兑换"】标记为已锁定 -->
+	<update id="update_ConversionCode_As_IsLocked" parameterType="java.util.Map">
+		UPDATE t_ebuy_product_conversion_code EPCC
+		SET EPCC.f_status = 2 <!-- 兑换码状态=={"1":"未兑换","2":"已锁定","3":"已兑换"} -->
+		WHERE 1=1
+		AND EPCC.f_sys0_del_state = 0
+		AND EPCC.f_status = 1 <!-- 兑换码状态=={"1":"未兑换","2":"已锁定","3":"已兑换"} -->
+		AND EPCC.f_id = #{conversionCodeId}
+	</update>
+	
+	<!-- 已锁定的兑换码【"2":"已锁定"】标记为未使用 -->
+	<update id="update_ConversionCode_As_NotLocked" parameterType="java.util.Map">
+		UPDATE t_ebuy_product_conversion_code EPCC
+		SET EPCC.f_status = 1 <!-- 兑换码状态=={"1":"未兑换","2":"已锁定","3":"已兑换"} -->
+		WHERE 1=1
+		AND EPCC.f_sys0_del_state = 0
+		AND EPCC.f_status = 2 <!-- 兑换码状态=={"1":"未兑换","2":"已锁定","3":"已兑换"} -->
+		AND EPCC.f_id = #{conversionCodeId}
+	</update>
+	
+	
+</mapper>

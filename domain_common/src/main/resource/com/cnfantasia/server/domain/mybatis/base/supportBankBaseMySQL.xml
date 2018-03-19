@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:支持的转账银行 t_support_bank -->
+<mapper namespace="supportBankBase">
+	<resultMap type="SupportBank" id="supportBankBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_bankName" javaType="java.lang.String" property="bankname"/>  <!-- 银行全称 -->        <result column="f_simple_name" javaType="java.lang.String" property="simpleName"/>  <!-- 银行简称 -->
+	</resultMap>
+	<resultMap type="SupportBank" id="supportBankExtendMap" extends="supportBankBaseMap">
+	</resultMap>
+	<resultMap type="SupportBank" id="supportBankBaseMap_AppendTable">
+        <id column="SBid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="SBbankname" javaType="java.lang.String" property="bankname"/>  <!-- 银行全称 -->        <result column="SBsimpleName" javaType="java.lang.String" property="simpleName"/>  <!-- 银行简称 -->
+	</resultMap>
+	<resultMap type="SupportBank" id="supportBankBaseMap_AppendTable1">
+        <id column="SB1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="SB1bankname" javaType="java.lang.String" property="bankname"/>  <!-- 银行全称 -->        <result column="SB1simpleName" javaType="java.lang.String" property="simpleName"/>  <!-- 银行简称 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		SB.f_id,SB.f_bankName,SB.f_simple_name
+	</sql>
+	<sql id="queryHead_AppendTable">
+		SB.f_id as SBid,SB.f_bankName as SBbankname,SB.f_simple_name as SBsimpleName
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		SB1.f_id as SB1id,SB1.f_bankName as SB1bankname,SB1.f_simple_name as SB1simpleName
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (SB.f_id = #{id} ) </if>        <if test="bankname != null">  and (SB.f_bankName = #{bankname} ) </if>        <if test="simpleName != null">  and (SB.f_simple_name = #{simpleName} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (SB.f_id = #{id} ) </if>        <if test="bankname != null and !bankname.equals('')  ">  and (SB.f_bankName like CONCAT('%',#{bankname},'%') ) </if>        <if test="simpleName != null and !simpleName.equals('')  ">  and (SB.f_simple_name like CONCAT('%',#{simpleName},'%') ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="supportBankBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="supportBankBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="supportBankBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="supportBankBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_support_bank SB    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(支持的转账银行)信息。 -->
+	<sql id="select_supportBank">
+		SELECT <include refid="supportBankBase.queryHead"/>
+		<include refid="supportBankBase.busiQueryCondition"/>
+		<include refid="supportBankBase.dimCheckSql"/>
+		ORDER BY SB.f_id DESC
+	</sql>
+	<select id="select_supportBank" parameterType="java.util.Map" resultMap="supportBankBase.supportBankExtendMap">
+		<include refid="supportBankBase.select_supportBank"/>
+	</select>
+	
+	<!-- 根据条件分页查询(支持的转账银行)信息  -->
+	<sql id="select_supportBank_withPage">
+		SELECT <include refid="supportBankBase.queryHead"/>
+		<include refid="supportBankBase.busiQueryCondition"/>
+		<include refid="supportBankBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_supportBank_withPage" resultMap="supportBankBase.supportBankExtendMap" parameterType="java.util.Map">
+		<include refid="supportBankBase.select_supportBank_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(支持的转账银行)信息。 -->
+	<sql id="select_supportBank_bySeqId">
+		SELECT <include refid="supportBankBase.queryHead"/>
+		<include refid="supportBankBase.busiQueryCondition"/>
+		 and SB.f_id = #{_parameter}
+	</sql>
+	<select id="select_supportBank_bySeqId" parameterType="java.math.BigInteger" resultMap="supportBankBase.supportBankBaseMap">
+		<include refid="supportBankBase.select_supportBank_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(支持的转账银行)记录数  -->
+	<sql id="select_supportBank_count">
+		SELECT COUNT(*)
+		<include refid="supportBankBase.busiQueryCount"/>
+		<include refid="supportBankBase.dimCheckSql"/>
+	</sql>
+	<select id="select_supportBank_count" resultType="java.lang.Integer">
+		<include refid="supportBankBase.select_supportBank_count"/>
+	</select>
+	
+	 <!-- 往(支持的转账银行)新增一条记录。 -->
+	 <sql id="insert_supportBank">
+		INSERT INTO t_support_bank 
+		(f_id,f_bankName,f_simple_name) VALUES 
+		(#{id},#{bankname,jdbcType=VARCHAR},#{simpleName,jdbcType=VARCHAR})
+	 </sql>
+    <insert id="insert_supportBank" parameterType="SupportBank">
+		<include refid="supportBankBase.insert_supportBank"/>
+    </insert>
+    
+	<!-- 批量新增(支持的转账银行)信息 -->
+    <insert id="insert_supportBank_Batch" parameterType="java.util.List">
+    	INSERT INTO t_support_bank 
+		(f_id,f_bankName,f_simple_name) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.bankname,jdbcType=VARCHAR},#{item.simpleName,jdbcType=VARCHAR})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(支持的转账银行)信息。 -->
+    <sql id="update_supportBank">
+		UPDATE t_support_bank		<trim prefix="SET" prefixOverrides=","> 		<if test="bankname != null and !bankname.equals('') "> ,f_bankName=#{bankname}</if> 		<if test="simpleName != null and !simpleName.equals('') "> ,f_simple_name=#{simpleName}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_supportBank" parameterType="SupportBank">
+		<include refid="supportBankBase.update_supportBank"/>
+    </update>
+    
+    <!-- 批量更新(支持的转账银行)信息。 -->
+    <update id="update_supportBank_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_support_bank		<trim prefix="SET" prefixOverrides=","> 		<if test="item.bankname != null and !item.bankname.equals('')  "> ,f_bankName=#{item.bankname}</if> 		<if test="item.simpleName != null and !item.simpleName.equals('')  "> ,f_simple_name=#{item.simpleName}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(支持的转账银行)信息_逻辑删除。 -->
+    <!-- <sql id="delete_supportBank_Logic">
+		UPDATE t_support_bank		<trim prefix="SET" prefixOverrides=","> 		<if test="bankname != null and !bankname.equals('')  "> ,f_bankName=#{bankname}</if> 		<if test="simpleName != null and !simpleName.equals('')  "> ,f_simple_name=#{simpleName}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_supportBank_Logic" parameterType="SupportBank">
+		<include refid="supportBankBase.delete_supportBank_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(支持的转账银行)信息_逻辑删除 -->
+    <!-- <update id="delete_supportBank_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_support_bank		<trim prefix="SET" prefixOverrides=","> 		<if test="item.bankname != null and !item.bankname.equals('')  "> ,f_bankName=#{item.bankname}</if> 		<if test="item.simpleName != null and !item.simpleName.equals('')  "> ,f_simple_name=#{item.simpleName}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(支持的转账银行)信息。 -->
+    <sql id="delete_supportBank">
+		DELETE FROM t_support_bank WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_supportBank" parameterType="java.lang.String">
+		<include refid="supportBankBase.delete_supportBank"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(支持的转账银行)信息。 -->
+    <delete id="delete_supportBank_Batch" parameterType="java.util.List">
+		DELETE FROM t_support_bank WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

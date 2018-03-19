@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 双乾支付优惠补贴 -->
+<mapper namespace="cashSqpayBt">
+	<!-- 查询“电商购物”数据 -->
+	<select id="select_goalName_with_ebuy" parameterType="java.math.BigInteger" resultType="java.lang.String">
+		SELECT
+		    GROUP_CONCAT(ESM.f_name)
+		FROM 
+		    t_ebuy_order EO
+		    LEFT JOIN t_ebuy_delivery_order EDO ON EDO.t_ebuy_order_f_id=EO.f_id AND EDO.f_sys0_del_state=0
+		    LEFT JOIN t_ebuy_supply_merchant ESM ON ESM.f_id=EDO.t_supply_merchant_f_id
+		WHERE 
+			EO.f_id=#{orderId}
+		GROUP BY EO.f_id
+	</select>
+	
+	<!-- 查询“物业费”、“其他代收费用”、“物业代扣卡”数据 -->
+	<select id="select_goalName_with_wy" parameterType="java.math.BigInteger" resultType="java.lang.String">
+		SELECT
+			PC.f_name
+		FROM
+			t_ebuy_order EO
+			LEFT JOIN t_room R ON R.f_id=EO.f_curr_room_id AND R.f_sys0_del_state = 0
+			LEFT JOIN t_real_room RR ON R.t_real_room_f_id = RR.f_id AND RR.f_sys0_del_state = 0
+			LEFT JOIN t_building B ON RR.t_building_f_id = B.f_id AND B.f_sys0_del_state = 0
+			LEFT JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id AND GB.f_sys0_del_state = 0
+			LEFT JOIN t_property_company PC ON PC.f_id=GB.t_property_company_f_id 
+		WHERE
+			EO.f_id=#{orderId} LIMIT 1
+	</select>
+	
+	<!-- 查询“停车费”数据-->
+	<select id="select_goalName_with_parking" parameterType="java.math.BigInteger" resultType="java.lang.String">
+		SELECT
+			PC.f_name
+		FROM
+			t_ebuy_order EO
+			LEFT JOIN t_car_num_pay_log CNPL ON CNPL.t_ebuy_order_id=EO.f_id AND CNPL.f_sys0_del_state = 0
+			LEFT JOIN t_car_num_list CNL ON CNL.f_id=CNPL.t_car_num_id AND CNL.f_sys0_del_state = 0
+			LEFT JOIN t_group_building GB ON GB.f_id=IF(CNPL.t_group_building_f_id IS NOT NULL, CNPL.t_group_building_f_id, CNL.t_group_building_f_id) AND GB.f_sys0_del_state = 0
+			LEFT JOIN t_property_company PC ON PC.f_id=GB.t_property_company_f_id 
+		WHERE
+			EO.f_id=#{orderId} LIMIT 1
+	</select>
+	
+	<!-- 查询“上门维修”数据 -->
+	<select id="select_goalName_with_repair" parameterType="java.math.BigInteger" resultType="java.lang.String">
+		SELECT
+			U.f_real_name
+		FROM 
+		    t_dredge_bill DB
+			LEFT JOIN t_user U ON U.f_id=DB.t_worker_f_id
+		WHERE DB.t_ebuy_order_f_id=#{orderId} LIMIT 1
+	</select>
+	
+</mapper>

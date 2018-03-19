@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:sec="http://www.springframework.org/schema/security" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd"
+        default-autowire="no" default-lazy-init="false">
+
+	<!-- 不要过滤图片等静态资源，其中**代表可以跨越目录，*不可以跨越目录。 -->
+	<sec:http pattern="/**/*.jpg" security="none" />
+	<sec:http pattern="/**/*.gif" security="none" />
+	<sec:http pattern="/**/*.png" security="none" />
+	<sec:http pattern="/**/*.css" security="none" />
+	<sec:http pattern="/**/*.js" security="none" />
+	<sec:http pattern="/index.html" security="none" />
+	
+	<!-- 有些操作是需要验权的，比如绑定手机、解绑手机、更新密码都是需要登录后才能获取验证码 , 所以注释此行  added by wenfq 2017-05-25
+	<sec:http pattern="/login/getValidateCode.json" security="none" />获取验证码 -->
+	
+	<!-- <sec:http pattern="/login/doLogout.json" security="none" /> --><!-- spring的虚拟url不能在此处定义，否则404 -->
+	<sec:http pattern="/security/loginPage.json" security="none" />
+	<sec:http pattern="/security/doLoginFailed.json" security="none" /><!-- 登陆失败后的处理 -->
+	<sec:http pattern="/security/sessionTimeout.json" security="none" />
+	<sec:http pattern="/security/accessDenied.json" security="none" />
+	<sec:http pattern="/security/accessExpired.json" security="none" />
+	<sec:http pattern="/qrCode/androidDown.html" security="none" />
+	<sec:http pattern="/qrCode/iosDown.html" security="none" />
+	<sec:http pattern="/qrCode/baseDown.html" security="none" />
+	<sec:http pattern="/behaviorLog/*.json" security="none" /> <!-- 用户行为的日志 -->
+	
+	
+	<sec:http use-expressions="true" auto-config="true" access-denied-page="/security/accessDenied.json"  >
+		<sec:logout invalidate-session="true" logout-url="/login/doLogout.json"
+		 	logout-success-url="/security/doLogoutSuccess.json" delete-cookies="JSESSIONID" />
+		<sec:form-login authentication-failure-url="/security/doLoginFailed.json" login-page="/security/loginPage.json"
+			login-processing-url="/login/doLogin.json"  always-use-default-target="true" authentication-success-handler-ref="loginSuccessHandler"
+			username-parameter="number" password-parameter="password" />
+		<!-- 防止用户重复登录，max-sessions表示最多允许多少次重复登录 -->
+		<!-- 如果设置为newSession，则每次验证码校验都为null有问题 此处防重复登录不一定能生效，原因是UserDetail的实现类需要重写hashcode和equals方法，并且选用的字段值最好只包含用户名  -->
+		<sec:session-management ><!-- invalid-session-url="/security/sessionTimeout.json" -->
+			<sec:concurrency-control max-sessions="1" expired-url="/security/accessExpired.json" />
+		</sec:session-management>
+		<!-- 实现免登陆验证 -->
+		<!-- <sec:remember-me user-service-ref="simpleUserDetailService" /> -->
+		<sec:custom-filter ref="simpleFilterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR" />
+		
+		<!-- <sec:custom-filter ref="simpleLogoutFilter" before="LOGOUT_FILTER" /> -->
+	</sec:http>
+
+	<!-- <bean id="simpleLogoutFilter" class="com.cnfantasia.server.api.pub.springSecurity.SimpleLogoutFilter">
+		<property name="logService" ref="logServiceImpl"></property>
+		<property name="logouturl" value="/login/doLogout.json" />
+	</bean> -->
+
+	<bean id="loginSuccessHandler" class="com.cnfantasia.server.api.login.web.LoginSuccessHandler" />
+
+	<!-- 一个自定义的filter，必须包含authenticationManager, accessDecisionManager,securityMetadataSource三个属性。 -->
+	<bean id="simpleFilterSecurityInterceptor" class="com.cnfantasia.server.api.pub.springSecurity.SimpleFilterSecurityInterceptor">
+		<property name="securityMetadataSource" ref="simpleInvocationSecurityMetadataSource" /><!--资源源数据定义，查询所有权限关系信息 ,系统启动时加载。 -->
+		<property name="authenticationManager" ref="simpleAuthenticationManager" /><!--认证管理器,查询用户信息，用户登录时查询。 -->
+		<property name="accessDecisionManager" ref="simpleAccessDecisionManager" /><!--访问决策器，决定是否通过 ，用户登录时验证。 -->
+	</bean>
+
+	<!-- 资源源数据定义，将所有的资源和权限对应关系建立起来，即定义某一资源可以被哪些角色去访问。 -->
+	<bean id="simpleInvocationSecurityMetadataSource" class="com.cnfantasia.server.api.pub.springSecurity.SimpleInvocationSecurityMetadataSource">
+		<constructor-arg name="resourceService" ref="resourceServiceImpl"/>
+	</bean>
+
+	<!-- 认证管理器，实现用户认证的入口，主要实现UserDetailService接口即可 -->
+	<sec:authentication-manager alias="simpleAuthenticationManager">
+		<sec:authentication-provider user-service-ref="simpleUserDetailService">
+			<sec:password-encoder ref="passwordEncoder">
+				<!-- <sec:salt-source user-property="username"/> -->
+			</sec:password-encoder>
+		</sec:authentication-provider>
+	</sec:authentication-manager>
+	<!-- 实现UserDetailService接口 -->
+	<bean id="simpleUserDetailService" class="com.cnfantasia.server.api.pub.springSecurity.SimpleUserDetailService">
+		<property name="loginService" ref="loginService"/>
+	</bean>
+	<!-- 用户的密码加密或解密 -->
+	<bean id="passwordEncoder" class="com.cnfantasia.server.api.pub.springSecurity.EncodeImpl" />
+	
+	<!-- 访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源。 -->
+	<bean id="simpleAccessDecisionManager" class="com.cnfantasia.server.api.pub.springSecurity.SimpleAccessDecisionManager" />
+	
+	<bean id="securityServiceImpl" class="com.cnfantasia.server.api.pub.service.SecurityServiceImpl">
+		<property name="loginDao" ref="loginDao"/>
+	</bean>
+	<bean id="resourceServiceImpl" class="com.cnfantasia.server.api.pub.service.ResourceServiceImpl">
+	</bean>
+	<!-- <bean id="logServiceImpl" class="com.cnfantasia.server.api.pub.service.LogServiceImpl"></bean> -->
+	
+	<bean class="com.cnfantasia.server.api.pub.utils.CnfantasiaCommbusiUtil"></bean>
+</beans> 

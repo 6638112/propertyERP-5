@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+    <!-- 后续所有自定义Bean放在这里，包括Service和Dao -->
+    
+	<bean id="channelPartnerDao" class="com.cnfantasia.server.ms.channelPartner.dao.ChannelPartnerDao" parent="channelPartnerBaseDao" />
+	<bean id="channelPartnerService" class="com.cnfantasia.server.ms.channelPartner.service.ChannelPartnerService" parent="channelPartnerBaseService"/>
+	
+	<!-- 物业报修 -->
+	<bean id="propertyRepairController" class="com.cnfantasia.server.ms.propertyRepair.web.PropertyRepairController" />
+	<bean id="propertyRepairService" class="com.cnfantasia.server.ms.propertyRepair.service.PropertyRepairService" parent="propertyRepairBaseService"/>
+	<bean id="propertyRepairDao" class="com.cnfantasia.server.ms.propertyRepair.dao.PropertyRepairDao" parent="propertyRepairBaseDao"/>
+	
+</beans>  

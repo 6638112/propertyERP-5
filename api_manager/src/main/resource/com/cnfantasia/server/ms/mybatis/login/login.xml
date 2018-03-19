@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户登录账号 t_login_no -->
+<mapper namespace="login">
+	<select id="select_ebuySupplyMerchantByUserId" parameterType="java.util.Map" resultMap="ebuySupplyMerchantBase.ebuySupplyMerchantBaseMap_AppendTable">
+		select <include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>
+		FROM t_ebuy_supply_merchant ESM
+		 left JOIN t_oms_user_has_t_ebuy_supply_merchant OUHTESM ON ESM.f_id = OUHTESM.t_ebuy_supply_merchant_id
+    	WHERE 1=1
+    	<include refid="ebuySupplyMerchantBase.querySql" />
+    	<if test="userId != null">  and (OUHTESM.t_oms_user_id = #{userId} ) </if>
+    	ORDER BY ESM.f_id DESC
+	</select>
+	
+	<select id="select_PropertyCompanyIdByUserId" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		select pc.f_admin_id
+			from t_oms_user_has_t_property_company uc
+				inner join t_property_company pc on uc.t_property_company_id = pc.f_id
+			where uc.t_oms_user_id = #{userId}
+ 				and uc.f_sys0_del_state = 0
+ 				limit 1
+	</select>
+	
+	<select id="selectGroupbuildingIdList" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT
+			ifnull(
+				ifnull(gb3.f_id, gb2.f_id),
+				gb.f_id
+			) gbId
+		FROM
+			t_oms_user u
+			LEFT JOIN t_property_company pc ON pc.f_admin_id = u.f_id or pc.f_admin_id = u.f_parent_user_id   <!-- 物业子账号也要考虑进来，即u.f_parent_user_id -->
+			LEFT JOIN t_group_building gb on gb.t_property_company_f_id = pc.f_id AND gb.f_sys0_del_state=0
+			LEFT JOIN t_oms_user_has_t_property_company uc ON uc.t_oms_user_id = u.f_id
+			LEFT JOIN t_group_building gb2 ON gb2.t_property_company_f_id = uc.t_property_company_id AND gb2.f_sys0_del_state=0
+			LEFT JOIN t_property_management_has_oms_user mu ON mu.t_oms_user_f_id = u.f_id or mu.t_oms_user_f_id = u.f_parent_user_id <!-- 管理处的子账号也要考虑进来，即u.f_parent_user_id -->
+			LEFT JOIN t_group_building gb3 ON gb3.t_property_management_f_id = mu.t_property_management_f_id  AND gb3.f_sys0_del_state=0
+		WHERE
+			u.f_id = #{userId}
+			
+		UNION
+		  select dgb.t_group_building_f_id gbId 
+			from t_oms_user u 
+			 inner join t_oms_user_has_property_district ud on ud.t_oms_user_f_id = u.f_id and ud.f_sys0_del_state = 0
+			 inner join t_property_district pd on pd.f_id = ud.t_property_district_f_id and pd.f_sys0_del_state = 0
+			 inner join t_property_district_has_group_building dgb on dgb.t_property_district_f_id = pd.f_id and dgb.f_sys0_del_state = 0
+			where u.f_id = #{userId}
+		LIMIT 200
+	</select>
+	
+	<select id="selectPropertyCompanyId" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		select pc.f_id from t_property_company pc
+		 where pc.f_admin_id = #{userId}
+		union 
+		select uc.t_property_company_id from t_oms_user_has_t_property_company uc 
+		 where uc.t_oms_user_id = #{userId}
+		limit 1
+	</select>
+	
+</mapper>

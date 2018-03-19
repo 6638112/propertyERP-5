@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:幸运抽奖 -->
+<mapper namespace="lotteryDraw">
+	<!--指定用户参与情况-->
+	<select id="getDrawRecordByUser" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.lotteryDraw.entity.LotteryDrawEntity">
+		SELECT
+			mpo.f_id AS id, mpo.f_name AS name, mpo.f_luck_desc AS `desc`, u.f_mobile AS phone, u.f_mobile AS mobile, ldr.f_status AS prizeStatus
+		FROM
+			t_lottery_draw_record ldr
+		INNER JOIN t_ms_prize_option mpo ON ldr.t_lottery_draw_product_id = mpo.f_id
+		INNER JOIN t_user u ON u.f_id = ldr.t_user_id
+		WHERE ldr.t_user_id = #{userId} and ldr.f_sys0_add_time &gt; '2017-02-10'  AND mpo.f_name !="谢谢参与"/*排除谢谢参与奖的奖品*/;
+	</select>
+
+	<!-- 其他用户中奖记录-->
+	<select id="getDrawRecordList" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.lotteryDraw.entity.LotteryDrawEntity">
+		SELECT
+		mpo.f_id AS id, mpo.f_name AS name, mpo.f_luck_desc AS `desc`, u.f_mobile AS phone, ldr.f_status AS prizeStatus
+		FROM
+		t_lottery_draw_record ldr
+		INNER JOIN t_ms_prize_option mpo ON ldr.t_lottery_draw_product_id = mpo.f_id
+		INNER JOIN t_user u ON u.f_id = ldr.t_user_id
+		WHERE ldr.t_user_id != #{userId} and ldr.f_sys0_add_time &gt; '2017-02-10' 
+		 AND ldr.f_status != 2 AND mpo.f_name !="谢谢参与"/*排除谢谢参与奖的奖品*/
+		ORDER BY mpo.f_last_upd_time , ldr.f_lottery_draw_time DESC;
+	</select>
+
+	<!-- 参与抽奖奖品-->
+	<select id="getLotteryDrawProduct" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.lotteryDraw.entity.LotteryDrawProductEntity">
+		SELECT
+		mpo.f_id AS id, mpo.f_name AS name, mpo.f_luck_desc AS `desc`,mpo.f_status AS status
+		FROM
+		t_ms_prize_option mpo
+		WHERE mpo.f_status = 2
+		ORDER BY mpo.f_sys0_add_time DESC;
+	</select>
+
+	<!-- 抽奖-->
+	<select id="draw_lottery" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		call sp_get_surprise_lottery(#{userId})
+	</select>
+	
+	<!-- 查询用户在活动期是否发过街坊贴子 -->
+	<select id="selectMicroblogContentCountByUserId" parameterType="java.util.Map" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			t_microblog_content
+		WHERE
+			f_sys0_del_state = 0
+		AND f_user_id = #{userId}
+		AND (f_sys0_add_time BETWEEN '2017-02-10 15:00:00' AND '2017-02-11 18:00:00')
+	</select>
+</mapper>

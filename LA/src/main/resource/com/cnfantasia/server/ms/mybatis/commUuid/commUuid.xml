@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:commUuid -->
+<mapper namespace="commUuid">
+	
+	<!-- 根据表名称查询对应的id -->
+	<select id="select_CommUuid_BySeqId" parameterType="java.lang.String"  resultMap="commUuidBase.commUuidBaseMap_AppendTable">
+		SELECT <include refid="commUuidBase.queryHead_AppendTable"/>
+		FROM t_comm_uuid CU
+    	WHERE 1=1
+		AND CU.f_table_name = #{_parameter}
+		FOR UPDATE <!-- 要加入查询锁,多个系统各自调用会有这个问题 -->
+	</select>
+	
+	<update id="update_CommUuid" parameterType="java.util.Map">
+		UPDATE t_comm_uuid CU
+		SET CU.f_number = CU.f_number+#{size}
+			,CU.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND CU.f_table_name = #{tableName}
+	</update>
+	
+	<select id="fetch_And_Update_Uuid" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		select uuid_nextval_size(#{tableName},#{size})
+	</select>
+</mapper>

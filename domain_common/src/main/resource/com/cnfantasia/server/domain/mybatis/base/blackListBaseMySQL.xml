@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:黑名单 t_black_list -->
+<mapper namespace="blackListBase">
+	<resultMap type="BlackList" id="blackListBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="f_content" javaType="java.lang.String" property="content"/>  <!--  -->
+        <result column="f_type" javaType="java.lang.Integer" property="type"/>  <!-- 黑名单类型 -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="BlackList" id="blackListExtendMap" extends="blackListBaseMap">
+	</resultMap>
+	<resultMap type="BlackList" id="blackListBaseMap_AppendTable">
+        <id column="BLid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="BLcontent" javaType="java.lang.String" property="content"/>  <!--  -->
+        <result column="BLtype" javaType="java.lang.Integer" property="type"/>  <!-- 黑名单类型 -->
+        <result column="BLsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->
+        <result column="BLsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->
+        <result column="BLsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->
+        <result column="BLsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->
+        <result column="BLsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->
+        <result column="BLsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->
+        <result column="BLsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="BlackList" id="blackListBaseMap_AppendTable1">
+        <id column="BL1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="BL1content" javaType="java.lang.String" property="content"/>  <!--  -->
+        <result column="BL1type" javaType="java.lang.Integer" property="type"/>  <!-- 黑名单类型 -->
+        <result column="BL1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->
+        <result column="BL1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->
+        <result column="BL1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->
+        <result column="BL1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->
+        <result column="BL1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->
+        <result column="BL1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->
+        <result column="BL1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		BL.f_id,BL.f_content,BL.f_type
+	</sql>
+	<sql id="queryHead_AppendTable">
+		BL.f_id as BLid,BL.f_content as BLcontent,BL.f_type as BLtype
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		BL1.f_id as BL1id,BL1.f_content as BL1content,BL1.f_type as BL1type
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (BL.f_id = #{id} ) </if>
+        <if test="content != null">  and (BL.f_content = #{content} ) </if>
+        <if test="type != null">  and (BL.f_type = #{type} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (BL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (BL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (BL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (BL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (BL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (BL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (BL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (BL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (BL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (BL.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (BL.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (BL.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (BL.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (BL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (BL.f_id = #{id} ) </if>
+        <if test="content != null and !content.equals('')  ">  and (BL.f_content like CONCAT('%',#{content},'%') ) </if>
+        <if test="type != null and !type.equals('')  ">  and (BL.f_type = #{type} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (BL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (BL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (BL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (BL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (BL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (BL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (BL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (BL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (BL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (BL.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (BL.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (BL.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (BL.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (BL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="blackListBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="blackListBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="blackListBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="blackListBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_black_list BL
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(黑名单)信息。 -->
+	<sql id="select_blackList">
+		SELECT <include refid="blackListBase.queryHead"/>
+		<include refid="blackListBase.busiQueryCondition"/>
+		<include refid="blackListBase.dimCheckSql"/>
+		ORDER BY BL.f_id DESC
+	</sql>
+	<select id="select_blackList" parameterType="java.util.Map" resultMap="blackListBase.blackListExtendMap">
+		<include refid="blackListBase.select_blackList"/>
+	</select>
+	
+	<!-- 根据条件分页查询(黑名单)信息  -->
+	<sql id="select_blackList_withPage">
+		SELECT <include refid="blackListBase.queryHead"/>
+		<include refid="blackListBase.busiQueryCondition"/>
+		<include refid="blackListBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_blackList_withPage" resultMap="blackListBase.blackListExtendMap" parameterType="java.util.Map">
+		<include refid="blackListBase.select_blackList_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(黑名单)信息。 -->
+	<sql id="select_blackList_bySeqId">
+		SELECT <include refid="blackListBase.queryHead"/>
+		<include refid="blackListBase.busiQueryCondition"/>
+		 and BL.f_id = #{_parameter}
+	</sql>
+	<select id="select_blackList_bySeqId" parameterType="java.math.BigInteger" resultMap="blackListBase.blackListBaseMap">
+		<include refid="blackListBase.select_blackList_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(黑名单)记录数  -->
+	<sql id="select_blackList_count">
+		SELECT COUNT(*)
+		<include refid="blackListBase.busiQueryCount"/>
+		<include refid="blackListBase.dimCheckSql"/>
+	</sql>
+	<select id="select_blackList_count" resultType="java.lang.Integer">
+		<include refid="blackListBase.select_blackList_count"/>
+	</select>
+	
+	 <!-- 往(黑名单)新增一条记录。 -->
+	 <sql id="insert_blackList">
+		INSERT INTO t_black_list 
+		(f_id,f_content,f_type,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{content,jdbcType=VARCHAR},#{type},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_blackList" parameterType="BlackList">
+		<include refid="blackListBase.insert_blackList"/>
+    </insert>
+    
+	<!-- 批量新增(黑名单)信息 -->
+    <insert id="insert_blackList_Batch" parameterType="java.util.List">
+    	INSERT INTO t_black_list 
+		(f_id,f_content,f_type,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.content,jdbcType=VARCHAR},#{item.type},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(黑名单)信息。 -->
+    <sql id="update_blackList">
+		UPDATE t_black_list
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="content != null and !content.equals('') "> ,f_content=#{content}</if>
+ 		<if test="type != null and !type.equals('') "> ,f_type=#{type}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_blackList" parameterType="BlackList">
+		<include refid="blackListBase.update_blackList"/>
+    </update>
+    
+    <!-- 批量更新(黑名单)信息。 -->
+    <update id="update_blackList_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_black_list
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.content != null and !item.content.equals('')  "> ,f_content=#{item.content}</if>
+ 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(黑名单)信息_逻辑删除。 -->
+    <sql id="delete_blackList_Logic">
+		UPDATE t_black_list
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="content != null and !content.equals('')  "> ,f_content=#{content}</if>
+ 		<if test="type != null and !type.equals('')  "> ,f_type=#{type}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_blackList_Logic" parameterType="BlackList">
+		<include refid="blackListBase.delete_blackList_Logic"/>
+    </update>
+    
+    <!-- 批量删除(黑名单)信息_逻辑删除 -->
+    <update id="delete_blackList_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_black_list
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.content != null and !item.content.equals('')  "> ,f_content=#{item.content}</if>
+ 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(黑名单)信息。 -->
+    <sql id="delete_blackList">
+		DELETE FROM t_black_list WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_blackList" parameterType="java.lang.String">
+		<include refid="blackListBase.delete_blackList"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(黑名单)信息。 -->
+    <delete id="delete_blackList_Batch" parameterType="java.util.List">
+		DELETE FROM t_black_list WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

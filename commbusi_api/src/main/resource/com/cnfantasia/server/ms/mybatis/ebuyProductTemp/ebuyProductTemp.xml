@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:商品导入临时数据表 t_ebuy_product_temp -->
+<mapper namespace="ebuyProductTemp">
+
+	<resultMap type="com.cnfantasia.server.ms.ebuyProductTemp.entity.EbuyProductTempEntity" id="ebuyProductTempEntity" extends="ebuyProductTempBase.ebuyProductTempBaseMap_AppendTable">
+        <collection property="prdtParamter" resultMap="ebuyProductParametersTempBase.ebuyProductParametersTempBaseMap_AppendTable"> </collection>
+	</resultMap>
+	
+	<!-- 根据商品的ID查询详情 -->
+	<select id="select_detail_byPrdtId"  parameterType="java.lang.String" resultMap="ebuyProductTempEntity">
+		select <include refid="ebuyProductTempBase.queryHead_AppendTable"/>, 
+		<include refid="ebuyProductParametersTempBase.queryHead_AppendTable"/>
+		FROM t_ebuy_product_temp EPT
+		left JOIN t_ebuy_product_parameters_temp EPPT ON EPPT.t_ebuy_product_temp_f_id = EPT.f_id
+    	WHERE 1=1 
+		and EPT.f_id = #{_parameter}
+	</select>
+	
+	<!-- 根据条件查询(商品表，临时存储从外部抓取的数据)信息。 -->
+	<select id="select_ebuyProductTemp"  parameterType="java.util.Map" resultMap="ebuyProductTempBase.ebuyProductTempExtendMap">
+		SELECT <include refid="ebuyProductTempBase.queryHead"/>
+		<include refid="ebuyProductTempBase.busiQueryCondition"/>
+		<include refid="ebuyProductTempBase.dimCheckSql"/>
+		<if test="name != null and name != '' ">  and (EPT.f_name like CONCAT('%',#{name},'%') ) </if>
+    	<if test="status != null and status != '' ">  and (EPT.f_status = #{status} ) </if>
+    	<if test="startTime != null and startTime != '' ">  and (EPT.f_create_time &gt;= #{startTime} ) </if>
+    	<if test="endTime != null and endTime != '' ">  and (EPT.f_create_time &lt;= #{endTime}  ) </if>
+		ORDER BY EPT.f_id DESC
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<update id="updateShelfStatus" parameterType="java.util.List" >
+		update t_ebuy_product_temp set f_status = 1 where f_src_id is not null and f_from_where = 'hjx' and f_src_id not in 
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")" >
+			#{item}
+		</foreach>
+	</update>
+</mapper>

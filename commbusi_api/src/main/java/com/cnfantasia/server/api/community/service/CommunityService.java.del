@@ -1,0 +1,204 @@
+/**   
+* Filename:    CommunityService.java   
+* @version:    1.0  
+* Create at:   2014年7月13日 上午10:47:37   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年7月13日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.community.service;
+
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.cnfantasia.server.api.commonBusiness.service.ICommonRoomService;
+import com.cnfantasia.server.api.pub.constant.SEQConstants;
+import com.cnfantasia.server.api.room.entity.RoomEntity;
+import com.cnfantasia.server.business.pub.dao.IDualDao;
+import com.cnfantasia.server.business.pub.entity.PageModel;
+import com.cnfantasia.server.business.pub.utils.DateUtil;
+import com.cnfantasia.server.business.pub.utils.MapConverter;
+import com.cnfantasia.server.business.pub.uuidMaker.IUuidManager;
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+
+/**
+ * Filename:    CommunityService.java
+ * @version:    1.0.0
+ * Create at:   2014年7月13日 上午10:47:37
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年7月13日       shiyl             1.0             1.0 Version
+ */
+public class CommunityService implements ICommunityService{
+//	private static final String SESSION_KEY_BLOCK_FID = "session_key_block_fid";
+	
+//	private Log logger = LogFactory.getLog(getClass());
+	private IDualDao dualDao;
+	public void setDualDao(IDualDao dualDao) {
+		this.dualDao = dualDao;
+	}
+	private IForumPostBaseDao forumPostBaseDao;
+	public void setForumPostBaseDao(IForumPostBaseDao forumPostBaseDao) {
+		this.forumPostBaseDao = forumPostBaseDao;
+	}
+//	private IForumForumBaseDao forumForumBaseDao;
+//	public void setForumForumBaseDao(IForumForumBaseDao forumForumBaseDao) {
+//		this.forumForumBaseDao = forumForumBaseDao;
+//	}
+	
+	private IForumThreadBaseDao forumThreadBaseDao;
+	public void setForumThreadBaseDao(IForumThreadBaseDao forumThreadBaseDao) {
+		this.forumThreadBaseDao = forumThreadBaseDao;
+	}
+	
+	private IForumForumBaseDao forumForumBaseDao;
+	public void setForumForumBaseDao(IForumForumBaseDao forumForumBaseDao) {
+		this.forumForumBaseDao = forumForumBaseDao;
+	}
+	
+	private ICommonRoomService commonRoomService;
+	public void setCommonRoomService(ICommonRoomService commonRoomService) {
+		this.commonRoomService = commonRoomService;
+	}
+	
+	private IUuidManager uuidManager;
+	public void setUuidManager(IUuidManager uuidManager) {
+		this.uuidManager = uuidManager;
+	}
+	
+	@Override
+	public int postMessage(String remoteUserName,Integer remoteUserId, Integer topicId,String subject,String messageTxt,String useip,Integer port) {
+		Integer fid=topicId;//论坛id
+		String nowTime = dualDao.getNowTime();
+		Long nowTimeLong = DateUtil.timeToLong(nowTime)/1000;
+		Integer tid=uuidManager.getNextUuidBigInteger(SEQConstants.t_forum_thread).intValue();//主题id
+		{//1.增加主题
+//			Integer tid,Integer fid,Integer posttableid,Integer typeid,Integer sortid,Integer readperm,Integer price,
+//			String author,Integer authorid,String subject,Long dateline,Long lastpost,String lastposter,Long views,
+//			Integer replies,Integer displayorder,Integer highlight,Integer digest,Integer rate,Integer special,
+//			Integer attachment,Integer moderated,Integer closed,Integer stickreply,Integer recommends,
+//			Integer recommendAdd,Integer recommendSub,Long heats,Integer status,Integer isgroup,
+//			Integer favtimes,Integer sharetimes,Integer stamp,Integer icon,Integer pushedaid,
+//			Integer cover,Integer replycredit,String relatebytag,Long maxposition,String bgcolor,Long comments,Integer hidden){
+			ForumThread forumThreadAdd = new ForumThread(tid, fid, 0, 0, 0, 0, 0, 
+					remoteUserName, remoteUserId, subject, nowTimeLong, nowTimeLong, remoteUserName, 0L, 0, 0, 
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 
+					0, 0, 0L, 32, 0, 0, 0, -1, -1, 0, 
+					0, 0, "", 0L, "", 0L, 0);
+			forumThreadBaseDao.insertForumThread(forumThreadAdd);
+		}
+		//2.增加帖子
+		Long pid=uuidManager.getNextUuidBigInteger(SEQConstants.t_forum_post).longValue();//帖子id
+		ForumPost forumPost = new ForumPost(pid, fid, tid, 1, remoteUserName, remoteUserId, subject, nowTimeLong, messageTxt, 
+				useip, port, 0, 0, 1, 0, -1, -1, 
+				0, 0, 0, 0, 0L, "0", 0, 
+				0L, null);
+		int res = forumPostBaseDao.insertForumPost(forumPost);
+		return res;
+//		 try {
+//     	DataSourceContextHolder.setDbType(DiscuzDbOperateInvoker.DATASOURCE_DISCUZ);
+////     	int res = DiscuzDbOperateInvoker.invokeDb(forumPostBaseDao, "insertForumPost", new Object[]{forumPost});
+//     	int res = forumPostBaseDao.insertForumPost(forumPost);
+//     	return res;
+//     } catch (Exception e) {
+//     	logger.debug("CommunityService.postMessage cause error",e);
+//       throw new RuntimeException("CommunityService.postMessage cause error",e);
+//     }finally{
+//     	DataSourceContextHolder.setDbType(null);
+//     }
+	}
+	
+	@Override
+	public List<ForumForum> getForumForumList() {
+		List<ForumForum> resList =  forumForumBaseDao.selectForumForumByCondition(new HashMap<String, Object>(), false);
+		return resList;
+	}
+	@Override
+	public List<ForumForum> getForumForumList(PageModel pageModel) {
+		List<ForumForum> resList =  forumForumBaseDao.selectForumForumByCondition(new HashMap<String, Object>(), pageModel, false);
+		return resList;
+	}
+	
+	@Override
+	public List<ForumThread> getMessageList(Integer fid, PageModel pageModel) {
+		ForumPost qry = new ForumPost();
+		qry.setFid(fid);
+		return forumThreadBaseDao.selectForumThreadByCondition(MapConverter.toMap(qry), pageModel, false);
+	}
+
+	@Override
+	public List<ForumForum> getSubForumForumList(Integer fid) {
+		ForumForum forumForum = new ForumForum();
+		forumForum.setFup(fid);
+		List<ForumForum> resList =  forumForumBaseDao.selectForumForumByCondition(MapConverter.toMap(forumForum), false);
+		return resList;
+	}
+	@Override
+	public List<ForumForum> getSubForumForumList(Integer fid, PageModel pageModel) {
+		ForumForum forumForum = new ForumForum();
+		forumForum.setFup(fid);
+		List<ForumForum> resList =  forumForumBaseDao.selectForumForumByCondition(MapConverter.toMap(forumForum),pageModel, false);
+		return resList;
+	}
+
+	@Override
+	public Map<ForumForum, ForumThread> getHomeInfo(Integer fid) {
+		//存入session
+//		SessionManager.getSession().setAttribute(SESSION_KEY_BLOCK_FID, fid);
+		Map<ForumForum,ForumThread> resMap = new HashMap<ForumForum, ForumThread>();
+		{//查询子类别前2个
+			PageModel pageModelQry01 = new PageModel(0, 1);
+			List<ForumForum> subForumForumList=getSubForumForumList(fid);
+			for(ForumForum tmp:subForumForumList){
+				if(resMap.size()>=2){break;}
+				List<ForumThread> forumPostList=getMessageList(tmp.getFid(), pageModelQry01);
+				if(forumPostList!=null&&forumPostList.size()>0){
+					if(tmp.getName().contains("拼一拼")||tmp.getName().contains("换一换")||tmp.getName().contains("其他")){
+						resMap.put(tmp, forumPostList.get(0));
+					}
+				}
+			}
+		}
+		return resMap;
+	}
+	@Override
+	public ForumForum getDefaultBolck(BigInteger userId){
+		ForumForum defaultBolck =null;
+		List<ForumForum> forumForumList = getForumForumList();
+		if(userId!=null){//查询用户所在小区名称
+			RoomEntity roomEntity=null;
+			roomEntity=commonRoomService.getDefaultRoomInfo(userId);
+			if(roomEntity!=null&&!roomEntity.checkIsEmptyRoom()){
+				String areaName = roomEntity.getRealRoomEntity().getBuildingEntity().getGroupBuildingEntity().getName();
+				for(ForumForum forumForum:forumForumList){
+					if(forumForum.getName().contains(areaName)){
+						defaultBolck = forumForum;
+						break;
+					}
+				}
+			}
+		}
+		if(defaultBolck==null){
+			String areaName = "体验小区";
+			for(ForumForum forumForum:forumForumList){
+				if(forumForum.getName().contains(areaName)){
+					defaultBolck= forumForum ;
+				}
+			}
+		}
+		if(defaultBolck!=null){
+			return defaultBolck;
+		}else{
+			throw new BusinessRuntimeException("CommunityController.fidObj.isNull");
+		}
+	}
+	
+}

@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:开通门禁的小区楼栋列表 t_building_key_list -->
+<mapper namespace="buildingKeyListBase">
+	<resultMap type="BuildingKeyList" id="buildingKeyListBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="t_building_f_id" javaType="java.math.BigInteger" property="tBuildingFId"/>  <!-- 楼栋Id -->
+        <result column="t_group_building_f_id" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 小区Id -->
+        <result column="t_building_key_str" javaType="java.lang.String" property="tBuildingKeyStr"/>  <!-- 楼栋密钥(一个楼栋k可以两个) -->
+        <result column="f_is_open_remote" javaType="java.lang.Integer" property="isOpenRemote"/>  <!-- 远程开门开关 -->
+        <result column="f_is_open_local" javaType="java.lang.Integer" property="isOpenLocal"/>  <!-- 走进开门开关 -->
+        <result column="t_gb_id" javaType="java.lang.String" property="tGbId"/>  <!-- 芝麻门禁对应的第三方小区id -->
+        <result column="f_status" javaType="java.lang.Integer" property="status"/>  <!-- 门禁状态 -->
+        <result column="f_type" javaType="java.lang.Integer" property="type"/>  <!-- 供应商类型 -->
+        <result column="f_door_name" javaType="java.lang.String" property="doorName"/>  <!-- 门禁名字，如“1栋1单元停车场” -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 申请时间 -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="BuildingKeyList" id="buildingKeyListExtendMap" extends="buildingKeyListBaseMap">
+	</resultMap>
+	<resultMap type="BuildingKeyList" id="buildingKeyListBaseMap_AppendTable">
+        <id column="BKLid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="BKLtBuildingFId" javaType="java.math.BigInteger" property="tBuildingFId"/>  <!-- 楼栋Id -->
+        <result column="BKLtGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 小区Id -->
+        <result column="BKLtBuildingKeyStr" javaType="java.lang.String" property="tBuildingKeyStr"/>  <!-- 楼栋密钥(一个楼栋k可以两个) -->
+        <result column="BKLisOpenRemote" javaType="java.lang.Integer" property="isOpenRemote"/>  <!-- 远程开门开关 -->
+        <result column="BKLisOpenLocal" javaType="java.lang.Integer" property="isOpenLocal"/>  <!-- 走进开门开关 -->
+        <result column="BKLtGbId" javaType="java.lang.String" property="tGbId"/>  <!-- 芝麻门禁对应的第三方小区id -->
+        <result column="BKLstatus" javaType="java.lang.Integer" property="status"/>  <!-- 门禁状态 -->
+        <result column="BKLtype" javaType="java.lang.Integer" property="type"/>  <!-- 供应商类型 -->
+        <result column="BKLdoorName" javaType="java.lang.String" property="doorName"/>  <!-- 门禁名字，如“1栋1单元停车场” -->
+        <result column="BKLsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 申请时间 -->
+        <result column="BKLsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="BKLsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="BKLsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="BKLsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="BKLsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="BKLsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="BuildingKeyList" id="buildingKeyListBaseMap_AppendTable1">
+        <id column="BKL1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="BKL1tBuildingFId" javaType="java.math.BigInteger" property="tBuildingFId"/>  <!-- 楼栋Id -->
+        <result column="BKL1tGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 小区Id -->
+        <result column="BKL1tBuildingKeyStr" javaType="java.lang.String" property="tBuildingKeyStr"/>  <!-- 楼栋密钥(一个楼栋k可以两个) -->
+        <result column="BKL1isOpenRemote" javaType="java.lang.Integer" property="isOpenRemote"/>  <!-- 远程开门开关 -->
+        <result column="BKL1isOpenLocal" javaType="java.lang.Integer" property="isOpenLocal"/>  <!-- 走进开门开关 -->
+        <result column="BKL1tGbId" javaType="java.lang.String" property="tGbId"/>  <!-- 芝麻门禁对应的第三方小区id -->
+        <result column="BKL1status" javaType="java.lang.Integer" property="status"/>  <!-- 门禁状态 -->
+        <result column="BKL1type" javaType="java.lang.Integer" property="type"/>  <!-- 供应商类型 -->
+        <result column="BKL1doorName" javaType="java.lang.String" property="doorName"/>  <!-- 门禁名字，如“1栋1单元停车场” -->
+        <result column="BKL1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 申请时间 -->
+        <result column="BKL1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="BKL1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="BKL1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="BKL1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="BKL1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="BKL1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		BKL.f_id,BKL.t_building_f_id,BKL.t_group_building_f_id,BKL.t_building_key_str,BKL.f_is_open_remote,BKL.f_is_open_local,BKL.t_gb_id,BKL.f_status,BKL.f_type,BKL.f_door_name
+	</sql>
+	<sql id="queryHead_AppendTable">
+		BKL.f_id as BKLid,BKL.t_building_f_id as BKLtBuildingFId,BKL.t_group_building_f_id as BKLtGroupBuildingFId,BKL.t_building_key_str as BKLtBuildingKeyStr,BKL.f_is_open_remote as BKLisOpenRemote,BKL.f_is_open_local as BKLisOpenLocal,BKL.t_gb_id as BKLtGbId,BKL.f_status as BKLstatus,BKL.f_type as BKLtype,BKL.f_door_name as BKLdoorName
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		BKL1.f_id as BKL1id,BKL1.t_building_f_id as BKL1tBuildingFId,BKL1.t_group_building_f_id as BKL1tGroupBuildingFId,BKL1.t_building_key_str as BKL1tBuildingKeyStr,BKL1.f_is_open_remote as BKL1isOpenRemote,BKL1.f_is_open_local as BKL1isOpenLocal,BKL1.t_gb_id as BKL1tGbId,BKL1.f_status as BKL1status,BKL1.f_type as BKL1type,BKL1.f_door_name as BKL1doorName
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (BKL.f_id = #{id} ) </if>
+        <if test="tBuildingFId != null">  and (BKL.t_building_f_id = #{tBuildingFId} ) </if>
+        <if test="tGroupBuildingFId != null">  and (BKL.t_group_building_f_id = #{tGroupBuildingFId} ) </if>
+        <if test="tBuildingKeyStr != null">  and (BKL.t_building_key_str = #{tBuildingKeyStr} ) </if>
+        <if test="isOpenRemote != null">  and (BKL.f_is_open_remote = #{isOpenRemote} ) </if>
+        <if test="isOpenLocal != null">  and (BKL.f_is_open_local = #{isOpenLocal} ) </if>
+        <if test="tGbId != null">  and (BKL.t_gb_id = #{tGbId} ) </if>
+        <if test="status != null">  and (BKL.f_status = #{status} ) </if>
+        <if test="type != null">  and (BKL.f_type = #{type} ) </if>
+        <if test="doorName != null">  and (BKL.f_door_name = #{doorName} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (BKL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (BKL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (BKL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (BKL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (BKL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (BKL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (BKL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (BKL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (BKL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (BKL.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (BKL.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (BKL.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (BKL.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (BKL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (BKL.f_id = #{id} ) </if>
+        <if test="tBuildingFId != null and !tBuildingFId.equals('')  ">  and (BKL.t_building_f_id = #{tBuildingFId} ) </if>
+        <if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  ">  and (BKL.t_group_building_f_id = #{tGroupBuildingFId} ) </if>
+        <if test="tBuildingKeyStr != null and !tBuildingKeyStr.equals('')  ">  and (BKL.t_building_key_str like CONCAT('%',#{tBuildingKeyStr},'%') ) </if>
+        <if test="isOpenRemote != null and !isOpenRemote.equals('')  ">  and (BKL.f_is_open_remote = #{isOpenRemote} ) </if>
+        <if test="isOpenLocal != null and !isOpenLocal.equals('')  ">  and (BKL.f_is_open_local = #{isOpenLocal} ) </if>
+        <if test="tGbId != null and !tGbId.equals('')  ">  and (BKL.t_gb_id like CONCAT('%',#{tGbId},'%') ) </if>
+        <if test="status != null and !status.equals('')  ">  and (BKL.f_status = #{status} ) </if>
+        <if test="type != null and !type.equals('')  ">  and (BKL.f_type = #{type} ) </if>
+        <if test="doorName != null and !doorName.equals('')  ">  and (BKL.f_door_name like CONCAT('%',#{doorName},'%') ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (BKL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (BKL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (BKL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (BKL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (BKL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (BKL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (BKL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (BKL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (BKL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (BKL.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (BKL.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (BKL.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (BKL.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (BKL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="buildingKeyListBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="buildingKeyListBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="buildingKeyListBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="buildingKeyListBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_building_key_list BKL
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(开通门禁的小区楼栋列表)信息。 -->
+	<sql id="select_buildingKeyList">
+		SELECT <include refid="buildingKeyListBase.queryHead"/>
+		<include refid="buildingKeyListBase.busiQueryCondition"/>
+		<include refid="buildingKeyListBase.dimCheckSql"/>
+		ORDER BY BKL.f_id DESC
+	</sql>
+	<select id="select_buildingKeyList" parameterType="java.util.Map" resultMap="buildingKeyListBase.buildingKeyListExtendMap">
+		<include refid="buildingKeyListBase.select_buildingKeyList"/>
+	</select>
+	
+	<!-- 根据条件分页查询(开通门禁的小区楼栋列表)信息  -->
+	<sql id="select_buildingKeyList_withPage">
+		SELECT <include refid="buildingKeyListBase.queryHead"/>
+		<include refid="buildingKeyListBase.busiQueryCondition"/>
+		<include refid="buildingKeyListBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_buildingKeyList_withPage" resultMap="buildingKeyListBase.buildingKeyListExtendMap" parameterType="java.util.Map">
+		<include refid="buildingKeyListBase.select_buildingKeyList_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(开通门禁的小区楼栋列表)信息。 -->
+	<sql id="select_buildingKeyList_bySeqId">
+		SELECT <include refid="buildingKeyListBase.queryHead"/>
+		<include refid="buildingKeyListBase.busiQueryCondition"/>
+		 and BKL.f_id = #{_parameter}
+	</sql>
+	<select id="select_buildingKeyList_bySeqId" parameterType="java.math.BigInteger" resultMap="buildingKeyListBase.buildingKeyListBaseMap">
+		<include refid="buildingKeyListBase.select_buildingKeyList_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(开通门禁的小区楼栋列表)记录数  -->
+	<sql id="select_buildingKeyList_count">
+		SELECT COUNT(*)
+		<include refid="buildingKeyListBase.busiQueryCount"/>
+		<include refid="buildingKeyListBase.dimCheckSql"/>
+	</sql>
+	<select id="select_buildingKeyList_count" resultType="java.lang.Integer">
+		<include refid="buildingKeyListBase.select_buildingKeyList_count"/>
+	</select>
+	
+	 <!-- 往(开通门禁的小区楼栋列表)新增一条记录。 -->
+	 <sql id="insert_buildingKeyList">
+		INSERT INTO t_building_key_list 
+		(f_id,t_building_f_id,t_group_building_f_id,t_building_key_str,f_is_open_remote,f_is_open_local,t_gb_id,f_status,f_type,f_door_name,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tBuildingFId},#{tGroupBuildingFId},#{tBuildingKeyStr,jdbcType=VARCHAR},#{isOpenRemote},#{isOpenLocal},#{tGbId,jdbcType=VARCHAR},#{status},#{type},#{doorName,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_buildingKeyList" parameterType="BuildingKeyList">
+		<include refid="buildingKeyListBase.insert_buildingKeyList"/>
+    </insert>
+    
+	<!-- 批量新增(开通门禁的小区楼栋列表)信息 -->
+    <insert id="insert_buildingKeyList_Batch" parameterType="java.util.List">
+    	INSERT INTO t_building_key_list 
+		(f_id,t_building_f_id,t_group_building_f_id,t_building_key_str,f_is_open_remote,f_is_open_local,t_gb_id,f_status,f_type,f_door_name,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tBuildingFId},#{item.tGroupBuildingFId},#{item.tBuildingKeyStr,jdbcType=VARCHAR},#{item.isOpenRemote},#{item.isOpenLocal},#{item.tGbId,jdbcType=VARCHAR},#{item.status},#{item.type},#{item.doorName,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(开通门禁的小区楼栋列表)信息。 -->
+    <sql id="update_buildingKeyList">
+		UPDATE t_building_key_list
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tBuildingFId != null and !tBuildingFId.equals('') "> ,t_building_f_id=#{tBuildingFId}</if>
+ 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('') "> ,t_group_building_f_id=#{tGroupBuildingFId}</if>
+ 		<if test="tBuildingKeyStr != null and !tBuildingKeyStr.equals('') "> ,t_building_key_str=#{tBuildingKeyStr}</if>
+ 		<if test="isOpenRemote != null and !isOpenRemote.equals('') "> ,f_is_open_remote=#{isOpenRemote}</if>
+ 		<if test="isOpenLocal != null and !isOpenLocal.equals('') "> ,f_is_open_local=#{isOpenLocal}</if>
+ 		<if test="tGbId != null and !tGbId.equals('') "> ,t_gb_id=#{tGbId}</if>
+ 		<if test="status != null and !status.equals('') "> ,f_status=#{status}</if>
+ 		<if test="type != null and !type.equals('') "> ,f_type=#{type}</if>
+ 		<if test="doorName != null and !doorName.equals('') "> ,f_door_name=#{doorName}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_buildingKeyList" parameterType="BuildingKeyList">
+		<include refid="buildingKeyListBase.update_buildingKeyList"/>
+    </update>
+    
+    <!-- 批量更新(开通门禁的小区楼栋列表)信息。 -->
+    <update id="update_buildingKeyList_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_building_key_list
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tBuildingFId != null and !item.tBuildingFId.equals('')  "> ,t_building_f_id=#{item.tBuildingFId}</if>
+ 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if>
+ 		<if test="item.tBuildingKeyStr != null and !item.tBuildingKeyStr.equals('')  "> ,t_building_key_str=#{item.tBuildingKeyStr}</if>
+ 		<if test="item.isOpenRemote != null and !item.isOpenRemote.equals('')  "> ,f_is_open_remote=#{item.isOpenRemote}</if>
+ 		<if test="item.isOpenLocal != null and !item.isOpenLocal.equals('')  "> ,f_is_open_local=#{item.isOpenLocal}</if>
+ 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if>
+ 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if>
+ 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if>
+ 		<if test="item.doorName != null and !item.doorName.equals('')  "> ,f_door_name=#{item.doorName}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(开通门禁的小区楼栋列表)信息_逻辑删除。 -->
+    <sql id="delete_buildingKeyList_Logic">
+		UPDATE t_building_key_list
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tBuildingFId != null and !tBuildingFId.equals('')  "> ,t_building_f_id=#{tBuildingFId}</if>
+ 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{tGroupBuildingFId}</if>
+ 		<if test="tBuildingKeyStr != null and !tBuildingKeyStr.equals('')  "> ,t_building_key_str=#{tBuildingKeyStr}</if>
+ 		<if test="isOpenRemote != null and !isOpenRemote.equals('')  "> ,f_is_open_remote=#{isOpenRemote}</if>
+ 		<if test="isOpenLocal != null and !isOpenLocal.equals('')  "> ,f_is_open_local=#{isOpenLocal}</if>
+ 		<if test="tGbId != null and !tGbId.equals('')  "> ,t_gb_id=#{tGbId}</if>
+ 		<if test="status != null and !status.equals('')  "> ,f_status=#{status}</if>
+ 		<if test="type != null and !type.equals('')  "> ,f_type=#{type}</if>
+ 		<if test="doorName != null and !doorName.equals('')  "> ,f_door_name=#{doorName}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_buildingKeyList_Logic" parameterType="BuildingKeyList">
+		<include refid="buildingKeyListBase.delete_buildingKeyList_Logic"/>
+    </update>
+    
+    <!-- 批量删除(开通门禁的小区楼栋列表)信息_逻辑删除 -->
+    <update id="delete_buildingKeyList_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_building_key_list
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tBuildingFId != null and !item.tBuildingFId.equals('')  "> ,t_building_f_id=#{item.tBuildingFId}</if>
+ 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if>
+ 		<if test="item.tBuildingKeyStr != null and !item.tBuildingKeyStr.equals('')  "> ,t_building_key_str=#{item.tBuildingKeyStr}</if>
+ 		<if test="item.isOpenRemote != null and !item.isOpenRemote.equals('')  "> ,f_is_open_remote=#{item.isOpenRemote}</if>
+ 		<if test="item.isOpenLocal != null and !item.isOpenLocal.equals('')  "> ,f_is_open_local=#{item.isOpenLocal}</if>
+ 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if>
+ 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if>
+ 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if>
+ 		<if test="item.doorName != null and !item.doorName.equals('')  "> ,f_door_name=#{item.doorName}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(开通门禁的小区楼栋列表)信息。 -->
+    <sql id="delete_buildingKeyList">
+		DELETE FROM t_building_key_list WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_buildingKeyList" parameterType="java.lang.String">
+		<include refid="buildingKeyListBase.delete_buildingKeyList"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(开通门禁的小区楼栋列表)信息。 -->
+    <delete id="delete_buildingKeyList_Batch" parameterType="java.util.List">
+		DELETE FROM t_building_key_list WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

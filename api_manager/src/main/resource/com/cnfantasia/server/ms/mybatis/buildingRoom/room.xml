@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户表 t_real_room -->
+<mapper namespace="room">
+    <resultMap type="com.cnfantasia.server.ms.buildingRoom.entity.RoomEntity" id="roomEntity" extends="realRoomBase.realRoomBaseMap_AppendTable">
+    	<result column="groupbuildingName" property="groupbuildingName"/>
+    	<result column="buildingName" property="buildingName"/>
+    	<association property="proprietor" resultMap="propertyProprietorBase.propertyProprietorBaseMap_AppendTable" />
+    </resultMap>
+    <!-- 分页查询 -->
+    <select id="select_room_forList" parameterType="java.util.Map" resultMap="roomEntity">
+		SELECT 
+			<include refid="realRoomBase.queryHead_AppendTable"/>,
+			<include refid="propertyProprietorBase.queryHead_AppendTable"/>,
+			GB.f_name groupbuildingName,B.f_name buildingName
+		FROM t_real_room RR
+		INNER JOIN t_building B ON RR.t_building_f_id = B.f_id AND B.f_sys0_del_state=0
+		INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id AND GB.f_sys0_del_state=0
+		INNER JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id AND PP.f_sys0_del_state=0
+		WHERE RR.f_sys0_del_state=0 
+		and RR.f_check_status in (1,9)
+		and B.f_check_status in (1,9) <!-- "1":"审核通过","9":"无需审核" -->
+		<if test="buildingId != null and buildingId != '' "> AND B.f_id = #{buildingId}</if><!-- 小区 -->
+		<if test="groupbuildingId != null and groupbuildingId != '' "> AND GB.f_id = #{groupbuildingId}</if><!-- 小区 -->
+    	<if test="groupbuildingName != null and groupbuildingName != '' "> AND GB.f_name like CONCAT('%',#{groupbuildingName}, '%') </if><!-- 小区 -->
+    	<if test="buildingName != null and buildingName != '' "> and B.f_name like CONCAT('%',#{buildingName}, '%') </if><!-- 楼栋 -->
+    	<if test="unitName != null and unitName != '' "> and RR.f_unit_name like CONCAT('%', #{unitName}, '%') </if><!-- 单元号-->
+    	<if test="roomNum != null and roomNum != '' "> and RR.f_num_tail like CONCAT('%', #{roomNum}, '%') </if><!-- 房号 -->
+    	<if test="proprietorName != null and proprietorName != '' "> and PP.f_name like CONCAT('%', #{proprietorName}, '%') </if><!-- 业主 -->
+    	<if test="proprietorPhone != null and proprietorPhone != '' "> and PP.f_phone like CONCAT('%', #{proprietorPhone}, '%') </if><!-- 业主 -->
+    	
+    	ORDER BY B.f_name_char_order, B.f_name_digit_order+0, RR.f_unit_name, RR.f_num_tail_char_order, RR.f_num_tail_digit_order+0
+    	
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	<!-- 分页查询数量 -->
+	<select id="select_room_forCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT 
+			COUNT(RR.f_id)
+		FROM t_real_room RR
+		INNER JOIN t_building B ON RR.t_building_f_id = B.f_id AND B.f_sys0_del_state=0
+		INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id AND GB.f_sys0_del_state=0
+		INNER JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id AND PP.f_sys0_del_state=0
+		WHERE RR.f_sys0_del_state=0 
+		and B.f_check_status in (1,9) <!-- "1":"审核通过","9":"无需审核" -->
+    	<if test="groupbuildingName != null and groupbuildingName != '' "> AND GB.f_name like CONCAT('%',#{groupbuildingName}, '%') </if><!-- 小区 -->
+    	<if test="buildingName != null and buildingName != '' "> and B.f_name like CONCAT('%',#{buildingName}, '%') </if><!-- 楼栋 -->
+    	<if test="unitName != null and unitName != '' "> and RR.f_unit_name like CONCAT('%', #{unitName}, '%') </if><!-- 单元号-->
+    	<if test="roomName != null and roomName != '' "> and RR.f_num like CONCAT('%', #{roomName}, '%') </if><!-- 房号 -->
+    	<if test="proprietorName != null and proprietorName != '' "> and PP.f_name like CONCAT('%', #{proprietorName}, '%') </if><!-- 业主 -->
+    </select>
+    <!-- 查询单个信息-->
+    <select id="select_room_byId" parameterType="java.util.Map" resultMap="roomEntity">
+    	SELECT 
+			<include refid="realRoomBase.queryHead_AppendTable"/>,
+			<include refid="propertyProprietorBase.queryHead_AppendTable"/>,
+			GB.f_name groupbuildingName,B.f_name buildingName
+		FROM t_real_room RR
+		INNER JOIN t_building B ON RR.t_building_f_id = B.f_id AND B.f_sys0_del_state=0
+		INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id AND GB.f_sys0_del_state=0
+		LEFT JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id AND PP.f_sys0_del_state=0
+		WHERE RR.f_id = #{id}
+    </select>
+    <!-- 根据楼栋ID删除房号信息
+    <update id="delete_room_byBuildingId" parameterType="java.util.Map">
+    	UPDATE t_real_room RR 
+		SET RR.f_sys0_del_state=1,RR.f_sys0_del_user=#{sysDelUser},RR.f_sys0_del_time=sysdate() 
+		WHERE RR.t_building_f_id=#{buildingId}
+    </update> -->
+    
+    <!-- 删除楼栋同步删除该楼栋下的房号和业主数据 -->
+    <update id="delete_room_byBuildingId" parameterType="java.util.Map">
+    	UPDATE t_real_room RR 
+    	SET RR.f_sys0_del_state=1,RR.f_sys0_del_time=sysdate(),RR.f_sys0_del_user=#{sysDelUser}
+		WHERE RR.f_sys0_del_state=0 AND RR.t_building_f_id=#{buildingId};
+		
+		UPDATE t_property_pproprietor PP 
+		SET PP.f_sys0_del_state=1,PP.f_sys0_del_time=sysdate(),PP.f_sys0_del_user=#{sysDelUser}
+		WHERE PP.f_sys0_del_state=0 AND EXISTS(
+			SELECT 1 from t_real_room RR WHERE RR.t_property_proprietor_f_id = PP.f_id
+			AND RR.t_property_proprietor_f_id=#{buildingId};
+		)
+    </update>
+
+	<!-- 根据楼栋号查询其下所有房间信息 -->
+	<select id="select_real_room_by_buildingIdList" parameterType="list" resultType="com.cnfantasia.server.ms.property.importer.entity.RealRoom4Import">
+		SELECT
+		rr.f_id rrId,
+		rr.f_num rrNum,
+		rr.f_num_tail rrNumTail,
+		rr.f_unit_name rrUnitName,
+		rr.f_prop_money propMoney,
+		rr.f_room_size roomSize,
+		rr.f_property_fee_per_m2 roomManagerPrice,
+		rr.f_check_status checkStatus,
+		b.f_id bId,
+		b.f_name bName
+		FROM t_real_room rr
+		JOIN t_building b ON b.f_id = rr.t_building_f_id
+		WHERE
+		rr.f_sys0_del_state = 0
+		AND b.f_id IN (
+		<foreach item="guard" index="index" collection="list"  
+            separator=","> #{guard} </foreach>  
+        );
+	</select>
+	
+	<!-- 根据房间IdList查询其下所有业主信息 -->
+	<select id="select_property_proprietor_by_rrIdList" parameterType="list" resultType="com.cnfantasia.server.ms.property.importer.entity.PropertyProprietor4Import">
+		SELECT
+			rr.t_property_proprietor_f_id firstPpId,
+			rr.f_id rrId,
+			pp.f_id ppId,
+			pp.f_name ppName,
+			pp.f_phone ppPhone,
+			pp.f_identify_no ppIdNumber
+		FROM
+		t_real_room_has_t_property_proprietor rrpp
+		JOIN t_real_room rr ON rr.f_id = rrpp.t_real_room_f_id AND rr.f_sys0_del_state = 0
+		JOIN t_property_proprietor pp ON pp.f_id = rrpp.t_property_proprietor_f_id AND pp.f_sys0_del_state = 0
+		WHERE 
+			<![CDATA[ pp.f_id <> -1 ]]>
+		AND rr.f_id IN (
+		<foreach item="guard" index="index" collection="list"  
+            separator=","> #{guard} </foreach>  
+        )
+		ORDER BY rr.f_id, pp.f_id
+	</select>
+	
+	<select id="doAutoRoomValidateFromDB" parameterType="java.math.BigInteger" resultType="int">
+		call sp_room_validate_mobile(#{gbId}); 
+	</select>
+
+	<!--查询抄表收费导入需要的房间模板  所有收费项在一个页签-->
+	<resultMap id="getMrImportModelEntity_Map" type="com.cnfantasia.server.ms.propertyPayConfig.entity.MrImportModelEntity">
+		<id property="realRoomId" column="realRoomId" javaType="java.math.BigInteger"/>
+		<result property="buildingName" column="buildingName" javaType="java.lang.String"/>
+		<result property="unitName" column="unitName" javaType="java.lang.String"/>
+		<result property="numTail" column="numTail" javaType="java.lang.String"/>
+		<collection property="mrStandardRooms" resultMap="mrStandardRoomBase.mrStandardRoomBaseMap_AppendTable"/>
+	</resultMap>
+	<select id="getMrImportModelEntity" parameterType="java.math.BigInteger" resultMap="getMrImportModelEntity_Map">
+		  SELECT RR.f_id AS realRoomId, B.f_name AS buildingName, IF(RR.f_unit_name is null,'', RR.f_unit_name) AS unitName, RR.f_num_tail AS numTail,
+		  		 <include refid="mrStandardRoomBase.queryHead_AppendTable"/>
+		  FROM t_group_building GB
+		  INNER JOIN t_building B ON GB.f_id = B.t_group_building_f_id AND GB.f_sys0_del_state=0 AND GB.f_check_status IN(1,9) AND GB.f_id=#{gbId}
+		  INNER JOIN t_real_room RR ON RR.t_building_f_id = B.f_id AND RR.f_sys0_del_state=0 AND B.f_sys0_del_state=0 AND RR.f_check_status IN(1,9) AND B.f_check_status IN(1,9)
+		  INNER JOIN t_mr_standard_room MSR ON MSR.t_real_room_id = RR.f_id AND MSR.f_sys0_del_state=0
+		  ORDER BY B.f_name_char_order, B.f_name_digit_order+0, RR.f_unit_name, RR.f_num_tail_char_order, RR.f_num_tail_digit_order+0
+	</select>
+
+	<!--查询抄表收费导入需要的房间模板 不同收费项在不同的页签-->
+	<select id="getMrExportModelEntity" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.propertyPayConfig.entity.MrExportModelEntity">
+		SELECT RR.f_id AS realRoomId, B.f_name AS buildingName, IF(RR.f_unit_name is null,'', RR.f_unit_name) AS unitName,
+			RR.f_num_tail AS numTail, MSR.t_mr_fee_item_id AS mrFeeItemId, MSR.f_multiplier_times AS multiplierTimes, MSR.f_mr_name AS mrName
+		FROM t_group_building GB
+		INNER JOIN t_building B ON GB.f_id = B.t_group_building_f_id AND GB.f_sys0_del_state=0 AND GB.f_check_status IN(1,9) AND GB.f_id=#{gbId}
+		INNER JOIN t_real_room RR ON RR.t_building_f_id = B.f_id AND RR.f_sys0_del_state=0 AND B.f_sys0_del_state=0 AND RR.f_check_status IN(1,9) AND B.f_check_status IN(1,9)
+		INNER JOIN t_mr_standard_room MSR ON MSR.t_real_room_id = RR.f_id AND MSR.f_sys0_del_state=0
+		WHERE MSR.t_mr_fee_item_id=#{itemId}
+		ORDER BY B.f_name_char_order, B.f_name_digit_order+0, RR.f_unit_name, RR.f_num_tail_char_order, RR.f_num_tail_digit_order+0
+	</select>
+</mapper>

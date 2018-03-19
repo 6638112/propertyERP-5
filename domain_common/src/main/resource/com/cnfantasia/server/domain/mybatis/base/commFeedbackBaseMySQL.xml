@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:意见反馈表 t_comm_feedback -->
+<mapper namespace="commFeedbackBase">
+	<resultMap type="CommFeedback" id="commFeedbackBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_detail" javaType="java.lang.String" property="detail"/>  <!-- 意见详细内容 -->        <result column="f_contect" javaType="java.lang.String" property="contect"/>  <!-- 联系方式 -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!-- 反馈者Id -->        <result column="f_create_time" javaType="java.lang.String" property="createTime"/>  <!--  -->        <result column="t_comm_feedback_label_f_id" javaType="java.math.BigInteger" property="tCommFeedbackLabelFId"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommFeedback" id="commFeedbackExtendMap" extends="commFeedbackBaseMap">
+	</resultMap>
+	<resultMap type="CommFeedback" id="commFeedbackBaseMap_AppendTable">
+        <id column="CFid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CFdetail" javaType="java.lang.String" property="detail"/>  <!-- 意见详细内容 -->        <result column="CFcontect" javaType="java.lang.String" property="contect"/>  <!-- 联系方式 -->        <result column="CFuserId" javaType="java.math.BigInteger" property="userId"/>  <!-- 反馈者Id -->        <result column="CFcreateTime" javaType="java.lang.String" property="createTime"/>  <!--  -->        <result column="CFtCommFeedbackLabelFId" javaType="java.math.BigInteger" property="tCommFeedbackLabelFId"/>  <!--  -->        <result column="CFsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CFsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CFsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CFsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CFsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CFsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CFsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommFeedback" id="commFeedbackBaseMap_AppendTable1">
+        <id column="CF1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CF1detail" javaType="java.lang.String" property="detail"/>  <!-- 意见详细内容 -->        <result column="CF1contect" javaType="java.lang.String" property="contect"/>  <!-- 联系方式 -->        <result column="CF1userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 反馈者Id -->        <result column="CF1createTime" javaType="java.lang.String" property="createTime"/>  <!--  -->        <result column="CF1tCommFeedbackLabelFId" javaType="java.math.BigInteger" property="tCommFeedbackLabelFId"/>  <!--  -->        <result column="CF1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CF1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CF1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CF1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CF1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CF1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CF1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CF.f_id,CF.f_detail,CF.f_contect,CF.f_user_id,date_format(CF.f_create_time,'%Y-%m-%d %T') as f_create_time,CF.t_comm_feedback_label_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CF.f_id as CFid,CF.f_detail as CFdetail,CF.f_contect as CFcontect,CF.f_user_id as CFuserId,date_format(CF.f_create_time,'%Y-%m-%d %T') as CFcreateTime,CF.t_comm_feedback_label_f_id as CFtCommFeedbackLabelFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CF1.f_id as CF1id,CF1.f_detail as CF1detail,CF1.f_contect as CF1contect,CF1.f_user_id as CF1userId,date_format(CF1.f_create_time,'%Y-%m-%d %T') as CF1createTime,CF1.t_comm_feedback_label_f_id as CF1tCommFeedbackLabelFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CF.f_id = #{id} ) </if>        <if test="detail != null">  and (CF.f_detail = #{detail} ) </if>        <if test="contect != null">  and (CF.f_contect = #{contect} ) </if>        <if test="userId != null">  and (CF.f_user_id = #{userId} ) </if>        <if test="createTime != null and !createTime.equals('')  ">  and (CF.f_create_time = str_to_date(#{createTime},'%Y-%m-%d %T') ) </if>        <if test="createTime_START != null and !createTime_START.equals('')  ">              <![CDATA[ and (CF.f_create_time >= str_to_date(#{createTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="createTime_END != null and !createTime_END.equals('')  ">            <![CDATA[ and (CF.f_create_time <= str_to_date(#{createTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="tCommFeedbackLabelFId != null">  and (CF.t_comm_feedback_label_f_id = #{tCommFeedbackLabelFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CF.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CF.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CF.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CF.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CF.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CF.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CF.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CF.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CF.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (CF.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (CF.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (CF.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (CF.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (CF.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CF.f_id = #{id} ) </if>        <if test="detail != null and !detail.equals('')  ">  and (CF.f_detail like CONCAT('%',#{detail},'%') ) </if>        <if test="contect != null and !contect.equals('')  ">  and (CF.f_contect like CONCAT('%',#{contect},'%') ) </if>        <if test="userId != null and !userId.equals('')  ">  and (CF.f_user_id = #{userId} ) </if>        <if test="createTime != null and !createTime.equals('')  ">  and (CF.f_create_time = str_to_date(#{createTime},'%Y-%m-%d %T') ) </if>        <if test="createTime_START != null and !createTime_START.equals('')  ">              <![CDATA[ and (CF.f_create_time >= str_to_date(#{createTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="createTime_END != null and !createTime_END.equals('')  ">            <![CDATA[ and (CF.f_create_time <= str_to_date(#{createTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="tCommFeedbackLabelFId != null and !tCommFeedbackLabelFId.equals('')  ">  and (CF.t_comm_feedback_label_f_id = #{tCommFeedbackLabelFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CF.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CF.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CF.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CF.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CF.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CF.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CF.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CF.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CF.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CF.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CF.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CF.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CF.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (CF.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="commFeedbackBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="commFeedbackBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="commFeedbackBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="commFeedbackBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_comm_feedback CF    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(意见反馈表)信息。 -->
+	<sql id="select_commFeedback">
+		SELECT <include refid="commFeedbackBase.queryHead"/>
+		<include refid="commFeedbackBase.busiQueryCondition"/>
+		<include refid="commFeedbackBase.dimCheckSql"/>
+		ORDER BY CF.f_id DESC
+	</sql>
+	<select id="select_commFeedback" parameterType="java.util.Map" resultMap="commFeedbackBase.commFeedbackExtendMap">
+		<include refid="commFeedbackBase.select_commFeedback"/>
+	</select>
+	
+	<!-- 根据条件分页查询(意见反馈表)信息  -->
+	<sql id="select_commFeedback_withPage">
+		SELECT <include refid="commFeedbackBase.queryHead"/>
+		<include refid="commFeedbackBase.busiQueryCondition"/>
+		<include refid="commFeedbackBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_commFeedback_withPage" resultMap="commFeedbackBase.commFeedbackExtendMap" parameterType="java.util.Map">
+		<include refid="commFeedbackBase.select_commFeedback_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(意见反馈表)信息。 -->
+	<sql id="select_commFeedback_bySeqId">
+		SELECT <include refid="commFeedbackBase.queryHead"/>
+		<include refid="commFeedbackBase.busiQueryCondition"/>
+		 and CF.f_id = #{_parameter}
+	</sql>
+	<select id="select_commFeedback_bySeqId" parameterType="java.math.BigInteger" resultMap="commFeedbackBase.commFeedbackBaseMap">
+		<include refid="commFeedbackBase.select_commFeedback_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(意见反馈表)记录数  -->
+	<sql id="select_commFeedback_count">
+		SELECT COUNT(*)
+		<include refid="commFeedbackBase.busiQueryCount"/>
+		<include refid="commFeedbackBase.dimCheckSql"/>
+	</sql>
+	<select id="select_commFeedback_count" resultType="java.lang.Integer">
+		<include refid="commFeedbackBase.select_commFeedback_count"/>
+	</select>
+	
+	 <!-- 往(意见反馈表)新增一条记录。 -->
+	 <sql id="insert_commFeedback">
+		INSERT INTO t_comm_feedback 
+		(f_id,f_detail,f_contect,f_user_id,f_create_time,t_comm_feedback_label_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{detail,jdbcType=VARCHAR},#{contect,jdbcType=VARCHAR},#{userId},str_to_date(#{createTime,jdbcType=DATE},'%Y-%m-%d %T'),#{tCommFeedbackLabelFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_commFeedback" parameterType="CommFeedback">
+		<include refid="commFeedbackBase.insert_commFeedback"/>
+    </insert>
+    
+	<!-- 批量新增(意见反馈表)信息 -->
+    <insert id="insert_commFeedback_Batch" parameterType="java.util.List">
+    	INSERT INTO t_comm_feedback 
+		(f_id,f_detail,f_contect,f_user_id,f_create_time,t_comm_feedback_label_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.detail,jdbcType=VARCHAR},#{item.contect,jdbcType=VARCHAR},#{item.userId},str_to_date(#{item.createTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.tCommFeedbackLabelFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(意见反馈表)信息。 -->
+    <sql id="update_commFeedback">
+		UPDATE t_comm_feedback		<trim prefix="SET" prefixOverrides=","> 		<if test="detail != null and !detail.equals('') "> ,f_detail=#{detail}</if> 		<if test="contect != null and !contect.equals('') "> ,f_contect=#{contect}</if> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="createTime != null and !createTime.equals('') "> ,f_create_time=str_to_date(#{createTime},'%Y-%m-%d %T')</if> 		<if test="tCommFeedbackLabelFId != null and !tCommFeedbackLabelFId.equals('') "> ,t_comm_feedback_label_f_id=#{tCommFeedbackLabelFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_commFeedback" parameterType="CommFeedback">
+		<include refid="commFeedbackBase.update_commFeedback"/>
+    </update>
+    
+    <!-- 批量更新(意见反馈表)信息。 -->
+    <update id="update_commFeedback_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_comm_feedback		<trim prefix="SET" prefixOverrides=","> 		<if test="item.detail != null and !item.detail.equals('')  "> ,f_detail=#{item.detail}</if> 		<if test="item.contect != null and !item.contect.equals('')  "> ,f_contect=#{item.contect}</if> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.createTime != null and !item.createTime.equals('')  "> ,f_create_time=str_to_date(#{item.createTime},'%Y-%m-%d %T')</if> 		<if test="item.tCommFeedbackLabelFId != null and !item.tCommFeedbackLabelFId.equals('')  "> ,t_comm_feedback_label_f_id=#{item.tCommFeedbackLabelFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(意见反馈表)信息_逻辑删除。 -->
+    <sql id="delete_commFeedback_Logic">
+		UPDATE t_comm_feedback		<trim prefix="SET" prefixOverrides=","> 		<if test="detail != null and !detail.equals('')  "> ,f_detail=#{detail}</if> 		<if test="contect != null and !contect.equals('')  "> ,f_contect=#{contect}</if> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="createTime != null and !createTime.equals('')  "> ,f_create_time=str_to_date(#{createTime},'%Y-%m-%d %T')</if> 		<if test="tCommFeedbackLabelFId != null and !tCommFeedbackLabelFId.equals('')  "> ,t_comm_feedback_label_f_id=#{tCommFeedbackLabelFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_commFeedback_Logic" parameterType="CommFeedback">
+		<include refid="commFeedbackBase.delete_commFeedback_Logic"/>
+    </update>
+    
+    <!-- 批量删除(意见反馈表)信息_逻辑删除 -->
+    <update id="delete_commFeedback_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_comm_feedback		<trim prefix="SET" prefixOverrides=","> 		<if test="item.detail != null and !item.detail.equals('')  "> ,f_detail=#{item.detail}</if> 		<if test="item.contect != null and !item.contect.equals('')  "> ,f_contect=#{item.contect}</if> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.createTime != null and !item.createTime.equals('')  "> ,f_create_time=str_to_date(#{item.createTime},'%Y-%m-%d %T')</if> 		<if test="item.tCommFeedbackLabelFId != null and !item.tCommFeedbackLabelFId.equals('')  "> ,t_comm_feedback_label_f_id=#{item.tCommFeedbackLabelFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(意见反馈表)信息。 -->
+    <sql id="delete_commFeedback">
+		DELETE FROM t_comm_feedback WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_commFeedback" parameterType="java.lang.String">
+		<include refid="commFeedbackBase.delete_commFeedback"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(意见反馈表)信息。 -->
+    <delete id="delete_commFeedback_Batch" parameterType="java.util.List">
+		DELETE FROM t_comm_feedback WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

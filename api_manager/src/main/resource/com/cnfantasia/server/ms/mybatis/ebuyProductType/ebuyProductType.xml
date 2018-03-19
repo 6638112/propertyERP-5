@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 数据表 t_ebuy_product_shelf -->
+<mapper namespace="ebuyProductType">
+	<select id="select_ebuy_product_types" parameterType="java.util.List" resultMap="ebuyProductTypeBase.ebuyProductTypeExtendMap">
+		select <include refid="ebuyProductTypeBase.queryHead"/>
+		FROM t_ebuy_product_type EPT
+    	 WHERE EPT.f_wlApp_type in(
+    	 <foreach item="item" collection="list"  separator=",">
+    	 #{item}
+    	 </foreach>
+    	 ) and EPT.f_sys0_del_state=0
+	</select>
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 物业抄表 -->
+<mapper namespace="meterReading">
+	<select id="select_groupBuilding_forList" resultMap="groupBuildingBase.groupBuildingBaseMap">
+		select 
+    		<include refid="groupBuildingBase.queryHead"/>
+    	from t_group_building GB
+    		<!-- <if test="isPmUser !=null and isPmUser == 1" > 
+    			管理处账号只能看到它所管辖的小区，所以用inner join
+				inner join t_property_management PM on PM.f_id=GB.t_property_management_f_id and PM.f_sys0_del_state=0
+				inner join t_property_management_has_oms_user PMHOU on PM.f_id = PMHOU.t_property_management_f_id and PMHOU.f_sys0_del_state=0
+			</if>
+			<if test="isPmUser == 0">
+				left join t_property_management PM on PM.f_id=GB.t_property_management_f_id 
+			</if> -->
+    		left JOIN t_property_company PC on GB.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+    		/*inner join t_pay_bill_type pbt on pbt.f_gb_id = GB.f_id and pbt.f_sys0_del_state=0 and pbt.f_is_prop_fee = 3*/
+			/*v501使用扩展表进行判断是否为抄表收费小区*/
+			INNER JOIN t_group_building_ext gbe ON gbe.f_id = gb.f_id AND gbe.f_meter_fee_status = 1
+		where GB.f_sys0_del_state=0 AND GB.f_propfee_canpay = 1/*开通缴费*/
+		<!-- <if test="isAdmin ==null or isAdmin == 0">
+			<if test="isPmUser !=null and isPmUser == 0" >and PC.f_admin_id=#{adminId}</if>
+			<if test="isPmUser !=null and isPmUser == 1" >and PMHOU.t_oms_user_f_id=#{adminId}</if>
+		</if> -->
+		<include refid="permiOos.dataPermissionCondition" />
+		<if test="gbName !=null and gbName != ''" >and GB.f_name like CONCAT('%',#{gbName}, '%')</if>
+		ORDER BY GB.f_id DESC
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.meterReading.entity.MrFeeItemWithFormula"
+		id="mrFeeItemWithFormulaMap" extends="mrFeeItemBase.mrFeeItemBaseMap_AppendTable">
+		<collection property="mfifList"
+			resultMap="mrFeeItemFormulaBase.mrFeeItemFormulaBaseMap_AppendTable" />
+	</resultMap>
+	
+	<!-- 查出带计算规则的配置项 -->
+	<select id="selectMrFeeItemWithFormula" resultMap="mrFeeItemWithFormulaMap" parameterType="string">
+		SELECT
+			<include refid="mrFeeItemBase.queryHead_AppendTable" />, 
+			<include refid="mrFeeItemFormulaBase.queryHead_AppendTable"/>
+		FROM
+			t_mr_fee_item mfi
+		left JOIN t_mr_fee_item_formula mfif ON mfif.t_mr_fee_item_f_id = mfi.f_id AND mfif.f_sys0_del_state = 0
+		WHERE
+			mfi.f_sys0_del_state = 0
+		AND mfi.f_gb_id = #{gbId}
+		ORDER BY mfi.f_id,mfif.f_id;
+	</select>
+
+	<select id="selectMrFeeItemWithFormulaForPayBillEdit" resultMap="mrFeeItemWithFormulaMap" parameterType="java.math.BigInteger">
+		SELECT
+		<include refid="mrFeeItemBase.queryHead_AppendTable" />,
+		<include refid="mrFeeItemFormulaBase.queryHead_AppendTable"/>
+		FROM
+		t_mr_fee_item mfi
+		left JOIN t_mr_fee_item_formula mfif ON mfif.t_mr_fee_item_f_id = mfi.f_id AND mfif.f_sys0_del_state = 0
+		INNER JOIN t_mr_pay_bill_record mpbr ON mpbr.t_property_fee_detail_f_id = #{propertyFeeDetailId} AND mpbr.t_mr_fee_item_f_id = mfi.f_id AND mpbr.f_sys0_del_state = 0
+		WHERE
+		mfi.f_sys0_del_state = 0
+		ORDER BY mfi.f_id,mfif.f_id;
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.meterReading.entity.RealRoomHasMrLastRecordEntity"
+		id="realRoomHasMrLastRecordEntityMap" extends="realRoomHasMrLastRecordBase.realRoomHasMrLastRecordBaseMap_AppendTable">
+		<result column="gbId" property="gbId"/>
+		<result column="gbName" property="gbName"/>
+		<result column="buildingId" property="buildingId"/>
+		<result column="buildingName" property="buildingName"/>
+		<association property="rr" resultMap="realRoomBase.realRoomBaseMap_AppendTable" />
+	</resultMap>
+	
+	<!-- 查出房间的最后一次抄表读数 -->
+	<select id="selectRealRoomHasMrLastRecord" resultMap="realRoomHasMrLastRecordEntityMap" parameterType="string">
+		SELECT
+			<include refid="realRoomHasMrLastRecordBase.queryHead_AppendTable" />, 
+			<include refid="realRoomBase.queryHead_AppendTable" />, 
+			gb.f_id  gbId, gb.f_name gbName, b.f_id buildingId, b.f_name buildingName
+		FROM
+			t_real_room_has_mr_last_record RRHMLR
+		JOIN t_real_room rr ON rr.f_id = RRHMLR.t_real_room_f_id and rr.f_sys0_del_state = 0
+		JOIN t_building b ON b.f_id = rr.t_building_f_id AND b.f_sys0_del_state = 0
+		JOIN t_group_building gb on gb.f_id = b.t_group_building_f_id and gb.f_sys0_del_state = 0
+		where RRHMLR.f_sys0_del_state = 0 AND gb.f_id = #{gbId};
+	</select>
+
+	<!--删除收费规则，收费标准-->
+	<update id="deleteMrCalculateRulAndStandardByFeeItemId" parameterType="java.util.Map">
+		UPDATE t_mr_calculate_rule_cfg SET f_sys0_del_state = 1 ,f_sys0_del_time=NOW(),f_sys0_del_user=#{userId} WHERE t_mr_fee_item_id=#{feeItemId};
+		UPDATE t_mr_fee_item_formula SET f_sys0_del_state = 1 ,f_sys0_del_time=NOW(),f_sys0_del_user=#{userId} WHERE t_mr_fee_item_f_id=#{feeItemId};
+		UPDATE t_mr_standard_room SET f_sys0_del_state = 1 ,f_sys0_del_time=NOW(),f_sys0_del_user=#{userId} WHERE t_mr_fee_item_id=#{feeItemId};
+		UPDATE t_mr_standard_building SET f_sys0_del_state = 1 ,f_sys0_del_time=NOW(),f_sys0_del_user=#{userId} WHERE t_mr_fee_item_id=#{feeItemId};
+		UPDATE t_mr_standard_group_building SET f_sys0_del_state = 1 ,f_sys0_del_time=NOW(),f_sys0_del_user=#{userId} WHERE t_mr_fee_item_id=#{feeItemId};
+	</update>
+</mapper>

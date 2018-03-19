@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 电商模块 -->
+<mapper namespace="ebuyNew">
+	<cache
+		eviction="LRU"
+		flushInterval="60000"
+		size="2048"
+		readOnly="true"/>
+	<!-- FIFO -->
+
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyHomeProd" id="ebuyHomeProdMap">
+		<id column="f_id" javaType="java.lang.Long" property="id"/>
+		<result column="f_name1" javaType="java.lang.String" property="name1"/>
+		<result column="f_name2" javaType="java.lang.String" property="name2"/>
+		<result column="f_name3" javaType="java.lang.String" property="name3"/>
+		<result column="f_sex" javaType="java.lang.Integer" property="sex"/>
+		<result column="f_color" javaType="java.lang.String" property="color"/>
+		<result column="f_sort" javaType="java.lang.String" property="sort"/>
+		<collection property="ebuyProdForLstList" column="t_ebuy_product_type_id" resultMap="ebuyProdForLstMap"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyProdForLst" id="ebuyProdForLstMap">
+		<id column="prod_shelf_id" javaType="java.lang.Long" property="id"/>
+		<result column="f_product_name" javaType="java.lang.String" property="name"/>
+		<result column="f_product_name_mini" javaType="java.lang.String" property="nameMini"/>
+		<result column="f_left_count" javaType="int" property="leftCount"/>
+		<result column="f_pic_base" javaType="java.lang.String" property="picBase"/>
+		<result column="f_price_on_shelf" javaType="java.math.BigDecimal" property="priceOnShelf"/>
+		<result column="f_price" javaType="java.math.BigDecimal" property="price"/>
+		<result column="f_price_discount" javaType="java.math.BigDecimal" property="priceDiscount"/>
+		<result column="f_price_unit" javaType="java.lang.String" property="priceUnit"/>
+		<result column="f_film_ticket_num" javaType="java.lang.Integer" property="filmTickets" />
+		<result column="f_supply_type" javaType="java.lang.Integer" property="supplyType"/>
+		<result column="f_sys0_upd_time" javaType="java.util.Date" property="updTime" />
+		<result column="sosName" javaType="string" property="sosName" />
+		<result column="sosIntroduceUrl" javaType="string" property="sosIntroduceUrl" />
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyProdForLstSales" id="EbuyProdForLstSalesMap" extends="ebuyProdForLstMap">
+		<result column="f_op_type" javaType="java.lang.Integer" property="opType"/>
+		<result column="f_op_name" javaType="java.lang.String" property="opName" />
+		<result column="f_can_buy_num" javaType="java.lang.Integer" property="canBuyNum" />
+		<result column="f_desc" javaType="java.lang.String" property="desc" />
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyStore" id="ebuyStoreMap">
+		<id column="f_id" javaType="java.lang.Long" property="id"/>
+		<result column="f_store_name" javaType="java.lang.String" property="storeName"/>
+		<result column="f_phone" javaType="java.lang.String" property="phone"/>
+		<result column="f_order" javaType="java.lang.Integer" property="order"/>
+		<result column="f_address" javaType="java.lang.String" property="address"/>
+		<result column="f_store_pic" javaType="java.lang.String" property="storePic"/>
+		<result column="f_pro_pic" javaType="java.lang.String" property="proPic"/>
+		<result column="f_shop_photoes" javaType="java.lang.String" property="shopPhotoes"/>
+		<result column="f_start_time" javaType="java.lang.String" property="startTime"/>
+		<result column="f_end_time" javaType="java.lang.String" property="endTime"/>
+		<result column="f_distance" javaType="java.lang.Integer" property="distance"/>
+		<result column="f_deliveTime" javaType="java.lang.Integer" property="deliveTime"/>
+		<result column="f_sys0_upd_time" javaType="java.util.Date" property="updTime" />
+		<collection property="ebuyProdForLstList" column="f_id" select="select_prodForStoreList"/>
+		<collection property="ebuyProdTypeList" column="f_id" select="getStoreProdTypes2" />
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyStore" id="ebuyStoreInfoMap">
+		<id column="f_id" javaType="java.lang.Long" property="id"/>
+		<result column="f_store_name" javaType="java.lang.String" property="storeName"/>
+		<result column="f_phone" javaType="java.lang.String" property="phone"/>
+		<result column="f_address" javaType="java.lang.String" property="address"/>
+		<result column="f_store_pic" javaType="java.lang.String" property="storePic"/>
+		<result column="f_pro_pic" javaType="java.lang.String" property="proPic"/>
+		<result column="f_shop_photoes" javaType="java.lang.String" property="shopPhotoes"/>
+		<result column="f_start_time" javaType="java.lang.String" property="startTime"/>
+		<result column="f_end_time" javaType="java.lang.String" property="endTime"/>
+		<result column="f_distance" javaType="java.lang.Integer" property="distance"/>
+		<result column="f_deliveTime" javaType="java.lang.Integer" property="deliveTime"/>
+		<result column="f_sys0_upd_time" javaType="java.util.Date" property="updTime" />
+		<collection property="ebuyProdTypeList" column="f_id" select="getStoreProdTypes2" />
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyFamilyFavor" id="ebuyFamilyFavorMap">
+		<id column="f_id" javaType="java.lang.Long" property="id"/>
+		<result column="f_hua_id" javaType="java.lang.String" property="huaId" />
+		<result column="f_sex" javaType="java.lang.String" property="sex" />
+		<result column="f_sys0_upd_time" javaType="java.util.Date" property="updTime" />
+		<collection property="ebuyProdForLstList" column="f_id" select="select_prodForFamilyFavorList"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyProdType" id="ebuyProdTypeMap">
+		<id column="f_id" javaType="java.lang.Long" property="id"/>
+		<result column="f_type_name" javaType="java.lang.String" property="typeName" />
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuySalesPromotion" id="EbuySalesPromotionMap">
+		<id column="f_id" javaType="java.lang.Long" property="id"/>
+		<result column="f_name" javaType="java.lang.String" property="name" />
+		<result column="f_can_buy_num" javaType="java.lang.Integer" property="canBuyNum"/>
+	</resultMap>
+	
+	<sql id="ebuyHomeProdHead">ht.f_id, ht.f_name1, ht.f_name2, ht.f_name3, ht.t_sort, ht.f_color, ps.t_ebuy_product_type_id</sql>
+	
+	<sql id="ebuyStoreHead">sm.f_id,sm.f_order, sm.f_name f_store_name, sm.f_store_pic, sm.f_pro_pic, sm.f_shop_photoes, sm.f_tel f_phone, sm.f_address, sm.f_start_time, sm.f_end_time, sm.f_sys0_upd_time, smgb.f_distance, smgb.f_delive_time</sql>
+	
+	<sql id="ebuyProdHead">
+		ps.f_id prod_shelf_id, p.f_name f_product_name, p.f_name_mini f_product_name_mini,
+		p.f_left_count f_left_count, p.f_pic_base f_pic_base,
+		ps.f_price_discount f_price_on_shelf, p.f_price f_price, p.f_price_discount f_price_discount,
+ 		p.f_price_unit f_price_unit, p.f_film_ticket_num f_film_ticket_num, p.f_sys0_upd_time, sm.f_type f_supply_type
+	</sql>
+	
+	<sql id="ebuyProdSalesHead">
+		ps.f_id prod_shelf_id, p.f_name f_product_name, p.f_name_mini f_product_name_mini,
+		p.f_left_count f_left_count, p.f_pic_base f_pic_base,
+		ps.f_price_discount f_price_on_shelf, p.f_price f_price, p.f_price_discount f_price_discount,
+ 		p.f_price_unit f_price_unit, p.f_film_ticket_num f_film_ticket_num, p.f_sys0_upd_time, sm.f_type f_supply_type,
+ 		sp.f_type f_op_type, sp.f_name f_op_name, sp.f_can_buy_num, p.f_desc,
+ 		sos.f_name sosName, sos.f_introduce_url sosIntroduceUrl
+	</sql>
+	
+	<sql id="ebuyProdForStoreHead">
+		ps.f_id prod_shelf_id, ps.f_price_discount f_price_discount,
+ 		p.f_name f_product_name, p.f_name_mini f_product_name_mini, p.f_pic_base f_pic_base, p.f_price f_price, p.f_price_discount f_price_discount,
+ 		p.f_price_unit f_price_unit, p.f_film_ticket_num f_film_ticket_num, p.f_sys0_upd_time, 2 f_supply_type
+	</sql>
+	
+	<sql id="ebuyHomeProdMoreConditions">
+		<where>
+			 ht.f_sys0_del_state = 0 and p.f_status = 0 and sm.f_store_audit_status = 1
+			<if test="homeTypeId!=null and homeTypeId!=''">
+				and ht.f_id = #{homeTypeId}
+			</if>
+			<if test="sex!=null">
+				and ht.f_sex in (#{sex}, 2)
+			</if>
+			<if test="groupBuildId!=null and groupBuildId!=''">
+				and ((smgb.t_group_building_id is not null and smgb.t_group_building_id = #{groupBuildId})
+				or (smgb.t_group_building_id is null and sm.f_type = 1)
+				or (smgb.t_group_building_id is null and smgb.t_address_city_id is not null and sm.f_type = 4
+				and EXISTS (SELECT 1 FROM t_address_city ac INNER JOIN t_address_block ab ON ac.f_id = ab.t_city_f_id AND ab.f_sys0_del_state = 0
+									INNER JOIN t_group_building gb ON ab.f_id = gb.t_block_f_id AND gb.f_sys0_del_state = 0
+								WHERE ac.f_sys0_del_state = 0 AND gb.f_id = #{groupBuildId} AND ac.f_id = smgb.t_address_city_id)))
+			</if>
+			<if test="searchKey != null and searchKey != '' ">  
+            	<![CDATA[ AND p.f_name like CONCAT('%',#{searchKey},'%')]]>
+        	</if>
+        	<if test="supplyType!=null and supplyType!=''">
+				and sm.f_type = #{supplyType}
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="ebuyStoreConditions">		
+		<where>
+			 sm.f_sys0_del_state = 0 and sm.f_type = 2 and sm.f_store_audit_status = 1
+			<if test="groupBuildId!=null and groupBuildId!=-1">
+				and ((smgb.t_group_building_id is not null and smgb.t_group_building_id = #{groupBuildId})
+				or (smgb.t_group_building_id is null and sm.f_type = 1)
+				or (smgb.t_group_building_id is null and smgb.t_address_city_id is not null and sm.f_type = 4
+				and EXISTS (SELECT 1 FROM t_address_city ac INNER JOIN t_address_block ab ON ac.f_id = ab.t_city_f_id AND ab.f_sys0_del_state = 0
+									INNER JOIN t_group_building gb ON ab.f_id = gb.t_block_f_id AND gb.f_sys0_del_state = 0
+								WHERE ac.f_sys0_del_state = 0 AND gb.f_id = #{groupBuildId} AND ac.f_id = smgb.t_address_city_id)))
+			</if>
+			<if test="searchKey != null and searchKey != '' ">  
+            	<![CDATA[ AND sm.f_name like CONCAT('%',#{searchKey},'%')]]>
+        	</if>
+		</where>
+	</sql>
+	
+	<sql id="ebuyProdConditions">		
+		<where>
+		    pt.f_sys0_del_state = 0
+		    and pt.f_point_type = 1
+		    and p.f_status = 0
+		    and sm.f_store_audit_status = 1 
+			<if test="appType!=null and appType!=''">
+				and pt.f_wlApp_type = #{appType}
+			</if>
+			<if test="groupBuildId!=null and groupBuildId!=-1">
+				and ((smgb.t_group_building_id is not null and smgb.t_group_building_id = #{groupBuildId})
+				or (smgb.t_group_building_id is null and sm.f_type = 1)
+				or (smgb.t_group_building_id is null and smgb.t_address_city_id is not null and sm.f_type = 4
+				and EXISTS (SELECT 1 FROM t_address_city ac INNER JOIN t_address_block ab ON ac.f_id = ab.t_city_f_id AND ab.f_sys0_del_state = 0
+									INNER JOIN t_group_building gb ON ab.f_id = gb.t_block_f_id AND gb.f_sys0_del_state = 0
+								WHERE ac.f_sys0_del_state = 0 AND gb.f_id = #{groupBuildId} AND ac.f_id = smgb.t_address_city_id)))
+			</if>
+			<choose>
+				<when test="storeId!=null and storeId!=''">
+					and sm.f_id = #{storeId}
+				</when>
+				<otherwise>
+					and sm.f_type &lt;&gt;2 <!-- 如果没有带楼下店的Id，过滤掉楼下店的商品 -->
+				</otherwise>
+			</choose>
+			<if test="productTypeId!=null and productTypeId!=''">
+				and pt.f_id = #{productTypeId}
+			</if>
+			<if test="supplyType!=null and supplyType!=''">
+				and sm.f_type = #{supplyType}
+			</if>
+			<if test="supplyTypes!=null">
+				and sm.f_type in
+				<foreach item="supplyType" collection="supplyTypes" open="(" separator="," close=")">
+					#{supplyType}
+				</foreach>
+			</if>
+			<if test="searchKey != null and searchKey != '' ">  
+            	<![CDATA[ AND p.f_name like CONCAT('%',#{searchKey},'%') ]]>
+        	</if>
+        	<if test="opType != 1">
+        		  AND esp.f_id is null
+        	</if>
+		</where>
+	</sql>
+	
+	<sql id="ebuyProdFavorConditions">		
+		<where>
+		    p.f_status = 0 and sm.f_store_audit_status = 1
+		</where>
+	</sql>
+	
+	<sql id="searchHomeProdListConditions">		
+		<where>
+		    p.f_status = 0 and sm.f_store_audit_status = 1
+		    <if test="homeTypeId != null">
+		    	and ht.f_id = #{homeTypeId}
+		    </if>
+			<if test="groupBuildId!=null and groupBuildId!=-1">
+				and ((smgb.t_group_building_id is not null and smgb.t_group_building_id = #{groupBuildId})
+				or (smgb.t_group_building_id is null and sm.f_type = 1)
+				or (smgb.t_group_building_id is null and smgb.t_address_city_id is not null and sm.f_type = 4
+				and EXISTS (SELECT 1 FROM t_address_city ac INNER JOIN t_address_block ab ON ac.f_id = ab.t_city_f_id AND ab.f_sys0_del_state = 0
+									INNER JOIN t_group_building gb ON ab.f_id = gb.t_block_f_id AND gb.f_sys0_del_state = 0
+								WHERE ac.f_sys0_del_state = 0 AND gb.f_id = #{groupBuildId} AND ac.f_id = smgb.t_address_city_id)))
+			</if>
+			<if test="supplyType!=null and supplyType!=''">
+				and sm.f_type = #{supplyType}
+			</if>
+			<if test="searchKey != null and searchKey != '' ">  
+            	<![CDATA[ AND p.f_name like CONCAT('%',#{searchKey},'%')]]>
+        	</if>
+		</where>
+	</sql>
+	
+	<!-- 手动调用清除缓存使用 -->
+	<select id="cleanCache" resultType="long" useCache="false" flushCache="true">
+    	select 1
+    </select>
+	
+	<select id="select_ebuyHomeProdList" parameterType="java.util.Map" resultMap="ebuyHomeProdMap" useCache="true">
+		select <include refid="ebuyHomeProdHead" />, <include refid="ebuyProdHead" />,#{sex} f_sex
+		   from t_ebuy_home_type ht
+		    left join t_ebuy_home_type_has_product htp on htp.t_home_type_id = ht.f_id and htp.f_sys0_del_state = 0
+			left join t_ebuy_product_shelf ps on ps.t_ebuy_product_id =htp.t_product_id and ps.f_up_shelf_state=0 and ps.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product_type ept on ps.t_ebuy_product_type_id = ept.f_id and ept.f_sys0_del_state = 0 and ept.f_wlApp_type = 1
+			left join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_sys0_del_state = 0 and p.f_status_audit = 5
+			left join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id and sm.f_sys0_del_state = 0
+			<if test="groupBuildId!=null and groupBuildId!=-1">
+ 				left join t_ebuy_supply_merchant_has_group_building smgb on smgb.t_ebuy_supply_merchant_id = sm.f_id and smgb.f_sys0_del_state = 0
+ 			</if>
+		<where>
+			 ht.f_sys0_del_state = 0 and p.f_status = 0 and sm.f_store_audit_status = 1
+			<if test="homeType!=null and homeType!=''">
+				and ht.f_type = #{homeType}
+			</if>
+			<if test="sex!=null">
+				and ht.f_sex in (#{sex}, 2)
+			</if>
+			<if test="groupBuildId!=null and groupBuildId!=-1">
+				and ((smgb.t_group_building_id is not null and smgb.t_group_building_id = #{groupBuildId})
+						or (smgb.t_group_building_id is null and sm.f_type = 1)
+						or (smgb.t_group_building_id is null and smgb.t_address_city_id is not null and sm.f_type = 4
+							and EXISTS (SELECT 1 FROM t_address_city ac INNER JOIN t_address_block ab ON ac.f_id = ab.t_city_f_id AND ab.f_sys0_del_state = 0
+											INNER JOIN t_group_building gb ON ab.f_id = gb.t_block_f_id AND gb.f_sys0_del_state = 0
+											WHERE ac.f_sys0_del_state = 0 AND gb.f_id = #{groupBuildId} AND ac.f_id = smgb.t_address_city_id)))
+			</if>
+			<if test="supplyType!=null and supplyType!=''">
+				and sm.f_type = #{supplyType}
+			</if>
+		</where>
+		<!-- order by ht.t_sort, (sm.f_type=2 )desc, htp.f_sort desc, ps.f_sort -->
+		order by ht.t_sort, (sm.f_type=2 )desc, p.f_sys0_upd_time desc
+	</select>
+	
+	<select id="select_ebuyHomeProdMoreList" parameterType="java.util.Map" resultMap="ebuyProdForLstMap" useCache="true">
+		select <include refid="ebuyProdHead" />
+		  from t_ebuy_home_type ht
+		    inner join t_ebuy_home_type_has_product htp on htp.t_home_type_id = ht.f_id and htp.f_sys0_del_state = 0
+			inner join t_ebuy_product_shelf ps on ps.t_ebuy_product_id =htp.t_product_id and ps.f_up_shelf_state=0 and ps.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product_type ept on ps.t_ebuy_product_type_id = ept.f_id and ept.f_sys0_del_state = 0 and ept.f_wlApp_type = 1
+			inner join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_sys0_del_state = 0 and p.f_status_audit = 5
+			inner join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id and sm.f_sys0_del_state = 0
+ 			<if test="groupBuildId!=null and groupBuildId!=-1">
+ 				left join t_ebuy_supply_merchant_has_group_building smgb on smgb.t_ebuy_supply_merchant_id = sm.f_id and smgb.f_sys0_del_state = 0
+ 			</if>
+		  <include refid="ebuyHomeProdMoreConditions" />
+		  <!-- 
+		  	<choose>
+		  		<when test="orderBy == 'priceAsc'">order by ps.f_price_discount, p.f_price_discount</when>
+		  		<when test="orderBy == 'priceDesc'">order by ps.f_price_discount desc, p.f_price_discount desc</when>
+		  		<otherwise>order by (sm.f_type=2 )desc, htp.f_sort desc, ps.f_sort</otherwise>
+		  	</choose>
+		  	 -->
+		  	order by ht.t_sort, (sm.f_type=2 )desc, ps.f_sort desc
+  		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	
+	<select id="select_ebuyHomeProdMoreCount" parameterType="java.util.Map" resultType="java.lang.Integer" useCache="true">
+		select count(ps.f_id)
+ 		  from t_ebuy_home_type ht
+		    inner join t_ebuy_home_type_has_product htp on htp.t_home_type_id = ht.f_id and htp.f_sys0_del_state = 0
+			inner join t_ebuy_product_shelf ps on ps.t_ebuy_product_id =htp.t_product_id and ps.f_up_shelf_state=0 and ps.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product_type ept on ps.t_ebuy_product_type_id = ept.f_id and ept.f_sys0_del_state = 0 and ept.f_wlApp_type = 1
+			inner join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_sys0_del_state = 0 and p.f_status_audit = 5
+			inner join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id and sm.f_sys0_del_state = 0
+ 			left join t_ebuy_supply_merchant_has_group_building smgb on smgb.t_ebuy_supply_merchant_id = sm.f_id and smgb.f_sys0_del_state = 0
+  		<include refid="ebuyHomeProdMoreConditions" />
+  		order by ht.t_sort, (sm.f_type=2 )desc, p.f_sys0_upd_time desc
+	</select>
+	
+	<select id="select_ebuyStoreList" parameterType="java.util.Map" resultMap="ebuyStoreMap" useCache="true">
+		select <include refid="ebuyStoreHead" />
+ 			from t_ebuy_supply_merchant sm
+  			 left join t_ebuy_supply_merchant_has_group_building smgb on smgb.t_ebuy_supply_merchant_id = sm.f_id and smgb.f_sys0_del_state = 0
+  		<include refid="ebuyStoreConditions" />
+  		<!-- 
+		<choose>
+			<when test="orderType != null and orderType == '1'.toString()">
+				and EXISTS (select 1 from t_ebuy_product p
+								inner join t_ebuy_product_shelf ps on p.f_id = ps.t_ebuy_product_id and ps.f_up_shelf_state=0
+								inner join t_ebuy_product_type pt on ps.t_ebuy_product_type_id = pt.f_id and pt.f_sys0_del_state = 0
+								where p.f_sys0_del_state = 0 and p.f_status = 0 and p.t_supply_merchant_f_id = sm.f_id)
+				order by sm.f_order desc, sm.f_id desc
+			</when>
+			<otherwise>order by sm.f_id</otherwise>
+		</choose>
+		 -->
+		and EXISTS (select 1 from t_ebuy_product p
+					inner join t_ebuy_product_shelf ps on p.f_id = ps.t_ebuy_product_id and ps.f_up_shelf_state=0
+					inner join t_ebuy_product_type pt on ps.t_ebuy_product_type_id = pt.f_id and pt.f_sys0_del_state = 0
+					where p.f_sys0_del_state = 0 and p.f_status = 0 and p.t_supply_merchant_f_id = sm.f_id)
+		 order by sm.f_order desc, sm.f_id desc
+  		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+
+	<select id="getEbuyStoreInfo" parameterType="java.util.Map" resultMap="ebuyStoreInfoMap" useCache="true">
+		select <include refid="ebuyStoreHead" />
+		from t_ebuy_supply_merchant sm
+		left join t_ebuy_supply_merchant_has_group_building smgb on smgb.t_ebuy_supply_merchant_id = sm.f_id and smgb.f_sys0_del_state = 0
+		WHERE sm.f_id = #{ebuySupplyMerchantId}
+		limit 1
+	</select>
+	
+	<select id="select_ebuyStoreCount" parameterType="java.util.Map" resultType="java.lang.Integer" useCache="true">
+		select count(sm.f_id)
+ 			from t_ebuy_supply_merchant sm
+  			 left join t_ebuy_supply_merchant_has_group_building smgb on smgb.t_ebuy_supply_merchant_id = sm.f_id and smgb.f_sys0_del_state = 0
+  		<include refid="ebuyStoreConditions" />
+	</select>
+	
+	<select id="select_prodForStoreList" parameterType="int" resultMap="ebuyProdForLstMap">
+		select <include refid="ebuyProdForStoreHead" />
+			from t_ebuy_product p
+			 inner join t_ebuy_product_shelf ps on p.f_id = ps.t_ebuy_product_id and ps.f_up_shelf_state=0
+			 inner join t_ebuy_product_type pt on ps.t_ebuy_product_type_id = pt.f_id and pt.f_sys0_del_state = 0
+			where p.f_sys0_del_state = 0 and p.f_status = 0 and p.t_supply_merchant_f_id = #{f_id} and pt.f_wlApp_type = 1
+			order by ps.f_sort desc
+			limit 15
+	</select>
+	
+	<select id="select_ebuyFamilyFavorList" parameterType="java.util.Map" resultMap="ebuyFamilyFavorMap" useCache="true">
+		select t.f_id, t.f_hua_id, t.f_sex, t.f_sys0_upd_time from t_user t
+		  where t.f_sys0_del_state = 0
+		   <if test="familyUserList!=null and familyUserList.size() != 0">
+			  and t.f_id in
+		      <foreach collection="familyUserList" item="familyUser"
+		          index="index" open="(" close=")" separator=",">
+		           #{familyUser.id}
+		      </foreach>
+           </if>
+           <if test="id!=null">
+			  and t.f_id = #{id}
+           </if>
+         limit 10
+	</select>
+	
+	<select id="select_prodForFamilyFavorList" parameterType="int" resultMap="ebuyProdForLstMap">
+		(select <include refid="ebuyProdHead" />
+		 from t_ebuy_recommend_user ru
+		 inner join t_ebuy_product_shelf ps on ru.t_ebuy_product_id = ps.f_id and ru.t_user_id = #{id}
+		 inner join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_status_audit = 5
+		 inner join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id
+		 <include refid="ebuyProdFavorConditions" />
+		order by ru.f_sort desc
+		limit 10)
+		UNION
+		(
+		select <include refid="ebuyProdHead" />
+		 from t_ebuy_recommend_user ru
+		 inner join t_ebuy_recommend_prod rp on ru.t_ebuy_product_id = rp.t_ebuy_product_id and ru.t_user_id = #{id}
+		 inner join t_ebuy_product_shelf ps on rp.t_ebuy_prod_recommend_id = ps.f_id
+		 inner join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_status_audit = 5
+		 inner join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id
+		 <include refid="ebuyProdFavorConditions" />
+		order by rp.f_sort desc
+		limit 10
+		)
+		limit 10
+	</select>
+	
+	<select id="select_ebuyFamilyFavorProdList" resultMap="ebuyProdForLstMap">
+		select distinct <include refid="ebuyProdHead" />
+			from t_ebuy_home_type ht
+			  left join t_ebuy_home_type_has_product htp on htp.t_home_type_id = ht.f_id and htp.f_sys0_del_state = 0
+			  left join t_ebuy_product_shelf ps on ps.t_ebuy_product_id =htp.t_product_id and ps.f_up_shelf_state=0 and ps.f_sys0_del_state = 0
+			  INNER JOIN t_ebuy_product_type ept on ps.t_ebuy_product_type_id = ept.f_id and ept.f_sys0_del_state = 0 and ept.f_wlApp_type = 1
+			 inner join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_status_audit = 5
+			 inner join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id
+			 <if test="groupBuildId!=null and groupBuildId!=-1">
+			 	left join t_ebuy_supply_merchant_has_group_building smgb on smgb.t_ebuy_supply_merchant_id = sm.f_id and smgb.f_sys0_del_state = 0
+			 </if>
+			 <include refid="ebuyHomeProdMoreConditions" />
+			order by ps.f_sort desc
+			limit 5, 80
+	</select>
+	
+	<select id="select_ebuyProdList" parameterType="java.util.Map" resultMap="EbuyProdForLstSalesMap" useCache="true">
+		select <include refid="ebuyProdSalesHead" />
+		  from t_ebuy_product_type pt
+			inner join t_ebuy_product_shelf ps on ps.t_ebuy_product_type_id = pt.f_id and ps.f_up_shelf_state=0 and ps.f_sys0_del_state = 0
+			inner join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_sys0_del_state = 0 and p.f_status_audit = 5
+			inner join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id and sm.f_sys0_del_state = 0
+			left join t_ebuy_sales_promotion esp on ps.t_sales_promotion_id = esp.f_id
+			<if test="groupBuildId!=null and groupBuildId!=-1">
+ 				left join t_ebuy_supply_merchant_has_group_building smgb on smgb.t_ebuy_supply_merchant_id = sm.f_id and smgb.f_sys0_del_state = 0
+ 			</if>
+ 			left join t_ebuy_sales_promotion sp on ps.t_sales_promotion_id = sp.f_id
+			LEFT JOIN t_source_of_supply sos on sos.f_id = p.t_source_of_supply_f_id
+		  <include refid="ebuyProdConditions" />
+		  	order by ps.f_sort desc
+  		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	
+	<select id="select_ebuyProdCount" parameterType="java.util.Map" resultType="java.lang.Integer" useCache="true">
+		select count(pt.f_id)
+ 		  from t_ebuy_product_type pt
+			inner join t_ebuy_product_shelf ps on ps.t_ebuy_product_type_id = pt.f_id
+			inner join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_sys0_del_state = 0 and p.f_status_audit = 5
+			inner join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id and sm.f_sys0_del_state = 0
+			left join t_ebuy_sales_promotion esp on ps.t_sales_promotion_id = esp.f_id
+			<if test="groupBuildId!=null and groupBuildId!=-1">
+ 				left join t_ebuy_supply_merchant_has_group_building smgb on smgb.t_ebuy_supply_merchant_id = sm.f_id and smgb.f_sys0_del_state = 0
+ 			</if>
+  		<include refid="ebuyProdConditions" />
+	</select>
+	
+	<select id="select_productIdByShelfId" parameterType="java.lang.Long" resultType="java.lang.Long" useCache="true">
+		select t.t_ebuy_product_id from t_ebuy_product_shelf t where t.f_id = #{shelfId} and t.f_sys0_del_state = 0 limit 1
+	</select>
+	
+	<select id="getStoreProdTypes" parameterType="java.util.Map" resultMap="ebuyProdTypeMap" useCache="true">
+		select pt.f_id, pt.f_type_name from t_ebuy_product_type pt
+		  where pt.f_sys0_del_state = 0 and pt.f_wlApp_type = 1
+		   and f_point_type in (1, 3)
+		   <if test="version != null">
+    			and <![CDATA[ pt.f_version <= #{version}]]>
+    	   </if>
+    	   <if test="opType != 1">
+    			and  pt.f_op_type = #{opType} 
+    	   </if>
+		   and exists (
+			 select 1 from t_ebuy_product p
+				inner join t_ebuy_product_shelf ps on ps.t_ebuy_product_id = p.f_id and ps.f_up_shelf_state=0 and p.f_sys0_del_state = 0 and p.f_status = 0
+				inner join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id and sm.f_sys0_del_state = 0
+				<if test="groupBuildId!=null and groupBuildId!=-1">
+	 				left join t_ebuy_supply_merchant_has_group_building smgb on smgb.t_ebuy_supply_merchant_id = sm.f_id and smgb.f_sys0_del_state = 0
+	 			</if>
+			 where p.f_status = 0
+			 <if test="storeId != null"> and p.t_supply_merchant_f_id = #{storeId}</if>
+			 <if test="supplyType != null"> and sm.f_type = #{supplyType}</if>
+			 <if test="supplyTypes!=null">
+				and sm.f_type in
+				<foreach item="supplyType" collection="supplyTypes" open="(" separator="," close=")">
+					#{supplyType}
+				</foreach>
+			</if>
+			<if test="groupBuildId!=null and groupBuildId!=-1">
+				and ((smgb.t_group_building_id is not null and smgb.t_group_building_id = #{groupBuildId})
+				or (smgb.t_group_building_id is null and sm.f_type = 1)
+				or (smgb.t_group_building_id is null and smgb.t_address_city_id is not null and sm.f_type = 4
+				and EXISTS (SELECT 1 FROM t_address_city ac INNER JOIN t_address_block ab ON ac.f_id = ab.t_city_f_id AND ab.f_sys0_del_state = 0
+								INNER JOIN t_group_building gb ON ab.f_id = gb.t_block_f_id AND gb.f_sys0_del_state = 0
+							  WHERE ac.f_sys0_del_state = 0 AND gb.f_id = #{groupBuildId} AND ac.f_id = smgb.t_address_city_id)))
+			</if>
+			  and ps.t_ebuy_product_type_id = pt.f_id)
+		order by pt.f_order desc
+	</select>
+	
+	<select id="getStoreProdTypes2" parameterType="java.util.Map" resultMap="ebuyProdTypeMap" useCache="true">
+		select pt.f_id, pt.f_type_name from t_ebuy_product_type pt
+		  where pt.f_sys0_del_state = 0 and pt.f_wlApp_type = 1 and f_point_type = 1 and exists (
+			 select * from t_ebuy_product p
+				inner join t_ebuy_product_shelf ps on ps.t_ebuy_product_id = p.f_id and ps.f_up_shelf_state=0 and p.f_sys0_del_state = 0
+				inner join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id and sm.f_sys0_del_state = 0
+			 where  p.t_supply_merchant_f_id = #{id} and ps.t_ebuy_product_type_id = pt.f_id and p.f_status = 0)
+		order by pt.f_order desc;
+	</select>
+	
+	<select id="searchHomeProdListByPage" parameterType="java.util.Map" resultMap="ebuyProdForLstMap" useCache="true">
+		select <include refid="ebuyProdHead" />
+		  from t_ebuy_home_type ht
+		    inner join t_ebuy_home_type_has_product htp on htp.t_home_type_id = ht.f_id and htp.f_sys0_del_state = 0
+			inner join t_ebuy_product_shelf ps on ps.t_ebuy_product_id =htp.t_product_id and ps.f_up_shelf_state=0 and ps.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product_type ept on ps.t_ebuy_product_type_id = ept.f_id and ept.f_sys0_del_state = 0 and ept.f_wlApp_type = 1
+			inner join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_sys0_del_state = 0 and p.f_status_audit = 5
+			inner join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id and sm.f_sys0_del_state = 0
+			<if test="groupBuildId!=null and groupBuildId!=-1">
+ 				left join t_ebuy_supply_merchant_has_group_building smgb on smgb.t_ebuy_supply_merchant_id = sm.f_id and smgb.f_sys0_del_state = 0
+ 			</if>
+		  <include refid="searchHomeProdListConditions" />
+		  	 order by ht.t_sort, (sm.f_type=2 )desc, ps.f_sort desc
+  		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	
+	<select id="searchHomeProdListCount" parameterType="java.util.Map" resultType="java.lang.Integer" useCache="true">
+		select count(p.f_id)
+ 		  from t_ebuy_home_type ht
+		    inner join t_ebuy_home_type_has_product htp on htp.t_home_type_id = ht.f_id and htp.f_sys0_del_state = 0
+			inner join t_ebuy_product_shelf ps on ps.t_ebuy_product_id =htp.t_product_id and ps.f_up_shelf_state=0 and ps.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product_type ept on ps.t_ebuy_product_type_id = ept.f_id and ept.f_sys0_del_state = 0 and ept.f_wlApp_type = 1
+			inner join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_sys0_del_state = 0 and p.f_status_audit = 5
+			inner join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id and sm.f_sys0_del_state = 0
+			<if test="groupBuildId!=null and groupBuildId!=-1">
+ 				left join t_ebuy_supply_merchant_has_group_building smgb on smgb.t_ebuy_supply_merchant_id = sm.f_id and smgb.f_sys0_del_state = 0
+ 			</if>
+  		<include refid="searchHomeProdListConditions" />
+	</select>
+	
+	<select id="getNewUserType" parameterType="java.util.Map" resultMap="EbuySalesPromotionMap" useCache="true">
+		select f_id, f_name, f_can_buy_num from t_ebuy_sales_promotion t
+		where t.f_type = 1 
+		 <![CDATA[ AND (t.f_city like CONCAT('%',#{city},'%') or t.f_city is null)]]>
+		 and not exists (select 1 from t_ebuy_order o where o.f_buyer_id = #{userId})
+	</select>
+	
+	<select id="selectCityIdByName" parameterType="java.util.Map" resultType="java.math.BigInteger" useCache="true" >
+		select c.f_id from t_address_city c
+		<where>
+			<if test="city != null and city != '' ">  
+	           	<![CDATA[ AND c.f_name like CONCAT('%',#{city},'%')]]>
+	       	</if>
+       	</where>
+       	limit 1
+	</select>
+
+	<select id="selectAdvertiseThemeProduct" parameterType="java.math.BigInteger" resultMap="EbuyProdForLstSalesMap" useCache="true">
+		select <include refid="ebuyProdSalesHead" />
+		from t_ebuy_advertise_has_promote_shelf_product psp
+		inner join t_ebuy_product_shelf ps on ps.f_id = psp.t_ebuy_product_shelf_f_id and ps.f_up_shelf_state=0 and ps.f_sys0_del_state = 0
+		inner join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_sys0_del_state = 0 and p.f_status_audit = 5
+		inner join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id and sm.f_sys0_del_state = 0
+		left join t_ebuy_sales_promotion esp on ps.t_sales_promotion_id = esp.f_id
+		left join t_ebuy_sales_promotion sp on ps.t_sales_promotion_id = sp.f_id
+		LEFT JOIN t_source_of_supply sos on sos.f_id = p.t_source_of_supply_f_id
+		WHERE psp.t_ebuy_advertise_f_id = #{advId}
+	</select>
+
+	<select id="getFightProducts" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.ebuy.entity.EbuyFightGroups" useCache="true">
+		SELECT DISTINCT p.f_id productId, p.f_name productName, pfg.f_price_discount fightPrice, p.f_left_count leftCount,
+		CASE WHEN now() &lt; pfg.f_start_date and now() &lt; pfg.f_expire_date THEN 0 WHEN now() > pfg.f_start_date and now() > pfg.f_expire_date THEN 3 ELSE 1 END fightStatus,
+		(select pfp.f_url_mini from t_ebuy_product_fight_pic pfp where pfp.t_ebuy_product_f_id = p.f_id ORDER BY pfp.f_id desc limit 1) fightPic
+		FROM t_ebuy_product_fight_groups pfg
+		INNER JOIN t_ebuy_product p ON pfg.t_ebuy_product_f_id = p.f_id AND p.f_sys0_del_state = 0 and p.f_status_audit = 5
+		INNER JOIN t_ebuy_fight_supply_merchant fsm on pfg.t_ebuy_fight_supply_merchant_f_id = fsm.f_id and fsm.f_sys0_del_state = 0
+		INNER JOIN t_ebuy_fight_merchant_has_group_building hgb on fsm.f_id = hgb.t_ebuy_fight_supply_merchant_f_id and hgb.f_sys0_del_state = 0
+		WHERE pfg.f_sys0_del_state = 0 AND p.f_left_count > 0
+		<if test="groupBuildingId != null and groupBuildingId != ''">
+			and hgb.t_group_building_id = #{groupBuildingId}
+		</if>
+-- 		进行中
+		<if test="fightStatus != null and fightStatus == '1'.toString()">
+			and pfg.f_start_date &lt; now() and pfg.f_expire_date > now() ORDER BY pfg.f_start_date DESC, pfg.f_id DESC
+		</if>
+-- 		预告，多个自提点有一个开始了就不算预告
+		<if test="fightStatus != null and fightStatus == '0'.toString()">
+			and now() &lt; pfg.f_start_date and now() &lt; pfg.f_expire_date
+			and not EXISTS (SELECT 1 FROM t_ebuy_product_fight_groups pfg1
+				INNER JOIN t_ebuy_fight_supply_merchant fsm1 ON pfg1.t_ebuy_fight_supply_merchant_f_id = fsm1.f_id AND fsm1.f_sys0_del_state = 0
+				INNER JOIN t_ebuy_fight_merchant_has_group_building hgb1 ON fsm1.f_id = hgb1.t_ebuy_fight_supply_merchant_f_id AND hgb1.f_sys0_del_state = 0
+				WHERE pfg1.t_ebuy_product_f_id = pfg.t_ebuy_product_f_id AND pfg1.f_sys0_del_state = 0
+				AND pfg1.f_start_date &lt; now() and pfg1.f_expire_date > now()
+				<if test="groupBuildingId != null and groupBuildingId != ''">
+					and hgb1.t_group_building_id = #{groupBuildingId}
+				</if>
+			)
+			ORDER BY pfg.f_start_date ASC ,pfg.f_id DESC
+		</if>
+		<if test="fightStatus == null or fightStatus == ''">
+			ORDER BY pfg.f_id ASC
+		</if>
+		<if test="begin != null and length != null">
+			limit #{begin}, #{length}
+		</if>
+	</select>
+
+	<select id="getHotFightProductSelling" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.ebuy.entity.EbuyFightGroups" useCache="true">
+		SELECT p.f_id productId, p.f_name productName, pfg.f_price_discount fightPrice, p.f_left_count leftCount,
+		(select pfp.f_url_mini from t_ebuy_product_fight_pic pfp where pfp.t_ebuy_product_f_id = p.f_id order by pfp.f_id desc limit 1) fightPic
+		FROM t_ebuy_product_fight_groups pfg
+		INNER JOIN t_ebuy_product p ON pfg.t_ebuy_product_f_id = p.f_id AND p.f_sys0_del_state = 0 and p.f_status_audit = 5
+		INNER JOIN t_ebuy_fight_supply_merchant fsm on pfg.t_ebuy_fight_supply_merchant_f_id = fsm.f_id and fsm.f_sys0_del_state = 0
+		INNER JOIN t_ebuy_fight_merchant_has_group_building hgb on fsm.f_id = hgb.t_ebuy_fight_supply_merchant_f_id and hgb.f_sys0_del_state = 0
+		WHERE pfg.f_sys0_del_state = 0 AND p.f_left_count > 0 and pfg.f_left_count > 0 and pfg.f_start_date &lt; now() and pfg.f_expire_date > now()
+		<if test="groupBuildingId != null and groupBuildingId != ''">
+			and hgb.t_group_building_id = #{groupBuildingId}
+		</if>
+		group by productId,productName,fightPrice,leftCount
+		order by p.f_sel_num DESC limit 1
+	</select>
+
+	<resultMap id="themeAdvEntityMap" type="com.cnfantasia.server.api.ebuy.entity.ThemeAdvEntity">
+		<id property="advId" column="advId" javaType="java.math.BigInteger"/>
+		<result property="advPic" column="advPic" javaType="java.lang.String"/>
+		<collection property="dredgeProductList" resultMap="dredgeProductEntityMap"/>
+		<collection property="ebuyProductList" resultMap="ebuyProdForLstMap"/>
+	</resultMap>
+	<resultMap id="dredgeProductEntityMap" type="com.cnfantasia.server.api.dredge.entity.DredgeProductEntity">
+		<id property="id" column="dpId" javaType="java.math.BigInteger"/>
+		<result property="productPic" column="dpPic" javaType="java.lang.String"/>
+		<result property="sellPrice" column="sellPrice" javaType="java.lang.Integer"/>
+		<result property="marketPrice" column="marketPrice" javaType="java.lang.Integer"/>
+		<result property="name" column="dpName" javaType="java.lang.String"/>
+	</resultMap>
+
+	<select id="getThemeDredgeAdvDetail" parameterType="map" resultMap="themeAdvEntityMap">
+		select ea.f_id advId, ea.f_pic_name advPic, dp.f_id dpId, dp.f_name dpName, dp.f_product_pic dpPic,
+			dps.f_sell_price sellPrice, dps.f_market_price marketPrice
+ 		from t_ebuy_advertise ea
+		inner join t_ebuy_advertise_has_promote_shelf_product hsp on hsp.t_ebuy_advertise_f_id = ea.f_id and hsp.f_sys0_del_state = 0
+		inner join t_dredge_product dp on dp.f_sys0_del_state = 0 and dp.f_id = hsp.t_dredge_product_f_id
+		INNER JOIN t_dredge_product_specification dps on dps.f_sys0_del_state = 0 and dps.f_dredge_product_id = dp.f_id
+		where ea.f_id = #{_parameter}
+		and dps.f_sell_price = (select min(dps2.f_sell_price) from t_dredge_product_specification dps2 where dps2.f_sys0_del_state = 0 and dps2.f_dredge_product_id = dp.f_id)
+		order by hsp.f_id
+	</select>
+
+	<select id="getThemeEbuyAdvDetail" parameterType="map" resultMap="themeAdvEntityMap">
+		select ea.f_id advId, ea.f_pic_name advPic,ps.f_id prod_shelf_id, p.f_id productId, p.f_name f_product_name,p.f_pic_base,
+		 ps.f_price f_price, ps.f_price_discount f_price_discount
+        from t_ebuy_advertise ea
+        inner JOIN t_ebuy_advertise_has_promote_shelf_product hsp on hsp.t_ebuy_advertise_f_id = ea.f_id and hsp.f_sys0_del_state = 0
+        inner join t_ebuy_product_shelf ps on hsp.t_ebuy_product_shelf_f_id = ps.f_id and ps.f_sys0_del_state = 0 and ps.f_up_shelf_state = 0
+        		and exists(select 1 from t_ebuy_product_type ept where ept.f_id = ps.t_ebuy_product_type_id
+        				and ept.f_sys0_del_state = 0 and ept.f_wlapp_type = #{appType})
+        inner JOIN t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_sys0_del_state = 0 and p.f_left_count > 0
+        where ea.f_sys0_del_state = 0 and ea.f_id = #{advId}
+	</select>
+
+	<select id="getEbuyThemeDescByShelfId" parameterType="map" resultType="string">
+		select ea.f_desc
+ 		from t_ebuy_advertise_has_promote_shelf_product psp
+		inner join t_ebuy_advertise ea on ea.f_id = psp.t_ebuy_advertise_f_id and ea.f_sys0_del_state = 0
+		where psp.f_sys0_del_state = 0 and ea.f_start_time &lt; now() and ea.f_end_time > now()
+		<if test="type != null and type == 1">
+			and psp.t_ebuy_product_shelf_f_id = #{shelfId} and ea.f_code = 'EBUY_THEME'
+		</if>
+		<if test="type != null and type == 2">
+			and psp.t_dredge_product_f_id = #{shelfId} and ea.f_code = 'DREDGE_THEME'
+		</if>
+		order by ea.f_id desc limit 1
+	</select>
+	
+	<!-- 找出订单中商品价格与货架中的价格不一样的商品，支付订单前校验用，只取第一条商品名称  added by wenfq 2017-08-30 -->
+	<select id="selectExpiredProductName" parameterType="java.math.BigInteger" resultType="string">
+		SELECT
+		ep.f_name
+		FROM
+			t_ebuy_order eo
+		JOIN t_ebuy_order_has_t_ebuy_product eoep ON eoep.t_ebuy_order_f_id = eo.f_id
+		JOIN t_ebuy_product_shelf eps ON eps.f_id = eoep.t_ebuy_product_f_id
+		JOIN t_ebuy_product ep ON ep.f_id = eps.t_ebuy_product_id
+		WHERE
+			eo.f_id = #{orderId}
+		AND eoep.f_product_price != eps.f_price_discount
+		LIMIT 1;
+	</select>
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 权限控制模块 -->
+<mapper namespace="permi">
+	<resultMap type="com.cnfantasia.server.api.omsPermiRole.entity.OmsPermiRoleEntity" id="omsPermiRoleEntity_Map_Append"
+		extends="omsPermiRoleBase.omsPermiRoleBaseMap_AppendTable">
+		
+	</resultMap>
+	<!-- 根据角色编码查询对应的角色信息,角色状态为启用 -->
+	<select id="select_omsPermiRole_byCode" parameterType="java.util.Map" resultMap="omsPermiRoleEntity_Map_Append">
+		SELECT <include refid="omsPermiRoleBase.queryHead"/>
+		FROM t_oms_permi_role OPR 
+     	WHERE 1=1
+     	AND OPR.f_sys0_del_state = 0
+     	AND OPR.f_code = #{roleCode}
+	</select>
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:运营消息推送配置表 t_self_activity -->
+<mapper namespace="selfActivityBase">
+	<resultMap type="SelfActivity" id="selfActivityBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 活动名称 -->        <result column="f_url" javaType="java.lang.String" property="url"/>  <!-- 页面地址 -->        <result column="f_status" javaType="java.lang.Integer" property="status"/>  <!-- 发布状态 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="SelfActivity" id="selfActivityExtendMap" extends="selfActivityBaseMap">
+	</resultMap>
+	<resultMap type="SelfActivity" id="selfActivityBaseMap_AppendTable">
+        <id column="SAid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="SAname" javaType="java.lang.String" property="name"/>  <!-- 活动名称 -->        <result column="SAurl" javaType="java.lang.String" property="url"/>  <!-- 页面地址 -->        <result column="SAstatus" javaType="java.lang.Integer" property="status"/>  <!-- 发布状态 -->        <result column="SAsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="SAsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="SAsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="SAsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="SAsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="SAsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="SAsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="SelfActivity" id="selfActivityBaseMap_AppendTable1">
+        <id column="SA1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="SA1name" javaType="java.lang.String" property="name"/>  <!-- 活动名称 -->        <result column="SA1url" javaType="java.lang.String" property="url"/>  <!-- 页面地址 -->        <result column="SA1status" javaType="java.lang.Integer" property="status"/>  <!-- 发布状态 -->        <result column="SA1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="SA1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="SA1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="SA1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="SA1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="SA1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="SA1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		SA.f_id,SA.f_name,SA.f_url,SA.f_status
+	</sql>
+	<sql id="queryHead_AppendTable">
+		SA.f_id as SAid,SA.f_name as SAname,SA.f_url as SAurl,SA.f_status as SAstatus
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		SA1.f_id as SA1id,SA1.f_name as SA1name,SA1.f_url as SA1url,SA1.f_status as SA1status
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (SA.f_id = #{id} ) </if>        <if test="name != null">  and (SA.f_name = #{name} ) </if>        <if test="url != null">  and (SA.f_url = #{url} ) </if>        <if test="status != null">  and (SA.f_status = #{status} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (SA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (SA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (SA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (SA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (SA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (SA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (SA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (SA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (SA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (SA.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (SA.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (SA.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (SA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (SA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (SA.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (SA.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="url != null and !url.equals('')  ">  and (SA.f_url like CONCAT('%',#{url},'%') ) </if>        <if test="status != null and !status.equals('')  ">  and (SA.f_status = #{status} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (SA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (SA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (SA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (SA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (SA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (SA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (SA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (SA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (SA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (SA.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (SA.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (SA.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (SA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (SA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="selfActivityBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="selfActivityBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="selfActivityBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="selfActivityBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_self_activity SA    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(运营消息推送配置表)信息。 -->
+	<sql id="select_selfActivity">
+		SELECT <include refid="selfActivityBase.queryHead"/>
+		<include refid="selfActivityBase.busiQueryCondition"/>
+		<include refid="selfActivityBase.dimCheckSql"/>
+		ORDER BY SA.f_id DESC
+	</sql>
+	<select id="select_selfActivity" parameterType="java.util.Map" resultMap="selfActivityBase.selfActivityExtendMap">
+		<include refid="selfActivityBase.select_selfActivity"/>
+	</select>
+	
+	<!-- 根据条件分页查询(运营消息推送配置表)信息  -->
+	<sql id="select_selfActivity_withPage">
+		SELECT <include refid="selfActivityBase.queryHead"/>
+		<include refid="selfActivityBase.busiQueryCondition"/>
+		<include refid="selfActivityBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_selfActivity_withPage" resultMap="selfActivityBase.selfActivityExtendMap" parameterType="java.util.Map">
+		<include refid="selfActivityBase.select_selfActivity_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(运营消息推送配置表)信息。 -->
+	<sql id="select_selfActivity_bySeqId">
+		SELECT <include refid="selfActivityBase.queryHead"/>
+		<include refid="selfActivityBase.busiQueryCondition"/>
+		 and SA.f_id = #{_parameter}
+	</sql>
+	<select id="select_selfActivity_bySeqId" parameterType="java.math.BigInteger" resultMap="selfActivityBase.selfActivityBaseMap">
+		<include refid="selfActivityBase.select_selfActivity_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(运营消息推送配置表)记录数  -->
+	<sql id="select_selfActivity_count">
+		SELECT COUNT(*)
+		<include refid="selfActivityBase.busiQueryCount"/>
+		<include refid="selfActivityBase.dimCheckSql"/>
+	</sql>
+	<select id="select_selfActivity_count" resultType="java.lang.Integer">
+		<include refid="selfActivityBase.select_selfActivity_count"/>
+	</select>
+	
+	 <!-- 往(运营消息推送配置表)新增一条记录。 -->
+	 <sql id="insert_selfActivity">
+		INSERT INTO t_self_activity 
+		(f_id,f_name,f_url,f_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{url,jdbcType=VARCHAR},#{status},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_selfActivity" parameterType="SelfActivity">
+		<include refid="selfActivityBase.insert_selfActivity"/>
+    </insert>
+    
+	<!-- 批量新增(运营消息推送配置表)信息 -->
+    <insert id="insert_selfActivity_Batch" parameterType="java.util.List">
+    	INSERT INTO t_self_activity 
+		(f_id,f_name,f_url,f_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.url,jdbcType=VARCHAR},#{item.status},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(运营消息推送配置表)信息。 -->
+    <sql id="update_selfActivity">
+		UPDATE t_self_activity		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="url != null and !url.equals('') "> ,f_url=#{url}</if> 		<if test="status != null and !status.equals('') "> ,f_status=#{status}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_selfActivity" parameterType="SelfActivity">
+		<include refid="selfActivityBase.update_selfActivity"/>
+    </update>
+    
+    <!-- 批量更新(运营消息推送配置表)信息。 -->
+    <update id="update_selfActivity_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_self_activity		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.url != null and !item.url.equals('')  "> ,f_url=#{item.url}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(运营消息推送配置表)信息_逻辑删除。 -->
+    <sql id="delete_selfActivity_Logic">
+		UPDATE t_self_activity		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="url != null and !url.equals('')  "> ,f_url=#{url}</if> 		<if test="status != null and !status.equals('')  "> ,f_status=#{status}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_selfActivity_Logic" parameterType="SelfActivity">
+		<include refid="selfActivityBase.delete_selfActivity_Logic"/>
+    </update>
+    
+    <!-- 批量删除(运营消息推送配置表)信息_逻辑删除 -->
+    <update id="delete_selfActivity_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_self_activity		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.url != null and !item.url.equals('')  "> ,f_url=#{item.url}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(运营消息推送配置表)信息。 -->
+    <sql id="delete_selfActivity">
+		DELETE FROM t_self_activity WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_selfActivity" parameterType="java.lang.String">
+		<include refid="selfActivityBase.delete_selfActivity"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(运营消息推送配置表)信息。 -->
+    <delete id="delete_selfActivity_Batch" parameterType="java.util.List">
+		DELETE FROM t_self_activity WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

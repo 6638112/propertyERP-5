@@ -1,0 +1,68 @@
+/**   
+* Filename:    IAccountDao.java   
+* @version:    1.0  
+* Create at:   2014年7月11日 上午1:53:28   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年7月11日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.login.dao;
+
+import com.cnfantasia.server.apibase.remoteUser.entity.RemoteUser;
+
+/**
+ * Filename:    IAccountDao.java
+ * @version:    1.0.0
+ * Create at:   2014年7月11日 上午1:53:28
+ * Description:账号管理Dao
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年7月11日       shiyl             1.0             1.0 Version
+ */
+public interface IAccountDao {
+	/**
+	 * 判断用户是否注册
+	 * @param account
+	 * @return
+	 */
+	public boolean checkIsRegist(String account);
+	/**
+	 * 注册
+	 * @param account
+	 * @param password
+	 * @param email
+	 * @return 返回注册的用户Id
+	 */
+	public int userRegister(String account,String password,String email);
+	
+	/**
+	 * 登录
+	 * @param account 用户名
+	 * @param password 密码
+	 * @return
+	 */
+	public RemoteUser userLogin(String account,String password);
+	
+	/**
+	 * 同步登录
+	 */
+	public String userSynlogin(int $uid);
+	
+	/**
+	 * 同步退出
+	 * @param account
+	 * @param password
+	 * @return
+	 */
+	public String userSynlogout(String account,String password);
+	
+	/**
+	 * 修改密码
+	 */
+	public boolean updPwd(String userName,String newPwd);
+}

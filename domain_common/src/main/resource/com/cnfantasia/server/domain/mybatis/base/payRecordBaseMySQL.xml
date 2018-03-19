@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:物业缴费记录 t_pay_record -->
+<mapper namespace="payRecordBase">
+	<resultMap type="PayRecord" id="payRecordBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!-- 缴费者Id -->        <result column="t_pay_bill_f_id" javaType="java.math.BigInteger" property="tPayBillFId"/>  <!-- 所属物业账单Id -->        <result column="f_pay_date" javaType="java.lang.String" property="payDate"/>  <!-- 缴费时间 -->        <result column="f_amount" javaType="java.lang.Long" property="amount"/>  <!-- 缴费金额 -->        <result column="f_discount" javaType="java.lang.Double" property="discount"/>  <!-- 使用的折扣 -->        <result column="f_real_amount" javaType="java.lang.Long" property="realAmount"/>  <!-- 实际缴费金额 -->        <result column="f_pay_type" javaType="java.lang.Long" property="payType"/>  <!-- 支付方式 -->        <result column="f_pay_result" javaType="java.lang.Long" property="payResult"/>  <!-- 支付结果 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PayRecord" id="payRecordExtendMap" extends="payRecordBaseMap">
+	</resultMap>
+	<resultMap type="PayRecord" id="payRecordBaseMap_AppendTable">
+        <id column="PRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PRuserId" javaType="java.math.BigInteger" property="userId"/>  <!-- 缴费者Id -->        <result column="PRtPayBillFId" javaType="java.math.BigInteger" property="tPayBillFId"/>  <!-- 所属物业账单Id -->        <result column="PRpayDate" javaType="java.lang.String" property="payDate"/>  <!-- 缴费时间 -->        <result column="PRamount" javaType="java.lang.Long" property="amount"/>  <!-- 缴费金额 -->        <result column="PRdiscount" javaType="java.lang.Double" property="discount"/>  <!-- 使用的折扣 -->        <result column="PRrealAmount" javaType="java.lang.Long" property="realAmount"/>  <!-- 实际缴费金额 -->        <result column="PRpayType" javaType="java.lang.Long" property="payType"/>  <!-- 支付方式 -->        <result column="PRpayResult" javaType="java.lang.Long" property="payResult"/>  <!-- 支付结果 -->        <result column="PRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PayRecord" id="payRecordBaseMap_AppendTable1">
+        <id column="PR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PR1userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 缴费者Id -->        <result column="PR1tPayBillFId" javaType="java.math.BigInteger" property="tPayBillFId"/>  <!-- 所属物业账单Id -->        <result column="PR1payDate" javaType="java.lang.String" property="payDate"/>  <!-- 缴费时间 -->        <result column="PR1amount" javaType="java.lang.Long" property="amount"/>  <!-- 缴费金额 -->        <result column="PR1discount" javaType="java.lang.Double" property="discount"/>  <!-- 使用的折扣 -->        <result column="PR1realAmount" javaType="java.lang.Long" property="realAmount"/>  <!-- 实际缴费金额 -->        <result column="PR1payType" javaType="java.lang.Long" property="payType"/>  <!-- 支付方式 -->        <result column="PR1payResult" javaType="java.lang.Long" property="payResult"/>  <!-- 支付结果 -->        <result column="PR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PR.f_id,PR.f_user_id,PR.t_pay_bill_f_id,date_format(PR.f_pay_date,'%Y-%m-%d %T') as f_pay_date,PR.f_amount,PR.f_discount,PR.f_real_amount,PR.f_pay_type,PR.f_pay_result
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PR.f_id as PRid,PR.f_user_id as PRuserId,PR.t_pay_bill_f_id as PRtPayBillFId,date_format(PR.f_pay_date,'%Y-%m-%d %T') as PRpayDate,PR.f_amount as PRamount,PR.f_discount as PRdiscount,PR.f_real_amount as PRrealAmount,PR.f_pay_type as PRpayType,PR.f_pay_result as PRpayResult
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PR1.f_id as PR1id,PR1.f_user_id as PR1userId,PR1.t_pay_bill_f_id as PR1tPayBillFId,date_format(PR1.f_pay_date,'%Y-%m-%d %T') as PR1payDate,PR1.f_amount as PR1amount,PR1.f_discount as PR1discount,PR1.f_real_amount as PR1realAmount,PR1.f_pay_type as PR1payType,PR1.f_pay_result as PR1payResult
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PR.f_id = #{id} ) </if>        <if test="userId != null">  and (PR.f_user_id = #{userId} ) </if>        <if test="tPayBillFId != null">  and (PR.t_pay_bill_f_id = #{tPayBillFId} ) </if>        <if test="payDate != null and !payDate.equals('')  ">  and (PR.f_pay_date = str_to_date(#{payDate},'%Y-%m-%d %T') ) </if>        <if test="payDate_START != null and !payDate_START.equals('')  ">              <![CDATA[ and (PR.f_pay_date >= str_to_date(#{payDate_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="payDate_END != null and !payDate_END.equals('')  ">            <![CDATA[ and (PR.f_pay_date <= str_to_date(#{payDate_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="amount != null">  and (PR.f_amount = #{amount} ) </if>        <if test="discount != null">  and (PR.f_discount = #{discount} ) </if>        <if test="realAmount != null">  and (PR.f_real_amount = #{realAmount} ) </if>        <if test="payType != null">  and (PR.f_pay_type = #{payType} ) </if>        <if test="payResult != null">  and (PR.f_pay_result = #{payResult} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (PR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (PR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (PR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (PR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (PR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PR.f_id = #{id} ) </if>        <if test="userId != null and !userId.equals('')  ">  and (PR.f_user_id = #{userId} ) </if>        <if test="tPayBillFId != null and !tPayBillFId.equals('')  ">  and (PR.t_pay_bill_f_id = #{tPayBillFId} ) </if>        <if test="payDate != null and !payDate.equals('')  ">  and (PR.f_pay_date = str_to_date(#{payDate},'%Y-%m-%d %T') ) </if>        <if test="payDate_START != null and !payDate_START.equals('')  ">              <![CDATA[ and (PR.f_pay_date >= str_to_date(#{payDate_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="payDate_END != null and !payDate_END.equals('')  ">            <![CDATA[ and (PR.f_pay_date <= str_to_date(#{payDate_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="amount != null and !amount.equals('')  ">  and (PR.f_amount = #{amount} ) </if>        <if test="discount != null and !discount.equals('')  ">  and (PR.f_discount = #{discount} ) </if>        <if test="realAmount != null and !realAmount.equals('')  ">  and (PR.f_real_amount = #{realAmount} ) </if>        <if test="payType != null and !payType.equals('')  ">  and (PR.f_pay_type = #{payType} ) </if>        <if test="payResult != null and !payResult.equals('')  ">  and (PR.f_pay_result = #{payResult} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (PR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="payRecordBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="payRecordBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="payRecordBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="payRecordBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_pay_record PR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(物业缴费记录)信息。 -->
+	<sql id="select_payRecord">
+		SELECT <include refid="payRecordBase.queryHead"/>
+		<include refid="payRecordBase.busiQueryCondition"/>
+		<include refid="payRecordBase.dimCheckSql"/>
+		ORDER BY PR.f_id DESC
+	</sql>
+	<select id="select_payRecord" parameterType="java.util.Map" resultMap="payRecordBase.payRecordExtendMap">
+		<include refid="payRecordBase.select_payRecord"/>
+	</select>
+	
+	<!-- 根据条件分页查询(物业缴费记录)信息  -->
+	<sql id="select_payRecord_withPage">
+		SELECT <include refid="payRecordBase.queryHead"/>
+		<include refid="payRecordBase.busiQueryCondition"/>
+		<include refid="payRecordBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_payRecord_withPage" resultMap="payRecordBase.payRecordExtendMap" parameterType="java.util.Map">
+		<include refid="payRecordBase.select_payRecord_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(物业缴费记录)信息。 -->
+	<sql id="select_payRecord_bySeqId">
+		SELECT <include refid="payRecordBase.queryHead"/>
+		<include refid="payRecordBase.busiQueryCondition"/>
+		 and PR.f_id = #{_parameter}
+	</sql>
+	<select id="select_payRecord_bySeqId" parameterType="java.math.BigInteger" resultMap="payRecordBase.payRecordBaseMap">
+		<include refid="payRecordBase.select_payRecord_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(物业缴费记录)记录数  -->
+	<sql id="select_payRecord_count">
+		SELECT COUNT(*)
+		<include refid="payRecordBase.busiQueryCount"/>
+		<include refid="payRecordBase.dimCheckSql"/>
+	</sql>
+	<select id="select_payRecord_count" resultType="java.lang.Integer">
+		<include refid="payRecordBase.select_payRecord_count"/>
+	</select>
+	
+	 <!-- 往(物业缴费记录)新增一条记录。 -->
+	 <sql id="insert_payRecord">
+		INSERT INTO t_pay_record 
+		(f_id,f_user_id,t_pay_bill_f_id,f_pay_date,f_amount,f_discount,f_real_amount,f_pay_type,f_pay_result,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{userId},#{tPayBillFId},str_to_date(#{payDate,jdbcType=DATE},'%Y-%m-%d %T'),#{amount},#{discount},#{realAmount},#{payType},#{payResult},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_payRecord" parameterType="PayRecord">
+		<include refid="payRecordBase.insert_payRecord"/>
+    </insert>
+    
+	<!-- 批量新增(物业缴费记录)信息 -->
+    <insert id="insert_payRecord_Batch" parameterType="java.util.List">
+    	INSERT INTO t_pay_record 
+		(f_id,f_user_id,t_pay_bill_f_id,f_pay_date,f_amount,f_discount,f_real_amount,f_pay_type,f_pay_result,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.userId},#{item.tPayBillFId},str_to_date(#{item.payDate,jdbcType=DATE},'%Y-%m-%d %T'),#{item.amount},#{item.discount},#{item.realAmount},#{item.payType},#{item.payResult},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(物业缴费记录)信息。 -->
+    <sql id="update_payRecord">
+		UPDATE t_pay_record		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="tPayBillFId != null and !tPayBillFId.equals('') "> ,t_pay_bill_f_id=#{tPayBillFId}</if> 		<if test="payDate != null and !payDate.equals('') "> ,f_pay_date=str_to_date(#{payDate},'%Y-%m-%d %T')</if> 		<if test="amount != null and !amount.equals('') "> ,f_amount=#{amount}</if> 		<if test="discount != null and !discount.equals('') "> ,f_discount=#{discount}</if> 		<if test="realAmount != null and !realAmount.equals('') "> ,f_real_amount=#{realAmount}</if> 		<if test="payType != null and !payType.equals('') "> ,f_pay_type=#{payType}</if> 		<if test="payResult != null and !payResult.equals('') "> ,f_pay_result=#{payResult}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_payRecord" parameterType="PayRecord">
+		<include refid="payRecordBase.update_payRecord"/>
+    </update>
+    
+    <!-- 批量更新(物业缴费记录)信息。 -->
+    <update id="update_payRecord_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.tPayBillFId != null and !item.tPayBillFId.equals('')  "> ,t_pay_bill_f_id=#{item.tPayBillFId}</if> 		<if test="item.payDate != null and !item.payDate.equals('')  "> ,f_pay_date=str_to_date(#{item.payDate},'%Y-%m-%d %T')</if> 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if> 		<if test="item.discount != null and !item.discount.equals('')  "> ,f_discount=#{item.discount}</if> 		<if test="item.realAmount != null and !item.realAmount.equals('')  "> ,f_real_amount=#{item.realAmount}</if> 		<if test="item.payType != null and !item.payType.equals('')  "> ,f_pay_type=#{item.payType}</if> 		<if test="item.payResult != null and !item.payResult.equals('')  "> ,f_pay_result=#{item.payResult}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(物业缴费记录)信息_逻辑删除。 -->
+    <sql id="delete_payRecord_Logic">
+		UPDATE t_pay_record		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="tPayBillFId != null and !tPayBillFId.equals('')  "> ,t_pay_bill_f_id=#{tPayBillFId}</if> 		<if test="payDate != null and !payDate.equals('')  "> ,f_pay_date=str_to_date(#{payDate},'%Y-%m-%d %T')</if> 		<if test="amount != null and !amount.equals('')  "> ,f_amount=#{amount}</if> 		<if test="discount != null and !discount.equals('')  "> ,f_discount=#{discount}</if> 		<if test="realAmount != null and !realAmount.equals('')  "> ,f_real_amount=#{realAmount}</if> 		<if test="payType != null and !payType.equals('')  "> ,f_pay_type=#{payType}</if> 		<if test="payResult != null and !payResult.equals('')  "> ,f_pay_result=#{payResult}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_payRecord_Logic" parameterType="PayRecord">
+		<include refid="payRecordBase.delete_payRecord_Logic"/>
+    </update>
+    
+    <!-- 批量删除(物业缴费记录)信息_逻辑删除 -->
+    <update id="delete_payRecord_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.tPayBillFId != null and !item.tPayBillFId.equals('')  "> ,t_pay_bill_f_id=#{item.tPayBillFId}</if> 		<if test="item.payDate != null and !item.payDate.equals('')  "> ,f_pay_date=str_to_date(#{item.payDate},'%Y-%m-%d %T')</if> 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if> 		<if test="item.discount != null and !item.discount.equals('')  "> ,f_discount=#{item.discount}</if> 		<if test="item.realAmount != null and !item.realAmount.equals('')  "> ,f_real_amount=#{item.realAmount}</if> 		<if test="item.payType != null and !item.payType.equals('')  "> ,f_pay_type=#{item.payType}</if> 		<if test="item.payResult != null and !item.payResult.equals('')  "> ,f_pay_result=#{item.payResult}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(物业缴费记录)信息。 -->
+    <sql id="delete_payRecord">
+		DELETE FROM t_pay_record WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_payRecord" parameterType="java.lang.String">
+		<include refid="payRecordBase.delete_payRecord"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(物业缴费记录)信息。 -->
+    <delete id="delete_payRecord_Batch" parameterType="java.util.List">
+		DELETE FROM t_pay_record WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

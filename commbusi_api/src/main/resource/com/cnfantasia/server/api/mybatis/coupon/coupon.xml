@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="coupon">
+	<resultMap type="com.cnfantasia.server.api.coupon.entity.CouponDto" id="couponMap" extends="couponBase.couponBaseMap">
+		<result column="addMan" javaType="java.lang.String" property="addMan"/>
+		<result column="updateMan" javaType="java.lang.String" property="updateMan"/>
+	</resultMap>
+	
+	<select id="getCouponListByCondition" parameterType="java.util.Map" resultMap="couponMap">
+		SELECT <include refid="couponBase.queryHead"/>,
+		IF (
+			ou1.f_real_name IS NULL
+			OR ou1.f_real_name = '',
+			ou1.f_user_account,
+			ou1.f_real_name
+		) AS addMan,
+		IF (
+			ou2.f_real_name IS NULL
+			OR ou2.f_real_name = '',
+			ou2.f_user_account,
+			ou2.f_real_name
+		) AS updateMan
+		FROM t_coupon C
+		left join t_oms_user ou1 on ou1.f_id=C.f_sys0_add_user
+        left join t_oms_user ou2 on ou2.f_id=C.f_sys0_upd_user
+    	WHERE 1=1
+		<include refid="couponBase.querySql"/>
+		<if test="queryOrderByType != null and queryOrderByType == 1">
+			ORDER BY C.f_send_end_date
+		</if>
+		<if test="queryOrderByType != null and queryOrderByType == 2">
+			ORDER BY C.f_send_end_date DESC
+		</if>
+		<if test="queryOrderByType != null and queryOrderByType == 3">
+			ORDER BY f_send_left
+		</if>
+		<if test="queryOrderByType != null and queryOrderByType == 4">
+			ORDER BY f_send_left DESC
+		</if>
+		<if test="queryOrderByType != null and queryOrderByType == 5">
+			ORDER BY f_id DESC
+		</if>
+		<if test="begin != null and length != null">
+			LIMIT #{begin},#{length}
+		</if>
+
+	</select>
+
+	<update id="updateCouponStatusClosedBatch" parameterType="java.util.Map">
+		UPDATE t_coupon c SET c.f_status = 2, c.f_sys0_upd_time = sysdate() WHERE c.f_status = 1 and c.f_send_end_date &lt; date_add(now(), INTERVAL -1 day)
+		<if test="userId != null">AND  uc.t_user_f_id = #{userId}</if>
+	</update>
+
+	<select id="getCouponListCanSendToUser" parameterType="java.util.Map" resultMap="couponBase.couponBaseMap">
+		SELECT <include refid="couponBase.queryHead"/>
+		FROM t_coupon C
+		LEFT JOIN t_coupon_area ca ON C.f_id = ca.t_coupon_f_id
+		WHERE 1 = 1
+		<if test="couponType != null and couponType != ''">
+			AND C.f_coupon_type = #{couponType}
+		</if>
+		<if test="goalType != null and goalType != ''">
+			AND C.f_goal_type = #{goalType}
+		</if>
+		AND C.f_status = 1 AND C.f_send_start_date &lt; NOW() AND C.f_send_end_date > DATE_ADD(NOW(), INTERVAL -1 DAY) AND C.f_send_total > C.f_send_count
+		AND (
+			(C.f_send_area = 1)
+			OR EXISTS( SELECT 1 FROM t_user u, t_room r, t_real_room rr, t_building b WHERE u.f_id = #{userId} and r.f_id = u.f_default_room_id and C.f_send_area = 3 AND rr.f_id = r.t_real_room_f_id AND rr.t_building_f_id = b.f_id AND b.t_group_building_f_id = ca.f_area_id)
+			OR EXISTS( SELECT 1 FROM t_user u, t_room r, t_real_room rr, t_building b, t_group_building gb, t_address_block ab WHERE u.f_id = #{userId} and r.f_id = u.f_default_room_id and C.f_send_area = 2 AND rr.f_id = r.t_real_room_f_id AND rr.t_building_f_id = b.f_id AND b.t_group_building_f_id = gb.f_id AND gb.t_block_f_id = ab.f_id AND ab.t_city_f_id = ca.f_area_id)
+		)
+	</select>
+
+	<select id="qryCanCouponReceiveScene" resultType="long">
+		select distinct cp.t_coupon_scene cou
+		from t_coupon cp
+		LEFT JOIN t_coupon_area ca ON cp.f_id = ca.t_coupon_f_id
+		where cp.f_status = 1 and cp.t_coupon_scene is not null and cp.f_send_start_date &lt; now() and cp.f_send_end_date > date_sub(now(), interval 1 day)
+		AND cp.f_send_total > cp.f_send_count
+		and not exists (select 1 from t_user_coupon uc where uc.t_coupon_f_id = cp.f_id and uc.t_user_f_id = #{userId} and uc.f_sys0_del_state = 0)
+		AND (
+			(cp.f_send_area = 1) or (cp.f_send_area = 3 and ca.f_area_id = #{gbId}) or (cp.f_send_area = 2 and ca.f_area_id = #{cityId})
+			OR EXISTS( SELECT 1 FROM t_user u, t_room r, t_real_room rr, t_building b WHERE u.f_id = #{userId} and r.f_id = u.f_default_room_id and cp.f_send_area = 3 AND rr.f_id = r.t_real_room_f_id AND rr.t_building_f_id = b.f_id AND b.t_group_building_f_id = ca.f_area_id)
+		 	OR EXISTS( SELECT 1 FROM t_user u, t_room r, t_real_room rr, t_building b, t_group_building gb, t_address_block ab WHERE u.f_id = #{userId} and r.f_id = u.f_default_room_id and cp.f_send_area = 2 AND rr.f_id = r.t_real_room_f_id AND rr.t_building_f_id = b.f_id AND b.t_group_building_f_id = gb.f_id AND gb.t_block_f_id = ab.f_id AND ab.t_city_f_id = ca.f_area_id)
+		)
+	</select>
+
+	<select id="getCouponSceneReceiveThing" resultType="map">
+		select distinct cs.f_id couponSceneId,
+			(select count(1) from t_user_coupon uc, t_coupon c where t_user_f_id = #{_parameter} and uc.t_coupon_f_id = c.f_id and uc.f_sys0_del_state = 0 and c.t_coupon_scene = cs.f_id) > 0 hasReceive
+		from t_coupon_scene cs
+		where cs.f_sys0_del_state = 0
+		order by cs.f_id
+	</select>
+
+	<resultMap id="couponLocalMap" type="com.cnfantasia.server.domainbase.coupon.entity.Coupon">
+		<id property="id" column="couponId" javaType="java.math.BigInteger"/>
+		<result property="couponName" column="couponName" javaType="java.lang.String"/>
+		<result property="useEndDate" column="useEndDate" javaType="java.lang.String"/>
+		<result property="linkUrl" column="linkUrl" javaType="java.lang.String"/>
+		<result property="discountMoney" column="discountMoney" javaType="java.lang.Integer"/>
+		<result property="leastSpendUse" column="leastSpendUse" javaType="java.lang.Integer"/>
+		<result property="useType" column="useType" javaType="java.lang.Integer"/>
+		<result property="sendCount" column="sendCount" javaType="java.lang.Integer"/>
+		<result property="useEndDateType" column="useEndDateType" javaType="java.lang.Integer"/>
+		<result property="useDateNumber" column="useDateNumber" javaType="java.lang.Integer"/>
+		<result property="goalType" column="goalType" javaType="java.lang.Integer"/>
+	</resultMap>
+	<select id="getCanReceiveCouponBySceneId" parameterType="map" resultMap="couponLocalMap">
+		select cp.f_id couponId, cp.f_coupon_name couponName, date_format(cp.f_use_end_date,'%Y-%m-%d') useEndDate, cp.f_discount_money discountMoney,
+		 cp.f_least_spend_use leastSpendUse, cp.f_link_url linkUrl, cp.f_use_type useType, cp.f_send_count sendCount,
+		 cp.f_use_end_date_type useEndDateType, cp.f_use_date_number useDateNumber, cp.f_goal_type goalType
+		from t_coupon cp
+		LEFT JOIN t_coupon_area ca ON cp.f_id = ca.t_coupon_f_id
+		where cp.f_status = 1 and cp.t_coupon_scene is not null and cp.f_send_start_date &lt; now() and cp.f_send_end_date > date_sub(now(), interval 1 day)
+		AND cp.f_send_total > cp.f_send_count
+		and not exists (select 1 from t_user_coupon uc where uc.t_coupon_f_id = cp.f_id and uc.t_user_f_id = #{userId} and uc.f_sys0_del_state = 0)
+		AND (
+			(cp.f_send_area = 1) or (cp.f_send_area = 3 and ca.f_area_id = #{gbId}) or (cp.f_send_area = 2 and ca.f_area_id = #{cityId})
+			OR EXISTS( SELECT 1 FROM t_user u, t_room r, t_real_room rr, t_building b WHERE u.f_id = #{userId} and r.f_id = u.f_default_room_id and cp.f_send_area = 3 AND rr.f_id = r.t_real_room_f_id AND rr.t_building_f_id = b.f_id AND b.t_group_building_f_id = ca.f_area_id)
+		 	OR EXISTS( SELECT 1 FROM t_user u, t_room r, t_real_room rr, t_building b, t_group_building gb, t_address_block ab WHERE u.f_id = #{userId} and r.f_id = u.f_default_room_id and cp.f_send_area = 2 AND rr.f_id = r.t_real_room_f_id AND rr.t_building_f_id = b.f_id AND b.t_group_building_f_id = gb.f_id AND gb.t_block_f_id = ab.f_id AND ab.t_city_f_id = ca.f_area_id)
+		)
+		and cp.t_coupon_scene = #{sceneId}
+		order by cp.f_id desc
+	</select>
+	
+	<select id="getCouponProductList" parameterType="java.math.BigInteger" resultType="java.util.Map">
+        SELECT
+			ps.f_id shelfId,
+			p.f_id productId,
+			p.f_name productName,
+			esm.f_id merchantId,
+			esm.f_name merchantName,
+			dp.f_id dpId,
+			concat(
+				'【',
+				ss.f_name,
+				'】',
+				dp.f_name
+			) dpName,
+			ss.f_name ssName
+		FROM
+			t_coupon_product cp
+		LEFT JOIN t_ebuy_product_shelf ps ON cp.f_shelf_id = ps.f_id
+		AND ps.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_product p ON ps.t_ebuy_product_id = p.f_id
+		AND p.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_supply_merchant esm ON p.t_supply_merchant_f_id = esm.f_id
+		AND esm.f_sys0_del_state = 0
+		LEFT JOIN t_dredge_product dp ON dp.f_id = cp.f_dredge_product_id
+		LEFT JOIN t_service_supplier ss ON ss.f_id = dp.f_service_supplier_id
+		WHERE
+			cp.f_coupon_id = #{couponId}
+		AND cp.f_sys0_del_state = 0
+    </select>
+
+	<update id="delCouponProductsByCouponId" parameterType="java.math.BigInteger">
+		UPDATE t_coupon_product
+		SET f_sys0_del_state = 1,
+		 f_sys0_del_time = now()
+		WHERE
+			f_coupon_id = #{couponId}
+	</update>
+	
+	<resultMap type="com.cnfantasia.server.api.coupon.entity.CarCoupon" id="carCouponMap" extends="couponBase.couponBaseMap">
+		<id property="ucId" column="ucId"/>
+	</resultMap>
+	
+	<sql id="selectCarCouponComm">
+		FROM
+			t_user_coupon UC
+		INNER JOIN t_coupon C ON C.f_id = UC.t_coupon_f_id
+		WHERE
+			UC.t_user_f_id = #{userId}
+			AND C.f_use_type in (4, 41)
+			AND UC.f_sys0_del_state = 0
+	</sql>
+	
+	<select id="selectCarCouponByUserId" parameterType="java.math.BigInteger" resultMap="carCouponMap">
+		SELECT
+			UC.f_id ucId,
+			<include refid="couponBase.queryHead"/>
+		<include refid="selectCarCouponComm"></include>
+		ORDER BY UC.f_id DESC LIMIT 1
+	</select>
+	
+	<!-- 根据用户id查询拥有的车禁券数量 -->
+	<select id="selectCarCouponCountWithUserId" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		<include refid="selectCarCouponComm"></include>
+	</select>
+	
+	<!-- 查询可用的停车券 -->
+	<select id="selectAvailableCarCoupon" resultMap="couponBase.couponBaseMap">
+		SELECT <include refid="couponBase.queryHead"/>
+		FROM t_coupon C
+    	WHERE 
+    		C.f_use_type in(4, 41) 
+    		AND C.f_coupon_type=1 
+    		AND C.f_status=1
+    		<![CDATA[
+    		AND DATEDIFF(C.f_send_start_date, NOW())<=0
+    		AND DATEDIFF(C.f_send_end_date, NOW())>=0
+    		AND DATEDIFF(C.f_use_end_date, NOW())>=0
+    		]]>
+    		<!-- AND C.f_use_start_date<NOW() -->
+    	ORDER BY C.f_id DESC 
+    	LIMIT 1
+	</select>
+
+	<!-- 查询可用的停车券（扫码送的） -->
+	<select id="selectAvailableCarCouponBystoreId" parameterType="java.math.BigInteger" resultMap="couponBase.couponBaseMap">
+		SELECT <include refid="couponBase.queryHead"/>
+		FROM t_coupon C
+		INNER JOIN t_ebuy_supply_merchant_has_coupon ESMHC ON ESMHC.t_coupon_id = C.f_id
+    	WHERE
+    		C.f_use_type=4
+    		AND C.f_status=1
+    		<![CDATA[
+    		AND DATEDIFF(C.f_send_start_date, NOW())<=0
+    		AND DATEDIFF(C.f_send_end_date, NOW())>=0
+    		AND DATEDIFF(C.f_use_end_date, NOW())>=0
+    		]]>
+			AND ESMHC.t_store_id = #{storeId}
+			AND ESMHC.f_sys0_del_state = 0
+			AND ESMHC.f_num > 0
+    	ORDER BY C.f_id DESC
+		LIMIT 1;
+	</select>
+	
+	<!-- 根据用户id查询可用的停车券 -->
+	<select id="selectAvailableCarCouponByUserId" parameterType="java.math.BigInteger" resultMap="carCouponMap">
+		SELECT
+			UC.f_id ucId,
+			<include refid="couponBase.queryHead"/>
+		<include refid="selectCarCouponComm"></include>
+		AND UC.f_status=1
+		<![CDATA[AND IF(UC.f_use_start_date IS NOT NULL, DATEDIFF(UC.f_use_start_date, NOW())<=0, TRUE)]]>
+		AND DATEDIFF(UC.f_use_end_date, NOW())>=0
+		ORDER BY UC.f_id DESC LIMIT 1
+	</select>
+	
+	<select id="getCityIdByGb" resultType="java.math.BigInteger" parameterType="map">
+		select ac.f_id
+		from t_group_building gb
+		inner join t_address_block ab on ab.f_id = gb.t_block_f_id
+		inner join t_address_city ac on ac.f_id = ab.t_city_f_id
+		where gb.f_id = #{_parameter}
+	</select>
+
+	<update id="updateCouponNumsByStore" parameterType="java.util.Map">
+		UPDATE t_ebuy_supply_merchant_has_coupon
+		SET f_num = f_num - 1
+		WHERE
+			f_num > 0
+		AND t_coupon_id = #{cId}
+		AND t_store_id = #{storeId}
+		AND f_sys0_del_state = 0;
+	</update>
+
+	<select id="getShareOrderCouponCanSend" resultMap="couponLocalMap" parameterType="map">
+		select cp.f_id couponId, cp.f_coupon_name couponName, date_format(cp.f_use_end_date,'%Y-%m-%d') useEndDate, cp.f_discount_money discountMoney,
+		cp.f_least_spend_use leastSpendUse, cp.f_link_url linkUrl, cp.f_use_type useType, cp.f_send_count sendCount,
+		cp.f_use_end_date_type useEndDateType, cp.f_use_date_number useDateNumber, cp.f_goal_type goalType
+		from t_coupon cp
+		LEFT JOIN t_ebuy_supply_merchant sm on sm.f_id = cp.f_supply_merchant_id and sm.f_sys0_del_state = 0
+		where cp.f_status = 1 and cp.f_send_start_date &lt; now() and cp.f_send_end_date > date_sub(now(), interval 1 day)
+		AND cp.f_send_total > cp.f_send_count and cp.f_goal_type = 67
+		and not exists (select 1 from t_user_coupon uc where uc.t_coupon_f_id = cp.f_id and uc.t_ebuy_order_f_id = #{orderId} and uc.f_get_type = 2 and uc.f_sys0_del_state = 0)
+		and cp.f_least_spend_send &lt;= #{amount}
+		<if test="useCoupon">
+			and cp.f_use_discount_send = 'Y'
+		</if>
+		order by cp.f_id desc
+	</select>
+</mapper>

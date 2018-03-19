@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:换一换图片表 t_community_exchange_pic -->
+<mapper namespace="communityExchangePicBase">
+	<resultMap type="CommunityExchangePic" id="communityExchangePicBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_community_exchange_content_f_id" javaType="java.math.BigInteger" property="tCommunityExchangeContentFId"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="f_pic_url" javaType="java.lang.String" property="picUrl"/>  <!-- 图片地址url -->        <result column="f_uploader" javaType="java.math.BigInteger" property="uploader"/>  <!-- 上传者 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommunityExchangePic" id="communityExchangePicExtendMap" extends="communityExchangePicBaseMap">
+	</resultMap>
+	<resultMap type="CommunityExchangePic" id="communityExchangePicBaseMap_AppendTable">
+        <id column="CEPid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CEPtCommunityExchangeContentFId" javaType="java.math.BigInteger" property="tCommunityExchangeContentFId"/>  <!--  -->        <result column="CEPname" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="CEPdesc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="CEPpicUrl" javaType="java.lang.String" property="picUrl"/>  <!-- 图片地址url -->        <result column="CEPuploader" javaType="java.math.BigInteger" property="uploader"/>  <!-- 上传者 -->        <result column="CEPsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CEPsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CEPsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CEPsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CEPsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CEPsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CEPsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommunityExchangePic" id="communityExchangePicBaseMap_AppendTable1">
+        <id column="CEP1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CEP1tCommunityExchangeContentFId" javaType="java.math.BigInteger" property="tCommunityExchangeContentFId"/>  <!--  -->        <result column="CEP1name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="CEP1desc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="CEP1picUrl" javaType="java.lang.String" property="picUrl"/>  <!-- 图片地址url -->        <result column="CEP1uploader" javaType="java.math.BigInteger" property="uploader"/>  <!-- 上传者 -->        <result column="CEP1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CEP1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CEP1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CEP1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CEP1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CEP1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CEP1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CEP.f_id,CEP.t_community_exchange_content_f_id,CEP.f_name,CEP.f_desc,CEP.f_pic_url,CEP.f_uploader,date_format(CEP.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CEP.f_id as CEPid,CEP.t_community_exchange_content_f_id as CEPtCommunityExchangeContentFId,CEP.f_name as CEPname,CEP.f_desc as CEPdesc,CEP.f_pic_url as CEPpicUrl,CEP.f_uploader as CEPuploader,date_format(CEP.f_sys0_upd_time,'%Y-%m-%d %T') as CEPsys0UpdTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CEP1.f_id as CEP1id,CEP1.t_community_exchange_content_f_id as CEP1tCommunityExchangeContentFId,CEP1.f_name as CEP1name,CEP1.f_desc as CEP1desc,CEP1.f_pic_url as CEP1picUrl,CEP1.f_uploader as CEP1uploader,date_format(CEP1.f_sys0_upd_time,'%Y-%m-%d %T') as CEP1sys0UpdTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CEP.f_id = #{id} ) </if>        <if test="tCommunityExchangeContentFId != null">  and (CEP.t_community_exchange_content_f_id = #{tCommunityExchangeContentFId} ) </if>        <if test="name != null">  and (CEP.f_name = #{name} ) </if>        <if test="desc != null">  and (CEP.f_desc = #{desc} ) </if>        <if test="picUrl != null">  and (CEP.f_pic_url = #{picUrl} ) </if>        <if test="uploader != null">  and (CEP.f_uploader = #{uploader} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CEP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CEP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CEP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CEP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CEP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CEP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CEP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CEP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CEP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (CEP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (CEP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (CEP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (CEP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (CEP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CEP.f_id = #{id} ) </if>        <if test="tCommunityExchangeContentFId != null and !tCommunityExchangeContentFId.equals('')  ">  and (CEP.t_community_exchange_content_f_id = #{tCommunityExchangeContentFId} ) </if>        <if test="name != null and !name.equals('')  ">  and (CEP.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="desc != null and !desc.equals('')  ">  and (CEP.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="picUrl != null and !picUrl.equals('')  ">  and (CEP.f_pic_url like CONCAT('%',#{picUrl},'%') ) </if>        <if test="uploader != null and !uploader.equals('')  ">  and (CEP.f_uploader = #{uploader} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CEP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CEP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CEP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CEP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CEP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CEP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CEP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CEP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CEP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CEP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CEP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CEP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CEP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (CEP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="communityExchangePicBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="communityExchangePicBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="communityExchangePicBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="communityExchangePicBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_community_exchange_pic CEP    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(换一换图片表)信息。 -->
+	<sql id="select_communityExchangePic">
+		SELECT <include refid="communityExchangePicBase.queryHead"/>
+		<include refid="communityExchangePicBase.busiQueryCondition"/>
+		<include refid="communityExchangePicBase.dimCheckSql"/>
+		ORDER BY CEP.f_id DESC
+	</sql>
+	<select id="select_communityExchangePic" parameterType="java.util.Map" resultMap="communityExchangePicBase.communityExchangePicExtendMap">
+		<include refid="communityExchangePicBase.select_communityExchangePic"/>
+	</select>
+	
+	<!-- 根据条件分页查询(换一换图片表)信息  -->
+	<sql id="select_communityExchangePic_withPage">
+		SELECT <include refid="communityExchangePicBase.queryHead"/>
+		<include refid="communityExchangePicBase.busiQueryCondition"/>
+		<include refid="communityExchangePicBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_communityExchangePic_withPage" resultMap="communityExchangePicBase.communityExchangePicExtendMap" parameterType="java.util.Map">
+		<include refid="communityExchangePicBase.select_communityExchangePic_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(换一换图片表)信息。 -->
+	<sql id="select_communityExchangePic_bySeqId">
+		SELECT <include refid="communityExchangePicBase.queryHead"/>
+		<include refid="communityExchangePicBase.busiQueryCondition"/>
+		 and CEP.f_id = #{_parameter}
+	</sql>
+	<select id="select_communityExchangePic_bySeqId" parameterType="java.math.BigInteger" resultMap="communityExchangePicBase.communityExchangePicBaseMap">
+		<include refid="communityExchangePicBase.select_communityExchangePic_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(换一换图片表)记录数  -->
+	<sql id="select_communityExchangePic_count">
+		SELECT COUNT(*)
+		<include refid="communityExchangePicBase.busiQueryCount"/>
+		<include refid="communityExchangePicBase.dimCheckSql"/>
+	</sql>
+	<select id="select_communityExchangePic_count" resultType="java.lang.Integer">
+		<include refid="communityExchangePicBase.select_communityExchangePic_count"/>
+	</select>
+	
+	 <!-- 往(换一换图片表)新增一条记录。 -->
+	 <sql id="insert_communityExchangePic">
+		INSERT INTO t_community_exchange_pic 
+		(f_id,t_community_exchange_content_f_id,f_name,f_desc,f_pic_url,f_uploader,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tCommunityExchangeContentFId},#{name,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR},#{picUrl,jdbcType=VARCHAR},#{uploader},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_communityExchangePic" parameterType="CommunityExchangePic">
+		<include refid="communityExchangePicBase.insert_communityExchangePic"/>
+    </insert>
+    
+	<!-- 批量新增(换一换图片表)信息 -->
+    <insert id="insert_communityExchangePic_Batch" parameterType="java.util.List">
+    	INSERT INTO t_community_exchange_pic 
+		(f_id,t_community_exchange_content_f_id,f_name,f_desc,f_pic_url,f_uploader,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tCommunityExchangeContentFId},#{item.name,jdbcType=VARCHAR},#{item.desc,jdbcType=VARCHAR},#{item.picUrl,jdbcType=VARCHAR},#{item.uploader},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(换一换图片表)信息。 -->
+    <sql id="update_communityExchangePic">
+		UPDATE t_community_exchange_pic		<trim prefix="SET" prefixOverrides=","> 		<if test="tCommunityExchangeContentFId != null and !tCommunityExchangeContentFId.equals('') "> ,t_community_exchange_content_f_id=#{tCommunityExchangeContentFId}</if> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="picUrl != null and !picUrl.equals('') "> ,f_pic_url=#{picUrl}</if> 		<if test="uploader != null and !uploader.equals('') "> ,f_uploader=#{uploader}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_communityExchangePic" parameterType="CommunityExchangePic">
+		<include refid="communityExchangePicBase.update_communityExchangePic"/>
+    </update>
+    
+    <!-- 批量更新(换一换图片表)信息。 -->
+    <update id="update_communityExchangePic_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_community_exchange_pic		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tCommunityExchangeContentFId != null and !item.tCommunityExchangeContentFId.equals('')  "> ,t_community_exchange_content_f_id=#{item.tCommunityExchangeContentFId}</if> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.picUrl != null and !item.picUrl.equals('')  "> ,f_pic_url=#{item.picUrl}</if> 		<if test="item.uploader != null and !item.uploader.equals('')  "> ,f_uploader=#{item.uploader}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(换一换图片表)信息_逻辑删除。 -->
+    <sql id="delete_communityExchangePic_Logic">
+		UPDATE t_community_exchange_pic		<trim prefix="SET" prefixOverrides=","> 		<if test="tCommunityExchangeContentFId != null and !tCommunityExchangeContentFId.equals('')  "> ,t_community_exchange_content_f_id=#{tCommunityExchangeContentFId}</if> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="picUrl != null and !picUrl.equals('')  "> ,f_pic_url=#{picUrl}</if> 		<if test="uploader != null and !uploader.equals('')  "> ,f_uploader=#{uploader}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_communityExchangePic_Logic" parameterType="CommunityExchangePic">
+		<include refid="communityExchangePicBase.delete_communityExchangePic_Logic"/>
+    </update>
+    
+    <!-- 批量删除(换一换图片表)信息_逻辑删除 -->
+    <update id="delete_communityExchangePic_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_community_exchange_pic		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tCommunityExchangeContentFId != null and !item.tCommunityExchangeContentFId.equals('')  "> ,t_community_exchange_content_f_id=#{item.tCommunityExchangeContentFId}</if> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.picUrl != null and !item.picUrl.equals('')  "> ,f_pic_url=#{item.picUrl}</if> 		<if test="item.uploader != null and !item.uploader.equals('')  "> ,f_uploader=#{item.uploader}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(换一换图片表)信息。 -->
+    <sql id="delete_communityExchangePic">
+		DELETE FROM t_community_exchange_pic WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_communityExchangePic" parameterType="java.lang.String">
+		<include refid="communityExchangePicBase.delete_communityExchangePic"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(换一换图片表)信息。 -->
+    <delete id="delete_communityExchangePic_Batch" parameterType="java.util.List">
+		DELETE FROM t_community_exchange_pic WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

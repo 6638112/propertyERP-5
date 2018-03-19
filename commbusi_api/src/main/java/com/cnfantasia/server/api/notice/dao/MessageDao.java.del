@@ -1,0 +1,25 @@
+package com.cnfantasia.server.api.notice.dao;
+
+import java.math.BigInteger;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.cnfantasia.server.api.pub.dao.AbstractBaseDao;
+import com.cnfantasia.server.apibase.messageGroup.entity.MessageGroup;
+/**
+ * 描述:(消息表) 具体业务Dao层实现
+ * 
+ * @version 1.00
+ * @author null
+ * 
+ */
+@Repository
+public class MessageDao extends AbstractBaseDao implements IMessageDao{
+
+	@Override
+	public List<MessageGroup> selectGroupBuildingByMsgid(BigInteger msgId) {
+		return sqlSession.selectList("message.select_groupBuilding_by_msgId", msgId);
+	}
+	
+}

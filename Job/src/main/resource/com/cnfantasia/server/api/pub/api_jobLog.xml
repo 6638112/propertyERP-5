@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+	<bean id="taskLogManager" class="com.cnfantasia.server.log.JobLogManager" destroy-method="destroy">
+		<property name="taskLoggerBaseService" ref="taskLoggerBaseService"/>
+	</bean>
+
+	<bean id="taskLog" class="com.cnfantasia.server.log.JobLog">
+		<property name="taskLogManager" ref="taskLogManager"/>
+	</bean>
+
+	<aop:config>
+		<aop:aspect id="taskLogAspect" ref="taskLog">
+			<aop:pointcut id="taskLogCut" expression="execution(* com.cnfantasia.server..*Task(..))"/>
+			<aop:around method="timeAround" pointcut-ref="taskLogCut"/>
+		</aop:aspect>
+	</aop:config>
+
+</beans>  

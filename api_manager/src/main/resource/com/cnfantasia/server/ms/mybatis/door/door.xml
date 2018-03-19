@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 门牌验证缴费情况查询表 -->
+<mapper namespace="roomVerifyPayment">
+	<cache
+		eviction="LRU"
+		flushInterval="300000"
+		size="10240"
+		readOnly="true"/>
+		
+	<resultMap type="com.cnfantasia.server.ms.door.entity.DoorVerifyAndPaymentDto" id="doorVerifyAndPaymentList_AppendTable" extends="roomVerifyPaymentBase.roomVerifyPaymentBaseMap">
+        <result column="verifyState" javaType="java.lang.Integer" property="verifyState"/>
+        <result column="verifyTime" javaType="java.lang.String" property="verifyTime"/>
+        <result column="pcName" javaType="java.lang.String" property="pcName"/>
+        <result column="cpCompanyName" javaType="java.lang.String" property="cpCompanyName"/>
+    </resultMap>
+    
+    <!-- 门牌验证缴费情况head -->
+    <sql id="roomVerifyPaymentIndex_head">
+   		RVP.f_province,
+		RVP.f_city,
+		PC.f_name AS pcName,
+		CP.f_company_name AS cpCompanyName,
+		RVP.f_gb_name,
+		RVP.f_building_name,
+		RVP.f_unit,
+		RVP.f_room_num,
+		RVP.f_register_state,
+		RVP.f_pay_state,
+		DATE_FORMAT(
+			RVP.f_pay_time,
+			'%Y-%m-%d %H:%i:%s'
+		) AS f_pay_time,
+		(
+			CASE
+			WHEN RR.f_validate_status = 5 THEN
+				1
+			ELSE
+				0
+			END
+		) AS verifyState,
+		DATE_FORMAT(
+			RR.f_validate_time,
+			'%Y-%m-%d %H:%i:%s'
+		) AS verifyTime
+    </sql>
+    
+    <!--门牌验证缴费情况查询from -->
+	<sql id="roomVerifyPaymentIndex_QueryFrom">
+	    FROM
+			t_room_verify_payment RVP
+		INNER JOIN t_real_room RR ON RVP.t_real_room_id = RR.f_id
+		LEFT JOIN t_group_building GB ON RVP.t_group_building_id = GB.f_id
+		LEFT JOIN t_property_company PC ON GB.t_property_company_f_id = PC.f_id
+		LEFT JOIN t_channel_partner_recommend CPR ON CPR.f_pc_name = PC.f_name
+		LEFT JOIN t_channel_partner CP ON CPR.t_channel_partner_f_id = CP.f_id
+	</sql>
+	
+	<sql id="roomVerifyPaymentIndex_checkSql">
+		WHERE 
+			RR.f_sys0_del_state = 0
+			<include refid="permi.dataPermissionCondition" />
+			<if test="pcIds != null and pcIds.size()>0">
+				AND PC.f_id IN
+				<foreach item="item" collection="pcIds" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+			<if test="cpIds != null and cpIds.size()>0">
+				AND CP.f_id IN
+				<foreach item="item" collection="cpIds" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+			<if test="province != null and !province.equals('')">
+			AND locate(#{province}, RVP.f_province) > 0
+			</if>
+			<if test="city != null and !city.equals('')">
+			AND locate(#{city}, RVP.f_city) > 0
+			</if>
+			<if test="pcName != null and !pcName.equals('')">
+			AND locate(#{pcName}, PC.f_name) > 0
+			</if>
+			<if test="cpCompanyName != null and !cpCompanyName.equals('')">
+			AND locate(#{cpCompanyName}, CP.f_company_name) > 0
+			</if>
+			<if test="gbName != null and !gbName.equals('')">
+			AND locate(#{gbName}, RVP.f_gb_name) > 0
+			</if>
+			<if test="buildingName != null and !buildingName.equals('')">
+			AND locate(#{buildingName}, RVP.f_building_name) > 0
+			</if>
+			<if test="unit != null and !unit.equals('')">
+			AND locate(#{unit}, RVP.f_unit) > 0
+			</if>
+			<if test="roomNum != null and !roomNum.equals('')">
+			AND locate(#{roomNum}, RVP.f_room_num) > 0
+			</if>
+			<if test="registerState != null and !registerState.equals('')">
+			AND RVP.f_register_state =#{registerState}
+			</if>
+			<if test="payState != null and !payState.equals('')">
+			AND RVP.f_pay_state =#{payState}
+			</if>
+			<if test="verifyState != null and verifyState=='1'.toString()">
+			AND RR.f_validate_status =5
+			</if>  
+			<if test="verifyState != null and verifyState=='0'.toString()">
+			AND (RR.f_validate_status =1 OR RR.f_validate_status IS NULL)
+			</if>  
+			<if test="payStartTime != null and !payStartTime.equals('')">
+			AND RVP.f_pay_time >=#{payStartTime}
+			</if>
+			<if test="payEndTime != null and !payEndTime.equals('')">
+			AND RVP.f_pay_time <![CDATA[<=]]>#{payEndTime}
+			</if>
+			<if test="verifyStartTime != null and !verifyStartTime.equals('')">
+			AND RR.f_validate_time >=#{verifyStartTime}
+			</if>
+			<if test="verifyEndTime != null and !verifyEndTime.equals('')">
+			AND RR.f_validate_time <![CDATA[<=]]>#{verifyEndTime}
+			</if>
+	</sql>
+	
+	<!-- 门牌验证缴费情况列表 -->
+	<select id="select_doorVerifyAndPayment_withPage" parameterType="java.util.Map" resultMap="roomVerifyPayment.doorVerifyAndPaymentList_AppendTable">
+		SELECT
+		<include refid="roomVerifyPaymentIndex_head"/>
+		<include refid="roomVerifyPaymentIndex_QueryFrom"/>
+		<include refid="roomVerifyPaymentIndex_checkSql"/>
+		ORDER BY RVP.f_pay_time DESC
+		<if test="(_begin != null and !_begin.equals('')) or (_length != null and !_length.equals(''))">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+	
+	<!-- 门牌验证缴费情况列表数据条数 -->
+	<select id="select_doorVerifyAndPayment_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		<!-- FROM t_room_verify_payment RVP
+		INNER JOIN t_real_room RR ON RVP.t_real_room_id = RR.f_id
+		<choose>
+			<when test="(cpIds != null and cpIds.size()>0) or (cpCompanyName != null and !cpCompanyName.equals(''))">
+				LEFT JOIN t_group_building GB ON RVP.t_group_building_id = GB.f_id
+				LEFT JOIN t_property_company PC ON GB.t_property_company_f_id = PC.f_id
+				LEFT JOIN t_channel_partner_recommend CPR ON CPR.f_pc_name = PC.f_name
+				LEFT JOIN t_channel_partner CP ON CPR.t_channel_partner_f_id = CP.f_id
+			</when>
+			<when test="(pcIds != null and pcIds.size()>0) or (pcName != null and !pcName.equals(''))">
+				LEFT JOIN t_group_building GB ON RVP.t_group_building_id = GB.f_id
+				LEFT JOIN t_property_company PC ON GB.t_property_company_f_id = PC.f_id
+			</when>
+		</choose> -->
+		<include refid="roomVerifyPaymentIndex_QueryFrom"/>
+		<include refid="roomVerifyPaymentIndex_checkSql"/>
+	</select>
+</mapper>

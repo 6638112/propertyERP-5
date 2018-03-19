@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="roomVerifyPayment">
+	
+	<!-- 根据buildingId查询RoomVerifyPayment相关信息 -->
+	<select id="select_roomVerifyPayment" parameterType="java.math.BigInteger" resultMap="roomVerifyPaymentBase.roomVerifyPaymentBaseMap">
+		SELECT
+			AP.f_id AS t_address_province_id,
+			AP.f_name AS f_province,
+			AC.f_id AS t_address_city_id,
+			AC.f_name AS f_city,
+			GB.f_id AS t_group_building_id,
+			GB.f_name AS f_gb_name,
+			B.f_id AS t_building_id,
+			B.f_name AS f_building_name
+		FROM
+			t_building B
+		LEFT JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id
+		LEFT JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id
+		LEFT JOIN t_address_city AC ON AC.f_id = AB.t_city_f_id
+		LEFT JOIN t_address_province AP ON AP.f_id = AC.t_province_f_id
+		WHERE
+			B.f_id = #{buildingId}
+	</select>
+	
+	<!-- 查询暂时还从未缴费的门牌 -->
+	<select id="select_roomVerifyPayment_withNoPay" parameterType="java.util.Map" resultMap="roomVerifyPaymentBase.roomVerifyPaymentExtendMap">
+		SELECT <include refid="roomVerifyPaymentBase.queryHead"/>
+		<include refid="roomVerifyPaymentBase.busiQueryCondition"/>
+		AND RVP.t_real_room_id=#{realRoomId}
+		AND (RVP.f_pay_state IS NULL OR RVP.f_pay_state=0)
+	</select>
+    
+</mapper>

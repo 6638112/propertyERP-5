@@ -1,0 +1,389 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 运营广告管理 -->
+<mapper namespace="advertiseForOms">
+
+    <select id="getShelfProductForAdv" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT ps.f_id as shelfId, p.f_id as productId, p.f_name as productName, esm.f_name as merchantName from t_ebuy_product_shelf ps
+        INNER JOIN t_ebuy_product_type pt on ps.t_ebuy_product_type_id = pt.f_id and pt.f_sys0_del_state = 0 and ps.f_up_shelf_state = 0
+        INNER JOIN t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_sys0_del_state = 0
+        INNER JOIN t_ebuy_supply_merchant esm on p.t_supply_merchant_f_id = esm.f_id and esm.f_sys0_del_state = 0
+        WHERE ps.f_sys0_del_state = 0 and ps.f_up_shelf_state = 0
+        AND EXISTS (SELECT 1 FROM t_ebuy_supply_merchant_has_t_ebuy_delivery_method ESMHTEDM
+                      INNER JOIN t_ebuy_delivery_method EDM ON EDM.f_id = ESMHTEDM.t_ebuy_delivery_method_f_id AND EDM.f_sys0_del_state = 0
+                      WHERE ESMHTEDM.t_ebuy_supply_merchant_f_id = esm.f_id AND ESMHTEDM.f_sys0_del_state = 0)
+         <if test="appType != null and appType !=''">
+             and pt.f_wlApp_type = #{appType}
+         </if>
+        <if test="qryStr != null and qryStr != ''">
+            and (p.f_id = #{qryStr} or p.f_name like concat('%', #{qryStr}, '%'))
+        </if>
+        <if test="supplyMerchantId != null and supplyMerchantId != ''">
+            and esm.f_id = #{supplyMerchantId}
+        </if>
+        <if test="begin != null and length != null">
+            limit #{begin}, #{length}
+        </if>
+    </select>
+    <sql id="getThemeProductAdvListIfClause">
+        <if test="advName != null and advName != ''">
+            and ea.f_tittle like concat('%', #{advName}, '%')
+        </if>
+        <if test="advStatus != null and advStatus == '1'.toString()">
+            and ea.f_start_time > now()
+        </if>
+        <if test="advStatus != null and advStatus == '2'.toString()">
+            and ea.f_start_time &lt; now() and ea.f_end_time > now()
+        </if>
+        <if test="advStatus != null and advStatus == '3'.toString()">
+            and ea.f_end_time &lt; now()
+        </if>
+        <if test="advStartTime != null and advStartTime != ''">
+            and ea.f_start_time > #{advStartTime}
+        </if>
+        <if test="advEndTime != null and advEndTime != ''">
+            and ea.f_end_time &lt; #{advEndTime}
+        </if>
+        <if test="advCode != null and advCode != ''">
+            and ea.f_code = #{advCode}
+        </if>
+        <if test="advType != null and advType != ''">
+            and ea.f_type = #{advType}
+        </if>
+    </sql>
+
+    <select id="getThemeProductAdvList" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.advertise.entity.EbuyAdvertiseDto">
+        SELECT ea.f_id AS id, ea.f_code AS code, ea.f_type AS `type`, ea.f_tittle as tittle, ea.f_pic_name AS picName, date_format(ea.f_start_time,'%Y-%m-%d %T') AS startTime, date_format(ea.f_end_time,'%Y-%m-%d %T') AS endTime, ea.f_order AS `order`,
+          CASE WHEN now() &lt; ea.f_start_time THEN 1 WHEN ea.f_start_time &lt;= now() AND now() &lt; ea.f_end_time THEN 2 ELSE 3 END AS `status`,
+          IF (
+			ou1.f_real_name IS NULL
+			OR ou1.f_real_name = '',
+			ou1.f_user_account,
+			ou1.f_real_name
+		  ) AS addMan,
+		  IF (
+			ou2.f_real_name IS NULL
+			OR ou2.f_real_name = '',
+			ou2.f_user_account,
+			ou2.f_real_name
+		  ) AS updateMan
+        FROM t_ebuy_advertise  ea
+        left join t_oms_user ou1 on ou1.f_id=ea.f_sys0_add_user
+        left join t_oms_user ou2 on ou2.f_id=ea.f_sys0_upd_user
+        WHERE ea.f_sys0_del_state = 0 AND (ea.f_link_url like '%/themeProductAd.%?advId=%' or ea.f_link_url like '%themeAdv/productList.html?advId=%')
+        <include refid="getThemeProductAdvListIfClause"/>
+        ORDER BY ea.f_order DESC, ea.f_start_time DESC
+        <if test="begin != null and length != null">
+            limit #{begin}, #{length}
+        </if>
+    </select>
+
+    <select id="getThemeProductAdvListCount" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT COUNT(1) FROM t_ebuy_advertise ea WHERE ea.f_sys0_del_state = 0 AND (ea.f_link_url like '%/themeProductAd.%?advId=%' or ea.f_link_url like '%themeAdv/productList.html?advId=%')
+        <include refid="getThemeProductAdvListIfClause"/>
+    </select>
+
+    <select id="getAddressIds" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.operation.entity.AddressIdEntity">
+        select tac.f_id countryId, ap.f_id provinceId, ac.f_id cityId, ab.f_id blockId, gb.f_id gbId
+        FROM t_address_city ac
+        LEFT JOIN t_address_block ab ON ab.t_city_f_id = ac.f_id AND ab.f_sys0_del_state = 0
+        LEFT JOIN t_group_building gb on gb.t_block_f_id = ab.f_id and gb.f_sys0_del_state = 0
+        LEFT JOIN t_address_province ap ON ap.f_id = ac.t_province_f_id AND ap.f_sys0_del_state = 0
+        LEFT JOIN t_address_country tac ON tac.f_id = ap.t_address_country_f_id AND tac.f_sys0_del_state = 0
+        WHERE ac.f_sys0_del_state = 0
+        <if test="gbId != null and gbId != ''">
+            and gb.f_id = #{gbId}
+        </if>
+        <if test="blockId != null and blockId != ''">
+            and ab.f_id = #{blockId}
+        </if>
+        <if test="cityId != null and cityId != ''">
+            and ac.f_id = #{cityId}
+        </if>
+        <if test="provinceId != null and provinceId != ''">
+            and ap.f_id = #{provinceId}
+        </if>
+        <if test="countryId != null and countryId != ''">
+            and tac.f_id = #{countryId}
+        </if>
+        limit 1
+    </select>
+
+    <select id="getThemeProductAdvProductList" parameterType="java.math.BigInteger" resultType="java.util.Map">
+        select ps.f_id shelfId, p.f_id productId, p.f_name productName, esm.f_id merchantId,esm.f_name merchantName,
+          dp.f_id dpId, concat('【',ss.f_name, '】', dp.f_name) dpName, ss.f_name ssName
+        from t_ebuy_advertise ea
+        inner JOIN t_ebuy_advertise_has_promote_shelf_product hsp on hsp.t_ebuy_advertise_f_id = ea.f_id and hsp.f_sys0_del_state = 0
+        left join t_ebuy_product_shelf ps on hsp.t_ebuy_product_shelf_f_id = ps.f_id and ps.f_sys0_del_state = 0
+        left JOIN t_ebuy_product p on ps.t_ebuy_product_id = p.f_id and p.f_sys0_del_state = 0
+        left JOIN t_ebuy_supply_merchant esm on p.t_supply_merchant_f_id = esm.f_id and esm.f_sys0_del_state = 0
+        left join t_dredge_product dp on dp.f_id = hsp.t_dredge_product_f_id
+        left join t_service_supplier ss on ss.f_id = dp.f_service_supplier_id
+        where ea.f_sys0_del_state = 0 and ea.f_id = #{advId}
+    </select>
+
+    <select id="getAdvAreaByAdvId" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT sa.f_id id, ac.f_id cityId, ac.f_name cityName, gb.f_id gbId, gb.f_name gbName, gb.f_address_desc gbAddress, ab.f_id blockId, ab.f_name blockName
+        FROM t_operation_sa_has_eb_supply hes
+        LEFT JOIN t_operation_service_area sa on hes.f_sa_id = sa.f_id and sa.f_sys0_del_state = 0
+        LEFT JOIN t_address_block ab on sa.t_address_block_f_id = ab.f_id and ab.f_sys0_del_state = 0
+        LEFT JOIN t_address_city ac on sa.t_address_city_f_id = ac.f_id and ac.f_sys0_del_state = 0
+        LEFT JOIN t_group_building gb on sa.t_group_building_f_id = gb.f_id and gb.f_sys0_del_state = 0
+        WHERE hes.f_sys0_del_state = 0 and hes.f_type=#{advType} and hes.f_eb_supply_id = #{advId} 
+    </select>
+
+    <delete id="deletePromoteShelfProductsByAdvId" parameterType="java.math.BigInteger">
+        delete from t_ebuy_advertise_has_promote_shelf_product where t_ebuy_advertise_f_id = #{advId}
+    </delete>
+
+    <delete id="deleteSaEbSupplyByAdvId" parameterType="java.util.Map">
+        delete from t_operation_sa_has_eb_supply where f_eb_supply_id = #{advId} and f_type=#{advType}
+    </delete>
+    
+    <sql id="advList">
+    	-- 首页弹窗广告、到家广告
+		SELECT 
+			ea.f_id AS id, 
+			ea.f_code AS `code`, 
+			ea.f_type AS `type`, 
+			ea.f_tittle as tittle, 
+			ea.f_pic_name AS picName, 
+			date_format(ea.f_start_time,'%Y-%m-%d %T') AS startTime, 
+			date_format(ea.f_end_time,'%Y-%m-%d %T') AS endTime, 
+			ea.f_order AS `order`,
+			CASE WHEN now() <![CDATA[<]]> ea.f_start_time THEN 1 
+					 WHEN ea.f_start_time <![CDATA[<=]]> now() AND now() <![CDATA[<]]> ea.f_end_time THEN 2 
+					 ELSE 3 END AS `status`,
+			IF (
+					ou1.f_real_name IS NULL
+					OR ou1.f_real_name = '',
+					ou1.f_user_account,
+					ou1.f_real_name
+				) AS addMan,
+			IF (
+					ou2.f_real_name IS NULL
+					OR ou2.f_real_name = '',
+					ou2.f_user_account,
+					ou2.f_real_name
+				) AS updateMan,
+			IF(ea.f_code = 'MAIN_BUSINESS_AD', 1, IF(ea.f_code = 'DREDGE_ACTIVITY_AD', 5, IF(ea.f_code = 'WX_STORE_ORDER_PUSH_AD', 6, if(ea.f_code = 'CAR_FEE_AD',7,if(ea.f_code = 'EXPERIENCE_STORE_AD',8,3))))) AS advType
+		FROM
+			t_ebuy_advertise ea
+		LEFT JOIN t_oms_user ou1 ON ou1.f_id = ea.f_sys0_add_user
+		LEFT JOIN t_oms_user ou2 ON ou2.f_id = ea.f_sys0_upd_user
+		WHERE
+			ea.f_sys0_del_state = 0 
+		AND (
+		<if test="advType == null or advType == ''.toString()">
+			ea.f_code = 'MAIN_BUSINESS_AD' 
+			or ea.f_code = 'WX' or ea.f_code = 'LA_WX' or ea.f_code = 'DREDGE_ACTIVITY_AD'
+		</if>
+		<if test="advType == '1'.toString()">
+			ea.f_code = 'MAIN_BUSINESS_AD'
+		</if>
+		<if test="advType == '3'.toString()">
+			ea.f_code = 'WX' or ea.f_code = 'LA_WX'
+		</if>
+        <if test="advType == '5'.toString()">
+            ea.f_code = 'DREDGE_ACTIVITY_AD'
+        </if>
+        <if test="advType == '6'.toString()">
+            ea.f_code = 'WX_STORE_ORDER_PUSH_AD'
+        </if>
+        <if test="advType == '7'.toString()">
+            ea.f_code = 'CAR_FEE_AD'
+        </if>
+        <if test="advType == '8'.toString()">
+            ea.f_code = 'EXPERIENCE_STORE_AD'
+        </if>
+		<if test="advType != null and advType != ''.toString() and advType != '1'.toString() and advType != '3'.toString() and advType != '5'.toString() and advType != '6'.toString() and advType != '7'.toString() and advType != '8'.toString()">
+			false
+		</if>
+		)
+		AND ea.f_link_url NOT LIKE '%/themeProductAd.%?advId=%'
+		<if test="advName != null and advName != ''">
+            and ea.f_tittle like concat('%', #{advName}, '%')
+        </if>
+        <if test="advStatus != null and advStatus == '1'.toString()">
+            and ea.f_start_time > now()
+        </if>
+        <if test="advStatus != null and advStatus == '2'.toString()">
+            and ea.f_start_time <![CDATA[<=]]> now() and ea.f_end_time > now()
+        </if>
+        <if test="advStatus != null and advStatus == '3'.toString()">
+            and ea.f_end_time &lt; now()
+        </if>
+        <if test="advStartTime != null and advStartTime != ''">
+            and ea.f_start_time >= #{advStartTime}
+        </if>
+        <if test="advEndTime != null and advEndTime != ''">
+            and ea.f_end_time <![CDATA[<=]]> #{advEndTime}
+        </if>
+        <if test="advCode != null and advCode != ''">
+            and ea.f_code = #{advCode}
+        </if>
+        <if test="jumpType != null and jumpType != ''">
+            and ea.f_type = #{jumpType}
+        </if>
+		-- 首页拦腰广告
+		union
+		SELECT
+			ohst.f_id as id,
+			ohst.f_code as `code`,
+			ohst.f_data_type as `type`,
+			ohst.f_name as `title`,
+			ohst.f_icon_name as picName,
+			date_format(ohst.f_start_time,'%Y-%m-%d %T') as startTime,
+			date_format(ohst.f_end_time ,'%Y-%m-%d %T') as endTime,
+			ohst.f_order as `order`,
+			CASE WHEN now() <![CDATA[<]]> ohst.f_start_time THEN 1 
+					 WHEN ohst.f_start_time <![CDATA[<=]]> now() AND now() <![CDATA[<]]> ohst.f_end_time THEN 2 
+					 ELSE 3 END AS `status`,
+			IF (
+					ou1.f_real_name IS NULL
+					OR ou1.f_real_name = '',
+					ou1.f_user_account,
+					ou1.f_real_name
+				) AS addMan,
+			IF (
+					ou2.f_real_name IS NULL
+					OR ou2.f_real_name = '',
+					ou2.f_user_account,
+					ou2.f_real_name
+				) AS updateMan,
+			2 AS advType
+		from t_operation_home_supply_type ohst
+		LEFT JOIN t_oms_user ou1 ON ou1.f_id = ohst.f_sys0_add_user
+		LEFT JOIN t_oms_user ou2 ON ou2.f_id = ohst.f_sys0_upd_user
+		WHERE 1=1 AND ohst.f_sys0_del_state=0 AND ohst.f_parent_id=701
+		<if test="advType != null and advType != ''.toString() and advType != '2'.toString()">
+			AND false
+		</if>
+		<if test="advName != null and advName != ''">
+            and ohst.f_name like concat('%', #{advName}, '%')
+        </if>
+        <if test="advStatus != null and advStatus == '1'.toString()">
+            and ohst.f_start_time > now()
+        </if>
+        <if test="advStatus != null and advStatus == '2'.toString()">
+            and ohst.f_start_time <![CDATA[<=]]> now() and ohst.f_end_time > now()
+        </if>
+        <if test="advStatus != null and advStatus == '3'.toString()">
+            and ohst.f_end_time &lt; now()
+        </if>
+        <if test="advStartTime != null and advStartTime != ''">
+            and ohst.f_start_time >= #{advStartTime}
+        </if>
+        <if test="advEndTime != null and advEndTime != ''">
+            and ohst.f_end_time <![CDATA[<=]]> #{advEndTime}
+        </if>
+        <if test="advCode != null and advCode != ''">
+            and ohst.f_code = #{advCode}
+        </if>
+        <if test="jumpType == '1'.toString()">
+        	and ohst.f_data_type=2
+	    </if>
+	    <if test="jumpType == '2'.toString()">
+        	and ohst.f_data_type=3
+	    </if>
+	    <if test="jumpType == '4'.toString()">
+        	and ohst.f_data_type=1
+	    </if>
+		-- 街坊广告
+		union
+		SELECT 
+			ca.f_id as id,
+			null as `code`,
+			null as `type`,
+			ca.f_name as `title`,
+			ca.f_icon as picName,
+			date_format(ca.f_start_time,'%Y-%m-%d %T') as startTime,
+			date_format(ca.f_end_time ,'%Y-%m-%d %T') as endTime,
+			ca.f_order as `order`,
+			CASE WHEN now() <![CDATA[<]]> ca.f_start_time THEN 1 
+					 WHEN ca.f_start_time <![CDATA[<=]]> now() AND now() <![CDATA[<]]> ca.f_end_time THEN 2 
+					 ELSE 3 END AS `status`,
+			IF (
+					ou1.f_real_name IS NULL
+					OR ou1.f_real_name = '',
+					ou1.f_user_account,
+					ou1.f_real_name
+				) AS addMan,
+			IF (
+					ou2.f_real_name IS NULL
+					OR ou2.f_real_name = '',
+					ou2.f_user_account,
+					ou2.f_real_name
+				) AS updateMan,
+			4 AS advType
+		from t_community_ads ca
+		LEFT JOIN t_oms_user ou1 ON ou1.f_id = ca.f_sys0_add_user
+		LEFT JOIN t_oms_user ou2 ON ou2.f_id = ca.f_sys0_upd_user
+		WHERE 1=1 AND ca.f_sys0_del_state=0 
+		<if test="advType != null and advType != ''.toString() and advType != '4'.toString()">
+			AND false
+		</if>
+		<if test="advName != null and advName != ''">
+            and ca.f_name like concat('%', #{advName}, '%')
+        </if>
+        <if test="advStatus != null and advStatus == '1'.toString()">
+            and ca.f_start_time > now()
+        </if>
+        <if test="advStatus != null and advStatus == '2'.toString()">
+            and ca.f_start_time <![CDATA[<]]> now() and ca.f_end_time > now()
+        </if>
+        <if test="advStatus != null and advStatus == '3'.toString()">
+            and ca.f_end_time &lt; now()
+        </if>
+        <if test="advStartTime != null and advStartTime != ''">
+            and ca.f_start_time >= #{advStartTime}
+        </if>
+        <if test="advEndTime != null and advEndTime != ''">
+            and ca.f_end_time <![CDATA[<=]]> #{advEndTime}
+        </if>
+        <if test="jumpType != null and jumpType != ''"><!-- 街坊广告没有跳转类型 -->
+            and false
+        </if>
+    </sql>
+
+    <select id="getAlertAdvList" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.advertise.entity.EbuyAdvertiseDto">
+    	SELECT t.*
+		FROM (
+			<include refid="advList"/>
+		)as t
+		ORDER BY
+			t.order DESC,
+			t.startTime DESC
+		<if test="begin != null and length != null">
+            LIMIT #{begin}, #{length}
+        </if>
+    </select>
+
+    <select id="getAlertAdvListCount" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT
+			count(*)
+		FROM(
+        <include refid="advList"/>
+        )AS t
+    </select>
+
+	<select id="select_gbs" parameterType="java.util.Map" resultMap="groupBuilding.GroupBuildingSimpleEntity_Map_Append">
+    	SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>
+    		,AB.f_name AS t_address_block
+    		, ac.f_name as t_address_city
+    		, ap.f_name as t_address_province
+    		, pc.f_name as propertyCompanyName
+    		, ac.f_id as cityId
+    	FROM t_group_building GB
+    		INNER JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id AND AB.f_sys0_del_state = 0
+    		inner join t_address_city ac on ac.f_id = AB.t_city_f_id and ac.f_sys0_del_state = 0 
+    		inner join t_address_province ap on ap.f_id = ac.t_province_f_id and ap.f_sys0_del_state = 0 
+    		inner join t_property_company pc on pc.f_id = GB.t_property_company_f_id
+    		LEFT JOIN t_oms_user OM ON OM.f_id = pc.f_admin_id 
+   	 	WHERE 1=1
+   	 	AND GB.f_sys0_del_state = 0
+   	 	AND GB.f_check_status=1 
+   	 	AND GB.f_sign_status=1
+    </select>
+</mapper>

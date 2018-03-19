@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--         
+	<context:property-placeholder location="classpath:/com/cnfantasia/server/ms/pub/db-config.properties"  ignore-unresolvable="true" />
+	 -->
+	<!-- 
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close" p:driverClassName="${db.driverClassName}"
+		p:url="${db.url}" p:username="${db.username}" p:password="${db.password}"
+		p:validationQuery="select 1" />
+	-->
+		 
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+		destroy-method="close" p:driverClassName="${db.driverClassName}"
+		p:url="${db.url}" p:username="${db.username}" p:password="${db.password}"
+		p:validationQuery="select 1" 
+		p:testWhileIdle="true"
+		p:timeBetweenEvictionRunsMillis="300000"
+		p:numTestsPerEvictionRun="50"
+		p:minEvictableIdleTimeMillis="3600000"
+		p:initialSize="${db.dbcp.initialPoolSize}"
+		p:maxIdle="${db.dbcp.maxIdle}"
+		p:minIdle="${db.dbcp.minIdle}"
+		p:maxTotal="${db.dbcp.maxActive}"
+
+		p:removeAbandonedTimeout="${db.dbcp.removeAbandonedTimeout}"
+		p:maxWaitMillis="${db.dbcp.maxWait}"
+		p:testOnBorrow="${db.dbcp.testOnBorrow}">
+	</bean>
+	
+	<bean id="dataSourceLogger" class="org.apache.commons.dbcp2.BasicDataSource"
+		destroy-method="close" p:driverClassName="${db.logger.driverClassName}"
+		p:url="${db.logger.url}" p:username="${db.logger.username}" p:password="${db.logger.password}"
+		p:validationQuery="select 1" 
+		p:testWhileIdle="true"
+		p:timeBetweenEvictionRunsMillis="300000"
+		p:numTestsPerEvictionRun="50"
+		p:minEvictableIdleTimeMillis="3600000"
+		p:initialSize="${db.logger.dbcp.initialPoolSize}"
+		p:maxIdle="${db.logger.dbcp.maxIdle}"
+		p:minIdle="${db.logger.dbcp.minIdle}"
+		p:maxTotal="${db.logger.dbcp.maxActive}"
+
+		p:removeAbandonedTimeout="${db.logger.dbcp.removeAbandonedTimeout}"
+		p:maxWaitMillis="${db.logger.dbcp.maxWait}"
+		p:testOnBorrow="${db.logger.dbcp.testOnBorrow}">
+	</bean>
+	 	
+		
+		
+	<!-- <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass"><value>${db.driverClassName}</value></property>
+		<property name="jdbcUrl"><value>${db.url}</value></property>
+		<property name="user"><value>${db.username}</value></property>
+		<property name="password"><value>${db.password}</value></property>
+		
+		<property name="initialPoolSize"><value>${db.c3p0.initialPoolSize}</value></property>
+		<property name="minPoolSize"><value>${db.c3p0.minPoolSize}</value></property>
+		<property name="maxPoolSize"><value>${db.c3p0.maxPoolSize}</value></property>
+		
+		 Determines how many connections at a time c3p0 will try to acquire when the pool is exhausted
+		<property name="acquireIncrement"><value>${db.c3p0.acquireIncrement}</value></property>
+		
+		<property name="checkoutTimeout"><value>180000</value></property>		
+		<property name="maxStatements"><value>1000</value></property>
+		<property name="acquireRetryDelay"><value>1000</value></property>
+		<property name="acquireRetryAttempts"><value>25</value></property>
+		<property name="breakAfterAcquireFailure"><value>false</value></property>
+		<property name="automaticTestTable"><value>t_connect_table_for_c3p0</value></property>
+		<property name="idleConnectionTestPeriod"><value>15</value></property>		
+		<property name="testConnectionOnCheckin"><value>true</value></property>
+		<property name="testConnectionOnCheckout"><value>false</value></property>
+		
+		这个是c3p0后台工作线程数，默认是3
+		<property name="numHelperThreads"><value>${db.c3p0.numHelperThreads}</value></property>
+		<property name="maxAdministrativeTaskTime"><value>${db.c3p0.maxAdministrativeTaskTime}</value></property>
+		<property name="maxIdleTimeExcessConnections"><value>${db.c3p0.maxIdleTimeExcessConnections}</value></property>
+		<property name="maxIdleTime"><value>${db.c3p0.maxIdleTime}</value></property>
+		<property name="maxConnectionAge"><value>${db.c3p0.maxConnectionAge}</value></property>
+		<property name="unreturnedConnectionTimeout"><value>${db.c3p0.unreturnedConnectionTimeout}</value></property>
+		<property name="debugUnreturnedConnectionStackTraces"><value>${db.c3p0.debugUnreturnedConnectionStackTraces}</value></property>			
+	</bean> -->
+	
+	
+		
+	<!-- 配置Jdbc模板  -->
+	<!-- <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
+		p:dataSource-ref="dataSource" /> -->
+		
+	<!--配置SqlSessionFactoryBean -->
+    <!-- <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:/com/cnfantasia/server/ms/mybatis/mybatis.cfg.xml"/>
+    </bean> -->
+    <bean id="sqlSessionFactory" class="com.cnfantasia.server.domain.pub.mybatis.SimpleSqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocations">
+        	<list>
+        		<value>classpath:/com/cnfantasia/server/ms/mybatis/mybatis.cfg.xml</value>
+        		<value>classpath:/com/cnfantasia/server/domain/mybatis/mybatis.cfg.xml</value>
+        		<value>classpath:/com/cnfantasia/server/commbusi/mybatis/mybatis.cfg.both.xml</value>
+        	</list>
+        </property>
+        <!-- <property name="configurationProperties" value="classpath:/com/cnfantasia/server/ms/mybatis/mybatis.cfg.xml"/> -->
+        <!-- <property name="mapperLocations" value="classpath:/com/cnfantasia/server/ms/mybatis/mybatis.cfg02.xml"/> -->
+    </bean>
+     
+    <bean id="sqlSessionLoggerFactory" class="com.cnfantasia.server.domain.pub.mybatis.SimpleSqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceLogger"/>
+        <property name="configLocations">
+        	<list>
+        		<value>classpath:/com/cnfantasia/server/ms/mybatis/mybatis.mscfg.logger.xml</value>
+        	</list>
+        </property>
+    </bean>
+    
+    <bean id="sqlSessionLoggerTemplate" class="org.mybatis.spring.SqlSessionTemplate">  
+        <constructor-arg index="0" ref="sqlSessionLoggerFactory" />  
+    </bean>
+    
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">  
+        <constructor-arg index="0" ref="sqlSessionFactory" />  
+    </bean>
+	
+	<bean id="abstractBaseDao" class="com.cnfantasia.server.ms.pub.dao.AbstractBaseDao" abstract="true">
+		<property name="sqlSession" ref="sqlSessionTemplate"/>
+	</bean>
+	
+	<bean id="abstractBaseLoggerDao" class="com.cnfantasia.server.ms.pub.dao.AbstractBaseDao" abstract="true">
+		<property name="sqlSession" ref="sqlSessionLoggerTemplate"/>
+	</bean>
+</beans>  

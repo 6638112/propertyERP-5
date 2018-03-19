@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:自定义片区 t_address_block_self_defined -->
+<mapper namespace="addressBlockSelfDefinedBase">
+	<resultMap type="AddressBlockSelfDefined" id="addressBlockSelfDefinedBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 自定义片区名称 -->        <result column="t_address_city_f_id" javaType="java.math.BigInteger" property="tAddressCityFId"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AddressBlockSelfDefined" id="addressBlockSelfDefinedExtendMap" extends="addressBlockSelfDefinedBaseMap">
+	</resultMap>
+	<resultMap type="AddressBlockSelfDefined" id="addressBlockSelfDefinedBaseMap_AppendTable">
+        <id column="ABSDid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ABSDname" javaType="java.lang.String" property="name"/>  <!-- 自定义片区名称 -->        <result column="ABSDtAddressCityFId" javaType="java.math.BigInteger" property="tAddressCityFId"/>  <!--  -->        <result column="ABSDsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="ABSDsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ABSDsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ABSDsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ABSDsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ABSDsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ABSDsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AddressBlockSelfDefined" id="addressBlockSelfDefinedBaseMap_AppendTable1">
+        <id column="ABSD1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ABSD1name" javaType="java.lang.String" property="name"/>  <!-- 自定义片区名称 -->        <result column="ABSD1tAddressCityFId" javaType="java.math.BigInteger" property="tAddressCityFId"/>  <!--  -->        <result column="ABSD1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="ABSD1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ABSD1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ABSD1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ABSD1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ABSD1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ABSD1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		ABSD.f_id,ABSD.f_name,ABSD.t_address_city_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		ABSD.f_id as ABSDid,ABSD.f_name as ABSDname,ABSD.t_address_city_f_id as ABSDtAddressCityFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		ABSD1.f_id as ABSD1id,ABSD1.f_name as ABSD1name,ABSD1.t_address_city_f_id as ABSD1tAddressCityFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (ABSD.f_id = #{id} ) </if>        <if test="name != null">  and (ABSD.f_name = #{name} ) </if>        <if test="tAddressCityFId != null">  and (ABSD.t_address_city_f_id = #{tAddressCityFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (ABSD.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (ABSD.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (ABSD.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ABSD.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (ABSD.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (ABSD.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (ABSD.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (ABSD.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (ABSD.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (ABSD.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (ABSD.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (ABSD.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (ABSD.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (ABSD.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (ABSD.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (ABSD.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="tAddressCityFId != null and !tAddressCityFId.equals('')  ">  and (ABSD.t_address_city_f_id = #{tAddressCityFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (ABSD.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (ABSD.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (ABSD.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ABSD.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (ABSD.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (ABSD.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (ABSD.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (ABSD.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (ABSD.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (ABSD.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (ABSD.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (ABSD.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (ABSD.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (ABSD.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="addressBlockSelfDefinedBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="addressBlockSelfDefinedBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="addressBlockSelfDefinedBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="addressBlockSelfDefinedBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_address_block_self_defined ABSD    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(自定义片区)信息。 -->
+	<sql id="select_addressBlockSelfDefined">
+		SELECT <include refid="addressBlockSelfDefinedBase.queryHead"/>
+		<include refid="addressBlockSelfDefinedBase.busiQueryCondition"/>
+		<include refid="addressBlockSelfDefinedBase.dimCheckSql"/>
+		ORDER BY ABSD.f_id DESC
+	</sql>
+	<select id="select_addressBlockSelfDefined" parameterType="java.util.Map" resultMap="addressBlockSelfDefinedBase.addressBlockSelfDefinedExtendMap">
+		<include refid="addressBlockSelfDefinedBase.select_addressBlockSelfDefined"/>
+	</select>
+	
+	<!-- 根据条件分页查询(自定义片区)信息  -->
+	<sql id="select_addressBlockSelfDefined_withPage">
+		SELECT <include refid="addressBlockSelfDefinedBase.queryHead"/>
+		<include refid="addressBlockSelfDefinedBase.busiQueryCondition"/>
+		<include refid="addressBlockSelfDefinedBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_addressBlockSelfDefined_withPage" resultMap="addressBlockSelfDefinedBase.addressBlockSelfDefinedExtendMap" parameterType="java.util.Map">
+		<include refid="addressBlockSelfDefinedBase.select_addressBlockSelfDefined_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(自定义片区)信息。 -->
+	<sql id="select_addressBlockSelfDefined_bySeqId">
+		SELECT <include refid="addressBlockSelfDefinedBase.queryHead"/>
+		<include refid="addressBlockSelfDefinedBase.busiQueryCondition"/>
+		 and ABSD.f_id = #{_parameter}
+	</sql>
+	<select id="select_addressBlockSelfDefined_bySeqId" parameterType="java.math.BigInteger" resultMap="addressBlockSelfDefinedBase.addressBlockSelfDefinedBaseMap">
+		<include refid="addressBlockSelfDefinedBase.select_addressBlockSelfDefined_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(自定义片区)记录数  -->
+	<sql id="select_addressBlockSelfDefined_count">
+		SELECT COUNT(*)
+		<include refid="addressBlockSelfDefinedBase.busiQueryCount"/>
+		<include refid="addressBlockSelfDefinedBase.dimCheckSql"/>
+	</sql>
+	<select id="select_addressBlockSelfDefined_count" resultType="java.lang.Integer">
+		<include refid="addressBlockSelfDefinedBase.select_addressBlockSelfDefined_count"/>
+	</select>
+	
+	 <!-- 往(自定义片区)新增一条记录。 -->
+	 <sql id="insert_addressBlockSelfDefined">
+		INSERT INTO t_address_block_self_defined 
+		(f_id,f_name,t_address_city_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{tAddressCityFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_addressBlockSelfDefined" parameterType="AddressBlockSelfDefined">
+		<include refid="addressBlockSelfDefinedBase.insert_addressBlockSelfDefined"/>
+    </insert>
+    
+	<!-- 批量新增(自定义片区)信息 -->
+    <insert id="insert_addressBlockSelfDefined_Batch" parameterType="java.util.List">
+    	INSERT INTO t_address_block_self_defined 
+		(f_id,f_name,t_address_city_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.tAddressCityFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(自定义片区)信息。 -->
+    <sql id="update_addressBlockSelfDefined">
+		UPDATE t_address_block_self_defined		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="tAddressCityFId != null and !tAddressCityFId.equals('') "> ,t_address_city_f_id=#{tAddressCityFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_addressBlockSelfDefined" parameterType="AddressBlockSelfDefined">
+		<include refid="addressBlockSelfDefinedBase.update_addressBlockSelfDefined"/>
+    </update>
+    
+    <!-- 批量更新(自定义片区)信息。 -->
+    <update id="update_addressBlockSelfDefined_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_address_block_self_defined		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.tAddressCityFId != null and !item.tAddressCityFId.equals('')  "> ,t_address_city_f_id=#{item.tAddressCityFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(自定义片区)信息_逻辑删除。 -->
+    <sql id="delete_addressBlockSelfDefined_Logic">
+		UPDATE t_address_block_self_defined		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="tAddressCityFId != null and !tAddressCityFId.equals('')  "> ,t_address_city_f_id=#{tAddressCityFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_addressBlockSelfDefined_Logic" parameterType="AddressBlockSelfDefined">
+		<include refid="addressBlockSelfDefinedBase.delete_addressBlockSelfDefined_Logic"/>
+    </update>
+    
+    <!-- 批量删除(自定义片区)信息_逻辑删除 -->
+    <update id="delete_addressBlockSelfDefined_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_address_block_self_defined		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.tAddressCityFId != null and !item.tAddressCityFId.equals('')  "> ,t_address_city_f_id=#{item.tAddressCityFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(自定义片区)信息。 -->
+    <sql id="delete_addressBlockSelfDefined">
+		DELETE FROM t_address_block_self_defined WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_addressBlockSelfDefined" parameterType="java.lang.String">
+		<include refid="addressBlockSelfDefinedBase.delete_addressBlockSelfDefined"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(自定义片区)信息。 -->
+    <delete id="delete_addressBlockSelfDefined_Batch" parameterType="java.util.List">
+		DELETE FROM t_address_block_self_defined WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

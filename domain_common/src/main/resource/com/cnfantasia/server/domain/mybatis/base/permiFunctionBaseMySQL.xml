@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:功能表 t_permi_function -->
+<mapper namespace="permiFunctionBase">
+	<resultMap type="PermiFunction" id="permiFunctionBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 功能名称 -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 功能描述 -->        <result column="f_action" javaType="java.lang.String" property="action"/>  <!-- 功能入口 -->        <result column="f_param" javaType="java.lang.String" property="param"/>  <!-- 参数信息 -->        <result column="f_status" javaType="java.lang.Integer" property="status"/>  <!-- 功能状态 -->        <result column="f_menu_flag" javaType="java.lang.Integer" property="menuFlag"/>  <!-- 是否为菜单 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PermiFunction" id="permiFunctionExtendMap" extends="permiFunctionBaseMap">
+	</resultMap>
+	<resultMap type="PermiFunction" id="permiFunctionBaseMap_AppendTable">
+        <id column="PFid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PFname" javaType="java.lang.String" property="name"/>  <!-- 功能名称 -->        <result column="PFdesc" javaType="java.lang.String" property="desc"/>  <!-- 功能描述 -->        <result column="PFaction" javaType="java.lang.String" property="action"/>  <!-- 功能入口 -->        <result column="PFparam" javaType="java.lang.String" property="param"/>  <!-- 参数信息 -->        <result column="PFstatus" javaType="java.lang.Integer" property="status"/>  <!-- 功能状态 -->        <result column="PFmenuFlag" javaType="java.lang.Integer" property="menuFlag"/>  <!-- 是否为菜单 -->        <result column="PFsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PFsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PFsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PFsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PFsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PFsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PFsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PermiFunction" id="permiFunctionBaseMap_AppendTable1">
+        <id column="PF1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PF1name" javaType="java.lang.String" property="name"/>  <!-- 功能名称 -->        <result column="PF1desc" javaType="java.lang.String" property="desc"/>  <!-- 功能描述 -->        <result column="PF1action" javaType="java.lang.String" property="action"/>  <!-- 功能入口 -->        <result column="PF1param" javaType="java.lang.String" property="param"/>  <!-- 参数信息 -->        <result column="PF1status" javaType="java.lang.Integer" property="status"/>  <!-- 功能状态 -->        <result column="PF1menuFlag" javaType="java.lang.Integer" property="menuFlag"/>  <!-- 是否为菜单 -->        <result column="PF1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PF1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PF1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PF1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PF1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PF1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PF1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PF.f_id,PF.f_name,PF.f_desc,PF.f_action,PF.f_param,PF.f_status,PF.f_menu_flag
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PF.f_id as PFid,PF.f_name as PFname,PF.f_desc as PFdesc,PF.f_action as PFaction,PF.f_param as PFparam,PF.f_status as PFstatus,PF.f_menu_flag as PFmenuFlag
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PF1.f_id as PF1id,PF1.f_name as PF1name,PF1.f_desc as PF1desc,PF1.f_action as PF1action,PF1.f_param as PF1param,PF1.f_status as PF1status,PF1.f_menu_flag as PF1menuFlag
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PF.f_id = #{id} ) </if>        <if test="name != null">  and (PF.f_name = #{name} ) </if>        <if test="desc != null">  and (PF.f_desc = #{desc} ) </if>        <if test="action != null">  and (PF.f_action = #{action} ) </if>        <if test="param != null">  and (PF.f_param = #{param} ) </if>        <if test="status != null">  and (PF.f_status = #{status} ) </if>        <if test="menuFlag != null">  and (PF.f_menu_flag = #{menuFlag} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PF.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PF.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PF.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PF.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PF.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PF.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PF.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PF.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PF.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (PF.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (PF.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (PF.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (PF.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (PF.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PF.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (PF.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="desc != null and !desc.equals('')  ">  and (PF.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="action != null and !action.equals('')  ">  and (PF.f_action like CONCAT('%',#{action},'%') ) </if>        <if test="param != null and !param.equals('')  ">  and (PF.f_param like CONCAT('%',#{param},'%') ) </if>        <if test="status != null and !status.equals('')  ">  and (PF.f_status = #{status} ) </if>        <if test="menuFlag != null and !menuFlag.equals('')  ">  and (PF.f_menu_flag = #{menuFlag} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PF.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PF.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PF.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PF.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PF.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PF.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PF.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PF.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PF.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PF.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PF.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PF.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PF.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (PF.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="permiFunctionBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="permiFunctionBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="permiFunctionBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="permiFunctionBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_permi_function PF    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(功能表)信息。 -->
+	<sql id="select_permiFunction">
+		SELECT <include refid="permiFunctionBase.queryHead"/>
+		<include refid="permiFunctionBase.busiQueryCondition"/>
+		<include refid="permiFunctionBase.dimCheckSql"/>
+		ORDER BY PF.f_id DESC
+	</sql>
+	<select id="select_permiFunction" parameterType="java.util.Map" resultMap="permiFunctionBase.permiFunctionExtendMap">
+		<include refid="permiFunctionBase.select_permiFunction"/>
+	</select>
+	
+	<!-- 根据条件分页查询(功能表)信息  -->
+	<sql id="select_permiFunction_withPage">
+		SELECT <include refid="permiFunctionBase.queryHead"/>
+		<include refid="permiFunctionBase.busiQueryCondition"/>
+		<include refid="permiFunctionBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_permiFunction_withPage" resultMap="permiFunctionBase.permiFunctionExtendMap" parameterType="java.util.Map">
+		<include refid="permiFunctionBase.select_permiFunction_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(功能表)信息。 -->
+	<sql id="select_permiFunction_bySeqId">
+		SELECT <include refid="permiFunctionBase.queryHead"/>
+		<include refid="permiFunctionBase.busiQueryCondition"/>
+		 and PF.f_id = #{_parameter}
+	</sql>
+	<select id="select_permiFunction_bySeqId" parameterType="java.math.BigInteger" resultMap="permiFunctionBase.permiFunctionBaseMap">
+		<include refid="permiFunctionBase.select_permiFunction_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(功能表)记录数  -->
+	<sql id="select_permiFunction_count">
+		SELECT COUNT(*)
+		<include refid="permiFunctionBase.busiQueryCount"/>
+		<include refid="permiFunctionBase.dimCheckSql"/>
+	</sql>
+	<select id="select_permiFunction_count" resultType="java.lang.Integer">
+		<include refid="permiFunctionBase.select_permiFunction_count"/>
+	</select>
+	
+	 <!-- 往(功能表)新增一条记录。 -->
+	 <sql id="insert_permiFunction">
+		INSERT INTO t_permi_function 
+		(f_id,f_name,f_desc,f_action,f_param,f_status,f_menu_flag,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR},#{action,jdbcType=VARCHAR},#{param,jdbcType=VARCHAR},#{status},#{menuFlag},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_permiFunction" parameterType="PermiFunction">
+		<include refid="permiFunctionBase.insert_permiFunction"/>
+    </insert>
+    
+	<!-- 批量新增(功能表)信息 -->
+    <insert id="insert_permiFunction_Batch" parameterType="java.util.List">
+    	INSERT INTO t_permi_function 
+		(f_id,f_name,f_desc,f_action,f_param,f_status,f_menu_flag,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.desc,jdbcType=VARCHAR},#{item.action,jdbcType=VARCHAR},#{item.param,jdbcType=VARCHAR},#{item.status},#{item.menuFlag},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(功能表)信息。 -->
+    <sql id="update_permiFunction">
+		UPDATE t_permi_function		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="action != null and !action.equals('') "> ,f_action=#{action}</if> 		<if test="param != null and !param.equals('') "> ,f_param=#{param}</if> 		<if test="status != null and !status.equals('') "> ,f_status=#{status}</if> 		<if test="menuFlag != null and !menuFlag.equals('') "> ,f_menu_flag=#{menuFlag}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_permiFunction" parameterType="PermiFunction">
+		<include refid="permiFunctionBase.update_permiFunction"/>
+    </update>
+    
+    <!-- 批量更新(功能表)信息。 -->
+    <update id="update_permiFunction_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_permi_function		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.action != null and !item.action.equals('')  "> ,f_action=#{item.action}</if> 		<if test="item.param != null and !item.param.equals('')  "> ,f_param=#{item.param}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.menuFlag != null and !item.menuFlag.equals('')  "> ,f_menu_flag=#{item.menuFlag}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(功能表)信息_逻辑删除。 -->
+    <sql id="delete_permiFunction_Logic">
+		UPDATE t_permi_function		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="action != null and !action.equals('')  "> ,f_action=#{action}</if> 		<if test="param != null and !param.equals('')  "> ,f_param=#{param}</if> 		<if test="status != null and !status.equals('')  "> ,f_status=#{status}</if> 		<if test="menuFlag != null and !menuFlag.equals('')  "> ,f_menu_flag=#{menuFlag}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_permiFunction_Logic" parameterType="PermiFunction">
+		<include refid="permiFunctionBase.delete_permiFunction_Logic"/>
+    </update>
+    
+    <!-- 批量删除(功能表)信息_逻辑删除 -->
+    <update id="delete_permiFunction_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_permi_function		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.action != null and !item.action.equals('')  "> ,f_action=#{item.action}</if> 		<if test="item.param != null and !item.param.equals('')  "> ,f_param=#{item.param}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.menuFlag != null and !item.menuFlag.equals('')  "> ,f_menu_flag=#{item.menuFlag}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(功能表)信息。 -->
+    <sql id="delete_permiFunction">
+		DELETE FROM t_permi_function WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_permiFunction" parameterType="java.lang.String">
+		<include refid="permiFunctionBase.delete_permiFunction"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(功能表)信息。 -->
+    <delete id="delete_permiFunction_Batch" parameterType="java.util.List">
+		DELETE FROM t_permi_function WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

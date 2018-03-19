@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 积分模块 -->
+<mapper namespace="point">
+	
+	<!-- 增加积分 -->
+	<update id="add_PointData" parameterType="java.util.Map">
+		UPDATE t_point_data PD
+		SET PD.f_point_value = PD.f_point_value+#{value}
+			,PD.f_sys0_upd_time = SYSDATE()
+			,PD.f_sys0_upd_user = #{userId}
+		WHERE 1=1
+		AND PD.f_sys0_del_state = 0
+		AND PD.t_user_f_id = #{userId}
+		AND #{value}>=0 <!-- 积分应大于等于0 -->
+	</update>
+	
+	<!-- 扣除积分 -->
+	<update id="cost_PointData" parameterType="java.util.Map">
+		UPDATE t_point_data PD
+		SET PD.f_point_value = PD.f_point_value-#{value}
+			,PD.f_sys0_upd_time = SYSDATE()
+			,PD.f_sys0_upd_user = #{userId}
+		WHERE 1=1
+		AND PD.f_sys0_del_state = 0
+		AND PD.t_user_f_id = #{userId}
+		AND #{value}>=0 <!-- 积分应大于等于0 -->
+		AND (PD.f_point_value-#{value})>=0 <!-- 确保余额足够 -->
+	</update>
+	
+	<!-- 查询最近一次获取对应类别的积分信息 -->
+	<select id="select_Last_PointSourceRecord" parameterType="java.util.Map" 
+		resultMap="pointSourceRecordBase.pointSourceRecordBaseMap_AppendTable">
+		SELECT <include refid="pointSourceRecordBase.queryHead_AppendTable"/>
+		FROM t_point_source_record PSR
+    	WHERE 1=1
+    	AND PSR.f_sys0_del_state = 0
+    	AND PSR.f_user_id = #{userId}
+    	AND PSR.f_type = #{type}
+    	ORDER BY f_from_time DESC 
+    	LIMIT 0,1
+	</select>
+	
+</mapper>

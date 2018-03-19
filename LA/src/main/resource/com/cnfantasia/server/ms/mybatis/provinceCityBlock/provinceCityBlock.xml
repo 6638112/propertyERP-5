@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN: 省市区 -->
+<mapper namespace="provinceWithCityBlock">
+	<resultMap type="com.cnfantasia.server.ms.provinceCityBlock.entity.ProvinceWithCityBlock" id="provinceWithCityBlock" >
+		<id column="apId" javaType="java.math.BigInteger" property="id"/> 
+        <result column="apName" javaType="java.lang.String" property="name"/> 
+        <collection  property="cityList" resultMap="cityWithBlock"/>
+	</resultMap>
+		
+	<resultMap type="com.cnfantasia.server.ms.provinceCityBlock.entity.CityWithBlock" id="cityWithBlock" >
+		<id column="acId" javaType="java.math.BigInteger" property="id"/> 
+        <result column="acName" javaType="java.lang.String" property="name"/> 
+        <collection  property="blockList" resultMap="addressBlock"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.domainbase.addressBlock.entity.AddressBlock" id="addressBlock" >
+		<id column="abId" javaType="java.math.BigInteger" property="id"/> 
+        <result column="abName" javaType="java.lang.String" property="name"/> 
+	</resultMap>
+	
+	<!-- 联合查询   省市区，一次全部查出，然后缓存到内存中 -->
+    <select id="select_provinceWithCityBlock_list" resultMap="provinceWithCityBlock">
+    	SELECT ap.f_id apId, ap.f_name apName, 
+    	ac.f_id acId, ac.f_name acName, 
+    	ab.f_id abId, ab.f_name abName 
+    	FROM t_address_province ap
+		inner join t_address_city ac on ac.t_province_f_id = ap.f_id and ac.f_sys0_del_state = 0
+		inner join t_address_block ab  on ab.t_city_f_id = ac.f_id and ab.f_sys0_del_state = 0
+		where ap.f_id > 0 and ap.f_id != 3292<!-- -1是体验市，3292 是访客体验区 -->
+		and ap.f_sys0_del_state = 0
+		order by ap.f_id;
+	</select>
+</mapper>

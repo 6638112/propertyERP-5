@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:数据变更记录 t_data_change_record -->
+<mapper namespace="dataChangeRecordBase">
+	<resultMap type="DataChangeRecord" id="dataChangeRecordBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键Id -->        <result column="f_table_name" javaType="java.lang.String" property="tableName"/>  <!-- 表名 -->        <result column="f_row_id" javaType="java.math.BigInteger" property="rowId"/>  <!-- 数据的ID -->        <result column="f_operation_desc" javaType="java.lang.String" property="operationDesc"/>  <!-- 变更操作描述 -->        <result column="f_data_from" javaType="java.lang.String" property="dataFrom"/>  <!-- 变更部分原数据 -->        <result column="f_data_to" javaType="java.lang.String" property="dataTo"/>  <!-- 变更部分变后数据 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 更新者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="DataChangeRecord" id="dataChangeRecordExtendMap" extends="dataChangeRecordBaseMap">
+	</resultMap>
+	<resultMap type="DataChangeRecord" id="dataChangeRecordBaseMap_AppendTable">
+        <id column="DCRid" javaType="java.math.BigInteger" property="id"/>  <!-- 主键Id -->        <result column="DCRtableName" javaType="java.lang.String" property="tableName"/>  <!-- 表名 -->        <result column="DCRrowId" javaType="java.math.BigInteger" property="rowId"/>  <!-- 数据的ID -->        <result column="DCRoperationDesc" javaType="java.lang.String" property="operationDesc"/>  <!-- 变更操作描述 -->        <result column="DCRdataFrom" javaType="java.lang.String" property="dataFrom"/>  <!-- 变更部分原数据 -->        <result column="DCRdataTo" javaType="java.lang.String" property="dataTo"/>  <!-- 变更部分变后数据 -->        <result column="DCRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="DCRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="DCRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="DCRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="DCRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 更新者 -->        <result column="DCRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="DCRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="DataChangeRecord" id="dataChangeRecordBaseMap_AppendTable1">
+        <id column="DCR1id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键Id -->        <result column="DCR1tableName" javaType="java.lang.String" property="tableName"/>  <!-- 表名 -->        <result column="DCR1rowId" javaType="java.math.BigInteger" property="rowId"/>  <!-- 数据的ID -->        <result column="DCR1operationDesc" javaType="java.lang.String" property="operationDesc"/>  <!-- 变更操作描述 -->        <result column="DCR1dataFrom" javaType="java.lang.String" property="dataFrom"/>  <!-- 变更部分原数据 -->        <result column="DCR1dataTo" javaType="java.lang.String" property="dataTo"/>  <!-- 变更部分变后数据 -->        <result column="DCR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="DCR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="DCR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="DCR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="DCR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 更新者 -->        <result column="DCR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="DCR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		DCR.f_id,DCR.f_table_name,DCR.f_row_id,DCR.f_operation_desc,DCR.f_data_from,DCR.f_data_to
+	</sql>
+	<sql id="queryHead_AppendTable">
+		DCR.f_id as DCRid,DCR.f_table_name as DCRtableName,DCR.f_row_id as DCRrowId,DCR.f_operation_desc as DCRoperationDesc,DCR.f_data_from as DCRdataFrom,DCR.f_data_to as DCRdataTo
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		DCR1.f_id as DCR1id,DCR1.f_table_name as DCR1tableName,DCR1.f_row_id as DCR1rowId,DCR1.f_operation_desc as DCR1operationDesc,DCR1.f_data_from as DCR1dataFrom,DCR1.f_data_to as DCR1dataTo
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (DCR.f_id = #{id} ) </if>        <if test="tableName != null">  and (DCR.f_table_name = #{tableName} ) </if>        <if test="rowId != null">  and (DCR.f_row_id = #{rowId} ) </if>        <if test="operationDesc != null">  and (DCR.f_operation_desc = #{operationDesc} ) </if>        <if test="dataFrom != null">  and (DCR.f_data_from = #{dataFrom} ) </if>        <if test="dataTo != null">  and (DCR.f_data_to = #{dataTo} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (DCR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (DCR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (DCR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (DCR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (DCR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (DCR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (DCR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (DCR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (DCR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (DCR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (DCR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (DCR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (DCR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (DCR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (DCR.f_id = #{id} ) </if>        <if test="tableName != null and !tableName.equals('')  ">  and (DCR.f_table_name like CONCAT('%',#{tableName},'%') ) </if>        <if test="rowId != null and !rowId.equals('')  ">  and (DCR.f_row_id = #{rowId} ) </if>        <if test="operationDesc != null and !operationDesc.equals('')  ">  and (DCR.f_operation_desc like CONCAT('%',#{operationDesc},'%') ) </if>        <if test="dataFrom != null and !dataFrom.equals('')  ">  and (DCR.f_data_from like CONCAT('%',#{dataFrom},'%') ) </if>        <if test="dataTo != null and !dataTo.equals('')  ">  and (DCR.f_data_to like CONCAT('%',#{dataTo},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (DCR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (DCR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (DCR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (DCR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (DCR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (DCR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (DCR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (DCR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (DCR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (DCR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (DCR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (DCR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (DCR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (DCR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="dataChangeRecordBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="dataChangeRecordBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="dataChangeRecordBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="dataChangeRecordBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_data_change_record DCR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(数据变更记录)信息。 -->
+	<sql id="select_dataChangeRecord">
+		SELECT <include refid="dataChangeRecordBase.queryHead"/>
+		<include refid="dataChangeRecordBase.busiQueryCondition"/>
+		<include refid="dataChangeRecordBase.dimCheckSql"/>
+		ORDER BY DCR.f_id DESC
+	</sql>
+	<select id="select_dataChangeRecord" parameterType="java.util.Map" resultMap="dataChangeRecordBase.dataChangeRecordExtendMap">
+		<include refid="dataChangeRecordBase.select_dataChangeRecord"/>
+	</select>
+	
+	<!-- 根据条件分页查询(数据变更记录)信息  -->
+	<sql id="select_dataChangeRecord_withPage">
+		SELECT <include refid="dataChangeRecordBase.queryHead"/>
+		<include refid="dataChangeRecordBase.busiQueryCondition"/>
+		<include refid="dataChangeRecordBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_dataChangeRecord_withPage" resultMap="dataChangeRecordBase.dataChangeRecordExtendMap" parameterType="java.util.Map">
+		<include refid="dataChangeRecordBase.select_dataChangeRecord_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(数据变更记录)信息。 -->
+	<sql id="select_dataChangeRecord_bySeqId">
+		SELECT <include refid="dataChangeRecordBase.queryHead"/>
+		<include refid="dataChangeRecordBase.busiQueryCondition"/>
+		 and DCR.f_id = #{_parameter}
+	</sql>
+	<select id="select_dataChangeRecord_bySeqId" parameterType="java.math.BigInteger" resultMap="dataChangeRecordBase.dataChangeRecordBaseMap">
+		<include refid="dataChangeRecordBase.select_dataChangeRecord_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(数据变更记录)记录数  -->
+	<sql id="select_dataChangeRecord_count">
+		SELECT COUNT(*)
+		<include refid="dataChangeRecordBase.busiQueryCount"/>
+		<include refid="dataChangeRecordBase.dimCheckSql"/>
+	</sql>
+	<select id="select_dataChangeRecord_count" resultType="java.lang.Integer">
+		<include refid="dataChangeRecordBase.select_dataChangeRecord_count"/>
+	</select>
+	
+	 <!-- 往(数据变更记录)新增一条记录。 -->
+	 <sql id="insert_dataChangeRecord">
+		INSERT INTO t_data_change_record 
+		(f_id,f_table_name,f_row_id,f_operation_desc,f_data_from,f_data_to,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tableName,jdbcType=VARCHAR},#{rowId},#{operationDesc,jdbcType=VARCHAR},#{dataFrom,jdbcType=VARCHAR},#{dataTo,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_dataChangeRecord" parameterType="DataChangeRecord">
+		<include refid="dataChangeRecordBase.insert_dataChangeRecord"/>
+    </insert>
+    
+	<!-- 批量新增(数据变更记录)信息 -->
+    <insert id="insert_dataChangeRecord_Batch" parameterType="java.util.List">
+    	INSERT INTO t_data_change_record 
+		(f_id,f_table_name,f_row_id,f_operation_desc,f_data_from,f_data_to,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tableName,jdbcType=VARCHAR},#{item.rowId},#{item.operationDesc,jdbcType=VARCHAR},#{item.dataFrom,jdbcType=VARCHAR},#{item.dataTo,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(数据变更记录)信息。 -->
+    <sql id="update_dataChangeRecord">
+		UPDATE t_data_change_record		<trim prefix="SET" prefixOverrides=","> 		<if test="tableName != null and !tableName.equals('') "> ,f_table_name=#{tableName}</if> 		<if test="rowId != null and !rowId.equals('') "> ,f_row_id=#{rowId}</if> 		<if test="operationDesc != null and !operationDesc.equals('') "> ,f_operation_desc=#{operationDesc}</if> 		<if test="dataFrom != null and !dataFrom.equals('') "> ,f_data_from=#{dataFrom}</if> 		<if test="dataTo != null and !dataTo.equals('') "> ,f_data_to=#{dataTo}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_dataChangeRecord" parameterType="DataChangeRecord">
+		<include refid="dataChangeRecordBase.update_dataChangeRecord"/>
+    </update>
+    
+    <!-- 批量更新(数据变更记录)信息。 -->
+    <update id="update_dataChangeRecord_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_data_change_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tableName != null and !item.tableName.equals('')  "> ,f_table_name=#{item.tableName}</if> 		<if test="item.rowId != null and !item.rowId.equals('')  "> ,f_row_id=#{item.rowId}</if> 		<if test="item.operationDesc != null and !item.operationDesc.equals('')  "> ,f_operation_desc=#{item.operationDesc}</if> 		<if test="item.dataFrom != null and !item.dataFrom.equals('')  "> ,f_data_from=#{item.dataFrom}</if> 		<if test="item.dataTo != null and !item.dataTo.equals('')  "> ,f_data_to=#{item.dataTo}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(数据变更记录)信息_逻辑删除。 -->
+    <sql id="delete_dataChangeRecord_Logic">
+		UPDATE t_data_change_record		<trim prefix="SET" prefixOverrides=","> 		<if test="tableName != null and !tableName.equals('')  "> ,f_table_name=#{tableName}</if> 		<if test="rowId != null and !rowId.equals('')  "> ,f_row_id=#{rowId}</if> 		<if test="operationDesc != null and !operationDesc.equals('')  "> ,f_operation_desc=#{operationDesc}</if> 		<if test="dataFrom != null and !dataFrom.equals('')  "> ,f_data_from=#{dataFrom}</if> 		<if test="dataTo != null and !dataTo.equals('')  "> ,f_data_to=#{dataTo}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_dataChangeRecord_Logic" parameterType="DataChangeRecord">
+		<include refid="dataChangeRecordBase.delete_dataChangeRecord_Logic"/>
+    </update>
+    
+    <!-- 批量删除(数据变更记录)信息_逻辑删除 -->
+    <update id="delete_dataChangeRecord_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_data_change_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tableName != null and !item.tableName.equals('')  "> ,f_table_name=#{item.tableName}</if> 		<if test="item.rowId != null and !item.rowId.equals('')  "> ,f_row_id=#{item.rowId}</if> 		<if test="item.operationDesc != null and !item.operationDesc.equals('')  "> ,f_operation_desc=#{item.operationDesc}</if> 		<if test="item.dataFrom != null and !item.dataFrom.equals('')  "> ,f_data_from=#{item.dataFrom}</if> 		<if test="item.dataTo != null and !item.dataTo.equals('')  "> ,f_data_to=#{item.dataTo}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(数据变更记录)信息。 -->
+    <sql id="delete_dataChangeRecord">
+		DELETE FROM t_data_change_record WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_dataChangeRecord" parameterType="java.lang.String">
+		<include refid="dataChangeRecordBase.delete_dataChangeRecord"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(数据变更记录)信息。 -->
+    <delete id="delete_dataChangeRecord_Batch" parameterType="java.util.List">
+		DELETE FROM t_data_change_record WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

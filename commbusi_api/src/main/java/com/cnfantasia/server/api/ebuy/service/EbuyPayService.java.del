@@ -1,0 +1,442 @@
+/**   
+ * Filename:    EbuyPayService.java   
+ * @version:    1.0  
+ * Create at:   2014年6月30日 上午2:31:46   
+ * Description:  
+ *   
+ * Modification History:   
+ * Date        Author      Version     Description   
+ * ----------------------------------------------------------------- 
+ * 2014年6月30日    shiyl      1.0         1.0 Version   
+ */
+package com.cnfantasia.server.api.ebuy.service;
+
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+
+import com.alibaba.fastjson.JSON;
+import com.cnfantasia.server.api.commonBusiness.service.ICommonEbuyService;
+import com.cnfantasia.server.api.ebuy.constant.EbuyDict;
+import com.cnfantasia.server.api.ebuy.dao.IEbuyDao;
+import com.cnfantasia.server.api.ebuy.entity.EbuyOrderEntity;
+import com.cnfantasia.server.api.ebuy.entity.WeiXinNotifyEntity;
+import com.cnfantasia.server.api.pub.constant.SEQConstants;
+import com.cnfantasia.server.apibase.ebuyOrder.entity.EbuyOrder;
+import com.cnfantasia.server.apibase.ebuyPayRecord.entity.EbuyPayRecord;
+import com.cnfantasia.server.apibase.ebuyPayRecord.service.IEbuyPayRecordBaseService;
+import com.cnfantasia.server.apibase.ebuyPrepayWeixinLog.dao.IEbuyPrepayWeixinLogBaseDao;
+import com.cnfantasia.server.apibase.ebuyPrepayWeixinLog.entity.EbuyPrepayWeixinLog;
+import com.cnfantasia.server.apibase.ebuyProduct.entity.EbuyProduct;
+import com.cnfantasia.server.business.pub.uuidMaker.IUuidManager;
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+import com.cnfantasia.server.common.exception.ValidateRuntimeException;
+import com.tenpay.AccessTokenRequestHandler;
+import com.tenpay.ClientRequestHandler;
+import com.tenpay.PackageRequestHandler;
+import com.tenpay.PrepayIdRequestHandler;
+import com.tenpay.util.ConstantUtil;
+import com.tenpay.util.WXUtil;
+
+/**
+ * Filename: EbuyPayService.java
+ * 
+ * @version: 1.0.0 Create at: 2014年6月30日 上午2:31:46 Description:
+ * 
+ *           Modification History: Date Author Version Description
+ *           ------------------------------------------------------------------
+ *           2014年6月30日 shiyl 1.0 1.0 Version
+ */
+public class EbuyPayService implements IEbuyPayService {
+	private Log logger = LogFactory.getLog(getClass());
+	private IEbuyDao ebuyDao;
+	public void setEbuyDao(IEbuyDao ebuyDao) {
+		this.ebuyDao = ebuyDao;
+	}
+
+	public IEbuyPrepayWeixinLogBaseDao ebuyPrepayWeixinLogBaseDao;
+	public void setEbuyPrepayWeixinLogBaseDao(IEbuyPrepayWeixinLogBaseDao ebuyPrepayWeixinLogBaseDao) {
+		this.ebuyPrepayWeixinLogBaseDao = ebuyPrepayWeixinLogBaseDao;
+	}
+	private IEbuyPayRecordBaseService ebuyPayRecordBaseService;
+	public void setEbuyPayRecordBaseService(IEbuyPayRecordBaseService ebuyPayRecordBaseService) {
+		this.ebuyPayRecordBaseService = ebuyPayRecordBaseService;
+	}
+	
+	private ICommonEbuyService commonEbuyService;
+	public void setCommonEbuyService(ICommonEbuyService commonEbuyService) {
+		this.commonEbuyService = commonEbuyService;
+	}
+	
+	private IUuidManager uuidManager;
+	public void setUuidManager(IUuidManager uuidManager) {
+		this.uuidManager = uuidManager;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String, Object> weixinPrePay(BigInteger userId, BigInteger orderId, String notify_url,
+			String remoteAddr, PackageRequestHandler packageReqHandler, PrepayIdRequestHandler prepayReqHandler,
+			ClientRequestHandler clientHandler) {
+		logger.debug("EbuyPayService prePayRequest start, orderId is:" + orderId + ",userId is:" + userId + "..");
+		// 日志记录对象
+		EbuyPrepayWeixinLog ebuyPrepayWeixinLog = new EbuyPrepayWeixinLog();
+		try {
+			{// 日志
+				ebuyPrepayWeixinLog.setUserId(userId);
+				ebuyPrepayWeixinLog.setOrderId(orderId);
+				logger.debug("userId=" + userId + ",orderId=" + orderId);
+			}
+			EbuyOrderEntity order = ebuyDao.getEbuyOrderEntityDetail(userId, orderId);
+			if(order==null){
+				throw new BusinessRuntimeException("EbuyPayService.weixinPrePay.order.isNull");
+			}
+			EbuyProduct ebuyProductEntity = order.getEbuyOrderHasTEbuyProductEntity_ProductList().get(0)
+					.getEbuyProductEntity();
+			String productInfo = ebuyProductEntity.getName();
+			Long tofalAmount = order.getAmount();
+			String out_trade_no = order.getOrderNo();
+
+			// 2.交互
+			int retcode;
+			// String xml_body = "";
+			Map<String, Object> clientParameters = null;
+			{
+				// ---------------------------------------------------------
+				// 微信支付请求示例，商户按照此文档进行开发即可
+				// ---------------------------------------------------------
+
+				// 接收财付通通知的URL
+				{// 日志
+					ebuyPrepayWeixinLog.setNotifyUrl(notify_url);
+					logger.debug("notify_url=" + notify_url);
+				}
+				// // ---------------生成订单号 开始------------------------
+				// // 当前时间 yyyyMMddHHmmss
+				// String currTime = TenpayUtil.getCurrTime();
+				// // 8位日期
+				// String strTime = currTime.substring(8, currTime.length());
+				// // 四位随机数
+				// String strRandom = TenpayUtil.buildRandom(4) + "";
+				// // 10位序列号,可以自行调整。
+				// String strReq = strTime + strRandom;
+				// // 订单号，此处用时间加随机数生成，商户根据自己情况调整，只要保持全局唯一就行
+				// String out_trade_no = strReq;
+				// // ---------------生成订单号 结束------------------------
+
+				packageReqHandler.setKey(ConstantUtil.PARTNER_KEY);
+
+				// 获取token值
+				String token = AccessTokenRequestHandler.getAccessToken();
+				{// 日志
+					ebuyPrepayWeixinLog.setAccessToken(token);
+					logger.debug("token=" + token);
+				}
+				if (!"".equals(token)) {
+					// 设置package订单参数
+					packageReqHandler.setParameter("bank_type", "WX");// 银行渠道
+					packageReqHandler.setParameter("body", productInfo); // 商品描述
+					packageReqHandler.setParameter("notify_url", notify_url); // 接收财付通通知的URL
+					packageReqHandler.setParameter("partner", ConstantUtil.PARTNER); // 商户号
+					packageReqHandler.setParameter("out_trade_no", out_trade_no); // 商家订单号
+					packageReqHandler.setParameter("total_fee", tofalAmount.toString()); // 商品金额,以分为单位
+					packageReqHandler.setParameter("spbill_create_ip", remoteAddr); // 订单生成的机器IP，指用户浏览器端IP
+					packageReqHandler.setParameter("fee_type", "1"); // 币种，1人民币 66
+					packageReqHandler.setParameter("input_charset", "UTF-8"); // 字符编码
+					{// 日志
+						Map<String, Object> packageParamsMap = new HashMap<String, Object>();
+						packageParamsMap.put("bank_type", "WX");// 银行渠道
+						packageParamsMap.put("body", productInfo); // 商品描述
+						packageParamsMap.put("notify_url", notify_url); // 接收财付通通知的URL
+						packageParamsMap.put("partner", ConstantUtil.PARTNER); // 商户号
+						packageParamsMap.put("out_trade_no", out_trade_no); // 商家订单号
+						packageParamsMap.put("total_fee", tofalAmount.toString()); // 商品金额,以分为单位
+						packageParamsMap.put("spbill_create_ip", remoteAddr); // 订单生成的机器IP，指用户浏览器端IP
+						packageParamsMap.put("fee_type", "1"); // 币种，1人民币 66
+						packageParamsMap.put("input_charset", "UTF-8"); // 字符编码
+						ebuyPrepayWeixinLog.setPackageParams(JSON.toJSONString(packageParamsMap));
+						if (logger.isDebugEnabled()) {
+							logger.debug("packageParamsMap=" + JSON.toJSONString(packageParamsMap));
+						}
+					}
+
+					// 获取package包
+					String packageValue = null;
+					try {
+						packageValue = packageReqHandler.getRequestURL();
+						{// 日志
+							ebuyPrepayWeixinLog.setPackageValue(packageValue);
+							if (logger.isDebugEnabled()) {
+								logger.debug("packageValue=" + packageValue);
+							}
+						}
+					} catch (UnsupportedEncodingException e) {
+						logger.debug(
+								"EbuyPayService.prePayRequest.getRequestURL.UnsupportedEncodingException.error" + e.getMessage(), e);
+						throw new BusinessRuntimeException(
+								"EbuyPayService.prePayRequest.getRequestURL.UnsupportedEncodingException.error", e);
+					}
+
+					String noncestr = WXUtil.getNonceStr();
+					String timestamp = WXUtil.getTimeStamp();
+					// String traceid = "";
+					String traceid = userId.toString();// 使用用户Id
+					// //设置获取prepayid支付参数
+					prepayReqHandler.setParameter("appid", ConstantUtil.APP_ID);
+					prepayReqHandler.setParameter("appkey", ConstantUtil.APP_KEY);
+					prepayReqHandler.setParameter("noncestr", noncestr);
+					prepayReqHandler.setParameter("package", packageValue);
+					prepayReqHandler.setParameter("timestamp", timestamp);
+					prepayReqHandler.setParameter("traceid", traceid);
+
+					// 生成获取预支付签名
+					String sign = prepayReqHandler.createSHA1Sign();
+					// 增加非参与签名的额外参数
+					prepayReqHandler.setParameter("app_signature", sign);
+					prepayReqHandler.setParameter("sign_method", ConstantUtil.SIGN_METHOD);
+					String gateUrl = ConstantUtil.GATEURL + token;
+					prepayReqHandler.setGateUrl(gateUrl);
+					{// 日志
+						Map<String, Object> prepayIdParams = new HashMap<String, Object>();
+						prepayIdParams.put("appid", ConstantUtil.APP_ID);
+						prepayIdParams.put("appkey", ConstantUtil.APP_KEY);
+						prepayIdParams.put("noncestr", noncestr);
+						prepayIdParams.put("package", packageValue);
+						prepayIdParams.put("timestamp", timestamp);
+						prepayIdParams.put("traceid", traceid);
+						prepayIdParams.put("app_signature", sign);
+						prepayIdParams.put("sign_method", ConstantUtil.SIGN_METHOD);
+						prepayIdParams.put("prepayReqHandler.gateUrl", gateUrl);
+						ebuyPrepayWeixinLog.setPrepayIdParams(JSON.toJSONString(prepayIdParams));
+						if (logger.isDebugEnabled()) {
+							logger.debug("prepayIdParams=" + prepayIdParams);
+						}
+					}
+					// 获取prepayId
+					String prepayid = null;
+					try {
+						prepayid = prepayReqHandler.sendPrepay();
+						{// 日志
+							ebuyPrepayWeixinLog.setPrepayId(prepayid);
+							if (logger.isDebugEnabled()) {
+								logger.debug("prepayid=" + prepayid);
+							}
+						}
+					} catch (JSONException e) {
+						logger.debug("EbuyPayService.prePayRequest.prepayReqHandler.sendPrepay.error:" + e.getMessage(), e);
+						throw new BusinessRuntimeException("EbuyPayService.prePayRequest.prepayReqHandler.sendPrepay.error", e);
+					}
+					// 吐回给客户端的参数
+					if (null != prepayid && !"".equals(prepayid)) {
+						// 输出参数列表
+						clientHandler.setParameter("appid", ConstantUtil.APP_ID);
+						clientHandler.setParameter("appkey", ConstantUtil.APP_KEY);
+						clientHandler.setParameter("noncestr", noncestr);
+						clientHandler.setParameter("package", "Sign=WXPay");
+						clientHandler.setParameter("partnerid", ConstantUtil.PARTNER);
+						clientHandler.setParameter("prepayid", prepayid);
+						clientHandler.setParameter("timestamp", timestamp);
+						// 生成签名
+						sign = clientHandler.createSHA1Sign();
+						clientHandler.setParameter("sign", sign);
+
+						// xml_body = clientHandler.getXmlBody();
+						clientParameters = clientHandler.getAllParameters();
+						{// 日志
+							Map<String, Object> clientBackParamsMap = new HashMap<String, Object>();
+							clientBackParamsMap.put("appid", ConstantUtil.APP_ID);
+							clientBackParamsMap.put("appkey", ConstantUtil.APP_KEY);
+							clientBackParamsMap.put("noncestr", noncestr);
+							clientBackParamsMap.put("package", "Sign=WXPay");
+							clientBackParamsMap.put("partnerid", ConstantUtil.PARTNER);
+							clientBackParamsMap.put("prepayid", prepayid);
+							clientBackParamsMap.put("timestamp", timestamp);
+							clientBackParamsMap.put("sign", sign);
+							ebuyPrepayWeixinLog.setClientBackParams(JSON.toJSONString(clientBackParamsMap));
+							if (logger.isDebugEnabled()) {
+								logger.debug("clientBackParamsMap=" + clientBackParamsMap);
+							}
+						}
+						retcode = 0;
+					} else {
+						retcode = -2;
+					}
+				} else {
+					retcode = -1;
+				}
+				/**
+				 * 打印debug信息
+				 */
+				if (logger.isDebugEnabled()) {
+					logger.debug("\r\ndebuginfo:\r\n" + new Date());
+					logger.debug("packageReqHandler.getDebugInfo()=" + packageReqHandler.getDebugInfo());
+					logger.debug("prepayReqHandler.getDebugInfo()=" + prepayReqHandler.getDebugInfo());
+					logger.debug("clientHandler.getDebugInfo()=" + clientHandler.getDebugInfo());
+				}
+				{// 日志
+					Map<String, Object> debugInfoMap = new HashMap<String, Object>();
+					debugInfoMap.put("time", new Date());
+					debugInfoMap.put("packageReqHandler.getDebugInfo()", packageReqHandler.getDebugInfo());
+					debugInfoMap.put("prepayReqHandler.getDebugInfo()", prepayReqHandler.getDebugInfo());
+					debugInfoMap.put("clientHandler.getDebugInfo()", clientHandler.getDebugInfo());
+					ebuyPrepayWeixinLog.setDebugInfo(JSON.toJSONString(debugInfoMap));
+				}
+
+				{// 日志
+					ebuyPrepayWeixinLog.setRetcode(retcode + "");
+					if (logger.isDebugEnabled()) {
+						logger.debug("retcode=" + retcode);
+					}
+				}
+				if (retcode == 0) {
+				} else if (retcode == -2) {
+					throw new BusinessRuntimeException("EbuyPayService.prePayRequest.getPrepayId.error");
+				} else if (retcode == -1) {
+					throw new BusinessRuntimeException("EbuyPayService.prePayRequest.getToken.error");
+				} else {
+					throw new BusinessRuntimeException("EbuyPayService.prePayRequest.unkonwn.error");
+				}
+
+			}
+			// 3.结果处理
+			Map<String, Object> resMap = new HashMap<String, Object>();
+			for (String key : clientParameters.keySet()) {
+				if (!"appkey".equals(key)) {
+					if ("package".equals(key)) {
+						resMap.put("packageValue", clientParameters.get(key));
+					} else {
+						resMap.put(key, clientParameters.get(key));
+					}
+				}
+			}
+			if (logger.isDebugEnabled()) {
+				logger.debug(JSON.toJSONString(resMap));
+			}
+			return resMap;
+		} catch (RuntimeException e) {
+			ebuyPrepayWeixinLog.setErrInfo(e.getMessage());
+			logger.debug(e.getMessage(), e);
+			throw e;
+		} finally {
+			addPrepayWeixinLog(ebuyPrepayWeixinLog);
+		}
+
+	}
+
+	@Override
+	public void addPrepayWeixinLog(EbuyPrepayWeixinLog ebuyPrepayWeixinLog) {
+		try {
+			BigInteger addId = uuidManager.getNextUuidBigInteger(SEQConstants.t_ebuy_prepay_weixin_log);
+			ebuyPrepayWeixinLog.setId(addId);
+			ebuyPrepayWeixinLogBaseDao.insertEbuyPrepayWeixinLog(ebuyPrepayWeixinLog);
+		} catch (Exception e) {
+			logger.debug("addPrepayWeixinLog cause error", e);
+		}
+	}
+
+	
+	@Override
+	public void payNotify(BigInteger userId, WeiXinNotifyEntity resultEntity) {
+		String orderNo = resultEntity.getOut_trade_no();
+		//查询数据库当前的订单情况
+		EbuyOrder ebuyOrder=commonEbuyService.selectEbuyOrderByOrderNo(orderNo);
+		
+		//处理重复通知的情况
+		if(ebuyOrder.getPayStatus()!=null&&EbuyDict.EbuyOrder_PayStatus.Pay_Success.compareTo(ebuyOrder.getPayStatus())==0 //&&ebuyOrder.getStatus()>=DictConstants.EbuyOrder_Status.DaiFaHuo
+			){//如果订单状态为支付成功，则不作处理，直接返回通知支付成功
+			logger.debug("Repeat notify,the order info has been updated .");//TODO ...重复通知了,记录日志
+			return;
+		}
+		
+		//2 处理数据库逻辑
+		{//校验返回数据金额自身合法性
+			boolean valiFeeBool  = resultEntity.validateFee();
+			if(!valiFeeBool){
+				logger.error("payNotify validateFee failed,product_fee is "+resultEntity.getProduct_fee()+";transport_fee is "+resultEntity.getTransport_fee()+";total_fee is"+resultEntity.getTotal_fee());
+				throw new ValidateRuntimeException("ebuyService.payNotify.resultEntity.validate.falied");
+			}
+		}
+		{// 注意判断返回金额,校验
+			Long myAmount = ebuyOrder.getAmount();
+			Long returnAmount = resultEntity.fetchAmount();
+			if(myAmount==null||returnAmount==null||myAmount.compareTo(returnAmount)!=0){
+				logger.error("payNotify checkAmount notEqual,myAmount is "+myAmount+";returnAmount is "+returnAmount);
+				throw new BusinessRuntimeException("ebuyService.payNotify.checkAmount.notEqual.error");
+			}
+		}
+		EbuyPayRecord ebuyPayRecord = null;
+		{
+			//生成成功支付记录
+			BigInteger ebuyPayRecordAddId = uuidManager.getNextUuidBigInteger(SEQConstants.t_ebuy_pay_record);
+//				String nowTime = dualDao.getNowTime();
+			ebuyPayRecord = new EbuyPayRecord();
+			ebuyPayRecord.setId(ebuyPayRecordAddId);
+			ebuyPayRecord.setFlowNo(resultEntity.getTransaction_id());//
+			ebuyPayRecord.setOrderNo(resultEntity.getOut_trade_no());
+			ebuyPayRecord.setPayAccount(null);//TODO 暂时未获取到
+			ebuyPayRecord.setPayAmount(resultEntity.fetchAmount());
+			ebuyPayRecord.setPayDesc(null);//TODO 支付描述，用户 xxx购买商品：aa*3;bb*4;
+			ebuyPayRecord.setPayMethod(EbuyDict.EbuyPayRecord_PayMethod.WeiXin);
+			ebuyPayRecord.setPayResultInfo(JSON.toJSONString(resultEntity));
+			ebuyPayRecord.setPayStatus(EbuyDict.EbuyPayRecord_PayStatus.Pay_Success);
+			ebuyPayRecord.setPayTime(resultEntity.getTime_end());
+			ebuyPayRecord.settEbuyOrderFId(ebuyOrder.getId());
+//				ebuyPayRecord.setCreateTime(nowTime);
+			ebuyPayRecord.setCreater(userId);
+		}
+		commonEbuyService.paySuccessOperateComm(ebuyOrder.getId(), ebuyPayRecord);
+		// 注意交易单不要重复处理
+	}
+
+	@Override
+	public void addNotifyRecord(WeiXinNotifyEntity currWeiXinNotifyEntity, String payErrInfo, BigInteger orderId) {
+	//增加支付记录
+		BigInteger ebuyPayRecordAddId = uuidManager.getNextUuidBigInteger(SEQConstants.t_ebuy_pay_record);
+		EbuyPayRecord ebuyPayRecord = new EbuyPayRecord();
+		ebuyPayRecord.setId(ebuyPayRecordAddId);
+		ebuyPayRecord.setFlowNo(currWeiXinNotifyEntity.getTransaction_id());//
+		ebuyPayRecord.setOrderNo(currWeiXinNotifyEntity.getOut_trade_no());
+		ebuyPayRecord.setPayAccount(null);//TODO 暂时未获取到
+		ebuyPayRecord.setPayAmount(currWeiXinNotifyEntity.fetchAmount());
+		ebuyPayRecord.setPayDesc(null);//TODO 支付描述，用户 xxx购买商品：aa*3;bb*4;
+		ebuyPayRecord.setPayMethod(EbuyDict.EbuyPayRecord_PayMethod.WeiXin);
+		ebuyPayRecord.setPayResultInfo(JSON.toJSONString(currWeiXinNotifyEntity));
+		ebuyPayRecord.setPayStatus(EbuyDict.EbuyPayRecord_PayStatus.Pay_Failed);
+		ebuyPayRecord.setPayTime(currWeiXinNotifyEntity.getTime_end());
+		ebuyPayRecord.settEbuyOrderFId(orderId);
+		ebuyPayRecord.setPayErrInfo(payErrInfo);
+//		String nowTime = dualDao.getNowTime();
+//		ebuyPayRecord.setCreateTime(nowTime);
+		ebuyPayRecordBaseService.insertEbuyPayRecord(ebuyPayRecord);
+	}
+	
+	
+//	@Override
+//	public void doCouponOnlyPay(BigInteger userId, BigInteger orderId, Long hbAmount) {
+//		//待完善 doCouponOnlyPay
+//	}
+	
+	// @Override
+	// public void testTrans() {
+	// try {
+	// BigInteger uuid =
+	// UuidManager.getNextUuidBigInteger(SEQConstants.t_ebuy_prepay_weixin_log);
+	// System.out.println(uuid);
+	// throw new BusinessRuntimeException();
+	// } catch (BusinessRuntimeException e) {
+	// throw e;
+	// }finally{
+	// EbuyPrepayWeixinLog ebuyPrepayWeixinLog = new EbuyPrepayWeixinLog();
+	// ebuyPrepayWeixinLog.setId(new BigInteger("1"));
+	// ebuyPrepayWeixinLogBaseDao.insertEbuyPrepayWeixinLog(MapConverter.toMap(ebuyPrepayWeixinLog));
+	// }
+	//
+	// }
+
+}

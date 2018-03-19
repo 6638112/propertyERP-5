@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:幸运抽奖记录表 t_lottery_draw_record -->
+<mapper namespace="lotteryDrawRecordBase">
+	<resultMap type="LotteryDrawRecord" id="lotteryDrawRecordBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_lottery_draw_product_id" javaType="java.math.BigInteger" property="tLotteryDrawProductId"/>  <!-- 奖品id（不中奖使用默认奖品id） -->        <result column="t_user_id" javaType="java.math.BigInteger" property="tUserId"/>  <!-- 用户id -->        <result column="f_lottery_draw_time" javaType="java.lang.String" property="lotteryDrawTime"/>  <!-- 抽奖时间 -->        <result column="f_status" javaType="java.lang.Integer" property="status"/>  <!-- 中奖状态（1中奖，2未中奖） -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="LotteryDrawRecord" id="lotteryDrawRecordExtendMap" extends="lotteryDrawRecordBaseMap">
+	</resultMap>
+	<resultMap type="LotteryDrawRecord" id="lotteryDrawRecordBaseMap_AppendTable">
+        <id column="LDRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="LDRtLotteryDrawProductId" javaType="java.math.BigInteger" property="tLotteryDrawProductId"/>  <!-- 奖品id（不中奖使用默认奖品id） -->        <result column="LDRtUserId" javaType="java.math.BigInteger" property="tUserId"/>  <!-- 用户id -->        <result column="LDRlotteryDrawTime" javaType="java.lang.String" property="lotteryDrawTime"/>  <!-- 抽奖时间 -->        <result column="LDRstatus" javaType="java.lang.Integer" property="status"/>  <!-- 中奖状态（1中奖，2未中奖） -->        <result column="LDRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="LDRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="LDRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="LDRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="LDRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="LDRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="LDRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="LotteryDrawRecord" id="lotteryDrawRecordBaseMap_AppendTable1">
+        <id column="LDR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="LDR1tLotteryDrawProductId" javaType="java.math.BigInteger" property="tLotteryDrawProductId"/>  <!-- 奖品id（不中奖使用默认奖品id） -->        <result column="LDR1tUserId" javaType="java.math.BigInteger" property="tUserId"/>  <!-- 用户id -->        <result column="LDR1lotteryDrawTime" javaType="java.lang.String" property="lotteryDrawTime"/>  <!-- 抽奖时间 -->        <result column="LDR1status" javaType="java.lang.Integer" property="status"/>  <!-- 中奖状态（1中奖，2未中奖） -->        <result column="LDR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="LDR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="LDR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="LDR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="LDR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="LDR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="LDR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		LDR.f_id,LDR.t_lottery_draw_product_id,LDR.t_user_id,date_format(LDR.f_lottery_draw_time,'%Y-%m-%d %T') as f_lottery_draw_time,LDR.f_status
+	</sql>
+	<sql id="queryHead_AppendTable">
+		LDR.f_id as LDRid,LDR.t_lottery_draw_product_id as LDRtLotteryDrawProductId,LDR.t_user_id as LDRtUserId,date_format(LDR.f_lottery_draw_time,'%Y-%m-%d %T') as LDRlotteryDrawTime,LDR.f_status as LDRstatus
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		LDR1.f_id as LDR1id,LDR1.t_lottery_draw_product_id as LDR1tLotteryDrawProductId,LDR1.t_user_id as LDR1tUserId,date_format(LDR1.f_lottery_draw_time,'%Y-%m-%d %T') as LDR1lotteryDrawTime,LDR1.f_status as LDR1status
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (LDR.f_id = #{id} ) </if>        <if test="tLotteryDrawProductId != null">  and (LDR.t_lottery_draw_product_id = #{tLotteryDrawProductId} ) </if>        <if test="tUserId != null">  and (LDR.t_user_id = #{tUserId} ) </if>        <if test="lotteryDrawTime != null and !lotteryDrawTime.equals('')  ">  and (LDR.f_lottery_draw_time = str_to_date(#{lotteryDrawTime},'%Y-%m-%d %T') ) </if>        <if test="lotteryDrawTime_START != null and !lotteryDrawTime_START.equals('')  ">              <![CDATA[ and (LDR.f_lottery_draw_time >= str_to_date(#{lotteryDrawTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="lotteryDrawTime_END != null and !lotteryDrawTime_END.equals('')  ">            <![CDATA[ and (LDR.f_lottery_draw_time <= str_to_date(#{lotteryDrawTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="status != null">  and (LDR.f_status = #{status} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (LDR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (LDR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (LDR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (LDR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (LDR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (LDR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (LDR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (LDR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (LDR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (LDR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (LDR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (LDR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (LDR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (LDR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (LDR.f_id = #{id} ) </if>        <if test="tLotteryDrawProductId != null and !tLotteryDrawProductId.equals('')  ">  and (LDR.t_lottery_draw_product_id = #{tLotteryDrawProductId} ) </if>        <if test="tUserId != null and !tUserId.equals('')  ">  and (LDR.t_user_id = #{tUserId} ) </if>        <if test="lotteryDrawTime != null and !lotteryDrawTime.equals('')  ">  and (LDR.f_lottery_draw_time = str_to_date(#{lotteryDrawTime},'%Y-%m-%d %T') ) </if>        <if test="lotteryDrawTime_START != null and !lotteryDrawTime_START.equals('')  ">              <![CDATA[ and (LDR.f_lottery_draw_time >= str_to_date(#{lotteryDrawTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="lotteryDrawTime_END != null and !lotteryDrawTime_END.equals('')  ">            <![CDATA[ and (LDR.f_lottery_draw_time <= str_to_date(#{lotteryDrawTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="status != null and !status.equals('')  ">  and (LDR.f_status = #{status} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (LDR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (LDR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (LDR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (LDR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (LDR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (LDR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (LDR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (LDR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (LDR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (LDR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (LDR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (LDR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (LDR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (LDR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="lotteryDrawRecordBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="lotteryDrawRecordBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="lotteryDrawRecordBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="lotteryDrawRecordBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_lottery_draw_record LDR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(幸运抽奖记录表)信息。 -->
+	<sql id="select_lotteryDrawRecord">
+		SELECT <include refid="lotteryDrawRecordBase.queryHead"/>
+		<include refid="lotteryDrawRecordBase.busiQueryCondition"/>
+		<include refid="lotteryDrawRecordBase.dimCheckSql"/>
+		ORDER BY LDR.f_id DESC
+	</sql>
+	<select id="select_lotteryDrawRecord" parameterType="java.util.Map" resultMap="lotteryDrawRecordBase.lotteryDrawRecordExtendMap">
+		<include refid="lotteryDrawRecordBase.select_lotteryDrawRecord"/>
+	</select>
+	
+	<!-- 根据条件分页查询(幸运抽奖记录表)信息  -->
+	<sql id="select_lotteryDrawRecord_withPage">
+		SELECT <include refid="lotteryDrawRecordBase.queryHead"/>
+		<include refid="lotteryDrawRecordBase.busiQueryCondition"/>
+		<include refid="lotteryDrawRecordBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_lotteryDrawRecord_withPage" resultMap="lotteryDrawRecordBase.lotteryDrawRecordExtendMap" parameterType="java.util.Map">
+		<include refid="lotteryDrawRecordBase.select_lotteryDrawRecord_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(幸运抽奖记录表)信息。 -->
+	<sql id="select_lotteryDrawRecord_bySeqId">
+		SELECT <include refid="lotteryDrawRecordBase.queryHead"/>
+		<include refid="lotteryDrawRecordBase.busiQueryCondition"/>
+		 and LDR.f_id = #{_parameter}
+	</sql>
+	<select id="select_lotteryDrawRecord_bySeqId" parameterType="java.math.BigInteger" resultMap="lotteryDrawRecordBase.lotteryDrawRecordBaseMap">
+		<include refid="lotteryDrawRecordBase.select_lotteryDrawRecord_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(幸运抽奖记录表)记录数  -->
+	<sql id="select_lotteryDrawRecord_count">
+		SELECT COUNT(*)
+		<include refid="lotteryDrawRecordBase.busiQueryCount"/>
+		<include refid="lotteryDrawRecordBase.dimCheckSql"/>
+	</sql>
+	<select id="select_lotteryDrawRecord_count" resultType="java.lang.Integer">
+		<include refid="lotteryDrawRecordBase.select_lotteryDrawRecord_count"/>
+	</select>
+	
+	 <!-- 往(幸运抽奖记录表)新增一条记录。 -->
+	 <sql id="insert_lotteryDrawRecord">
+		INSERT INTO t_lottery_draw_record 
+		(f_id,t_lottery_draw_product_id,t_user_id,f_lottery_draw_time,f_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tLotteryDrawProductId},#{tUserId},str_to_date(#{lotteryDrawTime,jdbcType=DATE},'%Y-%m-%d %T'),#{status},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_lotteryDrawRecord" parameterType="LotteryDrawRecord">
+		<include refid="lotteryDrawRecordBase.insert_lotteryDrawRecord"/>
+    </insert>
+    
+	<!-- 批量新增(幸运抽奖记录表)信息 -->
+    <insert id="insert_lotteryDrawRecord_Batch" parameterType="java.util.List">
+    	INSERT INTO t_lottery_draw_record 
+		(f_id,t_lottery_draw_product_id,t_user_id,f_lottery_draw_time,f_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tLotteryDrawProductId},#{item.tUserId},str_to_date(#{item.lotteryDrawTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.status},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(幸运抽奖记录表)信息。 -->
+    <sql id="update_lotteryDrawRecord">
+		UPDATE t_lottery_draw_record		<trim prefix="SET" prefixOverrides=","> 		<if test="tLotteryDrawProductId != null and !tLotteryDrawProductId.equals('') "> ,t_lottery_draw_product_id=#{tLotteryDrawProductId}</if> 		<if test="tUserId != null and !tUserId.equals('') "> ,t_user_id=#{tUserId}</if> 		<if test="lotteryDrawTime != null and !lotteryDrawTime.equals('') "> ,f_lottery_draw_time=str_to_date(#{lotteryDrawTime},'%Y-%m-%d %T')</if> 		<if test="status != null and !status.equals('') "> ,f_status=#{status}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_lotteryDrawRecord" parameterType="LotteryDrawRecord">
+		<include refid="lotteryDrawRecordBase.update_lotteryDrawRecord"/>
+    </update>
+    
+    <!-- 批量更新(幸运抽奖记录表)信息。 -->
+    <update id="update_lotteryDrawRecord_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_lottery_draw_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tLotteryDrawProductId != null and !item.tLotteryDrawProductId.equals('')  "> ,t_lottery_draw_product_id=#{item.tLotteryDrawProductId}</if> 		<if test="item.tUserId != null and !item.tUserId.equals('')  "> ,t_user_id=#{item.tUserId}</if> 		<if test="item.lotteryDrawTime != null and !item.lotteryDrawTime.equals('')  "> ,f_lottery_draw_time=str_to_date(#{item.lotteryDrawTime},'%Y-%m-%d %T')</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(幸运抽奖记录表)信息_逻辑删除。 -->
+    <sql id="delete_lotteryDrawRecord_Logic">
+		UPDATE t_lottery_draw_record		<trim prefix="SET" prefixOverrides=","> 		<if test="tLotteryDrawProductId != null and !tLotteryDrawProductId.equals('')  "> ,t_lottery_draw_product_id=#{tLotteryDrawProductId}</if> 		<if test="tUserId != null and !tUserId.equals('')  "> ,t_user_id=#{tUserId}</if> 		<if test="lotteryDrawTime != null and !lotteryDrawTime.equals('')  "> ,f_lottery_draw_time=str_to_date(#{lotteryDrawTime},'%Y-%m-%d %T')</if> 		<if test="status != null and !status.equals('')  "> ,f_status=#{status}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_lotteryDrawRecord_Logic" parameterType="LotteryDrawRecord">
+		<include refid="lotteryDrawRecordBase.delete_lotteryDrawRecord_Logic"/>
+    </update>
+    
+    <!-- 批量删除(幸运抽奖记录表)信息_逻辑删除 -->
+    <update id="delete_lotteryDrawRecord_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_lottery_draw_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tLotteryDrawProductId != null and !item.tLotteryDrawProductId.equals('')  "> ,t_lottery_draw_product_id=#{item.tLotteryDrawProductId}</if> 		<if test="item.tUserId != null and !item.tUserId.equals('')  "> ,t_user_id=#{item.tUserId}</if> 		<if test="item.lotteryDrawTime != null and !item.lotteryDrawTime.equals('')  "> ,f_lottery_draw_time=str_to_date(#{item.lotteryDrawTime},'%Y-%m-%d %T')</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(幸运抽奖记录表)信息。 -->
+    <sql id="delete_lotteryDrawRecord">
+		DELETE FROM t_lottery_draw_record WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_lotteryDrawRecord" parameterType="java.lang.String">
+		<include refid="lotteryDrawRecordBase.delete_lotteryDrawRecord"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(幸运抽奖记录表)信息。 -->
+    <delete id="delete_lotteryDrawRecord_Batch" parameterType="java.util.List">
+		DELETE FROM t_lottery_draw_record WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 加密 -->
+<mapper namespace="encrypt">
+	<!-- 测试时临时注释掉 -->
+	<cache
+		eviction="LRU"
+		flushInterval="600000" 
+		size="2048"
+		readOnly="true"/>
+	<!-- FIFO -->
+	<!-- 10分钟10*60*1000 -->
+	
+	<!-- 手动调用清除缓存使用 -->
+	<select id="cleanCache" resultType="long" useCache="false" flushCache="true">
+    	select 1
+    </select>
+	
+	<resultMap type="com.cnfantasia.server.commbusi.encrypt.entity.EncryptUrlEntity" id="encryptUrlEntity_Map_Append"
+		extends="encryptUrlBase.encryptUrlBaseMap_AppendTable">
+		<collection property="columList" javaType="list" ofType="string" >
+    		<result property="columList" column="ext_colum"/>
+    	</collection>
+	</resultMap>
+	
+	<select id="select_EncryptUrl_All" resultMap="encryptUrlEntity_Map_Append">
+    	SELECT <include refid="encryptUrlBase.queryHead_AppendTable"/>
+    		,EC.f_colum AS ext_colum
+		FROM t_encrypt_url EU
+			LEFT JOIN t_encrypt_colum EC ON EC.f_url_id = EU.f_id AND EC.f_sys0_del_state = 0
+		WHERE 1=1
+		AND EU.f_sys0_del_state = 0
+	</select>
+	
+</mapper>

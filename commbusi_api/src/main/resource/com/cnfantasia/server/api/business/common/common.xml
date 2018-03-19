@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+	<bean id="commonLockDao" class="com.cnfantasia.server.api.common.dao.CommonLockDao"  parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="commonLockService" class="com.cnfantasia.server.api.common.service.CommonLockService">
+		<property name="commonLockDao" ref="commonLockDao" />
+	</bean>
+	
+	<bean id="commMsgDao" class="com.cnfantasia.server.api.common.dao.CommMsgDao"  parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="commMsgService" class="com.cnfantasia.server.api.common.service.CommMsgService">
+		<property name="commMsgDao" ref="commMsgDao" />
+	</bean>
+	
+	<bean id="commMobileService" class="com.cnfantasia.server.api.commonBusiness.service.CommMobileService">
+		<property name="commMsgService" ref="commMsgService" />
+	</bean>
+	
+	<bean id="appVersionDao" class="com.cnfantasia.server.api.common.dao.AppVersionDao"  parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="appVersionService" class="com.cnfantasia.server.api.common.service.AppVersionService">
+		<property name="appVersionDao" ref="appVersionDao" />
+	</bean>
+	
+</beans>  

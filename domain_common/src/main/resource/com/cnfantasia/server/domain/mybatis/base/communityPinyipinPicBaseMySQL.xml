@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:拼一拼图片列表 t_community_pinyipin_pic -->
+<mapper namespace="communityPinyipinPicBase">
+	<resultMap type="CommunityPinyipinPic" id="communityPinyipinPicBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_community_pinyipin_content_f_id" javaType="java.math.BigInteger" property="tCommunityPinyipinContentFId"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="f_pic_url" javaType="java.lang.String" property="picUrl"/>  <!-- 图片地址 -->        <result column="f_uploader" javaType="java.math.BigInteger" property="uploader"/>  <!-- 图片上传者 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommunityPinyipinPic" id="communityPinyipinPicExtendMap" extends="communityPinyipinPicBaseMap">
+	</resultMap>
+	<resultMap type="CommunityPinyipinPic" id="communityPinyipinPicBaseMap_AppendTable">
+        <id column="CPPid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CPPtCommunityPinyipinContentFId" javaType="java.math.BigInteger" property="tCommunityPinyipinContentFId"/>  <!--  -->        <result column="CPPname" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="CPPdesc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="CPPpicUrl" javaType="java.lang.String" property="picUrl"/>  <!-- 图片地址 -->        <result column="CPPuploader" javaType="java.math.BigInteger" property="uploader"/>  <!-- 图片上传者 -->        <result column="CPPsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CPPsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CPPsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CPPsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CPPsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CPPsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CPPsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommunityPinyipinPic" id="communityPinyipinPicBaseMap_AppendTable1">
+        <id column="CPP1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CPP1tCommunityPinyipinContentFId" javaType="java.math.BigInteger" property="tCommunityPinyipinContentFId"/>  <!--  -->        <result column="CPP1name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="CPP1desc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="CPP1picUrl" javaType="java.lang.String" property="picUrl"/>  <!-- 图片地址 -->        <result column="CPP1uploader" javaType="java.math.BigInteger" property="uploader"/>  <!-- 图片上传者 -->        <result column="CPP1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CPP1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CPP1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CPP1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CPP1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CPP1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CPP1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CPP.f_id,CPP.t_community_pinyipin_content_f_id,CPP.f_name,CPP.f_desc,CPP.f_pic_url,CPP.f_uploader,date_format(CPP.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CPP.f_id as CPPid,CPP.t_community_pinyipin_content_f_id as CPPtCommunityPinyipinContentFId,CPP.f_name as CPPname,CPP.f_desc as CPPdesc,CPP.f_pic_url as CPPpicUrl,CPP.f_uploader as CPPuploader,date_format(CPP.f_sys0_upd_time,'%Y-%m-%d %T') as CPPsys0UpdTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CPP1.f_id as CPP1id,CPP1.t_community_pinyipin_content_f_id as CPP1tCommunityPinyipinContentFId,CPP1.f_name as CPP1name,CPP1.f_desc as CPP1desc,CPP1.f_pic_url as CPP1picUrl,CPP1.f_uploader as CPP1uploader,date_format(CPP1.f_sys0_upd_time,'%Y-%m-%d %T') as CPP1sys0UpdTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CPP.f_id = #{id} ) </if>        <if test="tCommunityPinyipinContentFId != null">  and (CPP.t_community_pinyipin_content_f_id = #{tCommunityPinyipinContentFId} ) </if>        <if test="name != null">  and (CPP.f_name = #{name} ) </if>        <if test="desc != null">  and (CPP.f_desc = #{desc} ) </if>        <if test="picUrl != null">  and (CPP.f_pic_url = #{picUrl} ) </if>        <if test="uploader != null">  and (CPP.f_uploader = #{uploader} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CPP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CPP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CPP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CPP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CPP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CPP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CPP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CPP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CPP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (CPP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (CPP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (CPP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (CPP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (CPP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CPP.f_id = #{id} ) </if>        <if test="tCommunityPinyipinContentFId != null and !tCommunityPinyipinContentFId.equals('')  ">  and (CPP.t_community_pinyipin_content_f_id = #{tCommunityPinyipinContentFId} ) </if>        <if test="name != null and !name.equals('')  ">  and (CPP.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="desc != null and !desc.equals('')  ">  and (CPP.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="picUrl != null and !picUrl.equals('')  ">  and (CPP.f_pic_url like CONCAT('%',#{picUrl},'%') ) </if>        <if test="uploader != null and !uploader.equals('')  ">  and (CPP.f_uploader = #{uploader} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CPP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CPP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CPP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CPP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CPP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CPP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CPP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CPP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CPP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CPP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CPP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CPP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CPP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (CPP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="communityPinyipinPicBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="communityPinyipinPicBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="communityPinyipinPicBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="communityPinyipinPicBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_community_pinyipin_pic CPP    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(拼一拼图片列表)信息。 -->
+	<sql id="select_communityPinyipinPic">
+		SELECT <include refid="communityPinyipinPicBase.queryHead"/>
+		<include refid="communityPinyipinPicBase.busiQueryCondition"/>
+		<include refid="communityPinyipinPicBase.dimCheckSql"/>
+		ORDER BY CPP.f_id DESC
+	</sql>
+	<select id="select_communityPinyipinPic" parameterType="java.util.Map" resultMap="communityPinyipinPicBase.communityPinyipinPicExtendMap">
+		<include refid="communityPinyipinPicBase.select_communityPinyipinPic"/>
+	</select>
+	
+	<!-- 根据条件分页查询(拼一拼图片列表)信息  -->
+	<sql id="select_communityPinyipinPic_withPage">
+		SELECT <include refid="communityPinyipinPicBase.queryHead"/>
+		<include refid="communityPinyipinPicBase.busiQueryCondition"/>
+		<include refid="communityPinyipinPicBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_communityPinyipinPic_withPage" resultMap="communityPinyipinPicBase.communityPinyipinPicExtendMap" parameterType="java.util.Map">
+		<include refid="communityPinyipinPicBase.select_communityPinyipinPic_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(拼一拼图片列表)信息。 -->
+	<sql id="select_communityPinyipinPic_bySeqId">
+		SELECT <include refid="communityPinyipinPicBase.queryHead"/>
+		<include refid="communityPinyipinPicBase.busiQueryCondition"/>
+		 and CPP.f_id = #{_parameter}
+	</sql>
+	<select id="select_communityPinyipinPic_bySeqId" parameterType="java.math.BigInteger" resultMap="communityPinyipinPicBase.communityPinyipinPicBaseMap">
+		<include refid="communityPinyipinPicBase.select_communityPinyipinPic_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(拼一拼图片列表)记录数  -->
+	<sql id="select_communityPinyipinPic_count">
+		SELECT COUNT(*)
+		<include refid="communityPinyipinPicBase.busiQueryCount"/>
+		<include refid="communityPinyipinPicBase.dimCheckSql"/>
+	</sql>
+	<select id="select_communityPinyipinPic_count" resultType="java.lang.Integer">
+		<include refid="communityPinyipinPicBase.select_communityPinyipinPic_count"/>
+	</select>
+	
+	 <!-- 往(拼一拼图片列表)新增一条记录。 -->
+	 <sql id="insert_communityPinyipinPic">
+		INSERT INTO t_community_pinyipin_pic 
+		(f_id,t_community_pinyipin_content_f_id,f_name,f_desc,f_pic_url,f_uploader,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tCommunityPinyipinContentFId},#{name,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR},#{picUrl,jdbcType=VARCHAR},#{uploader},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_communityPinyipinPic" parameterType="CommunityPinyipinPic">
+		<include refid="communityPinyipinPicBase.insert_communityPinyipinPic"/>
+    </insert>
+    
+	<!-- 批量新增(拼一拼图片列表)信息 -->
+    <insert id="insert_communityPinyipinPic_Batch" parameterType="java.util.List">
+    	INSERT INTO t_community_pinyipin_pic 
+		(f_id,t_community_pinyipin_content_f_id,f_name,f_desc,f_pic_url,f_uploader,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tCommunityPinyipinContentFId},#{item.name,jdbcType=VARCHAR},#{item.desc,jdbcType=VARCHAR},#{item.picUrl,jdbcType=VARCHAR},#{item.uploader},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(拼一拼图片列表)信息。 -->
+    <sql id="update_communityPinyipinPic">
+		UPDATE t_community_pinyipin_pic		<trim prefix="SET" prefixOverrides=","> 		<if test="tCommunityPinyipinContentFId != null and !tCommunityPinyipinContentFId.equals('') "> ,t_community_pinyipin_content_f_id=#{tCommunityPinyipinContentFId}</if> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="picUrl != null and !picUrl.equals('') "> ,f_pic_url=#{picUrl}</if> 		<if test="uploader != null and !uploader.equals('') "> ,f_uploader=#{uploader}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_communityPinyipinPic" parameterType="CommunityPinyipinPic">
+		<include refid="communityPinyipinPicBase.update_communityPinyipinPic"/>
+    </update>
+    
+    <!-- 批量更新(拼一拼图片列表)信息。 -->
+    <update id="update_communityPinyipinPic_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_community_pinyipin_pic		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tCommunityPinyipinContentFId != null and !item.tCommunityPinyipinContentFId.equals('')  "> ,t_community_pinyipin_content_f_id=#{item.tCommunityPinyipinContentFId}</if> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.picUrl != null and !item.picUrl.equals('')  "> ,f_pic_url=#{item.picUrl}</if> 		<if test="item.uploader != null and !item.uploader.equals('')  "> ,f_uploader=#{item.uploader}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(拼一拼图片列表)信息_逻辑删除。 -->
+    <sql id="delete_communityPinyipinPic_Logic">
+		UPDATE t_community_pinyipin_pic		<trim prefix="SET" prefixOverrides=","> 		<if test="tCommunityPinyipinContentFId != null and !tCommunityPinyipinContentFId.equals('')  "> ,t_community_pinyipin_content_f_id=#{tCommunityPinyipinContentFId}</if> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="picUrl != null and !picUrl.equals('')  "> ,f_pic_url=#{picUrl}</if> 		<if test="uploader != null and !uploader.equals('')  "> ,f_uploader=#{uploader}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_communityPinyipinPic_Logic" parameterType="CommunityPinyipinPic">
+		<include refid="communityPinyipinPicBase.delete_communityPinyipinPic_Logic"/>
+    </update>
+    
+    <!-- 批量删除(拼一拼图片列表)信息_逻辑删除 -->
+    <update id="delete_communityPinyipinPic_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_community_pinyipin_pic		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tCommunityPinyipinContentFId != null and !item.tCommunityPinyipinContentFId.equals('')  "> ,t_community_pinyipin_content_f_id=#{item.tCommunityPinyipinContentFId}</if> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.picUrl != null and !item.picUrl.equals('')  "> ,f_pic_url=#{item.picUrl}</if> 		<if test="item.uploader != null and !item.uploader.equals('')  "> ,f_uploader=#{item.uploader}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(拼一拼图片列表)信息。 -->
+    <sql id="delete_communityPinyipinPic">
+		DELETE FROM t_community_pinyipin_pic WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_communityPinyipinPic" parameterType="java.lang.String">
+		<include refid="communityPinyipinPicBase.delete_communityPinyipinPic"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(拼一拼图片列表)信息。 -->
+    <delete id="delete_communityPinyipinPic_Batch" parameterType="java.util.List">
+		DELETE FROM t_community_pinyipin_pic WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

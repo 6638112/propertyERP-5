@@ -1,0 +1,114 @@
+/**   
+* Filename:    PropertyPayService.java   
+* @version:    1.0  
+* Create at:   2014年11月20日 上午6:29:05   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年11月20日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.payment.service;
+
+import java.math.BigInteger;
+import java.util.Map;
+
+import com.cnfantasia.server.api.plotproperty.entity.PayBillEntity;
+import com.cnfantasia.server.api.plotproperty.entity.PlotpropertyOrderEntity;
+import com.cnfantasia.server.api.plotproperty.service.IPlotpropertyService;
+import com.cnfantasia.server.api.room.entity.RealRoomEntity;
+import com.cnfantasia.server.apibase.ebuyPayRecord.entity.EbuyPayRecord;
+import com.cnfantasia.server.business.pub.utils.DateUtil;
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+import com.tenpay.ClientRequestHandler;
+import com.tenpay.PackageRequestHandler;
+import com.tenpay.PrepayIdRequestHandler;
+
+/**
+ * Filename:    PropertyPayService.java
+ * @version:    1.0.0
+ * Create at:   2014年11月20日 上午6:29:05
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年11月20日       shiyl             1.0             1.0 Version
+ */
+public class PropertyPayService extends AbstractPaymentService implements IPropertyPayService{
+	private IPlotpropertyService plotpropertyService;
+	public void setPlotpropertyService(IPlotpropertyService plotpropertyService) {
+		this.plotpropertyService = plotpropertyService;
+	}
+	
+//	private ICommonPrizeService commonPrizeService;
+//	public void setCommonPrizeService(ICommonPrizeService commonPrizeService) {
+//		this.commonPrizeService = commonPrizeService;
+//	}
+
+	@Override
+	public Map<String, Object> weixinPrePay(BigInteger userId, BigInteger orderId, String notify_url, String remoteAddr,
+			PackageRequestHandler packageReqHandler, PrepayIdRequestHandler prepayReqHandler,
+			ClientRequestHandler clientHandler) {
+		PlotpropertyOrderEntity plotpropertyOrder = plotpropertyService.getPlotpropertyOrderDetail(userId, orderId);
+		if(plotpropertyOrder==null){
+			throw new BusinessRuntimeException("PropertyPayService.weixinPrePay.order.isNull");
+		}
+		PayBillEntity payBillEntity = plotpropertyOrder.getPayBillEntity();
+		if(payBillEntity==null){
+			throw new BusinessRuntimeException("PropertyPayService.weixinPrePay.payBill.isNull");
+		}
+		RealRoomEntity realRoomEntity = plotpropertyOrder.getPayBillEntity().getRealRoomEntity();
+		if(realRoomEntity==null||realRoomEntity.getBuildingEntity()==null
+				||realRoomEntity.getBuildingEntity().getGroupBuildingEntity()==null
+				||realRoomEntity.getBuildingEntity().getGroupBuildingEntity().getAddressBlockEntity()==null
+				||realRoomEntity.getBuildingEntity().getGroupBuildingEntity().getAddressBlockEntity().getAddressCityEntity()==null){
+			throw new BusinessRuntimeException("PropertyPayService.weixinPrePay.realRoomInfo.lost");
+		}
+		StringBuffer productInfoSbf = new StringBuffer();
+		productInfoSbf.append(realRoomEntity.getBuildingEntity().getGroupBuildingEntity().getAddressBlockEntity().getAddressCityEntity().getName());
+		productInfoSbf.append(realRoomEntity.getBuildingEntity().getGroupBuildingEntity().getAddressBlockEntity().getName());
+		productInfoSbf.append(realRoomEntity.getBuildingEntity().getGroupBuildingEntity().getName());
+		productInfoSbf.append(realRoomEntity.getBuildingEntity().getName().endsWith("栋")?realRoomEntity.getBuildingEntity().getName():realRoomEntity.getBuildingEntity().getName()+"栋");
+		productInfoSbf.append(realRoomEntity.getNum());
+		productInfoSbf.append(",");
+		productInfoSbf.append(DateUtil.strFormate(payBillEntity.getMonth(),DateUtil.formatSecond.get(), DateUtil.formatOnlyYear.get()));
+		productInfoSbf.append("年");
+		productInfoSbf.append(DateUtil.strFormate(payBillEntity.getMonth(),DateUtil.formatSecond.get(), DateUtil.formatOnlyMonth.get()));
+		productInfoSbf.append("月物业费");
+		String productInfo = productInfoSbf.toString();//深圳市福田区花好园A栋301,11月物业费
+		Long tofalAmount = plotpropertyOrder.getAmount();
+		String out_trade_no = plotpropertyOrder.getOrderNo();
+		Map<String, Object> resMap =  weixinPrePay(userId, orderId, notify_url, remoteAddr, packageReqHandler, prepayReqHandler, clientHandler, productInfo, tofalAmount, out_trade_no);
+		return resMap;
+	}
+	
+	//TODO 支付失败，若使用了折扣，则将对应的折扣由已使用标记为未使用
+	@Override
+	public void paySuccessOperateComm(BigInteger userId,BigInteger orderId, EbuyPayRecord ebuyPayRecord) {
+		// 若支付成功，回填 f_is_pay和f_succ_pay_amount 和 f_payment_way
+		PlotpropertyOrderEntity plotpropertyOrder = plotpropertyService.getPlotpropertyOrderDetail(orderId);
+		if(plotpropertyOrder==null){
+			throw new BusinessRuntimeException("PropertyPayService.paySuccessOpt.order.isNull");
+		}
+		if(plotpropertyOrder.getEbuyOrderHasTPayBill()==null){
+			throw new BusinessRuntimeException("PropertyPayService.paySuccessOpt.orderHasTPayBill.isNull");
+		}
+		PayBillEntity payBillEntity = plotpropertyOrder.getPayBillEntity();
+		if(payBillEntity==null){
+			throw new BusinessRuntimeException("PropertyPayService.paySuccessOpt.payBill.isNull");
+		}
+		{//更新账单信息
+			Integer resCount = plotpropertyService.updatePayBillInfoSuccessByApp(payBillEntity.getId(), plotpropertyOrder.getAmount()
+					, plotpropertyOrder.getEbuyOrderHasTPayBill().getDiscount()
+					, plotpropertyOrder.getEbuyOrderHasTPayBill().getPrizeRecordId());
+			if(resCount==null||resCount<=0){
+				throw new BusinessRuntimeException("PropertyPayService.paySuccessOpt.payBill.updPayBillInfo.failed");
+			}
+		}
+		
+		super.paySuccessOperateComm(userId,orderId, ebuyPayRecord);
+	}
+	
+}

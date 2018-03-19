@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:门牌车牌信息临时表 t_car_key_room_temp -->
+<mapper namespace="carKeyRoomTempBase">
+	<resultMap type="CarKeyRoomTemp" id="carKeyRoomTempBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_building_no" javaType="java.lang.String" property="buildingNo"/>  <!-- 楼栋号 -->        <result column="f_room_no" javaType="java.lang.String" property="roomNo"/>  <!-- 房间号 -->        <result column="f_car_num" javaType="java.lang.String" property="carNum"/>  <!-- 车牌号 -->        <result column="t_group_building_f_id" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 小区Id -->        <result column="f_isnot_status" javaType="java.lang.Integer" property="isnotStatus"/>  <!-- 是否月卡 -->        <result column="f_status" javaType="java.lang.Integer" property="status"/>  <!-- 状态 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 申请时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CarKeyRoomTemp" id="carKeyRoomTempExtendMap" extends="carKeyRoomTempBaseMap">
+	</resultMap>
+	<resultMap type="CarKeyRoomTemp" id="carKeyRoomTempBaseMap_AppendTable">
+        <id column="CKRTid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CKRTbuildingNo" javaType="java.lang.String" property="buildingNo"/>  <!-- 楼栋号 -->        <result column="CKRTroomNo" javaType="java.lang.String" property="roomNo"/>  <!-- 房间号 -->        <result column="CKRTcarNum" javaType="java.lang.String" property="carNum"/>  <!-- 车牌号 -->        <result column="CKRTtGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 小区Id -->        <result column="CKRTisnotStatus" javaType="java.lang.Integer" property="isnotStatus"/>  <!-- 是否月卡 -->        <result column="CKRTstatus" javaType="java.lang.Integer" property="status"/>  <!-- 状态 -->        <result column="CKRTsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 申请时间 -->        <result column="CKRTsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CKRTsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CKRTsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CKRTsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CKRTsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CKRTsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CarKeyRoomTemp" id="carKeyRoomTempBaseMap_AppendTable1">
+        <id column="CKRT1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CKRT1buildingNo" javaType="java.lang.String" property="buildingNo"/>  <!-- 楼栋号 -->        <result column="CKRT1roomNo" javaType="java.lang.String" property="roomNo"/>  <!-- 房间号 -->        <result column="CKRT1carNum" javaType="java.lang.String" property="carNum"/>  <!-- 车牌号 -->        <result column="CKRT1tGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 小区Id -->        <result column="CKRT1isnotStatus" javaType="java.lang.Integer" property="isnotStatus"/>  <!-- 是否月卡 -->        <result column="CKRT1status" javaType="java.lang.Integer" property="status"/>  <!-- 状态 -->        <result column="CKRT1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 申请时间 -->        <result column="CKRT1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CKRT1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CKRT1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CKRT1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CKRT1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CKRT1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CKRT.f_id,CKRT.f_building_no,CKRT.f_room_no,CKRT.f_car_num,CKRT.t_group_building_f_id,CKRT.f_isnot_status,CKRT.f_status
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CKRT.f_id as CKRTid,CKRT.f_building_no as CKRTbuildingNo,CKRT.f_room_no as CKRTroomNo,CKRT.f_car_num as CKRTcarNum,CKRT.t_group_building_f_id as CKRTtGroupBuildingFId,CKRT.f_isnot_status as CKRTisnotStatus,CKRT.f_status as CKRTstatus
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CKRT1.f_id as CKRT1id,CKRT1.f_building_no as CKRT1buildingNo,CKRT1.f_room_no as CKRT1roomNo,CKRT1.f_car_num as CKRT1carNum,CKRT1.t_group_building_f_id as CKRT1tGroupBuildingFId,CKRT1.f_isnot_status as CKRT1isnotStatus,CKRT1.f_status as CKRT1status
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CKRT.f_id = #{id} ) </if>        <if test="buildingNo != null">  and (CKRT.f_building_no = #{buildingNo} ) </if>        <if test="roomNo != null">  and (CKRT.f_room_no = #{roomNo} ) </if>        <if test="carNum != null">  and (CKRT.f_car_num = #{carNum} ) </if>        <if test="tGroupBuildingFId != null">  and (CKRT.t_group_building_f_id = #{tGroupBuildingFId} ) </if>        <if test="isnotStatus != null">  and (CKRT.f_isnot_status = #{isnotStatus} ) </if>        <if test="status != null">  and (CKRT.f_status = #{status} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CKRT.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CKRT.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CKRT.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CKRT.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CKRT.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CKRT.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CKRT.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CKRT.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CKRT.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (CKRT.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (CKRT.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (CKRT.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (CKRT.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (CKRT.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CKRT.f_id = #{id} ) </if>        <if test="buildingNo != null and !buildingNo.equals('')  ">  and (CKRT.f_building_no like CONCAT('%',#{buildingNo},'%') ) </if>        <if test="roomNo != null and !roomNo.equals('')  ">  and (CKRT.f_room_no like CONCAT('%',#{roomNo},'%') ) </if>        <if test="carNum != null and !carNum.equals('')  ">  and (CKRT.f_car_num like CONCAT('%',#{carNum},'%') ) </if>        <if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  ">  and (CKRT.t_group_building_f_id = #{tGroupBuildingFId} ) </if>        <if test="isnotStatus != null and !isnotStatus.equals('')  ">  and (CKRT.f_isnot_status = #{isnotStatus} ) </if>        <if test="status != null and !status.equals('')  ">  and (CKRT.f_status = #{status} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CKRT.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CKRT.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CKRT.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CKRT.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CKRT.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CKRT.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CKRT.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CKRT.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CKRT.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CKRT.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CKRT.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CKRT.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CKRT.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (CKRT.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="carKeyRoomTempBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="carKeyRoomTempBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="carKeyRoomTempBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="carKeyRoomTempBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_car_key_room_temp CKRT    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(门牌车牌信息临时表)信息。 -->
+	<sql id="select_carKeyRoomTemp">
+		SELECT <include refid="carKeyRoomTempBase.queryHead"/>
+		<include refid="carKeyRoomTempBase.busiQueryCondition"/>
+		<include refid="carKeyRoomTempBase.dimCheckSql"/>
+		ORDER BY CKRT.f_id DESC
+	</sql>
+	<select id="select_carKeyRoomTemp" parameterType="java.util.Map" resultMap="carKeyRoomTempBase.carKeyRoomTempExtendMap">
+		<include refid="carKeyRoomTempBase.select_carKeyRoomTemp"/>
+	</select>
+	
+	<!-- 根据条件分页查询(门牌车牌信息临时表)信息  -->
+	<sql id="select_carKeyRoomTemp_withPage">
+		SELECT <include refid="carKeyRoomTempBase.queryHead"/>
+		<include refid="carKeyRoomTempBase.busiQueryCondition"/>
+		<include refid="carKeyRoomTempBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_carKeyRoomTemp_withPage" resultMap="carKeyRoomTempBase.carKeyRoomTempExtendMap" parameterType="java.util.Map">
+		<include refid="carKeyRoomTempBase.select_carKeyRoomTemp_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(门牌车牌信息临时表)信息。 -->
+	<sql id="select_carKeyRoomTemp_bySeqId">
+		SELECT <include refid="carKeyRoomTempBase.queryHead"/>
+		<include refid="carKeyRoomTempBase.busiQueryCondition"/>
+		 and CKRT.f_id = #{_parameter}
+	</sql>
+	<select id="select_carKeyRoomTemp_bySeqId" parameterType="java.math.BigInteger" resultMap="carKeyRoomTempBase.carKeyRoomTempBaseMap">
+		<include refid="carKeyRoomTempBase.select_carKeyRoomTemp_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(门牌车牌信息临时表)记录数  -->
+	<sql id="select_carKeyRoomTemp_count">
+		SELECT COUNT(*)
+		<include refid="carKeyRoomTempBase.busiQueryCount"/>
+		<include refid="carKeyRoomTempBase.dimCheckSql"/>
+	</sql>
+	<select id="select_carKeyRoomTemp_count" resultType="java.lang.Integer">
+		<include refid="carKeyRoomTempBase.select_carKeyRoomTemp_count"/>
+	</select>
+	
+	 <!-- 往(门牌车牌信息临时表)新增一条记录。 -->
+	 <sql id="insert_carKeyRoomTemp">
+		INSERT INTO t_car_key_room_temp 
+		(f_id,f_building_no,f_room_no,f_car_num,t_group_building_f_id,f_isnot_status,f_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{buildingNo,jdbcType=VARCHAR},#{roomNo,jdbcType=VARCHAR},#{carNum,jdbcType=VARCHAR},#{tGroupBuildingFId},#{isnotStatus},#{status},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_carKeyRoomTemp" parameterType="CarKeyRoomTemp">
+		<include refid="carKeyRoomTempBase.insert_carKeyRoomTemp"/>
+    </insert>
+    
+	<!-- 批量新增(门牌车牌信息临时表)信息 -->
+    <insert id="insert_carKeyRoomTemp_Batch" parameterType="java.util.List">
+    	INSERT INTO t_car_key_room_temp 
+		(f_id,f_building_no,f_room_no,f_car_num,t_group_building_f_id,f_isnot_status,f_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.buildingNo,jdbcType=VARCHAR},#{item.roomNo,jdbcType=VARCHAR},#{item.carNum,jdbcType=VARCHAR},#{item.tGroupBuildingFId},#{item.isnotStatus},#{item.status},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(门牌车牌信息临时表)信息。 -->
+    <sql id="update_carKeyRoomTemp">
+		UPDATE t_car_key_room_temp		<trim prefix="SET" prefixOverrides=","> 		<if test="buildingNo != null and !buildingNo.equals('') "> ,f_building_no=#{buildingNo}</if> 		<if test="roomNo != null and !roomNo.equals('') "> ,f_room_no=#{roomNo}</if> 		<if test="carNum != null and !carNum.equals('') "> ,f_car_num=#{carNum}</if> 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('') "> ,t_group_building_f_id=#{tGroupBuildingFId}</if> 		<if test="isnotStatus != null and !isnotStatus.equals('') "> ,f_isnot_status=#{isnotStatus}</if> 		<if test="status != null and !status.equals('') "> ,f_status=#{status}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_carKeyRoomTemp" parameterType="CarKeyRoomTemp">
+		<include refid="carKeyRoomTempBase.update_carKeyRoomTemp"/>
+    </update>
+    
+    <!-- 批量更新(门牌车牌信息临时表)信息。 -->
+    <update id="update_carKeyRoomTemp_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_car_key_room_temp		<trim prefix="SET" prefixOverrides=","> 		<if test="item.buildingNo != null and !item.buildingNo.equals('')  "> ,f_building_no=#{item.buildingNo}</if> 		<if test="item.roomNo != null and !item.roomNo.equals('')  "> ,f_room_no=#{item.roomNo}</if> 		<if test="item.carNum != null and !item.carNum.equals('')  "> ,f_car_num=#{item.carNum}</if> 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if> 		<if test="item.isnotStatus != null and !item.isnotStatus.equals('')  "> ,f_isnot_status=#{item.isnotStatus}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(门牌车牌信息临时表)信息_逻辑删除。 -->
+    <sql id="delete_carKeyRoomTemp_Logic">
+		UPDATE t_car_key_room_temp		<trim prefix="SET" prefixOverrides=","> 		<if test="buildingNo != null and !buildingNo.equals('')  "> ,f_building_no=#{buildingNo}</if> 		<if test="roomNo != null and !roomNo.equals('')  "> ,f_room_no=#{roomNo}</if> 		<if test="carNum != null and !carNum.equals('')  "> ,f_car_num=#{carNum}</if> 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{tGroupBuildingFId}</if> 		<if test="isnotStatus != null and !isnotStatus.equals('')  "> ,f_isnot_status=#{isnotStatus}</if> 		<if test="status != null and !status.equals('')  "> ,f_status=#{status}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_carKeyRoomTemp_Logic" parameterType="CarKeyRoomTemp">
+		<include refid="carKeyRoomTempBase.delete_carKeyRoomTemp_Logic"/>
+    </update>
+    
+    <!-- 批量删除(门牌车牌信息临时表)信息_逻辑删除 -->
+    <update id="delete_carKeyRoomTemp_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_car_key_room_temp		<trim prefix="SET" prefixOverrides=","> 		<if test="item.buildingNo != null and !item.buildingNo.equals('')  "> ,f_building_no=#{item.buildingNo}</if> 		<if test="item.roomNo != null and !item.roomNo.equals('')  "> ,f_room_no=#{item.roomNo}</if> 		<if test="item.carNum != null and !item.carNum.equals('')  "> ,f_car_num=#{item.carNum}</if> 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if> 		<if test="item.isnotStatus != null and !item.isnotStatus.equals('')  "> ,f_isnot_status=#{item.isnotStatus}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(门牌车牌信息临时表)信息。 -->
+    <sql id="delete_carKeyRoomTemp">
+		DELETE FROM t_car_key_room_temp WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_carKeyRoomTemp" parameterType="java.lang.String">
+		<include refid="carKeyRoomTempBase.delete_carKeyRoomTemp"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(门牌车牌信息临时表)信息。 -->
+    <delete id="delete_carKeyRoomTemp_Batch" parameterType="java.util.List">
+		DELETE FROM t_car_key_room_temp WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ebuyMerchant2">
+
+	<resultMap type="EbuyMerchantBean" id="ebuyMerchantBeanMap">
+		<id column="f_id" javaType="java.lang.Long" property="id"/>
+		<result column="t_merchant_id" javaType="java.lang.Long" property="merchantId"/>
+		<result column="t_user_id" javaType="java.lang.Long" property="userId"/>
+		<result column="f_is_first_login" javaType="java.lang.Boolean" property="isFirstLogin"/>
+		<result column="f_store_audit_status" javaType="java.lang.Integer" property="storeAuditStatus" />
+		<result column="f_owner_phone" javaType="java.lang.String" property="ownerPhone"/>
+	</resultMap>
+
+	<resultMap type="MerchantOrder" id="merchantOrderMap">
+		<id column="f_id" javaType="java.lang.Long" property="id"/>
+		<id column="f_order_id" javaType="java.lang.Long" property="orderId"/>
+		<result column="f_order_no" javaType="java.lang.String" property="orderNo"/>
+		<result column="f_status" javaType="java.lang.Integer" property="status"/>
+		<result column="f_pay_time" javaType="java.util.Date" property="payTime"/>
+		<result column="f_deliver_addr" javaType="java.lang.String" property="deliverAddr"/>
+		<result column="f_receive_people" javaType="java.lang.String" property="receivePeople"/>
+		<result column="f_phone" javaType="java.lang.String" property="phone"/>
+		<result column="f_deliver_money" javaType="java.math.BigDecimal" property="deliverMoney"/>
+		<result column="f_huaId" javaType="long" property="huaId"/>
+		<result column="userDeliveryType" javaType="java.lang.Integer" property="userDeliveryType"/>
+		<collection property="productList" ofType="com.cnfantasia.server.api.ebuyorder.entity.OrderProduct">
+			<id column="f_product_id" javaType="java.lang.Long" property="id"/>
+			<result column="f_product_name" javaType="java.lang.String" property="productName"/>
+			<result column="f_price" javaType="java.math.BigDecimal" property="price"/>
+			<result column="f_qty" javaType="java.lang.Integer" property="qty"/>
+			<result column="f_pic_base" javaType="java.lang.String" property="picBase"/>
+			<result column="f_upd_time" javaType="java.util.Date" property="updTime"/>
+		</collection>
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.api.ebuyorder.entity.MerchantProdLst" id="merchantProdLstMap">
+		<id column="f_id" javaType="java.lang.Long" property="id"/>
+		<result column="f_name" javaType="java.lang.String" property="prodName"/>
+		<result column="f_price_discount" javaType="java.lang.Double" property="price"/>
+		<result column="f_left_count" javaType="java.lang.Integer" property="leftCount"/>
+		<result column="f_status_audit" javaType="java.lang.Integer" property="statusAudit"/>
+		<result column="f_status" javaType="java.lang.Integer" property="status"/>
+		<result column="f_pic_base" javaType="java.lang.String" property="picBase"/>
+		<result column="f_sys0_upd_time" javaType="java.util.Date" property="updTime"/>
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyProdType" id="ebuyProdTypeMap">
+		<id column="f_id" javaType="java.lang.Long" property="id"/>
+		<result column="f_type_name" javaType="java.lang.String" property="typeName" />
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.api.ebuyorder.entity.MerchantProdDetail" id="merchantProdDetailMap">
+		<id column="f_id" javaType="java.lang.Long" property="id"/>
+		<result column="f_name" javaType="java.lang.String" property="prodName"/>
+		<result column="f_product_type_id" javaType="java.lang.Long" property="productTypeId"/>
+		<result column="f_price" javaType="java.lang.Double" property="price"/>
+		<result column="f_price_discount" javaType="java.lang.Double" property="priceDiscount"/>
+		<result column="f_left_count" javaType="java.lang.Integer" property="leftCount"/>
+		<result column="f_status" javaType="java.lang.Integer" property="status"/>
+		<result column="f_status_audit" javaType="java.lang.Integer" property="statusAudit"/>
+		<result column="f_reason" javaType="java.lang.String" property="reason"/>
+		<result column="f_pic_base" javaType="java.lang.String" property="picBase"/>
+		<result column="f_sys0_upd_time" javaType="java.util.Date" property="updTime"/>
+		<collection property="prodPicList" ofType="com.cnfantasia.server.api.ebuyorder.entity.MerchantProdPic">
+			<id column="f_pic_id" javaType="java.lang.Long" property="id"/>
+			<result column="f_url" javaType="java.lang.String" property="url"/>
+			<result column="f_upd_time" javaType="java.util.Date" property="updTime"/>
+		</collection>
+		<collection property="prodParamList" ofType="com.cnfantasia.server.api.ebuyorder.entity.MerchantProdParam">
+			<id column="f_param_id" javaType="java.lang.Long" property="id"/>
+			<result column="t_prop_name" javaType="java.lang.String" property="propName"/>
+			<result column="t_prop_value" javaType="java.lang.String" property="propValue"/>
+		</collection>
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.api.ebuyorder.entity.MerchantEbuyProduct" id="merchantEbuyProductMap" extends="ebuyProductBase.ebuyProductBaseMap_AppendTable">
+		<collection property="prodPic" resultMap="ebuyProductPicBase.ebuyProductPicBaseMap_AppendTable"/>
+		<collection property="prodParams" resultMap="ebuyProductParametersBase.ebuyProductParametersBaseMap_AppendTable1"/>
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuySupplyMerchantEntity" id="ebuySupplyMerchantEntityMap" extends="ebuySupplyMerchantBase.ebuySupplyMerchantBaseMap_AppendTable">
+		<collection property="groupBuildingList" resultMap="groupBuildingBase.groupBuildingBaseMap_AppendTable"/>
+		<collection property="merchantLicenseList" resultMap="merchantLicenseMap" />
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.api.ebuyorder.entity.MerchantLicense" id="merchantLicenseMap">
+		<id column="f_pic_id" javaType="java.lang.Long" property="id"/>
+		<result column="f_url" javaType="java.lang.String" property="url"/>
+		<result column="f_upd_time" javaType="java.util.Date" property="updTime"/>
+	</resultMap>
+
+    <!-- 运营后台 供应商列表 使用-->
+	<resultMap id="ebuySupplyMerchant4ListMap" type="com.cnfantasia.server.api.ebuy.entity.EbuySupplyMerchant4List" extends="ebuySupplyMerchantBase.ebuySupplyMerchantBaseMap">
+		<result column="registMobile" javaType="string" property="registMobile"/>
+		<result column="addMan" javaType="string" property="addMan"/>
+		<result column="updateMan" javaType="string" property="updateMan"/>
+	</resultMap>
+
+	<resultMap id="deliveryOrderDetailMap" type="com.cnfantasia.server.api.ebuyorder.entity.DeliveryOrderDetailEntity">
+		<id property="id" javaType="java.math.BigInteger" column="id"/>
+		<result property="orderId" javaType="java.math.BigInteger" column="orderId"/>
+		<result property="orderNo" javaType="java.lang.String" column="orderNo"/>
+		<result property="delivAddress" javaType="java.lang.String" column="delivAddress"/>
+		<result property="amount" javaType="java.lang.Long" column="amount"/>
+		<result property="totalCoupon" javaType="java.lang.Long" column="totalCoupon"/>
+		<result property="deliveryRealFee" javaType="java.lang.Long" column="deliveryRealFee"/>
+		<result property="delivPeopleName" javaType="java.lang.String" column="delivPeopleName"/>
+		<result property="delivPhone" javaType="java.lang.String" column="delivPhone"/>
+		<result property="refundType" javaType="java.lang.Integer" column="refundType"/>
+		<result property="deliveryOrderRefundFee" javaType="java.math.BigDecimal" column="deliveryOrderRefundFee"/>
+		<result property="payMethod" javaType="java.lang.Integer" column="payMethod"/>
+		<result property="payTime" javaType="java.lang.String" column="payTime"/>
+		<result property="refundReason" javaType="java.lang.String" column="refundReason"/>
+		<result property="refundApplyTime" javaType="java.lang.String" column="refundApplyTime"/>
+		<collection property="orderProductList" ofType="com.cnfantasia.server.api.ebuyorder.entity.OrderProduct">
+			<id property="id" javaType="java.lang.Long" column="productId"/>
+			<result property="productName" javaType="java.lang.String" column="productName"/>
+			<result property="price" javaType="java.math.BigDecimal" column="productPrice"/>
+			<result property="qty" javaType="java.lang.Integer" column="productQty"/>
+			<result property="picBase" javaType="java.lang.String" column="picBase"/>
+			<result property="updTime" javaType="java.util.Date" column="productPicUpdTime"/>
+			<result property="hasProductRefund" javaType="java.lang.Boolean" column="hasProductRefund"/>
+		</collection>
+	</resultMap>
+
+	<select id="getEbuyMerchant" resultMap="ebuyMerchantBeanMap" parameterType="Map">
+		select mu.f_id, mu.t_merchant_id, mu.t_user_id, mu.f_is_first_login, sm.f_store_audit_status,sm.f_owner_phone
+		  from t_ebuy_supply_merchant_has_user mu
+		    inner join t_ebuy_supply_merchant sm on mu.t_merchant_id = sm.f_id
+		  where mu.t_user_id = #{userId} limit 1
+	</select>
+
+	<select id="updateEbuyMerchant" parameterType="Map">
+		update t_ebuy_supply_merchant_has_user smu set smu.f_is_first_login = 0
+ 			where exists (select * from t_user u where u.f_id = smu.t_user_id and u.f_mobile = #{number})
+	</select>
+
+	<select id="getEbuyDeliveryOrderList" parameterType="Map" resultMap="merchantOrderMap">
+		select o.f_id, o.f_order_id, o.f_order_no, o.f_status, o.f_pay_time, CONCAT(ifnull(o.f_deliv_address_area,''), IFNULL(o.f_deliv_address_detail,'')) f_deliver_addr,
+					o.f_deliv_people_name f_receive_people, o.f_deliv_phone f_phone,o.f_buyer_id f_huaId, o.userDeliveryType,
+					o.f_delivery_real_fee f_deliver_money, p.f_id f_product_id, p.f_name f_product_name, ohp.f_product_price f_price, ohp.f_product_qty f_qty,
+					p.f_pic_base, p.f_sys0_upd_time f_upd_time
+			from (select edo.f_id, eo.f_id f_order_id, eo.f_order_no, edo.f_status f_status, eo.f_pay_time, eo.f_deliv_address_area,<!-- 订单状态,当配送单为已发货时且订单为未发货,此订单即已发货(此种情况是多个配送单) -->
+					 eo.f_deliv_address_detail, eo.f_deliv_people_name, eo.f_deliv_phone,eo.f_buyer_id, edo.f_user_delivery_type userDeliveryType,
+					 edo.f_delivery_real_fee  from t_ebuy_order eo
+					 inner join t_ebuy_delivery_order edo on eo.f_id = edo.t_ebuy_order_f_id
+					where eo.f_type in (1, 8)
+					  <if test="status != null">
+						  <choose>
+						  	<when test="status == 1"> and (edo.f_status in(0, 1) and eo.f_status in (3, 4, 5, 6))</when>
+						  	<otherwise> and (edo.f_status IN (2, 3) and eo.f_status in (3, 4, 5, 6))</otherwise>
+						  </choose>
+					  </if>
+					  <if test="currentDate != null"><![CDATA[ and eo.f_pay_time <= #{currentDate} ]]></if>
+					  <if test="supplyId != null"> and edo.t_supply_merchant_f_id = #{supplyId}</if>
+					  <if test="searchKey != null">
+					  	<![CDATA[ and (eo.f_order_no like CONCAT('%',#{searchKey},'%') 
+					  		or eo.f_deliv_phone like CONCAT('%',#{searchKey},'%') 
+					  		or eo.f_deliv_people_name like CONCAT('%',#{searchKey},'%')
+					  		or eo.f_buyer_id like CONCAT('%', #{searchKey}, '%')) ]]>
+					  </if>
+					  and exists (select 1 from t_ebuy_delivery_order_product dop
+						inner JOIN t_ebuy_order_has_t_ebuy_product ohp ON dop.t_ebuy_order_has_t_ebuy_product_f_id = ohp.f_id
+						inner JOIN t_ebuy_product_shelf ps ON ps.f_id = dop.t_ebuy_product_f_id
+						inner JOIN t_ebuy_product p ON ps.t_ebuy_product_id = p.f_id where dop.t_ebuy_delivery_order_f_id = edo.f_id)
+					 order by edo.f_sys0_add_time desc
+					 <![CDATA[ LIMIT #{_begin},#{_length} ]]>
+				) o
+			 inner join t_ebuy_delivery_order_product dop on dop.t_ebuy_delivery_order_f_id = o.f_id
+			 inner join t_ebuy_order_has_t_ebuy_product ohp on dop.t_ebuy_order_has_t_ebuy_product_f_id = ohp.f_id
+			 inner join t_ebuy_product_shelf ps on ps.f_id = dop.t_ebuy_product_f_id
+			 inner join t_ebuy_product p on ps.t_ebuy_product_id = p.f_id
+	</select>
+
+	<select id="getEbuyDeliveryOrderCount" parameterType="Map" resultType="Integer">
+		select count(edo.f_id)  from t_ebuy_order eo
+			   inner join t_ebuy_delivery_order edo on eo.f_id = edo.t_ebuy_order_f_id
+			where eo.f_type = 1
+			   <if test="status != null">
+				  <choose>
+				  	<when test="status == 1"> and (edo.f_status in(0, 1) and eo.f_status in (3, 4, 5, 6))</when>
+				  	<otherwise> and (edo.f_status IN (2, 3) and eo.f_status in (3, 4, 5, 6))</otherwise>
+				  </choose>
+			  </if>
+			   <if test="currentDate != null"><![CDATA[ and eo.f_pay_time <= #{currentDate} ]]></if>
+			   <if test="supplyId != null"> and edo.t_supply_merchant_f_id = #{supplyId}</if>
+			   and exists (select 1 from t_ebuy_delivery_order_product dop
+					inner JOIN t_ebuy_order_has_t_ebuy_product ohp ON dop.t_ebuy_order_has_t_ebuy_product_f_id = ohp.f_id
+					inner JOIN t_ebuy_product_shelf ps ON ps.f_id = dop.t_ebuy_product_f_id
+					inner JOIN t_ebuy_product p ON ps.t_ebuy_product_id = p.f_id where dop.t_ebuy_delivery_order_f_id = edo.f_id)
+	</select>
+
+	<select id="getMerchantProductList" parameterType="Map" resultMap="merchantProdLstMap">
+		select p.f_id, p.f_name, p.f_price_discount, p.f_left_count, p.f_status,
+		p.f_status_audit, p.f_pic_base, p.f_sys0_upd_time,
+		p.f_sel_num selNum, p.f_is_hot_sale isHotSale,
+		(
+		SELECT
+		eps.f_id
+		FROM
+		t_ebuy_product_shelf eps
+		WHERE
+		eps.t_ebuy_product_id = p.f_id and eps.f_up_shelf_state = 0
+		AND eps.f_sys0_del_state = 0 limit 1
+		) epsId,
+		(
+		SELECT
+		eps.f_sort
+		FROM
+		t_ebuy_product_shelf eps
+		WHERE
+		eps.t_ebuy_product_id = p.f_id and eps.f_up_shelf_state = 0
+		AND eps.f_sys0_del_state = 0 LIMIT 1
+		) epsSort
+		from t_ebuy_product p
+		  where p.t_supply_merchant_f_id = #{supplyId}
+		  <choose>
+		   	  <when test="status != null and status == 0"> and p.f_status = ${status} and p.f_status_audit = 5</when>
+		   	  <when test="status != null and status == 1"><![CDATA[ and (p.f_status = ${status} or p.f_status_audit <> 5) ]]></when>
+		   </choose>
+		   <if test="searchKey != null">
+		      and p.f_name like CONCAT('%',#{searchKey},'%')
+		   </if>
+		   and exists(
+				  select 1 from t_ebuy_product_type pt
+						inner join t_ebuy_product_shelf ps on pt.f_id = ps.t_ebuy_product_type_id
+					where p.f_id = ps.t_ebuy_product_id
+					<if test="productTypeId != null">
+						and pt.f_id = #{productTypeId}
+					</if>
+		   )
+		   <choose>
+		   	  <when test="orderBy != null and orderBy == 1">order by p.f_price_discount asc</when>
+		   	  <when test="orderBy != null and orderBy == 2">order by p.f_price_discount desc</when>
+			   <when test="orderBy != null and orderBy == 3">order by epsId asc </when>  <!--上架时间升序-->
+			   <when test="orderBy != null and orderBy == 4">order by epsId desc </when>
+			   <when test="orderBy != null and orderBy == 5">order by p.f_sel_num asc </when> <!-- 销量从低到高-->
+			   <when test="orderBy != null and orderBy == 6">order by p.f_sel_num desc </when>
+		   	  <otherwise>order by epsSort desc, epsId desc</otherwise>
+		   </choose>
+		  <![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+
+	<select id="getMerchantProductCount" parameterType="Map" resultType="Integer">
+		select count(p.f_id) from t_ebuy_product p
+		  where p.t_supply_merchant_f_id = #{supplyId}
+		   <choose>
+		   	  <when test="status != null and status == 0"> and p.f_status = ${status} and p.f_status_audit = 5</when>
+		   	  <when test="status != null and status == 1"><![CDATA[ and (p.f_status = ${status} or p.f_status_audit <> 5) ]]></when>
+		   </choose>
+		   <if test="searchKey != null">
+		      and p.f_name like CONCAT('%',#{searchKey},'%')
+		   </if>
+		   and exists(
+				  select * from t_ebuy_product_type pt
+						inner join t_ebuy_product_shelf ps on pt.f_id = ps.t_ebuy_product_type_id
+					where p.f_id = ps.t_ebuy_product_id
+					<if test="productTypeId != null">
+						and pt.f_id = #{productTypeId}
+					</if>
+		   )
+	</select>
+
+	<select id="getProdTypes" parameterType="java.util.Map" resultMap="ebuyProdTypeMap">
+		select pt.f_id, pt.f_type_name from t_ebuy_product_type pt
+		  where pt.f_sys0_del_state = 0 and pt.f_wlApp_type = 1
+		   and f_point_type in (1, 3)
+		   and exists (
+			 select 1 from t_ebuy_product p
+				inner join t_ebuy_product_shelf ps on ps.t_ebuy_product_id = p.f_id and p.f_sys0_del_state = 0 and ps.f_up_shelf_state = 0
+				inner join t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id and sm.f_sys0_del_state = 0
+			 where ps.t_ebuy_product_type_id = pt.f_id
+			 <if test="storeId != null"> and p.t_supply_merchant_f_id = #{storeId}</if>
+			 <if test="status != null"> and p.f_status = #{status}</if>
+			 )
+		order by pt.f_order desc
+	</select>
+
+	<select id="getAllProdTypes" resultMap="ebuyProdTypeMap">
+		select pt.f_id, pt.f_type_name from t_ebuy_product_type pt
+		  where pt.f_sys0_del_state = 0 and pt.f_wlApp_type = 1
+		   and f_point_type in (1, 3)
+		order by pt.f_order desc
+	</select>
+
+	<select id="getMerchantProdDetail" parameterType="Map" resultMap="merchantProdDetailMap">
+		select tempp.f_id, tempp.f_name, tempp.f_price_discount, tempp.f_price, tempp.f_left_count,
+           tempp.f_status, tempp.f_status_audit, tempp.f_pic_base, tempp.f_sys0_upd_time, pt.f_id f_product_type_id, pau.f_reason,
+				pp.f_id f_pic_id, pp.f_url_big f_url, pp.f_sys0_upd_time f_upd_time,
+				pa.f_id f_param_id, pa.t_prop_name, pa.t_prop_value
+			from
+		     (select p.f_id, p.f_name, p.f_price_discount, p.f_price, p.f_left_count,
+		           p.f_status, p.f_status_audit, p.f_pic_base, p.f_sys0_upd_time
+		      from t_ebuy_product p
+					 where p.f_id = #{prodId}) tempp
+				 left join t_ebuy_product_pic pp on tempp.f_id = pp.t_ebuy_product_f_id and pp.f_sys0_del_state = 0
+				 left join t_ebuy_product_parameters pa on tempp.f_id = pa.t_ebuy_product_f_id and pa.f_sys0_del_state = 0
+				 left join t_ebuy_product_shelf ps on tempp.f_id = ps.t_ebuy_product_id
+				 left join t_ebuy_product_type pt on ps.t_ebuy_product_type_id = pt.f_id and pt.f_wlApp_type = 1
+				 left join t_ebuy_product_audit pau on tempp.f_id = pau.f_id
+			order by pt.f_id desc
+	</select>
+
+	<!--
+	<insert id="insertProduct" parameterType="com.cnfantasia.server.api.ebuyorder.entity.MerchantProdDetail">
+		INSERT INTO t_ebuy_product (f_id, t_supply_merchant_f_id, f_name, f_price, f_price_discount, f_purchase_price, f_left_count, f_create_time, f_sel_num, f_pic_base, f_pic_base_mini,
+								t_ebuy_product_type_f_id, f_status, f_status_audit, f_point_type, f_special_product_type)
+ 			values(#{id}, #{productId}, #{name}, #{flow}, #{phone}, #{price})
+	</insert>
+	 -->
+
+	 <resultMap type="com.cnfantasia.server.api.ebuyorder.entity.MerchantEbuyProduct" id="merchantEbuyProduct" extends="ebuyProductBase.ebuyProductBaseMap_AppendTable">
+		<association property="prodPic" resultMap="ebuySupplyMerchantBase.ebuySupplyMerchantBaseMap_AppendTable" />
+		<association property="params" resultMap="ebuyProductTypeBase.ebuyProductTypeBaseMap_AppendTable" />
+	</resultMap>
+
+	<select id="select_ebuyProduct" parameterType="java.util.Map" resultMap="merchantEbuyProduct">
+		select <include refid="ebuyProductBase.queryHead_AppendTable"/>,
+		       <include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>,
+		       <include refid="ebuyProductTypeBase.queryHead_AppendTable"/>
+		FROM t_ebuy_product EP
+		left JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id
+		left JOIN t_ebuy_product_type EPT ON EPT.f_id = EP.t_ebuy_product_type_f_id
+    	WHERE 1=1
+			  <include refid="ebuyProductBase.querySql" />
+        	  <if test="supplyName != null">  and (ESM.f_name = #{supplyName} ) </if>
+              <if test="typeName != null">  and (EPT.f_type_name = #{typeName} ) </if>
+              <if test="supplyMerchantList!=null and supplyMerchantList.size() != 0">
+                and ESM.f_id in
+                <foreach collection="supplyMerchantList" item="supply"
+                    index="index" open="(" close=")" separator=",">
+                    #{supply.id}
+                </foreach>
+              </if>
+        ORDER BY EP.f_id DESC
+        <if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+
+	<delete id="deletePodParams" parameterType="java.math.BigInteger">
+		delete from t_ebuy_product_parameters where t_ebuy_product_f_id = #{prodId}
+	</delete>
+
+	<select id="getMerchantProduct" parameterType="java.util.Map" resultMap="merchantEbuyProductMap">
+		select <include refid="ebuyProductBase.queryHead_AppendTable"/>,
+		       <include refid="ebuyProductPicBase.queryHead_AppendTable"/>,
+		       <include refid="ebuyProductParametersBase.queryHead_AppendTable1"/>
+		FROM t_ebuy_product EP
+		left JOIN t_ebuy_product_pic EPP ON EPP.t_ebuy_product_f_id = EP.f_id
+		left JOIN t_ebuy_product_parameters EPP1 ON EPP1.t_ebuy_product_f_id = EP.f_id
+    	WHERE EP.f_id = #{prodId}
+	</select>
+
+	<select id="getMerchantSupply" parameterType="java.util.Map" resultMap="ebuySupplyMerchantEntityMap">
+		select <include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>,
+		       <include refid="groupBuildingBase.queryHead_AppendTable"/>,
+		       date_format(ESM.f_sys0_upd_time,'%Y-%m-%d %T') as ESMsys0UpdTime,
+		       ESML.f_id f_pic_id, ESML.f_url, ESML.f_sys0_upd_time f_upd_time
+		  from
+			(select * from t_ebuy_supply_merchant ESM_ <if test="supplyId != null"> where ESM_.f_id = #{supplyId}</if> limit 1) ESM
+			  left join t_ebuy_supply_merchant_licence ESML on ESM.F_ID = ESML.t_supply_mc_id
+			  left join t_ebuy_supply_merchant_has_group_building ESMHGB ON ESM.F_ID = ESMHGB.t_ebuy_supply_merchant_id and ESMHGB.f_sys0_del_state = 0
+			  left join t_group_building GB on GB.f_id = ESMHGB.t_group_building_id and GB.f_sys0_del_state = 0
+	</select>
+
+	<select id="qrySupplyMerchantList" parameterType="java.util.Map" resultMap="ebuySupplyMerchant4ListMap">
+		select <include refid="ebuySupplyMerchantBase.queryHead"/>,
+		date_format(ESM.f_sys0_add_time,'%Y-%m-%d %T') as f_sys0_add_time, ESM.f_sys0_del_state as f_sys0_del_state,
+		u.f_mobile registMobile,
+		IF (
+			ou1.f_real_name IS NULL
+			OR ou1.f_real_name = '',
+			ou1.f_user_account,
+			ou1.f_real_name
+		) AS addMan,
+		IF (
+			ou2.f_real_name IS NULL
+			OR ou2.f_real_name = '',
+			ou2.f_user_account,
+			ou2.f_real_name
+		) AS updateMan
+		from t_ebuy_supply_merchant ESM
+		INNER JOIN t_ebuy_supply_merchant_has_user mu ON mu.t_merchant_id = ESM.f_id
+		INNER JOIN t_user u on u.f_id = mu.t_user_id
+		left join t_oms_user ou1 on ou1.f_id=ESM.f_sys0_add_user
+        left join t_oms_user ou2 on ou2.f_id=ESM.f_sys0_upd_user
+        
+		where ESM.f_type=2 <!-- 自建店铺 -->
+		<if test="address !=null and address!=''">and ESM.f_address like concat('%', #{address},'%') </if>
+		<if test="linkPhone != null and linkPhone != ''">and ESM.f_tel like concat('%',  #{linkPhone},'%')</if>
+		<if test="linkName != null and linkName != ''">and ESM.f_link_name like concat('%',  #{linkName},'%')</if>
+		<if test="storeAuditStatus != null and storeAuditStatus != ''"> and ESM.f_store_audit_status = #{storeAuditStatus}</if>
+		<if test="storeAuditTimeStart != null and storeAuditTimeStart!='' and storeAuditTimeEnd != null and storeAuditTimeEnd!='' ">and (ESM.f_store_audit_time between #{storeAuditTimeStart} and #{storeAuditTimeEnd})</if>
+		<if test="ownerName != null and ownerName != ''">and ESM.f_user_name like concat('%',  #{ownerName},'%')</if>
+		<if test="ownerAuditStatus != null and ownerAuditStatus != ''">and ESM.f_owner_audit_status = #{ownerAuditStatus}</if>
+		<if test="ownerAuditTimeStart != null and ownerAuditTimeStart!='' and ownerAuditTimeEnd != null and ownerAuditTimeEnd!='' ">and (ESM.f_owner_audit_time between #{ownerAuditTimeStart} and #{ownerAuditTimeEnd})</if>
+		<if test="storeName != null and storeName != ''">and ESM.f_name like concat('%', #{storeName},'%')</if>
+		and EXISTS (select 1 from 
+			 t_ebuy_supply_merchant_has_group_building ESMG
+					inner join t_group_building GB on ESMG.t_group_building_id = GB.f_id
+			where ESMG.f_sys0_del_state = 0 and GB.f_sys0_del_state = 0 and ESMG.t_ebuy_supply_merchant_id = ESM.f_id
+					 <include refid="permiOos.dataPermissionCondition" />)
+		ORDER BY ESM.f_sys0_add_time DESC
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+
+	<resultMap type="com.cnfantasia.server.api.ebuyorder.entity.GroupBuilding" id="gbMap">
+		<id property="gbId" column="gbId"/>
+		<result property="gbName" column="gbName"/>
+		<result property="gbArea" column="gbArea"/>
+		<result property="gbAddress" column="gbAddress"/>
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.api.ebuyorder.entity.Merchant4AuditBean" id="merchantAuditMap">
+		<id property="shopId" column="shopId"/>
+		<result property="shopName" column="shopName"/>
+		<result property="shopArea" column="shopArea"/>
+		<result property="shopAddress" column="shopAddress"/>
+		<result property="leastDeliveryAmt" column="leastDeliveryAmt"/>
+		<result property="shopIntroduce" column="shopIntroduce"/>
+		<result property="shopPhotoes" column="shopPhotoes" />
+		<result property="blockId" column="blockId" />
+		<association property="ownerInfo" autoMapping="true" javaType="com.cnfantasia.server.api.ebuyorder.entity.OwnerInfo">
+			<result property="ownerName" column="ownerName"/>
+			<result property="ownerPhone" column="ownerPhone"/>
+			<result property="owenerIDPhotoes" column="f_owner_id_photoes"/>
+		</association>
+		<collection property="serviceGbList" resultMap="gbMap" />
+		<collection property="businessPhotoesList" javaType="string">
+			<result property="businessPhotoesList" column="businessPhotoesList"/>
+		</collection>
+	</resultMap>
+
+	<select id="getMerchat4AuditOrView" parameterType="string" resultMap="merchantAuditMap">
+		select esm.f_id shopId,esm.f_name shopName, concat(ap.f_name, ac.f_name, ab.f_name) as shopArea, esm.f_address shopAddress, esm.f_least_delivery_amt leastDeliveryAmt,
+		esm.f_shop_photoes shopPhotoes,
+		esml.f_url businessPhotoesList, esm.f_introduce shopIntroduce, esm.f_user_name ownerName, esm.f_owner_phone ownerPhone, esm.f_owner_id_photoes,
+	    gb.f_id gbId, gb.f_name gbName, concat(ap.f_name, ac.f_name, ab.f_name) as gbArea, gb.f_address_desc gbAddress, ab.f_id AS blockId
+		from t_ebuy_supply_merchant esm
+		left join t_address_block ab on ab.f_id = esm.t_address_block_f_id
+		left join t_address_city ac on ac.f_id = ab.t_city_f_id
+		left join t_address_province ap on ap.f_id = ac.t_province_f_id
+		left join t_ebuy_supply_merchant_licence esml on esml.t_supply_mc_id = esm.f_id
+		left join t_ebuy_supply_merchant_has_group_building esmhgb on esmhgb.t_ebuy_supply_merchant_id = esm.f_id and esmhgb.f_sys0_del_state = 0
+		left join t_group_building gb on gb.f_id = esmhgb.t_group_building_id
+		where esm.f_id = #{id};
+	</select>
+
+	<delete id="deleteLicenseByMerchantId" >delete from  t_ebuy_supply_merchant_licence where t_supply_mc_id = #{mcId} ;</delete>
+
+	<delete id="deleteGroupBuildingByMerchantId">delete from t_ebuy_supply_merchant_has_group_building where t_ebuy_supply_merchant_id = #{mcId} ;</delete>
+
+	<delete id="deleteMerchantDelivFeeSettlementByMerchantId">DELETE FROM t_supply_merchant_delivery_fee_settlement WHERE t_ebuy_supply_merchant_f_id = #{merchantId}</delete>
+
+	<select id="selectDeliveryMethodByMerchantId" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.ebuyorder.entity.DeliveryMethod">
+		select edm.f_id id, edm.f_name name, edm.f_fee fee, 
+		edm.f_price_amount_start price_amount_start , edm.f_price_amount_end price_amount_end,
+		edm.f_type type
+		from t_ebuy_delivery_method edm
+		left join t_ebuy_supply_merchant_has_t_ebuy_delivery_method esmHasDm on esmHasDm.t_ebuy_delivery_method_f_id = edm.f_id
+		left join t_ebuy_supply_merchant esm on esm.f_id = esmHasDm.t_ebuy_supply_merchant_f_id
+		where esm.f_sys0_del_state = 0 and  esm.f_id = #{esmId};
+	</select>
+
+	<select id="selectDeliveryMethodCondition" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.ebuyorder.entity.DeliveryMethod">
+		select edm.f_id id, edm.f_name name, edm.f_fee fee, edm.f_price_amount_start price_amount_start , edm.f_price_amount_end price_amount_end
+		from t_ebuy_delivery_method edm
+		where edm.f_sys0_del_state = 0
+		<if test="name != null and name != ''">
+			and edm.f_name like concat('%', #{name}, '%')
+		</if>
+		<if test="fee != null and fee != ''">
+			and edm.f_fee = #{fee}
+		</if>
+	</select>
+
+	<delete id="deleteDeliveryMethodByMerchantId"  parameterType="java.math.BigInteger">
+		delete from t_ebuy_supply_merchant_has_t_ebuy_delivery_method where t_ebuy_supply_merchant_f_id = #{esmId};
+	</delete>
+	<select id="getEbuySupplyMerchantType1" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.ebuyorder.entity.MerchantListDto">
+		SELECT esm.f_id id, esm.f_type type, date_format(esm.f_sys0_add_time,'%Y-%m-%d %T') sys0AddTime, esm.f_address address,
+			esm.f_name name, esm.f_link_name linkName, esm.f_tel tel, esm.f_revenue_type revenueType,
+			IF (
+				ou1.f_real_name IS NULL
+				OR ou1.f_real_name = '',
+				ou1.f_user_account,
+				ou1.f_real_name
+			) AS addMan,
+			IF (
+				ou2.f_real_name IS NULL
+				OR ou2.f_real_name = '',
+				ou2.f_user_account,
+				ou2.f_real_name
+			) AS updateMan
+		FROM t_ebuy_supply_merchant esm
+		left join t_oms_user ou1 on ou1.f_id = esm.f_sys0_add_user
+		left join t_oms_user ou2 on ou2.f_id = esm.f_sys0_upd_user
+		where esm.f_sys0_del_state = 0 and esm.f_type in (1,4)
+		<if test="linkName !=null and linkName != ''">
+			and esm.f_link_name like concat('%',#{linkName}, '%')
+		</if>
+		<if test="revenueType != null and revenueType != ''">
+			and esm.f_revenue_type = #{revenueType}
+		</if>
+		<if test="supplierName != null and supplierName != ''">
+			and esm.f_name like concat('%',#{supplierName}, '%')
+		</if>
+		<if test="addTime != null and addTime != ''">
+			and esm.f_sys0_add_time > #{addTime}
+		</if>
+		<if test="cityName != null and cityName != ''">
+			and (esm.f_type = 1 or EXISTS (select 1 from t_address_city ac LEFT JOIN t_ebuy_supply_merchant_has_group_building hgb on ac.f_id = hgb.t_address_city_id and hgb.f_sys0_del_state = 0 where ac.f_sys0_del_state = 0 and hgb.t_ebuy_supply_merchant_id = esm.f_id and ac.f_name like concat('%',#{cityName}, '%')))
+		</if>
+		order by esm.f_sys0_add_time desc
+		<if test="begin != null and length != null">
+			limit #{begin}, #{length}
+		</if>
+	</select>
+	<select id="getEbuySupplyMerchantType1Count" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT COUNT(1)
+		FROM t_ebuy_supply_merchant esm
+		where esm.f_sys0_del_state = 0 and esm.f_type in (1,4)
+		<if test="linkName !=null and linkName != ''">
+			and esm.f_link_name like concat('%',#{linkName}, '%')
+		</if>
+		<if test="revenueType != null and revenueType != ''">
+			and esm.f_revenue_type = #{revenueType}
+		</if>
+		<if test="supplierName != null and supplierName != ''">
+			and esm.f_name like concat('%',#{supplierName}, '%')
+		</if>
+		<if test="addTime != null and addTime != ''">
+			and esm.f_sys0_add_time > #{addTime}
+		</if>
+		<if test="cityName != null and cityName != ''">
+			and (esm.f_type = 1 or EXISTS (select 1 from t_address_city ac LEFT JOIN t_ebuy_supply_merchant_has_group_building hgb on ac.f_id = hgb.t_address_city_id and hgb.f_sys0_del_state = 0 where ac.f_sys0_del_state = 0 and hgb.t_ebuy_supply_merchant_id = esm.f_id and ac.f_name like concat('%',#{cityName}, '%')))
+		</if>
+	</select>
+	<select id="getSupplyMerchantType1CityList" parameterType="java.math.BigInteger" resultType="java.util.Map">
+		SELECT ac.f_id id, ac.f_name name
+		FROM t_ebuy_supply_merchant_has_group_building hgb
+		LEFT JOIN t_address_city ac ON hgb.t_address_city_id = ac.f_id AND ac.f_sys0_del_state = 0
+		WHERE hgb.f_sys0_del_state = 0 AND hgb.t_ebuy_supply_merchant_id = #{supplyMerchantId}
+	</select>
+	<select id="getMerchantSettleFeeByAmountAndMerchantId" parameterType="java.util.Map" resultType="com.cnfantasia.server.domainbase.supplyMerchantDeliveryFeeSettlement.entity.SupplyMerchantDeliveryFeeSettlement">
+		SELECT f_id AS id, t_ebuy_supply_merchant_f_id AS tEbuySupplyMerchantFId, f_amount_start AS amountStart, f_amount_end AS amountEnd, f_settlement_fee AS settlementFee
+		FROM t_supply_merchant_delivery_fee_settlement
+		WHERE f_amount_start &lt;= #{totalFee}
+		AND (f_amount_end > #{totalFee} OR f_amount_end IS NULL)
+		AND t_ebuy_supply_merchant_f_id = #{merchantId}
+	</select>
+
+	<!-- 查询供应商运费 -->
+	<select id="getMerchantFeeList" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.ebuyorder.entity.MerchantFeeDto">
+		SELECT
+			edm.f_desc AS `desc`, edm.f_fee AS `fee`
+		FROM
+			t_ebuy_supply_merchant_has_t_ebuy_delivery_method esmhtdm
+		INNER JOIN t_ebuy_delivery_method edm ON edm.f_id = esmhtdm.t_ebuy_delivery_method_f_id
+		AND edm.f_sys0_del_state = 0
+		WHERE
+			esmhtdm.t_ebuy_supply_merchant_f_id = #{merchantId}
+		AND esmhtdm.f_sys0_del_state = 0
+	</select>
+
+	<update id="updateShelfPriceByProductId" parameterType="java.util.Map">
+		update t_ebuy_product_shelf set f_price_discount = #{priceDiscount}, f_sys0_upd_time = SYSDATE()
+		<if test="productTypeId != null and productTypeId != '' and appType == 1">
+			,t_ebuy_product_type_id = #{productTypeId}
+		</if>
+		<if test="price != null and price != ''">,f_price = #{price}</if>
+		<if test="upShelfState != null">,f_up_shelf_state = #{upShelfState}</if>
+		 where t_ebuy_product_id = #{productId}
+		 <if test="appType != null and appType != ''">
+		 	and EXISTS (select 1 from t_ebuy_product_type pt where pt.f_id = t_ebuy_product_type_id and f_wlApp_type = #{appType})
+		 </if>
+		
+	</update>
+
+	<select id="getOrderNotApplySettle" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.ebuyorder.entity.SettleDelivOrder">
+		SELECT
+			EDO.f_id deliveryOrderId,
+			EO.f_deliv_address_detail deliveryAddress,
+			IFNULL(EDO.f_amount,0) deliveryOrderAmount,
+			IFNULL(EDO.f_total_coupon,0) deliveryOrderCoupon,
+			DATE_FORMAT(EDO.f_sys0_add_time,'%Y-%m-%d %T') deliveryOrderAddTime,
+			CASE WHEN EDO.f_refund_status = 2 THEN 1 ELSE 0 END hasDelivRefund,
+  			IFNULL(ERO.f_apply_fee,0) deliveryOrderRefundAmount,
+			IFNULL(SUM(HEP.f_product_qty),0) productQty
+		FROM t_ebuy_delivery_order EDO
+		INNER JOIN t_ebuy_order EO ON EO.f_id = EDO.t_ebuy_order_f_id AND EO.f_sys0_del_state = 0 AND EO.f_type IN (1, 3)
+							AND (EDO.f_settle_status = 1 OR EDO.f_settle_status = 3 OR EDO.f_settle_status IS NULL)
+		INNER JOIN t_ebuy_delivery_order_product DOP ON DOP.t_ebuy_delivery_order_f_id = EDO.f_id AND DOP.f_supply_merchant_id = #{supplyMerchantId} AND DOP.f_sys0_del_state = 0
+		INNER JOIN t_ebuy_order_has_t_ebuy_product HEP ON DOP.t_ebuy_order_has_t_ebuy_product_f_id = HEP.f_id AND HEP.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_refund_order ERO ON ERO.t_ebuy_delivery_order_f_id = EDO.f_id AND ERO.f_sys0_del_state = 0
+		WHERE EDO.f_sys0_del_state = 0 AND EDO.t_supply_merchant_f_id = #{supplyMerchantId}
+		AND (EDO.f_status = 3 OR EDO.f_refund_status = 2)
+		GROUP BY EDO.f_id
+		ORDER BY EDO.f_receive_time DESC
+	  	<if test="_begin != null and _length != null">
+			limit #{_begin}, #{_length}
+		</if>
+	</select>
+
+	<sql id="deliveryOrderDetailSelectHead">
+		select edo.f_id as id, eo.f_id as orderId, eo.f_order_no orderNo, eo.f_deliv_address_detail as delivAddress,
+			ifnull(edo.f_amount, 0) as amount, ifnull(edo.f_total_coupon, 0) as totalCoupon, edo.f_delivery_real_fee deliveryRealFee,
+			eo.f_deliv_people_name delivPeopleName,eo.f_deliv_phone delivPhone,
+			IFNULL(ero.f_status,0) refundType, IFNULL(ero.f_refund_fee,0) deliveryOrderRefundFee, eo.f_pay_method payMethod, DATE_FORMAT(eo.f_pay_time,'%Y-%m-%d %T') payTime,
+			ep.f_id productId, ep.f_name productName, ep.f_pic_base picBase, eohep.f_product_price productPrice, eohep.f_product_qty productQty,
+			case when erop.f_id IS NULL then 0 else 1 end hasProductRefund,ep.f_sys0_upd_time productPicUpdTime,
+			era.f_reason refundReason, DATE_FORMAT(ero.f_sys0_add_time,'%Y-%m-%d %T') refundApplyTime
+	</sql>
+	<select id="getDeliveryOrderDetail" parameterType="java.util.Map" resultMap="deliveryOrderDetailMap">
+		<include refid="deliveryOrderDetailSelectHead"/>
+		from t_ebuy_delivery_order edo
+		INNER JOIN t_ebuy_order eo on edo.t_ebuy_order_f_id = eo.f_id and eo.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_refund_order ero on ero.t_ebuy_delivery_order_f_id = edo.f_id and ero.f_sys0_del_state = 0 and  ero.f_refund_status = 2
+		LEFT JOIN t_ebuy_refund_audit era on ero.t_ebuy_refund_audit_f_id = era.f_id
+		INNER JOIN t_ebuy_delivery_order_product edop on edop.t_ebuy_delivery_order_f_id = edo.f_id and edop.f_sys0_del_state = 0
+		INNER JOIN t_ebuy_order_has_t_ebuy_product eohep on edop.t_ebuy_order_has_t_ebuy_product_f_id = eohep.f_id and eohep.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_refund_order_product erop on erop.t_ebuy_delivery_order_f_id = edo.f_id and erop.t_ebuy_refund_order_f_id = ero.f_id and erop.f_sys0_del_state = 0 and erop.t_ebuy_order_has_t_ebuy_product_f_id = eohep.f_id
+		INNER JOIN t_ebuy_product_shelf eps on eohep.t_ebuy_product_f_id = eps.f_id
+		INNER JOIN t_ebuy_product ep on eps.t_ebuy_product_id = ep.f_id
+		where edo.f_sys0_del_state = 0 and edo.f_id = ${deliveryOrderId}
+		<if test="supplyMerchantId != null and supplyMerchantId != ''">
+			and edo.t_supply_merchant_f_id = #{supplyMerchantId}
+		</if>
+	</select>
+
+	<sql id="getRevenueApplyListCheckSql">
+		<if test="supplyMerchantId != null and supplyMerchantId != ''">
+			and ra.t_ebuy_supply_merchant_fk = #{supplyMerchantId}
+		</if>
+		<choose>
+			<when test="settleStatusType != null and '1'.toString() == settleStatusType.toString()">
+				and ra.f_audit_status in (1,2)
+			</when>
+			<otherwise>
+				and ra.f_audit_status = 3
+			</otherwise>
+		</choose>
+	</sql>
+
+	<!--结算申请列表总数-->
+	<select id="getRevenueApplyListCount" parameterType="java.util.Map" resultType="integer">
+		select count(1) from t_revenue_apply ra where ra.f_goal_type = 16 AND ra.f_visible_type = 2
+		<include refid="getRevenueApplyListCheckSql"/>
+	</select>
+
+	<!--结算申请列表-->
+	<select id="getRevenueApplyList" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.ebuyProductSettle.entity.RevenueApplyDto">
+		select ra.f_id id,date_format(ra.f_sys0_add_time, '%Y.%m.%d') sys0AddTime, ra.f_total_amount totalAmount,
+				ra.f_audit_status auditStatus, ra.f_handler_note handlerNote, count(sal.f_id) settleOrderCount
+		from t_revenue_apply  ra
+		left join t_ebuy_product_settle_apply_log sal on sal.t_revenue_apply_f_id = ra.f_id
+		where  ra.f_goal_type = 16 AND ra.f_visible_type = 2
+		<include refid="getRevenueApplyListCheckSql"/>
+		group by ra.f_id
+		order by ra.f_id desc
+		<if test="_begin != null and _length != null">
+			limit #{_begin}, #{_length}
+		</if>
+	</select>
+
+	<select id="getSettleDeliveryOrderList" parameterType="java.util.Map"  resultMap="deliveryOrderDetailMap">
+		select edo.f_id as id, eo.f_id as orderId, eo.f_order_no orderNo, eo.f_deliv_address_detail as delivAddress,
+			ifnull(edo.f_amount, 0) as amount, ifnull(edo.f_total_coupon, 0) as totalCoupon, edo.f_delivery_real_fee deliveryRealFee,
+			eo.f_deliv_people_name delivPeopleName,eo.f_deliv_phone delivPhone,
+			IFNULL(ero.f_status,0) refundType, IFNULL(ero.f_refund_fee,0) deliveryOrderRefundFee, eo.f_pay_method payMethod, DATE_FORMAT(eo.f_pay_time,'%Y-%m-%d %T') payTime,
+			ep.f_id productId, ep.f_name productName, ep.f_pic_base picBase, eohep.f_product_price productPrice, eohep.f_product_qty productQty,
+			case when erop.f_id IS NULL then 0 else 1 end hasProductRefund,ep.f_sys0_upd_time productPicUpdTime,
+			era.f_reason refundReason, DATE_FORMAT(ero.f_sys0_add_time,'%Y-%m-%d %T') refundApplyTime
+		from t_ebuy_delivery_order edo
+        inner join t_ebuy_product_settle_apply_log sal on sal.t_ebuy_delivery_order_f_id = edo.f_id
+        inner join t_revenue_apply ra on sal.t_revenue_apply_f_id = ra.f_id
+		INNER JOIN t_ebuy_order eo on edo.t_ebuy_order_f_id = eo.f_id
+		LEFT JOIN t_ebuy_refund_order ero on ero.t_ebuy_delivery_order_f_id = edo.f_id and ero.f_sys0_del_state = 0 and  ero.f_refund_status = 2
+		LEFT JOIN t_ebuy_refund_audit era on ero.t_ebuy_refund_audit_f_id = era.f_id
+		INNER JOIN t_ebuy_delivery_order_product edop on edop.t_ebuy_delivery_order_f_id = edo.f_id and edop.f_sys0_del_state = 0
+		INNER JOIN t_ebuy_order_has_t_ebuy_product eohep on edop.t_ebuy_order_has_t_ebuy_product_f_id = eohep.f_id and eohep.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_refund_order_product erop on erop.t_ebuy_delivery_order_f_id = edo.f_id and erop.t_ebuy_refund_order_f_id = ero.f_id and erop.f_sys0_del_state = 0 and erop.t_ebuy_order_has_t_ebuy_product_f_id = eohep.f_id
+		INNER JOIN t_ebuy_product_shelf eps on eohep.t_ebuy_product_f_id = eps.f_id
+		INNER JOIN t_ebuy_product ep on eps.t_ebuy_product_id = ep.f_id
+		where ra.f_id = #{revenueApplyId}
+		<if test="supplyMerchantId != null and supplyMerchantId != ''">
+			and ra.t_ebuy_supply_merchant_fk = #{supplyMerchantId}
+		</if>
+		 order by edo.f_id desc
+		 <if test="_begin != null and _length != null">
+			 limit #{_begin}, #{_length}
+		 </if>
+	</select>
+
+	<select id="getUserDataInMerchantService" parameterType="map" resultType="com.cnfantasia.server.api.commonBusiness.entity.CommUserDataEntity">
+		select DISTINCT u.f_id userId, u.f_default_room_id defaultRoomId, 1 userType
+		 from t_user u
+		INNER JOIN t_room r on r.f_id = u.f_default_room_id and r.f_sys0_del_state = 0
+		INNER JOIN t_real_room rr on r.t_real_room_f_id = rr.f_id and rr.f_sys0_del_state = 0
+		INNER JOIN t_building b on b.f_id = rr.t_building_f_id and b.f_sys0_del_state = 0
+		INNER JOIN t_group_building gb on gb.f_id = b.t_group_building_f_id and gb.f_sys0_del_state = 0
+		INNER JOIN t_ebuy_supply_merchant_has_group_building smgb on smgb.t_group_building_id = gb.f_id and smgb.f_sys0_del_state = 0
+		where u.f_sys0_del_state = 0 and smgb.t_ebuy_supply_merchant_id = #{merchantId}
+	</select>
+
+	<!-- 更新(供应商)信息。 -->
+	<sql id="update_ebuySupplyMerchant">
+		UPDATE t_ebuy_supply_merchant
+		<trim prefix="SET" prefixOverrides=",">
+			,f_pro_pic=#{proPic}
+			,f_shop_photoes=#{shopPhotoes}
+		</trim>
+		WHERE f_id=#{id}
+	</sql>
+	<update id="updateEbuySupplyMerchantShopPic" parameterType="EbuySupplyMerchant">
+		<include refid="update_ebuySupplyMerchant"/>
+	</update>
+	
+	<!-- 将同一个供应商下的商品排序置顶 -->
+	<update id="updateSortToTop" parameterType="java.math.BigInteger" >
+		UPDATE t_ebuy_product_shelf eps
+		JOIN t_ebuy_product p ON p.f_id = eps.t_ebuy_product_id
+		JOIN t_ebuy_supply_merchant esm ON esm.f_id = p.t_supply_merchant_f_id
+		SET eps.f_sort = (
+			SELECT
+				maxSort
+			FROM
+				(
+					SELECT
+						IFNULL(max(eps2.f_sort), 0) + 1 AS maxSort
+					FROM
+						t_ebuy_product_shelf eps2
+					JOIN t_ebuy_product p2 ON p2.f_id = eps2.t_ebuy_product_id
+					WHERE
+						p2.t_supply_merchant_f_id = (
+							SELECT
+								t_supply_merchant_f_id
+							FROM
+								t_ebuy_product
+							WHERE
+								f_id = #{epId}
+						)
+				) t
+		),
+		 eps.f_sys0_upd_time = SYSDATE()
+		WHERE
+			p.f_id = #{epId};
+	</update>
+
+	<!--获取临停车优惠券剩余数量-->
+	<select id="getCarCouponNums" parameterType="java.lang.Long" resultType="java.util.Map">
+		SELECT ESMHC.f_num num, C.f_coupon_name name
+		FROM t_coupon C
+		INNER JOIN t_ebuy_supply_merchant_has_coupon ESMHC ON ESMHC.t_coupon_id = C.f_id
+		WHERE
+		C.f_use_type=4
+		AND C.f_status=1
+		<![CDATA[
+    		AND DATEDIFF(C.f_send_start_date, NOW())<=0
+    		AND DATEDIFF(C.f_send_end_date, NOW())>=0
+    		AND DATEDIFF(C.f_use_end_date, NOW())>=0
+    		]]>
+		AND ESMHC.t_store_id = #{storeId}
+		AND ESMHC.f_sys0_del_state = 0
+		AND ESMHC.f_num > 0
+		ORDER BY C.f_id DESC
+	</select>
+</mapper>

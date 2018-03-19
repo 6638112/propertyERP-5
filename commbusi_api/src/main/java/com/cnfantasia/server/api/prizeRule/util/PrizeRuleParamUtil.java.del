@@ -1,0 +1,60 @@
+/**   
+ * Filename:    PrizeRuleParamUtil.java   
+ * @version:    1.0  
+ * Create at:   2014年8月29日 上午3:41:42   
+ * Description:  
+ *   
+ * Modification History:   
+ * Date        Author      Version     Description   
+ * ----------------------------------------------------------------- 
+ * 2014年8月29日    shiyl      1.0         1.0 Version   
+ */
+package com.cnfantasia.server.api.prizeRule.util;
+
+import com.cnfantasia.server.api.prize.entity.DiscountValueEntity;
+import com.cnfantasia.server.api.prizeRule.constant.PrizeRuleConstant;
+import com.cnfantasia.server.api.prizeRule.service.IPrizeRuleManager;
+
+/**
+ * Filename: PrizeRuleParamUtil.java
+ * 
+ * @version: 1.0.0 Create at: 2014年8月29日 上午3:41:42 Description:
+ * 
+ *           Modification History: Date Author Version Description
+ *           ------------------------------------------------------------------
+ *           2014年8月29日 shiyl 1.0 1.0 Version
+ */
+public class PrizeRuleParamUtil {
+	
+	private  IPrizeRuleManager prizeRuleManager;
+	public  void setPrizeRuleManager(IPrizeRuleManager prizeRuleManager) {
+		this.prizeRuleManager = prizeRuleManager;
+	}
+
+	public  DiscountValueEntity getUnPrizeDiscount() {
+		Long unPrizeDisCount = Long.valueOf(prizeRuleManager.getParaValue(PrizeRuleConstant.UN_PRIZE_DISCOUNT));
+		DiscountValueEntity discountValueEntity = new DiscountValueEntity(unPrizeDisCount);
+		return discountValueEntity;
+	}
+
+	public  DiscountValueEntity getPrizeDiscountMax() {
+		Long unPrizeDisCount = Long.valueOf(prizeRuleManager.getParaValue(PrizeRuleConstant.PRIZE_DISCOUNT_MAX));
+		DiscountValueEntity discountValueEntity = new DiscountValueEntity(unPrizeDisCount);
+		return discountValueEntity;
+	}
+	
+	public  int getMaxPrizeCount(){
+		Integer maxPrizeCount = Integer.valueOf(prizeRuleManager.getParaValue(PrizeRuleConstant.MAX_PRIZE_COUNT_DAY));
+		return maxPrizeCount;
+	}
+	
+	public  double getRuleA1(){
+		Double rualA1 = Double.valueOf(prizeRuleManager.getParaValue(PrizeRuleConstant.PRIZE_CONVERT_RULE_A1));
+		return rualA1;
+	}
+	public  double getRuleD(){
+		Double rualD = Double.valueOf(prizeRuleManager.getParaValue(PrizeRuleConstant.PRIZE_CONVERT_RULE_D));
+		return rualD;
+	}
+	
+}

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:临时用户中奖记录 t_prize_record_tmp -->
+<mapper namespace="prizeRecordTmpBase">
+	<resultMap type="PrizeRecordTmp" id="prizeRecordTmpBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!-- 摇奖人 -->        <result column="f_prize_time" javaType="java.lang.String" property="prizeTime"/>  <!-- 抽奖时间 -->        <result column="f_end_time" javaType="java.lang.String" property="endTime"/>  <!-- 有效时间 -->        <result column="f_discount" javaType="java.lang.Double" property="discount"/>  <!-- 折扣 -->        <result column="t_user_tmp_f_id" javaType="java.math.BigInteger" property="tUserTmpFId"/>  <!-- 临时用户 -->        <result column="f_adjust_type" javaType="java.lang.Integer" property="adjustType"/>  <!-- 是否为调整记录 -->        <result column="f_pool_type" javaType="java.lang.Integer" property="poolType"/>  <!-- 来源奖池类型 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PrizeRecordTmp" id="prizeRecordTmpExtendMap" extends="prizeRecordTmpBaseMap">
+	</resultMap>
+	<resultMap type="PrizeRecordTmp" id="prizeRecordTmpBaseMap_AppendTable">
+        <id column="PRTid" javaType="java.math.BigInteger" property="id"/>  <!-- 摇奖人 -->        <result column="PRTprizeTime" javaType="java.lang.String" property="prizeTime"/>  <!-- 抽奖时间 -->        <result column="PRTendTime" javaType="java.lang.String" property="endTime"/>  <!-- 有效时间 -->        <result column="PRTdiscount" javaType="java.lang.Double" property="discount"/>  <!-- 折扣 -->        <result column="PRTtUserTmpFId" javaType="java.math.BigInteger" property="tUserTmpFId"/>  <!-- 临时用户 -->        <result column="PRTadjustType" javaType="java.lang.Integer" property="adjustType"/>  <!-- 是否为调整记录 -->        <result column="PRTpoolType" javaType="java.lang.Integer" property="poolType"/>  <!-- 来源奖池类型 -->        <result column="PRTsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PRTsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PRTsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PRTsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PRTsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PRTsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PRTsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PrizeRecordTmp" id="prizeRecordTmpBaseMap_AppendTable1">
+        <id column="PRT1id" javaType="java.math.BigInteger" property="id"/>  <!-- 摇奖人 -->        <result column="PRT1prizeTime" javaType="java.lang.String" property="prizeTime"/>  <!-- 抽奖时间 -->        <result column="PRT1endTime" javaType="java.lang.String" property="endTime"/>  <!-- 有效时间 -->        <result column="PRT1discount" javaType="java.lang.Double" property="discount"/>  <!-- 折扣 -->        <result column="PRT1tUserTmpFId" javaType="java.math.BigInteger" property="tUserTmpFId"/>  <!-- 临时用户 -->        <result column="PRT1adjustType" javaType="java.lang.Integer" property="adjustType"/>  <!-- 是否为调整记录 -->        <result column="PRT1poolType" javaType="java.lang.Integer" property="poolType"/>  <!-- 来源奖池类型 -->        <result column="PRT1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PRT1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PRT1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PRT1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PRT1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PRT1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PRT1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PRT.f_id,date_format(PRT.f_prize_time,'%Y-%m-%d %T') as f_prize_time,date_format(PRT.f_end_time,'%Y-%m-%d %T') as f_end_time,PRT.f_discount,PRT.t_user_tmp_f_id,PRT.f_adjust_type,PRT.f_pool_type
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PRT.f_id as PRTid,date_format(PRT.f_prize_time,'%Y-%m-%d %T') as PRTprizeTime,date_format(PRT.f_end_time,'%Y-%m-%d %T') as PRTendTime,PRT.f_discount as PRTdiscount,PRT.t_user_tmp_f_id as PRTtUserTmpFId,PRT.f_adjust_type as PRTadjustType,PRT.f_pool_type as PRTpoolType
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PRT1.f_id as PRT1id,date_format(PRT1.f_prize_time,'%Y-%m-%d %T') as PRT1prizeTime,date_format(PRT1.f_end_time,'%Y-%m-%d %T') as PRT1endTime,PRT1.f_discount as PRT1discount,PRT1.t_user_tmp_f_id as PRT1tUserTmpFId,PRT1.f_adjust_type as PRT1adjustType,PRT1.f_pool_type as PRT1poolType
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PRT.f_id = #{id} ) </if>        <if test="prizeTime != null and !prizeTime.equals('')  ">  and (PRT.f_prize_time = str_to_date(#{prizeTime},'%Y-%m-%d %T') ) </if>        <if test="prizeTime_START != null and !prizeTime_START.equals('')  ">              <![CDATA[ and (PRT.f_prize_time >= str_to_date(#{prizeTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="prizeTime_END != null and !prizeTime_END.equals('')  ">            <![CDATA[ and (PRT.f_prize_time <= str_to_date(#{prizeTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="endTime != null and !endTime.equals('')  ">  and (PRT.f_end_time = str_to_date(#{endTime},'%Y-%m-%d %T') ) </if>        <if test="endTime_START != null and !endTime_START.equals('')  ">              <![CDATA[ and (PRT.f_end_time >= str_to_date(#{endTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="endTime_END != null and !endTime_END.equals('')  ">            <![CDATA[ and (PRT.f_end_time <= str_to_date(#{endTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="discount != null">  and (PRT.f_discount = #{discount} ) </if>        <if test="tUserTmpFId != null">  and (PRT.t_user_tmp_f_id = #{tUserTmpFId} ) </if>        <if test="adjustType != null">  and (PRT.f_adjust_type = #{adjustType} ) </if>        <if test="poolType != null">  and (PRT.f_pool_type = #{poolType} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PRT.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PRT.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PRT.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PRT.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PRT.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PRT.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PRT.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PRT.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PRT.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (PRT.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (PRT.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (PRT.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (PRT.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (PRT.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PRT.f_id = #{id} ) </if>        <if test="prizeTime != null and !prizeTime.equals('')  ">  and (PRT.f_prize_time = str_to_date(#{prizeTime},'%Y-%m-%d %T') ) </if>        <if test="prizeTime_START != null and !prizeTime_START.equals('')  ">              <![CDATA[ and (PRT.f_prize_time >= str_to_date(#{prizeTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="prizeTime_END != null and !prizeTime_END.equals('')  ">            <![CDATA[ and (PRT.f_prize_time <= str_to_date(#{prizeTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="endTime != null and !endTime.equals('')  ">  and (PRT.f_end_time = str_to_date(#{endTime},'%Y-%m-%d %T') ) </if>        <if test="endTime_START != null and !endTime_START.equals('')  ">              <![CDATA[ and (PRT.f_end_time >= str_to_date(#{endTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="endTime_END != null and !endTime_END.equals('')  ">            <![CDATA[ and (PRT.f_end_time <= str_to_date(#{endTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="discount != null and !discount.equals('')  ">  and (PRT.f_discount = #{discount} ) </if>        <if test="tUserTmpFId != null and !tUserTmpFId.equals('')  ">  and (PRT.t_user_tmp_f_id = #{tUserTmpFId} ) </if>        <if test="adjustType != null and !adjustType.equals('')  ">  and (PRT.f_adjust_type = #{adjustType} ) </if>        <if test="poolType != null and !poolType.equals('')  ">  and (PRT.f_pool_type = #{poolType} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PRT.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PRT.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PRT.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PRT.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PRT.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PRT.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PRT.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PRT.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PRT.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PRT.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PRT.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PRT.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PRT.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (PRT.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="prizeRecordTmpBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="prizeRecordTmpBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="prizeRecordTmpBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="prizeRecordTmpBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_prize_record_tmp PRT    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(临时用户中奖记录)信息。 -->
+	<sql id="select_prizeRecordTmp">
+		SELECT <include refid="prizeRecordTmpBase.queryHead"/>
+		<include refid="prizeRecordTmpBase.busiQueryCondition"/>
+		<include refid="prizeRecordTmpBase.dimCheckSql"/>
+		ORDER BY PRT.f_id DESC
+	</sql>
+	<select id="select_prizeRecordTmp" parameterType="java.util.Map" resultMap="prizeRecordTmpBase.prizeRecordTmpExtendMap">
+		<include refid="prizeRecordTmpBase.select_prizeRecordTmp"/>
+	</select>
+	
+	<!-- 根据条件分页查询(临时用户中奖记录)信息  -->
+	<sql id="select_prizeRecordTmp_withPage">
+		SELECT <include refid="prizeRecordTmpBase.queryHead"/>
+		<include refid="prizeRecordTmpBase.busiQueryCondition"/>
+		<include refid="prizeRecordTmpBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_prizeRecordTmp_withPage" resultMap="prizeRecordTmpBase.prizeRecordTmpExtendMap" parameterType="java.util.Map">
+		<include refid="prizeRecordTmpBase.select_prizeRecordTmp_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(临时用户中奖记录)信息。 -->
+	<sql id="select_prizeRecordTmp_bySeqId">
+		SELECT <include refid="prizeRecordTmpBase.queryHead"/>
+		<include refid="prizeRecordTmpBase.busiQueryCondition"/>
+		 and PRT.f_id = #{_parameter}
+	</sql>
+	<select id="select_prizeRecordTmp_bySeqId" parameterType="java.math.BigInteger" resultMap="prizeRecordTmpBase.prizeRecordTmpBaseMap">
+		<include refid="prizeRecordTmpBase.select_prizeRecordTmp_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(临时用户中奖记录)记录数  -->
+	<sql id="select_prizeRecordTmp_count">
+		SELECT COUNT(*)
+		<include refid="prizeRecordTmpBase.busiQueryCount"/>
+		<include refid="prizeRecordTmpBase.dimCheckSql"/>
+	</sql>
+	<select id="select_prizeRecordTmp_count" resultType="java.lang.Integer">
+		<include refid="prizeRecordTmpBase.select_prizeRecordTmp_count"/>
+	</select>
+	
+	 <!-- 往(临时用户中奖记录)新增一条记录。 -->
+	 <sql id="insert_prizeRecordTmp">
+		INSERT INTO t_prize_record_tmp 
+		(f_id,f_prize_time,f_end_time,f_discount,t_user_tmp_f_id,f_adjust_type,f_pool_type,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},str_to_date(#{prizeTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{endTime,jdbcType=DATE},'%Y-%m-%d %T'),#{discount},#{tUserTmpFId},#{adjustType},#{poolType},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_prizeRecordTmp" parameterType="PrizeRecordTmp">
+		<include refid="prizeRecordTmpBase.insert_prizeRecordTmp"/>
+    </insert>
+    
+	<!-- 批量新增(临时用户中奖记录)信息 -->
+    <insert id="insert_prizeRecordTmp_Batch" parameterType="java.util.List">
+    	INSERT INTO t_prize_record_tmp 
+		(f_id,f_prize_time,f_end_time,f_discount,t_user_tmp_f_id,f_adjust_type,f_pool_type,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},str_to_date(#{item.prizeTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.endTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.discount},#{item.tUserTmpFId},#{item.adjustType},#{item.poolType},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(临时用户中奖记录)信息。 -->
+    <sql id="update_prizeRecordTmp">
+		UPDATE t_prize_record_tmp		<trim prefix="SET" prefixOverrides=","> 		<if test="prizeTime != null and !prizeTime.equals('') "> ,f_prize_time=str_to_date(#{prizeTime},'%Y-%m-%d %T')</if> 		<if test="endTime != null and !endTime.equals('') "> ,f_end_time=str_to_date(#{endTime},'%Y-%m-%d %T')</if> 		<if test="discount != null and !discount.equals('') "> ,f_discount=#{discount}</if> 		<if test="tUserTmpFId != null and !tUserTmpFId.equals('') "> ,t_user_tmp_f_id=#{tUserTmpFId}</if> 		<if test="adjustType != null and !adjustType.equals('') "> ,f_adjust_type=#{adjustType}</if> 		<if test="poolType != null and !poolType.equals('') "> ,f_pool_type=#{poolType}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_prizeRecordTmp" parameterType="PrizeRecordTmp">
+		<include refid="prizeRecordTmpBase.update_prizeRecordTmp"/>
+    </update>
+    
+    <!-- 批量更新(临时用户中奖记录)信息。 -->
+    <update id="update_prizeRecordTmp_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_prize_record_tmp		<trim prefix="SET" prefixOverrides=","> 		<if test="item.prizeTime != null and !item.prizeTime.equals('')  "> ,f_prize_time=str_to_date(#{item.prizeTime},'%Y-%m-%d %T')</if> 		<if test="item.endTime != null and !item.endTime.equals('')  "> ,f_end_time=str_to_date(#{item.endTime},'%Y-%m-%d %T')</if> 		<if test="item.discount != null and !item.discount.equals('')  "> ,f_discount=#{item.discount}</if> 		<if test="item.tUserTmpFId != null and !item.tUserTmpFId.equals('')  "> ,t_user_tmp_f_id=#{item.tUserTmpFId}</if> 		<if test="item.adjustType != null and !item.adjustType.equals('')  "> ,f_adjust_type=#{item.adjustType}</if> 		<if test="item.poolType != null and !item.poolType.equals('')  "> ,f_pool_type=#{item.poolType}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(临时用户中奖记录)信息_逻辑删除。 -->
+    <sql id="delete_prizeRecordTmp_Logic">
+		UPDATE t_prize_record_tmp		<trim prefix="SET" prefixOverrides=","> 		<if test="prizeTime != null and !prizeTime.equals('')  "> ,f_prize_time=str_to_date(#{prizeTime},'%Y-%m-%d %T')</if> 		<if test="endTime != null and !endTime.equals('')  "> ,f_end_time=str_to_date(#{endTime},'%Y-%m-%d %T')</if> 		<if test="discount != null and !discount.equals('')  "> ,f_discount=#{discount}</if> 		<if test="tUserTmpFId != null and !tUserTmpFId.equals('')  "> ,t_user_tmp_f_id=#{tUserTmpFId}</if> 		<if test="adjustType != null and !adjustType.equals('')  "> ,f_adjust_type=#{adjustType}</if> 		<if test="poolType != null and !poolType.equals('')  "> ,f_pool_type=#{poolType}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_prizeRecordTmp_Logic" parameterType="PrizeRecordTmp">
+		<include refid="prizeRecordTmpBase.delete_prizeRecordTmp_Logic"/>
+    </update>
+    
+    <!-- 批量删除(临时用户中奖记录)信息_逻辑删除 -->
+    <update id="delete_prizeRecordTmp_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_prize_record_tmp		<trim prefix="SET" prefixOverrides=","> 		<if test="item.prizeTime != null and !item.prizeTime.equals('')  "> ,f_prize_time=str_to_date(#{item.prizeTime},'%Y-%m-%d %T')</if> 		<if test="item.endTime != null and !item.endTime.equals('')  "> ,f_end_time=str_to_date(#{item.endTime},'%Y-%m-%d %T')</if> 		<if test="item.discount != null and !item.discount.equals('')  "> ,f_discount=#{item.discount}</if> 		<if test="item.tUserTmpFId != null and !item.tUserTmpFId.equals('')  "> ,t_user_tmp_f_id=#{item.tUserTmpFId}</if> 		<if test="item.adjustType != null and !item.adjustType.equals('')  "> ,f_adjust_type=#{item.adjustType}</if> 		<if test="item.poolType != null and !item.poolType.equals('')  "> ,f_pool_type=#{item.poolType}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(临时用户中奖记录)信息。 -->
+    <sql id="delete_prizeRecordTmp">
+		DELETE FROM t_prize_record_tmp WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_prizeRecordTmp" parameterType="java.lang.String">
+		<include refid="prizeRecordTmpBase.delete_prizeRecordTmp"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(临时用户中奖记录)信息。 -->
+    <delete id="delete_prizeRecordTmp_Batch" parameterType="java.util.List">
+		DELETE FROM t_prize_record_tmp WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="loan">
+
+	<resultMap type="com.cnfantasia.server.ms.loan.entity.LoanBuyLogEntity" id="loanBuyLogEntityMap" extends="loanBuyLogReqMap">
+        <result column="orderNo" javaType="java.lang.String" property="orderNo"/>
+        <result column="loanDate" javaType="java.lang.String" property="loanDate"/>
+        <result column="loanAmount" javaType="java.lang.Double" property="loanAmount"/>
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.ms.loan.entity.LoanBuyLogReq" id="loanBuyLogReqMap">
+        <result column="city" javaType="java.lang.String" property="city"/>
+        <result column="gbName" javaType="java.lang.String" property="gbName"/>
+        <result column="buildingName" javaType="java.lang.String" property="buildingName"/>
+        <result column="roomNum" javaType="java.lang.String" property="roomNum"/>
+        <result column="name" javaType="java.lang.String" property="name"/>
+        <result column="mobile" javaType="java.lang.String" property="mobile"/>
+        <result column="idCard" javaType="java.lang.String" property="idCard"/>
+        <result column="productType" javaType="java.lang.String" property="productType"/>
+        <result column="platform" javaType="java.lang.String" property="platform"/>
+    </resultMap>
+	
+	<sql id="loanIndex_checkSql">
+		FROM
+			t_loan_buy_log LBL
+			LEFT JOIN t_loan_product LP ON LP.f_id = LBL.t_loan_product_f_id
+			LEFT JOIN t_loan_third LT ON LT.f_id=LP.t_loan_third_f_id
+		WHERE
+			LBL.f_sys0_del_state = 0
+			<if test="city != null and !city.equals('')">
+				AND LOCATE(#{city}, LBL.f_city)>0
+			</if>
+			<if test="gbName != null and !gbName.equals('')">
+				AND LOCATE(#{gbName}, LBL.f_gb_name)>0
+			</if>
+			<if test="buildingName != null and !buildingName.equals('')">
+				AND LOCATE(#{buildingName}, LBL.f_building_name)>0
+			</if>
+			<if test="roomNum != null and !roomNum.equals('')">
+				AND LOCATE(#{roomNum}, LBL.f_room_num)>0
+			</if>
+			<if test="roomNum != null and !roomNum.equals('')">
+				AND LOCATE(#{roomNum}, LBL.f_room_num)>0
+			</if>
+			<if test="name != null and !name.equals('')">
+				AND LOCATE(#{name}, LBL.f_name)>0
+			</if>
+			<if test="mobile != null and !mobile.equals('')">
+				AND LOCATE(#{name}, LBL.f_mobile)>0
+			</if>
+			<if test="idCard != null and !idCard.equals('')">
+				AND LOCATE(#{idCard}, LBL.f_id_card)>0
+			</if>
+			<if test="loanDateStart != null and !loanDateStart.equals('')">
+				AND LBL.f_loan_date >= #{loanDateStart}
+			</if>
+			<if test="loanDateEnd != null and !loanDateEnd.equals('')">
+				<![CDATA[ AND LBL.f_loan_date <= #{loanDateEnd} ]]>
+			</if>
+			<if test="productType != null and !productType.equals('')">
+				AND LP.f_id = #{productType}
+			</if>
+	</sql>
+	
+	<select id="selectLoanBuyLogWithList" parameterType="java.util.Map" resultMap="loanBuyLogEntityMap">
+		SELECT
+			LBL.f_order_no orderNo,
+			LBL.f_city city,
+			LBL.f_gb_name gbName,
+			LBL.f_building_name buildingName,
+			LBL.f_room_num roomNum,
+			LBL.f_name name,
+			LBL.f_mobile mobile,
+			LBL.f_id_card idCard,
+			LP.f_name productType,
+			DATE_FORMAT(
+				LBL.f_loan_date,
+				'%Y-%m-%d'
+			) loanDate,
+			LBL.f_loan_amount loanAmount,
+			LT.f_name platform
+		<include refid="loanIndex_checkSql"></include>
+		ORDER BY
+			LBL.f_sys0_add_time DESC
+		<if test="(_begin != null and !_begin.equals('')) or (_length != null and !_length.equals(''))">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+	
+	<select id="selectLoanBuyLogWithCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) <include refid="loanIndex_checkSql"></include>
+	</select>
+	
+</mapper>

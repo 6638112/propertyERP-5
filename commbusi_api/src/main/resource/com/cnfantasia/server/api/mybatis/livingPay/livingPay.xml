@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 生活缴费 -->
+<mapper namespace="livingPay">
+    <select id="selectLivingPayItemList" resultType="com.cnfantasia.server.api.livingPay.entity.PayItem">
+        SELECT
+            f_id id,
+            f_name `name`,
+            f_pic_url picUrl,
+            f_type type,
+            f_sort sort
+        FROM
+            t_living_fee_item
+        WHERE
+            f_sys0_del_state = 0
+        ORDER BY
+            f_sort;
+    </select>
+
+    <select id="qryLivingPayRecordList" parameterType="map" resultType="com.cnfantasia.server.api.livingPay.entity.PayRecord">
+        SELECT
+            pr.f_id id,
+            pr.f_charge_object changeObject,
+            pi.f_pic_url picUrl,
+            pi.f_name typeName,
+            pr.f_address address,
+            date_format(f_pay_time,'%Y-%m-%d %H:%i') payTime,
+            pr.f_amount/100.0 amount,
+            pr.f_amount_balance/100.0 amtBalance,
+            pr.f_status `status`,
+            CASE
+              WHEN pr.f_status = 0 THEN
+                '正在充值'
+              WHEN pr.f_status = 1 THEN
+                '充值成功'
+            ELSE
+                '未知状态'
+            END statusStr
+        FROM
+            t_living_fee_pay_record pr
+        JOIN t_living_fee_item pi ON pi.f_id = pr.t_living_fee_item_f_id and pi.f_sys0_del_state = 0
+        where pr.f_sys0_del_state = 0
+        AND pr.f_status &gt;= 0
+        AND pr.t_user_f_id = #{userId}
+        order by pr.f_id desc;
+    </select>
+    
+    <select id="qryLivingPayRevenueList" parameterType="map" resultType="com.cnfantasia.server.api.livingPay.entity.PayRecordRevenue">
+        SELECT
+            r.f_id id,
+            i.f_name typeName,
+            r.f_charge_object chargeObject,
+            r.f_link_tel linkTel,
+            r.f_address address,
+            date_format(f_pay_time, '%Y-%m-%d %T') payTime,
+            r.f_amount/100.0 amount,
+            r.f_amount_balance/100.0 amtBalance,
+            CASE
+        WHEN r.f_status = -1 THEN
+            '未缴费'
+        WHEN r.f_status = 0 THEN
+            '未充值'
+        WHEN r.f_status = 1 THEN
+            '已充值'
+        ELSE
+            '未知状态'
+        END statusStr,
+         CASE
+        WHEN rsa.f_tk_status IS NULL OR rsa.f_tk_status = 1 THEN
+            '未提款'
+        WHEN rsa.f_tk_status = 2 THEN
+            '申请中'
+        WHEN rsa.f_tk_status = 3 THEN
+            '已结算'
+        ELSE
+            '未知状态'
+        END revenueStatusStr
+        FROM
+            t_living_fee_pay_record r
+        JOIN t_living_fee_item i ON i.f_id = r.t_living_fee_item_f_id
+        LEFT JOIN t_revenue_signal_amount rsa ON rsa.f_goal_id = r.f_id AND rsa.f_goal_type = 18
+        WHERE
+            r.f_sys0_del_state = 0
+        and r.f_status &gt;= 0
+        <if test="itemId != null and !itemId.equals('')">AND i.f_id = #{itemId}</if>
+        <if test="chargeObject != null and !chargeObject.equals('')">and r.f_charge_object like CONCAT('%', #{chargeObject},'%')</if>
+        <if test="linkTel != null and !linkTel.equals('')">and r.f_link_tel like CONCAT('%',#{linkTel},'%')</if>
+        <if test="payTimeStart != null and !payTimeStart.equals('')">and r.f_pay_time &gt;= #{payTimeStart}</if>
+        <if test="payTimeEnd != null and !payTimeEnd.equals('')">and r.f_pay_time &lt;= #{payTimeEnd}</if>
+        <if test="status != null and !status.equals('')">and r.f_status = #{status}</if>
+        <if test="settleStatus != null and !settleStatus.equals('')">
+            <choose>
+                <when test="settleStatus == 1">
+                    and (rsa.f_tk_status = 1 or rsa.f_tk_status is null)
+                </when>
+                <otherwise>
+                    and rsa.f_tk_status = #{settleStatus}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="revenueApplyId != null and !revenueApplyId.equals('')">and rsa.f_rev_apply_finance_id = #{revenueApplyId}</if>
+        ORDER BY r.f_status asc, r.f_sys0_add_time desc
+        <if test="_begin != null and _length != '' ">
+            <![CDATA[ LIMIT #{_begin},#{_length} ]]>
+        </if>
+    </select>
+
+
+    <!-- 根据电商的订单ID，查询商品信息， 缴费类型[生活缴费]-->
+    <select id="qryProductInfoByOrderId" parameterType="java.math.BigInteger" resultType="string">
+        SELECT
+            CONCAT(
+                i.f_name,
+                '[生活缴费]'
+            ) productInfo
+        FROM
+            t_living_fee_pay_record r
+        LEFT JOIN t_living_fee_item i ON i.f_id = r.t_living_fee_item_f_id
+        WHERE r.t_ebuy_order_f_id = #{orderId}
+        LIMIT 1
+    </select>
+
+    <select id="selectInfo4RevenueList" resultType="com.cnfantasia.server.api.livingPay.entity.Info4Revenue">
+        SELECT
+            r.f_id goalId,
+            r.f_amount payAmount,
+            eo.f_order_no orderNo,
+            epr.f_flow_no flowNo
+        FROM
+            t_living_fee_pay_record r
+        JOIN t_ebuy_order eo ON eo.f_id = r.t_ebuy_order_f_id and eo.f_pay_status = 2 and eo.f_sys0_del_state = 0
+        LEFT JOIN t_ebuy_pay_record epr on epr.t_ebuy_order_f_id = eo.f_id and epr.f_pay_status = 2 and epr.f_sys0_del_state = 0
+        LEFT JOIN t_revenue_signal_amount rsa ON rsa.f_goal_id = r.f_id AND rsa.f_goal_type = 18 AND rsa.f_sys0_del_state = 0
+        WHERE
+            r.f_status = 1
+        AND r.f_sys0_del_state = 0
+        AND rsa.f_id is NULL;
+    </select>
+
+    <select id="selectInfo4ApplyRevenue" resultType="com.cnfantasia.server.api.livingPay.entity.Info4AppleRevenue">
+        SELECT
+            r.f_id recordId, rsa.f_id rsaId, rsa.f_amount revenueAmt
+        FROM
+            t_living_fee_pay_record r
+        JOIN t_revenue_signal_amount rsa ON rsa.f_goal_id = r.f_id AND rsa.f_goal_type = 18 and rsa.f_tk_status = 1 AND rsa.f_sys0_del_state = 0
+        where r.f_sys0_del_state = 0
+    </select>
+
+    <select id="qrypayRecord4RevenueExportList" resultType="com.cnfantasia.server.api.livingPay.entity.PayRecord4RevenueExport"
+            parameterType="map">
+        SELECT
+            pr.f_id livingPayRecordId,
+            eo.f_order_no orderNo,
+            pr.f_charge_object chargeObject,
+            fi.f_name feeTypeName,
+            pr.f_room_numuber roomNo,
+            pr.f_address address,
+            pr.f_amount/100.00 amount,
+            epr.f_flow_no payFlowNo,
+            date_format(pr.f_pay_time, '%Y-%m-%d %T') payTime,
+            pr.f_status livingPayRecordStatus,
+            CASE
+        WHEN pr.f_status = 0 THEN
+            '未充值'
+        WHEN pr.f_status = 1 THEN
+            '已充值'
+        ELSE
+            '未知状态'
+        END chargeStatusString,
+         CASE
+        WHEN epr.f_pay_method = 1 THEN
+            '微信支付'
+        WHEN epr.f_pay_method = 2 THEN
+            '支付宝'
+        WHEN epr.f_pay_method = 3 THEN
+            '银联支付'
+        WHEN epr.f_pay_method = 4 THEN
+            '纯红包支付'
+        WHEN epr.f_pay_method = 5 THEN
+            '纯积分支付'
+        WHEN epr.f_pay_method = 6 THEN
+            '微信轻应用支付'
+        ELSE
+            '其它支付方式'
+        END AS payMethod,
+         CASE
+        WHEN rsa.f_tk_status is null OR rsa.f_tk_status = 1 THEN
+            '未提款'
+        WHEN rsa.f_tk_status = 2 THEN
+            '提款中'
+        WHEN rsa.f_tk_status = 3 THEN
+            '已结算'
+        ELSE
+            '其它结算状态'
+        END AS settleStatusString
+        FROM
+            t_living_fee_pay_record pr
+        JOIN t_living_fee_item fi ON fi.f_id = pr.t_living_fee_item_f_id
+        JOIN t_ebuy_order eo ON eo.f_id = pr.t_ebuy_order_f_id
+        LEFT JOIN t_ebuy_pay_record epr ON epr.t_ebuy_order_f_id = eo.f_id AND epr.f_sys0_del_state = 0 AND epr.f_pay_status = 2
+        LEFT JOIN t_revenue_signal_amount rsa ON rsa.f_goal_id = pr.f_id AND rsa.f_goal_type = 18 AND rsa.f_sys0_del_state = 0
+        WHERE pr.f_sys0_del_state = 0
+        <if test="itemId != null and !itemId.equals('')">AND fi.f_id = #{itemId}</if>
+        <if test="chargeObject != null and !chargeObject.equals('')">and pr.f_charge_object like CONCAT('%', #{chargeObject},'%')</if>
+        <if test="linkTel != null and !linkTel.equals('')">and pr.f_link_tel like CONCAT('%',#{linkTel},'%')</if>
+        <if test="payTimeStart != null and !payTimeStart.equals('')">and pr.f_pay_time &gt;= #{payTimeStart}</if>
+        <if test="payTimeEnd != null and !payTimeEnd.equals('')">and pr.f_pay_time &lt;= #{payTimeEnd}</if>
+        <if test="status != null and !status.equals('')">and pr.f_status = #{status}</if>
+        <if test="settleStatus != null and !settleStatus.equals('')">
+            <choose>
+                <when test="settleStatus == 1">
+                    and (rsa.f_tk_status = 1 or rsa.f_tk_status is null)
+                </when>
+                <otherwise>
+                    and rsa.f_tk_status = #{settleStatus}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="revenueApplyId != null and !revenueApplyId.equals('')">and rsa.f_rev_apply_finance_id = #{revenueApplyId}</if>
+        ORDER BY pr.f_id
+    </select>
+</mapper>

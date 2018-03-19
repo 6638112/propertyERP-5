@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:收藏 t_collections -->
+<mapper namespace="collectionsBase">
+	<resultMap type="Collections" id="collectionsBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户Id -->        <result column="f_time" javaType="java.lang.String" property="time"/>  <!-- 收藏时间 -->        <result column="f_target_type" javaType="java.lang.Integer" property="targetType"/>  <!-- 收藏对象类型 -->        <result column="f_target_id" javaType="java.math.BigInteger" property="targetId"/>  <!-- 目标内容Id -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="Collections" id="collectionsExtendMap" extends="collectionsBaseMap">
+	</resultMap>
+	<resultMap type="Collections" id="collectionsBaseMap_AppendTable">
+        <id column="Cid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CuserId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户Id -->        <result column="Ctime" javaType="java.lang.String" property="time"/>  <!-- 收藏时间 -->        <result column="CtargetType" javaType="java.lang.Integer" property="targetType"/>  <!-- 收藏对象类型 -->        <result column="CtargetId" javaType="java.math.BigInteger" property="targetId"/>  <!-- 目标内容Id -->        <result column="Csys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="Csys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="Csys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="Csys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="Csys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="Csys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="Csys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="Collections" id="collectionsBaseMap_AppendTable1">
+        <id column="C1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="C1userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户Id -->        <result column="C1time" javaType="java.lang.String" property="time"/>  <!-- 收藏时间 -->        <result column="C1targetType" javaType="java.lang.Integer" property="targetType"/>  <!-- 收藏对象类型 -->        <result column="C1targetId" javaType="java.math.BigInteger" property="targetId"/>  <!-- 目标内容Id -->        <result column="C1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="C1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="C1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="C1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="C1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="C1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="C1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		C.f_id,C.f_user_id,date_format(C.f_time,'%Y-%m-%d %T') as f_time,C.f_target_type,C.f_target_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		C.f_id as Cid,C.f_user_id as CuserId,date_format(C.f_time,'%Y-%m-%d %T') as Ctime,C.f_target_type as CtargetType,C.f_target_id as CtargetId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		C1.f_id as C1id,C1.f_user_id as C1userId,date_format(C1.f_time,'%Y-%m-%d %T') as C1time,C1.f_target_type as C1targetType,C1.f_target_id as C1targetId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (C.f_id = #{id} ) </if>        <if test="userId != null">  and (C.f_user_id = #{userId} ) </if>        <if test="time != null and !time.equals('')  ">  and (C.f_time = str_to_date(#{time},'%Y-%m-%d %T') ) </if>        <if test="time_START != null and !time_START.equals('')  ">              <![CDATA[ and (C.f_time >= str_to_date(#{time_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="time_END != null and !time_END.equals('')  ">            <![CDATA[ and (C.f_time <= str_to_date(#{time_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="targetType != null">  and (C.f_target_type = #{targetType} ) </if>        <if test="targetId != null">  and (C.f_target_id = #{targetId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (C.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (C.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (C.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (C.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (C.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (C.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (C.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (C.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (C.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (C.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (C.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (C.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (C.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (C.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (C.f_id = #{id} ) </if>        <if test="userId != null and !userId.equals('')  ">  and (C.f_user_id = #{userId} ) </if>        <if test="time != null and !time.equals('')  ">  and (C.f_time = str_to_date(#{time},'%Y-%m-%d %T') ) </if>        <if test="time_START != null and !time_START.equals('')  ">              <![CDATA[ and (C.f_time >= str_to_date(#{time_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="time_END != null and !time_END.equals('')  ">            <![CDATA[ and (C.f_time <= str_to_date(#{time_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="targetType != null and !targetType.equals('')  ">  and (C.f_target_type = #{targetType} ) </if>        <if test="targetId != null and !targetId.equals('')  ">  and (C.f_target_id = #{targetId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (C.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (C.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (C.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (C.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (C.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (C.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (C.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (C.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (C.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (C.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (C.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (C.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (C.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (C.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="collectionsBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="collectionsBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="collectionsBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="collectionsBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_collections C    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(收藏)信息。 -->
+	<sql id="select_collections">
+		SELECT <include refid="collectionsBase.queryHead"/>
+		<include refid="collectionsBase.busiQueryCondition"/>
+		<include refid="collectionsBase.dimCheckSql"/>
+		ORDER BY C.f_id DESC
+	</sql>
+	<select id="select_collections" parameterType="java.util.Map" resultMap="collectionsBase.collectionsExtendMap">
+		<include refid="collectionsBase.select_collections"/>
+	</select>
+	
+	<!-- 根据条件分页查询(收藏)信息  -->
+	<sql id="select_collections_withPage">
+		SELECT <include refid="collectionsBase.queryHead"/>
+		<include refid="collectionsBase.busiQueryCondition"/>
+		<include refid="collectionsBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_collections_withPage" resultMap="collectionsBase.collectionsExtendMap" parameterType="java.util.Map">
+		<include refid="collectionsBase.select_collections_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(收藏)信息。 -->
+	<sql id="select_collections_bySeqId">
+		SELECT <include refid="collectionsBase.queryHead"/>
+		<include refid="collectionsBase.busiQueryCondition"/>
+		 and C.f_id = #{_parameter}
+	</sql>
+	<select id="select_collections_bySeqId" parameterType="java.math.BigInteger" resultMap="collectionsBase.collectionsBaseMap">
+		<include refid="collectionsBase.select_collections_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(收藏)记录数  -->
+	<sql id="select_collections_count">
+		SELECT COUNT(*)
+		<include refid="collectionsBase.busiQueryCount"/>
+		<include refid="collectionsBase.dimCheckSql"/>
+	</sql>
+	<select id="select_collections_count" resultType="java.lang.Integer">
+		<include refid="collectionsBase.select_collections_count"/>
+	</select>
+	
+	 <!-- 往(收藏)新增一条记录。 -->
+	 <sql id="insert_collections">
+		INSERT INTO t_collections 
+		(f_id,f_user_id,f_time,f_target_type,f_target_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{userId},str_to_date(#{time,jdbcType=DATE},'%Y-%m-%d %T'),#{targetType},#{targetId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_collections" parameterType="Collections">
+		<include refid="collectionsBase.insert_collections"/>
+    </insert>
+    
+	<!-- 批量新增(收藏)信息 -->
+    <insert id="insert_collections_Batch" parameterType="java.util.List">
+    	INSERT INTO t_collections 
+		(f_id,f_user_id,f_time,f_target_type,f_target_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.userId},str_to_date(#{item.time,jdbcType=DATE},'%Y-%m-%d %T'),#{item.targetType},#{item.targetId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(收藏)信息。 -->
+    <sql id="update_collections">
+		UPDATE t_collections		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="time != null and !time.equals('') "> ,f_time=str_to_date(#{time},'%Y-%m-%d %T')</if> 		<if test="targetType != null and !targetType.equals('') "> ,f_target_type=#{targetType}</if> 		<if test="targetId != null and !targetId.equals('') "> ,f_target_id=#{targetId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_collections" parameterType="Collections">
+		<include refid="collectionsBase.update_collections"/>
+    </update>
+    
+    <!-- 批量更新(收藏)信息。 -->
+    <update id="update_collections_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_collections		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.time != null and !item.time.equals('')  "> ,f_time=str_to_date(#{item.time},'%Y-%m-%d %T')</if> 		<if test="item.targetType != null and !item.targetType.equals('')  "> ,f_target_type=#{item.targetType}</if> 		<if test="item.targetId != null and !item.targetId.equals('')  "> ,f_target_id=#{item.targetId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(收藏)信息_逻辑删除。 -->
+    <sql id="delete_collections_Logic">
+		UPDATE t_collections		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="time != null and !time.equals('')  "> ,f_time=str_to_date(#{time},'%Y-%m-%d %T')</if> 		<if test="targetType != null and !targetType.equals('')  "> ,f_target_type=#{targetType}</if> 		<if test="targetId != null and !targetId.equals('')  "> ,f_target_id=#{targetId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_collections_Logic" parameterType="Collections">
+		<include refid="collectionsBase.delete_collections_Logic"/>
+    </update>
+    
+    <!-- 批量删除(收藏)信息_逻辑删除 -->
+    <update id="delete_collections_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_collections		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.time != null and !item.time.equals('')  "> ,f_time=str_to_date(#{item.time},'%Y-%m-%d %T')</if> 		<if test="item.targetType != null and !item.targetType.equals('')  "> ,f_target_type=#{item.targetType}</if> 		<if test="item.targetId != null and !item.targetId.equals('')  "> ,f_target_id=#{item.targetId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(收藏)信息。 -->
+    <sql id="delete_collections">
+		DELETE FROM t_collections WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_collections" parameterType="java.lang.String">
+		<include refid="collectionsBase.delete_collections"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(收藏)信息。 -->
+    <delete id="delete_collections_Batch" parameterType="java.util.List">
+		DELETE FROM t_collections WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

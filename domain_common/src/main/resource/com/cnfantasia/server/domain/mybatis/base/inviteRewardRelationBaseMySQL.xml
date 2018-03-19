@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:邀请奖励关系纪录表 t_invite_reward_relation -->
+<mapper namespace="inviteRewardRelationBase">
+	<resultMap type="InviteRewardRelation" id="inviteRewardRelationBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_invite_user_f_id" javaType="java.math.BigInteger" property="tInviteUserFId"/>  <!-- 邀请人ID，对应t_user表的f_id -->        <result column="t_register_user_f_id" javaType="java.math.BigInteger" property="tRegisterUserFId"/>  <!-- 注册新人ID，对应t_user表的f_id -->        <result column="f_relation_time" javaType="java.lang.String" property="relationTime"/>  <!-- 受邀注册关联时间 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 修改时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="InviteRewardRelation" id="inviteRewardRelationExtendMap" extends="inviteRewardRelationBaseMap">
+	</resultMap>
+	<resultMap type="InviteRewardRelation" id="inviteRewardRelationBaseMap_AppendTable">
+        <id column="IRRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="IRRtInviteUserFId" javaType="java.math.BigInteger" property="tInviteUserFId"/>  <!-- 邀请人ID，对应t_user表的f_id -->        <result column="IRRtRegisterUserFId" javaType="java.math.BigInteger" property="tRegisterUserFId"/>  <!-- 注册新人ID，对应t_user表的f_id -->        <result column="IRRrelationTime" javaType="java.lang.String" property="relationTime"/>  <!-- 受邀注册关联时间 -->        <result column="IRRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="IRRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 修改时间 -->        <result column="IRRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="IRRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="IRRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="IRRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="IRRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="InviteRewardRelation" id="inviteRewardRelationBaseMap_AppendTable1">
+        <id column="IRR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="IRR1tInviteUserFId" javaType="java.math.BigInteger" property="tInviteUserFId"/>  <!-- 邀请人ID，对应t_user表的f_id -->        <result column="IRR1tRegisterUserFId" javaType="java.math.BigInteger" property="tRegisterUserFId"/>  <!-- 注册新人ID，对应t_user表的f_id -->        <result column="IRR1relationTime" javaType="java.lang.String" property="relationTime"/>  <!-- 受邀注册关联时间 -->        <result column="IRR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="IRR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 修改时间 -->        <result column="IRR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="IRR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="IRR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="IRR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="IRR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		IRR.f_id,IRR.t_invite_user_f_id,IRR.t_register_user_f_id,date_format(IRR.f_relation_time,'%Y-%m-%d %T') as f_relation_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		IRR.f_id as IRRid,IRR.t_invite_user_f_id as IRRtInviteUserFId,IRR.t_register_user_f_id as IRRtRegisterUserFId,date_format(IRR.f_relation_time,'%Y-%m-%d %T') as IRRrelationTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		IRR1.f_id as IRR1id,IRR1.t_invite_user_f_id as IRR1tInviteUserFId,IRR1.t_register_user_f_id as IRR1tRegisterUserFId,date_format(IRR1.f_relation_time,'%Y-%m-%d %T') as IRR1relationTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (IRR.f_id = #{id} ) </if>        <if test="tInviteUserFId != null">  and (IRR.t_invite_user_f_id = #{tInviteUserFId} ) </if>        <if test="tRegisterUserFId != null">  and (IRR.t_register_user_f_id = #{tRegisterUserFId} ) </if>        <if test="relationTime != null and !relationTime.equals('')  ">  and (IRR.f_relation_time = str_to_date(#{relationTime},'%Y-%m-%d %T') ) </if>        <if test="relationTime_START != null and !relationTime_START.equals('')  ">              <![CDATA[ and (IRR.f_relation_time >= str_to_date(#{relationTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="relationTime_END != null and !relationTime_END.equals('')  ">            <![CDATA[ and (IRR.f_relation_time <= str_to_date(#{relationTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (IRR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (IRR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (IRR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (IRR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (IRR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (IRR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (IRR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (IRR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (IRR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (IRR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (IRR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (IRR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (IRR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (IRR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (IRR.f_id = #{id} ) </if>        <if test="tInviteUserFId != null and !tInviteUserFId.equals('')  ">  and (IRR.t_invite_user_f_id = #{tInviteUserFId} ) </if>        <if test="tRegisterUserFId != null and !tRegisterUserFId.equals('')  ">  and (IRR.t_register_user_f_id = #{tRegisterUserFId} ) </if>        <if test="relationTime != null and !relationTime.equals('')  ">  and (IRR.f_relation_time = str_to_date(#{relationTime},'%Y-%m-%d %T') ) </if>        <if test="relationTime_START != null and !relationTime_START.equals('')  ">              <![CDATA[ and (IRR.f_relation_time >= str_to_date(#{relationTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="relationTime_END != null and !relationTime_END.equals('')  ">            <![CDATA[ and (IRR.f_relation_time <= str_to_date(#{relationTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (IRR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (IRR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (IRR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (IRR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (IRR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (IRR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (IRR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (IRR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (IRR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (IRR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (IRR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (IRR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (IRR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (IRR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="inviteRewardRelationBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="inviteRewardRelationBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="inviteRewardRelationBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="inviteRewardRelationBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_invite_reward_relation IRR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(邀请奖励关系纪录表)信息。 -->
+	<sql id="select_inviteRewardRelation">
+		SELECT <include refid="inviteRewardRelationBase.queryHead"/>
+		<include refid="inviteRewardRelationBase.busiQueryCondition"/>
+		<include refid="inviteRewardRelationBase.dimCheckSql"/>
+		ORDER BY IRR.f_id DESC
+	</sql>
+	<select id="select_inviteRewardRelation" parameterType="java.util.Map" resultMap="inviteRewardRelationBase.inviteRewardRelationExtendMap">
+		<include refid="inviteRewardRelationBase.select_inviteRewardRelation"/>
+	</select>
+	
+	<!-- 根据条件分页查询(邀请奖励关系纪录表)信息  -->
+	<sql id="select_inviteRewardRelation_withPage">
+		SELECT <include refid="inviteRewardRelationBase.queryHead"/>
+		<include refid="inviteRewardRelationBase.busiQueryCondition"/>
+		<include refid="inviteRewardRelationBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_inviteRewardRelation_withPage" resultMap="inviteRewardRelationBase.inviteRewardRelationExtendMap" parameterType="java.util.Map">
+		<include refid="inviteRewardRelationBase.select_inviteRewardRelation_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(邀请奖励关系纪录表)信息。 -->
+	<sql id="select_inviteRewardRelation_bySeqId">
+		SELECT <include refid="inviteRewardRelationBase.queryHead"/>
+		<include refid="inviteRewardRelationBase.busiQueryCondition"/>
+		 and IRR.f_id = #{_parameter}
+	</sql>
+	<select id="select_inviteRewardRelation_bySeqId" parameterType="java.math.BigInteger" resultMap="inviteRewardRelationBase.inviteRewardRelationBaseMap">
+		<include refid="inviteRewardRelationBase.select_inviteRewardRelation_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(邀请奖励关系纪录表)记录数  -->
+	<sql id="select_inviteRewardRelation_count">
+		SELECT COUNT(*)
+		<include refid="inviteRewardRelationBase.busiQueryCount"/>
+		<include refid="inviteRewardRelationBase.dimCheckSql"/>
+	</sql>
+	<select id="select_inviteRewardRelation_count" resultType="java.lang.Integer">
+		<include refid="inviteRewardRelationBase.select_inviteRewardRelation_count"/>
+	</select>
+	
+	 <!-- 往(邀请奖励关系纪录表)新增一条记录。 -->
+	 <sql id="insert_inviteRewardRelation">
+		INSERT INTO t_invite_reward_relation 
+		(f_id,t_invite_user_f_id,t_register_user_f_id,f_relation_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tInviteUserFId},#{tRegisterUserFId},str_to_date(#{relationTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_inviteRewardRelation" parameterType="InviteRewardRelation">
+		<include refid="inviteRewardRelationBase.insert_inviteRewardRelation"/>
+    </insert>
+    
+	<!-- 批量新增(邀请奖励关系纪录表)信息 -->
+    <insert id="insert_inviteRewardRelation_Batch" parameterType="java.util.List">
+    	INSERT INTO t_invite_reward_relation 
+		(f_id,t_invite_user_f_id,t_register_user_f_id,f_relation_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tInviteUserFId},#{item.tRegisterUserFId},str_to_date(#{item.relationTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(邀请奖励关系纪录表)信息。 -->
+    <sql id="update_inviteRewardRelation">
+		UPDATE t_invite_reward_relation		<trim prefix="SET" prefixOverrides=","> 		<if test="tInviteUserFId != null and !tInviteUserFId.equals('') "> ,t_invite_user_f_id=#{tInviteUserFId}</if> 		<if test="tRegisterUserFId != null and !tRegisterUserFId.equals('') "> ,t_register_user_f_id=#{tRegisterUserFId}</if> 		<if test="relationTime != null and !relationTime.equals('') "> ,f_relation_time=str_to_date(#{relationTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_inviteRewardRelation" parameterType="InviteRewardRelation">
+		<include refid="inviteRewardRelationBase.update_inviteRewardRelation"/>
+    </update>
+    
+    <!-- 批量更新(邀请奖励关系纪录表)信息。 -->
+    <update id="update_inviteRewardRelation_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_invite_reward_relation		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tInviteUserFId != null and !item.tInviteUserFId.equals('')  "> ,t_invite_user_f_id=#{item.tInviteUserFId}</if> 		<if test="item.tRegisterUserFId != null and !item.tRegisterUserFId.equals('')  "> ,t_register_user_f_id=#{item.tRegisterUserFId}</if> 		<if test="item.relationTime != null and !item.relationTime.equals('')  "> ,f_relation_time=str_to_date(#{item.relationTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(邀请奖励关系纪录表)信息_逻辑删除。 -->
+    <sql id="delete_inviteRewardRelation_Logic">
+		UPDATE t_invite_reward_relation		<trim prefix="SET" prefixOverrides=","> 		<if test="tInviteUserFId != null and !tInviteUserFId.equals('')  "> ,t_invite_user_f_id=#{tInviteUserFId}</if> 		<if test="tRegisterUserFId != null and !tRegisterUserFId.equals('')  "> ,t_register_user_f_id=#{tRegisterUserFId}</if> 		<if test="relationTime != null and !relationTime.equals('')  "> ,f_relation_time=str_to_date(#{relationTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_inviteRewardRelation_Logic" parameterType="InviteRewardRelation">
+		<include refid="inviteRewardRelationBase.delete_inviteRewardRelation_Logic"/>
+    </update>
+    
+    <!-- 批量删除(邀请奖励关系纪录表)信息_逻辑删除 -->
+    <update id="delete_inviteRewardRelation_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_invite_reward_relation		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tInviteUserFId != null and !item.tInviteUserFId.equals('')  "> ,t_invite_user_f_id=#{item.tInviteUserFId}</if> 		<if test="item.tRegisterUserFId != null and !item.tRegisterUserFId.equals('')  "> ,t_register_user_f_id=#{item.tRegisterUserFId}</if> 		<if test="item.relationTime != null and !item.relationTime.equals('')  "> ,f_relation_time=str_to_date(#{item.relationTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(邀请奖励关系纪录表)信息。 -->
+    <sql id="delete_inviteRewardRelation">
+		DELETE FROM t_invite_reward_relation WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_inviteRewardRelation" parameterType="java.lang.String">
+		<include refid="inviteRewardRelationBase.delete_inviteRewardRelation"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(邀请奖励关系纪录表)信息。 -->
+    <delete id="delete_inviteRewardRelation_Batch" parameterType="java.util.List">
+		DELETE FROM t_invite_reward_relation WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

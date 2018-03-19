@@ -1,0 +1,80 @@
+/**   
+* Filename:    IEbuyPayService.java   
+* @version:    1.0  
+* Create at:   2014年6月30日 上午2:31:57   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年6月30日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.ebuy.service;
+
+import java.math.BigInteger;
+import java.util.Map;
+
+import com.cnfantasia.server.api.ebuy.entity.WeiXinNotifyEntity;
+import com.cnfantasia.server.apibase.ebuyPrepayWeixinLog.entity.EbuyPrepayWeixinLog;
+import com.tenpay.ClientRequestHandler;
+import com.tenpay.PackageRequestHandler;
+import com.tenpay.PrepayIdRequestHandler;
+
+/**
+ * Filename:    IEbuyPayService.java
+ * @version:    1.0.0
+ * Create at:   2014年6月30日 上午2:31:57
+ * Description:支付处理服务类
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年6月30日       shiyl             1.0             1.0 Version
+ */
+public interface IEbuyPayService {
+	/**
+	 * 微信支付
+	 * @param userId 用户Id
+	 * @param orderId 订单Id
+	 * @param hbAmount 红包金额
+	 * @param notify_url 财付通支付通知url
+	 * @param remoteAddr 订单生成的机器IP，指用户浏览器端IP
+	 * @param packageReqHandler 生成package的请求类
+	 * @param prepayReqHandler 获取prepayid的请求类
+	 * @param clientHandler 返回客户端支付参数的请求类
+	 */
+	public Map<String,Object> weixinPrePay(BigInteger userId,BigInteger orderId,String notify_url,String remoteAddr
+			,PackageRequestHandler packageReqHandler,PrepayIdRequestHandler prepayReqHandler,ClientRequestHandler clientHandler);
+	
+	/**
+	 * 增加微信预支付日志
+	 * @param ebuyPrepayWeixinLog
+	 */
+	public void addPrepayWeixinLog(EbuyPrepayWeixinLog ebuyPrepayWeixinLog);
+
+	/**
+	 * 微信支付通知处理
+	 * @param userId
+	 * @param resultEntity
+	 */
+	public void payNotify(BigInteger userId, WeiXinNotifyEntity resultEntity);
+	
+	/**
+	 * 增加微信支付通知记录
+	 * @param currWeiXinNotifyEntity
+	 * @param payErrInfo
+	 * @param orderId
+	 */
+	public void addNotifyRecord(WeiXinNotifyEntity currWeiXinNotifyEntity,String payErrInfo,BigInteger orderId);
+	
+//	/**
+//	 * 纯优惠支付
+//	 * @param userId
+//	 * @param orderId
+//	 * @param hbAmount
+//	 */
+//	public void doCouponOnlyPay(BigInteger userId,BigInteger orderId,Long hbAmount);
+	
+//	public void testTrans();
+	
+}

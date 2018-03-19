@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN: t_property_fee_print -->
+<mapper namespace="feePrint">
+	<cache
+		eviction="LRU"
+		flushInterval="60000"
+		size="512"
+		readOnly="true"/>
+		<!-- mybatis 二级缓存缓存60秒的数据 -->
+		
+	<resultMap type="com.cnfantasia.server.ms.payBill.entity.FeePrint" id="FeePrintMap">
+		<id column="fpf_id" property="id" javaType="java.lang.Long"/>
+		<result column="fpt_real_room_id" property="realRoomId" javaType="java.lang.Long"/>
+        <result column="fpf_addr" javaType="java.lang.String" property="addr"/> 
+        <result column="fpf_account_name" javaType="java.lang.String" property="accountName"/> 
+        <result column="fpf_account_month" javaType="java.lang.String" property="accountMonth"/>  
+        <result column="fpf_account_type" javaType="java.lang.String" property="accountType"/>  
+        <result column="fpf_account" javaType="java.lang.String" property="account"/>  
+        <result column="fpf_pay_tm" javaType="java.util.Date" property="payTm"/> 
+        <result column="fpf_fee_detail" javaType="string" property="feeDetail"/> 
+        <association property="realRoomEntity" resultMap="realRoomMap_Search" />
+	</resultMap>
+	 
+	<!-- 真实门牌 -->
+	<resultMap type="com.cnfantasia.server.api.room.entity.RealRoomEntity" id="realRoomMap_Search" extends="realRoomBase.realRoomBaseMap_AppendTable" >
+    	<association property="buildingEntity" resultMap="buildingMap_Search" javaType="com.cnfantasia.server.api.room.entity.BuildingEntity"/>
+    	<association property="propertyProprietor" resultMap="propertyProprietorBase.propertyProprietorBaseMap_AppendTable" />
+    </resultMap>
+	<!-- 楼栋 -->
+	<resultMap type="com.cnfantasia.server.api.room.entity.BuildingEntity" id="buildingMap_Search" extends="buildingBase.buildingBaseMap_AppendTable" >
+    	<association property="groupBuildingEntity" resultMap="groupBuildingMap_Search" javaType="com.cnfantasia.server.api.room.entity.GroupBuildingEntity"/>
+    </resultMap>
+	<!-- 小区 -->
+    <resultMap type="com.cnfantasia.server.api.room.entity.GroupBuildingEntity" id="groupBuildingMap_Search" extends="groupBuildingBase.groupBuildingBaseMap_AppendTable" >
+    	<result column="ext_haveSupport" javaType="java.lang.Integer" property="haveSupport"/><!-- 当前用户是否已点支持 -->
+    	<result column="ext_haveSummon" javaType="java.lang.Integer" property="haveSummon"/><!-- 当前用户是否已点召唤 -->
+    	<result column="ext_totalSupportCount" javaType="java.lang.Integer" property="totalSupportCount"/><!-- 当前总支持人数 -->
+    	<association property="addressBlockEntity" resultMap="addressBlockMap_Search" javaType="com.cnfantasia.server.api.room.entity.AddressBlockEntity"/>
+    	<association property="propertyManagementEntity" resultMap="propertyManagementEntity_Map_Append"/>
+    </resultMap>
+    <!-- 小区,包含距离 -->
+    <resultMap type="com.cnfantasia.server.api.room.entity.GroupBuildingEntityWithDistance" id="groupBuildingMap_Search_WithDistance" extends="groupBuildingMap_Search">
+    	<result column="ext_distance" property="distance" javaType="java.lang.Double"/>
+    </resultMap>
+    <!-- 物业管理处 -->
+    <resultMap type="com.cnfantasia.server.api.room.entity.PropertyManagementEntity" id="propertyManagementEntity_Map_Append"
+    	extends="propertyManagementBase.propertyManagementBaseMap_AppendTable">
+    </resultMap>
+    <!-- 区 -->
+    <resultMap type="com.cnfantasia.server.api.room.entity.AddressBlockEntity" id="addressBlockMap_Search" extends ="addressBlockBase.addressBlockBaseMap_AppendTable">
+    	<!-- resultMap 此处只能引用addressCityMap_Search，不能直接写addressCityBase.addressCityBaseMap_AppendTable? -->
+    	<association property="addressCityEntity" resultMap="addressCityMap_Search"  javaType="com.cnfantasia.server.api.room.entity.AddressCityEntity"/>
+    </resultMap>
+    <!-- 市 -->
+    <resultMap type="com.cnfantasia.server.api.room.entity.AddressCityEntity" id="addressCityMap_Search" extends ="addressCityBase.addressCityBaseMap_AppendTable">
+    	<association property="addressProvinceEntity" resultMap="addressProvinceMap_Search" javaType="com.cnfantasia.server.api.room.entity.AddressProvinceEntity"/>
+    </resultMap>	
+    <!-- 省 -->
+    <resultMap type="com.cnfantasia.server.api.room.entity.AddressProvinceEntity" id="addressProvinceMap_Search" extends ="addressProvinceBase.addressProvinceBaseMap_AppendTable">
+    </resultMap>
+    
+    <!-- 根据Id查询真实门牌信息 -->
+	<select id="select_RealRoom_ById" parameterType="java.util.Map" resultMap="realRoomMap_Search" useCache="false">
+		SELECT <include refid="realRoomBase.queryHead_AppendTable"/>,<include refid="buildingBase.queryHead_AppendTable"/>
+			,<include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+   			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+   			,<include refid="propertyProprietorBase.queryHead_AppendTable"/><!-- 真实门牌的业主信息 -->
+   			,<include refid="propertyManagementBase.queryHead_AppendTable"/><!-- 物业管理处信息 -->
+		FROM t_real_room RR 
+			LEFT JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id AND PP.f_sys0_del_state = 0
+			INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+			INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+			LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+			
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+		WHERE 1=1
+		AND RR.f_sys0_del_state = 0
+		AND RR.f_id = #{realRoomId}
+	</select>
+	
+	<insert id="insert_fee_print" parameterType="com.cnfantasia.server.ms.payBill.entity.FeePrint">
+		INSERT INTO t_property_fee_print
+			(t_real_room_id, f_addr, f_account_name, f_account_month, f_account_type, f_account, f_fee_detail, f_pay_tm)
+ 			VALUES (#{realRoomId}, #{addr}, #{accountName}, #{accountMonth}, #{accountType}, #{account}, #{feeDetail},#{payTm})
+	</insert>
+	
+	<sql id="selectFeePrintList_where">
+		 <where>
+ 		  	<if test="feePrintId != null and feePrintId != ''">fp.f_id = #{feePrintId}</if>
+ 		  	<if test="feePrintId == null">
+ 		  	<choose>
+				<when test="groupBuildingList!=null and groupBuildingList.size()>0">
+					AND GB.f_id in
+					<foreach item="groupBuilding" collection="groupBuildingList" open="(" separator="," close=")">
+						#{groupBuilding.id}
+					</foreach>
+				</when>
+				<otherwise>
+					<!-- 为空，则不取任何数据 -->
+					AND GB.f_id=-100
+				</otherwise>
+			</choose>
+			</if>
+ 			<if test="groupBuild != null and groupBuild != ''"><![CDATA[ AND GB.f_name like CONCAT('%',#{groupBuild},'%')]]></if>
+ 			<if test="building != null and building != ''"><![CDATA[ AND B.f_name like CONCAT('%',#{building},'%')]]></if>
+ 			<if test="unitName != null and unitName != ''"><![CDATA[ AND RR.f_unit_name like CONCAT('%',#{unitName},'%')]]></if>
+ 			<if test="roomNum != null and roomNum != ''"><![CDATA[ AND RR.f_num_tail like CONCAT('%',#{roomNum},'%')]]></if>
+ 			<if test="accountName != null and accountName != ''"><![CDATA[ AND fp.f_account_name like CONCAT('%',#{accountName},'%')]]></if>
+ 			<if test="accountMonth != null and accountMonth != ''"><![CDATA[ AND fp.f_account_month like CONCAT('%',#{accountMonth},'%')]]></if>
+ 		  </where>
+	</sql>
+	<select id="select_fee_print_list" parameterType="java.util.Map" resultMap="FeePrintMap" useCache="false">
+		select fp.f_id fpf_id, fp.t_real_room_id fpt_real_room_id, fp.f_addr fpf_addr,
+		 fp.f_account_name fpf_account_name,
+		 fp.f_account_month fpf_account_month,
+		  fp.f_account_type fpf_account_type, fp.f_account fpf_account, fp.f_pay_tm fpf_pay_tm,
+		  fp.f_fee_detail fpf_fee_detail
+			,<include refid="realRoomBase.queryHead_AppendTable"/>,<include refid="buildingBase.queryHead_AppendTable"/>
+			,<include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+   			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+   			,<include refid="propertyProprietorBase.queryHead_AppendTable"/><!-- 真实门牌的业主信息 -->
+   			,<include refid="propertyManagementBase.queryHead_AppendTable"/><!-- 物业管理处信息 -->
+		from t_property_fee_print fp
+			inner join t_real_room RR on fp.t_real_room_id = RR.f_id and RR.f_sys0_del_state = 0
+			LEFT JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id AND PP.f_sys0_del_state = 0
+			INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+			INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+			LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id AND PM.f_sys0_del_state = 0			
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+ 		  <include refid="selectFeePrintList_where" />
+ 		  order by fp.f_id desc
+ 		  <if test="_begin != null"> limit #{_begin},#{_length} </if>
+	</select>
+	
+	<select id="select_fee_print_count" parameterType="java.util.Map" resultType="Integer" useCache="false">
+ 		select count(fp.f_id) 
+		  from t_property_fee_print fp
+		    inner join t_real_room RR on fp.t_real_room_id = RR.f_id
+				inner join t_building B on RR.t_building_f_id = B.f_id
+				inner join t_group_building GB on B.t_group_building_f_id = GB.f_id
+ 		  <include refid="selectFeePrintList_where" />
+	</select>
+	
+	<select id="getSelectBuildingList" resultType="com.cnfantasia.server.ms.payBill.entity.SelectDo" parameterType="java.lang.Long">
+		select distinct t.f_id id, t.f_name name from t_building t 
+			left join t_real_room rr on rr.t_building_f_id = t.f_id 
+		where t.t_group_building_f_id = #{parentId} 
+			and rr.f_check_status in (1,9) and t.f_check_status in (1,9)
+		order by t.f_name
+		<!-- 
+		select distinct  b.f_id id, b.f_name name, rr.f_unit_name unitName from t_building b
+			left join t_real_room rr on rr.t_building_f_id = b.f_id 
+			where b.f_sys0_del_state = 0 and b.f_check_status in (1,9)
+			and rr.f_check_status in (1,9)
+			and b.t_group_building_f_id = #{parentId}
+			order by b.f_name,rr.f_unit_name
+		-->
+	</select>
+	
+	<select id="getSelectUnitNameList" resultType="com.cnfantasia.server.ms.payBill.entity.SelectDo" parameterType="java.lang.Long">
+		select distinct t.f_unit_name unitName from t_real_room t 
+		where t.t_building_f_id = #{parentId} 
+			and t.f_check_status in (1,9)
+		order by t.f_unit_name
+	</select>
+	
+	<select id="getSelectRoomNumList" resultType="com.cnfantasia.server.ms.payBill.entity.SelectDo" parameterType="java.util.Map">
+		select distinct t.f_id id, <![CDATA[ ifnull(t.f_num_tail, t.f_num) ]]> roomNum from t_real_room t 
+		where t.t_building_f_id = #{buildingId} 
+		    <if test="unitName != null and unitName != '' and unitName != 'null'"> and f_unit_name = #{unitName} </if>
+			and t.f_check_status in (1,9)
+		order by roomNum
+	</select>
+</mapper>

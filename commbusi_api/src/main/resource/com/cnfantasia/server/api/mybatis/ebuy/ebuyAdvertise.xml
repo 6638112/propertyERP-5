@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 电商模块 -->
+<mapper namespace="ebuyAdvertise">
+
+	<!-- LRU 最新最少使用, FIFO先进先出-->
+	<cache
+		eviction="FIFO"
+		flushInterval="60000"
+		size="512"/>
+		
+	<!-- 手动调用清除缓存使用 -->
+	<select id="cleanCache" resultType="long" useCache="false" flushCache="true">
+    	select 1
+    </select>
+	
+	<sql id="head">f_id, f_code, f_tittle, f_type, f_pic_name, f_link_url, f_sys0_upd_time</sql>
+	
+	<sql id="advertiseHead">CA.f_id, CA.f_code, CA.f_tittle, CA.f_type, CA.f_pic_name, CA.f_link_url, CA.f_sys0_upd_time, CA.f_ios_addr, CA.f_android_addr, CA.f_ios_param, CA.f_android_param, CA.f_frequency</sql>
+	
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyAdvertise" id="ebuyAdvertiseMap">
+        <id column="f_id" javaType="java.lang.Long" property="id"/>  <!--  -->
+        <result column="f_code" javaType="java.lang.String" property="code"/>  <!--  -->
+        <result column="f_tittle" javaType="java.lang.String" property="tittle"/>  <!--  -->
+        <result column="f_type" javaType="java.lang.Integer" property="type"/>  <!--  -->
+        <result column="f_pic_name" javaType="java.lang.String" property="picName"/>  <!--  -->
+        <result column="f_link_url" javaType="java.lang.String" property="linkUrl"/>  <!--  -->
+        <result column="f_sys0_upd_time" javaType="java.util.Date" property="updTime"/>  <!--  -->
+        <result column="f_ios_addr" javaType="java.lang.String" property="iosAddr"/>  <!--  -->
+        <result column="f_android_addr" javaType="java.lang.String" property="androidAddr"/>  <!--  -->
+        <result column="f_ios_param" javaType="java.lang.String" property="iosParam"/>  <!--  -->
+        <result column="f_android_param" javaType="java.lang.String" property="androidParam"/>  <!--  -->
+		<result column="f_frequency" javaType="java.lang.Integer" property="frequency"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyAdvertiseWithRela" id="ebuyAdvertiseWithRelaMap" extends="ebuyAdvertiseMap">
+		<result column="ext_relation" javaType="java.lang.Integer" property="relation"/><!-- 包含关系 -->
+	</resultMap>
+	
+	<select id="select_Advertise_List_old" parameterType="java.util.Map" resultMap="ebuyAdvertiseMap">
+		SELECT <include refid="head" />
+		FROM t_ebuy_advertise t
+    	WHERE t.f_sys0_del_state = 0
+    		<![CDATA[ 
+	    		AND IF(t.f_start_time is null, TRUE, NOW()>=t.f_start_time)
+	    		AND IF(t.f_end_time is null, TRUE, NOW()<=t.f_end_time)
+    		]]>
+    		<if test="code != null and !(code.equals(''))">
+    			and t.f_code = #{code}
+    		</if>
+    		<if test="version != null">
+    			<![CDATA[ 
+    			and IFNULL(t.f_version, 0) <= #{version}
+				and IFNULL(t.f_max_version, 999999) >= #{version}
+				]]>
+    		</if>
+    		order by t.f_order DESC
+	</select>
+	
+	<select id="select_Advertise_List" parameterType="java.util.Map" resultMap="ebuyAdvertiseWithRelaMap">
+		SELECT <include refid="advertiseHead" />
+			,OSHES.f_relation AS ext_relation
+		FROM (
+			<foreach collection="codeIdList" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item} saId
+			</foreach>
+		) A_tmp
+		INNER JOIN t_operation_sa_has_eb_supply OSHES ON OSHES.f_sys0_del_state = 0
+			AND OSHES.f_type = 4 <!-- 广告 -->
+			AND OSHES.f_sa_id = A_tmp.saId
+		INNER JOIN t_ebuy_advertise CA ON CA.f_sys0_del_state = 0
+			AND CA.f_id = OSHES.f_eb_supply_id
+			AND NOW() >= CA.f_start_time
+			AND CA.f_end_time > NOW()
+		<where>
+		    <if test="codeList != null">
+				and CA.f_code in
+				<foreach item="item" collection="codeList"  separator="," open="(" close=")">
+					#{item}
+				</foreach>
+    		</if>
+    		<if test="version != null">
+    		<![CDATA[ 
+    			and IFNULL(CA.f_version, 0) <= #{version}
+				and IFNULL(CA.f_max_version, 999999) >= #{version}
+				]]>
+    		</if>
+		</where>
+		ORDER BY CA.f_order DESC
+		-- LIMIT 0,10
+	</select>
+	
+	<!-- 查询有拼购商品的自提点 -->
+	<select id="queryFightGroupProductZiti" resultMap="ebuyFightSupplyMerchantBase.ebuyFightSupplyMerchantExtendMap">
+		SELECT
+			DISTINCT <include refid="ebuyFightSupplyMerchantBase.queryHead"/>
+		FROM
+			t_ebuy_fight_supply_merchant EFSM
+		INNER JOIN t_ebuy_product_fight_groups EPFG ON EPFG.t_ebuy_fight_supply_merchant_f_id = EFSM.f_id
+		AND EPFG.f_sys0_del_state = 0
+		AND EPFG.f_start_date <![CDATA[<= now()]]>
+		AND EPFG.f_expire_date > now()
+		AND EPFG.f_left_count > 0
+		AND EFSM.f_sys0_del_state = 0
+		INNER JOIN t_ebuy_product EP ON EP.f_id=EPFG.t_ebuy_product_f_id AND EP.f_status=0
+		INNER JOIN t_ebuy_product_shelf EPS ON EPS.t_ebuy_product_id=EP.f_id AND EPS.f_up_shelf_state=0
+		INNER JOIN t_ebuy_product_type EPT ON EPT.f_id=EPS.t_ebuy_product_type_id AND EPT.f_wlApp_type=3
+	</select>
+	
+	<!-- 查询有推广商品的banner -->
+	<select id="queryPromoteProductAdIds" resultType="java.math.BigInteger">
+		SELECT
+			DISTINCT EA.f_id
+		FROM
+			t_ebuy_advertise_has_promote_shelf_product EAHPSP
+		INNER JOIN t_ebuy_advertise EA ON EA.f_id = EAHPSP.t_ebuy_advertise_f_id
+		AND NOW() >= EA.f_start_time
+		AND EA.f_end_time > NOW()
+		AND EA.f_sys0_del_state = 0
+		AND EAHPSP.f_sys0_del_state = 0
+		INNER JOIN t_ebuy_product_shelf EPS ON EPS.f_id = EAHPSP.t_ebuy_product_shelf_f_id
+		AND EPS.f_up_shelf_state = 0
+		AND EPS.f_sys0_del_state = 0
+		INNER JOIN t_ebuy_product EP ON EP.f_id = EPS.t_ebuy_product_id
+		AND EP.f_status = 0
+		AND EP.f_status_audit = 5
+		AND EP.f_sys0_del_state = 0
+		WHERE
+			(
+				EA.f_code = 'EBUY_AD'
+				AND LOCATE(
+					'ebuyNew/themeProductAd.html',
+					EA.f_link_url
+				) > 0
+			)
+		OR (
+			EA.f_code = 'LA_EBUY'
+			AND LOCATE(
+				'../product/themeProductAd.do',
+				EA.f_link_url
+			) > 0
+		)
+	</select>
+
+	<select id="select_Main_Promote_Advertise" parameterType="java.util.Map" resultMap="ebuyAdvertiseMap">
+		SELECT <include refid="advertiseHead" />
+		,OSHES.f_relation AS ext_relation
+		FROM (
+		<foreach collection="codeIdList" item="item" index="index" separator=" union all select " open=" select " close="">
+			#{item} saId
+		</foreach>
+		) A_tmp
+		INNER JOIN t_operation_sa_has_eb_supply OSHES ON OSHES.f_sys0_del_state = 0
+		AND OSHES.f_type = 4 <!-- 广告 -->
+		AND OSHES.f_sa_id = A_tmp.saId
+		INNER JOIN t_ebuy_advertise CA ON CA.f_sys0_del_state = 0
+		AND CA.f_id = OSHES.f_eb_supply_id
+		AND NOW() >= CA.f_start_time
+		AND CA.f_end_time > NOW()
+		<where>
+			<if test="codeList != null">
+				and CA.f_code in
+				<foreach item="item" collection="codeList"  separator="," open="(" close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="version != null">
+				<![CDATA[ 
+    			and IFNULL(CA.f_version, 0) <= #{version}
+				and IFNULL(CA.f_max_version, 999999) >= #{version}
+				]]>
+			</if>
+		</where>
+		ORDER BY CA.f_id DESC
+		LIMIT 0,1
+	</select>
+	
+	
+</mapper>

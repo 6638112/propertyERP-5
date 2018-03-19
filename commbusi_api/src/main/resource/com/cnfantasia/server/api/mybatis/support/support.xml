@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:点赞模块 -->
+<mapper namespace="support">
+	
+	<sql id="select_Kitchen_Cookbook_Support_List_comm">
+		SELECT <include refid="kitchenCookbookBase.queryHead_AppendTable"/>
+			,CASE WHEN ISNULL(S.f_id) THEN 0 ELSE 1 END AS ext_isLikeEat <!-- 0不喜欢吃，1喜欢吃 -->
+			,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END 
+				FROM t_common_gather_data CGD WHERE 1=1
+				AND CGD.f_target_type = 21 <!-- 21表示厨房菜谱 -->
+				AND CGD.f_target_id = KC.f_id
+				AND CGD.f_sys0_del_state = 0
+			) AS ext_totalLikeEatCount <!-- 喜欢吃的总人数 -->
+			<!-- ,ext_favour_count AS ext_totalLikeEatCount -->
+		FROM t_kitchen_cookbook KC
+			INNER JOIN (
+				t_kitchen_cookbook_type_has_t_kitchen_cookbook KCTHTKC
+				INNER JOIN t_kitchen_cookbook_type KCT ON KCT.f_id = KCTHTKC.t_kitchen_cookbook_type_f_id AND KCT.f_sys0_del_state = 0
+				INNER JOIN t_kitchen_cookbook_top_type KCTT ON KCTT.f_id = KCT.t_kitchen_cookbook_top_type_f_id AND KCTT.f_sys0_del_state = 0
+			)ON KC.f_id = KCTHTKC.t_kitchen_cookbook_f_id AND KCTHTKC.f_sys0_del_state = 0
+			
+			LEFT JOIN t_support S ON 
+				S.f_target_type = 21 <!-- 21表示厨房菜谱 -->
+				AND S.f_user_id = #{userId}
+				AND KC.f_id = S.f_target_id
+				AND S.f_sys0_del_state = 0 
+				
+			<!-- LEFT JOIN
+				(SELECT f_target_id,COUNT(0) ext_favour_count 
+					FROM t_support S2 
+					WHERE 1=1 
+					AND S2.f_target_type = 21 
+					AND S2.f_sys0_del_state = 0 GROUP BY S2.f_target_id ) S2  
+				ON KC.f_id = S2.f_target_id  -->
+		WHERE 1=1
+		AND KC.f_sys0_del_state = 0
+		AND NOT ISNULL(S.f_id) <!-- 只筛选喜欢吃的 -->
+	</sql>
+	
+	<!-- 查询点赞的菜谱列表 -->
+	<select id="select_Kitchen_Cookbook_Support_List_page" parameterType="java.util.Map" resultMap="kitchen.kitchenEntityMap_Append">
+		SELECT _tmp.*,<include refid="kitchenDetailBase.queryHead_AppendTable"/>
+		FROM (
+			<include refid="select_Kitchen_Cookbook_Support_List_comm"/>
+			ORDER BY S.f_time DESC <!-- 按点赞时间倒叙排序 -->
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		)_tmp
+		LEFT JOIN t_kitchen_detail KD ON _tmp.KCid = KD.t_kitchen_cookbook_f_id AND KD.f_sys0_del_state = 0
+	</select>
+	<select id="select_Kitchen_Cookbook_Support_List_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM (<include refid="select_Kitchen_Cookbook_Support_List_comm"/>) AS table01
+	</select>
+	
+</mapper>

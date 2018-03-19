@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 家庭留言板 -->
+<mapper namespace="familyMsg">
+	<!-- 家庭留言信息 -->
+	<resultMap type="com.cnfantasia.server.api.familyMsg.entity.FamilyMsgEntity" id="familyMsgEntity_Map_Append" 
+		extends="familyMsgBase.familyMsgBaseMap_AppendTable">
+		<result column="ext_isFavour" javaType="java.lang.Boolean" property="extIsFavour"/><!-- 是否被当前用户点赞 -->
+		<result column="ext_favour_count" javaType="java.lang.Integer" property="extFavourCount"/><!-- 点赞总数 -->
+		<result column="ext_comment_count" javaType="java.lang.Integer" property="extCommentCount"/><!-- 评论总数 -->
+		<!-- 留言创建者信息 -->
+		<association property="createrInfo" resultMap="commonUser.userSimpleEntity_Map_Append"/>
+		<!-- 家庭留言图片列表 -->
+		<collection property="familyMsgPicList" resultMap="familyMsgPicBase.familyMsgPicBaseMap_AppendTable" />
+		<!-- 艾特的用户列表信息 -->
+		<collection property="familyMsgHasTUserList" resultMap="familyMsgHasTUserBase.familyMsgHasTUserBaseMap_AppendTable" />
+		<!-- 留言的拓展列表信息 -->
+		<collection property="familyMsgExtDataList" resultMap="familyMsgExtDataBase.familyMsgExtDataBaseMap_AppendTable" />
+	</resultMap>
+	
+	<sql id="select_Msg_base_comm">
+		SELECT <include refid="familyMsgBase.queryHead_AppendTable" />
+			,<include refid="familyMsgPicBase.queryHead_AppendTable" />
+			,<include refid="commonUser.userSimple_common_select"/>
+			,CASE WHEN ISNULL(S.f_id) THEN FALSE ELSE TRUE END AS ext_isFavour <!-- 0未赞，1已赞 -->
+			,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END 
+				FROM t_common_gather_data CGD WHERE 1=1
+				AND CGD.f_target_type = 101 <!-- 101表示家庭留言板 --> 
+				AND CGD.f_target_id = FM.f_id
+				AND CGD.f_sys0_del_state = 0
+			) AS ext_favour_count <!-- 点赞总数 -->
+			,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_comment_count)) THEN 0 ELSE sum(CGD.f_total_comment_count) END 
+				FROM t_common_gather_data CGD WHERE 1=1
+				AND CGD.f_target_type = 101 <!-- 101表示家庭留言板 --> 
+				AND CGD.f_target_id = FM.f_id
+				AND CGD.f_sys0_del_state = 0
+			) AS ext_comment_count <!-- 评论总数 -->
+			<!-- ,S2.ext_favour_count AS ext_favour_count
+			,C.ext_comment_count AS ext_comment_count -->
+		FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+			INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND R.f_id = UHTR.t_room_f_id 
+			INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+            AND U.f_default_room_id = Group_roomId.room_Id
+			<include refid="commonUser.userSimple_common_from"/>
+			
+			INNER JOIN t_family_msg FM ON FM.f_sys0_del_state = 0 AND U.f_id = FM.f_user_id
+            <!-- 留言必须是当前用户的当前门牌下的 --> 
+            INNER JOIN (select
+                    RR.f_id as RRid
+            from
+                t_user U
+            inner join t_room R ON R.f_id = U.f_default_room_id
+            inner join t_real_room RR ON R.t_real_room_f_id = RR.f_id
+            where
+               U.f_id = #{userId}
+               AND R.f_sys0_del_state = 0
+               AND RR.f_sys0_del_state = 0
+               AND U.f_sys0_del_state = 0) USER_2_REAL_ROOM ON FM.f_real_room_id = USER_2_REAL_ROOM.RRid
+
+			LEFT JOIN t_family_msg_pic FMP ON FM.f_id = FMP.t_family_msg_f_id AND FMP.f_sys0_del_state = 0 <!-- 留言对应的图片 -->
+			LEFT JOIN (select * from t_support where
+				f_target_type = 101 <!-- 101表示家庭留言板 --> 
+				AND f_user_id = #{userId}
+				AND f_sys0_del_state = 0 ) S on
+                 FM.f_id = S.f_target_id  
+			<!-- LEFT JOIN
+			(SELECT f_target_id,COUNT(0) ext_favour_count 
+				FROM t_support S2 
+				WHERE 1=1 
+				AND S2.f_target_type = 101
+				AND S2.f_sys0_del_state = 0 GROUP BY S2.f_target_id ) S2  ON FM.f_id = S2.f_target_id  -->
+	        <!-- LEFT JOIN
+			(SELECT f_target_id,COUNT(0) ext_comment_count 
+				FROM t_comments C WHERE 1=1 AND C.f_target_type = 101 AND C.f_sys0_del_state = 0 GROUP BY C.f_target_id 
+			) C  ON FM.f_id = C.f_target_id  -->
+		WHERE 1=1
+	</sql>
+	
+	<!-- 查询留言列表信息-分页 -->
+	<select id="select_Msg_List_Page" parameterType="java.util.Map" resultMap="familyMsgEntity_Map_Append">
+		SELECT _tmp.*
+			,<include refid="familyMsgHasTUserBase.queryHead_AppendTable" />
+			,<include refid="familyMsgExtDataBase.queryHead_AppendTable" />
+		FROM (
+			<include refid="select_Msg_base_comm"/>
+	  	 	ORDER BY FM.f_create_time DESC
+	  	 	<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		) _tmp
+		LEFT JOIN t_family_msg_has_t_user FMHTU ON _tmp.FMid = FMHTU.t_family_msg_f_id AND FMHTU.f_sys0_del_state = 0
+		LEFT JOIN t_family_msg_ext_data FMED ON _tmp.FMid = FMED.t_family_msg_f_id AND FMED.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询留言列表信息-个数 -->
+	<select id="select_Msg_List_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM (<include refid="select_Msg_base_comm"/>) AS tab
+	</select>
+	
+	<!-- 查询单个留言的详情 -->
+	<select id="select_Msg_Detail" parameterType="java.util.Map" resultMap="familyMsgEntity_Map_Append">
+		SELECT _tmp.*
+			,<include refid="familyMsgHasTUserBase.queryHead_AppendTable" />
+			,<include refid="familyMsgExtDataBase.queryHead_AppendTable" />
+		FROM (
+			<include refid="select_Msg_base_comm"/>
+			AND FM.f_id=#{msgId}
+		) _tmp
+		LEFT JOIN t_family_msg_has_t_user FMHTU ON _tmp.FMid = FMHTU.t_family_msg_f_id AND FMHTU.f_sys0_del_state = 0
+		LEFT JOIN t_family_msg_ext_data FMED ON _tmp.FMid = FMED.t_family_msg_f_id AND FMED.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 同步引用表的数据到拓展信息表中 -->
+	<update id="syn_FamilyMsgExtData_ByFamilyMsgId" parameterType="java.util.Map">
+		<!-- 数据类别标识=={"1":"家庭购物车商品","2":"单个商品","3":"今日菜单","4":"单个菜谱","5":"家庭折扣"} -->
+		UPDATE t_family_msg_ext_data FMED
+			<!-- LEFT JOIN t_ebuy_buy_car_has_t_ebuy_product EBCHTEP ON EBCHTEP.f_id = FMED.f_data_id AND FMED.f_data_type IN (1) AND EBCHTEP.f_sys0_del_state = 0
+			LEFT JOIN t_ebuy_product EP ON EP.f_sys0_del_state = 0 
+				AND ( (EP.f_id = EBCHTEP.t_ebuy_product_f_id AND FMED.f_data_type IN (1) ) 
+					OR ( EP.f_id = FMED.f_data_id AND FMED.f_data_type IN (2) ) ) -->
+					
+			LEFT JOIN t_ebuy_product EP ON EP.f_sys0_del_state = 0 AND EP.f_id = FMED.f_data_id AND FMED.f_data_type IN (1,2)
+
+			LEFT JOIN t_kitchen_cookbook_collect KCC ON KCC.f_id = FMED.f_data_id AND FMED.f_data_type IN (3) AND KCC.f_sys0_del_state = 0
+			LEFT JOIN t_kitchen_cookbook KC ON KC.f_sys0_del_state = 0
+				AND ( (KC.f_id = KCC.t_kitchen_cookbook_f_id AND FMED.f_data_type IN (3)) 
+					OR (KC.f_id = FMED.f_data_id AND FMED.f_data_type IN (4) ) )
+				
+			LEFT JOIN t_prize_record PR ON PR.f_id = FMED.f_data_id AND FMED.f_data_type IN (5) AND PR.f_sys0_del_state = 0
+		SET 
+		   FMED.f_id = FMED.f_id
+		  <!-- ,FMED.f_ep_buycar_id = CASE WHEN FMED.f_data_type IN(1) THEN EBCHTEP.t_ebuy_buy_car_f_id ELSE FMED.f_ep_buycar_id END
+		  ,FMED.f_ep_buycar_product_id = CASE WHEN FMED.f_data_type IN(1) THEN EBCHTEP.t_ebuy_product_f_id ELSE FMED.f_ep_buycar_product_id END
+		  ,FMED.f_ep_buycar_qty = CASE WHEN FMED.f_data_type IN(1) THEN EBCHTEP.f_product_qty ELSE FMED.f_ep_buycar_qty END
+		  ,FMED.f_ep_buycar_create_time = CASE WHEN FMED.f_data_type IN(1) THEN EBCHTEP.f_create_time ELSE FMED.f_ep_buycar_create_time END -->
+		  
+		  ,FMED.f_ep_name = CASE WHEN FMED.f_data_type IN(1,2) THEN EP.f_name ELSE FMED.f_ep_name END
+		  ,FMED.f_ep_name_mini = CASE WHEN FMED.f_data_type IN(1,2) THEN EP.f_name_mini ELSE FMED.f_ep_name_mini END
+		  ,FMED.f_ep_price = CASE WHEN FMED.f_data_type IN(1,2) THEN EP.f_price ELSE FMED.f_ep_price END
+		  ,FMED.f_ep_price_discount = CASE WHEN FMED.f_data_type IN(1,2) THEN EP.f_price_discount ELSE FMED.f_ep_price_discount END
+		  ,FMED.f_ep_pic_base = CASE WHEN FMED.f_data_type IN(1,2) THEN EP.f_pic_base ELSE FMED.f_ep_pic_base END
+		  ,FMED.f_ep_pic_base_mini = CASE WHEN FMED.f_data_type IN(1,2) THEN EP.f_pic_base_mini ELSE FMED.f_ep_pic_base_mini END
+		  ,FMED.f_ep_price_unit = CASE WHEN FMED.f_data_type IN(1,2) THEN EP.f_price_unit ELSE FMED.f_ep_price_unit END
+		  ,FMED.f_ep_desc = CASE WHEN FMED.f_data_type IN(1,2) THEN EP.f_desc ELSE FMED.f_ep_desc END
+		  ,FMED.f_ep_price_point = CASE WHEN FMED.f_data_type IN(1,2) THEN EP.f_price_point ELSE FMED.f_ep_price_point END
+		  ,FMED.f_ep_price_discount_point = CASE WHEN FMED.f_data_type IN(1,2) THEN EP.f_price_discount_point ELSE FMED.f_ep_price_discount_point END
+		  ,FMED.f_ep_point_type = CASE WHEN FMED.f_data_type IN(1,2) THEN EP.f_point_type ELSE FMED.f_ep_point_type END
+		  ,FMED.f_ep_special_product_type = CASE WHEN FMED.f_data_type IN(1,2) THEN EP.f_special_product_type ELSE FMED.f_ep_special_product_type END
+
+		  ,FMED.f_kcb_collect_user = CASE WHEN FMED.f_data_type IN(3) THEN KCC.f_user_id ELSE FMED.f_kcb_collect_user END
+		  ,FMED.f_kcb_collect_time = CASE WHEN FMED.f_data_type IN(3) THEN KCC.f_time ELSE FMED.f_kcb_collect_time END
+
+		  ,FMED.f_kcb_name = CASE WHEN FMED.f_data_type IN(3,4) THEN KC.f_name ELSE FMED.f_kcb_name END
+		  ,FMED.f_kcb_pic_url = CASE WHEN FMED.f_data_type IN(3,4) THEN KC.f_pic_url ELSE FMED.f_kcb_pic_url END
+		  ,FMED.f_kcb_desc = CASE WHEN FMED.f_data_type IN(3,4) THEN KC.f_desc ELSE FMED.f_kcb_desc END
+		  ,FMED.f_kcb_eat_weight = CASE WHEN FMED.f_data_type IN(3,4) THEN KC.f_eat_weight ELSE FMED.f_kcb_eat_weight END
+		  ,FMED.f_kcb_cook_time = CASE WHEN FMED.f_data_type IN(3,4) THEN KC.f_cook_time ELSE FMED.f_kcb_cook_time END
+		  ,FMED.f_kcb_cook_step = CASE WHEN FMED.f_data_type IN(3,4) THEN KC.f_cook_step ELSE FMED.f_kcb_cook_step END
+		  ,FMED.f_kcb_taste = CASE WHEN FMED.f_data_type IN(3,4) THEN KC.f_taste ELSE FMED.f_kcb_taste END
+		  ,FMED.f_kcb_cook_tech = CASE WHEN FMED.f_data_type IN(3,4) THEN KC.f_cook_tech ELSE FMED.f_kcb_cook_tech END
+		  ,FMED.f_kcb_tips = CASE WHEN FMED.f_data_type IN(3,4) THEN KC.f_tips ELSE FMED.f_kcb_tips END
+		  
+		  ,FMED.f_pr_prize_time = CASE WHEN FMED.f_data_type IN(5) THEN PR.f_prize_time ELSE FMED.f_pr_prize_time END
+		  ,FMED.f_pr_discount = CASE WHEN FMED.f_data_type IN(5) THEN PR.f_discount ELSE FMED.f_pr_discount END
+		  ,FMED.f_pr_user_room_id = CASE WHEN FMED.f_data_type IN(5) THEN PR.t_user_has_t_room_f_id ELSE FMED.f_pr_user_room_id END
+		  ,FMED.f_pr_end_time = CASE WHEN FMED.f_data_type IN(5) THEN PR.f_end_time ELSE FMED.f_pr_end_time END
+		WHERE 1 = 1
+		AND FMED.f_sys0_del_state = 0
+		AND FMED.t_family_msg_f_id = #{familyMsgId}
+	</update>
+	
+	<!-- 将关联的用户数据同步到艾特的用户表中 -->
+	<update id="syn_FamilyMsgHasTUserData_ByFamilyMsgId" parameterType="java.util.Map">
+		UPDATE t_family_msg_has_t_user FMHTU
+			INNER JOIN t_user U ON U.f_id = FMHTU.t_user_f_id AND U.f_sys0_del_state = 0
+		SET FMHTU.f_nick_name = U.f_nick_name
+			,FMHTU.f_real_name = U.f_real_name
+			,FMHTU.f_sex = U.f_sex
+			,FMHTU.f_imgProfile = U.f_imgProfile
+			,FMHTU.f_signature = U.f_signature
+			,FMHTU.f_hua_id = U.f_hua_id
+		WHERE 1=1
+		AND FMHTU.f_sys0_del_state = 0
+		AND FMHTU.t_family_msg_f_id = #{familyMsgId}
+	</update>
+	
+</mapper>

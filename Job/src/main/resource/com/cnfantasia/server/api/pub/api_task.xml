@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	   xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<!-- <task:executor id="executor" pool-size="3" />  -->
+	<task:scheduler id="jobScheduler" pool-size="8" />
+	<task:scheduled-tasks scheduler="jobScheduler">
+
+		<task:scheduled ref="financeDeductionTask" method="financeDeduction" cron="5 0 0/2 * * *" />
+
+		<task:scheduled ref="flowRechargeTask" method="financeDeduction" cron="40 0/30 * * * *" />
+
+		<!-- 海吉星商品同步，4小时同步一次, 这个执行时间太长，不能转新job -->
+		<task:scheduled ref="productImpotter4HJXTask" method="executeImportTask" cron="22 0 0/4 * * *"/>
+
+		<!-- 每天触发，每1分钟触发一次  系统自动检查拼单是否已过时，若过时则更改拼单状态-->
+		<task:scheduled ref="revenueTask" method="synPropertyOtherFeeForPropertyCompany" cron="0 0/2 * * * ?" /><!-- 其他代收费用 -->
+		<task:scheduled ref="revenueTask" method="synPropertyRealPayAmoutForPropertyCompany" cron="20 0/2 * * * ?" />
+		<task:scheduled ref="revenueTask" method="synPropertySubsidyAmoutForPropertyCompany" cron="40 0/2 * * * ?" />
+		<!-- <task:scheduled ref="revenueTask" method="synRoomValidateForPropertyCompany" cron="0 0/1 * * * ?" /> -->
+		<!-- <task:scheduled ref="revenueTask" method="synRoomValidateForPropertyAgent" cron="0 0/1 * * * ?" /> -->
+		<task:scheduled ref="revenueTask" method="synEbuyForSupply" cron="10 0/2 * * * ?" />
+		<task:scheduled ref="revenueTask" method="synDredgePayAmoutForMaster" cron="55 0/1 * * * ?" />
+		<task:scheduled ref="revenueTask" method="synFinance" cron="15 0/2 * * * ?" />
+		<task:scheduled ref="revenueTask" method="synCarFinance" cron="20 0/2 * * * ?" />
+		<task:scheduled ref="revenueTask" method="synCar" cron="50 0/1 * * * ?" />
+		<task:scheduled ref="revenueTask" method="synFianceDedu" cron="18 0/2 * * * ?" />
+		<!-- <task:scheduled ref="revenueTask" method="synCarDedu" cron="16 0/3 * * * ?" /> -->
+
+		<!--合并用户提款单  晓路，说要调整时间为0点合并 -->
+		<!--<task:scheduled ref="revenueApplyPush2EASTask" method="mergeTask" cron="10 1 0 * * ?" />-->
+
+		<!--提款单推送到EAS 调整时间为2:30,3:30,4:30推送，减少出现：提交数据报没有数据权限的问题-->
+		<!-- <task:scheduled ref="revenueApplyPush2EASTask" method="execTask" cron="0 30 2 * * ?" />
+         <task:scheduled ref="revenueApplyPush2EASTask" method="execTask" cron="0 30 3 * * ?" />
+         <task:scheduled ref="revenueApplyPush2EASTask" method="execTask" cron="0 30 4 * * ?" />-->
+
+		<!-- 每天凌晨1:10检查发起自动提款的申请检查0 10 1 * * ? -->
+		<!--<task:scheduled ref="propertySubsidyAmoutAutoApplyCompany" method="execTask" cron="1 10 1 * * ?" />
+		<task:scheduled ref="propertySubsidyAmoutAutoApplyCompany" method="execTask" cron="30 20 1 * * ?" />
+		<task:scheduled ref="propertySubsidyAmoutAutoApplyCompany" method="execTask" cron="50 30 1 * * ?" />-->
+		<!-- 测试用
+		<task:scheduled ref="propertySubsidyAmoutAutoApplyCompany" method="execTask" cron="1 0/30 * * * ?" />
+		<task:scheduled ref="propertySubsidyAmoutAutoApplyCompany" method="execTask" cron="30 0/30 * * * ?" />
+		<task:scheduled ref="propertySubsidyAmoutAutoApplyCompany" method="execTask" cron="50 0/30 * * * ?" /> -->
+
+
+		<!-- 依谷网订单推送  测试一次 "0/59 * * * * ?"-->
+		<!--<task:scheduled ref="eguTask" method="eguOrderPush" cron="03 0 0/1 * * *"/>-->
+		<!--<task:scheduled ref="eguTask" method="eguOrderExpressTraceTask" cron="03 01 0/1 * * ?"/>-->
+
+		<!--推送月卡缴费记录-->
+		<!-- <task:scheduled ref="yHSPushPayLogTask" method="pushPayLog" cron="30 0/1 * * * ?"/> -->
+
+		<!-- 每1分钟触发一次消息推送 -->
+		<task:scheduled ref="msgpushTask" method="autoSendTask" cron="59 0/1 * * * ?" />
+		<!-- <task:scheduled ref="pushFail2SendMsgTask" method="execTask" cron="59 0/1 * * * ?" /> -->
+		<!-- 消息推送 -->
+		<task:scheduled ref="msgpushbean" method="pushTask" cron="59 0/1 * * * ?" />
+
+		<!-- 每5分钟触发一次消息推送 -->
+		<task:scheduled ref="weChatMsgTask" method="sendNotification" cron="29 0/5 * * * ?" />
+		<task:scheduled ref="smsNotificationTask" method="sendNotification" cron="19 0/5 * * * ?" />
+
+		<!--长连接车禁推送-->
+		<!-- <task:scheduled ref="accessPushTask" method="execTask" cron="0 0/1 * * * ?" /> -->
+
+		<!--消费券及用户所持消费券过期处理，每天0点执行-->
+		<!--<task:scheduled ref="couponTask" method="execTask" cron="6 2 0 * * ?" />-->
+		<!--<task:scheduled ref="userCouponTask" method="execTask" cron="1 2 0 * * ?" />-->
+
+		<!--定时对新维修订单对不同等级的师傅推送，2分钟执行一次-->
+		<!--<task:scheduled ref="dredgeTask" method="execTask" cron="30 0/2 * * * ?" />-->
+		<!--服务前付款订单，物业维修免费订单，在师傅端确认完成后，7天内用户未确认完成，则系统自动把订单变为完成状态-->
+		<!--<task:scheduled ref="dredgeTask" method="autoFinishBillTask" cron="30 0 0/2 * * ?" />-->
+
+
+		<!-- 现金流量汇总表数据生成，每10分钟执行一次（代码中每次最多生成100条） -->
+		<task:scheduled ref="cashFlowSummaryTask" method="execTask" cron="30 0/10 * * * ?" />
+
+		<!-- 小区账单平均金额计算 -->
+		<!-- <task:scheduled ref="groupBuildingBillAvgSynTask" method="execTask" cron="1 40 1 * * ?" /> -->
+
+		<!--初始化用户和设备缴费记录，每月一号凌晨0:00 （0 0 0 1 * ?）-->
+		<task:scheduled ref="userAndDevicePayCountInitSynTask" method="execTask" cron="0 0 0 1 * ?" />
+
+		<!--滞纳金计算-->
+		<!--v512 取消计算yh<task:scheduled ref="alterPeriodSynTask" method="execTask" cron="1 10 1 * * ?" />-->
+
+		<!--一元夺宝抽奖，发送信息-->
+		<task:scheduled ref="flashDealActivitySynTask" method="execTask" cron="30 0/5 * * * ?" />
+
+		<!-- 幸运购活动提醒，每3分钟执行一次 -->
+		<task:scheduled ref="flashDealActivityRemindSynTask" method="execTask" cron="30 0/3 * * * ?" />
+
+		<!-- 每天12:30 日期不是10号20号，只记首页提醒-->
+		<task:scheduled ref="carMsgTask" method="pushTask" cron="0 30 12 1/1 * ?" />
+
+		<!-- 每10分钟 -->
+		<task:scheduled ref="carMsgTask" method="pushOffline" cron="0 0/10 * * * ?" />
+		<!-- 每月20号12:30 -->
+		<task:scheduled ref="carMsgTask" method="sendMsgTask" cron="0 0 12 * * ?" />
+		<!-- <task:scheduled ref="carMsgTask" method="sendMsgTask" cron="0 0 0/1 * * ?" /> -->
+
+		<!--通知物业管理软件已缴物业费-->
+		<task:scheduled ref="propertySoftwareTask" method="execTask" cron="37 0/3 * * * ?" />
+		<!--推公共维修单到物业软件-->
+		<task:scheduled ref="propertySoftwareTask" method="pushRepairTask" cron="22 0/10 * * * ?" />
+		<!--取公共维修单详情-->
+		<task:scheduled ref="propertySoftwareTask" method="getRepairDetailTask" cron="46 0/30 * * * ?" />
+
+		<!--银行托收任务,0点触发-->
+		<!-- <task:scheduled ref="bankCollectionTask" method="execTask" cron="20 0 0 * * ?" /> -->
+
+		<!--自动生成账期 5分钟一次-->
+		<!-- <task:scheduled ref="createCycleAndPayBillTask" method="execTask" cron="0 0/5 * * * ?" /> -->
+
+		<!--推送运营消息   先将频率设置为30s一次 -->
+		<task:scheduled ref="operateMsgTask" method="execTask" cron="5/30 * * * * ?" />
+
+		<task:scheduled ref="carTask" method="pushXMFTmpCarPayLogTask" cron="0 0/1 * * * ?"/>
+		<task:scheduled ref="carTask" method="pushXMFMonthCarPayLogTask" cron="0 0/10 * * * ?" />
+		<task:scheduled ref="carTask" method="synXMFMonthCarInfoTask" cron="0 0 2 * * ?" />
+		<task:scheduled ref="carTask" method="synXMFMonthCarPayLogTask" cron="0 0/30 * * * ?" />
+		<task:scheduled ref="carTask" method="synXMFParkingRecord" cron="0 0/10 * * * ?" />
+
+		<task:scheduled ref="carTask" method="pushHATmpCarPayLogTask" cron="0 0/1 * * * ?" />
+		<task:scheduled ref="carTask" method="pushHAMonthCarPayLogTask" cron="0 0/10 * * * ?" />
+		<task:scheduled ref="carTask" method="synHAMonthCarInfoTask" cron="0 0 2 * * ?" />
+
+		<task:scheduled ref="carTask" method="pushHPFTempCarPayLogTask" cron="0 0/1 * * * ?" />
+		<task:scheduled ref="carTask" method="pushHPFMonthCarPayLogTask" cron="0 0/10 * * * ?" />
+		<task:scheduled ref="carTask" method="synHPFMonthCarFeeTask" cron="0 0 2 * * ?" />
+
+		<task:scheduled ref="xmfCarService" method="synMonthCarPayLog20180103" cron="0 50 18 17 1 ?"/>
+		<task:scheduled ref="xmfCarService" method="synParkingRecord20180103" cron="0 50 18 17 1 ?"/>
+
+		<!-- 限时购活动结束或库存为0时，还原商品售价 每1分钟执行一次-->
+		<task:scheduled ref="limitBuyPriceSysTask" method="execTask" cron="21 0/1 * * * ?" />
+	</task:scheduled-tasks>
+</beans>

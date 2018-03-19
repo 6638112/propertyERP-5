@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:收益推送 -->
+<mapper namespace="revenuePush">
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.RevenueApplyEntity" id="revenueApplyEntityMap" extends="revenueApplyBase.revenueApplyBaseMap_AppendTable">
+		<collection property="revenueSignalAmountList" resultMap="revenueSignalAmountBase.revenueSignalAmountBaseMap_AppendTable">
+		</collection>
+	</resultMap>
+	
+	<select id="selectRevenueApplyList4Push" parameterType="java.util.Map" resultMap="revenueApplyEntityMap">
+		select <include refid="revenueApplyBase.queryHead_AppendTable"></include>
+		, <include refid="revenueSignalAmountBase.queryHead_AppendTable"></include>
+		  FROM t_revenue_apply RA
+		  left join t_revenue_signal_amount RSA on RSA.f_rev_apply_finance_id = RA.f_id
+		  where RA.f_tk_status = 2 and RA.f_sys0_del_state = 0 AND (RSA.f_sys0_del_state = 0 or RSA.f_sys0_del_state is null) -- 供应商结算是没有RSA的
+		  and ((RA.f_eas_bill_numbers is null and RA.f_goal_type &lt;&gt; 7) <!-- 不是其它代收费用 -->
+		  or (RA.f_goal_type = 7 and RA.f_amount_ptbt*RA.f_amount_usr_real &gt; 0 and RA.f_eas_bill_numbers not like '%;%') <!-- 其它代收有实收和补贴时，只推了一个 -->
+		  or (RA.f_goal_type = 7 and RA.f_eas_bill_numbers is null)) <!-- 还没有推 -->
+		  and RA.f_visible_type=1 <!-- 只推送财务（admin）或见的提款单  -->
+		  <if test="id == null"> <!-- 没id传入参数，意味着自动推送，需要有3次失败限制 -->
+			  <!-- 并且失败次数小于3次 -->
+		  	and EXISTS (SELECT epr.f_id from t_eas_push_record epr where epr.t_revenue_apply_f_id = RA.f_id and epr.f_is_success = 0 HAVING count(epr.f_id) &lt; 3) <!-- 这里还有一Bug，RA的 f_eas_bill_numbers is null，且t_eas_push_record.f_is_success = 1时，还是可以找出记录-->
+		  </if>
+		  <if test="id != null and !id.equals('') "> and RA.f_id = #{id} </if>
+		  <if test="goalType != null and !goalType.equals('') "> and RA.f_goal_type = #{goalType} </if>
+		  <if test="miniRoleType != null and !miniRoleType.equals('') "> and RA.f_mini_role_type = #{miniRoleType} </if>
+		  order by RA.f_mini_role_id, RSA.f_id
+	</select>
+	
+	<update id="updateRevenueApplyAfterPushSuccess" parameterType="map">
+		update t_revenue_apply set f_eas_bill_numbers = IF(f_eas_bill_numbers is null, #{easCode}, CONCAT(f_eas_bill_numbers, ';', #{easCode})), f_sys0_upd_time = now()  
+		where 
+		(f_apply_no in 
+		<foreach item="item" collection="applyNoList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		 or concat(f_apply_no, 'BT') in  -- 其它代收费用的补贴，推的时候加了后缀BT
+		 <foreach item="item" collection="applyNoList" open="(" separator="," close=")">
+			#{item}
+		 </foreach>
+		 )
+	</update>
+
+	<insert id="insertPushRecordAfterSuccess" parameterType="map" >
+		INSERT INTO t_eas_push_record (
+			`f_id`,
+			`f_push_time`,
+			`f_push_response`,
+			`f_is_success`,
+			`f_sys0_add_time`,
+			`f_sys0_del_state`,
+			`t_revenue_apply_f_id`
+		)
+		SELECT
+			uuid_nextval('t_eas_push_record'),
+			now(),
+			#{pushResponse},
+			1,
+			now(),
+			0,
+			f_id
+		FROM
+			t_revenue_apply
+		WHERE
+			f_apply_no IN 
+			<foreach item="item" collection="applyNoList" open="(" separator="," close=")">
+			#{item, jdbcType=VARCHAR}
+			</foreach>
+	</insert>
+	
+	<insert id="insertPushRecordAfterFail" parameterType="map" >
+		INSERT INTO t_eas_push_record (
+			`f_id`,
+			`f_push_time`,
+			`f_push_response`,
+			`f_is_success`,
+			`f_sys0_add_time`,
+			`f_sys0_del_state`,
+			`t_revenue_apply_f_id`
+		)
+		SELECT
+			uuid_nextval('t_eas_push_record'),
+			now(),
+			#{pushResponse},
+			0,
+			now(),
+			0,
+			f_id
+		FROM
+			t_revenue_apply
+		WHERE
+			locate(f_apply_no, #{srcBillNumber})>0
+	</insert>
+	
+	<update id="updateRevenueApplyAfterEASPayed_1" parameterType="map">
+		<!-- 多对1, 只要EAS付款，所有提现单都要标为已结算 -->
+		UPDATE t_revenue_apply ra 
+		left JOIN t_revenue_signal_amount rsa on rsa.f_rev_apply_finance_id = ra.f_id
+		set ra.f_tk_status = 3, 
+		ra.f_eas_payed_amount = #{payAmount}, 
+		ra.f_sys0_upd_time = now(),
+		rsa.f_tk_status = 3,
+		rsa.f_sys0_upd_time = now()
+		WHERE ra.f_tk_status = 2 
+		AND LOCATE(#{easCode}, ra.f_eas_bill_numbers)&gt;0 and LOCATE(f_apply_no, #{srcCode}) &gt;0
+		and ((ra.f_mini_role_type = 2 or ra.f_mini_role_type = 13)
+		 or (ra.f_mini_role_type = 3 and ra.f_goal_type in(2,3,4,9)));
+	</update>
+	
+	<update id="updateRevenueApplyAfterEASPayed_2" parameterType="map">
+		<!-- 1对多，只所有EAS报销单都已付款，提现单才标为已结算 -->
+		UPDATE t_revenue_apply ra 
+		left JOIN t_revenue_signal_amount rsa on rsa.f_rev_apply_finance_id = ra.f_id
+		<![CDATA[ set ra.f_tk_status = IF(IFNULL(ra.f_eas_payed_amount,0) +  #{payAmount} >= ra.f_amount_usr_real, 3, 2),]]> <!-- 只与f_amount_usr_real比较，因为补贴部分不会生成付款单，直接关闭掉了 -->
+		ra.f_eas_payed_amount = IF(ra.f_eas_payed_amount is null, #{payAmount}, (ra.f_eas_payed_amount+ #{payAmount})),
+		ra.f_sys0_upd_time = now(),
+		<![CDATA[ rsa.f_tk_status = IF(IFNULL(ra.f_eas_payed_amount,0) +  #{payAmount} >= ra.f_amount_usr_real, 3, 2)]]>
+		where ra.f_tk_status = 2 
+		and ra.f_eas_bill_numbers like CONCAT('%', #{easCode},'%') AND ra.f_apply_no = #{srcCode} 
+		and ((ra.f_mini_role_type = 6 and ra.f_goal_type = 2) 
+		or (ra.f_mini_role_type = 5 and ra.f_goal_type = 4) 
+		or (ra.f_mini_role_type = 2 and ra.f_goal_type = 7)
+		or (ra.f_mini_role_type = 13 and ra.f_goal_type = 7)
+		or (ra.f_mini_role_type = 12 and ra.f_goal_type = 16));
+	</update>
+	
+	<update id="updateRevenueApplyAfterEASPayed_3" parameterType="map">
+		<!-- 1对1  -->
+		UPDATE t_revenue_apply ra 
+		left JOIN t_revenue_signal_amount rsa on rsa.f_rev_apply_finance_id = ra.f_id
+		set ra.f_tk_status = 3, 
+		ra.f_eas_payed_amount = #{payAmount}, 
+		ra.f_sys0_upd_time = now(),
+		rsa.f_tk_status = 3,
+		rsa.f_sys0_upd_time = now()
+		where ra.f_tk_status = 2
+		AND ra.f_eas_bill_numbers = #{easCode} 
+		AND f_apply_no = #{srcCode};
+	</update>
+	
+	<!-- 合并提款单：下午两点自动合并单个用户的提款申请，合并的逻辑为:结算项目相同且银行卡号相同的未结算提款单合并为一条 -->
+	<insert id="mergeRevenueApply">
+		INSERT INTO t_revenue_apply (
+		f_id,f_apply_no,f_sys0_add_time,f_apply_time,f_goal_end_time,f_tk_status,f_opt_type,f_visible_type,t_ebuy_supply_merchant_fk,f_revenue_type,t_gb_id,t_property_management_f_id,
+			f_amount_ptbt,
+			f_amount_usr_real,
+			f_total_amount,
+			f_mini_role_id,
+			f_mini_role_type,
+			f_bank_branch,
+			f_bank_city,
+			f_bank_province,
+			f_b_bank_name,
+			f_account_name,
+			f_b_bank_no,
+			f_b_connect_name,
+			f_b_phone,
+			f_goal_type,
+			f_apply_user_id,
+			f_role_name
+		)
+			( 
+				SELECT
+		uuid_nextval('t_revenue_apply'), UUID_SHORT(), SYSDATE(), ra.f_apply_time,ra.f_goal_end_time,ra.f_tk_status,2,1,ra.t_ebuy_supply_merchant_fk,ra.f_revenue_type,ra.t_gb_id,ra.t_property_management_f_id,
+					sum(ra.f_amount_ptbt),
+					sum(ra.f_amount_usr_real),
+					sum(ra.f_total_amount),
+					ra.f_mini_role_id,
+					ra.f_mini_role_type,
+					ra.f_bank_branch,
+					ra.f_bank_city,
+					ra.f_bank_province,
+					ra.f_b_bank_name,
+					ra.f_account_name,
+					ra.f_b_bank_no,
+					ra.f_b_connect_name,
+					ra.f_b_phone,
+					ra.f_goal_type,
+					ra.f_apply_user_id,
+					ra.f_role_name
+				FROM
+					t_revenue_apply ra
+				WHERE
+					ra.f_tk_status = 2
+				AND ra.f_visible_type = 2
+				and ra.f_sys0_del_state = 0
+				AND ra.f_rev_apply_finance_id IS NULL
+				<!-- 供应商结算16，必须是审核通过的，其它类型的不限 -->
+				<![CDATA[ and ((ra.f_goal_type = 16 and ra.f_audit_status =3) or ((ra.f_goal_type <> 16))) ]]>
+				GROUP BY
+					ra.f_mini_role_id,
+					ra.f_mini_role_type,
+					ra.f_bank_branch,
+					ra.f_bank_city,
+					ra.f_bank_province,
+					ra.f_b_bank_name,
+					ra.f_account_name,
+					ra.f_b_bank_no,
+					ra.f_b_connect_name,
+					ra.f_b_phone,
+					ra.f_goal_type,
+					ra.f_apply_user_id,
+					ra.f_role_name
+			);
+	</insert>
+	
+	<!-- 更新合并后的绑定关系 -->
+	<update id="updateMergeRelation" parameterType="map">
+		update t_revenue_apply ra 
+		left JOIN t_revenue_signal_amount rsa on rsa.f_rev_apply_id = ra.f_id AND rsa.f_rev_apply_finance_id IS NULL
+		JOIN t_revenue_apply ra2 ON ra.f_mini_role_id = ra2.f_mini_role_id
+		AND ra.f_mini_role_type = ra2.f_mini_role_type
+		AND ((ra.f_bank_branch is null and  ra2.f_bank_branch is null) or ra.f_bank_branch = ra2.f_bank_branch)
+		AND ((ra.f_bank_city is null and  ra2.f_bank_city is NULL) or ra.f_bank_city = ra2.f_bank_city)
+		AND ((ra.f_bank_province is null and  ra2.f_bank_province is null) or ra.f_bank_province = ra2.f_bank_province)
+		AND ((ra.f_b_bank_name is null and  ra2.f_b_bank_name is null) or ra.f_b_bank_name = ra2.f_b_bank_name)
+		AND ((ra.f_account_name is null and ra2.f_account_name is NULL) or ra.f_account_name = ra2.f_account_name)
+		AND ((ra.f_b_bank_no is null AND ra2.f_b_bank_no is null ) or ra.f_b_bank_no = ra2.f_b_bank_no)
+		AND ((ra.f_b_connect_name is null and  ra2.f_b_connect_name is NULL) or ra.f_b_connect_name = ra2.f_b_connect_name)
+		AND ((ra.f_b_phone IS null and ra2.f_b_phone is NULL) or ra.f_b_phone = ra2.f_b_phone)
+		AND ((ra.f_goal_type is null and  ra2.f_goal_type is null ) or ra.f_goal_type = ra2.f_goal_type)
+		AND ((ra.f_apply_user_id is null and ra2.f_apply_user_id is null ) or ra.f_apply_user_id=ra2.f_apply_user_id)
+		AND ra2.f_visible_type = 1
+		and ra2.f_tk_status = 2 <!-- 提款中的 -->
+		set ra.f_rev_apply_finance_id = ra2.f_id, ra.f_sys0_upd_time =SYSDATE(), 
+		rsa.f_rev_apply_finance_id = ra2.f_id, rsa.f_sys0_upd_time =SYSDATE()
+		where ra.f_tk_status = 2 and ra.f_sys0_del_state = 0
+			AND ra.f_visible_type = 2 
+			<![CDATA[ and ((ra.f_goal_type = 16 and ra.f_audit_status=3) or ((ra.f_goal_type <> 16))) ]]>
+			and if(ra.f_goal_type = 16, ra2.f_sys0_add_time > ra.f_audit_time, ra2.f_sys0_add_time > ra.f_sys0_add_time) <!--供应商结算16,与f_audit_time比较，  必须是ra.f_sys0_add_time之后合并的提款单 -->
+			AND ra.f_rev_apply_finance_id IS NULL;
+	</update>
+	
+	<!-- 更新合并前订单的结算状态为已经结算 -->
+	<update id="updateRevenueApplyTkStatus" parameterType="map">
+		update t_revenue_apply ra 
+		left JOIN t_revenue_signal_amount rsa on rsa.f_rev_apply_id = ra.f_id 
+		JOIN t_revenue_apply ra2 ON ra.f_rev_apply_finance_id = ra2.f_id AND ra2.f_visible_type = 1 AND ra2.f_tk_status = 3
+		set ra.f_tk_status = ra2.f_tk_status, ra.f_sys0_upd_time =SYSDATE(), 
+		rsa.f_tk_status = ra2.f_tk_status, rsa.f_sys0_upd_time =SYSDATE()
+		where ra.f_tk_status = 2 AND ra.f_visible_type = 2;
+	</update>
+</mapper>

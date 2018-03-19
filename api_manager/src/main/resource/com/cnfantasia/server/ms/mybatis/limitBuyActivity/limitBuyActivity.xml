@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="limitBuyActivity">
+
+	<resultMap type="com.cnfantasia.server.ms.limitBuyActivity.entity.LimitBuyActivityListDto" id="limitBuyActivityMap">
+        <result column="lbaId" javaType="java.math.BigInteger" property="lbaId"/>
+        <result column="productId" javaType="java.math.BigInteger" property="productId"/>
+        <result column="originalPrice" javaType="java.math.BigDecimal" property="originalPrice"/>
+        <result column="robPrice" javaType="java.math.BigDecimal" property="robPrice"/>
+        <result column="title" javaType="java.lang.String" property="title"/>
+        <result column="productName" javaType="java.lang.String" property="productName"/>
+        <result column="merchantName" javaType="java.lang.String" property="merchantName"/>
+        <result column="startTime" javaType="java.lang.String" property="startTime"/>
+        <result column="endTime" javaType="java.lang.String" property="endTime"/>
+        <result column="startStatus" javaType="java.lang.String" property="startStatus"/>
+        <result column="endStatus" javaType="java.lang.String" property="endStatus"/>
+        <result column="positionType" javaType="java.lang.Integer" property="positionType"/>
+        <result column="leftCount" javaType="java.lang.Integer" property="leftCount"/>
+        <result column="maxCanBuy" javaType="java.lang.Integer" property="maxCanBuy"/>
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.ms.limitBuyActivity.entity.LimitBuyActivityUpdateParam" id="limitBuyActivityUpdateParamMap">
+        <result column="id" javaType="java.math.BigInteger" property="id"/>
+        <result column="robPrice" javaType="java.math.BigDecimal" property="robPrice"/>
+        <result column="title" javaType="java.lang.String" property="title"/>
+        <result column="startTime" javaType="java.lang.String" property="startTime"/>
+        <result column="endTime" javaType="java.lang.String" property="endTime"/>
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.ms.limitBuyActivity.entity.LimitBuyActivityDetailDto" id="limitBuyActivityDetailDtoMap" extends="limitBuyActivityUpdateParamMap">
+        <result column="productId" javaType="java.math.BigInteger" property="productId"/>
+        <result column="originalPrice" javaType="java.math.BigDecimal" property="originalPrice"/>
+        <result column="shelfType" javaType="java.lang.String" property="shelfType"/>
+        <result column="productName" javaType="java.lang.String" property="productName"/>
+        <result column="leftCount" javaType="long" property="leftCount"/>
+        <result column="maxCanBuy" javaType="long" property="maxCanBuy"/>
+        <result column="merchantName" javaType="java.lang.String" property="merchantName"/>
+    </resultMap>
+    
+	<sql id="selectLimitBuyActivityForPageFrom">
+		FROM
+				t_limit_buy_activity LBA
+			INNER JOIN t_ebuy_product EP ON EP.f_id = LBA.t_ebuy_product_f_id
+			INNER JOIN t_ebuy_product_shelf EPS ON EPS.t_ebuy_product_id = EP.f_id
+			AND EPS.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product_type EPT ON EPT.f_id = EPS.t_ebuy_product_type_id
+			AND EPT.f_wlApp_type = 1
+			INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id
+	</sql>
+	
+	<sql id="selectLimitBuyActivityForPageWhere">
+		WHERE 
+			LBA.f_sys0_del_state = 0
+			<if test="productId != null and !productId.equals('')">
+			AND LBA.t_ebuy_product_f_id=#{productId}
+			</if>
+			<if test="productName != null and !productName.equals('')">
+			AND locate(#{productName}, EP.f_name) > 0
+			</if>
+			<if test="status != null and !status.equals('')">
+				<if test="status.equals('1'.toString())">
+				AND <![CDATA[LBA.f_activity_start_time<NOW() AND LBA.f_activity_end_time>NOW()]]>
+				</if>
+				<if test="status.equals('2'.toString())">
+				AND <![CDATA[LBA.f_activity_start_time>NOW()]]>
+				</if>
+				<if test="status.equals('3'.toString())">
+				AND <![CDATA[LBA.f_activity_end_time<NOW()]]>
+				</if>
+			</if>
+			<if test="startTimeStart != null and !startTimeStart.equals('')">
+			AND LBA.f_activity_start_time>=#{startTimeStart}
+			</if>
+			<if test="startTimeEnd != null and !startTimeEnd.equals('')">
+			AND <![CDATA[LBA.f_activity_start_time<=#{startTimeEnd}]]>
+			</if>
+			<if test="endTimeStart != null and !endTimeStart.equals('')">
+			AND LBA.f_activity_end_time>=#{endTimeStart}
+			</if>
+			<if test="endTimeEnd != null and !endTimeEnd.equals('')">
+			AND <![CDATA[LBA.f_activity_end_time<=#{endTimeEnd}]]>
+			</if>
+			and EXISTS (select 1 from t_ebuy_supply_merchant_has_group_building ESMG
+						  	inner join t_group_building GB on ESMG.t_group_building_id = GB.f_id
+						where ESMG.t_ebuy_supply_merchant_id = ESM.f_id and ESMG.f_sys0_del_state = 0 and GB.f_sys0_del_state = 0
+				<include refid="permiOos.dataPermissionCondition" />)
+	</sql>
+	
+	<!-- 限时购列表数据查询 -->
+	<select id="selectLimitBuyActivityForPage" parameterType="java.util.Map" resultMap="limitBuyActivityMap">
+		SELECT
+			LBA.f_id lbaId,
+			LBA.f_title title,
+			DATE_FORMAT(
+				LBA.f_activity_start_time,
+				'%Y-%m-%d %H:%i'
+			) startTime,
+			DATE_FORMAT(
+				LBA.f_activity_end_time,
+				'%Y-%m-%d %H:%i'
+			)endTime,
+			(
+				<![CDATA[LBA.f_activity_start_time < now()]]>
+			) startStatus,
+			(
+				LBA.f_activity_end_time > now()
+			) endStatus,
+			LBA.t_ebuy_product_f_id productId,
+			LBA.f_position_type positionType,
+			IFNULL(LBA.f_activity_price, 0) robPrice,
+			IFNULL(EPS.f_price_discount, 0) originalPrice,
+			LBA.f_left_count leftCount,
+			LBA.f_max_can_buy maxCanBuy,
+			EP.f_name productName,
+			ESM.f_name merchantName
+		<include refid="selectLimitBuyActivityForPageFrom"/>
+		<include refid="selectLimitBuyActivityForPageWhere"/>
+		ORDER BY
+			IFNULL(
+				LBA.f_sys0_upd_time,
+				LBA.f_sys0_add_time
+			) DESC
+		<if test="(_begin != null and !_begin.equals('')) or (_length != null and !_length.equals(''))">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>	
+	</select>
+	
+	<!-- 限时购列表数据条数查询 -->
+	<select id="selectLimitBuyActivityForCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="selectLimitBuyActivityForPageFrom"/>
+		<include refid="selectLimitBuyActivityForPageWhere"/>
+	</select>
+	
+	<!-- 限时购详情 -->
+	<select id="selectLimitBuyActivityForDetail" parameterType="java.math.BigInteger" resultMap="limitBuyActivityDetailDtoMap">
+		SELECT
+			LBA.f_id id,
+			LBA.f_title title,
+			DATE_FORMAT(
+				LBA.f_activity_start_time,
+				'%Y-%m-%d %H:%i'
+			) startTime,
+			DATE_FORMAT(
+				LBA.f_activity_end_time,
+				'%Y-%m-%d %H:%i'
+			)endTime,
+			LBA.t_ebuy_product_f_id productId,
+			LBA.f_left_count leftCount,
+			LBA.f_max_can_buy maxCanBuy,
+			IFNULL(LBA.f_activity_price, 0) robPrice,
+			IFNULL(EPS.f_price_discount, 0) originalPrice,
+			EP.f_name productName,
+			ESM.f_name merchantName,
+			EPT.f_type_name shelfType
+		<include refid="selectLimitBuyActivityForPageFrom"/>
+		WHERE LBA.f_id=#{lbaId}
+		LIMIT 1
+	</select>
+	
+	<!-- 限时购详情基本信息 -->
+	<select id="selectLimitBuyActivityForBaseDetail" parameterType="java.math.BigInteger" resultMap="limitBuyActivityDetailDtoMap">
+		SELECT
+			EP.f_id productId,
+			IFNULL(EPS.f_price_discount, 0) originalPrice,
+			EP.f_name productName,EP.f_left_count leftCount,
+			ESM.f_name merchantName,
+			EPT.f_type_name shelfType
+		FROM 
+			t_ebuy_product EP
+			INNER JOIN t_ebuy_product_shelf EPS ON EPS.t_ebuy_product_id = EP.f_id
+			AND EPS.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product_type EPT ON EPT.f_id = EPS.t_ebuy_product_type_id
+			AND EPT.f_wlApp_type = 1
+			INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id
+		WHERE EP.f_id=#{productId}
+		LIMIT 1
+	</select>
+	
+	<select id="downShelf" parameterType="com.cnfantasia.server.domainbase.limitBuyActivity.entity.LimitBuyActivity"  resultType="int">
+		UPDATE t_limit_buy_activity
+		SET f_activity_start_time = SYSDATE(), f_activity_end_time = SYSDATE(),f_sys0_upd_time = SYSDATE()
+		WHERE
+			f_activity_end_time &gt; SYSDATE()
+		AND t_ebuy_product_f_id IN 
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=") ">
+        	#{item.id}
+ 	 	</foreach>
+	</select>
+</mapper>

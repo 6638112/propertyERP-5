@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:annotation-config/>
+	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
+		<property name="maxInactiveIntervalInSeconds" value="7200"></property>
+	</bean>
+	
+	<!-- redis的连接池pool，不是必选项：timeout/password -->
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+		<constructor-arg index="0" ref="jedisPoolConfig" />
+		<constructor-arg index="1" value="${redis.host01}" />
+		<constructor-arg index="2" value="${redis.port01}" type="int" />
+		<constructor-arg index="3" value="${redis.timeout01}" type="int" />
+		<constructor-arg index="4" value="${redis.password01}"/>
+	</bean>
+	
+	<!-- ShardedJedis做Redis集群 -->
+	<!-- <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool"
+		destroy-method="destroy">
+		<constructor-arg ref="jedisPoolConfig" />
+		<constructor-arg>
+			<list>
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg value="${redis.host01}" />
+					<constructor-arg type="int" value="${redis.port01}" />
+					<constructor-arg value="instance:01" />
+				</bean>
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg value="127.0.0.1" />
+					<constructor-arg type="int" value="7001" />
+					<constructor-arg value="instance:02" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean> -->
+	
+	<!-- Jedis还提供了对jedis sentinel pool的封装，所以发生主从切换的时候，web server都不需要重新配置和deploy -->
+	<!-- <bean id="redisSentinel" class="redis.clients.jedis.JedisSentinelPool">
+		<constructor-arg index="0" value="mymaster" />
+		<constructor-arg index="1">
+			<set>
+				<value>hostofsentinel:26379</value>
+			</set>
+		</constructor-arg>
+		<constructor-arg index="2" ref="jedisPoolConfig" />
+	</bean> -->
+	
+	<bean id="redisCacheHandler" class="com.cnfantasia.server.api.cache.handler.RedisCacheHandler" init-method="initAllData"
+		destroy-method="clearCache">
+		<constructor-arg name="pool" ref="jedisPool" />
+		<constructor-arg name="reloadList" >
+			<list>
+				<ref bean="operationServiceAreaReload"/>
+				<ref bean="communitySupplyTypeDataReload"/>
+				<ref bean="microblogPushTypeDataReload"/>
+				<!-- <ref bean="addressCountryReload"/>
+				<ref bean="addressProvinceReload"/>
+				<ref bean="addressCityReload"/>
+				<ref bean="addressBlockReload"/> -->
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 服务范围 -->
+	<bean id="operationServiceAreaReload" class="com.cnfantasia.server.api.cache.handler.OperationServiceAreaReload">
+		<property name="addressOperationDao" ref="addressOperationDao"/>
+	</bean>
+	<!-- 普通商家类别数据 -->
+	<bean id="communitySupplyTypeDataReload" class="com.cnfantasia.server.api.cache.communitySupplyType.CommunitySupplyTypeDataReload">
+		<property name="communitySupplyTypeBaseDao" ref="communitySupplyTypeBaseDao"/>
+	</bean>
+	<!-- 街坊消息推送类别数据 -->
+	<bean id="microblogPushTypeDataReload" class="com.cnfantasia.server.api.cache.microblogPushType.MicroblogPushTypeDataReload">
+		<property name="microblogPushTypeBaseDao" ref="microblogPushTypeBaseDao"/>
+	</bean>
+	<!-- 国家 -->
+	<bean id="addressCountryReload" class="com.cnfantasia.server.api.cache.address.AddressCountryReload">
+		<property name="addressCountryBaseDao" ref="addressCountryBaseDao"/>
+	</bean>
+	<!-- 省 -->
+	<bean id="addressProvinceReload" class="com.cnfantasia.server.api.cache.address.AddressProvinceReload">
+		<property name="addressProvinceBaseDao" ref="addressProvinceBaseDao"/>
+	</bean>
+	<!-- 行政市 -->
+	<bean id="addressCityReload" class="com.cnfantasia.server.api.cache.address.AddressCityReload">
+		<property name="addressCityBaseDao" ref="addressCityBaseDao"/>
+	</bean>
+	<!-- 行政区 -->
+	<bean id="addressBlockReload" class="com.cnfantasia.server.api.cache.address.AddressBlockReload">
+		<property name="addressBlockBaseDao" ref="addressBlockBaseDao"/>
+	</bean>
+	
+</beans>  

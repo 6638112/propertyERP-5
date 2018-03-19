@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--收费报表-->
+<mapper namespace="payBillReport">
+	<resultMap type="com.cnfantasia.server.ms.payBill.entity.FeeCollectionViewEntity" id="getFeeCollectionListMap">
+		<result column="propertyCompanyId" javaType="java.math.BigInteger" property="propertyCompanyId"/>
+		<result column="propertyCompanyName" javaType="java.lang.String" property="propertyCompanyName"/>
+		<collection property="propertyManagementReportEntityList" resultMap="propertyManagementReportEntityListMap" />
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.ms.payBill.entity.PropertyManagementReportEntity" id="propertyManagementReportEntityListMap">
+		<result column="propertyManagementId" javaType="java.math.BigInteger" property="propertyManagementId"/>
+		<result column="propertyManagementName" javaType="java.lang.String" property="propertyManagementName"/>
+		<collection property="groupBuildingReportEntityList" resultMap="groupBuildingReportEntityListMap" />
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.ms.payBill.entity.GroupBuildingReportEntity" id="groupBuildingReportEntityListMap">
+		<result column="gbId" javaType="java.math.BigInteger" property="gbId"/>
+		<result column="gbName" javaType="java.lang.String" property="gbName"/>
+		<result column="succAmt" javaType="java.lang.Long" property="succAmt"/>
+		<result column="jfqPayAmt" javaType="java.lang.Long" property="jfqPayAmt"/>
+		<result column="bankPayAmt" javaType="java.lang.Long" property="bankPayAmt"/>
+		<result column="cashPayAmt" javaType="java.lang.Long" property="cashPayAmt"/>
+		<result column="needPayAmt" javaType="java.lang.Long" property="needPayAmt"/>
+		<result column="deduPirce" javaType="java.lang.Long" property="deduPirce"/>
+		<result column="isCollectArrears" javaType="java.lang.Integer" property="isCollectArrears"/>
+		<collection property="feeReportEntityList" resultMap="feeReportEntityListMap" />
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.ms.payBill.entity.PropertyFeeReportEntity" id="feeReportEntityListMap">
+		<result column="gbId" javaType="java.math.BigInteger" property="gbId"/>
+		<result column="bId" javaType="java.math.BigInteger" property="bId"/>
+		<result column="thisName" javaType="java.lang.String" property="thisName"/>
+		<result column="code" javaType="java.lang.String" property="code"/>
+		<result column="totalAmt" javaType="java.lang.Long" property="totalAmt"/>
+		<result column="unpaidAmt" javaType="java.lang.Long" property="unpaidAmt"/>
+	</resultMap>
+
+	<select id="getFeeCollectionList" parameterType="java.util.Map" resultMap="getFeeCollectionListMap">
+		SELECT _totalTmp.*
+		FROM(
+			(SELECT
+				_tmp0.*,_tmp1.bId bId,IFNULL(_tmp1.feeName,_tmp2.feeName) thisName,_tmp1.totalPrice totalAmt,_tmp2.lastPrice unpaidAmt, 'wuye' code
+			FROM
+			(
+				SELECT
+				sum(pb.f_amount) succAmt,
+				pc.f_id propertyCompanyId,
+				pc.f_name propertyCompanyName,
+				gb.f_id gbId,
+				pm.f_id propertyManagementId,
+				pm.f_name propertyManagementName,
+				gb.f_name gbName,
+				IFNULL(gbbc.f_is_collect_arrears,1) isCollectArrears,
+				SUM(
+					CASE
+						WHEN ((pb.f_payment_way = 1 OR (pb.f_payment_way = 2 AND pb.f_finance_status != 1) OR pb.f_payment_way = 3 OR pb.f_payment_way = 4) AND pb.f_is_pay = 1) THEN pb.f_amount/*包含全部抵扣*/
+						WHEN (pb.f_payment_way = 2 AND pb.f_is_pay = 1 AND pb.f_finance_status = 1) THEN pb.f_dedu_price/*部分已缴后再标记手工已缴*/
+						WHEN (pb.f_payment_way = 4 AND pb.f_is_pay = 2) THEN pb.f_dedu_price/*部分抵扣*/
+					ELSE
+						0
+					END
+				) AS jfqPayAmt,
+				SUM(
+					CASE
+						WHEN pb.f_payment_way = 5 AND pb.f_is_pay = 1 THEN pb.f_amount
+					ELSE
+						0
+					END
+				) AS bankPayAmt,
+				SUM(
+					CASE
+						WHEN (pb.f_payment_way = 2 AND pb.f_is_pay = 1 AND (pb.f_finance_status != 1 OR ISNULL(pb.f_finance_status) OR pb.f_finance_status=''))/*不包含部分已缴后手工标记的*/
+						THEN pb.f_amount
+						WHEN (pb.f_payment_way = 2 AND pb.f_is_pay = 1 AND pb.f_finance_status = 1)
+						THEN pb.f_amount - pb.f_dedu_price
+					ELSE
+						0
+					END
+				) AS cashPayAmt,
+				SUM(
+					CASE
+						WHEN (pb.f_is_pay = 2 AND (pb.f_finance_status != 1 OR ISNULL(pb.f_finance_status) OR pb.f_finance_status='')) THEN pb.f_amount/*不包含部分已缴的*/
+						WHEN (pb.f_is_pay = 2 AND pb.f_finance_status = 1) THEN (pb.f_amount - pb.f_dedu_price)/*部分已缴的取未抵扣金额*/
+					ELSE
+						0
+					END
+				) AS needPayAmt,
+				(
+					CASE
+						WHEN (pb.f_is_pay = 2 AND pb.f_finance_status = 1) THEN (pb.f_dedu_price)
+					ELSE
+						0
+					END
+				) AS deduPirce/*物业宝抵扣金额--部分抵扣的*/
+				FROM
+		 			t_pay_bill pb
+				INNER JOIN t_real_room rr ON rr.f_id = pb.t_real_room_f_id
+				INNER JOIN t_building b ON b.f_id = rr.t_building_f_id AND b.f_check_status IN (1, 9)
+				INNER JOIN t_group_building GB ON b.t_group_building_f_id = GB.f_id AND GB.f_sys0_del_state = 0
+				INNER JOIN t_property_management pm ON pm.f_id = GB.t_property_management_f_id AND pm.f_sys0_del_state = 0
+				INNER JOIN t_property_company pc ON pc.f_id = pm.t_property_company_f_id
+				LEFT JOIN t_group_building_bill_cycle gbbc ON gbbc.f_id = pb.t_bill_cycle_id AND gbbc.f_sys0_del_state = 0
+				WHERE 1 = 1  AND pb.f_sys0_del_state = 0
+				<if test="billMonth != null and billMonth != '' ">
+					AND left(pb.f_bill_month_start, 7) = '${billMonth}'
+				</if>
+				<if test="propertyManagementId != null and propertyManagementId != '' ">
+					AND pm.f_id = #{propertyManagementId}
+				</if>
+				<if test="buildingId != null and buildingId != '' ">
+					AND b.f_id = #{buildingId}
+				</if>
+				GROUP BY
+					GB.f_id
+			) _tmp0
+			INNER JOIN (/*查询小区下的所有费用名称*/
+				SELECT DISTINCT pfd.f_name feeName, gb.f_id gbId
+				FROM t_group_building gb
+				INNER JOIN t_building b ON b.t_group_building_f_id = gb.f_id AND b.f_check_status IN (1, 9)
+				INNER JOIN t_real_room rr ON rr.t_building_f_id = b.f_id
+				<if test="buildingId != null and buildingId != '' ">
+					AND b.f_id = #{buildingId}
+				</if>
+				INNER JOIN t_pay_bill pb ON pb.t_real_room_f_id = rr.f_id AND pb.f_sys0_del_state=0
+				INNER JOIN t_property_fee_detail pfd ON pfd.t_pay_bill_f_id = pb.f_id AND pfd.f_sys0_del_state=0
+				WHERE 1=1
+				<if test="gbId != null and gbId != '' ">
+					AND GB.f_id = #{gbId}
+				</if>
+				<include refid="permi.dataPermissionCondition"/>
+			)_tmp3 ON _tmp3.gbId = _tmp0.gbId
+			INNER JOIN
+			(
+				SELECT
+					GB.f_id gbId,
+					SUM(pfd.f_total_price*IFNULL(pfd.f_bill_month_size, 1)) totalPrice,
+					pfd.f_name feeName,b.f_id bId
+				FROM
+					t_pay_bill pb
+				INNER JOIN t_property_fee_detail pfd ON pb.f_id = pfd.t_pay_bill_f_id AND pb.f_sys0_del_state = 0 AND pfd.f_sys0_del_state = 0
+				INNER JOIN t_real_room rr ON rr.f_id = pb.t_real_room_f_id AND rr.f_check_status IN (1, 9)
+				INNER JOIN t_building b ON rr.t_building_f_id = b.f_id AND b.f_check_status IN (1, 9)
+				<if test="buildingId != null and buildingId != '' ">
+					AND b.f_id = #{buildingId}
+				</if>
+				INNER JOIN t_group_building GB ON GB.f_id = b.t_group_building_f_id
+				INNER JOIN t_property_proprietor PP ON PP.f_id = pb.f_property_proprietor_id
+				WHERE 1=1 AND pfd.f_total_price > 0
+				<if test="gbId != null and gbId != '' ">
+					AND GB.f_id = #{gbId}
+				</if>
+				<if test="billMonth != null and billMonth != '' ">
+					AND left(pb.f_bill_month_start, 7) = #{billMonth}
+				</if>
+				GROUP BY
+					GB.f_id,pfd.f_name
+			) _tmp1 ON _tmp1.gbId = _tmp3.gbId AND _tmp3.feeName = _tmp1.feeName
+		LEFT JOIN (
+			SELECT
+				gb.f_id gbId,
+				sum(
+					(	CASE WHEN pb.f_cycle_type = 2 /*选择周期特殊处理*/ THEN pfd.f_total_price*IFNULL(pfd.f_bill_month_size, 1)
+							ELSE pfd.f_total_price
+						END
+					) - IFNULL(pfd.f_allowance_price,0)
+				) lastPrice,
+				pfd.f_name feeName
+			FROM
+				t_pay_bill pb
+			INNER JOIN t_property_fee_detail_unpaid pfdu ON pb.f_id = pfdu.t_pay_bill_id AND pb.f_sys0_del_state = 0
+			INNER JOIN t_group_building_bill_cycle gbbc ON gbbc.f_id = pb.t_bill_cycle_id
+			AND gbbc.f_is_collect_arrears = 2 AND date_format(gbbc.f_bill_pay_start,'%Y-%m-%d') &lt;= date_format(NOW(),'%Y-%m-%d') AND date_format(gbbc.f_bill_pay_end,'%Y-%m-%d') &gt;= date_format(NOW(),'%Y-%m-%d')
+			<if test="billMonth != null and billMonth != '' ">
+				AND left(gbbc.f_bill_month_start, 7) = #{billMonth}
+			</if>
+			INNER JOIN t_pay_bill pb2 ON pb2.f_id = pfdu.t_unpaid_pay_bill_id AND pb2.f_sys0_del_state = 0 AND pb2.f_is_pay=2
+			INNER JOIN t_real_room rr ON rr.f_id = pb2.t_real_room_f_id AND rr.f_check_status IN (1, 9)
+			INNER JOIN t_building b ON rr.t_building_f_id = b.f_id  AND b.f_check_status IN (1, 9)
+			INNER JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id
+			INNER JOIN t_property_fee_detail pfd ON pfd.t_pay_bill_f_id = pb2.f_id AND pfd.f_sys0_del_state = 0
+			WHERE (pfd.f_total_price - IFNULL(pfd.f_allowance_price,0)) > 0 AND pfd.f_total_price >0
+			GROUP BY
+				gb.f_id,pfd.f_name
+		)_tmp2 ON _tmp3.gbId = _tmp2.gbId AND _tmp2.feeName = _tmp3.feeName)
+		UNION
+		<!-- 停车费 -->
+		(SELECT 
+			SUM(succAmt) succAmt,
+		    _tmp.propertyCompanyId propertyCompanyId,
+			_tmp.propertyCompanyName propertyCompanyName,
+			_tmp.gbId gbId,
+			_tmp.propertyManagementId propertyManagementId,
+			_tmp.propertyManagementName propertyManagementName,
+			_tmp.gbName gbName,
+            _tmp.isCollectArrears isCollectArrears, 
+			SUM(_tmp.jfqPayAmt) jfqPayAmt,
+	        _tmp.bankPayAmt bankPayAmt, 
+	        SUM(_tmp.cashPayAmt) cashPayAmt,
+	        _tmp.needPayAmt needPayAmt, 
+	        0 deduPirce, 
+	        _tmp.bId bId,
+	        _tmp.thisName thisName,
+	        SUM(_tmp.totalAmt) totalAmt,
+	        _tmp.unpaidAmt, 
+	        'car' code
+		FROM (
+			SELECT
+				TCNPL.f_fee succAmt,
+			    TPC.f_id propertyCompanyId,
+				TPC.f_name propertyCompanyName,
+				GB.f_id gbId,
+				TPM.f_id propertyManagementId,
+				TPM.f_name propertyManagementName,
+				GB.f_name gbName,
+	            1 isCollectArrears, 
+				IF(TCNPL.f_status!=1, TCNPL.f_fee, 0) jfqPayAmt,
+		        0 bankPayAmt, 
+		        IF(TCNPL.f_status=1, TCNPL.f_fee, 0) cashPayAmt,
+		        0 needPayAmt, 
+		        TB.f_id bId,
+		        '停车费（车禁）' thisName,
+		        TCNPL.f_fee totalAmt,
+		        0 unpaidAmt	
+			FROM t_car_num_pay_log TCNPL 
+				INNER JOIN t_car_num_list TCNL ON TCNPL.t_car_num_id = TCNL.f_id			
+				INNER JOIN t_group_building GB ON GB.f_id = IF(TCNPL.t_group_building_f_id IS NOT NULL, TCNPL.t_group_building_f_id, TCNL.t_group_building_f_id)	
+				<include refid="permi.dataPermissionCondition"/>		
+				LEFT JOIN t_property_management TPM ON TPM.f_id = GB.t_property_management_f_id
+			    AND TPM.f_sys0_del_state = 0
+			    LEFT JOIN t_property_company TPC ON TPC.f_id = TPM.t_property_company_f_id			
+				LEFT JOIN t_ebuy_order TEO ON TEO.f_id = TCNPL.t_ebuy_order_id
+				LEFT JOIN t_ebuy_order_ext EOE ON EOE.t_ebuy_order_f_id=TEO.f_id AND EOE.f_sys0_del_state = 0
+				LEFT JOIN t_room_has_car_num TRHCN ON TRHCN.t_user_id = TEO.f_buyer_id AND TCNL.f_id=TRHCN.t_car_num_list_f_id AND TRHCN.f_sys0_del_state=0
+				LEFT JOIN t_real_room TRR on TRR.f_id=TCNL.f_real_room_id AND TRR.f_sys0_del_state = 0 AND TRR.t_building_f_id !=- 1
+				LEFT JOIN t_building TB ON TB.f_id = TRR.t_building_f_id AND TB.f_sys0_del_state = 0
+				LEFT JOIN t_group_building GB2 ON GB2.f_id=TB.t_group_building_f_id
+			WHERE 1=1  
+				<if test="billMonth != null and billMonth != '' ">
+				AND LEFT (TCNPL.f_pay_time, 7) = #{billMonth}
+				</if>
+				<if test="gbId != null and gbId != '' ">
+					AND GB.f_id = #{gbId}
+				</if>				
+				<if test="propertyManagementId != null and propertyManagementId != '' ">
+					AND TPM.f_id = #{propertyManagementId}
+				</if>
+				<if test="buildingId != null and buildingId != '' ">
+					AND TB.f_id = #{buildingId}
+				</if>
+				AND TCNPL.f_sys0_del_state=0 AND TCNPL.f_pay_time IS NOT NULL 
+				AND TCNPL.f_status!=2
+			GROUP BY
+				TCNPL.f_status,
+				TCNPL.t_car_num_id,
+				TCNPL.f_pay_time
+		   	UNION ALL		  
+		   	SELECT
+			    RSA.f_amount*100 succAmt,
+			    PC.f_id propertyCompanyId,
+			 	PC.f_name propertyCompanyName,
+				GB.f_id gbId,
+				PM.f_id propertyManagementId,
+				PM.f_name propertyManagementName,
+				GB.f_name gbName,
+		        1 isCollectArrears, 
+				RSA.f_amount*100 jfqPayAmt,
+		        0 bankPayAmt, 
+		        0 cashPayAmt,
+		        0 needPayAmt, 
+		        B.f_id bId,
+		        '停车费（车禁）' thisName,
+		        RSA.f_amount*100 totalAmt,
+		        0 unpaidAmt	
+		   	FROM t_revenue_signal_amount RSA  
+				INNER JOIN t_finance_buy fb ON fb.f_order_no = RSA.f_order_no
+				INNER JOIN t_finance_req fr ON fb.t_finance_req_id = fr.f_id
+				LEFT JOIN t_car_num_list CNL ON CNL.t_car_num=fb.f_car_num
+				INNER JOIN t_group_building GB ON GB.f_id = CNL.t_group_building_f_id		
+				<include refid="permi.dataPermissionCondition"/>	
+				LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id
+			    AND PM.f_sys0_del_state = 0
+			    LEFT JOIN t_property_company PC ON PC.f_id = PM.t_property_company_f_id
+				LEFT JOIN t_real_room RR on RR.f_id=CNL.f_real_room_id AND RR.f_sys0_del_state = 0 AND RR.t_building_f_id !=- 1
+				LEFT JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0			
+	   		WHERE RSA.f_sys0_del_state = 0 AND RSA.f_goal_type = 10
+		   		<if test="billMonth != null and billMonth != '' ">
+				AND LEFT (RSA.f_goal_rev_time, 7) = #{billMonth}
+				</if>
+				<if test="gbId != null and gbId != '' ">
+					AND GB.f_id = #{gbId}
+				</if>				
+				<if test="propertyManagementId != null and propertyManagementId != '' ">
+					AND PM.f_id = #{propertyManagementId}
+				</if>
+				<if test="buildingId != null and buildingId != '' ">
+					AND B.f_id = #{buildingId}
+				</if>
+	   	) _tmp
+		GROUP BY gbId)
+		) _totalTmp
+		ORDER BY _totalTmp.gbId
+	</select>
+
+	<select id="getFeeReportEntityList" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.payBill.entity.PropertyFeeReportEntity">
+		SELECT A.*, C.totalPrice AS unpaidAmt FROM t_building b
+		INNER JOIN
+		(
+			SELECT b.f_id bId, pfd.f_name thisName, SUM(pfd.f_total_price) totalAmt, GB.f_id gbId FROM t_building b
+			INNER JOIN t_real_room rr ON rr.t_building_f_id = b.f_id
+			INNER JOIN t_pay_bill pb ON pb.t_real_room_f_id = rr.f_id
+			INNER JOIN t_group_building_bill_cycle gbbc ON gbbc.f_id = pb.t_bill_cycle_id
+			INNER JOIN t_property_fee_detail pfd ON pfd.t_pay_bill_f_id = pb.f_id
+			INNER JOIN t_group_building GB ON GB.f_id = b.t_group_building_f_id
+			INNER JOIN t_property_management pm ON pm.f_id = GB.t_property_management_f_id AND pm.f_sys0_del_state = 0
+			INNER JOIN t_property_company pc ON pc.f_id = pm.t_property_company_f_id AND b.f_sys0_del_state = 0
+			WHERE 1=1 AND b.f_sys0_del_state = 0 AND b.f_check_status in(1,9)
+			<if test="billMonth != null and billMonth != '' ">
+				AND left(gbbc.f_bill_month_start, 7) = ${billMonth}
+			</if>
+			<if test="propertyManagementId != null and propertyManagementId != '' ">
+				AND pm.f_id = #{propertyManagementId}
+			</if>
+			<if test="gbId != null and gbId != '' ">
+				AND GB.f_id = #{gbId}
+			</if>
+			<if test="buildingId != null and buildingId != '' ">
+				AND b.f_id = #{buildingId}
+			</if>
+			<include refid="permi.dataPermissionCondition"/>
+			GROUP BY b.f_id,pfd.f_name
+		)AS A ON b.f_id = A.bId
+		LEFT JOIN
+		(
+			SELECT B.* FROM (
+				SELECT  b.f_id bId, pfd.f_name lastName, SUM(pfd.f_total_price) totalPrice FROM t_building b
+				INNER JOIN t_real_room rr ON rr.t_building_f_id = b.f_id
+				INNER JOIN t_pay_bill pb ON pb.t_real_room_f_id = rr.f_id
+				INNER JOIN t_group_building_bill_cycle gbbc ON gbbc.f_id = pb.t_bill_cycle_id
+				INNER JOIN t_property_fee_detail_unpaid pfdu ON pfdu.t_pay_bill_id = pb.f_id
+				INNER JOIN t_property_fee_detail pfd ON pfd.t_pay_bill_f_id = pfdu.t_unpaid_pay_bill_id
+				INNER JOIN t_group_building GB ON GB.f_id = b.t_group_building_f_id
+				INNER JOIN t_property_management pm ON pm.f_id = GB.t_property_management_f_id AND pm.f_sys0_del_state = 0
+				INNER JOIN t_property_company pc ON pc.f_id = pm.t_property_company_f_id AND b.f_sys0_del_state = 0
+				WHERE 1=1 AND b.f_sys0_del_state = 0 AND b.f_check_status in(1,9)
+				<if test="billMonth != null and billMonth != '' ">
+					AND left(gbbc.f_bill_month_start, 7) = ${billMonth}
+				</if>
+				<if test="propertyManagementId != null and propertyManagementId != '' ">
+					AND pm.f_id = #{propertyManagementId}
+				</if>
+				<if test="gbId != null and gbId != '' ">
+					AND GB.f_id = #{gbId}
+				</if>
+				<if test="buildingId != null and buildingId != '' ">
+					AND b.f_id = #{buildingId}
+				</if>
+				<include refid="permi.dataPermissionCondition"/>
+				GROUP BY b.f_id,pfd.f_name
+			)AS B
+		) AS C ON A.bId = C.bId AND A.thisName = C.lastName
+	</select>
+
+	<select id="getGroupBuildingList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT f_id id, f_name name FROM t_group_building GB
+		WHERE 1=1 AND GB.f_check_status IN (1, 9) AND GB.f_sign_status = 1 AND GB.f_sys0_del_state=0
+		<if test="pmId != null and pmId != '' ">
+			AND GB.t_property_management_f_id = #{pmId}
+		</if>
+		<include refid="permi.dataPermissionCondition"/>
+	</select>
+	<select id="getPmList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT pm.f_id id, pm.f_name name FROM t_property_management pm
+		INNER JOIN t_group_building GB ON GB.t_property_management_f_id = pm.f_id AND GB.f_check_status IN (1, 9)
+		WHERE 1=1 AND GB.f_sign_status = 1 AND  pm.f_sys0_del_state = 0 AND GB.f_sys0_del_state = 0
+		<if test="name != null and name != '' ">
+			AND pm.f_name = #{name}
+		</if>
+		<include refid="permi.dataPermissionCondition"/>
+	</select>
+	<select id="getBuildingList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT B.f_id id , B.f_name name FROM t_building B
+		INNER JOIN t_group_building GB ON  GB.f_id = B.t_group_building_f_id AND B.f_check_status IN (1, 9)
+		WHERE 1=1 AND GB.f_sign_status = 1 AND GB.f_check_status IN (1, 9) AND GB.f_sys0_del_state = 0 AND  B.f_sys0_del_state = 0
+		<if test="gbId != null and gbId != '' ">
+			AND GB.f_id = #{gbId}
+		</if>
+		<include refid="permi.dataPermissionCondition"/>
+	</select>
+</mapper>

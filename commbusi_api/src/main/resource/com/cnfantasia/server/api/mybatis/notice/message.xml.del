@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 物业公告模块 -->
+<mapper namespace="message">
+	<!-- 根据消息Id查询所属小区 -->
+	<select id="select_groupBuilding_by_msgId" resultMap="messageGroupBase.messageGroupBaseMap_AppendTable" parameterType="java.math.BigInteger">
+		SELECT <include refid="messageGroupBase.queryHead_AppendTable"/>
+		FROM t_message_group MG
+    	WHERE 1=1 
+    	AND MG.f_sys0_del_state = 0
+    	AND MG.t_message_f_id = #{_parameter}
+	</select>
+</mapper>

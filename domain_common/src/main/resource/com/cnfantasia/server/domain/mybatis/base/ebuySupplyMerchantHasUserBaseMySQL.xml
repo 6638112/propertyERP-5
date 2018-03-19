@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户供应商关系表 t_ebuy_supply_merchant_has_user -->
+<mapper namespace="ebuySupplyMerchantHasUserBase">
+	<resultMap type="EbuySupplyMerchantHasUser" id="ebuySupplyMerchantHasUserBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_merchant_id" javaType="java.lang.String" property="tMerchantId"/>  <!-- 供应商ID -->        <result column="t_user_id" javaType="java.lang.String" property="tUserId"/>  <!-- 用户ID -->        <result column="f_is_first_login" javaType="java.lang.Integer" property="isFirstLogin"/>  <!-- 是否首次登录 -->        <result column="f_update_tm" javaType="java.lang.String" property="updateTm"/>  <!--  -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuySupplyMerchantHasUser" id="ebuySupplyMerchantHasUserExtendMap" extends="ebuySupplyMerchantHasUserBaseMap">
+	</resultMap>
+	<resultMap type="EbuySupplyMerchantHasUser" id="ebuySupplyMerchantHasUserBaseMap_AppendTable">
+        <id column="ESMHUid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ESMHUtMerchantId" javaType="java.lang.String" property="tMerchantId"/>  <!-- 供应商ID -->        <result column="ESMHUtUserId" javaType="java.lang.String" property="tUserId"/>  <!-- 用户ID -->        <result column="ESMHUisFirstLogin" javaType="java.lang.Integer" property="isFirstLogin"/>  <!-- 是否首次登录 -->        <result column="ESMHUupdateTm" javaType="java.lang.String" property="updateTm"/>  <!--  -->        <result column="ESMHUsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuySupplyMerchantHasUser" id="ebuySupplyMerchantHasUserBaseMap_AppendTable1">
+        <id column="ESMHU1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ESMHU1tMerchantId" javaType="java.lang.String" property="tMerchantId"/>  <!-- 供应商ID -->        <result column="ESMHU1tUserId" javaType="java.lang.String" property="tUserId"/>  <!-- 用户ID -->        <result column="ESMHU1isFirstLogin" javaType="java.lang.Integer" property="isFirstLogin"/>  <!-- 是否首次登录 -->        <result column="ESMHU1updateTm" javaType="java.lang.String" property="updateTm"/>  <!--  -->        <result column="ESMHU1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		ESMHU.f_id,ESMHU.t_merchant_id,ESMHU.t_user_id,ESMHU.f_is_first_login,date_format(ESMHU.f_update_tm,'%Y-%m-%d %T') as f_update_tm
+	</sql>
+	<sql id="queryHead_AppendTable">
+		ESMHU.f_id as ESMHUid,ESMHU.t_merchant_id as ESMHUtMerchantId,ESMHU.t_user_id as ESMHUtUserId,ESMHU.f_is_first_login as ESMHUisFirstLogin,date_format(ESMHU.f_update_tm,'%Y-%m-%d %T') as ESMHUupdateTm
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		ESMHU1.f_id as ESMHU1id,ESMHU1.t_merchant_id as ESMHU1tMerchantId,ESMHU1.t_user_id as ESMHU1tUserId,ESMHU1.f_is_first_login as ESMHU1isFirstLogin,date_format(ESMHU1.f_update_tm,'%Y-%m-%d %T') as ESMHU1updateTm
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (ESMHU.f_id = #{id} ) </if>        <if test="tMerchantId != null">  and (ESMHU.t_merchant_id = #{tMerchantId} ) </if>        <if test="tUserId != null">  and (ESMHU.t_user_id = #{tUserId} ) </if>        <if test="isFirstLogin != null">  and (ESMHU.f_is_first_login = #{isFirstLogin} ) </if>        <if test="updateTm != null and !updateTm.equals('')  ">  and (ESMHU.f_update_tm = str_to_date(#{updateTm},'%Y-%m-%d %T') ) </if>        <if test="updateTm_START != null and !updateTm_START.equals('')  ">              <![CDATA[ and (ESMHU.f_update_tm >= str_to_date(#{updateTm_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="updateTm_END != null and !updateTm_END.equals('')  ">            <![CDATA[ and (ESMHU.f_update_tm <= str_to_date(#{updateTm_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelState != null">  and (ESMHU.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (ESMHU.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (ESMHU.f_id = #{id} ) </if>        <if test="tMerchantId != null and !tMerchantId.equals('')  ">  and (ESMHU.t_merchant_id like CONCAT('%',#{tMerchantId},'%') ) </if>        <if test="tUserId != null and !tUserId.equals('')  ">  and (ESMHU.t_user_id like CONCAT('%',#{tUserId},'%') ) </if>        <if test="isFirstLogin != null and !isFirstLogin.equals('')  ">  and (ESMHU.f_is_first_login = #{isFirstLogin} ) </if>        <if test="updateTm != null and !updateTm.equals('')  ">  and (ESMHU.f_update_tm = str_to_date(#{updateTm},'%Y-%m-%d %T') ) </if>        <if test="updateTm_START != null and !updateTm_START.equals('')  ">              <![CDATA[ and (ESMHU.f_update_tm >= str_to_date(#{updateTm_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="updateTm_END != null and !updateTm_END.equals('')  ">            <![CDATA[ and (ESMHU.f_update_tm <= str_to_date(#{updateTm_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (ESMHU.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (ESMHU.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuySupplyMerchantHasUserBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuySupplyMerchantHasUserBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuySupplyMerchantHasUserBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuySupplyMerchantHasUserBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_supply_merchant_has_user ESMHU    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(用户供应商关系表)信息。 -->
+	<sql id="select_ebuySupplyMerchantHasUser">
+		SELECT <include refid="ebuySupplyMerchantHasUserBase.queryHead"/>
+		<include refid="ebuySupplyMerchantHasUserBase.busiQueryCondition"/>
+		<include refid="ebuySupplyMerchantHasUserBase.dimCheckSql"/>
+		ORDER BY ESMHU.f_id DESC
+	</sql>
+	<select id="select_ebuySupplyMerchantHasUser" parameterType="java.util.Map" resultMap="ebuySupplyMerchantHasUserBase.ebuySupplyMerchantHasUserExtendMap">
+		<include refid="ebuySupplyMerchantHasUserBase.select_ebuySupplyMerchantHasUser"/>
+	</select>
+	
+	<!-- 根据条件分页查询(用户供应商关系表)信息  -->
+	<sql id="select_ebuySupplyMerchantHasUser_withPage">
+		SELECT <include refid="ebuySupplyMerchantHasUserBase.queryHead"/>
+		<include refid="ebuySupplyMerchantHasUserBase.busiQueryCondition"/>
+		<include refid="ebuySupplyMerchantHasUserBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuySupplyMerchantHasUser_withPage" resultMap="ebuySupplyMerchantHasUserBase.ebuySupplyMerchantHasUserExtendMap" parameterType="java.util.Map">
+		<include refid="ebuySupplyMerchantHasUserBase.select_ebuySupplyMerchantHasUser_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(用户供应商关系表)信息。 -->
+	<sql id="select_ebuySupplyMerchantHasUser_bySeqId">
+		SELECT <include refid="ebuySupplyMerchantHasUserBase.queryHead"/>
+		<include refid="ebuySupplyMerchantHasUserBase.busiQueryCondition"/>
+		 and ESMHU.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuySupplyMerchantHasUser_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuySupplyMerchantHasUserBase.ebuySupplyMerchantHasUserBaseMap">
+		<include refid="ebuySupplyMerchantHasUserBase.select_ebuySupplyMerchantHasUser_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(用户供应商关系表)记录数  -->
+	<sql id="select_ebuySupplyMerchantHasUser_count">
+		SELECT COUNT(*)
+		<include refid="ebuySupplyMerchantHasUserBase.busiQueryCount"/>
+		<include refid="ebuySupplyMerchantHasUserBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuySupplyMerchantHasUser_count" resultType="java.lang.Integer">
+		<include refid="ebuySupplyMerchantHasUserBase.select_ebuySupplyMerchantHasUser_count"/>
+	</select>
+	
+	 <!-- 往(用户供应商关系表)新增一条记录。 -->
+	 <sql id="insert_ebuySupplyMerchantHasUser">
+		INSERT INTO t_ebuy_supply_merchant_has_user 
+		(f_id,t_merchant_id,t_user_id,f_is_first_login,f_update_tm,f_sys0_del_state) VALUES 
+		(#{id},#{tMerchantId,jdbcType=VARCHAR},#{tUserId,jdbcType=VARCHAR},#{isFirstLogin},str_to_date(#{updateTm,jdbcType=DATE},'%Y-%m-%d %T'),0)
+	 </sql>
+    <insert id="insert_ebuySupplyMerchantHasUser" parameterType="EbuySupplyMerchantHasUser">
+		<include refid="ebuySupplyMerchantHasUserBase.insert_ebuySupplyMerchantHasUser"/>
+    </insert>
+    
+	<!-- 批量新增(用户供应商关系表)信息 -->
+    <insert id="insert_ebuySupplyMerchantHasUser_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_supply_merchant_has_user 
+		(f_id,t_merchant_id,t_user_id,f_is_first_login,f_update_tm,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tMerchantId,jdbcType=VARCHAR},#{item.tUserId,jdbcType=VARCHAR},#{item.isFirstLogin},str_to_date(#{item.updateTm,jdbcType=DATE},'%Y-%m-%d %T'),0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(用户供应商关系表)信息。 -->
+    <sql id="update_ebuySupplyMerchantHasUser">
+		UPDATE t_ebuy_supply_merchant_has_user		<trim prefix="SET" prefixOverrides=","> 		<if test="tMerchantId != null and !tMerchantId.equals('') "> ,t_merchant_id=#{tMerchantId}</if> 		<if test="tUserId != null and !tUserId.equals('') "> ,t_user_id=#{tUserId}</if> 		<if test="isFirstLogin != null and !isFirstLogin.equals('') "> ,f_is_first_login=#{isFirstLogin}</if> 		<if test="updateTm != null and !updateTm.equals('') "> ,f_update_tm=str_to_date(#{updateTm},'%Y-%m-%d %T')</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuySupplyMerchantHasUser" parameterType="EbuySupplyMerchantHasUser">
+		<include refid="ebuySupplyMerchantHasUserBase.update_ebuySupplyMerchantHasUser"/>
+    </update>
+    
+    <!-- 批量更新(用户供应商关系表)信息。 -->
+    <update id="update_ebuySupplyMerchantHasUser_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_supply_merchant_has_user		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tMerchantId != null and !item.tMerchantId.equals('')  "> ,t_merchant_id=#{item.tMerchantId}</if> 		<if test="item.tUserId != null and !item.tUserId.equals('')  "> ,t_user_id=#{item.tUserId}</if> 		<if test="item.isFirstLogin != null and !item.isFirstLogin.equals('')  "> ,f_is_first_login=#{item.isFirstLogin}</if> 		<if test="item.updateTm != null and !item.updateTm.equals('')  "> ,f_update_tm=str_to_date(#{item.updateTm},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(用户供应商关系表)信息_逻辑删除。 -->
+    <sql id="delete_ebuySupplyMerchantHasUser_Logic">
+		UPDATE t_ebuy_supply_merchant_has_user		<trim prefix="SET" prefixOverrides=","> 		<if test="tMerchantId != null and !tMerchantId.equals('')  "> ,t_merchant_id=#{tMerchantId}</if> 		<if test="tUserId != null and !tUserId.equals('')  "> ,t_user_id=#{tUserId}</if> 		<if test="isFirstLogin != null and !isFirstLogin.equals('')  "> ,f_is_first_login=#{isFirstLogin}</if> 		<if test="updateTm != null and !updateTm.equals('')  "> ,f_update_tm=str_to_date(#{updateTm},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuySupplyMerchantHasUser_Logic" parameterType="EbuySupplyMerchantHasUser">
+		<include refid="ebuySupplyMerchantHasUserBase.delete_ebuySupplyMerchantHasUser_Logic"/>
+    </update>
+    
+    <!-- 批量删除(用户供应商关系表)信息_逻辑删除 -->
+    <update id="delete_ebuySupplyMerchantHasUser_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_supply_merchant_has_user		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tMerchantId != null and !item.tMerchantId.equals('')  "> ,t_merchant_id=#{item.tMerchantId}</if> 		<if test="item.tUserId != null and !item.tUserId.equals('')  "> ,t_user_id=#{item.tUserId}</if> 		<if test="item.isFirstLogin != null and !item.isFirstLogin.equals('')  "> ,f_is_first_login=#{item.isFirstLogin}</if> 		<if test="item.updateTm != null and !item.updateTm.equals('')  "> ,f_update_tm=str_to_date(#{item.updateTm},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(用户供应商关系表)信息。 -->
+    <sql id="delete_ebuySupplyMerchantHasUser">
+		DELETE FROM t_ebuy_supply_merchant_has_user WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuySupplyMerchantHasUser" parameterType="java.lang.String">
+		<include refid="ebuySupplyMerchantHasUserBase.delete_ebuySupplyMerchantHasUser"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(用户供应商关系表)信息。 -->
+    <delete id="delete_ebuySupplyMerchantHasUser_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_supply_merchant_has_user WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

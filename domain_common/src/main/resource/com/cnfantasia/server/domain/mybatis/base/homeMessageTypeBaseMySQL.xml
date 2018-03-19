@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:首页消息类型表 t_home_message_type -->
+<mapper namespace="homeMessageTypeBase">
+	<resultMap type="HomeMessageType" id="homeMessageTypeBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="f_code" javaType="java.lang.String" property="code"/>  <!-- code -->        <result column="f_icon_url" javaType="java.lang.String" property="iconUrl"/>  <!-- 图标地址 -->        <result column="f_order" javaType="java.lang.Long" property="order"/>  <!-- 优先级，越大级别越高 -->        <result column="f_is_relate_room" javaType="java.lang.Integer" property="isRelateRoom"/>  <!-- 是否与门牌有关，0不是，1是 -->        <result column="f_start_version" javaType="java.lang.Long" property="startVersion"/>  <!-- 开始版本 -->        <result column="f_end_version" javaType="java.lang.Long" property="endVersion"/>  <!-- 结束版本 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="HomeMessageType" id="homeMessageTypeExtendMap" extends="homeMessageTypeBaseMap">
+	</resultMap>
+	<resultMap type="HomeMessageType" id="homeMessageTypeBaseMap_AppendTable">
+        <id column="HMTid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="HMTname" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="HMTcode" javaType="java.lang.String" property="code"/>  <!-- code -->        <result column="HMTiconUrl" javaType="java.lang.String" property="iconUrl"/>  <!-- 图标地址 -->        <result column="HMTorder" javaType="java.lang.Long" property="order"/>  <!-- 优先级，越大级别越高 -->        <result column="HMTisRelateRoom" javaType="java.lang.Integer" property="isRelateRoom"/>  <!-- 是否与门牌有关，0不是，1是 -->        <result column="HMTstartVersion" javaType="java.lang.Long" property="startVersion"/>  <!-- 开始版本 -->        <result column="HMTendVersion" javaType="java.lang.Long" property="endVersion"/>  <!-- 结束版本 -->        <result column="HMTsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="HMTsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="HMTsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="HMTsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="HMTsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="HMTsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="HMTsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="HomeMessageType" id="homeMessageTypeBaseMap_AppendTable1">
+        <id column="HMT1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="HMT1name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="HMT1code" javaType="java.lang.String" property="code"/>  <!-- code -->        <result column="HMT1iconUrl" javaType="java.lang.String" property="iconUrl"/>  <!-- 图标地址 -->        <result column="HMT1order" javaType="java.lang.Long" property="order"/>  <!-- 优先级，越大级别越高 -->        <result column="HMT1isRelateRoom" javaType="java.lang.Integer" property="isRelateRoom"/>  <!-- 是否与门牌有关，0不是，1是 -->        <result column="HMT1startVersion" javaType="java.lang.Long" property="startVersion"/>  <!-- 开始版本 -->        <result column="HMT1endVersion" javaType="java.lang.Long" property="endVersion"/>  <!-- 结束版本 -->        <result column="HMT1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="HMT1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="HMT1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="HMT1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="HMT1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="HMT1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="HMT1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		HMT.f_id,HMT.f_name,HMT.f_code,HMT.f_icon_url,HMT.f_order,HMT.f_is_relate_room,HMT.f_start_version,HMT.f_end_version
+	</sql>
+	<sql id="queryHead_AppendTable">
+		HMT.f_id as HMTid,HMT.f_name as HMTname,HMT.f_code as HMTcode,HMT.f_icon_url as HMTiconUrl,HMT.f_order as HMTorder,HMT.f_is_relate_room as HMTisRelateRoom,HMT.f_start_version as HMTstartVersion,HMT.f_end_version as HMTendVersion
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		HMT1.f_id as HMT1id,HMT1.f_name as HMT1name,HMT1.f_code as HMT1code,HMT1.f_icon_url as HMT1iconUrl,HMT1.f_order as HMT1order,HMT1.f_is_relate_room as HMT1isRelateRoom,HMT1.f_start_version as HMT1startVersion,HMT1.f_end_version as HMT1endVersion
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (HMT.f_id = #{id} ) </if>        <if test="name != null">  and (HMT.f_name = #{name} ) </if>        <if test="code != null">  and (HMT.f_code = #{code} ) </if>        <if test="iconUrl != null">  and (HMT.f_icon_url = #{iconUrl} ) </if>        <if test="order != null">  and (HMT.f_order = #{order} ) </if>        <if test="isRelateRoom != null">  and (HMT.f_is_relate_room = #{isRelateRoom} ) </if>        <if test="startVersion != null">  and (HMT.f_start_version = #{startVersion} ) </if>        <if test="endVersion != null">  and (HMT.f_end_version = #{endVersion} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (HMT.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (HMT.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (HMT.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (HMT.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (HMT.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (HMT.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (HMT.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (HMT.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (HMT.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (HMT.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (HMT.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (HMT.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (HMT.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (HMT.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (HMT.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (HMT.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="code != null and !code.equals('')  ">  and (HMT.f_code like CONCAT('%',#{code},'%') ) </if>        <if test="iconUrl != null and !iconUrl.equals('')  ">  and (HMT.f_icon_url like CONCAT('%',#{iconUrl},'%') ) </if>        <if test="order != null and !order.equals('')  ">  and (HMT.f_order = #{order} ) </if>        <if test="isRelateRoom != null and !isRelateRoom.equals('')  ">  and (HMT.f_is_relate_room = #{isRelateRoom} ) </if>        <if test="startVersion != null and !startVersion.equals('')  ">  and (HMT.f_start_version = #{startVersion} ) </if>        <if test="endVersion != null and !endVersion.equals('')  ">  and (HMT.f_end_version = #{endVersion} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (HMT.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (HMT.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (HMT.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (HMT.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (HMT.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (HMT.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (HMT.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (HMT.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (HMT.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (HMT.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (HMT.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (HMT.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (HMT.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (HMT.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="homeMessageTypeBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="homeMessageTypeBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="homeMessageTypeBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="homeMessageTypeBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_home_message_type HMT    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(首页消息类型表)信息。 -->
+	<sql id="select_homeMessageType">
+		SELECT <include refid="homeMessageTypeBase.queryHead"/>
+		<include refid="homeMessageTypeBase.busiQueryCondition"/>
+		<include refid="homeMessageTypeBase.dimCheckSql"/>
+		ORDER BY HMT.f_id DESC
+	</sql>
+	<select id="select_homeMessageType" parameterType="java.util.Map" resultMap="homeMessageTypeBase.homeMessageTypeExtendMap">
+		<include refid="homeMessageTypeBase.select_homeMessageType"/>
+	</select>
+	
+	<!-- 根据条件分页查询(首页消息类型表)信息  -->
+	<sql id="select_homeMessageType_withPage">
+		SELECT <include refid="homeMessageTypeBase.queryHead"/>
+		<include refid="homeMessageTypeBase.busiQueryCondition"/>
+		<include refid="homeMessageTypeBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_homeMessageType_withPage" resultMap="homeMessageTypeBase.homeMessageTypeExtendMap" parameterType="java.util.Map">
+		<include refid="homeMessageTypeBase.select_homeMessageType_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(首页消息类型表)信息。 -->
+	<sql id="select_homeMessageType_bySeqId">
+		SELECT <include refid="homeMessageTypeBase.queryHead"/>
+		<include refid="homeMessageTypeBase.busiQueryCondition"/>
+		 and HMT.f_id = #{_parameter}
+	</sql>
+	<select id="select_homeMessageType_bySeqId" parameterType="java.math.BigInteger" resultMap="homeMessageTypeBase.homeMessageTypeBaseMap">
+		<include refid="homeMessageTypeBase.select_homeMessageType_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(首页消息类型表)记录数  -->
+	<sql id="select_homeMessageType_count">
+		SELECT COUNT(*)
+		<include refid="homeMessageTypeBase.busiQueryCount"/>
+		<include refid="homeMessageTypeBase.dimCheckSql"/>
+	</sql>
+	<select id="select_homeMessageType_count" resultType="java.lang.Integer">
+		<include refid="homeMessageTypeBase.select_homeMessageType_count"/>
+	</select>
+	
+	 <!-- 往(首页消息类型表)新增一条记录。 -->
+	 <sql id="insert_homeMessageType">
+		INSERT INTO t_home_message_type 
+		(f_id,f_name,f_code,f_icon_url,f_order,f_is_relate_room,f_start_version,f_end_version,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},#{iconUrl,jdbcType=VARCHAR},#{order},#{isRelateRoom},#{startVersion},#{endVersion},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_homeMessageType" parameterType="HomeMessageType">
+		<include refid="homeMessageTypeBase.insert_homeMessageType"/>
+    </insert>
+    
+	<!-- 批量新增(首页消息类型表)信息 -->
+    <insert id="insert_homeMessageType_Batch" parameterType="java.util.List">
+    	INSERT INTO t_home_message_type 
+		(f_id,f_name,f_code,f_icon_url,f_order,f_is_relate_room,f_start_version,f_end_version,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.code,jdbcType=VARCHAR},#{item.iconUrl,jdbcType=VARCHAR},#{item.order},#{item.isRelateRoom},#{item.startVersion},#{item.endVersion},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(首页消息类型表)信息。 -->
+    <sql id="update_homeMessageType">
+		UPDATE t_home_message_type		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="code != null and !code.equals('') "> ,f_code=#{code}</if> 		<if test="iconUrl != null and !iconUrl.equals('') "> ,f_icon_url=#{iconUrl}</if> 		<if test="order != null and !order.equals('') "> ,f_order=#{order}</if> 		<if test="isRelateRoom != null and !isRelateRoom.equals('') "> ,f_is_relate_room=#{isRelateRoom}</if> 		<if test="startVersion != null and !startVersion.equals('') "> ,f_start_version=#{startVersion}</if> 		<if test="endVersion != null and !endVersion.equals('') "> ,f_end_version=#{endVersion}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_homeMessageType" parameterType="HomeMessageType">
+		<include refid="homeMessageTypeBase.update_homeMessageType"/>
+    </update>
+    
+    <!-- 批量更新(首页消息类型表)信息。 -->
+    <update id="update_homeMessageType_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_home_message_type		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.code != null and !item.code.equals('')  "> ,f_code=#{item.code}</if> 		<if test="item.iconUrl != null and !item.iconUrl.equals('')  "> ,f_icon_url=#{item.iconUrl}</if> 		<if test="item.order != null and !item.order.equals('')  "> ,f_order=#{item.order}</if> 		<if test="item.isRelateRoom != null and !item.isRelateRoom.equals('')  "> ,f_is_relate_room=#{item.isRelateRoom}</if> 		<if test="item.startVersion != null and !item.startVersion.equals('')  "> ,f_start_version=#{item.startVersion}</if> 		<if test="item.endVersion != null and !item.endVersion.equals('')  "> ,f_end_version=#{item.endVersion}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(首页消息类型表)信息_逻辑删除。 -->
+    <sql id="delete_homeMessageType_Logic">
+		UPDATE t_home_message_type		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="code != null and !code.equals('')  "> ,f_code=#{code}</if> 		<if test="iconUrl != null and !iconUrl.equals('')  "> ,f_icon_url=#{iconUrl}</if> 		<if test="order != null and !order.equals('')  "> ,f_order=#{order}</if> 		<if test="isRelateRoom != null and !isRelateRoom.equals('')  "> ,f_is_relate_room=#{isRelateRoom}</if> 		<if test="startVersion != null and !startVersion.equals('')  "> ,f_start_version=#{startVersion}</if> 		<if test="endVersion != null and !endVersion.equals('')  "> ,f_end_version=#{endVersion}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_homeMessageType_Logic" parameterType="HomeMessageType">
+		<include refid="homeMessageTypeBase.delete_homeMessageType_Logic"/>
+    </update>
+    
+    <!-- 批量删除(首页消息类型表)信息_逻辑删除 -->
+    <update id="delete_homeMessageType_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_home_message_type		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.code != null and !item.code.equals('')  "> ,f_code=#{item.code}</if> 		<if test="item.iconUrl != null and !item.iconUrl.equals('')  "> ,f_icon_url=#{item.iconUrl}</if> 		<if test="item.order != null and !item.order.equals('')  "> ,f_order=#{item.order}</if> 		<if test="item.isRelateRoom != null and !item.isRelateRoom.equals('')  "> ,f_is_relate_room=#{item.isRelateRoom}</if> 		<if test="item.startVersion != null and !item.startVersion.equals('')  "> ,f_start_version=#{item.startVersion}</if> 		<if test="item.endVersion != null and !item.endVersion.equals('')  "> ,f_end_version=#{item.endVersion}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(首页消息类型表)信息。 -->
+    <sql id="delete_homeMessageType">
+		DELETE FROM t_home_message_type WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_homeMessageType" parameterType="java.lang.String">
+		<include refid="homeMessageTypeBase.delete_homeMessageType"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(首页消息类型表)信息。 -->
+    <delete id="delete_homeMessageType_Batch" parameterType="java.util.List">
+		DELETE FROM t_home_message_type WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:家庭财富选项 t_family_wealth_option -->
+<mapper namespace="familyWealthOptionBase">
+	<resultMap type="FamilyWealthOption" id="familyWealthOptionBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_type" javaType="java.lang.Integer" property="type"/>  <!-- 财富类别 -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 选项名称 -->        <result column="f_icon_url" javaType="java.lang.String" property="iconUrl"/>  <!-- 图标地址 -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="f_order" javaType="java.lang.Integer" property="order"/>  <!-- 顺序 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="FamilyWealthOption" id="familyWealthOptionExtendMap" extends="familyWealthOptionBaseMap">
+	</resultMap>
+	<resultMap type="FamilyWealthOption" id="familyWealthOptionBaseMap_AppendTable">
+        <id column="FWOid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="FWOtype" javaType="java.lang.Integer" property="type"/>  <!-- 财富类别 -->        <result column="FWOname" javaType="java.lang.String" property="name"/>  <!-- 选项名称 -->        <result column="FWOiconUrl" javaType="java.lang.String" property="iconUrl"/>  <!-- 图标地址 -->        <result column="FWOdesc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="FWOorder" javaType="java.lang.Integer" property="order"/>  <!-- 顺序 -->        <result column="FWOsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="FWOsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="FWOsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="FWOsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="FWOsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="FWOsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="FWOsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="FamilyWealthOption" id="familyWealthOptionBaseMap_AppendTable1">
+        <id column="FWO1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="FWO1type" javaType="java.lang.Integer" property="type"/>  <!-- 财富类别 -->        <result column="FWO1name" javaType="java.lang.String" property="name"/>  <!-- 选项名称 -->        <result column="FWO1iconUrl" javaType="java.lang.String" property="iconUrl"/>  <!-- 图标地址 -->        <result column="FWO1desc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="FWO1order" javaType="java.lang.Integer" property="order"/>  <!-- 顺序 -->        <result column="FWO1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="FWO1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="FWO1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="FWO1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="FWO1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="FWO1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="FWO1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		FWO.f_id,FWO.f_type,FWO.f_name,FWO.f_icon_url,FWO.f_desc,FWO.f_order,date_format(FWO.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		FWO.f_id as FWOid,FWO.f_type as FWOtype,FWO.f_name as FWOname,FWO.f_icon_url as FWOiconUrl,FWO.f_desc as FWOdesc,FWO.f_order as FWOorder,date_format(FWO.f_sys0_upd_time,'%Y-%m-%d %T') as FWOsys0UpdTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		FWO1.f_id as FWO1id,FWO1.f_type as FWO1type,FWO1.f_name as FWO1name,FWO1.f_icon_url as FWO1iconUrl,FWO1.f_desc as FWO1desc,FWO1.f_order as FWO1order,date_format(FWO1.f_sys0_upd_time,'%Y-%m-%d %T') as FWO1sys0UpdTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (FWO.f_id = #{id} ) </if>        <if test="type != null">  and (FWO.f_type = #{type} ) </if>        <if test="name != null">  and (FWO.f_name = #{name} ) </if>        <if test="iconUrl != null">  and (FWO.f_icon_url = #{iconUrl} ) </if>        <if test="desc != null">  and (FWO.f_desc = #{desc} ) </if>        <if test="order != null">  and (FWO.f_order = #{order} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (FWO.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (FWO.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (FWO.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (FWO.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (FWO.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (FWO.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (FWO.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (FWO.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (FWO.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (FWO.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (FWO.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (FWO.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (FWO.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (FWO.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (FWO.f_id = #{id} ) </if>        <if test="type != null and !type.equals('')  ">  and (FWO.f_type = #{type} ) </if>        <if test="name != null and !name.equals('')  ">  and (FWO.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="iconUrl != null and !iconUrl.equals('')  ">  and (FWO.f_icon_url like CONCAT('%',#{iconUrl},'%') ) </if>        <if test="desc != null and !desc.equals('')  ">  and (FWO.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="order != null and !order.equals('')  ">  and (FWO.f_order = #{order} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (FWO.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (FWO.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (FWO.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (FWO.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (FWO.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (FWO.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (FWO.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (FWO.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (FWO.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (FWO.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (FWO.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (FWO.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (FWO.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (FWO.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="familyWealthOptionBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="familyWealthOptionBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="familyWealthOptionBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="familyWealthOptionBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_family_wealth_option FWO    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(家庭财富选项)信息。 -->
+	<sql id="select_familyWealthOption">
+		SELECT <include refid="familyWealthOptionBase.queryHead"/>
+		<include refid="familyWealthOptionBase.busiQueryCondition"/>
+		<include refid="familyWealthOptionBase.dimCheckSql"/>
+		ORDER BY FWO.f_id DESC
+	</sql>
+	<select id="select_familyWealthOption" parameterType="java.util.Map" resultMap="familyWealthOptionBase.familyWealthOptionExtendMap">
+		<include refid="familyWealthOptionBase.select_familyWealthOption"/>
+	</select>
+	
+	<!-- 根据条件分页查询(家庭财富选项)信息  -->
+	<sql id="select_familyWealthOption_withPage">
+		SELECT <include refid="familyWealthOptionBase.queryHead"/>
+		<include refid="familyWealthOptionBase.busiQueryCondition"/>
+		<include refid="familyWealthOptionBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_familyWealthOption_withPage" resultMap="familyWealthOptionBase.familyWealthOptionExtendMap" parameterType="java.util.Map">
+		<include refid="familyWealthOptionBase.select_familyWealthOption_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(家庭财富选项)信息。 -->
+	<sql id="select_familyWealthOption_bySeqId">
+		SELECT <include refid="familyWealthOptionBase.queryHead"/>
+		<include refid="familyWealthOptionBase.busiQueryCondition"/>
+		 and FWO.f_id = #{_parameter}
+	</sql>
+	<select id="select_familyWealthOption_bySeqId" parameterType="java.math.BigInteger" resultMap="familyWealthOptionBase.familyWealthOptionBaseMap">
+		<include refid="familyWealthOptionBase.select_familyWealthOption_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(家庭财富选项)记录数  -->
+	<sql id="select_familyWealthOption_count">
+		SELECT COUNT(*)
+		<include refid="familyWealthOptionBase.busiQueryCount"/>
+		<include refid="familyWealthOptionBase.dimCheckSql"/>
+	</sql>
+	<select id="select_familyWealthOption_count" resultType="java.lang.Integer">
+		<include refid="familyWealthOptionBase.select_familyWealthOption_count"/>
+	</select>
+	
+	 <!-- 往(家庭财富选项)新增一条记录。 -->
+	 <sql id="insert_familyWealthOption">
+		INSERT INTO t_family_wealth_option 
+		(f_id,f_type,f_name,f_icon_url,f_desc,f_order,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{type},#{name,jdbcType=VARCHAR},#{iconUrl,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR},#{order},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_familyWealthOption" parameterType="FamilyWealthOption">
+		<include refid="familyWealthOptionBase.insert_familyWealthOption"/>
+    </insert>
+    
+	<!-- 批量新增(家庭财富选项)信息 -->
+    <insert id="insert_familyWealthOption_Batch" parameterType="java.util.List">
+    	INSERT INTO t_family_wealth_option 
+		(f_id,f_type,f_name,f_icon_url,f_desc,f_order,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.type},#{item.name,jdbcType=VARCHAR},#{item.iconUrl,jdbcType=VARCHAR},#{item.desc,jdbcType=VARCHAR},#{item.order},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(家庭财富选项)信息。 -->
+    <sql id="update_familyWealthOption">
+		UPDATE t_family_wealth_option		<trim prefix="SET" prefixOverrides=","> 		<if test="type != null and !type.equals('') "> ,f_type=#{type}</if> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="iconUrl != null and !iconUrl.equals('') "> ,f_icon_url=#{iconUrl}</if> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="order != null and !order.equals('') "> ,f_order=#{order}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_familyWealthOption" parameterType="FamilyWealthOption">
+		<include refid="familyWealthOptionBase.update_familyWealthOption"/>
+    </update>
+    
+    <!-- 批量更新(家庭财富选项)信息。 -->
+    <update id="update_familyWealthOption_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_family_wealth_option		<trim prefix="SET" prefixOverrides=","> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.iconUrl != null and !item.iconUrl.equals('')  "> ,f_icon_url=#{item.iconUrl}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.order != null and !item.order.equals('')  "> ,f_order=#{item.order}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(家庭财富选项)信息_逻辑删除。 -->
+    <sql id="delete_familyWealthOption_Logic">
+		UPDATE t_family_wealth_option		<trim prefix="SET" prefixOverrides=","> 		<if test="type != null and !type.equals('')  "> ,f_type=#{type}</if> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="iconUrl != null and !iconUrl.equals('')  "> ,f_icon_url=#{iconUrl}</if> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="order != null and !order.equals('')  "> ,f_order=#{order}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_familyWealthOption_Logic" parameterType="FamilyWealthOption">
+		<include refid="familyWealthOptionBase.delete_familyWealthOption_Logic"/>
+    </update>
+    
+    <!-- 批量删除(家庭财富选项)信息_逻辑删除 -->
+    <update id="delete_familyWealthOption_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_family_wealth_option		<trim prefix="SET" prefixOverrides=","> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.iconUrl != null and !item.iconUrl.equals('')  "> ,f_icon_url=#{item.iconUrl}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.order != null and !item.order.equals('')  "> ,f_order=#{item.order}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(家庭财富选项)信息。 -->
+    <sql id="delete_familyWealthOption">
+		DELETE FROM t_family_wealth_option WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_familyWealthOption" parameterType="java.lang.String">
+		<include refid="familyWealthOptionBase.delete_familyWealthOption"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(家庭财富选项)信息。 -->
+    <delete id="delete_familyWealthOption_Batch" parameterType="java.util.List">
+		DELETE FROM t_family_wealth_option WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

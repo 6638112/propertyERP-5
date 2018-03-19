@@ -1,0 +1,96 @@
+package com.commom.commonUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
+
+/**
+ * @author   syl
+ * @version  	 
+ */
+public class JsonFormatUtil {
+	private static String ecodeType="UTF-8";
+	private static List<Character> leftChars=new ArrayList<Character>();//左方向字符
+	private static List<Character> rightChars=new ArrayList<Character>();//右方向字符
+	private static List<Character> splitChars=new ArrayList<Character>();//拆分字符
+	private static List<Character> catchChars=new ArrayList<Character>();//括号字符
+	private static int Const_Left=0;//字符是左方向字符的标志
+	private static int Const_Right=1;//字符是右方向字符的标志
+	private static int Const_Common=2;//字符是普通字符的标志
+	private static int Const_Can_Split=3;//字符是拆分字符的标志
+	private static String Const_Space="	";
+	static{
+		leftChars.add('{');
+		leftChars.add('[');
+		
+		rightChars.add('}');
+		rightChars.add(']');
+		
+		splitChars.add(',');
+		
+		catchChars.add('"');
+	}
+	/*public static void main(String[] args) throws Exception {
+		List<String> jsonList=FileOperUtil.readFile("src/dbFile.txt", ecodeType);
+		String jsonSrc=jsonList.get(16);
+		System.out.println(jsonSrc);
+		System.out.println(formateJson(jsonSrc));
+	}*/
+	public static String formateJson(String jsonSrc){
+		StringBuffer resSbf=new StringBuffer();
+		int jsonSrcLength=jsonSrc.length();
+		int deepth=-1;//左侧空格深度
+		int lastType=-1;//记录上个字符类型
+		boolean isClosed=true;//json的key值或者value值是否读取完毕
+		for(int i=0;i<jsonSrcLength;i++){//遍历字符
+			Character tmpChar=jsonSrc.charAt(i);
+			if(leftChars.contains(tmpChar)){//如果是左方向字符
+				deepth++;
+				if(lastType==Const_Left){//上个类型是左方向字符
+					resSbf.append("\r");
+					resSbf.append(getLeftSizeLength(deepth));
+				}
+				resSbf.append(tmpChar);
+				lastType=Const_Left;
+			}else if(rightChars.contains(tmpChar)){//如果是右方向字符
+				resSbf.append("\r");
+				resSbf.append(getLeftSizeLength(deepth));
+				resSbf.append(tmpChar);
+				deepth--;
+				lastType=Const_Right;
+			}else{//其它字符
+				if(catchChars.contains(tmpChar)){//记录json的key或者value是否读取完毕
+					isClosed=!isClosed;
+				}
+				if(lastType==Const_Left||lastType==Const_Can_Split){//上个字符是左方向字符，或者是可以拆分换行的字符
+					resSbf.append("\r");
+					resSbf.append(getLeftSizeLength(deepth));
+				}
+				resSbf.append(tmpChar);
+				
+				if(splitChars.contains(tmpChar)&&isClosed){//如果是拆分字符，并且json的key或者value读取完毕
+					lastType=Const_Can_Split;
+				}else{
+					lastType=Const_Common;
+				}
+			}
+		}//for(int i=0;i<jsonSrcLength;i++){
+		return resSbf.toString();
+	}
+	public static Character getStackPop(Stack<Character> currDataStack){
+		try {
+			return currDataStack.pop();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	public static String getLeftSizeLength(int deepth){
+		String res="";
+		for(int i=0;i<=deepth;i++){
+			res=res+Const_Space;
+		}
+		return res;
+	}
+}
+

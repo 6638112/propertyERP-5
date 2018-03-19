@@ -1,0 +1,654 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 物业缴费 -->
+<mapper namespace="property">
+	<resultMap type="com.cnfantasia.server.api.property.dto.PayBillDetailDto" id="payBillDetailMap">
+        <result column="billName" javaType="java.lang.String" property="billName"/>
+        <result column="billAmount" javaType="java.lang.String" property="billAmount"/>
+        <result column="startValue" javaType="java.lang.String" property="startValue"/>
+        <result column="endValue" javaType="java.lang.String" property="endValue"/>
+        <result column="feeType" javaType="java.lang.Integer" property="feeType"/>
+        <result column="mrName" javaType="java.lang.String" property="mrName"/>
+        <result column="amountBigDecimal" javaType="java.math.BigDecimal" property="amountBigDecimal"/>
+    </resultMap>
+    
+    <!-- 已缴费账单列表 -->
+    <resultMap type="com.cnfantasia.server.api.property.dto.PaidBillItemDto" id="paidBillListMap">
+        <id column="billTitle" property="billTitle"/>
+        <result column="realAmt" javaType="java.lang.String" property="realAmt"/>
+        <result column="totalAmt" javaType="java.lang.String" property="totalAmt"/>
+        <result column="discountAmt" javaType="java.lang.String" property="discountAmt"/>
+        <result column="rechargeBill" javaType="java.lang.Boolean" property="rechargeBill"/>
+        <association property="billDetails" resultMap="billDetailDtoMap" />
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.api.property.dto.BillDetailDto" id="billDetailDtoMap">
+        <result column="name" javaType="java.lang.String" property="name"/>
+        <result column="desc" javaType="java.lang.String" property="desc"/>
+        <result column="amount" javaType="java.lang.String" property="amount"/>
+        <result column="discount" javaType="java.lang.String" property="discount"/>
+        <result column="icon" javaType="java.lang.String" property="icon"/>
+        <result column="typeName" javaType="java.lang.String" property="typeName"/>
+        <result column="orderId" javaType="java.math.BigInteger" property="orderId"/>
+        <result column="type" javaType="java.lang.String" property="type"/>
+    </resultMap>
+    
+    <!-- 车禁已缴费账单详情 -->
+    <resultMap type="com.cnfantasia.server.api.property.dto.CarPaidBillDetailDto" id="paidCarBillDetailMap" extends="carUnPaidBillDetailMap">
+        <association property="billPay" resultMap="billPayMap" />
+    </resultMap>
+
+	<resultMap type="com.cnfantasia.server.api.property.dto.BillPayDto" id="billPayMap">
+        <result column="result" javaType="java.lang.String" property="result"/>
+        <result column="payMethod" javaType="java.lang.String" property="payMethod"/>
+        <result column="payTime" javaType="java.lang.String" property="payTime"/>
+        <association property="preferAmt" resultMap="preferAmtMap" />
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.api.property.dto.PreferAmtDto" id="preferAmtMap">
+        <result column="jfqDiscount" javaType="java.lang.String" property="jfqDiscount"/>
+        <result column="bankDiscount" javaType="java.lang.String" property="bankDiscount"/>
+        <result column="hbAmt" javaType="java.lang.String" property="hbAmt"/>
+    </resultMap>
+    
+    <!-- 车禁未缴账单信息 -->
+    <resultMap type="com.cnfantasia.server.api.property.dto.CarUnPaidBillDetailDto" id="carUnPaidBillDetailMap" extends="billBaseMap">
+        <association property="carBillTail" resultMap="carBillTailMap" />
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.api.property.dto.CarBillTailDto" id="carBillTailMap">
+        <result column="carNum" javaType="java.lang.String" property="carNum"/>
+        <result column="carFee" javaType="java.lang.String" property="carFee"/>
+        <result column="month" javaType="java.lang.String" property="month"/>
+        <result column="parking" javaType="java.lang.String" property="parking"/>
+        <result column="expire" javaType="java.lang.String" property="expire"/>
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.api.property.dto.BillBaseDto" id="billBaseMap">
+        <result column="title" javaType="java.lang.String" property="title"/>
+        <result column="desc" javaType="java.lang.String" property="desc"/>
+        <result column="amount" javaType="java.lang.String" property="amount"/>
+        <result column="tel" javaType="java.lang.String" property="tel"/>
+        <result column="collectionArrearsType" javaType="java.lang.Integer" property="collectionArrearsType"/>
+    </resultMap>
+    
+    <!-- 物业费已缴费账单详情 -->
+    <resultMap type="com.cnfantasia.server.api.property.dto.PropertyPaidBillDetailDto" id="propertyPaidBillDetailMap" extends="propertyUnPaidBillDetailMap">
+        <association property="billPay" resultMap="billPayMap" />
+    </resultMap>
+    
+    <!-- 物业费未缴账单信息 -->
+    <resultMap type="com.cnfantasia.server.api.property.dto.PropertyUnPaidBillDetailDto" id="propertyUnPaidBillDetailMap" extends="billBaseMap">
+        <association property="propertyBillTail" resultMap="propertyBillTailMap" />
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.api.property.dto.PropertyBillTailDto" id="propertyBillTailMap">
+        <result column="payAddress" javaType="java.lang.String" property="payAddress"/>
+        <result column="proprietorName" javaType="java.lang.String" property="proprietorName"/>
+        <result column="lastUnpaid" javaType="java.math.BigDecimal" property="lastUnpaid"/>
+        <association property="payBillDetails" resultMap="payBillDetailMap" />
+    </resultMap>
+
+	<!-- 查询(支付详情)账单明细 -->
+	<select id="select_payBill_details" parameterType="java.math.BigInteger" resultMap="payBillDetailMap">
+		SELECT
+			IF (
+				EO.f_type = 4,
+				CONCAT(
+					CNPL.f_pay_num,
+					'个月停车费'
+				),
+				IFNULL(GBBCC.f_bill_name, 
+					IF(
+						PB.f_cycle_type=2,
+						CONCAT(
+							IFNULL(PB.f_bill_month_size, ''),
+							'个月',
+							PBT.f_name
+						),
+						CONCAT(
+							date_format(PB.f_bill_month_start,'%m'),
+							'-',
+							date_format(PB.f_bill_month_end,'%m'),
+							'月',
+							PBT.f_name
+						)
+					)
+				)
+				
+			) AS billName,
+			CONCAT(
+				'￥ ',
+				cast(
+					IF(EO.f_type = 4, CNPL.f_fee, PB.f_amount) / 100 AS DECIMAL (28, 2)
+				)
+			) AS billAmount
+		FROM
+			t_ebuy_order_relation EOR
+		INNER JOIN t_ebuy_order EO ON EO.f_id = EOR.f_sub_id
+		AND EO.f_sys0_del_state = 0
+		LEFT JOIN t_car_num_pay_log CNPL ON CNPL.t_ebuy_order_id = EO.f_id
+		AND CNPL.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_order_has_t_pay_bill EOPB ON EOPB.t_ebuy_order_f_id = EO.f_id
+		AND EO.f_sys0_del_state = 0
+		LEFT JOIN t_pay_bill PB ON PB.f_id = EOPB.t_pay_bill_f_id
+		<!-- AND PB.f_sys0_del_state = 0 --><!-- 支付确认中的 t_pay_bill为删除状态-->
+		LEFT JOIN t_pay_bill_type PBT ON PBT.f_id=PB.f_bill_type_id AND PBT.f_sys0_del_state = 0
+		LEFT JOIN t_group_building_bill_cycle_config GBBCC ON GBBCC.f_id=PB.t_group_building_bill_cycle_config_f_id
+		WHERE
+			EOR.f_parent_id = #{orderId}
+		AND EOR.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询已缴账单信息条件范围分组 -->
+	<sql id="select_paidBill_info_range_group">
+		FROM
+			(
+				(
+					SELECT
+						PB.f_pay_time,
+						1 'type'
+					FROM
+						t_pay_bill PB
+					WHERE
+						PB.t_real_room_f_id = #{realRoomId}
+					AND PB.f_sys0_del_state = 0
+					AND (
+						PB.f_is_pay = 1
+						OR IFNULL(PB.f_finance_status, 0) = 1
+					)
+				)
+			UNION
+				(
+					SELECT
+						_EO.f_pay_time f_pay_time,
+						2 'type'
+					FROM
+						t_ebuy_order _EO
+					INNER JOIN t_ebuy_order_relation _EOR ON _EO.f_id = _EOR.f_sub_id
+					AND _EOR.f_sys0_del_state = 0
+					WHERE
+						_EO.f_buyer_id = #{userId}
+					AND _EO.f_type = 4
+					AND _EO.f_pay_status = 2
+					AND _EO.f_sys0_del_state = 0
+				)
+			) _t
+		GROUP BY
+			DATE_FORMAT(_t.f_pay_time, '%Y-%m')
+	</sql>
+	
+	<!-- 查询已缴账单信息条件范围 -->
+	<sql id="select_paidBill_info_range">
+		AND EXISTS (
+			SELECT
+				1
+			FROM
+				(
+					SELECT
+						_t.f_pay_time,
+						MIN(_t.f_pay_time) f_pay_time_min,
+						MAX(_t.f_pay_time) f_pay_time_max,
+						GROUP_CONCAT(_t.type) types
+					<include refid="select_paidBill_info_range_group"></include>
+					ORDER BY
+						_t.f_pay_time DESC
+					LIMIT #{_begin}, #{_length}
+				) t
+			WHERE
+				(
+					OBJ.f_pay_time BETWEEN t.f_pay_time_min
+					AND t.f_pay_time_max
+				)
+			AND LOCATE(_type.type, types) > 0
+		) 
+	</sql>
+	
+	<!-- 查询已缴账单信息 -->
+	<select id="select_paidBill_list" parameterType="java.util.Map" resultMap="paidBillListMap">
+		SELECT
+			_tmp.billTitle,
+			_tmp.realAmt amount,
+			_tmp.discountAmt discount,
+			_tmp.name `name`,
+			_tmp.desc `desc`,
+			_tmp.icon,
+			_tmp.typeName typeName,
+			_tmp.orderId,
+			_tmp.type,
+			_tmp.rechargeBill
+		FROM
+			(
+				(
+					SELECT
+						OBJ.f_id orderId,
+						IFNULL(OBJ.f_succ_pay_amount, 0) - IFNULL(CSB.f_amount_bt, 0) realAmt,
+						OBJ.f_amount - IFNULL(OBJ.f_succ_pay_amount, 0) + IFNULL(CSB.f_amount_bt, 0) discountAmt,
+						DATE_FORMAT(OBJ.f_pay_time, '%Y年%m月') billTitle,
+						IFNULL(GBBCC.f_bill_name,
+							IF (
+								OBJ.f_cycle_type = 2,
+								CONCAT(
+									IFNULL(OBJ.f_bill_month_size, ''),
+									'个月',
+									PBT.f_name
+								),
+								CONCAT(
+									date_format(
+										OBJ.f_bill_month_start,
+										'%m'
+									),
+									'-',
+									date_format(OBJ.f_bill_month_end, '%m'),
+									'月',
+									PBT.f_name
+								)
+							)
+						) `name`,
+						CONCAT(
+							DATE_FORMAT(
+								IFNULL(
+									OBJ.f_bill_month_start,
+									IFNULL(
+										OBJ.f_bill_month,
+										OBJ.f_month
+									)
+								),
+								'%y.%m'
+							),
+							'-',
+							DATE_FORMAT(
+								IFNULL(
+									OBJ.f_bill_month_end,
+									IFNULL(
+										OBJ.f_bill_month,
+										OBJ.f_month
+									)
+								),
+								'%y.%m'
+							)
+						) `desc`,
+						PBT.f_icon icon,
+						PBT.f_name typeName,
+						OBJ.f_pay_time payTime,
+						1 `type`,
+						(OBJ.t_group_building_bill_cycle_config_f_id IS NOT NULL) rechargeBill
+					FROM
+						t_pay_bill OBJ
+					INNER JOIN t_pay_bill_type PBT ON PBT.f_id = OBJ.f_bill_type_id
+					AND PBT.f_sys0_del_state = 0
+					LEFT JOIN t_ebuy_order_has_t_pay_bill EOPB ON EOPB.t_pay_bill_f_id = OBJ.f_id
+					AND EOPB.f_sys0_del_state = 0
+					LEFT JOIN t_ebuy_order EO ON EO.f_id = EOPB.t_ebuy_order_f_id
+					AND EO.f_pay_status = 2 AND EO.f_sys0_del_state = 0
+					LEFT JOIN t_cash_sqpay_bt CSB ON CSB.t_ebuy_order_f_id = EO.f_id
+					INNER JOIN (SELECT 1 type) _type
+					LEFT JOIN t_group_building_bill_cycle_config GBBCC ON GBBCC.f_id=OBJ.t_group_building_bill_cycle_config_f_id
+					WHERE
+						OBJ.t_real_room_f_id = #{realRoomId}
+					AND OBJ.f_sys0_del_state = 0
+					AND (
+						OBJ.f_is_pay = 1
+						OR IFNULL(OBJ.f_finance_status, 0) = 1
+					)
+					<!-- t_ebuy_order中，只有支付成功的数据才查出来--> 
+					AND (IF(EO.f_id IS NULL, EOPB.f_id IS NULL, TRUE))
+					<include refid="select_paidBill_info_range"></include>
+				)
+				UNION
+					(
+						SELECT
+							OBJ.f_id orderId,
+							(
+								OBJ.f_amount - IFNULL(CSB.f_amount_bt, 0)
+							) realAmt,
+							(
+								IFNULL(
+									OBJ.f_total_coupon_amount,
+									0
+								) + IFNULL(CSB.f_amount_bt, 0)
+							) discountAmt,
+							DATE_FORMAT(OBJ.f_pay_time, '%Y年%m月') billTitle,
+							CONCAT(
+								CNPL.f_pay_num,
+								'个月停车费'
+							) AS `name`,
+							CNL.t_car_num AS `desc`,
+							'' icon,
+							'停车费' typeName,
+							OBJ.f_pay_time `payTime`,
+							2 `type`,
+							false rechargeBill
+						FROM
+							t_ebuy_order OBJ
+						INNER JOIN t_ebuy_order_relation EOR ON EOR.f_sub_id = OBJ.f_id
+						AND EOR.f_sys0_del_state = 0
+						INNER JOIN t_car_num_pay_log CNPL ON CNPL.t_ebuy_order_id = OBJ.f_id
+						AND CNPL.f_sys0_del_state = 0
+						INNER JOIN t_car_num_list CNL ON CNL.f_id = CNPL.t_car_num_id
+						LEFT JOIN t_cash_sqpay_bt CSB ON CSB.t_ebuy_order_f_id = OBJ.f_id
+						INNER JOIN (SELECT 2 type) _type
+						WHERE
+							OBJ.f_buyer_id = #{userId}
+						AND OBJ.f_type = 4
+						AND OBJ.f_pay_status = 2
+						AND OBJ.f_sys0_del_state = 0
+						<include refid="select_paidBill_info_range"></include>
+					)
+			) _tmp
+		ORDER BY
+			_tmp.payTime DESC
+	</select>
+	
+	<!-- 查询已缴账单信息数据条数 -->
+	<select id="select_paidBill_count" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			(
+			SELECT
+				1
+			<include refid="select_paidBill_info_range_group"></include>
+			) _t
+	</select>
+	
+	<!-- 查询车禁已缴费账单详情 -->
+	<select id="select_paidCarBill_detail" parameterType="java.math.BigInteger" resultMap="paidCarBillDetailMap">
+		SELECT
+			CONCAT(
+				GB.f_name,
+				'月卡(元)'
+			) title,
+			cast(
+				CNPL.f_fee / 100 AS DECIMAL (28, 2)
+			) amount,
+			CONCAT(
+				CNPL.f_pay_num,
+				'个月月卡费'
+			) `desc`,
+			PM.f_tel tel,
+			cast(
+				CNL.f_fee / 100 AS DECIMAL (28, 2)
+			) carFee,
+			CNL.t_car_num carNum,
+			DATE_FORMAT(
+				CNPL.f_pay_end_date,
+				'%y.%m.%d'
+			) expire,
+			CONCAT(CNPL.f_pay_num, '个月') `month`,
+			CONCAT(GB.f_name, '停车场') parking,
+			CONCAT(
+				'￥ ',
+				IFNULL(
+					cast(
+						IFNULL(CSB.f_amount_bt, 0) / 100 AS DECIMAL (28, 2)
+					),
+					0
+				)
+			) bankDiscount,
+			CONCAT(
+				'￥ ',
+				IFNULL(
+					cast(
+						IFNULL(PC.f_amount, 0) / 100 AS DECIMAL (28, 2)
+					),
+					0
+				)
+			) hbAmt,
+			CONCAT(
+				'￥ ',
+				IFNULL(
+					cast(
+						(
+							IFNULL(EO.f_total_coupon_amount, 0) - IFNULL(PC.f_amount, 0)
+						) / 100 AS DECIMAL (28, 2)
+					),
+					0
+				)
+			) jfqDiscount,
+			EO.f_pay_method payMethod,
+			DATE_FORMAT(
+				EO.f_pay_time,
+				'%y.%m.%d %H:%i'
+			) payTime
+		FROM
+			t_ebuy_order EO
+		INNER JOIN t_car_num_pay_log CNPL ON CNPL.t_ebuy_order_id = EO.f_id
+		INNER JOIN t_car_num_list CNL ON CNL.f_id = CNPL.t_car_num_id
+		INNER JOIN t_group_building GB ON GB.f_id = CNL.t_group_building_f_id
+		LEFT JOIN t_cash_sqpay_bt CSB ON CSB.t_ebuy_order_f_id = EO.f_id
+		LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id
+		LEFT JOIN t_pay_coupon PC ON PC.t_ebuy_order_f_id = EO.f_id
+		AND PC.f_sys0_del_state = 0
+		WHERE
+			EO.f_id = #{orderId}
+		LIMIT 1
+	</select>
+	
+	<!-- 查询物业已缴费账单详情 -->
+	<select id="select_paidPropertyBill_detail" parameterType="java.math.BigInteger" resultMap="propertyPaidBillDetailMap">
+		SELECT
+			CONCAT(PBT.f_name, '账单(元)') title,
+			cast(
+				PB.f_amount / 100 AS DECIMAL (28, 2)
+			) amount,
+			CONCAT(
+				date_format(PB.f_bill_month_start,'%m'),
+				'-',
+				date_format(PB.f_bill_month_end,'%m'),
+				'月',
+				PBT.f_name
+			) `desc`,
+			PM.f_tel tel,
+			CONCAT(
+				'￥ ',
+				IFNULL(
+					cast(
+						IFNULL(CSB.f_amount_bt, 0) / 100 AS DECIMAL (28, 2)
+					),
+					0
+				)
+			) bankDiscount,
+			CONCAT(
+				'￥ ',
+				IFNULL(
+					cast(
+						IFNULL(PC.f_amount, 0) / 100 AS DECIMAL (28, 2)
+					),
+					0
+				)
+			) hbAmt,
+			CONCAT(
+				'￥ ',
+				IFNULL(
+					cast(
+						(
+							IFNULL(PB.f_amount, 0) - IFNULL(PB.f_succ_pay_amount, 0) - IFNULL(PC.f_amount, 0)-IF(PB.f_finance_status = 1, IFNULL(PB.f_dedu_price,0), 0)
+						) / 100 AS DECIMAL (28, 2)
+					),
+					0
+				)
+			) jfqDiscount,
+			PB.f_payment_way payMethod,
+			DATE_FORMAT(
+				PB.f_pay_time,
+				'%y.%m.%d %H:%i'
+			) payTime,
+			RPAD(
+				LEFT (PP.f_name, 1),
+				CHAR_LENGTH(PP.f_name),
+				'*'
+			) proprietorName,
+			CONCAT(
+				GB.f_name,
+				'-',
+				B.f_name,
+				'-',
+				IFNULL(f_num_tail, '')
+			) payAddress,
+			PB.f_last_unpaid lastUnpaid,
+			PDF.f_name billName,
+			PDF.f_mr_name mrName, 
+			CONCAT(
+				'￥ ',
+				cast(
+					PDF.f_total_price / 100 AS DECIMAL (28, 2)
+				)
+			) billAmount,
+			cast(
+				PDF.f_total_price / 100 AS DECIMAL (28, 2)
+			) amountBigDecimal,
+			MPBR.f_start_value startValue,
+			MPBR.f_end_value endValue,
+			PDF.f_fee_type feeType
+		FROM
+			t_pay_bill PB
+		INNER JOIN t_pay_bill_type PBT ON PBT.f_id = PB.f_bill_type_id
+		INNER JOIN t_real_room RR ON RR.f_id = PB.t_real_room_f_id
+		LEFT JOIN t_building B ON B.f_id = RR.t_building_f_id
+		LEFT JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id
+		LEFT JOIN t_property_proprietor PP ON PP.f_id = PB.f_property_proprietor_id
+		LEFT JOIN t_ebuy_order_has_t_pay_bill EOPB ON EOPB.t_pay_bill_f_id = PB.f_id AND EOPB.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_order EO ON EO.f_id = EOPB.t_ebuy_order_f_id AND EO.f_sys0_del_state = 0
+		LEFT JOIN t_cash_sqpay_bt CSB ON CSB.t_ebuy_order_f_id = EO.f_id
+		LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id
+		LEFT JOIN t_pay_coupon PC ON PC.t_ebuy_order_f_id = EO.f_id AND PC.f_sys0_del_state = 0
+		LEFT JOIN t_property_fee_detail PDF ON PDF.t_pay_bill_f_id = PB.f_id AND PDF.f_sys0_del_state = 0
+		LEFT JOIN t_mr_pay_bill_record MPBR ON MPBR.t_property_fee_detail_f_id=PDF.f_id AND MPBR.f_sys0_del_state=0
+		WHERE
+			PB.f_id = #{payBillId}
+		AND PB.f_sys0_del_state = 0
+		ORDER BY
+			PDF.f_fee_type ASC,
+			PDF.f_id DESC
+	</select>
+	
+	<!-- 非选择性周期缴费(自营)详情 -->
+	<select id="select_unPaidPropertyBill_detail_jfq" parameterType="java.lang.String" resultMap="propertyUnPaidBillDetailMap">
+		SELECT
+			CONCAT(
+				PBT.f_name,
+				'账单'
+			) title,
+			cast(
+				PB.f_amount / 100 AS DECIMAL (28, 2)
+			) amount,
+			CONCAT(
+				IF (
+					PB.f_cycle_type = 1,
+					PB.f_bill_month_size,
+					TIMESTAMPDIFF(
+						MONTH,
+						DATE_FORMAT(
+							PB.f_bill_month_end,
+							'%Y-%m-01'
+						),
+						DATE_FORMAT(
+							PB.f_bill_month_start,
+							'%Y-%m-01'
+						)
+					) + 1
+				),
+				'个月',
+				PBT.f_name
+			) `desc`,
+			PM.f_tel tel,
+			RPAD(
+				LEFT (PP.f_name, 1),
+				CHAR_LENGTH(PP.f_name),
+				'*'
+			) proprietorName,
+			CONCAT(GB.f_name, '  ',B.f_name, '-', IF(RR.f_unit_name is null,'', concat(RR.f_unit_name, '-')), RR.f_num_tail) payAddress,
+			PB.f_last_unpaid lastUnpaid,
+			PDF.f_name billName,
+			PDF.f_mr_name mrName, 
+			CONCAT(
+				'￥ ',
+				cast(
+					PDF.f_total_price / 100 AS DECIMAL (28, 2)
+				)
+			) billAmount,
+			cast(
+				PDF.f_total_price / 100 AS DECIMAL (28, 2)
+			) amountBigDecimal,
+			gbbc.f_is_collect_arrears collectionArrearsType,
+			MPBR.f_start_value startValue,
+			MPBR.f_end_value endValue,
+			PDF.f_fee_type feeType
+		FROM
+			t_pay_bill PB
+			INNER JOIN t_pay_bill_type PBT ON PBT.f_id = PB.f_bill_type_id
+			INNER JOIN t_real_room RR ON RR.f_id = PB.t_real_room_f_id
+			INNER JOIN t_group_building_bill_cycle gbbc on gbbc.f_id = PB.t_bill_cycle_id
+			LEFT JOIN t_building B ON B.f_id = RR.t_building_f_id
+			LEFT JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id
+			LEFT JOIN t_property_proprietor PP ON PP.f_id = PB.f_property_proprietor_id
+			LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id
+			LEFT JOIN t_property_fee_detail PDF ON PDF.t_pay_bill_f_id = PB.f_id AND PDF.f_sys0_del_state = 0
+			LEFT JOIN t_mr_pay_bill_record MPBR ON MPBR.t_property_fee_detail_f_id=PDF.f_id AND MPBR.f_sys0_del_state=0
+		WHERE PB.f_id=#{payBillId}
+		ORDER BY
+			PDF.f_fee_type ASC,
+			PDF.f_id DESC
+	</select>
+	
+	<!--  获取物业宝抵扣（已缴） -->
+	<select id="select_deduByOrderId" parameterType="java.util.Map" resultType="java.lang.Long">
+		<choose>
+			<when test="orderType=='1'.toString()"><!-- 总订单id -->
+				SELECT
+					sum(ifnull(pb.f_dedu_price, 0))
+				FROM
+					t_ebuy_order_relation eor
+					INNER JOIN t_ebuy_order_has_t_pay_bill eopb ON eor.f_sub_id = eopb.t_ebuy_order_f_id
+					AND eor.f_sys0_del_state = 0
+					AND eor.f_sub_type = 2
+					INNER JOIN t_pay_bill pb ON eopb.t_pay_bill_f_id = pb.f_id
+					AND pb.f_finance_status = 1
+					AND pb.f_dedu_price > 0
+					AND pb.f_sys0_del_state = 0
+					AND eopb.f_sys0_del_state = 0
+				WHERE
+					eor.f_parent_id = #{id}
+			</when>
+			<otherwise><!-- 子订单id -->
+				SELECT
+					pb.f_dedu_price
+				FROM
+					t_pay_bill pb
+				WHERE
+					pb.f_id = #{id}
+					AND pb.f_finance_status = 1
+					AND pb.f_dedu_price > 0
+					AND pb.f_sys0_del_state = 0
+			</otherwise>
+		</choose>
+	</select>
+	
+	<update id="update_paybillUserPrefer" parameterType="java.util.Map">
+		UPDATE t_paybill_user_prefer
+		SET f_prefer =#{prefer}
+		WHERE
+			f_paybill_id =#{payBillId}
+		AND f_user_id =#{userId}
+	</update>
+
+	<select id="getUnpaidBillInfoList" parameterType="map" resultType="com.cnfantasia.server.api.property.dto.RemainBillDto">
+		SELECT pb.f_id payBillId, cast((pb.f_amount - IFnull(pb.f_dedu_price, 0))/100 AS DECIMAL(28,2)) billRelAmt, DATE_FORMAT(gbbc.f_bill_month_start, '%y.%m') billMonthStart,
+			concat(DATE_FORMAT(gbbc.f_bill_month_start, '%m'), '-', DATE_FORMAT(gbbc.f_bill_month_end, '%m'), '月', pbt.f_name, '欠费') billTypeName
+		FROM t_property_fee_detail_unpaid fdu
+		INNER JOIN t_pay_bill pb ON pb.f_sys0_del_state = 0 AND pb.f_id = fdu.t_unpaid_pay_bill_id
+		INNER JOIN t_group_building_bill_cycle gbbc on gbbc.f_id = pb.t_bill_cycle_id
+		inner join t_pay_bill_type pbt on pbt.f_id = gbbc.t_pay_bill_type_id
+		WHERE fdu.t_pay_bill_id = #{_parameter} AND pb.f_is_pay = 2
+		order by gbbc.f_bill_month_start
+	</select>
+	
+	<!-- 获取物业充值随机立减金额 -->
+	<select id="select_property_recharge_perfer" statementType="CALLABLE" parameterType="java.util.Map" resultType="java.lang.Long">
+		<![CDATA[
+		    {CALL sp_get_property_recharge_perfer(#{gbbccId}, #{userId},#{realroomId}, #{amount})}
+		]]>
+	</select>
+</mapper>

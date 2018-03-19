@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="activity">
+    
+	<!-- 查询停车记录 -->
+	<select id="selectActivities" parameterType="java.util.Map" resultMap="ebuyAdvertiseBase.ebuyAdvertiseExtendMap">
+		SELECT 
+			<include refid="ebuyAdvertiseBase.queryHead"/>
+		FROM t_ebuy_advertise EA
+    	WHERE 
+    		EA.f_code = 'ACTIVITY_ENTRANCE'
+		ORDER BY 
+			EA.f_order DESC, IFNULL(EA.f_sys0_upd_time, EA.f_sys0_add_time) DESC
+	</select>
+	
+</mapper>

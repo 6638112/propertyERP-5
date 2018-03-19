@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:业主表 t_property_company -->
+<mapper namespace="propertyCompany">
+	<resultMap type="com.cnfantasia.server.ms.propertyCompany.entity.PropertyCompanyEntity" id="propertyCompanyEntity" extends="propertyCompanyBase.propertyCompanyBaseMap">
+	</resultMap>
+	
+	<!-- 根据 登录用户Id，找 所属 物业公司的 信息  -->
+    <select id="select_pcInfo_ByOmsUserId" parameterType="java.math.BigInteger" resultMap="propertyCompanyEntity">
+    	select <include refid="propertyCompanyBase.queryHead_AppendTable"/>
+    	FROM t_property_company PC
+    	inner join t_oms_user OU on OU.f_id = PC.f_admin_id
+    	WHERE 1=1 
+    	<if test="_parameter != null and _parameter != 1 "> and OU.f_id = #{_parameter}</if><!-- 管理员要看到所有 -->
+	</select>
+	
+	<!-- 根据 登录用户Id，找 所管辖的 小区的列表  -->
+    <select id="select_gbList_ByOmsUserId" parameterType="java.math.BigInteger" resultMap="groupBuilding.GroupBuildingSimpleEntity_Map_Append">
+    	select <include refid="groupBuildingBase.queryHead_AppendTable"/>,AB.f_name AS ext_addressBlockName, ac.f_name as ext_addressCityName, ap.f_name as ext_addressProvinceName
+    	FROM t_group_building GB
+    	INNER JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id AND AB.f_sys0_del_state = 0
+   		inner join t_address_city ac on ac.f_id = AB.t_city_f_id and ac.f_sys0_del_state = 0 
+   		inner join t_address_province ap on ap.f_id = ac.t_province_f_id and ap.f_sys0_del_state = 0 
+   		inner join t_property_company pc on pc.f_id = GB.t_property_company_f_id 
+   	 	WHERE 1=1
+   	 	AND GB.f_sys0_del_state = 0
+    	<if test="#{_parameter} != null and #{_parameter} != '' " > and pc.f_admin_id = #{_parameter}</if>
+	</select>
+	
+	<!-- 根据 物业公司Id，找到注册时录入小区 列表  -->
+    <select id="select_gbrList_ByPCId" parameterType="java.math.BigInteger" resultType="java.util.Map">
+    	select gbr.f_name as gbrName, gbr.f_address_desc gbrAddressdesc, 
+		ab.f_name abName, ab.f_id abId, ac.f_name acName, ap.f_name apName from t_group_building_register gbr 
+		inner join t_address_block ab on ab.f_id = gbr.t_address_block_f_id
+		inner join t_address_city ac on ac.f_id = ab.t_city_f_id
+		inner join t_address_province ap on ap.f_id = ac.t_province_f_id 
+		where gbr.t_property_company_f_id = #{_parameter}
+	</select>
+	
+	<!-- 为管理员返回所有物业公司信息列表 -->
+	<select id="select_pcList_forAdmin" parameterType="java.util.HashMap" resultMap="propertyCompanyEntity">
+    	select <include refid="propertyCompanyBase.queryHead"/>
+    	FROM t_property_company PC
+   	 	WHERE 1=1 
+   	 	AND PC.f_sys0_del_state = 0
+   	 	 <if test="startTime != null and startTime != '' ">  and (PC.f_sys0_add_time &gt;= #{startTime} ) </if>
+    	 <if test="endTime != null and endTime != '' ">  and (PC.f_sys0_add_time &lt;= #{endTime}  ) </if>
+    	 <if test="isAudited != null and isAudited != '' ">  and (PC.f_is_audited = #{isAudited}  ) </if>
+   	 	order by PC.f_id desc 
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+</mapper>

@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 消息推送模块 -->
+<mapper namespace="msgpush">
+	
+	<!-- 待发送的消息实体 -->
+	<resultMap type="com.cnfantasia.server.api.msgpush.entity.MessagepushEntity" id="messagepushEntity_Map_Append">
+		<id column="UHTMid" javaType="java.math.BigInteger"/>  <!-- id不可缺少，否则永远最多只返回一条数据 -->
+		<result column="mobile" javaType="java.lang.String" property="mobile"/>  <!--  -->
+		<association property="userHasTMessage" resultMap="userHasTMessageBase.userHasTMessageBaseMap_AppendTable"/>
+		<association property="userPushInfo" resultMap="userPushInfoBase.userPushInfoBaseMap_AppendTable"/>
+		<association property="message" resultMap="messageEntity_Append_Map"/>
+	</resultMap>
+	<!-- 消息组使用的实体类  TODO 需要Id的定义-->
+	<resultMap type="com.cnfantasia.server.api.msgpush.entity.MessagePushGroupEntity" id="messagePushGroupEntity_Map_Append">
+		<association property="userPushInfo" resultMap="userPushInfoBase.userPushInfoBaseMap_AppendTable"/>
+		<association property="message" resultMap="messageEntity_Append_Map"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.notice.entity.MessageEntity" id="messageEntity_Append_Map" 
+		extends="messageBase.messageBaseMap_AppendTable">
+		<!-- 使用的消息推送配置 -->
+		<association property="messageView" resultMap="messageViewBase.messageViewBaseMap_AppendTable"></association>
+		<!-- 推送的消息使用的参数 -->
+		<collection property="messageParameterList" resultMap="messageParameterBase.messageParameterBaseMap_AppendTable"></collection>
+	</resultMap>
+	
+	<sql id="select_uhtm_message_comm_base">
+		SELECT <include refid="userHasTMessageBase.queryHead_AppendTable"/>
+			,<include refid="messageBase.queryHead_AppendTable"/>
+			,<include refid="messageViewBase.queryHead_AppendTable"/>
+			,<include refid="messageParameterBase.queryHead_AppendTable"/>
+			,<include refid="userPushInfoBase.queryHead_AppendTable"/>
+			,U.f_mobile AS mobile
+		FROM t_user_has_t_message UHTM
+		INNER JOIN (
+			t_message M
+			LEFT JOIN t_message_view MV ON MV.f_type_id = M.f_type AND MV.f_sys0_del_state = 0 <!-- 消息跳转的视图 -->
+			LEFT JOIN t_message_parameter MP ON MP.t_message_f_id = M.f_id AND M.f_sys0_del_state = 0 <!-- 消息参数 -->
+		)ON M.f_id = UHTM.t_message_f_id AND M.f_sys0_del_state = 0
+		LEFT JOIN t_user_push_info UPI ON UPI.f_user_id = UHTM.t_user_f_id AND UPI.f_user_type = UHTM.f_user_type AND UPI.f_sys0_del_state = 0
+		<!-- 用户用户类别=={"1":"注册用户","2":"临时用户"} -->
+		LEFT JOIN t_user U ON U.f_id = UHTM.t_user_f_id AND U.f_sys0_del_state = 0 AND UHTM.f_user_type = 1 <!-- AND M.f_type = 3 -->
+		WHERE 1=1
+		AND UHTM.f_sys0_del_state = 0
+		AND CASE WHEN (U.f_id is not null AND (M.f_is_relate_room IS NULL OR M.f_is_relate_room != 0)) THEN U.f_default_room_id = UHTM.f_user_room_id ELSE 1=1 END
+		
+		AND UHTM.f_send_status != 1  <!-- != 1消息发送状态=={"0":"未发送","1":"发送成功","2":"发送失败"} -->
+		<![CDATA[ AND ( (ISNULL(UHTM.f_expiry_time)) OR (UHTM.f_expiry_time>=NOW())) ]]> <!-- 失效时间为空或者未失效 -->
+		<![CDATA[ AND ( (ISNULL(UHTM.f_try_failed_count)) OR (UHTM.f_try_failed_count<3) )  ]]> <!-- 尝试的错误次数小于3次 -->
+		<!-- AND TO_DAYS(UHTM.f_sys0_add_time) = TO_DAYS(NOW()) --> <!-- 当天信息 -->
+		AND UHTM.f_sys0_add_time >= DATE_ADD(NOW(),INTERVAL -24 HOUR) <!-- 24小时之内的 -->
+		AND CASE WHEN M.f_type >= 1000 THEN UPI.t_channel_sub_f_id in(10, 11) ELSE UPI.t_channel_sub_f_id not in(10, 11) END
+	</sql>
+	
+	<!-- 查询当前待发送的消息列表 -->
+	<select id="select_Send_List_Signal" resultMap="messagepushEntity_Map_Append">
+		<include refid="select_uhtm_message_comm_base"/>
+	</select>
+	
+	<!-- 根据Id查询消息详情 -->
+	<select id="select_ToSend_Msg_ById" parameterType="java.util.Map" resultMap="messagepushEntity_Map_Append">
+		<include refid="select_uhtm_message_comm_base"/>
+		AND UHTM.f_id = #{userHasMsgId}
+		ORDER BY IFNULL(UPI.f_sys0_upd_time,UPI.f_sys0_add_time) ASC
+	</select>
+	<!-- 根据消息IdList查询消息列表 -->
+	<select id="select_ToSend_MsgList_ById" parameterType="java.util.Map" resultMap="messagepushEntity_Map_Append">
+		<include refid="select_uhtm_message_comm_base"/>
+		AND UHTM.f_id IN 
+		<foreach item="item" collection="userHasMsgIdList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- <select id="select_Send_List_Count" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_user_has_t_message UHTM
+		INNER JOIN (
+			t_message M
+			LEFT JOIN t_message_view MV ON MV.f_type_id = M.f_type AND MV.f_sys0_del_state = 0 消息跳转的视图
+			LEFT JOIN t_message_parameter MP ON MP.t_message_f_id = M.f_id AND M.f_sys0_del_state = 0 消息参数
+		)ON M.f_id = UHTM.t_message_f_id AND M.f_sys0_del_state = 0
+		LEFT JOIN t_user_push_info UPI ON UPI.f_user_id = UHTM.t_user_f_id AND UPI.f_user_type = UHTM.f_user_type AND UPI.f_sys0_del_state = 0
+		WHERE 1=1
+		AND UHTM.f_sys0_del_state = 0
+		AND UHTM.f_send_status != 1 
+	</select> -->
+	
+	<!-- 查询当前待发送的消息列表(分组的消息) -->
+	<!-- <select id="select_Send_List_OfGroup" resultMap="messagePushGroupEntity_Map_Append">
+		SELECT 
+			<include refid="messageBase.queryHead_AppendTable"/>
+			,<include refid="messageViewBase.queryHead_AppendTable"/>
+			,<include refid="messageParameterBase.queryHead_AppendTable"/>
+			,<include refid="userPushInfoBase.queryHead_AppendTable"/>
+		FROM t_message_group MG
+		INNER JOIN (
+			t_message M
+			LEFT JOIN t_message_view MV ON MV.f_type_id = M.f_type AND MV.f_sys0_del_state = 0 消息跳转的视图
+			LEFT JOIN t_message_parameter MP ON MP.t_message_f_id = M.f_id AND M.f_sys0_del_state = 0 消息参数
+		)ON M.f_id = MG.t_message_f_id AND M.f_sys0_del_state = 0
+		INNER JOIN (
+			t_user U
+			INNER JOIN t_room R on r.f_id = U.f_default_room_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id  AND RR.f_sys0_del_state = 0
+			INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+			INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+		) ON GB.f_id = MG.f_groupbuilding_id AND U.f_sys0_del_state = 0 
+		LEFT JOIN t_user_push_info UPI ON UPI.f_user_id = U.f_id AND UPI.f_user_type = 1 {"1":"注册用户","2":"临时用户"}
+			 AND UPI.f_sys0_del_state = 0
+		WHERE 1=1
+		AND MG.f_sys0_del_state = 0
+		AND NOT EXISTS (
+			SELECT 1 FROM t_user_has_t_message UHTM 
+			WHERE 1=1
+			AND UHTM.t_user_f_id = U.f_id and UHTM.t_message_f_id = M.f_id
+			AND UHTM.f_sys0_del_state = 0
+			AND UHTM.f_send_status != 1 
+		)
+	</select> -->
+	
+	<resultMap type="com.cnfantasia.server.api.msgpush.entity.PreMonthDiscountInfoEntity" id="preMonthDiscountInfoEntity_Map">
+		<id column="f_userid" javaType="java.math.BigInteger" property="userId"/>  <!--  -->
+		<result column="f_default_room_id" javaType="java.math.BigInteger" property="defaultRoomId"/>  <!--  -->
+        <result column="f_year" javaType="java.lang.String" property="year"/>  <!--  -->
+        <result column="f_month" javaType="java.lang.String" property="month"/>  <!--  -->
+        <result column="f_staus" javaType="java.lang.Integer" property="status"/>  <!-- 折扣使用状态 0未使用，1已使用  -->
+        <result column="f_sign_status" javaType="java.lang.Integer" property="groupBuildingSignStatus"/>  <!-- 小区是否签约标志=={"0":"否","1":"是"} -->
+	</resultMap>
+	<!-- 查询上个月折扣未使用的信息 -->
+	<select id="select_UnusedPrize_Discount_List" resultMap="preMonthDiscountInfoEntity_Map">
+		<![CDATA[
+			SELECT 
+			    u.f_id f_userid,
+			    u.f_default_room_id f_default_room_id,
+			    DATE_FORMAT((CASE
+			                WHEN
+			                    gb.f_pay_period_end >= EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			                THEN
+			                    STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+			                                            '%Y-%m-'),
+			                                    LPAD(gb.f_pay_period_end, 2, '0')),
+			                            '%Y-%m-%d')
+			                WHEN
+			                    gb.f_pay_period_end < EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			                THEN
+			                    STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 0 MONTH),
+			                                            '%Y-%m-'),
+			                                    LPAD(gb.f_pay_period_end, 2, '0')),
+			                            '%Y-%m-%d')
+			                ELSE DATE_ADD(LAST_DAY(NOW()),
+			                    INTERVAL - 1 MONTH)
+			            END),
+			            '%Y') f_year,
+			    DATE_FORMAT((CASE
+			                WHEN
+			                    gb.f_pay_period_end >= EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			                THEN
+			                    STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+			                                            '%Y-%m-'),
+			                                    LPAD(gb.f_pay_period_end, 2, '0')),
+			                            '%Y-%m-%d')
+			                WHEN
+			                    gb.f_pay_period_end < EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			                THEN
+			                    STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 0 MONTH),
+			                                            '%Y-%m-'),
+			                                    LPAD(gb.f_pay_period_end, 2, '0')),
+			                            '%Y-%m-%d')
+			                ELSE DATE_ADD(LAST_DAY(NOW()),
+			                    INTERVAL - 1 MONTH)
+			            END),
+			            '%m') f_month,
+			    CASE
+			        WHEN pr1.f_discount IS NULL THEN 0
+			        WHEN pr1.f_discount IS NOT NULL THEN 1
+			    END f_staus,
+			    gb.f_sign_status AS f_sign_status
+			FROM
+			    t_user u
+			        JOIN
+			    t_user_has_t_room ur ON ur.t_user_f_id = u.f_id
+			        AND ur.t_room_f_id = u.f_default_room_id
+			        AND ur.f_apply_status = 1
+			        JOIN
+			    t_room r ON ur.t_room_f_id = r.f_id
+			        JOIN
+			    t_real_room rr ON r.t_real_room_f_id = rr.f_id
+			        JOIN
+			    t_building b ON rr.t_building_f_id = b.f_id
+			        JOIN
+			    t_group_building gb ON b.t_group_building_f_id = gb.f_id
+			        JOIN
+			    t_prize_record pr ON pr.f_prize_time >= (CASE
+			        WHEN
+			            gb.f_pay_period_end >= EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			        THEN
+			            STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+			                                    '%Y-%m-'),
+			                            LPAD(gb.f_pay_period_start, 2, '0')),
+			                    '%Y-%m-%d')
+			        WHEN
+			            gb.f_pay_period_end < EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			        THEN
+			            STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+			                                    '%Y-%m-'),
+			                            LPAD(gb.f_pay_period_start, 2, '0')),
+			                    '%Y-%m-%d')
+			        ELSE DATE_ADD(DATE_ADD(LAST_DAY(NOW()),
+			                INTERVAL 1 DAY),
+			            INTERVAL - 2 MONTH)
+			    END)
+			        AND pr.f_prize_time < DATE_ADD((CASE
+			            WHEN
+			                gb.f_pay_period_end >= EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			            THEN
+			                STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+			                                        '%Y-%m-'),
+			                                LPAD(gb.f_pay_period_end, 2, '0')),
+			                        '%Y-%m-%d')
+			            WHEN
+			                gb.f_pay_period_end < EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			            THEN
+			                STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 0 MONTH),
+			                                        '%Y-%m-'),
+			                                LPAD(gb.f_pay_period_end, 2, '0')),
+			                        '%Y-%m-%d')
+			            ELSE DATE_ADD(LAST_DAY(NOW()),
+			                INTERVAL - 1 MONTH)
+			        END),
+			        INTERVAL + 1 DAY)
+			        AND pr.t_user_has_t_room_f_id = ur.f_id
+			        LEFT JOIN
+			    t_prize_record pr1 ON pr1.f_status = 1
+			        AND pr1.f_prize_time >= (CASE
+			        WHEN
+			            gb.f_pay_period_end >= EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			        THEN
+			            STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 2 MONTH),
+			                                    '%Y-%m-'),
+			                            LPAD(gb.f_pay_period_start, 2, '0')),
+			                    '%Y-%m-%d')
+			        WHEN
+			            gb.f_pay_period_end < EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			        THEN
+			            STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+			                                    '%Y-%m-'),
+			                            LPAD(gb.f_pay_period_start, 2, '0')),
+			                    '%Y-%m-%d')
+			        ELSE DATE_ADD(DATE_ADD(LAST_DAY(NOW()),
+			                INTERVAL 1 DAY),
+			            INTERVAL - 2 MONTH)
+			    END)
+			        AND pr1.f_prize_time < DATE_ADD((CASE
+			            WHEN
+			                gb.f_pay_period_end >= EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			            THEN
+			                STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+			                                        '%Y-%m-'),
+			                                LPAD(gb.f_pay_period_end, 2, '0')),
+			                        '%Y-%m-%d')
+			            WHEN
+			                gb.f_pay_period_end < EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			            THEN
+			                STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 0 MONTH),
+			                                        '%Y-%m-'),
+			                                LPAD(gb.f_pay_period_end, 2, '0')),
+			                        '%Y-%m-%d')
+			            ELSE DATE_ADD(LAST_DAY(NOW()),
+			                INTERVAL - 1 MONTH)
+			        END),
+			        INTERVAL + 1 DAY)
+			        AND pr1.t_user_has_t_room_f_id = ur.f_id
+			WHERE
+			    1 = 1 AND pr1.f_discount IS NULL
+			GROUP BY u.f_id , u.f_default_room_id , DATE_FORMAT((CASE
+			            WHEN
+			                gb.f_pay_period_end >= EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			            THEN
+			                STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+			                                        '%Y-%m-'),
+			                                LPAD(gb.f_pay_period_end, 2, '0')),
+			                        '%Y-%m-%d')
+			            WHEN
+			                gb.f_pay_period_end < EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			            THEN
+			                STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 0 MONTH),
+			                                        '%Y-%m-'),
+			                                LPAD(gb.f_pay_period_end, 2, '0')),
+			                        '%Y-%m-%d')
+			            ELSE DATE_ADD(LAST_DAY(NOW()),
+			                INTERVAL - 1 MONTH)
+			        END),
+			        '%Y') , DATE_FORMAT((CASE
+			            WHEN
+			                gb.f_pay_period_end >= EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			            THEN
+			                STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH),
+			                                        '%Y-%m-'),
+			                                LPAD(gb.f_pay_period_end, 2, '0')),
+			                        '%Y-%m-%d')
+			            WHEN
+			                gb.f_pay_period_end < EXTRACT(DAY FROM DATE_ADD(NOW(), INTERVAL - 1 MONTH))
+			            THEN
+			                STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 0 MONTH),
+			                                        '%Y-%m-'),
+			                                LPAD(gb.f_pay_period_end, 2, '0')),
+			                        '%Y-%m-%d')
+			            ELSE DATE_ADD(LAST_DAY(NOW()),
+			                INTERVAL - 1 MONTH)
+			        END),
+			        '%m') , pr1.f_discount , gb.f_sign_status
+		]]>
+	</select>
+	<!-- <select id="select_UnusedPrize_Discount_List" resultMap="preMonthDiscountInfoEntity_Map">
+		<![CDATA[  
+		select 
+		    u.f_id f_userid,
+		    u.f_default_room_id f_default_room_id,
+		    date_format(p.f_prize_time, '%Y') f_year,
+		    date_format(p.f_prize_time, '%m') f_month,
+		    case
+		        when p1.f_discount is null then 0
+		        when p1.f_discount is not null then 1
+		    end f_staus
+		from
+		    t_user u
+		    join t_user_has_t_room ur ON ur.t_user_f_id = u.f_id and ur.t_room_f_id = u.f_default_room_id
+		    	and ur.f_apply_status = 1 
+		    join
+		    (select  * from t_prize_record
+		    	where
+		        f_prize_time >= date_add(date_add(last_day(now()), interval 1 day), interval - 2 month)
+		            and f_prize_time < date_add(last_day(date_add(date_add(last_day(now()), interval 1 day), interval - 2 month)), interval 1 day)
+		     ) p ON p.t_user_has_t_room_f_id = ur.f_id
+	        left join
+	    	(select * from t_prize_record
+		    	where
+		        	f_status = 1
+		            and f_prize_time >= date_add(date_add(last_day(now()), interval 1 day), interval - 2 month)
+		            and f_prize_time < date_add(last_day(date_add(date_add(last_day(now()), interval 1 day), interval - 2 month)), interval 1 day)
+		    ) p1 ON p1.t_user_has_t_room_f_id = ur.f_id
+		    where 1=1
+			and p1.f_discount is  null
+			group by u.f_id , u.f_default_room_id , date_format(p.f_prize_time, '%Y') , date_format(p.f_prize_time, '%m') , p1.f_discount
+		]]>
+	</select> -->
+	
+	<select id="select_UserPushInfo_ByUser" parameterType="java.util.Map" resultMap="userPushInfoBase.userPushInfoBaseMap_AppendTable">
+		SELECT <include refid="userPushInfoBase.queryHead_AppendTable"/>
+		FROM t_user_push_info UPI
+    	WHERE 1=1
+    	AND UPI.f_sys0_del_state = 0
+    	AND UPI.f_user_type = #{userType}
+    	AND UPI.f_user_id=#{userId} 
+    	AND UPI.t_channel_sub_f_id = #{subChannelId}
+	</select>
+	
+	<select id="select_UserPushInfo_ByBaidu" parameterType="java.util.Map" resultMap="userPushInfoBase.userPushInfoBaseMap_AppendTable">
+		SELECT <include refid="userPushInfoBase.queryHead_AppendTable"/>
+		FROM t_user_push_info UPI
+    	WHERE 1=1
+    	AND UPI.f_sys0_del_state = 0
+    	AND UPI.f_baidu_channel_id = #{baiduChannelId}
+    	AND UPI.f_baidu_user_id = #{baiduUserId} 
+    	AND UPI.t_channel_sub_f_id = #{subChannelId}
+	</select>
+    
+    <select id="select_UserPushInfo_ByChannel" parameterType="java.util.Map" resultMap="userPushInfoBase.userPushInfoBaseMap_AppendTable">
+        SELECT <include refid="userPushInfoBase.queryHead_AppendTable"/>
+        FROM t_user_push_info UPI
+        WHERE 1=1
+        AND UPI.f_sys0_del_state = 0
+        AND UPI.t_channel_sub_f_id = #{subChannelId}
+        AND UPI.${column} = #{channelid}
+        <if test="exclude != null and exclude.size() > 0">  AND UPI.f_user_id not in 
+        <foreach item="item" collection="exclude" open="(" separator="," close=")">
+            #{item.userId}
+        </foreach>
+        </if>
+    </select>
+	
+	<!-- 移除历史绑定信息 -->
+	<!-- <update id="remove_History_BindInfo" parameterType="java.util.Map">
+		UPDATE t_user_push_info UPI
+		SET UPI.f_sys0_del_state= 1
+			,UPI.f_sys0_del_time= SYSDATE()
+		WHERE 1=1  
+		AND UPI.f_sys0_del_state = 0
+		AND (
+			(UPI.f_baidu_user_id = #{baiduUserId} AND UPI.f_baidu_channel_id = #{baiduChannelId} ) 
+			OR (UPI.f_user_id=#{userId} AND UPI.f_user_type = #{userType} ) 
+		)
+		AND UPI.t_channel_sub_f_id = #{subChannelId}
+	</update> -->
+	
+	<select id="select_NotPushId_ByLock" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT UHTM.f_id
+		FROM t_user_has_t_message UHTM
+		WHERE 1=1
+		AND UHTM.f_id = #{userHasMsgId}
+		AND UHTM.f_send_status != 1 <!-- 消息发送状态=={"0":"未发送","1":"发送成功","2":"发送失败"} -->
+		AND UHTM.f_sys0_del_state = 0
+		<![CDATA[ AND ( (ISNULL(UHTM.f_expiry_time)) OR (UHTM.f_expiry_time>=NOW())) ]]> <!-- 失效时间为空或者未失效 -->
+		<![CDATA[ AND ( (ISNULL(UHTM.f_try_failed_count)) OR (UHTM.f_try_failed_count<3) )  ]]> <!-- 尝试的错误次数小于3次 -->
+		AND UHTM.f_sys0_add_time >= DATE_ADD(NOW(),INTERVAL -24 HOUR) <!-- 24小时之内的 -->
+		FOR UPDATE
+	</select>
+	
+	<select id="select_ToSendMsgIdList_Now" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT f_id
+		FROM t_message
+		WHERE 1=1
+		AND f_type IN 
+		<foreach item="item" collection="msgType" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		<![CDATA[
+		AND NOW() >= f_time
+		AND f_time >= DATE_ADD(NOW(),INTERVAL -24 HOUR)
+		]]>
+		AND IF(f_type=3, f_send_state=1, TRUE)
+	</select>
+	
+	<select id="select_ToSendUserHasMsgList_ByMsgId" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT UHTM.f_id
+		FROM t_message M
+		INNER JOIN t_user_has_t_message UHTM ON 
+			UHTM.t_message_f_id = M.f_id
+			AND UHTM.f_send_status != 1  <!-- 消息发送状态=={"0":"未发送","1":"发送成功","2":"发送失败"} -->
+			AND UHTM.f_sys0_del_state = 0
+			<![CDATA[ AND ( (ISNULL(UHTM.f_expiry_time)) OR (UHTM.f_expiry_time>=NOW())) ]]> <!-- 失效时间为空或者未失效 -->
+			<![CDATA[ AND ( (ISNULL(UHTM.f_try_failed_count)) OR (UHTM.f_try_failed_count<3) )  ]]> <!-- 尝试的错误次数小于3次 -->
+			AND UHTM.f_sys0_add_time >= DATE_ADD(NOW(),INTERVAL -24 HOUR) <!-- 24小时之内的 -->
+		WHERE 1=1
+		AND M.f_id = #{msgId}
+		AND M.f_sys0_del_state = 0
+		AND EXISTS (
+			SELECT UPI.f_id
+			FROM t_user_push_info UPI
+			WHERE 1=1
+			AND UPI.f_user_type = UHTM.f_user_type
+			AND UPI.f_user_id = UHTM.t_user_f_id
+			AND UPI.f_sys0_del_state = 0
+		)
+	</select>
+	<select id="getPushSystemParamConfig" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT f_sys_para_value FROM t_comm_sys_para WHERE f_sys_para_code=#{param_config} AND f_sys0_del_state = 0;
+	</select>
+    
+    <update id="batch_update_channelid" parameterType="java.util.Map">
+        <if test="upis != null and upis.size() > 0">
+        <if test="channelid != null">update t_user_push_info UPI set UPI.${column}=#{channelid}</if>
+        <if test="channelid == null">update t_user_push_info UPI set UPI.${column}=null</if>
+        where UPI.f_id in
+        <foreach item="item" collection="upis" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+        </if>
+    </update>
+
+	<update id="update_userPushInfo_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+			UPDATE t_user_push_info
+			<trim prefix="SET" prefixOverrides=",">
+				<if test="item.tChannelSubFId != null and !item.tChannelSubFId.equals('')  "> ,t_channel_sub_f_id=#{item.tChannelSubFId}</if>
+				<if test="item.baiduUserId != null and !item.baiduUserId.equals('')  "> ,f_baidu_user_id=#{item.baiduUserId}</if>
+				<if test="item.baiduChannelId != null and !item.baiduChannelId.equals('')  "> ,f_baidu_channel_id=#{item.baiduChannelId}</if>
+				,f_channel_gt=#{item.channelGt},f_channel_xm=#{item.channelXm},f_channel_hw=#{item.channelHw},f_channel_bd=#{item.channelBd}
+				<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if>
+				<if test="item.userType != null and !item.userType.equals('')  "> ,f_user_type=#{item.userType}</if>
+				<if test="item.userAgent != null and !item.userAgent.equals('')  "> ,f_user_agent=#{item.userAgent}</if>
+				<if test="item.appVersion != null and !item.appVersion.equals('')  "> ,f_app_version=#{item.appVersion}</if>
+				<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+				<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+				<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+				<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+				<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+				<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+				<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+				<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+			</trim>
+			WHERE f_id=#{item.id}
+		</foreach>
+	</update>
+</mapper>

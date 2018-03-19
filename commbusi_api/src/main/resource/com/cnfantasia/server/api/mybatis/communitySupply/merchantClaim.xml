@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 社区商家新增及认领 -->
+<mapper namespace="merchantClaim">
+	
+	<!-- 查询新增商家可选的类别列表 -->
+	<select id="select_CommunitySupplyType_CanAdd_List" resultMap="communitySupplyTypeBase.communitySupplyTypeBaseMap_AppendTable">
+		SELECT <include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+		FROM t_community_supply_type_can_add CSTCA
+			INNER JOIN t_community_supply_type CST ON CSTCA.t_community_supply_type_f_id = CST.f_id AND CST.f_sys0_del_state = 0 
+    	WHERE 1=1
+    	AND CSTCA.f_sys0_del_state = 0 
+    	ORDER BY CSTCA.f_order ASC,CSTCA.f_id ASC
+	</select>
+	
+	<!-- 查询对应关系的成功的认领信息 -->
+	<select id="select_CommunitySupplyBelong_Success" parameterType="java.util.Map" 
+		resultMap="communitySupplyBelongBase.communitySupplyBelongBaseMap_AppendTable">
+		SELECT <include refid="communitySupplyBelongBase.queryHead_AppendTable"/>
+		FROM t_community_supply_belong CSB
+		WHERE 1=1 
+		AND CSB.t_group_building_has_t_community_supply_f_id = #{groupBuilding_communitySupply_RelaId}
+		AND CSB.f_audit_status = 2 <!-- 认领状态=={"1":"待审批","2":"审核通过","3":"审核不通过"} -->
+		ORDER BY f_id DESC 
+		LIMIT 0,1
+	</select>
+	
+	
+</mapper>

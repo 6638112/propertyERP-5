@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:缓存的socket数据 t_park_cache -->
+<mapper namespace="parkCacheBase">
+	<resultMap type="ParkCache" id="parkCacheBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键 -->        <result column="f_trade_code" javaType="java.lang.String" property="tradeCode"/>  <!-- x小区的业务编号 -->        <result column="f_buffer" javaType="Byte[]" property="buffer"/>  <!-- 缓存 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->		<result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState" />  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="ParkCache" id="parkCacheExtendMap" extends="parkCacheBaseMap">
+	</resultMap>
+	<resultMap type="ParkCache" id="parkCacheBaseMap_AppendTable">
+        <id column="PCid" javaType="java.math.BigInteger" property="id"/>  <!-- 主键 -->        <result column="PCtradeCode" javaType="java.lang.String" property="tradeCode"/>  <!-- x小区的业务编号 -->        <result column="PCbuffer" javaType="Byte[]" property="buffer"/>  <!-- 缓存 -->        <result column="PCsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="PCsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="PCsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="PCsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="PCsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="PCsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="PCsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="ParkCache" id="parkCacheBaseMap_AppendTable1">
+        <id column="PC1id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键 -->        <result column="PC1tradeCode" javaType="java.lang.String" property="tradeCode"/>  <!-- x小区的业务编号 -->        <result column="PC1buffer" javaType="Byte[]" property="buffer"/>  <!-- 缓存 -->        <result column="PC1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="PC1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="PC1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="PC1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="PC1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="PC1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->		<result column="PC1sys0DelState" javaType="java.lang.Integer" property="sys0DelState" />  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取 -->
+	<sql id="queryHead">
+		PC.f_id,PC.f_trade_code,PC.f_buffer
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PC.f_id as PCid,PC.f_trade_code as PCtradeCode,PC.f_buffer as PCbuffer
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PC1.f_id as PC1id,PC1.f_trade_code as PC1tradeCode,PC1.f_buffer as PC1buffer
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PC.f_id = #{id} ) </if>        <if test="tradeCode != null">  and (PC.f_trade_code = #{tradeCode} ) </if>        <if test="buffer != null">  and (PC.f_buffer = #{buffer} ) </if>		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> and (PC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>		<if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>		</if>		<if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>		</if>		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> and (PC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>		<if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>		</if>		<if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>		</if>		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> and (PC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>		<if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>		</if>		<if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>		</if>		<if test="sys0AddUser != null"> and (PC.f_sys0_add_user = #{sys0AddUser} ) </if>		<if test="sys0UpdUser != null"> and (PC.f_sys0_upd_user = #{sys0UpdUser} ) </if>		<if test="sys0DelUser != null"> and (PC.f_sys0_del_user = #{sys0DelUser} ) </if>		<if test="sys0DelState != null"> and (PC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (PC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PC.f_id = #{id} ) </if>        <if test="tradeCode != null and !tradeCode.equals('')  ">  and (PC.f_trade_code like CONCAT('%',#{tradeCode},'%') ) </if>        <if test="buffer != null and !buffer.length>0  ">  and (PC.f_buffer=#{buffer}) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>		</if>		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> and (PC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>		<if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>		</if>		<if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>		</if>		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> and (PC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>		<if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>		</if>		<if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>		</if>		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> and (PC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (PC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="parkCacheBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="parkCacheBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="parkCacheBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="parkCacheBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_park_cache PC
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(缓存的socket数据)信息。 -->
+	<sql id="select_parkCache">
+		SELECT <include refid="parkCacheBase.queryHead"/>
+		<include refid="parkCacheBase.busiQueryCondition"/>
+		<include refid="parkCacheBase.dimCheckSql"/>
+		ORDER BY PC.f_id DESC
+	</sql>
+	<select id="select_parkCache" parameterType="java.util.Map" resultMap="parkCacheBase.parkCacheExtendMap">
+		<include refid="parkCacheBase.select_parkCache"/>
+	</select>
+	
+	<!-- 根据条件分页查询(缓存的socket数据)信息  -->
+	<sql id="select_parkCache_withPage">
+		SELECT <include refid="parkCacheBase.queryHead"/>
+		<include refid="parkCacheBase.busiQueryCondition"/>
+		<include refid="parkCacheBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_parkCache_withPage" resultMap="parkCacheBase.parkCacheExtendMap" parameterType="java.util.Map">
+		<include refid="parkCacheBase.select_parkCache_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(缓存的socket数据)信息。 -->
+	<sql id="select_parkCache_bySeqId">
+		SELECT <include refid="parkCacheBase.queryHead"/>
+		<include refid="parkCacheBase.busiQueryCondition"/>
+		 and PC.f_id = #{_parameter}
+	</sql>
+	<select id="select_parkCache_bySeqId" parameterType="java.math.BigInteger" resultMap="parkCacheBase.parkCacheBaseMap">
+		<include refid="parkCacheBase.select_parkCache_bySeqId"/>
+	</select>
+
+	<!-- 根据条件查询满足条件的(缓存的socket数据)记录数 -->
+	<sql id="select_parkCache_count">
+		SELECT COUNT(*)
+		<include refid="parkCacheBase.busiQueryCount" />
+		<include refid="parkCacheBase.dimCheckSql" />
+	</sql>
+	<select id="select_parkCache_count" resultType="java.lang.Integer">
+		<include refid="parkCacheBase.select_parkCache_count"/>
+	</select>
+	
+	 <!-- 往(缓存的socket数据)新增一条记录。 -->
+	 <sql id="insert_parkCache">
+		INSERT INTO t_park_cache 
+		(f_id,f_trade_code,f_buffer,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tradeCode,jdbcType=VARCHAR},#{buffer,jdbcType=BLOB},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_parkCache" parameterType="ParkCache">
+		<include refid="parkCacheBase.insert_parkCache"/>
+    </insert>
+    
+	<!-- 批量新增(缓存的socket数据)信息 -->
+    <insert id="insert_parkCache_Batch" parameterType="java.util.List">
+    	INSERT INTO t_park_cache 
+		(f_id,f_trade_code,f_buffer,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tradeCode,jdbcType=VARCHAR},#{item.buffer,jdbcType=BLOB},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(缓存的socket数据)信息。 -->
+    <sql id="update_parkCache">
+		UPDATE t_park_cache		<trim prefix="SET" prefixOverrides=","> 		<if test="tradeCode != null and !tradeCode.equals('') "> ,f_trade_code=#{tradeCode}</if> 		<if test="buffer != null and !buffer.length>0 "> ,f_buffer=#{buffer}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>			<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>			<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+	</sql>
+	<update id="update_parkCache" parameterType="ParkCache">
+		<include refid="parkCacheBase.update_parkCache" />
+	</update>
+
+	<!-- 批量更新(缓存的socket数据)信息。 -->
+    <update id="update_parkCache_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_park_cache		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tradeCode != null and !item.tradeCode.equals('')  "> ,f_trade_code=#{item.tradeCode}</if> 		<if test="item.buffer != null and !item.buffer.length>0  "> ,f_buffer=#{item.buffer}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>				<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>				<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>			</trim>			WHERE f_id=#{item.id}
+		</foreach>
+	</update>
+
+   <!-- 根据序列号删除(缓存的socket数据)信息_逻辑删除。 -->
+    <sql id="delete_parkCache_Logic">
+		UPDATE t_park_cache		<trim prefix="SET" prefixOverrides=","> 		<if test="tradeCode != null and !tradeCode.equals('')  "> ,f_trade_code=#{tradeCode}</if> 		<if test="buffer != null and !buffer.length>0  "> ,f_buffer=#{buffer}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>			<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>			,f_sys0_del_state= 1		</trim>		WHERE 1=1		AND f_sys0_del_state = 0		AND f_id=#{id}
+	</sql>
+	<update id="delete_parkCache_Logic" parameterType="ParkCache">
+		<include refid="parkCacheBase.delete_parkCache_Logic" />
+	</update>
+
+	<!-- 批量删除(缓存的socket数据)信息_逻辑删除 -->
+    <update id="delete_parkCache_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_park_cache		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tradeCode != null and !item.tradeCode.equals('')  "> ,f_trade_code=#{item.tradeCode}</if> 		<if test="item.buffer != null and !item.buffer.length>0  "> ,f_buffer=#{item.buffer}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>				<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>				,f_sys0_del_state= 1			</trim>			WHERE 1=1			AND f_sys0_del_state = 0			AND f_id=#{item.id}
+		</foreach>
+	</update>
+
+	<!-- 根据序列号删除(缓存的socket数据)信息。 -->
+	<sql id="delete_parkCache">
+		DELETE FROM t_park_cache WHERE f_id=#{_parameter}
+	</sql>
+	<delete id="delete_parkCache" parameterType="java.lang.String">
+		<include refid="parkCacheBase.delete_parkCache" />
+	</delete>
+
+	<!-- 根据序列号批量删除(缓存的socket数据)信息。 -->
+	<delete id="delete_parkCache_Batch" parameterType="java.util.List">
+		DELETE FROM t_park_cache WHERE 1=1 AND f_id IN
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+</mapper>

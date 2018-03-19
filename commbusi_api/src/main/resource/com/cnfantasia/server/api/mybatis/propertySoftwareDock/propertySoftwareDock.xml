@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  秒杀活动 -->
+<mapper namespace="propertySoftwareDock">
+
+    <resultMap id="realRoomSysInfoMap" type="com.propertySoftwareDock.base.entity.RealRoomSysInfo">
+        <id property="realRoomId" column="realRoomId" javaType="java.math.BigInteger"/>
+        <result property="softwareRoomId" column="softwareRoomId" javaType="java.lang.String"/>
+        <result property="softwareCustomerId" column="softwareCustomerId" javaType="java.lang.String"/>
+        <result property="realRoomMapperId" column="realRoomMapperId" javaType="java.math.BigInteger"/>
+        <association property="realRoom" javaType="com.cnfantasia.server.domainbase.realRoom.entity.RealRoom">
+            <id property="id" column="realRoomId" javaType="java.math.BigInteger"/>
+            <result property="numTail" column="numTail" javaType="java.lang.String"/>
+            <result property="num" column="num" javaType="java.lang.String"/>
+            <result property="unitName" column="unitName" javaType="java.lang.String"/>
+            <result property="checkStatus" column="checkStatus" javaType="java.lang.Integer"/>
+        </association>
+        <association property="building" javaType="com.cnfantasia.server.domainbase.building.entity.Building">
+            <id property="id" column="buildingId" javaType="java.math.BigInteger"/>
+            <result property="name" column="buildingName" javaType="java.lang.String"/>
+        </association>
+        <association property="groupBuilding" javaType="com.cnfantasia.server.domainbase.groupBuilding.entity.GroupBuilding">
+            <id property="id" column="gbId" javaType="java.math.BigInteger"/>
+            <result property="name" column="gbName" javaType="java.lang.String"/>
+        </association>
+        <association property="propertyProprietor" javaType="com.cnfantasia.server.domainbase.propertyProprietor.entity.PropertyProprietor">
+            <id property="id" column="proprietorId" javaType="java.math.BigInteger"/>
+            <result property="name" column="proprietorName" javaType="java.lang.String"/>
+            <result property="phone" column="proprietorPhone" javaType="java.lang.String"/>
+        </association>
+    </resultMap>
+
+    <select id="getGbIdByRealRoomId" resultType="bigInteger" parameterType="bigInteger">
+        SELECT gb.f_id FROM t_real_room rr
+        INNER JOIN t_building b ON rr.t_building_f_id = b.f_id AND b.f_sys0_del_state = 0
+        INNER JOIN t_group_building gb ON b.t_group_building_f_id = gb.f_id AND gb.f_sys0_del_state = 0
+        WHERE rr.f_id = #{_parameter}
+    </select>
+
+    <select id="getRealRoomSoftwareInfo" resultType="com.propertySoftwareDock.base.entity.RealRoomSoftwareInfo" parameterType="bigInteger">
+        SELECT rsm.f_software_room_id softwareHouseId, rsm.f_software_customer_id softwareCustomerId, rsm.t_real_room_f_id realRoomId, gb.f_id gbId,
+	            gsc.f_software_gb_id softwareGbId, gsc.f_database_code dbCode, gsc.f_rsa_public_key rsaPublicKey, gsc.f_rsa_private_key rsaPrivateKey,
+	            gsc.f_service_class_name serviceClassName, gsc.f_ip_address serverAddress,gsc.f_default_repairer_id defaultRepairerId,
+	            gsc.f_cannot_connect_start_date cannotConnectStartDate, gsc.f_cannot_connect_end_date cannotConnectEndDate
+        FROM t_realroom_software_mapper rsm
+        RIGHT JOIN t_real_room rr ON rr.f_id = rsm.t_real_room_f_id AND rsm.f_sys0_del_state = 0
+        INNER JOIN t_building b ON rr.t_building_f_id = b.f_id AND b.f_sys0_del_state = 0
+        INNER JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id AND gb.f_sys0_del_state = 0
+        INNER JOIN t_gb_software_config gsc ON gsc.f_gb_id = gb.f_id AND gsc.f_is_valid = 1 AND gsc.f_sys0_del_state = 0
+        WHERE rr.f_sys0_del_state = 0 AND rr.f_id = #{_parameter}
+        ORDER BY gsc.f_id DESC, rsm.f_id DESC
+        LIMIT 1
+    </select>
+
+    <select id="getUnNotifySoftwarePayBillIds" resultType="com.propertySoftwareDock.base.entity.RealRoomSoftwareInfo">
+        SELECT pb.f_id payBillId,
+        (select gsc.f_service_class_name from t_gb_software_config gsc where gsc.f_gb_id = gb.f_id order by gsc.f_id desc limit 1) serviceClassName
+        FROM t_pay_bill pb
+        INNER JOIN t_realroom_software_fee rsf ON pb.t_realroom_software_fee_f_id = rsf.f_id AND rsf.f_notify_count &lt; 10
+        INNER JOIN t_real_room rr on rr.f_id = pb.t_real_room_f_id
+        INNER JOIN t_building b on b.f_id = rr.t_building_f_id
+        INNER JOIN t_group_building gb on gb.f_id = b.t_group_building_f_id
+        WHERE pb.f_sys0_del_state = 0 AND pb.f_is_pay = 1
+        AND CASE WHEN rsf.f_notify_count = 0 OR rsf.f_sys0_upd_time IS NULL THEN 1=1
+                WHEN rsf.f_notify_count = 1 THEN rsf.f_sys0_upd_time &lt; DATE_SUB(now(),INTERVAL 5 MINUTE)
+                ELSE rsf.f_sys0_upd_time &lt; DATE_SUB(now(),INTERVAL 10 MINUTE) END
+    </select>
+
+    <select id="getMapperedRealRoomSysInfoListByGbId" parameterType="bigInteger" resultMap="realRoomSysInfoMap">
+        SELECT rr.f_id realRoomId, rr.f_num_tail numTail, rr.f_num num, rr.f_unit_name unitName,rr.f_check_status checkStatus,
+            gb.f_id gbId, gb.f_name gbName, b.f_id buildingId, b.f_name buildingName,
+            pp.f_id proprietorId, pp.f_name proprietorName, pp.f_phone proprietorPhone,
+            rsm.f_software_room_id softwareRoomId, rsm.f_software_customer_id softwareCustomerId, rsm.f_id realRoomMapperId
+        FROM t_realroom_software_mapper rsm
+        INNER JOIN t_real_room rr ON rr.f_id = rsm.t_real_room_f_id AND rr.f_sys0_del_state = 0
+        INNER JOIN t_building b ON b.f_id = rr.t_building_f_id AND b.f_sys0_del_state = 0
+        INNER JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id AND gb.f_sys0_del_state = 0
+        LEFT JOIN t_property_proprietor pp ON rr.t_property_proprietor_f_id = pp.f_id AND pp.f_sys0_del_state = 0
+        WHERE gb.f_id = #{_parameter} AND rsm.f_sys0_del_state = 0
+    </select>
+
+    <select id="getAllRealRoomSysInfoListByGbId" parameterType="bigInteger" resultMap="realRoomSysInfoMap">
+        SELECT rr.f_id realRoomId, rr.f_num_tail numTail, rr.f_num num, rr.f_unit_name unitName,rr.f_check_status checkStatus,
+        gb.f_id gbId, gb.f_name gbName, b.f_id buildingId, b.f_name buildingName,
+        pp.f_id proprietorId, pp.f_name proprietorName, pp.f_phone proprietorPhone,
+        rsm.f_software_room_id softwareRoomId, rsm.f_software_customer_id softwareCustomerId, rsm.f_id realRoomMapperId
+        FROM t_real_room rr
+        INNER JOIN t_building b ON b.f_id = rr.t_building_f_id AND b.f_sys0_del_state = 0
+        INNER JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id AND gb.f_sys0_del_state = 0
+        LEFT JOIN t_realroom_software_mapper rsm ON rr.f_id = rsm.t_real_room_f_id AND rsm.f_sys0_del_state = 0
+        LEFT JOIN t_property_proprietor pp ON rr.t_property_proprietor_f_id = pp.f_id AND pp.f_sys0_del_state = 0
+        WHERE gb.f_id = #{_parameter} AND rr.f_sys0_del_state = 0
+    </select>
+
+</mapper>

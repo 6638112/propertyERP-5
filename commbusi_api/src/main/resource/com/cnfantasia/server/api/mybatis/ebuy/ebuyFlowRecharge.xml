@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 电商模块 -->
+<mapper namespace="ebuyFlowRecharge">
+	<resultMap type="EbuyFlowRecharge" id="ebuyFlowRechargeMap">
+		<id column="t_order_id" javaType="java.lang.Long" property="orderId"/>
+		<id column="t_product_id" javaType="java.lang.Long" property="productId"/>
+		<result column="f_name" javaType="java.lang.String" property="name"/>
+		<result column="f_flow" javaType="java.lang.String" property="flow" />
+		<result column="f_phone" javaType="java.lang.String" property="phone" />
+		<result column="f_price" javaType="java.math.BigDecimal" property="price" />
+		<result column="f_status" javaType="java.lang.Integer" property="status" />
+		<result column="f_ret_orderId" javaType="java.lang.String" property="retOrderId"/>
+	</resultMap>
+
+	<insert id="insert_flowRecharge" parameterType="EbuyFlowRecharge">
+    	INSERT INTO t_ebuy_order_flow_recharge (t_order_id, t_product_id, f_name, f_flow, f_phone, f_price)
+ 			values(#{orderId}, #{productId}, #{name}, #{flow}, #{phone}, #{price})
+    </insert>
+    
+    <select id="getFlowRecharge" parameterType="java.util.Map" resultMap="ebuyFlowRechargeMap">
+    	select t_order_id, t_product_id, f_name, f_flow, f_phone, f_price, f_status from t_ebuy_order_flow_recharge t
+    	where t.t_order_id = #{orderId}
+    	<if test="productId != null">
+ 			and t.t_product_id = #{productId}
+ 		</if>
+    </select>
+    
+    <select id="getOrderIdForRecharge" parameterType="java.lang.Integer" resultType="java.lang.String">
+    	select t_order_id from t_ebuy_order_flow_recharge t
+    	where t.f_status = 6
+    	limit 100
+    </select>
+    
+    <update id="updateForReloadRecharge">
+    	<![CDATA[ 
+    	 update t_ebuy_order_flow_recharge t
+			set t.f_status = 6, t.f_count = t.f_count + 1
+			 where t.f_count <= 5
+			   and (t.f_status in (2, 4, 5) or (t.f_status = 1 and t.f_update_tm <= DATE_SUB(now(),INTERVAL 1 HOUR)))
+		]]>
+    </update>
+    
+    <update id="updateReloadRechargeStatus">
+    	update t_ebuy_order_flow_recharge t
+			set t.f_status = 7
+		 where t.f_status = 6
+    </update>
+    
+    <update id="update_flowRecharge" parameterType="EbuyFlowRecharge">
+    	update t_ebuy_order_flow_recharge t 
+    	 set t.f_status = #{status}
+    	 <if test="retOrderId != null">, t.f_ret_orderId = #{retOrderId}</if>
+    	 <if test="callBackResult != null">, t.f_call_back_result = #{callBackResult}</if>
+    	where t.t_order_id = #{orderId}
+    </update>
+    
+    <update id="update_flowRechargeOrder" parameterType="EbuyFlowRecharge">
+    	update t_ebuy_order o
+		 inner join t_ebuy_delivery_order de on o.f_id = de.t_ebuy_order_f_id
+		set o.f_status = 5, de.f_status = 3
+		where o.f_id = #{orderId}
+    </update>
+	
+</mapper>

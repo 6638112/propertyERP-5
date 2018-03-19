@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:发盘记录 t_bc_offer_record -->
+<mapper namespace="bcOfferRecordBase">
+	<resultMap type="BcOfferRecord" id="bcOfferRecordBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_payBill_id" javaType="java.math.BigInteger" property="paybillId"/>  <!-- 账单id -->        <result column="f_short_code" javaType="java.lang.String" property="shortCode"/>  <!-- 账单的唯一短编码 -->        <result column="f_offer_content" javaType="java.lang.String" property="offerContent"/>  <!-- 发盘信息 -->        <result column="f_offer_time" javaType="java.lang.String" property="offerTime"/>  <!-- 发盘时间 -->        <result column="t_bc_group_building_cycle_f_id" javaType="java.math.BigInteger" property="tBcGroupBuildingCycleFId"/>  <!--  -->
+	</resultMap>
+	<resultMap type="BcOfferRecord" id="bcOfferRecordExtendMap" extends="bcOfferRecordBaseMap">
+	</resultMap>
+	<resultMap type="BcOfferRecord" id="bcOfferRecordBaseMap_AppendTable">
+        <id column="BORid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="BORpaybillId" javaType="java.math.BigInteger" property="paybillId"/>  <!-- 账单id -->        <result column="BORshortCode" javaType="java.lang.String" property="shortCode"/>  <!-- 账单的唯一短编码 -->        <result column="BORofferContent" javaType="java.lang.String" property="offerContent"/>  <!-- 发盘信息 -->        <result column="BORofferTime" javaType="java.lang.String" property="offerTime"/>  <!-- 发盘时间 -->        <result column="BORtBcGroupBuildingCycleFId" javaType="java.math.BigInteger" property="tBcGroupBuildingCycleFId"/>  <!--  -->
+	</resultMap>
+	<resultMap type="BcOfferRecord" id="bcOfferRecordBaseMap_AppendTable1">
+        <id column="BOR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="BOR1paybillId" javaType="java.math.BigInteger" property="paybillId"/>  <!-- 账单id -->        <result column="BOR1shortCode" javaType="java.lang.String" property="shortCode"/>  <!-- 账单的唯一短编码 -->        <result column="BOR1offerContent" javaType="java.lang.String" property="offerContent"/>  <!-- 发盘信息 -->        <result column="BOR1offerTime" javaType="java.lang.String" property="offerTime"/>  <!-- 发盘时间 -->        <result column="BOR1tBcGroupBuildingCycleFId" javaType="java.math.BigInteger" property="tBcGroupBuildingCycleFId"/>  <!--  -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		BOR.f_id,BOR.f_payBill_id,BOR.f_short_code,BOR.f_offer_content,date_format(BOR.f_offer_time,'%Y-%m-%d %T') as f_offer_time,BOR.t_bc_group_building_cycle_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		BOR.f_id as BORid,BOR.f_payBill_id as BORpaybillId,BOR.f_short_code as BORshortCode,BOR.f_offer_content as BORofferContent,date_format(BOR.f_offer_time,'%Y-%m-%d %T') as BORofferTime,BOR.t_bc_group_building_cycle_f_id as BORtBcGroupBuildingCycleFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		BOR1.f_id as BOR1id,BOR1.f_payBill_id as BOR1paybillId,BOR1.f_short_code as BOR1shortCode,BOR1.f_offer_content as BOR1offerContent,date_format(BOR1.f_offer_time,'%Y-%m-%d %T') as BOR1offerTime,BOR1.t_bc_group_building_cycle_f_id as BOR1tBcGroupBuildingCycleFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (BOR.f_id = #{id} ) </if>        <if test="paybillId != null">  and (BOR.f_payBill_id = #{paybillId} ) </if>        <if test="shortCode != null">  and (BOR.f_short_code = #{shortCode} ) </if>        <if test="offerContent != null">  and (BOR.f_offer_content = #{offerContent} ) </if>        <if test="offerTime != null and !offerTime.equals('')  ">  and (BOR.f_offer_time = str_to_date(#{offerTime},'%Y-%m-%d %T') ) </if>        <if test="offerTime_START != null and !offerTime_START.equals('')  ">              <![CDATA[ and (BOR.f_offer_time >= str_to_date(#{offerTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="offerTime_END != null and !offerTime_END.equals('')  ">            <![CDATA[ and (BOR.f_offer_time <= str_to_date(#{offerTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="tBcGroupBuildingCycleFId != null">  and (BOR.t_bc_group_building_cycle_f_id = #{tBcGroupBuildingCycleFId} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (BOR.f_id = #{id} ) </if>        <if test="paybillId != null and !paybillId.equals('')  ">  and (BOR.f_payBill_id = #{paybillId} ) </if>        <if test="shortCode != null and !shortCode.equals('')  ">  and (BOR.f_short_code like CONCAT('%',#{shortCode},'%') ) </if>        <if test="offerContent != null and !offerContent.equals('')  ">  and (BOR.f_offer_content like CONCAT('%',#{offerContent},'%') ) </if>        <if test="offerTime != null and !offerTime.equals('')  ">  and (BOR.f_offer_time = str_to_date(#{offerTime},'%Y-%m-%d %T') ) </if>        <if test="offerTime_START != null and !offerTime_START.equals('')  ">              <![CDATA[ and (BOR.f_offer_time >= str_to_date(#{offerTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="offerTime_END != null and !offerTime_END.equals('')  ">            <![CDATA[ and (BOR.f_offer_time <= str_to_date(#{offerTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="tBcGroupBuildingCycleFId != null and !tBcGroupBuildingCycleFId.equals('')  ">  and (BOR.t_bc_group_building_cycle_f_id = #{tBcGroupBuildingCycleFId} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="bcOfferRecordBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="bcOfferRecordBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="bcOfferRecordBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="bcOfferRecordBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_bc_offer_record BOR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(发盘记录)信息。 -->
+	<sql id="select_bcOfferRecord">
+		SELECT <include refid="bcOfferRecordBase.queryHead"/>
+		<include refid="bcOfferRecordBase.busiQueryCondition"/>
+		<include refid="bcOfferRecordBase.dimCheckSql"/>
+		ORDER BY BOR.f_id DESC
+	</sql>
+	<select id="select_bcOfferRecord" parameterType="java.util.Map" resultMap="bcOfferRecordBase.bcOfferRecordExtendMap">
+		<include refid="bcOfferRecordBase.select_bcOfferRecord"/>
+	</select>
+	
+	<!-- 根据条件分页查询(发盘记录)信息  -->
+	<sql id="select_bcOfferRecord_withPage">
+		SELECT <include refid="bcOfferRecordBase.queryHead"/>
+		<include refid="bcOfferRecordBase.busiQueryCondition"/>
+		<include refid="bcOfferRecordBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_bcOfferRecord_withPage" resultMap="bcOfferRecordBase.bcOfferRecordExtendMap" parameterType="java.util.Map">
+		<include refid="bcOfferRecordBase.select_bcOfferRecord_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(发盘记录)信息。 -->
+	<sql id="select_bcOfferRecord_bySeqId">
+		SELECT <include refid="bcOfferRecordBase.queryHead"/>
+		<include refid="bcOfferRecordBase.busiQueryCondition"/>
+		 and BOR.f_id = #{_parameter}
+	</sql>
+	<select id="select_bcOfferRecord_bySeqId" parameterType="java.math.BigInteger" resultMap="bcOfferRecordBase.bcOfferRecordBaseMap">
+		<include refid="bcOfferRecordBase.select_bcOfferRecord_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(发盘记录)记录数  -->
+	<sql id="select_bcOfferRecord_count">
+		SELECT COUNT(*)
+		<include refid="bcOfferRecordBase.busiQueryCount"/>
+		<include refid="bcOfferRecordBase.dimCheckSql"/>
+	</sql>
+	<select id="select_bcOfferRecord_count" resultType="java.lang.Integer">
+		<include refid="bcOfferRecordBase.select_bcOfferRecord_count"/>
+	</select>
+	
+	 <!-- 往(发盘记录)新增一条记录。 -->
+	 <sql id="insert_bcOfferRecord">
+		INSERT INTO t_bc_offer_record 
+		(f_id,f_payBill_id,f_short_code,f_offer_content,f_offer_time,t_bc_group_building_cycle_f_id) VALUES 
+		(#{id},#{paybillId},#{shortCode,jdbcType=VARCHAR},#{offerContent,jdbcType=VARCHAR},str_to_date(#{offerTime,jdbcType=DATE},'%Y-%m-%d %T'),#{tBcGroupBuildingCycleFId})
+	 </sql>
+    <insert id="insert_bcOfferRecord" parameterType="BcOfferRecord">
+		<include refid="bcOfferRecordBase.insert_bcOfferRecord"/>
+    </insert>
+    
+	<!-- 批量新增(发盘记录)信息 -->
+    <insert id="insert_bcOfferRecord_Batch" parameterType="java.util.List">
+    	INSERT INTO t_bc_offer_record 
+		(f_id,f_payBill_id,f_short_code,f_offer_content,f_offer_time,t_bc_group_building_cycle_f_id) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.paybillId},#{item.shortCode,jdbcType=VARCHAR},#{item.offerContent,jdbcType=VARCHAR},str_to_date(#{item.offerTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.tBcGroupBuildingCycleFId})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(发盘记录)信息。 -->
+    <sql id="update_bcOfferRecord">
+		UPDATE t_bc_offer_record		<trim prefix="SET" prefixOverrides=","> 		<if test="paybillId != null and !paybillId.equals('') "> ,f_payBill_id=#{paybillId}</if> 		<if test="shortCode != null and !shortCode.equals('') "> ,f_short_code=#{shortCode}</if> 		<if test="offerContent != null and !offerContent.equals('') "> ,f_offer_content=#{offerContent}</if> 		<if test="offerTime != null and !offerTime.equals('') "> ,f_offer_time=str_to_date(#{offerTime},'%Y-%m-%d %T')</if> 		<if test="tBcGroupBuildingCycleFId != null and !tBcGroupBuildingCycleFId.equals('') "> ,t_bc_group_building_cycle_f_id=#{tBcGroupBuildingCycleFId}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_bcOfferRecord" parameterType="BcOfferRecord">
+		<include refid="bcOfferRecordBase.update_bcOfferRecord"/>
+    </update>
+    
+    <!-- 批量更新(发盘记录)信息。 -->
+    <update id="update_bcOfferRecord_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_bc_offer_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.paybillId != null and !item.paybillId.equals('')  "> ,f_payBill_id=#{item.paybillId}</if> 		<if test="item.shortCode != null and !item.shortCode.equals('')  "> ,f_short_code=#{item.shortCode}</if> 		<if test="item.offerContent != null and !item.offerContent.equals('')  "> ,f_offer_content=#{item.offerContent}</if> 		<if test="item.offerTime != null and !item.offerTime.equals('')  "> ,f_offer_time=str_to_date(#{item.offerTime},'%Y-%m-%d %T')</if> 		<if test="item.tBcGroupBuildingCycleFId != null and !item.tBcGroupBuildingCycleFId.equals('')  "> ,t_bc_group_building_cycle_f_id=#{item.tBcGroupBuildingCycleFId}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(发盘记录)信息_逻辑删除。 -->
+    <!-- <sql id="delete_bcOfferRecord_Logic">
+		UPDATE t_bc_offer_record		<trim prefix="SET" prefixOverrides=","> 		<if test="paybillId != null and !paybillId.equals('')  "> ,f_payBill_id=#{paybillId}</if> 		<if test="shortCode != null and !shortCode.equals('')  "> ,f_short_code=#{shortCode}</if> 		<if test="offerContent != null and !offerContent.equals('')  "> ,f_offer_content=#{offerContent}</if> 		<if test="offerTime != null and !offerTime.equals('')  "> ,f_offer_time=str_to_date(#{offerTime},'%Y-%m-%d %T')</if> 		<if test="tBcGroupBuildingCycleFId != null and !tBcGroupBuildingCycleFId.equals('')  "> ,t_bc_group_building_cycle_f_id=#{tBcGroupBuildingCycleFId}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_bcOfferRecord_Logic" parameterType="BcOfferRecord">
+		<include refid="bcOfferRecordBase.delete_bcOfferRecord_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(发盘记录)信息_逻辑删除 -->
+    <!-- <update id="delete_bcOfferRecord_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_bc_offer_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.paybillId != null and !item.paybillId.equals('')  "> ,f_payBill_id=#{item.paybillId}</if> 		<if test="item.shortCode != null and !item.shortCode.equals('')  "> ,f_short_code=#{item.shortCode}</if> 		<if test="item.offerContent != null and !item.offerContent.equals('')  "> ,f_offer_content=#{item.offerContent}</if> 		<if test="item.offerTime != null and !item.offerTime.equals('')  "> ,f_offer_time=str_to_date(#{item.offerTime},'%Y-%m-%d %T')</if> 		<if test="item.tBcGroupBuildingCycleFId != null and !item.tBcGroupBuildingCycleFId.equals('')  "> ,t_bc_group_building_cycle_f_id=#{item.tBcGroupBuildingCycleFId}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(发盘记录)信息。 -->
+    <sql id="delete_bcOfferRecord">
+		DELETE FROM t_bc_offer_record WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_bcOfferRecord" parameterType="java.lang.String">
+		<include refid="bcOfferRecordBase.delete_bcOfferRecord"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(发盘记录)信息。 -->
+    <delete id="delete_bcOfferRecord_Batch" parameterType="java.util.List">
+		DELETE FROM t_bc_offer_record WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

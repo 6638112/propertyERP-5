@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang = "zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta charset="utf-8">
+<title>流量充值</title>
+<meta content="telephone=no" name="format-detection">
+<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta content="telephone=no" name="format-detection">
+<link rel="stylesheet" href="common/wx.css">
+<link rel="stylesheet" href="common/flow.css">
+<script type="text/javascript" src="common/jquery-2.1.3.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="common/jquery/themes/icon.css">
+<script type="text/javascript" src="common/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="common/jquery/jquery.easyui.min.js"></script>
+<script type="text/javascript">
+	
+	function getUrlParam(name) {
+		//构造一个含有目标参数的正则表达式对象  
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		//匹配目标参数  
+		var r = window.location.search.substr(1).match(reg);
+		//返回参数值  
+		if (r != null)
+			return unescape(r[2]);
+		return null;
+	}
+	
+</script>
+</head>
+
+
+<body>
+
+	<div class="fc_bg" style="z-index:100; display:none; width:100%; height:100%; position:absolute; top:0; left:0; background:#000; opacity:0.6;"></div>
+	<div class="fc_box" style="z-index:101;display:none;position:absolute;top:100px;left:0;width:100%;">
+		<div class="fc_main" style="margin:0 auto;width:50%;background-color:#FFFFFF;border-radius:10px;padding:24px;">
+			<img style="display:block;margin:0 auto" src="imgs/indicator_medium.gif" />
+	    	<p style="font-family:'microsoft yahei';text-align:center;margin-top:20px;margin-bottom:0">加载中，请稍后...</p>
+		</div>
+	</div>
+	<!--nav-->
+	<div id="J_nav" class="nav">
+		<div class="nav_inner">
+			<div class="nav_list">
+				<div class="nav-item">
+					<a href="#">充话费</a>
+				</div>
+			</div>
+			<input type="hidden" name="" id="phoneChargingType" value="1" />
+		</div>
+	</div>
+	<!--end nav-->
+	<form method="post">
+		<input type="hidden" id="packageId" name="packageID" value="" /> 
+		<input type="hidden" id="price" value="" />
+		<input type="hidden" name="uuid" id="uuid" value="" />
+
+		<div id="J_Content" class="tab-content">
+			<div id="J_Content_new" class="tab-pannel tb-wx">
+				<div class="hidden"></div>
+				<div class="number">
+					<div class="tel-control">
+						<input type="tel" class="tel" value="" placeholder="请输入11位手机号码" maxlength="11" name="userPhone"><span class="number-clear"><img src="common/img/quickdelete.png"/></span>
+					</div>
+					<div class="number-input-control">
+						<button class="number-input-cancel" type="button">取消</button>
+					</div>
+				</div>
+
+				<div id="div_j_box_step" class="step-tip j-box-step">
+					<div class="flow-step cur">
+						<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABBCAAAAABXib1TAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAJdnBBZwAAAEgAAABBAB+7S0wAAAQESURBVFjDpZgNWxM5EID9//8iST9YymNRtMAdoPhYtAX5KHjUHlcsIiIFsRa5fuxmLpPN7mZ3023am6dsIcm+mZnMTBKewHzy79dPh/vHnSEA9xuezMepE0ZRCsdBy3ygFiWEUmSxY6XSHCAONzmqMIyw/vwaPZQoJdIy/Ho/r0YchhtUGYZS+h+meW+pJvdJELfD1PbF80NAEaqdJ0HfaisOMwnFR1txTiitegB/KZDoPNJBHLqrdKIIdxyp2Tr49+YY4HOOKpfXYxqd5UnovoSgY6tq2HcmX64MAK4KVEal6lOgM2rG+I1s3fMd2HOY37Qsoud2kQkoITsa6D7nhzwxsQh9NvKnGzwNBpHSD4BfZXxpoReB+IZ8YeHwsmeQX72hzxlXNH7xWmTuinjtK0SgO9m1+nvKwr+KWZzrAIz+pCeggQ7lFFM4UI+tgDCwCeC1QAetYVcjI5RRTtPuO9AGSdAylbbyrODuJEMCH4cJkIPN/Uy7bvI0TSr1E6AFtDgT1HfS8cXy3chwBcK+hwzOoExS8croF92FCsQyQW7FVyHOacY8Ol0jsQTbpuzZiw+zMW0vmTIor/nMoKYpkSsuWIG4/4NfFzmDXeUB2IEiuS3oJUH9vtjjfAYQRnp/MbnuovTmv0fLbqnRoJzASJU6hpHZIHctVTkF6aPS98YaxN+YAqimeg92desmgnDMftIu1G6L++v5t9o+LDRqGWo4eTn2J7lizBZ0ydIbCymrOnqXZ3TXErQVlC/t6fz0/YIHEmvTvDcYM4QE9onv/LXy3hG1Bp2LF+r4NmFRLWoHvQ1r0CN9J2Y+CbNdPsIDoz2Iiz3jlcvhTNgW+nwHZgfBumhZFTvsZSHMsQ1vRhA6cyBL63Ox1l1HJcnKCGbWCMNW+mXpXpxAnspitvTIZwcBbBK/qi6IgvH4QjCL97GqYQsa5YLcyos9Z7BOc9/i9ccW1A5zlLAWB3f7H+CxDX06yB+8rZ+5TKcLS43cItULWo1rc8wEughjBx+bl+lDih2I74gMI35qLH54MB3lGzhJuowU4yCviB7Cz9q5B8YrQQNP6mmNnDjoSmYqK9R7E+8VsoyYNSIP4dw1nO7FJ5dPPsAd67tADMQijbwSzVe7gb8yNDI6m0SgbvljcmdP4RpEapTcjpZwne+CpqHFfWsXY+MgpdFLVLQ1/fVIsFzR0xSoihqt2138pPTkHesqBfosM6tpxcDpxvJuV3RToLEjc+Hd0E6f2+fybhxbfXXNCk53y5vT5Q/Hr56FRwOIb0W7abYQ/z4jFGqDAQTDiuy0QakJk1UquBy7VUInXWrjIgcVE/ro1/XuVs6Gg1LaSx1qY/+JGF23T6dLs3MXxoEm/wFinOK7kK557AAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxNS0wMS0yOVQxNDowNzoxMCswODowMFkhDqYAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTUtMDEtMjlUMTQ6MDc6MTArMDg6MDAofLYaAAAAAElFTkSuQmCC" />
+						<p>1.填号码</p>
+					</div>
+
+					<div class="flow-step">
+						<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABBCAAAAABXib1TAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAJdnBBZwAAAEgAAABBAB+7S0wAAAORSURBVFjDrZiJdqowEIZ5/9dLBlFBW+ty3C3uCJObDUgwYKx3bO05CXz8s2QSGrD/ZMEnN2OxTpI4SUZJcvwzCPnv4wso5T+U7j9SdOgRSgn/hMdPXMt/qDRCe5dPYnTpC4pwLbqhAXrsV/NZq80f2OBsgWqLbnIgkHE7jSkRzrqMAIUd6vCi/LBiWnH6d1aBipnQCG6OCMLSTha7DavJfqaGBCiPCagnt9jMTjseQxAOSL/u5XjAcCLkAAGnb5z+jVrIU3ho76ZclaCdKik6mE6dgV4UdiEuoHK5d63dDfJIjn5lflkvvmu14bnmsCCVYz+e1ZPFdQroscZw0Ez6mqMX5943wre3poKRFOTHuUZQZoDC2p4LBiJVGy/OKSyd4jZvTAZS7I7ZGXZaWvYMYRNs3BBEJciXI1dAkjenhSLiA/o1yzSSxWJJCgZ+ig7UrPvLcxzqGL3iVPmi9NdxRQVSC6peDuYzMbXW35p1gVQgYKFKEy3aEUoxwr0pewk68PbQK2uqlnQxGgwhw/wlaKfi2U/tS0oOmJ21A4QH3pXk9TDm2wKWiu7muiA01VKxXdGkXNZc17TqKo9BmXdiBxpbFRVxHQoIV4Vsq3wQNEn8ndR3LmyWoQizSDmg2/FeVMTE6rqDvJKzDDuyZoeVJme2tPp3eKtEbGkXSBSwsSsBHZtyzFbGL+wEaQW2sMpmlZ4TvAAhjwmpk6SDrAfiQocHb6LDhXbmmou2GOrlQCpJoL7EnqGXj2wpIXa5JuqvsU0S/b0t9eje1B0jpleoqG9qbr1gVJAC9TpASuz6eecmtJ8b1ZxqEHYqYvjtSNqZNRW9dI0fTwZKhkFasrdBQu4VGoKG+D5I2sGACODVbJv+IH7D1Ap1cyP2dk3UpZH6Ef4FpO1Whwiu5iPeA6HoE6Vtn57yjqKq80rH0AckFrcLlMnjBcD9eapd0d4BYkcZ71VDDbYrcoZBGD8VkiE6Jg7vKOL9Iu9ROLlA6VvBls5NnOOtMYK2Y80s8wfFIkZr9pZtXSC540xUVHxMXCVWIsSNxraQ1ZL5coRlkeOYFJwkKPHHsGIsm2/j8BOgeonrp4Un5iQ3LDponkZ4jtWmEcajOHllcRLKDZM8lR5/g5wrUtubqNtmrHH0D5jRDsEPQvguh/isiLGNJ0FjKKyeYydB+FhE/qRo7qr3QL/Os2u64bZ9ZZvfs7tSPvq3j2n/AI0uKC1tsFT9AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE1LTAxLTI5VDE0OjA3OjEwKzA4OjAwWSEOpgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNS0wMS0yOVQxNDowNzoxMCswODowMCh8thoAAAAASUVORK5CYII=" />
+						<p>2.选面值</p>
+					</div>
+
+					<div class="flow-step">
+						<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEkAAABBCAAAAAC4S9ZtAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAJdnBBZwAAAEkAAABBANTnmOkAAAMSSURBVFjDrZgNU+IwEIb9/38v2ZY5TfRQzhNFnEFax2s3l2z6kTShbMEdBKc0T97d7G5SbsxP2c2lA9G+vuu6xatJBo8FSFk8fV9NOhbSmbhrryR1IAlyex2JQIJYq5TUHnbb07bPKSL7GkluHUy1Bpma6N/hOIQ6dE0IkPtIE26GwQD21Zm7mT7koZ/RKSpFONtrSGo1jQlkBLLchffAtU8S098Nug1IuLZfWp1ECZ0EkijlCwaulTDMZme/j7LgXXgthdZaKaWV7oz+V/o5UFSVQvRRsNYp6kjtiiTpCs2c0bdVISBQPIA86YOuP85zOkVF57/H6cZEpEdKsKabdRYUZ4oOviLSrbv6fI5iJ6qKGNROSTTRx5kYIcUoXFkVgjyJrn/yYjRmiV1+zJKOsxRSFKWbbuKo8jXVMzGKSDBPssGGvpBcSmrEUyTSdDoLwlWDjKJ573D8mCy/apFPim4l13zlO0leETJJ4Y3Hsq9XChWVSCIqQ0KMomm7aRk0LoD7xmAmoAnJYtoYVZdj84OoaHGW9EbDXuJVgyEfRWbVTpJkSELnGohBkWqCwe3xHAlGknUtbOkRCH+/8TURyEoSPt6qCfq52UgOiUZg3Td/33GjhMStYJFS14SI+9Hewnmk1uZRVCL33jUvCw9OK4uE5qsH+QxQ/6JFV25r5mlyrdZvnUOrDTNRS6YmCvaY2eCCHaW04pKqbB5hSOJF/E85VL7P7KRkuZomjS0FsUlylCTiWltOEsN+pMM8ukiT6F0z5hpN4M9t2V3kgjhZ3F2D15KANN3mXWORXuQJU0tJrz9G2uU5Ijq/sTXlHhbgbrkmIbKqFmvalUXG7MXFJHPi7DO9yCKxLE9aucjsGMdxusPXM/Wd/ZSkXEKvOY8IpjtPmyrxg0h/F7uHbkMQRXKyryiDVlwUmmZDhbk2UxI++JR52tdnrHJvh+2tr/CvhGRq6Boty7qztNiYlNQ9lzFB4HGTA3D/RL2HBSyyhwbT5xaKuuKLsn/F62RPDn95+Nz8YghzmNXDLu2ll/9CM7X/Izdatl9LEbAAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTUtMDEtMjlUMTQ6MDc6MTArMDg6MDBZIQ6mAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE1LTAxLTI5VDE0OjA3OjEwKzA4OjAwKHy2GgAAAABJRU5ErkJggg==" />
+						<p>3.充值</p>
+					</div>
+				</div>
+
+				<div class="j-box-sku" style="display:none">
+					<div class="info">
+						<div class="carrier">
+							<span id="s_carrier" class="icon-ctcc">广东电信</span>
+						</div>
+						<div class="box-soldoff j-box-soldoff" style="display: none;">
+							<span class="soldOff">抱歉，暂时缺货</span>
+						</div>
+					</div>
+
+					<div class="denom itemlist">
+						<ul class="j-list-denom">
+						</ul>
+					</div>
+
+					<div class="cont-goods j-box-goods">
+						<div class="h2">流量包描述</div>
+						<ul class="list-goods j-list-goods">
+							<li data-itemid="45282021678" class="active"><div class="title">充值后，您将收到运营商发送的短信，请注意查收。月初和月末运营商系统繁忙，话费可能会延迟到账，届时可联系客服处理 。</div>
+								<div class="price">￥7.65</div></li>
+						</ul>
+					</div>
+					<div class="action j-action">
+						<div class="submit">立即充值</div>
+					</div>
+				</div>
+	</form>
+	<script type="text/javascript">
+		var count = 0; 
+		$(document).ready(function() {
+			
+			var uuid = getUrlParam("uuid");
+			$("#uuid").val(uuid);
+			
+			$("#fm").form({
+				success : function(val) {
+					//alert(val);
+					val = eval("("+val+")");
+					if (val.code == "00") {
+						$(".fc_bg").css("display","none");
+						$(".fc_box").css("display","none");
+						//处理支付提交成功
+					} else {
+						$(".fc_bg").css("display","none");
+						$(".fc_box").css("display","none");
+						//处理支付提交失败
+					}
+				}
+			});
+			
+			$("li").click(function() {
+				$(this).parent().find("li").removeClass("active");
+				$(this).addClass("active");
+			});
+			var _clear = $(".number-clear");
+			var _input_tel = $(".tel");
+
+			var $exchange_submit = $(".submit");
+			
+			_input_tel.keyup(function() {
+
+				var _this = $(this);
+				var str = _this.val().replace(/([ ])|(-)/g,"");
+				
+				if (_this.val() != "" && str.length == 11) {
+					$(".fc_bg").css("display","block");
+					$(".fc_box").css("display","block");
+					setTimeout(function(){
+						_clear.show();
+						showExchangeMain(str,$("#uuid").val());							
+					}, 100);
+				}else if(str.length >= 11){
+					$(".j-box-sku").hide();
+					$("#price").val('');
+					$("#packageId").val('');
+					$(".j-list-denom").empty();
+					$(".number-clear").show();
+					$("#div_j_box_step").show();
+					$(".fc_bg").css("display","none");
+					$(".fc_box").css("display","none");
+					alert("手机号码格式不正确");
+				}else{
+					$("#div_j_box_step").show();
+					$(".j-box-sku").hide();
+					$("#price").val('');
+					$("#packageId").val('');
+					$(".j-list-denom").empty();
+					$(".number-clear").show();
+					$(".fc_bg").css("display","none");
+					$(".fc_box").css("display","none");
+				}
+			});
+			_clear.click(function() {
+				_input_tel.val("");
+				$("#price").val('');
+				$("#packageId").val('');
+				$(".j-box-sku").hide();
+				$("#div_j_box_step").show();
+				$(this).hide();
+			});
+			
+			//提交按钮
+			var u = navigator.userAgent, app = navigator.appVersion;
+			var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器
+			var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+			
+			//安卓
+			if(isAndroid){
+				$exchange_submit.click(function(){
+					
+					//提交获取数据
+					var phoneNum = $('.tel').val();
+					var mNum = $('#packageId').val();
+					var mPrice = $('#price').val();
+					
+					window.desc.checkNumBtn(phoneNum, mNum, mPrice);
+				});
+			}
+			
+			//ios
+			if(isiOS){
+				function checkNum(recharge,param01,param02,param03){
+					document.location="jfq://"+recharge+":/"+param01+'/'+param02+'/'+param03;
+				};
+				
+				$exchange_submit.click(function(){
+					
+					//提交获取数据
+					var phoneNum = $('.tel').val();
+					var mNum = $('#packageId').val();
+					var mPrice = $('#price').val();
+					
+					checkNum('recharge', phoneNum, mNum, mPrice);
+				});
+			}
+				
+			
+			
+		});
+	</script>
+	<script src="js/flowexchange.js?v=20160711"></script>
+</body>
+</html>

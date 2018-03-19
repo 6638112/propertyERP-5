@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:业主门禁认证（可配置）信息 t_cloud_key_user_data -->
+<mapper namespace="cloudKeyUserDataBase">
+	<resultMap type="CloudKeyUserData" id="cloudKeyUserDataBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_cloud_key_user_audit_f_id" javaType="java.math.BigInteger" property="tCloudKeyUserAuditFId"/>  <!--  -->        <result column="f_key" javaType="java.lang.String" property="key"/>  <!-- 键 -->        <result column="f_value" javaType="java.lang.String" property="value"/>  <!-- 值 -->
+        <result column="f_label" javaType="java.lang.String" property="label"/>  <!-- label -->
+        <result column="f_input_type" javaType="java.lang.String" property="inputType"/>  <!-- inputType -->
+	</resultMap>
+	<resultMap type="CloudKeyUserData" id="cloudKeyUserDataExtendMap" extends="cloudKeyUserDataBaseMap">
+	</resultMap>
+	<resultMap type="CloudKeyUserData" id="cloudKeyUserDataBaseMap_AppendTable">
+        <id column="CKUDid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CKUDtCloudKeyUserAuditFId" javaType="java.math.BigInteger" property="tCloudKeyUserAuditFId"/>  <!--  -->        <result column="CKUDkey" javaType="java.lang.String" property="key"/>  <!-- 键 -->        <result column="CKUDvalue" javaType="java.lang.String" property="value"/>  <!-- 值 -->
+	</resultMap>
+	<resultMap type="CloudKeyUserData" id="cloudKeyUserDataBaseMap_AppendTable1">
+        <id column="CKUD1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CKUD1tCloudKeyUserAuditFId" javaType="java.math.BigInteger" property="tCloudKeyUserAuditFId"/>  <!--  -->        <result column="CKUD1key" javaType="java.lang.String" property="key"/>  <!-- 键 -->        <result column="CKUD1value" javaType="java.lang.String" property="value"/>  <!-- 值 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CKUD.f_id,CKUD.t_cloud_key_user_audit_f_id,CKUD.f_key,CKUD.f_value
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CKUD.f_id as CKUDid,CKUD.t_cloud_key_user_audit_f_id as CKUDtCloudKeyUserAuditFId,CKUD.f_key as CKUDkey,CKUD.value as CKUDvalue
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CKUD1.f_id as CKUD1id,CKUD1.t_cloud_key_user_audit_f_id as CKUD1tCloudKeyUserAuditFId,CKUD1.f_key as CKUD1key,CKUD1.f_value as CKUD1value
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CKUD.f_id = #{id} ) </if>        <if test="tCloudKeyUserAuditFId != null">  and (CKUD.t_cloud_key_user_audit_f_id = #{tCloudKeyUserAuditFId} ) </if>        <if test="key != null">  and (CKUD.f_key = #{key} ) </if>        <if test="value != null">  and (CKUD.f_value = #{value} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CKUD.f_id = #{id} ) </if>        <if test="tCloudKeyUserAuditFId != null and !tCloudKeyUserAuditFId.equals('')  ">  and (CKUD.t_cloud_key_user_audit_f_id = #{tCloudKeyUserAuditFId} ) </if>        <if test="key != null and !key.equals('')  ">  and (CKUD.f_key like CONCAT('%',#{key},'%') ) </if>        <if test="value != null and !value.equals('')  ">  and (CKUD.f_value like CONCAT('%',#{value},'%') ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="cloudKeyUserDataBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="cloudKeyUserDataBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="cloudKeyUserDataBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="cloudKeyUserDataBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_cloud_key_user_data CKUD    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(业主门禁认证（可配置）信息)信息。 -->
+	<sql id="select_cloudKeyUserData">
+		SELECT <include refid="cloudKeyUserDataBase.queryHead"/>
+		<include refid="cloudKeyUserDataBase.busiQueryCondition"/>
+		<include refid="cloudKeyUserDataBase.dimCheckSql"/>
+		ORDER BY CKUD.f_id DESC
+	</sql>
+	<select id="select_cloudKeyUserDatas" parameterType="java.util.Map" resultMap="cloudKeyUserDataBase.cloudKeyUserDataExtendMap">
+		<!-- <include refid="cloudKeyUserDataBase.select_cloudKeyUserData"/> -->
+		SELECT CKUD.f_id,CKUD.t_cloud_key_user_audit_f_id,CKUD.f_key,CKUD.f_value, tbkc.f_label, tbkc.f_input_type 
+		FROM t_building_key_config tbkc left join t_cloud_key_user_data CKUD  on tbkc.f_input_id=CKUD.f_key 
+		WHERE 
+		tbkc.t_group_building_f_id=(select t_group_building_f_id from t_cloud_key_user_audit where f_id=#{tCloudKeyUserAuditFId})
+		and CKUD.t_cloud_key_user_audit_f_id = #{tCloudKeyUserAuditFId}
+		order by tbkc.f_order asc
+	</select>
+	
+	<!-- 根据条件分页查询(业主门禁认证（可配置）信息)信息  -->
+	<sql id="select_cloudKeyUserData_withPage">
+		SELECT <include refid="cloudKeyUserDataBase.queryHead"/>
+		<include refid="cloudKeyUserDataBase.busiQueryCondition"/>
+		<include refid="cloudKeyUserDataBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_cloudKeyUserData_withPage" resultMap="cloudKeyUserDataBase.cloudKeyUserDataExtendMap" parameterType="java.util.Map">
+		<include refid="cloudKeyUserDataBase.select_cloudKeyUserData_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(业主门禁认证（可配置）信息)信息。 -->
+	<sql id="select_cloudKeyUserData_bySeqId">
+		SELECT <include refid="cloudKeyUserDataBase.queryHead"/>
+		<include refid="cloudKeyUserDataBase.busiQueryCondition"/>
+		 and CKUD.f_id = #{_parameter}
+	</sql>
+	<select id="select_cloudKeyUserData_bySeqId" parameterType="java.math.BigInteger" resultMap="cloudKeyUserDataBase.cloudKeyUserDataBaseMap">
+		<include refid="cloudKeyUserDataBase.select_cloudKeyUserData_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(业主门禁认证（可配置）信息)记录数  -->
+	<sql id="select_cloudKeyUserData_count">
+		SELECT COUNT(*)
+		<include refid="cloudKeyUserDataBase.busiQueryCount"/>
+		<include refid="cloudKeyUserDataBase.dimCheckSql"/>
+	</sql>
+	<select id="select_cloudKeyUserData_count" resultType="java.lang.Integer">
+		<include refid="cloudKeyUserDataBase.select_cloudKeyUserData_count"/>
+	</select>
+	
+	<!-- 根据userId和real_room_id查询t_cloud_key_user_audit表f_id -->
+	<select id="select_cloudKeyUserAudit_id" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		select f_id 
+		from t_cloud_key_user_audit a 
+		where a.f_hua_id=#{userId} and a.t_real_room_f_id=#{realRoomId}
+	</select>
+	
+	 <!-- 往(业主门禁认证（可配置）信息)新增一条记录。 -->
+	 <sql id="insert_cloudKeyUserData">
+		INSERT INTO t_cloud_key_user_data 
+		(f_id,t_cloud_key_user_audit_f_id,f_key,f_value) VALUES 
+		(#{id},#{tCloudKeyUserAuditFId},#{key,jdbcType=VARCHAR},#{value,jdbcType=VARCHAR})
+	 </sql>
+    <insert id="insert_cloudKeyUserData" parameterType="CloudKeyUserData">
+		<include refid="cloudKeyUserDataBase.insert_cloudKeyUserData"/>
+    </insert>
+    
+	<!-- 批量新增(业主门禁认证（可配置）信息)信息 -->
+    <insert id="insert_cloudKeyUserData_Batch" parameterType="java.util.List">
+    	INSERT INTO t_cloud_key_user_data 
+		 VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tCloudKeyUserAuditFId},#{item.key,jdbcType=VARCHAR},#{item.value,jdbcType=VARCHAR})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(业主门禁认证（可配置）信息)信息。 -->
+    <sql id="update_cloudKeyUserData">
+		UPDATE t_cloud_key_user_data		<trim prefix="SET" prefixOverrides=","> 		<if test="tCloudKeyUserAuditFId != null and !tCloudKeyUserAuditFId.equals('') "> ,t_cloud_key_user_audit_f_id=#{tCloudKeyUserAuditFId}</if> 		<if test="key != null and !key.equals('') "> ,f_key=#{key}</if> 		<if test="value != null and !value.equals('') "> ,f_value=#{value}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_cloudKeyUserData" parameterType="CloudKeyUserData">
+		<include refid="cloudKeyUserDataBase.update_cloudKeyUserData"/>
+    </update>
+    
+    <!-- 批量更新(业主门禁认证（可配置）信息)信息。 -->
+    <update id="update_cloudKeyUserData_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_cloud_key_user_data		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tCloudKeyUserAuditFId != null and !item.tCloudKeyUserAuditFId.equals('')  "> ,t_cloud_key_user_audit_f_id=#{item.tCloudKeyUserAuditFId}</if> 		<if test="item.key != null and !item.key.equals('')  "> ,f_key=#{item.key}</if> 		<if test="item.value != null and !item.value.equals('')  "> ,f_value=#{item.value}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+    <!-- 根据序列号删除(业主门禁认证（可配置）信息)信息。 -->
+    <sql id="delete_cloudKeyUserData">
+		DELETE FROM t_cloud_key_user_data WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_cloudKeyUserData" parameterType="java.lang.String">
+		<include refid="cloudKeyUserDataBase.delete_cloudKeyUserData"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(业主门禁认证（可配置）信息)信息。 -->
+    <delete id="delete_cloudKeyUserData_Batch" parameterType="java.util.List">
+		DELETE FROM t_cloud_key_user_data WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+    <!-- 根据序列号批量删除(业主门禁认证（可配置）信息)信息。 -->
+    <delete id="delete_cloudKeyUserData_by_t_cloud_key_user_audit_f_id" parameterType="java.math.BigInteger">
+		DELETE FROM t_cloud_key_user_data WHERE 1=1 AND t_cloud_key_user_audit_f_id =#{cloudKeyUserAuditFId}
+    </delete>
+    
+</mapper>

@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:月卡车缴费记录 t_car_num_pay_log -->
+<mapper namespace="carNumPayLogBase">
+	<resultMap type="CarNumPayLog" id="carNumPayLogBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="t_car_num_id" javaType="java.math.BigInteger" property="tCarNumId"/>  <!-- 车牌Id -->
+        <result column="t_ebuy_order_id" javaType="java.math.BigInteger" property="tEbuyOrderId"/>  <!-- 订单Id -->
+        <result column="f_status" javaType="java.lang.Integer" property="status"/>  <!-- 是否解放区缴费 -->
+        <result column="f_push_times" javaType="java.lang.Integer" property="pushTimes"/>  <!-- 推送次数 -->
+        <result column="f_send_time" javaType="java.lang.String" property="sendTime"/>  <!-- 下次发送时间 -->
+        <result column="f_push_status" javaType="java.lang.Integer" property="pushStatus"/>  <!-- 推送状态 -->
+        <result column="f_pay_num" javaType="java.lang.Long" property="payNum"/>  <!-- 月卡购买月数 -->
+        <result column="f_pay_start_date" javaType="java.lang.String" property="payStartDate"/>  <!-- 月卡车缴费开始有效期 -->
+        <result column="f_pay_end_date" javaType="java.lang.String" property="payEndDate"/>  <!-- 月卡车缴费截至有效期 -->
+        <result column="f_fee" javaType="java.lang.Long" property="fee"/>  <!-- 缴费金额 -->
+        <result column="f_coupon_amount" javaType="java.lang.Long" property="couponAmount"/>  <!-- 随机立减优惠金额（单位 -->
+        <result column="f_receivable_fee" javaType="java.lang.Long" property="receivableFee"/>  <!-- 应收费用（第三方车禁需要，单位 -->
+        <result column="f_cardsn" javaType="java.lang.String" property="cardsn"/>  <!-- 华鹏飞临停车cardsn -->
+        <result column="f_pay_time" javaType="java.lang.String" property="payTime"/>  <!-- 购买时间 -->
+        <result column="t_group_building_f_id" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 临停车缴费小区id -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="f_cash_status" javaType="java.lang.Integer" property="cashStatus"/>  <!-- 现金流生成状态 -->
+        <result column="t_car_prefer_f_id" javaType="java.math.BigInteger" property="tCarPreferFId"/>  <!-- 随机立减 -->
+        <result column="f_need_bill" javaType="java.lang.Integer" property="needBill"/>  <!-- 是否需要发票 -->
+	</resultMap>
+	<resultMap type="CarNumPayLog" id="carNumPayLogExtendMap" extends="carNumPayLogBaseMap">
+	</resultMap>
+	<resultMap type="CarNumPayLog" id="carNumPayLogBaseMap_AppendTable">
+        <id column="CNPLid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="CNPLtCarNumId" javaType="java.math.BigInteger" property="tCarNumId"/>  <!-- 车牌Id -->
+        <result column="CNPLtEbuyOrderId" javaType="java.math.BigInteger" property="tEbuyOrderId"/>  <!-- 订单Id -->
+        <result column="CNPLstatus" javaType="java.lang.Integer" property="status"/>  <!-- 是否解放区缴费 -->
+        <result column="CNPLpushTimes" javaType="java.lang.Integer" property="pushTimes"/>  <!-- 推送次数 -->
+        <result column="CNPLsendTime" javaType="java.lang.String" property="sendTime"/>  <!-- 下次发送时间 -->
+        <result column="CNPLpushStatus" javaType="java.lang.Integer" property="pushStatus"/>  <!-- 推送状态 -->
+        <result column="CNPLpayNum" javaType="java.lang.Long" property="payNum"/>  <!-- 月卡购买月数 -->
+        <result column="CNPLpayStartDate" javaType="java.lang.String" property="payStartDate"/>  <!-- 月卡车缴费开始有效期 -->
+        <result column="CNPLpayEndDate" javaType="java.lang.String" property="payEndDate"/>  <!-- 月卡车缴费截至有效期 -->
+        <result column="CNPLfee" javaType="java.lang.Long" property="fee"/>  <!-- 缴费金额 -->
+        <result column="CNPLcouponAmount" javaType="java.lang.Long" property="couponAmount"/>  <!-- 随机立减优惠金额（单位 -->
+        <result column="CNPLreceivableFee" javaType="java.lang.Long" property="receivableFee"/>  <!-- 应收费用（第三方车禁需要，单位 -->
+        <result column="CNPLcardsn" javaType="java.lang.String" property="cardsn"/>  <!-- 华鹏飞临停车cardsn -->
+        <result column="CNPLpayTime" javaType="java.lang.String" property="payTime"/>  <!-- 购买时间 -->
+        <result column="CNPLtGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 临停车缴费小区id -->
+        <result column="CNPLsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="CNPLsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="CNPLsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="CNPLsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="CNPLsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="CNPLsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="CNPLsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="CNPLcashStatus" javaType="java.lang.Integer" property="cashStatus"/>  <!-- 现金流生成状态 -->
+        <result column="CNPLtCarPreferFId" javaType="java.math.BigInteger" property="tCarPreferFId"/>  <!-- 随机立减 -->
+        <result column="CNPLneedBill" javaType="java.lang.Integer" property="needBill"/>  <!-- 是否需要发票 -->
+	</resultMap>
+	<resultMap type="CarNumPayLog" id="carNumPayLogBaseMap_AppendTable1">
+        <id column="CNPL1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="CNPL1tCarNumId" javaType="java.math.BigInteger" property="tCarNumId"/>  <!-- 车牌Id -->
+        <result column="CNPL1tEbuyOrderId" javaType="java.math.BigInteger" property="tEbuyOrderId"/>  <!-- 订单Id -->
+        <result column="CNPL1status" javaType="java.lang.Integer" property="status"/>  <!-- 是否解放区缴费 -->
+        <result column="CNPL1pushTimes" javaType="java.lang.Integer" property="pushTimes"/>  <!-- 推送次数 -->
+        <result column="CNPL1sendTime" javaType="java.lang.String" property="sendTime"/>  <!-- 下次发送时间 -->
+        <result column="CNPL1pushStatus" javaType="java.lang.Integer" property="pushStatus"/>  <!-- 推送状态 -->
+        <result column="CNPL1payNum" javaType="java.lang.Long" property="payNum"/>  <!-- 月卡购买月数 -->
+        <result column="CNPL1payStartDate" javaType="java.lang.String" property="payStartDate"/>  <!-- 月卡车缴费开始有效期 -->
+        <result column="CNPL1payEndDate" javaType="java.lang.String" property="payEndDate"/>  <!-- 月卡车缴费截至有效期 -->
+        <result column="CNPL1fee" javaType="java.lang.Long" property="fee"/>  <!-- 缴费金额 -->
+        <result column="CNPL1couponAmount" javaType="java.lang.Long" property="couponAmount"/>  <!-- 随机立减优惠金额（单位 -->
+        <result column="CNPL1receivableFee" javaType="java.lang.Long" property="receivableFee"/>  <!-- 应收费用（第三方车禁需要，单位 -->
+        <result column="CNPL1cardsn" javaType="java.lang.String" property="cardsn"/>  <!-- 华鹏飞临停车cardsn -->
+        <result column="CNPL1payTime" javaType="java.lang.String" property="payTime"/>  <!-- 购买时间 -->
+        <result column="CNPL1tGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 临停车缴费小区id -->
+        <result column="CNPL1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="CNPL1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="CNPL1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="CNPL1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="CNPL1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="CNPL1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="CNPL1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="CNPL1cashStatus" javaType="java.lang.Integer" property="cashStatus"/>  <!-- 现金流生成状态 -->
+        <result column="CNPL1tCarPreferFId" javaType="java.math.BigInteger" property="tCarPreferFId"/>  <!-- 随机立减 -->
+        <result column="CNPL1needBill" javaType="java.lang.Integer" property="needBill"/>  <!-- 是否需要发票 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CNPL.f_id,CNPL.t_car_num_id,CNPL.t_ebuy_order_id,CNPL.f_status,CNPL.f_push_times,date_format(CNPL.f_send_time,'%Y-%m-%d %T') as f_send_time,CNPL.f_push_status,CNPL.f_pay_num,date_format(CNPL.f_pay_start_date,'%Y-%m-%d %T') as f_pay_start_date,date_format(CNPL.f_pay_end_date,'%Y-%m-%d %T') as f_pay_end_date,CNPL.f_fee,CNPL.f_coupon_amount,CNPL.f_receivable_fee,CNPL.f_cardsn,date_format(CNPL.f_pay_time,'%Y-%m-%d %T') as f_pay_time,CNPL.t_group_building_f_id,CNPL.f_cash_status,CNPL.t_car_prefer_f_id,CNPL.f_need_bill
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CNPL.f_id as CNPLid,CNPL.t_car_num_id as CNPLtCarNumId,CNPL.t_ebuy_order_id as CNPLtEbuyOrderId,CNPL.f_status as CNPLstatus,CNPL.f_push_times as CNPLpushTimes,date_format(CNPL.f_send_time,'%Y-%m-%d %T') as CNPLsendTime,CNPL.f_push_status as CNPLpushStatus,CNPL.f_pay_num as CNPLpayNum,date_format(CNPL.f_pay_start_date,'%Y-%m-%d %T') as CNPLpayStartDate,date_format(CNPL.f_pay_end_date,'%Y-%m-%d %T') as CNPLpayEndDate,CNPL.f_fee as CNPLfee,CNPL.f_coupon_amount as CNPLcouponAmount,CNPL.f_receivable_fee as CNPLreceivableFee,CNPL.f_cardsn as CNPLcardsn,date_format(CNPL.f_pay_time,'%Y-%m-%d %T') as CNPLpayTime,CNPL.t_group_building_f_id as CNPLtGroupBuildingFId,CNPL.f_cash_status as CNPLcashStatus,CNPL.t_car_prefer_f_id as CNPLtCarPreferFId,CNPL.f_need_bill as CNPLneedBill
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CNPL1.f_id as CNPL1id,CNPL1.t_car_num_id as CNPL1tCarNumId,CNPL1.t_ebuy_order_id as CNPL1tEbuyOrderId,CNPL1.f_status as CNPL1status,CNPL1.f_push_times as CNPL1pushTimes,date_format(CNPL1.f_send_time,'%Y-%m-%d %T') as CNPL1sendTime,CNPL1.f_push_status as CNPL1pushStatus,CNPL1.f_pay_num as CNPL1payNum,date_format(CNPL1.f_pay_start_date,'%Y-%m-%d %T') as CNPL1payStartDate,date_format(CNPL1.f_pay_end_date,'%Y-%m-%d %T') as CNPL1payEndDate,CNPL1.f_fee as CNPL1fee,CNPL1.f_coupon_amount as CNPL1couponAmount,CNPL1.f_receivable_fee as CNPL1receivableFee,CNPL1.f_cardsn as CNPL1cardsn,date_format(CNPL1.f_pay_time,'%Y-%m-%d %T') as CNPL1payTime,CNPL1.t_group_building_f_id as CNPL1tGroupBuildingFId,CNPL1.f_cash_status as CNPL1cashStatus,CNPL1.t_car_prefer_f_id as CNPL1tCarPreferFId,CNPL1.f_need_bill as CNPL1needBill
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CNPL.f_id = #{id} ) </if>
+        <if test="tCarNumId != null">  and (CNPL.t_car_num_id = #{tCarNumId} ) </if>
+        <if test="tEbuyOrderId != null">  and (CNPL.t_ebuy_order_id = #{tEbuyOrderId} ) </if>
+        <if test="status != null">  and (CNPL.f_status = #{status} ) </if>
+        <if test="pushTimes != null">  and (CNPL.f_push_times = #{pushTimes} ) </if>
+        <if test="sendTime != null and !sendTime.equals('')  ">  and (CNPL.f_send_time = str_to_date(#{sendTime},'%Y-%m-%d %T') ) </if>
+        <if test="sendTime_START != null and !sendTime_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_send_time >= str_to_date(#{sendTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sendTime_END != null and !sendTime_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_send_time <= str_to_date(#{sendTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="pushStatus != null">  and (CNPL.f_push_status = #{pushStatus} ) </if>
+        <if test="payNum != null">  and (CNPL.f_pay_num = #{payNum} ) </if>
+        <if test="payStartDate != null and !payStartDate.equals('')  ">  and (CNPL.f_pay_start_date = str_to_date(#{payStartDate},'%Y-%m-%d %T') ) </if>
+        <if test="payStartDate_START != null and !payStartDate_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_pay_start_date >= str_to_date(#{payStartDate_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payStartDate_END != null and !payStartDate_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_pay_start_date <= str_to_date(#{payStartDate_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payEndDate != null and !payEndDate.equals('')  ">  and (CNPL.f_pay_end_date = str_to_date(#{payEndDate},'%Y-%m-%d %T') ) </if>
+        <if test="payEndDate_START != null and !payEndDate_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_pay_end_date >= str_to_date(#{payEndDate_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payEndDate_END != null and !payEndDate_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_pay_end_date <= str_to_date(#{payEndDate_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="fee != null">  and (CNPL.f_fee = #{fee} ) </if>
+        <if test="couponAmount != null">  and (CNPL.f_coupon_amount = #{couponAmount} ) </if>
+        <if test="receivableFee != null">  and (CNPL.f_receivable_fee = #{receivableFee} ) </if>
+        <if test="cardsn != null">  and (CNPL.f_cardsn = #{cardsn} ) </if>
+        <if test="payTime != null and !payTime.equals('')  ">  and (CNPL.f_pay_time = str_to_date(#{payTime},'%Y-%m-%d %T') ) </if>
+        <if test="payTime_START != null and !payTime_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_pay_time >= str_to_date(#{payTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payTime_END != null and !payTime_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_pay_time <= str_to_date(#{payTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="tGroupBuildingFId != null">  and (CNPL.t_group_building_f_id = #{tGroupBuildingFId} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CNPL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CNPL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CNPL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (CNPL.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (CNPL.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (CNPL.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (CNPL.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (CNPL.f_sys0_del_state = 0 ) </if>
+        <if test="cashStatus != null">  and (CNPL.f_cash_status = #{cashStatus} ) </if>
+        <if test="tCarPreferFId != null">  and (CNPL.t_car_prefer_f_id = #{tCarPreferFId} ) </if>
+        <if test="needBill != null">  and (CNPL.f_need_bill = #{needBill} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CNPL.f_id = #{id} ) </if>
+        <if test="tCarNumId != null and !tCarNumId.equals('')  ">  and (CNPL.t_car_num_id = #{tCarNumId} ) </if>
+        <if test="tEbuyOrderId != null and !tEbuyOrderId.equals('')  ">  and (CNPL.t_ebuy_order_id = #{tEbuyOrderId} ) </if>
+        <if test="status != null and !status.equals('')  ">  and (CNPL.f_status = #{status} ) </if>
+        <if test="pushTimes != null and !pushTimes.equals('')  ">  and (CNPL.f_push_times = #{pushTimes} ) </if>
+        <if test="sendTime != null and !sendTime.equals('')  ">  and (CNPL.f_send_time = str_to_date(#{sendTime},'%Y-%m-%d %T') ) </if>
+        <if test="sendTime_START != null and !sendTime_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_send_time >= str_to_date(#{sendTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sendTime_END != null and !sendTime_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_send_time <= str_to_date(#{sendTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="pushStatus != null and !pushStatus.equals('')  ">  and (CNPL.f_push_status = #{pushStatus} ) </if>
+        <if test="payNum != null and !payNum.equals('')  ">  and (CNPL.f_pay_num = #{payNum} ) </if>
+        <if test="payStartDate != null and !payStartDate.equals('')  ">  and (CNPL.f_pay_start_date = str_to_date(#{payStartDate},'%Y-%m-%d %T') ) </if>
+        <if test="payStartDate_START != null and !payStartDate_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_pay_start_date >= str_to_date(#{payStartDate_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payStartDate_END != null and !payStartDate_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_pay_start_date <= str_to_date(#{payStartDate_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payEndDate != null and !payEndDate.equals('')  ">  and (CNPL.f_pay_end_date = str_to_date(#{payEndDate},'%Y-%m-%d %T') ) </if>
+        <if test="payEndDate_START != null and !payEndDate_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_pay_end_date >= str_to_date(#{payEndDate_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payEndDate_END != null and !payEndDate_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_pay_end_date <= str_to_date(#{payEndDate_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="fee != null and !fee.equals('')  ">  and (CNPL.f_fee = #{fee} ) </if>
+        <if test="couponAmount != null and !couponAmount.equals('')  ">  and (CNPL.f_coupon_amount = #{couponAmount} ) </if>
+        <if test="receivableFee != null and !receivableFee.equals('')  ">  and (CNPL.f_receivable_fee = #{receivableFee} ) </if>
+        <if test="cardsn != null and !cardsn.equals('')  ">  and (CNPL.f_cardsn like CONCAT('%',#{cardsn},'%') ) </if>
+        <if test="payTime != null and !payTime.equals('')  ">  and (CNPL.f_pay_time = str_to_date(#{payTime},'%Y-%m-%d %T') ) </if>
+        <if test="payTime_START != null and !payTime_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_pay_time >= str_to_date(#{payTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payTime_END != null and !payTime_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_pay_time <= str_to_date(#{payTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  ">  and (CNPL.t_group_building_f_id = #{tGroupBuildingFId} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CNPL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CNPL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CNPL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (CNPL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (CNPL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CNPL.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CNPL.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CNPL.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CNPL.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (CNPL.f_sys0_del_state = 0 ) </if>
+        <if test="cashStatus != null and !cashStatus.equals('')  ">  and (CNPL.f_cash_status = #{cashStatus} ) </if>
+        <if test="tCarPreferFId != null and !tCarPreferFId.equals('')  ">  and (CNPL.t_car_prefer_f_id = #{tCarPreferFId} ) </if>
+        <if test="needBill != null and !needBill.equals('')  ">  and (CNPL.f_need_bill = #{needBill} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="carNumPayLogBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="carNumPayLogBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="carNumPayLogBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="carNumPayLogBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_car_num_pay_log CNPL
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(月卡车缴费记录)信息。 -->
+	<sql id="select_carNumPayLog">
+		SELECT <include refid="carNumPayLogBase.queryHead"/>
+		<include refid="carNumPayLogBase.busiQueryCondition"/>
+		<include refid="carNumPayLogBase.dimCheckSql"/>
+		ORDER BY CNPL.f_id DESC
+	</sql>
+	<select id="select_carNumPayLog" parameterType="java.util.Map" resultMap="carNumPayLogBase.carNumPayLogExtendMap">
+		<include refid="carNumPayLogBase.select_carNumPayLog"/>
+	</select>
+	
+	<!-- 根据条件分页查询(月卡车缴费记录)信息  -->
+	<sql id="select_carNumPayLog_withPage">
+		SELECT <include refid="carNumPayLogBase.queryHead"/>
+		<include refid="carNumPayLogBase.busiQueryCondition"/>
+		<include refid="carNumPayLogBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_carNumPayLog_withPage" resultMap="carNumPayLogBase.carNumPayLogExtendMap" parameterType="java.util.Map">
+		<include refid="carNumPayLogBase.select_carNumPayLog_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(月卡车缴费记录)信息。 -->
+	<sql id="select_carNumPayLog_bySeqId">
+		SELECT <include refid="carNumPayLogBase.queryHead"/>
+		<include refid="carNumPayLogBase.busiQueryCondition"/>
+		 and CNPL.f_id = #{_parameter}
+	</sql>
+	<select id="select_carNumPayLog_bySeqId" parameterType="java.math.BigInteger" resultMap="carNumPayLogBase.carNumPayLogBaseMap">
+		<include refid="carNumPayLogBase.select_carNumPayLog_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(月卡车缴费记录)记录数  -->
+	<sql id="select_carNumPayLog_count">
+		SELECT COUNT(*)
+		<include refid="carNumPayLogBase.busiQueryCount"/>
+		<include refid="carNumPayLogBase.dimCheckSql"/>
+	</sql>
+	<select id="select_carNumPayLog_count" resultType="java.lang.Integer">
+		<include refid="carNumPayLogBase.select_carNumPayLog_count"/>
+	</select>
+	
+	 <!-- 往(月卡车缴费记录)新增一条记录。 -->
+	 <sql id="insert_carNumPayLog">
+		INSERT INTO t_car_num_pay_log 
+		(f_id,t_car_num_id,t_ebuy_order_id,f_status,f_push_times,f_send_time,f_push_status,f_pay_num,f_pay_start_date,f_pay_end_date,f_fee,f_coupon_amount,f_receivable_fee,f_cardsn,f_pay_time,t_group_building_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_cash_status,t_car_prefer_f_id,f_need_bill) VALUES 
+		(#{id},#{tCarNumId},#{tEbuyOrderId},#{status},#{pushTimes},str_to_date(#{sendTime,jdbcType=DATE},'%Y-%m-%d %T'),#{pushStatus},#{payNum},str_to_date(#{payStartDate,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{payEndDate,jdbcType=DATE},'%Y-%m-%d %T'),#{fee},#{couponAmount},#{receivableFee},#{cardsn,jdbcType=VARCHAR},str_to_date(#{payTime,jdbcType=DATE},'%Y-%m-%d %T'),#{tGroupBuildingFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0,#{cashStatus},#{tCarPreferFId},#{needBill})
+	 </sql>
+    <insert id="insert_carNumPayLog" parameterType="CarNumPayLog">
+		<include refid="carNumPayLogBase.insert_carNumPayLog"/>
+    </insert>
+    
+	<!-- 批量新增(月卡车缴费记录)信息 -->
+    <insert id="insert_carNumPayLog_Batch" parameterType="java.util.List">
+    	INSERT INTO t_car_num_pay_log 
+		(f_id,t_car_num_id,t_ebuy_order_id,f_status,f_push_times,f_send_time,f_push_status,f_pay_num,f_pay_start_date,f_pay_end_date,f_fee,f_coupon_amount,f_receivable_fee,f_cardsn,f_pay_time,t_group_building_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_cash_status,t_car_prefer_f_id,f_need_bill) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tCarNumId},#{item.tEbuyOrderId},#{item.status},#{item.pushTimes},str_to_date(#{item.sendTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.pushStatus},#{item.payNum},str_to_date(#{item.payStartDate,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.payEndDate,jdbcType=DATE},'%Y-%m-%d %T'),#{item.fee},#{item.couponAmount},#{item.receivableFee},#{item.cardsn,jdbcType=VARCHAR},str_to_date(#{item.payTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.tGroupBuildingFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0,#{item.cashStatus},#{item.tCarPreferFId},#{item.needBill})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(月卡车缴费记录)信息。 -->
+    <sql id="update_carNumPayLog">
+		UPDATE t_car_num_pay_log
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tCarNumId != null and !tCarNumId.equals('') "> ,t_car_num_id=#{tCarNumId}</if>
+ 		<if test="tEbuyOrderId != null and !tEbuyOrderId.equals('') "> ,t_ebuy_order_id=#{tEbuyOrderId}</if>
+ 		<if test="status != null and !status.equals('') "> ,f_status=#{status}</if>
+ 		<if test="pushTimes != null and !pushTimes.equals('') "> ,f_push_times=#{pushTimes}</if>
+ 		<if test="sendTime != null and !sendTime.equals('') "> ,f_send_time=str_to_date(#{sendTime},'%Y-%m-%d %T')</if>
+ 		<if test="pushStatus != null and !pushStatus.equals('') "> ,f_push_status=#{pushStatus}</if>
+ 		<if test="payNum != null and !payNum.equals('') "> ,f_pay_num=#{payNum}</if>
+ 		<if test="payStartDate != null and !payStartDate.equals('') "> ,f_pay_start_date=str_to_date(#{payStartDate},'%Y-%m-%d %T')</if>
+ 		<if test="payEndDate != null and !payEndDate.equals('') "> ,f_pay_end_date=str_to_date(#{payEndDate},'%Y-%m-%d %T')</if>
+ 		<if test="fee != null and !fee.equals('') "> ,f_fee=#{fee}</if>
+ 		<if test="couponAmount != null and !couponAmount.equals('') "> ,f_coupon_amount=#{couponAmount}</if>
+ 		<if test="receivableFee != null and !receivableFee.equals('') "> ,f_receivable_fee=#{receivableFee}</if>
+ 		<if test="cardsn != null and !cardsn.equals('') "> ,f_cardsn=#{cardsn}</if>
+ 		<if test="payTime != null and !payTime.equals('') "> ,f_pay_time=str_to_date(#{payTime},'%Y-%m-%d %T')</if>
+ 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('') "> ,t_group_building_f_id=#{tGroupBuildingFId}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+ 		<if test="cashStatus != null and !cashStatus.equals('') "> ,f_cash_status=#{cashStatus}</if>
+ 		<if test="tCarPreferFId != null and !tCarPreferFId.equals('') "> ,t_car_prefer_f_id=#{tCarPreferFId}</if>
+ 		<if test="needBill != null and !needBill.equals('') "> ,f_need_bill=#{needBill}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_carNumPayLog" parameterType="CarNumPayLog">
+		<include refid="carNumPayLogBase.update_carNumPayLog"/>
+    </update>
+    
+    <!-- 批量更新(月卡车缴费记录)信息。 -->
+    <update id="update_carNumPayLog_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_car_num_pay_log
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tCarNumId != null and !item.tCarNumId.equals('')  "> ,t_car_num_id=#{item.tCarNumId}</if>
+ 		<if test="item.tEbuyOrderId != null and !item.tEbuyOrderId.equals('')  "> ,t_ebuy_order_id=#{item.tEbuyOrderId}</if>
+ 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if>
+ 		<if test="item.pushTimes != null and !item.pushTimes.equals('')  "> ,f_push_times=#{item.pushTimes}</if>
+ 		<if test="item.sendTime != null and !item.sendTime.equals('')  "> ,f_send_time=str_to_date(#{item.sendTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.pushStatus != null and !item.pushStatus.equals('')  "> ,f_push_status=#{item.pushStatus}</if>
+ 		<if test="item.payNum != null and !item.payNum.equals('')  "> ,f_pay_num=#{item.payNum}</if>
+ 		<if test="item.payStartDate != null and !item.payStartDate.equals('')  "> ,f_pay_start_date=str_to_date(#{item.payStartDate},'%Y-%m-%d %T')</if>
+ 		<if test="item.payEndDate != null and !item.payEndDate.equals('')  "> ,f_pay_end_date=str_to_date(#{item.payEndDate},'%Y-%m-%d %T')</if>
+ 		<if test="item.fee != null and !item.fee.equals('')  "> ,f_fee=#{item.fee}</if>
+ 		<if test="item.couponAmount != null and !item.couponAmount.equals('')  "> ,f_coupon_amount=#{item.couponAmount}</if>
+ 		<if test="item.receivableFee != null and !item.receivableFee.equals('')  "> ,f_receivable_fee=#{item.receivableFee}</if>
+ 		<if test="item.cardsn != null and !item.cardsn.equals('')  "> ,f_cardsn=#{item.cardsn}</if>
+ 		<if test="item.payTime != null and !item.payTime.equals('')  "> ,f_pay_time=str_to_date(#{item.payTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+ 		<if test="item.cashStatus != null and !item.cashStatus.equals('')  "> ,f_cash_status=#{item.cashStatus}</if>
+ 		<if test="item.tCarPreferFId != null and !item.tCarPreferFId.equals('')  "> ,t_car_prefer_f_id=#{item.tCarPreferFId}</if>
+ 		<if test="item.needBill != null and !item.needBill.equals('')  "> ,f_need_bill=#{item.needBill}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(月卡车缴费记录)信息_逻辑删除。 -->
+    <sql id="delete_carNumPayLog_Logic">
+		UPDATE t_car_num_pay_log
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tCarNumId != null and !tCarNumId.equals('')  "> ,t_car_num_id=#{tCarNumId}</if>
+ 		<if test="tEbuyOrderId != null and !tEbuyOrderId.equals('')  "> ,t_ebuy_order_id=#{tEbuyOrderId}</if>
+ 		<if test="status != null and !status.equals('')  "> ,f_status=#{status}</if>
+ 		<if test="pushTimes != null and !pushTimes.equals('')  "> ,f_push_times=#{pushTimes}</if>
+ 		<if test="sendTime != null and !sendTime.equals('')  "> ,f_send_time=str_to_date(#{sendTime},'%Y-%m-%d %T')</if>
+ 		<if test="pushStatus != null and !pushStatus.equals('')  "> ,f_push_status=#{pushStatus}</if>
+ 		<if test="payNum != null and !payNum.equals('')  "> ,f_pay_num=#{payNum}</if>
+ 		<if test="payStartDate != null and !payStartDate.equals('')  "> ,f_pay_start_date=str_to_date(#{payStartDate},'%Y-%m-%d %T')</if>
+ 		<if test="payEndDate != null and !payEndDate.equals('')  "> ,f_pay_end_date=str_to_date(#{payEndDate},'%Y-%m-%d %T')</if>
+ 		<if test="fee != null and !fee.equals('')  "> ,f_fee=#{fee}</if>
+ 		<if test="couponAmount != null and !couponAmount.equals('')  "> ,f_coupon_amount=#{couponAmount}</if>
+ 		<if test="receivableFee != null and !receivableFee.equals('')  "> ,f_receivable_fee=#{receivableFee}</if>
+ 		<if test="cardsn != null and !cardsn.equals('')  "> ,f_cardsn=#{cardsn}</if>
+ 		<if test="payTime != null and !payTime.equals('')  "> ,f_pay_time=str_to_date(#{payTime},'%Y-%m-%d %T')</if>
+ 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{tGroupBuildingFId}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="cashStatus != null and !cashStatus.equals('')  "> ,f_cash_status=#{cashStatus}</if>
+ 		<if test="tCarPreferFId != null and !tCarPreferFId.equals('')  "> ,t_car_prefer_f_id=#{tCarPreferFId}</if>
+ 		<if test="needBill != null and !needBill.equals('')  "> ,f_need_bill=#{needBill}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_carNumPayLog_Logic" parameterType="CarNumPayLog">
+		<include refid="carNumPayLogBase.delete_carNumPayLog_Logic"/>
+    </update>
+    
+    <!-- 批量删除(月卡车缴费记录)信息_逻辑删除 -->
+    <update id="delete_carNumPayLog_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_car_num_pay_log
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tCarNumId != null and !item.tCarNumId.equals('')  "> ,t_car_num_id=#{item.tCarNumId}</if>
+ 		<if test="item.tEbuyOrderId != null and !item.tEbuyOrderId.equals('')  "> ,t_ebuy_order_id=#{item.tEbuyOrderId}</if>
+ 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if>
+ 		<if test="item.pushTimes != null and !item.pushTimes.equals('')  "> ,f_push_times=#{item.pushTimes}</if>
+ 		<if test="item.sendTime != null and !item.sendTime.equals('')  "> ,f_send_time=str_to_date(#{item.sendTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.pushStatus != null and !item.pushStatus.equals('')  "> ,f_push_status=#{item.pushStatus}</if>
+ 		<if test="item.payNum != null and !item.payNum.equals('')  "> ,f_pay_num=#{item.payNum}</if>
+ 		<if test="item.payStartDate != null and !item.payStartDate.equals('')  "> ,f_pay_start_date=str_to_date(#{item.payStartDate},'%Y-%m-%d %T')</if>
+ 		<if test="item.payEndDate != null and !item.payEndDate.equals('')  "> ,f_pay_end_date=str_to_date(#{item.payEndDate},'%Y-%m-%d %T')</if>
+ 		<if test="item.fee != null and !item.fee.equals('')  "> ,f_fee=#{item.fee}</if>
+ 		<if test="item.couponAmount != null and !item.couponAmount.equals('')  "> ,f_coupon_amount=#{item.couponAmount}</if>
+ 		<if test="item.receivableFee != null and !item.receivableFee.equals('')  "> ,f_receivable_fee=#{item.receivableFee}</if>
+ 		<if test="item.cardsn != null and !item.cardsn.equals('')  "> ,f_cardsn=#{item.cardsn}</if>
+ 		<if test="item.payTime != null and !item.payTime.equals('')  "> ,f_pay_time=str_to_date(#{item.payTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.cashStatus != null and !item.cashStatus.equals('')  "> ,f_cash_status=#{item.cashStatus}</if>
+ 		<if test="item.tCarPreferFId != null and !item.tCarPreferFId.equals('')  "> ,t_car_prefer_f_id=#{item.tCarPreferFId}</if>
+ 		<if test="item.needBill != null and !item.needBill.equals('')  "> ,f_need_bill=#{item.needBill}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(月卡车缴费记录)信息。 -->
+    <sql id="delete_carNumPayLog">
+		DELETE FROM t_car_num_pay_log WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_carNumPayLog" parameterType="java.lang.String">
+		<include refid="carNumPayLogBase.delete_carNumPayLog"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(月卡车缴费记录)信息。 -->
+    <delete id="delete_carNumPayLog_Batch" parameterType="java.util.List">
+		DELETE FROM t_car_num_pay_log WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

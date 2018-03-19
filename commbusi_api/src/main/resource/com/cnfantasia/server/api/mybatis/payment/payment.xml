@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 支付 -->
+<mapper namespace="payment">
+	<update id="upadte_Order_IsClientPay_ByOrderNo" parameterType="java.util.Map">
+		UPDATE t_ebuy_order EO
+		SET EO.f_client_pay_status = 2 <!-- 客户端支付状态=={"2":"返回支付成功"} -->
+			,EO.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND EO.f_sys0_del_state = 0
+		AND EO.f_order_no = #{orderNo}
+	</update>
+	
+	<!-- 查询订单的支付状态 -->
+	<select id="select_Order_PayStatus" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT f_pay_status
+		FROM t_ebuy_order
+		WHERE 1=1
+		AND f_sys0_del_state = 0
+		AND f_id = #{orderId}
+	</select>
+
+</mapper>
+	

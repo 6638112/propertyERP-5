@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:奖项城市关系表 t_ms_prize_option_city -->
+<mapper namespace="msPrizeOptionCityBase">
+	<resultMap type="MsPrizeOptionCity" id="msPrizeOptionCityBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_prize_option_id" javaType="java.math.BigInteger" property="prizeOptionId"/>  <!-- 所属奖项Id -->        <result column="f_city_name" javaType="java.lang.String" property="cityName"/>  <!-- 城市名称 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MsPrizeOptionCity" id="msPrizeOptionCityExtendMap" extends="msPrizeOptionCityBaseMap">
+	</resultMap>
+	<resultMap type="MsPrizeOptionCity" id="msPrizeOptionCityBaseMap_AppendTable">
+        <id column="MPOCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MPOCprizeOptionId" javaType="java.math.BigInteger" property="prizeOptionId"/>  <!-- 所属奖项Id -->        <result column="MPOCcityName" javaType="java.lang.String" property="cityName"/>  <!-- 城市名称 -->        <result column="MPOCsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MPOCsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MPOCsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MPOCsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MPOCsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MPOCsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MPOCsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MsPrizeOptionCity" id="msPrizeOptionCityBaseMap_AppendTable1">
+        <id column="MPOC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MPOC1prizeOptionId" javaType="java.math.BigInteger" property="prizeOptionId"/>  <!-- 所属奖项Id -->        <result column="MPOC1cityName" javaType="java.lang.String" property="cityName"/>  <!-- 城市名称 -->        <result column="MPOC1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MPOC1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MPOC1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MPOC1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MPOC1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MPOC1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MPOC1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		MPOC.f_id,MPOC.f_prize_option_id,MPOC.f_city_name
+	</sql>
+	<sql id="queryHead_AppendTable">
+		MPOC.f_id as MPOCid,MPOC.f_prize_option_id as MPOCprizeOptionId,MPOC.f_city_name as MPOCcityName
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		MPOC1.f_id as MPOC1id,MPOC1.f_prize_option_id as MPOC1prizeOptionId,MPOC1.f_city_name as MPOC1cityName
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (MPOC.f_id = #{id} ) </if>        <if test="prizeOptionId != null">  and (MPOC.f_prize_option_id = #{prizeOptionId} ) </if>        <if test="cityName != null">  and (MPOC.f_city_name = #{cityName} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MPOC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MPOC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MPOC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MPOC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MPOC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MPOC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MPOC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MPOC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MPOC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (MPOC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (MPOC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (MPOC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (MPOC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (MPOC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (MPOC.f_id = #{id} ) </if>        <if test="prizeOptionId != null and !prizeOptionId.equals('')  ">  and (MPOC.f_prize_option_id = #{prizeOptionId} ) </if>        <if test="cityName != null and !cityName.equals('')  ">  and (MPOC.f_city_name like CONCAT('%',#{cityName},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MPOC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MPOC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MPOC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MPOC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MPOC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MPOC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MPOC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MPOC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MPOC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (MPOC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (MPOC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (MPOC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (MPOC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (MPOC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="msPrizeOptionCityBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="msPrizeOptionCityBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="msPrizeOptionCityBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="msPrizeOptionCityBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ms_prize_option_city MPOC    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(奖项城市关系表)信息。 -->
+	<sql id="select_msPrizeOptionCity">
+		SELECT <include refid="msPrizeOptionCityBase.queryHead"/>
+		<include refid="msPrizeOptionCityBase.busiQueryCondition"/>
+		<include refid="msPrizeOptionCityBase.dimCheckSql"/>
+		ORDER BY MPOC.f_id DESC
+	</sql>
+	<select id="select_msPrizeOptionCity" parameterType="java.util.Map" resultMap="msPrizeOptionCityBase.msPrizeOptionCityExtendMap">
+		<include refid="msPrizeOptionCityBase.select_msPrizeOptionCity"/>
+	</select>
+	
+	<!-- 根据条件分页查询(奖项城市关系表)信息  -->
+	<sql id="select_msPrizeOptionCity_withPage">
+		SELECT <include refid="msPrizeOptionCityBase.queryHead"/>
+		<include refid="msPrizeOptionCityBase.busiQueryCondition"/>
+		<include refid="msPrizeOptionCityBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_msPrizeOptionCity_withPage" resultMap="msPrizeOptionCityBase.msPrizeOptionCityExtendMap" parameterType="java.util.Map">
+		<include refid="msPrizeOptionCityBase.select_msPrizeOptionCity_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(奖项城市关系表)信息。 -->
+	<sql id="select_msPrizeOptionCity_bySeqId">
+		SELECT <include refid="msPrizeOptionCityBase.queryHead"/>
+		<include refid="msPrizeOptionCityBase.busiQueryCondition"/>
+		 and MPOC.f_id = #{_parameter}
+	</sql>
+	<select id="select_msPrizeOptionCity_bySeqId" parameterType="java.math.BigInteger" resultMap="msPrizeOptionCityBase.msPrizeOptionCityBaseMap">
+		<include refid="msPrizeOptionCityBase.select_msPrizeOptionCity_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(奖项城市关系表)记录数  -->
+	<sql id="select_msPrizeOptionCity_count">
+		SELECT COUNT(*)
+		<include refid="msPrizeOptionCityBase.busiQueryCount"/>
+		<include refid="msPrizeOptionCityBase.dimCheckSql"/>
+	</sql>
+	<select id="select_msPrizeOptionCity_count" resultType="java.lang.Integer">
+		<include refid="msPrizeOptionCityBase.select_msPrizeOptionCity_count"/>
+	</select>
+	
+	 <!-- 往(奖项城市关系表)新增一条记录。 -->
+	 <sql id="insert_msPrizeOptionCity">
+		INSERT INTO t_ms_prize_option_city 
+		(f_id,f_prize_option_id,f_city_name,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{prizeOptionId},#{cityName,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_msPrizeOptionCity" parameterType="MsPrizeOptionCity">
+		<include refid="msPrizeOptionCityBase.insert_msPrizeOptionCity"/>
+    </insert>
+    
+	<!-- 批量新增(奖项城市关系表)信息 -->
+    <insert id="insert_msPrizeOptionCity_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ms_prize_option_city 
+		(f_id,f_prize_option_id,f_city_name,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.prizeOptionId},#{item.cityName,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(奖项城市关系表)信息。 -->
+    <sql id="update_msPrizeOptionCity">
+		UPDATE t_ms_prize_option_city		<trim prefix="SET" prefixOverrides=","> 		<if test="prizeOptionId != null and !prizeOptionId.equals('') "> ,f_prize_option_id=#{prizeOptionId}</if> 		<if test="cityName != null and !cityName.equals('') "> ,f_city_name=#{cityName}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_msPrizeOptionCity" parameterType="MsPrizeOptionCity">
+		<include refid="msPrizeOptionCityBase.update_msPrizeOptionCity"/>
+    </update>
+    
+    <!-- 批量更新(奖项城市关系表)信息。 -->
+    <update id="update_msPrizeOptionCity_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ms_prize_option_city		<trim prefix="SET" prefixOverrides=","> 		<if test="item.prizeOptionId != null and !item.prizeOptionId.equals('')  "> ,f_prize_option_id=#{item.prizeOptionId}</if> 		<if test="item.cityName != null and !item.cityName.equals('')  "> ,f_city_name=#{item.cityName}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(奖项城市关系表)信息_逻辑删除。 -->
+    <sql id="delete_msPrizeOptionCity_Logic">
+		UPDATE t_ms_prize_option_city		<trim prefix="SET" prefixOverrides=","> 		<if test="prizeOptionId != null and !prizeOptionId.equals('')  "> ,f_prize_option_id=#{prizeOptionId}</if> 		<if test="cityName != null and !cityName.equals('')  "> ,f_city_name=#{cityName}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_msPrizeOptionCity_Logic" parameterType="MsPrizeOptionCity">
+		<include refid="msPrizeOptionCityBase.delete_msPrizeOptionCity_Logic"/>
+    </update>
+    
+    <!-- 批量删除(奖项城市关系表)信息_逻辑删除 -->
+    <update id="delete_msPrizeOptionCity_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ms_prize_option_city		<trim prefix="SET" prefixOverrides=","> 		<if test="item.prizeOptionId != null and !item.prizeOptionId.equals('')  "> ,f_prize_option_id=#{item.prizeOptionId}</if> 		<if test="item.cityName != null and !item.cityName.equals('')  "> ,f_city_name=#{item.cityName}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(奖项城市关系表)信息。 -->
+    <sql id="delete_msPrizeOptionCity">
+		DELETE FROM t_ms_prize_option_city WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_msPrizeOptionCity" parameterType="java.lang.String">
+		<include refid="msPrizeOptionCityBase.delete_msPrizeOptionCity"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(奖项城市关系表)信息。 -->
+    <delete id="delete_msPrizeOptionCity_Batch" parameterType="java.util.List">
+		DELETE FROM t_ms_prize_option_city WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

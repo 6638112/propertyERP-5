@@ -1,0 +1,54 @@
+/**   
+* Filename:    MyHttpServletResponseWrapper.java   
+* @version:    1.0  
+* Create at:   2014年8月4日 上午9:18:41   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年8月4日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.pub.logger;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
+/**
+ * Filename:    MyHttpServletResponseWrapper.java
+ * @version:    1.0.0
+ * Create at:   2014年8月4日 上午9:18:41
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年8月4日       shiyl             1.0             1.0 Version
+ */
+public class MyHttpServletResponseWrapper extends HttpServletResponseWrapper {
+	private static final int BUFFER_SIZE = 2048;
+	
+  private StringWriter sw = new StringWriter(BUFFER_SIZE);
+
+  public MyHttpServletResponseWrapper(HttpServletResponse response) {
+    super(response);
+  }
+
+  public PrintWriter getWriter() throws IOException {
+    return new PrintWriter(sw);
+  }
+
+  public ServletOutputStream getOutputStream() throws IOException {
+    throw new UnsupportedOperationException();
+  }
+
+  public String toString() {
+    return sw.toString();
+  }
+
+}

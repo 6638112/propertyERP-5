@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:公用的锁表 t_common_lock -->
+<mapper namespace="commonLockBase">
+	<resultMap type="CommonLock" id="commonLockBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_table_name" javaType="java.lang.String" property="tableName"/>  <!-- 需要锁的表名 -->
+	</resultMap>
+	<resultMap type="CommonLock" id="commonLockExtendMap" extends="commonLockBaseMap">
+	</resultMap>
+	<resultMap type="CommonLock" id="commonLockBaseMap_AppendTable">
+        <id column="CLid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CLtableName" javaType="java.lang.String" property="tableName"/>  <!-- 需要锁的表名 -->
+	</resultMap>
+	<resultMap type="CommonLock" id="commonLockBaseMap_AppendTable1">
+        <id column="CL1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CL1tableName" javaType="java.lang.String" property="tableName"/>  <!-- 需要锁的表名 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CL.f_id,CL.f_table_name
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CL.f_id as CLid,CL.f_table_name as CLtableName
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CL1.f_id as CL1id,CL1.f_table_name as CL1tableName
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CL.f_id = #{id} ) </if>        <if test="tableName != null">  and (CL.f_table_name = #{tableName} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CL.f_id = #{id} ) </if>        <if test="tableName != null and !tableName.equals('')  ">  and (CL.f_table_name like CONCAT('%',#{tableName},'%') ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="commonLockBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="commonLockBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="commonLockBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="commonLockBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_common_lock CL    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(公用的锁表)信息。 -->
+	<sql id="select_commonLock">
+		SELECT <include refid="commonLockBase.queryHead"/>
+		<include refid="commonLockBase.busiQueryCondition"/>
+		<include refid="commonLockBase.dimCheckSql"/>
+		ORDER BY CL.f_id DESC
+	</sql>
+	<select id="select_commonLock" parameterType="java.util.Map" resultMap="commonLockBase.commonLockExtendMap">
+		<include refid="commonLockBase.select_commonLock"/>
+	</select>
+	
+	<!-- 根据条件分页查询(公用的锁表)信息  -->
+	<sql id="select_commonLock_withPage">
+		SELECT <include refid="commonLockBase.queryHead"/>
+		<include refid="commonLockBase.busiQueryCondition"/>
+		<include refid="commonLockBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_commonLock_withPage" resultMap="commonLockBase.commonLockExtendMap" parameterType="java.util.Map">
+		<include refid="commonLockBase.select_commonLock_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(公用的锁表)信息。 -->
+	<sql id="select_commonLock_bySeqId">
+		SELECT <include refid="commonLockBase.queryHead"/>
+		<include refid="commonLockBase.busiQueryCondition"/>
+		 and CL.f_id = #{_parameter}
+	</sql>
+	<select id="select_commonLock_bySeqId" parameterType="java.math.BigInteger" resultMap="commonLockBase.commonLockBaseMap">
+		<include refid="commonLockBase.select_commonLock_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(公用的锁表)记录数  -->
+	<sql id="select_commonLock_count">
+		SELECT COUNT(*)
+		<include refid="commonLockBase.busiQueryCount"/>
+		<include refid="commonLockBase.dimCheckSql"/>
+	</sql>
+	<select id="select_commonLock_count" resultType="java.lang.Integer">
+		<include refid="commonLockBase.select_commonLock_count"/>
+	</select>
+	
+	 <!-- 往(公用的锁表)新增一条记录。 -->
+	 <sql id="insert_commonLock">
+		INSERT INTO t_common_lock 
+		(f_id,f_table_name) VALUES 
+		(#{id},#{tableName,jdbcType=VARCHAR})
+	 </sql>
+    <insert id="insert_commonLock" parameterType="CommonLock">
+		<include refid="commonLockBase.insert_commonLock"/>
+    </insert>
+    
+	<!-- 批量新增(公用的锁表)信息 -->
+    <insert id="insert_commonLock_Batch" parameterType="java.util.List">
+    	INSERT INTO t_common_lock 
+		(f_id,f_table_name) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tableName,jdbcType=VARCHAR})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(公用的锁表)信息。 -->
+    <sql id="update_commonLock">
+		UPDATE t_common_lock		<trim prefix="SET" prefixOverrides=","> 		<if test="tableName != null and !tableName.equals('') "> ,f_table_name=#{tableName}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_commonLock" parameterType="CommonLock">
+		<include refid="commonLockBase.update_commonLock"/>
+    </update>
+    
+    <!-- 批量更新(公用的锁表)信息。 -->
+    <update id="update_commonLock_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_common_lock		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tableName != null and !item.tableName.equals('')  "> ,f_table_name=#{item.tableName}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(公用的锁表)信息_逻辑删除。 -->
+    <!-- <sql id="delete_commonLock_Logic">
+		UPDATE t_common_lock		<trim prefix="SET" prefixOverrides=","> 		<if test="tableName != null and !tableName.equals('')  "> ,f_table_name=#{tableName}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_commonLock_Logic" parameterType="CommonLock">
+		<include refid="commonLockBase.delete_commonLock_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(公用的锁表)信息_逻辑删除 -->
+    <!-- <update id="delete_commonLock_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_common_lock		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tableName != null and !item.tableName.equals('')  "> ,f_table_name=#{item.tableName}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(公用的锁表)信息。 -->
+    <sql id="delete_commonLock">
+		DELETE FROM t_common_lock WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_commonLock" parameterType="java.lang.String">
+		<include refid="commonLockBase.delete_commonLock"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(公用的锁表)信息。 -->
+    <delete id="delete_commonLock_Batch" parameterType="java.util.List">
+		DELETE FROM t_common_lock WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

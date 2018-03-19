@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 抽奖临时记录表处理 -->
+<mapper namespace="prizeRecordTmpData">
+	<!-- 查询临时表的待处理记录数 -->
+	<select id="select_PrizeRecordTmpData_2Deal_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_prize_record_tmp_data PRTD
+		WHERE 1=1
+		AND PRTD.f_sys0_del_state = 0
+		AND PRTD.f_deal_status = 1 <!-- 处理状态=={"1":"未处理","2":"成功","3":"失败"} -->
+		AND PRTD.f_user_type = #{userType}
+		AND PRTD.f_user_id = #{userId}
+		AND CASE WHEN ISNULL(PRTD.f_room_id) THEN TRUE ELSE PRTD.f_room_id = #{roomId} END
+	</select>
+	
+	<!-- 标记抽奖记录状态为失败 -->
+	<update id="update_PrizeRecordTmpData_As_Failed" parameterType="java.util.Map">
+		UPDATE t_prize_record_tmp_data PRTD
+		SET PRTD.f_deal_status = 3 <!-- 处理状态=={"1":"未处理","2":"成功","3":"失败"} -->
+			,PRTD.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND PRTD.f_sys0_del_state = 0
+		AND PRTD.f_deal_status = 1 <!-- 处理状态=={"1":"未处理","2":"成功","3":"失败"} -->
+		AND PRTD.f_user_type = #{userType}
+		AND PRTD.f_user_id = #{userId}
+		AND CASE WHEN ISNULL(PRTD.f_room_id) THEN TRUE ELSE PRTD.f_room_id = #{roomId} END
+		AND PRTD.f_prize_num = #{prizeNum}
+		AND TO_DAYS(PRTD.f_prizetime) = TO_DAYS(NOW())
+	</update>
+	
+	<!-- 标记抽奖记录状态为成功 -->
+	<update id="update_PrizeRecordTmpData_As_Success" parameterType="java.util.Map">
+		UPDATE t_prize_record_tmp_data PRTD
+		SET PRTD.f_deal_status = 2 <!-- 处理状态=={"1":"未处理","2":"成功","3":"失败"} -->
+			,PRTD.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND PRTD.f_sys0_del_state = 0
+		AND PRTD.f_deal_status = 1 <!-- 处理状态=={"1":"未处理","2":"成功","3":"失败"} -->
+		AND PRTD.f_user_type = #{userType}
+		AND PRTD.f_user_id = #{userId}
+		AND CASE WHEN ISNULL(PRTD.f_room_id) THEN TRUE ELSE PRTD.f_room_id = #{roomId} END
+		AND PRTD.f_prize_num = #{prizeNum}
+		AND TO_DAYS(PRTD.f_prizetime) = TO_DAYS(NOW())
+	</update>
+	
+	<!-- 标记抽奖记录状态为结束 -->
+	<update id="update_PrizeRecordTmpData_As_Finished" parameterType="java.util.Map">
+		UPDATE t_prize_record_tmp_data PRTD
+		SET PRTD.f_sys0_del_state = 1 <!-- 处理状态=={"1":"未处理","2":"成功","3":"失败"} -->
+			,PRTD.f_sys0_del_time = SYSDATE()
+		WHERE 1=1
+		AND PRTD.f_sys0_del_state = 0
+		<!-- AND PRTD.f_user_id = #{userId}
+		AND PRTD.f_user_type = #{userType} -->
+		AND PRTD.f_id = #{recordTmpDataId}
+	</update>
+	
+	<!-- 查询[未标记为失败的]临时抽奖记录列表 -->
+	<select id="select_TmpPrizeData_List_NotFailed_ByUserInfo" parameterType="java.util.Map" 
+		resultMap="prizeRecordTmpDataBase.prizeRecordTmpDataBaseMap_AppendTable">
+		SELECT <include refid="prizeRecordTmpDataBase.queryHead_AppendTable"/>
+		FROM t_prize_record_tmp_data PRTD
+		WHERE 1=1
+		AND PRTD.f_sys0_del_state = 0
+		AND (PRTD.f_deal_status = 1 OR PRTD.f_deal_status = 2) <!-- 处理状态=={"1":"未处理","2":"成功","3":"失败"} -->
+		AND PRTD.f_user_type = #{userType}
+		AND PRTD.f_user_id = #{userId}
+		<if test="isTimeOut == true"> <!-- 取已超时通知的 -->
+			AND TIMESTAMPDIFF(SECOND,PRTD.f_auto_succ_time,now()) > #{timeOutSecond} 
+		</if>
+		<if test="isTimeOut == false"> <!-- 取未超时通知的 -->
+			<!-- 60秒之前未处理的 -->
+			<![CDATA[ AND TIMESTAMPDIFF(SECOND,PRTD.f_auto_succ_time,now()) < #{timeOutSecond} ]]>
+		</if>
+	</select>
+	
+	<select id="select_TmpPrizeDataList_NotFailed_AndTimeOut" parameterType="java.util.Map" 
+		resultMap="prizeRecordTmpDataBase.prizeRecordTmpDataBaseMap_AppendTable">
+		SELECT <include refid="prizeRecordTmpDataBase.queryHead_AppendTable"/>
+		FROM t_prize_record_tmp_data PRTD
+		WHERE 1=1
+		AND PRTD.f_sys0_del_state = 0
+		AND (PRTD.f_deal_status = 1 OR PRTD.f_deal_status = 2) <!-- 处理状态=={"1":"未处理","2":"成功","3":"失败"} -->
+		AND TIMESTAMPDIFF(SECOND,PRTD.f_prizetime,now()) > #{timeOutSecond} 
+	</select>
+	
+	<!-- 查询单个详情 -->
+	<select id="select_PrizeRecordTmpData_Detail" parameterType="java.util.Map" 
+		resultMap="prizeRecordTmpDataBase.prizeRecordTmpDataBaseMap_AppendTable">
+		SELECT <include refid="prizeRecordTmpDataBase.queryHead_AppendTable"/>
+		FROM t_prize_record_tmp_data PRTD
+		WHERE 1=1
+		AND PRTD.f_sys0_del_state = 0
+		AND PRTD.f_id = #{recordTmpDataId} 
+		for update
+	</select>
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:菜谱收藏 t_kitchen_cookbook_collect -->
+<mapper namespace="kitchenCookbookCollectBase">
+	<resultMap type="KitchenCookbookCollect" id="kitchenCookbookCollectBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户Id -->        <result column="f_room_id" javaType="java.math.BigInteger" property="roomId"/>  <!--  -->        <result column="f_time" javaType="java.lang.String" property="time"/>  <!-- 收藏的时间 -->        <result column="t_kitchen_cookbook_f_id" javaType="java.math.BigInteger" property="tKitchenCookbookFId"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="KitchenCookbookCollect" id="kitchenCookbookCollectExtendMap" extends="kitchenCookbookCollectBaseMap">
+	</resultMap>
+	<resultMap type="KitchenCookbookCollect" id="kitchenCookbookCollectBaseMap_AppendTable">
+        <id column="KCCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="KCCuserId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户Id -->        <result column="KCCroomId" javaType="java.math.BigInteger" property="roomId"/>  <!--  -->        <result column="KCCtime" javaType="java.lang.String" property="time"/>  <!-- 收藏的时间 -->        <result column="KCCtKitchenCookbookFId" javaType="java.math.BigInteger" property="tKitchenCookbookFId"/>  <!--  -->        <result column="KCCsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="KCCsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="KCCsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="KCCsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="KCCsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="KCCsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="KCCsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="KitchenCookbookCollect" id="kitchenCookbookCollectBaseMap_AppendTable1">
+        <id column="KCC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="KCC1userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户Id -->        <result column="KCC1roomId" javaType="java.math.BigInteger" property="roomId"/>  <!--  -->        <result column="KCC1time" javaType="java.lang.String" property="time"/>  <!-- 收藏的时间 -->        <result column="KCC1tKitchenCookbookFId" javaType="java.math.BigInteger" property="tKitchenCookbookFId"/>  <!--  -->        <result column="KCC1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="KCC1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="KCC1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="KCC1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="KCC1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="KCC1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="KCC1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		KCC.f_id,KCC.f_user_id,KCC.f_room_id,date_format(KCC.f_time,'%Y-%m-%d %T') as f_time,KCC.t_kitchen_cookbook_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		KCC.f_id as KCCid,KCC.f_user_id as KCCuserId,KCC.f_room_id as KCCroomId,date_format(KCC.f_time,'%Y-%m-%d %T') as KCCtime,KCC.t_kitchen_cookbook_f_id as KCCtKitchenCookbookFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		KCC1.f_id as KCC1id,KCC1.f_user_id as KCC1userId,KCC1.f_room_id as KCC1roomId,date_format(KCC1.f_time,'%Y-%m-%d %T') as KCC1time,KCC1.t_kitchen_cookbook_f_id as KCC1tKitchenCookbookFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (KCC.f_id = #{id} ) </if>        <if test="userId != null">  and (KCC.f_user_id = #{userId} ) </if>        <if test="roomId != null">  and (KCC.f_room_id = #{roomId} ) </if>        <if test="time != null and !time.equals('')  ">  and (KCC.f_time = str_to_date(#{time},'%Y-%m-%d %T') ) </if>        <if test="time_START != null and !time_START.equals('')  ">              <![CDATA[ and (KCC.f_time >= str_to_date(#{time_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="time_END != null and !time_END.equals('')  ">            <![CDATA[ and (KCC.f_time <= str_to_date(#{time_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="tKitchenCookbookFId != null">  and (KCC.t_kitchen_cookbook_f_id = #{tKitchenCookbookFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (KCC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (KCC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (KCC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (KCC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (KCC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (KCC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (KCC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (KCC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (KCC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (KCC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (KCC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (KCC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (KCC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (KCC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (KCC.f_id = #{id} ) </if>        <if test="userId != null and !userId.equals('')  ">  and (KCC.f_user_id = #{userId} ) </if>        <if test="roomId != null and !roomId.equals('')  ">  and (KCC.f_room_id = #{roomId} ) </if>        <if test="time != null and !time.equals('')  ">  and (KCC.f_time = str_to_date(#{time},'%Y-%m-%d %T') ) </if>        <if test="time_START != null and !time_START.equals('')  ">              <![CDATA[ and (KCC.f_time >= str_to_date(#{time_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="time_END != null and !time_END.equals('')  ">            <![CDATA[ and (KCC.f_time <= str_to_date(#{time_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="tKitchenCookbookFId != null and !tKitchenCookbookFId.equals('')  ">  and (KCC.t_kitchen_cookbook_f_id = #{tKitchenCookbookFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (KCC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (KCC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (KCC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (KCC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (KCC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (KCC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (KCC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (KCC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (KCC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (KCC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (KCC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (KCC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (KCC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (KCC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="kitchenCookbookCollectBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="kitchenCookbookCollectBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="kitchenCookbookCollectBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="kitchenCookbookCollectBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_kitchen_cookbook_collect KCC    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(菜谱收藏)信息。 -->
+	<sql id="select_kitchenCookbookCollect">
+		SELECT <include refid="kitchenCookbookCollectBase.queryHead"/>
+		<include refid="kitchenCookbookCollectBase.busiQueryCondition"/>
+		<include refid="kitchenCookbookCollectBase.dimCheckSql"/>
+		ORDER BY KCC.f_id DESC
+	</sql>
+	<select id="select_kitchenCookbookCollect" parameterType="java.util.Map" resultMap="kitchenCookbookCollectBase.kitchenCookbookCollectExtendMap">
+		<include refid="kitchenCookbookCollectBase.select_kitchenCookbookCollect"/>
+	</select>
+	
+	<!-- 根据条件分页查询(菜谱收藏)信息  -->
+	<sql id="select_kitchenCookbookCollect_withPage">
+		SELECT <include refid="kitchenCookbookCollectBase.queryHead"/>
+		<include refid="kitchenCookbookCollectBase.busiQueryCondition"/>
+		<include refid="kitchenCookbookCollectBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_kitchenCookbookCollect_withPage" resultMap="kitchenCookbookCollectBase.kitchenCookbookCollectExtendMap" parameterType="java.util.Map">
+		<include refid="kitchenCookbookCollectBase.select_kitchenCookbookCollect_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(菜谱收藏)信息。 -->
+	<sql id="select_kitchenCookbookCollect_bySeqId">
+		SELECT <include refid="kitchenCookbookCollectBase.queryHead"/>
+		<include refid="kitchenCookbookCollectBase.busiQueryCondition"/>
+		 and KCC.f_id = #{_parameter}
+	</sql>
+	<select id="select_kitchenCookbookCollect_bySeqId" parameterType="java.math.BigInteger" resultMap="kitchenCookbookCollectBase.kitchenCookbookCollectBaseMap">
+		<include refid="kitchenCookbookCollectBase.select_kitchenCookbookCollect_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(菜谱收藏)记录数  -->
+	<sql id="select_kitchenCookbookCollect_count">
+		SELECT COUNT(*)
+		<include refid="kitchenCookbookCollectBase.busiQueryCount"/>
+		<include refid="kitchenCookbookCollectBase.dimCheckSql"/>
+	</sql>
+	<select id="select_kitchenCookbookCollect_count" resultType="java.lang.Integer">
+		<include refid="kitchenCookbookCollectBase.select_kitchenCookbookCollect_count"/>
+	</select>
+	
+	 <!-- 往(菜谱收藏)新增一条记录。 -->
+	 <sql id="insert_kitchenCookbookCollect">
+		INSERT INTO t_kitchen_cookbook_collect 
+		(f_id,f_user_id,f_room_id,f_time,t_kitchen_cookbook_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{userId},#{roomId},str_to_date(#{time,jdbcType=DATE},'%Y-%m-%d %T'),#{tKitchenCookbookFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_kitchenCookbookCollect" parameterType="KitchenCookbookCollect">
+		<include refid="kitchenCookbookCollectBase.insert_kitchenCookbookCollect"/>
+    </insert>
+    
+	<!-- 批量新增(菜谱收藏)信息 -->
+    <insert id="insert_kitchenCookbookCollect_Batch" parameterType="java.util.List">
+    	INSERT INTO t_kitchen_cookbook_collect 
+		(f_id,f_user_id,f_room_id,f_time,t_kitchen_cookbook_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.userId},#{item.roomId},str_to_date(#{item.time,jdbcType=DATE},'%Y-%m-%d %T'),#{item.tKitchenCookbookFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(菜谱收藏)信息。 -->
+    <sql id="update_kitchenCookbookCollect">
+		UPDATE t_kitchen_cookbook_collect		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="roomId != null and !roomId.equals('') "> ,f_room_id=#{roomId}</if> 		<if test="time != null and !time.equals('') "> ,f_time=str_to_date(#{time},'%Y-%m-%d %T')</if> 		<if test="tKitchenCookbookFId != null and !tKitchenCookbookFId.equals('') "> ,t_kitchen_cookbook_f_id=#{tKitchenCookbookFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_kitchenCookbookCollect" parameterType="KitchenCookbookCollect">
+		<include refid="kitchenCookbookCollectBase.update_kitchenCookbookCollect"/>
+    </update>
+    
+    <!-- 批量更新(菜谱收藏)信息。 -->
+    <update id="update_kitchenCookbookCollect_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_kitchen_cookbook_collect		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.roomId != null and !item.roomId.equals('')  "> ,f_room_id=#{item.roomId}</if> 		<if test="item.time != null and !item.time.equals('')  "> ,f_time=str_to_date(#{item.time},'%Y-%m-%d %T')</if> 		<if test="item.tKitchenCookbookFId != null and !item.tKitchenCookbookFId.equals('')  "> ,t_kitchen_cookbook_f_id=#{item.tKitchenCookbookFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(菜谱收藏)信息_逻辑删除。 -->
+    <sql id="delete_kitchenCookbookCollect_Logic">
+		UPDATE t_kitchen_cookbook_collect		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="roomId != null and !roomId.equals('')  "> ,f_room_id=#{roomId}</if> 		<if test="time != null and !time.equals('')  "> ,f_time=str_to_date(#{time},'%Y-%m-%d %T')</if> 		<if test="tKitchenCookbookFId != null and !tKitchenCookbookFId.equals('')  "> ,t_kitchen_cookbook_f_id=#{tKitchenCookbookFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_kitchenCookbookCollect_Logic" parameterType="KitchenCookbookCollect">
+		<include refid="kitchenCookbookCollectBase.delete_kitchenCookbookCollect_Logic"/>
+    </update>
+    
+    <!-- 批量删除(菜谱收藏)信息_逻辑删除 -->
+    <update id="delete_kitchenCookbookCollect_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_kitchen_cookbook_collect		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.roomId != null and !item.roomId.equals('')  "> ,f_room_id=#{item.roomId}</if> 		<if test="item.time != null and !item.time.equals('')  "> ,f_time=str_to_date(#{item.time},'%Y-%m-%d %T')</if> 		<if test="item.tKitchenCookbookFId != null and !item.tKitchenCookbookFId.equals('')  "> ,t_kitchen_cookbook_f_id=#{item.tKitchenCookbookFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(菜谱收藏)信息。 -->
+    <sql id="delete_kitchenCookbookCollect">
+		DELETE FROM t_kitchen_cookbook_collect WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_kitchenCookbookCollect" parameterType="java.lang.String">
+		<include refid="kitchenCookbookCollectBase.delete_kitchenCookbookCollect"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(菜谱收藏)信息。 -->
+    <delete id="delete_kitchenCookbookCollect_Batch" parameterType="java.util.List">
+		DELETE FROM t_kitchen_cookbook_collect WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

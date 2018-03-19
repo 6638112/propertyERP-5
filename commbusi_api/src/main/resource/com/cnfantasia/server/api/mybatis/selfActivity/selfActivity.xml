@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selfActivity">
+
+	<select id="qrySelfActivityList" resultType="com.cnfantasia.server.api.selfActivity.entity.SelfActivity4List">
+		SELECT
+			sa.f_id id,
+			sa.f_name `name`,
+			date_format(sa.f_sys0_add_time,'%Y-%m-%d %T') sys0AddTime,
+			sa.f_sys0_add_time,
+			sa.f_status `status`, 
+			sa.f_url url,
+			ouAdd.f_user_account addUser,
+			ouUpd.f_user_account updUser
+		FROM
+			t_self_activity sa
+		LEFT JOIN t_oms_user ouAdd ON ouAdd.f_id = sa.f_sys0_add_user
+		LEFT JOIN t_oms_user ouUpd ON ouUpd.f_id = sa.f_sys0_upd_user
+		WHERE sa.f_sys0_del_state = 0
+		<if test="name != null and !name.equals('')"> and sa.f_name like CONCAT('%',#{name},'%')</if>
+		<if test="url != null and !url.equals('')"> and sa.f_status = 1 and sa.f_url like CONCAT('%',#{url},'%')</if>
+		<if test="addUser != null and !addUser.equals('')"> and ouAdd.f_user_account like CONCAT('%',#{addUser},'%')</if>
+		<if test="addTimeStart != null and !addTimeStart.equals('')"> and sa.f_sys0_add_time &gt;=  #{addTimeStart} </if>
+		<if test="addTimeEnd != null and !addTimeEnd.equals('')"> and sa.f_sys0_add_time &lt;=  #{addTimeEnd} </if>
+		ORDER BY
+			sa.f_id DESC
+	</select>
+
+	<resultMap id="selfActivityDetailMap" type="com.cnfantasia.server.api.selfActivity.entity.SeftActivityWithDetail" extends="selfActivityBase.selfActivityBaseMap_AppendTable">
+		<collection property="sadList" resultMap="selfActivityDetailBase.selfActivityDetailBaseMap_AppendTable">
+		</collection>
+	</resultMap>
+
+	<select id="qrySelfActivityWithDetaiById" parameterType="java.math.BigInteger" resultMap="selfActivityDetailMap">
+		SELECT <include refid="selfActivityBase.queryHead_AppendTable"/>,
+			<include refid="selfActivityDetailBase.queryHead_AppendTable" />
+		FROM
+		t_self_activity SA
+		LEFT JOIN t_self_activity_detail SAD ON SAD.t_self_activity_f_id = SA.f_id and SAD.f_sys0_del_state = 0
+		WHERE
+		SA.f_id = #{id};
+	</select>
+    
+</mapper>

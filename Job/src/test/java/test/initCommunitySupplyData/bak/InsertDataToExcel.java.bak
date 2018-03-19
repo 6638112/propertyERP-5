@@ -1,0 +1,107 @@
+/**   
+* Filename:    InsertDataToExcel.java   
+* @version:    1.0  
+* Create at:   2014年6月18日 上午3:29:21   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年6月18日    shiyl      1.0         1.0 Version   
+*/
+package test.initCommunitySupplyData.bak;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
+
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.alibaba.fastjson.JSON;
+
+
+/**
+ * Filename:    InsertDataToExcel.java
+ * @version:    1.0.0
+ * Create at:   2014年6月18日 上午3:29:21
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年6月18日       shiyl             1.0             1.0 Version
+ */
+public class InsertDataToExcel {
+	public static void main(String[] args) throws Exception {
+		File file =new File("src/test/java/test/htmlparser/alldata.txt");
+		String goalFilePath = "src/test/java/test/htmlparser/res.xls";
+		List<String> dataList = FileOperUtil.readFile(file, "UTF-8");
+		XSSFWorkbook srcWorkBook = new XSSFWorkbook();
+		XSSFSheet sheet = srcWorkBook.createSheet();
+		{
+			int rowCount=dataList.size();
+			for(int i=0;i<rowCount;i++){
+				TableEntity tableEntity = JSON.parseObject(dataList.get(i), TableEntity.class);
+				XSSFRow row = sheet.createRow(i);
+				{
+					XSSFCell cell = row.createCell(1);
+					cell.setCellValue(tableEntity.getCode());
+				}
+				{
+					XSSFCell cell = row.createCell(2);
+					cell.setCellValue(tableEntity.getCompany());
+				}
+				{
+					XSSFCell cell = row.createCell(3);
+					cell.setCellValue(tableEntity.getIndex());
+				}
+				{
+					XSSFCell cell = row.createCell(4);
+					cell.setCellValue(tableEntity.getLevel());
+				}
+				{
+					XSSFCell cell = row.createCell(5);
+					cell.setCellValue(tableEntity.getName());
+				}
+				{
+					XSSFCell cell = row.createCell(6);
+					cell.setCellValue(tableEntity.getTel());
+				}
+			}
+		}
+		//写入文件
+		FileOutputStream fileOut = new FileOutputStream(new File(goalFilePath));
+		srcWorkBook.write(fileOut);
+		fileOut.flush();
+	}
+//	public static void writeDataToNewExcel(String modelFilePath,String goalFilePath,List<HashMap<String,Object>> srcDataInfo) throws Exception{
+//		//读取模板数据文件，初始化数据
+//		XSSFRow sheetRowFirst=null;
+//		//填写具体数据
+//		{
+//			XSSFWorkbook srcWorkBook = new XSSFWorkbook();
+//			XSSFSheet sheet = srcWorkBook.createSheet();
+//			int rowCount=srcDataInfo.size();
+//			for(int i=0;i<rowCount;i++){
+//				HashMap<String,Object> lineMap=srcDataInfo.get(i);
+//				XSSFRow row = sheet.createRow(i);
+//				int columnCount=keysList.size();
+//				for(int j=0;j<columnCount;j++){
+//					String value="";
+//					if(lineMap.get(keysList.get(j))!=null){
+//						value=lineMap.get(keysList.get(j)).toString();
+//					}
+//					XSSFCell cell = row.createCell(j);
+//					cell.setCellValue(value);
+//				}
+//			}
+//			//写入文件
+//			FileOutputStream fileOut = new FileOutputStream(new File(goalFilePath));
+//			srcWorkBook.write(fileOut);
+//			fileOut.flush();
+//		}
+//	}
+}

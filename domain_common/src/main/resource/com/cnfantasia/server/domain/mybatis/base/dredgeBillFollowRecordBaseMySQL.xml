@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:维修订单跟进记录 t_dredge_bill_follow_record -->
+<mapper namespace="dredgeBillFollowRecordBase">
+	<resultMap type="DredgeBillFollowRecord" id="dredgeBillFollowRecordBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_dredge_bill_f_id" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!-- 维修单ID -->        <result column="f_content" javaType="java.lang.String" property="content"/>  <!-- 跟进内容 -->        <result column="f_follow_time" javaType="java.lang.String" property="followTime"/>  <!-- 跟进时间时间 -->        <result column="f_follow_user" javaType="java.lang.String" property="followUser"/>  <!-- 跟进人（bi.jiefangqu.com平台账号） -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="DredgeBillFollowRecord" id="dredgeBillFollowRecordExtendMap" extends="dredgeBillFollowRecordBaseMap">
+	</resultMap>
+	<resultMap type="DredgeBillFollowRecord" id="dredgeBillFollowRecordBaseMap_AppendTable">
+        <id column="DBFRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="DBFRtDredgeBillFId" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!-- 维修单ID -->        <result column="DBFRcontent" javaType="java.lang.String" property="content"/>  <!-- 跟进内容 -->        <result column="DBFRfollowTime" javaType="java.lang.String" property="followTime"/>  <!-- 跟进时间时间 -->        <result column="DBFRfollowUser" javaType="java.lang.String" property="followUser"/>  <!-- 跟进人（bi.jiefangqu.com平台账号） -->        <result column="DBFRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="DBFRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="DBFRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="DBFRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="DBFRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="DBFRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="DBFRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="DredgeBillFollowRecord" id="dredgeBillFollowRecordBaseMap_AppendTable1">
+        <id column="DBFR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="DBFR1tDredgeBillFId" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!-- 维修单ID -->        <result column="DBFR1content" javaType="java.lang.String" property="content"/>  <!-- 跟进内容 -->        <result column="DBFR1followTime" javaType="java.lang.String" property="followTime"/>  <!-- 跟进时间时间 -->        <result column="DBFR1followUser" javaType="java.lang.String" property="followUser"/>  <!-- 跟进人（bi.jiefangqu.com平台账号） -->        <result column="DBFR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="DBFR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="DBFR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="DBFR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="DBFR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="DBFR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="DBFR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		DBFR.f_id,DBFR.t_dredge_bill_f_id,DBFR.f_content,date_format(DBFR.f_follow_time,'%Y-%m-%d %T') as f_follow_time,DBFR.f_follow_user
+	</sql>
+	<sql id="queryHead_AppendTable">
+		DBFR.f_id as DBFRid,DBFR.t_dredge_bill_f_id as DBFRtDredgeBillFId,DBFR.f_content as DBFRcontent,date_format(DBFR.f_follow_time,'%Y-%m-%d %T') as DBFRfollowTime,DBFR.f_follow_user as DBFRfollowUser
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		DBFR1.f_id as DBFR1id,DBFR1.t_dredge_bill_f_id as DBFR1tDredgeBillFId,DBFR1.f_content as DBFR1content,date_format(DBFR1.f_follow_time,'%Y-%m-%d %T') as DBFR1followTime,DBFR1.f_follow_user as DBFR1followUser
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (DBFR.f_id = #{id} ) </if>        <if test="tDredgeBillFId != null">  and (DBFR.t_dredge_bill_f_id = #{tDredgeBillFId} ) </if>        <if test="content != null">  and (DBFR.f_content = #{content} ) </if>        <if test="followTime != null and !followTime.equals('')  ">  and (DBFR.f_follow_time = str_to_date(#{followTime},'%Y-%m-%d %T') ) </if>        <if test="followTime_START != null and !followTime_START.equals('')  ">              <![CDATA[ and (DBFR.f_follow_time >= str_to_date(#{followTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="followTime_END != null and !followTime_END.equals('')  ">            <![CDATA[ and (DBFR.f_follow_time <= str_to_date(#{followTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="followUser != null">  and (DBFR.f_follow_user = #{followUser} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (DBFR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (DBFR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (DBFR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (DBFR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (DBFR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (DBFR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (DBFR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (DBFR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (DBFR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (DBFR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (DBFR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (DBFR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (DBFR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (DBFR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (DBFR.f_id = #{id} ) </if>        <if test="tDredgeBillFId != null and !tDredgeBillFId.equals('')  ">  and (DBFR.t_dredge_bill_f_id = #{tDredgeBillFId} ) </if>        <if test="content != null and !content.equals('')  ">  and (DBFR.f_content like CONCAT('%',#{content},'%') ) </if>        <if test="followTime != null and !followTime.equals('')  ">  and (DBFR.f_follow_time = str_to_date(#{followTime},'%Y-%m-%d %T') ) </if>        <if test="followTime_START != null and !followTime_START.equals('')  ">              <![CDATA[ and (DBFR.f_follow_time >= str_to_date(#{followTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="followTime_END != null and !followTime_END.equals('')  ">            <![CDATA[ and (DBFR.f_follow_time <= str_to_date(#{followTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="followUser != null and !followUser.equals('')  ">  and (DBFR.f_follow_user like CONCAT('%',#{followUser},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (DBFR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (DBFR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (DBFR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (DBFR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (DBFR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (DBFR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (DBFR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (DBFR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (DBFR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (DBFR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (DBFR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (DBFR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (DBFR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (DBFR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="dredgeBillFollowRecordBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="dredgeBillFollowRecordBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="dredgeBillFollowRecordBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="dredgeBillFollowRecordBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_dredge_bill_follow_record DBFR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(维修订单跟进记录)信息。 -->
+	<sql id="select_dredgeBillFollowRecord">
+		SELECT <include refid="dredgeBillFollowRecordBase.queryHead"/>
+		<include refid="dredgeBillFollowRecordBase.busiQueryCondition"/>
+		<include refid="dredgeBillFollowRecordBase.dimCheckSql"/>
+		ORDER BY DBFR.f_id DESC
+	</sql>
+	<select id="select_dredgeBillFollowRecord" parameterType="java.util.Map" resultMap="dredgeBillFollowRecordBase.dredgeBillFollowRecordExtendMap">
+		<include refid="dredgeBillFollowRecordBase.select_dredgeBillFollowRecord"/>
+	</select>
+	
+	<!-- 根据条件分页查询(维修订单跟进记录)信息  -->
+	<sql id="select_dredgeBillFollowRecord_withPage">
+		SELECT <include refid="dredgeBillFollowRecordBase.queryHead"/>
+		<include refid="dredgeBillFollowRecordBase.busiQueryCondition"/>
+		<include refid="dredgeBillFollowRecordBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_dredgeBillFollowRecord_withPage" resultMap="dredgeBillFollowRecordBase.dredgeBillFollowRecordExtendMap" parameterType="java.util.Map">
+		<include refid="dredgeBillFollowRecordBase.select_dredgeBillFollowRecord_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(维修订单跟进记录)信息。 -->
+	<sql id="select_dredgeBillFollowRecord_bySeqId">
+		SELECT <include refid="dredgeBillFollowRecordBase.queryHead"/>
+		<include refid="dredgeBillFollowRecordBase.busiQueryCondition"/>
+		 and DBFR.f_id = #{_parameter}
+	</sql>
+	<select id="select_dredgeBillFollowRecord_bySeqId" parameterType="java.math.BigInteger" resultMap="dredgeBillFollowRecordBase.dredgeBillFollowRecordBaseMap">
+		<include refid="dredgeBillFollowRecordBase.select_dredgeBillFollowRecord_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(维修订单跟进记录)记录数  -->
+	<sql id="select_dredgeBillFollowRecord_count">
+		SELECT COUNT(*)
+		<include refid="dredgeBillFollowRecordBase.busiQueryCount"/>
+		<include refid="dredgeBillFollowRecordBase.dimCheckSql"/>
+	</sql>
+	<select id="select_dredgeBillFollowRecord_count" resultType="java.lang.Integer">
+		<include refid="dredgeBillFollowRecordBase.select_dredgeBillFollowRecord_count"/>
+	</select>
+	
+	 <!-- 往(维修订单跟进记录)新增一条记录。 -->
+	 <sql id="insert_dredgeBillFollowRecord">
+		INSERT INTO t_dredge_bill_follow_record 
+		(f_id,t_dredge_bill_f_id,f_content,f_follow_time,f_follow_user,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tDredgeBillFId},#{content,jdbcType=VARCHAR},str_to_date(#{followTime,jdbcType=DATE},'%Y-%m-%d %T'),#{followUser,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_dredgeBillFollowRecord" parameterType="DredgeBillFollowRecord">
+		<include refid="dredgeBillFollowRecordBase.insert_dredgeBillFollowRecord"/>
+    </insert>
+    
+	<!-- 批量新增(维修订单跟进记录)信息 -->
+    <insert id="insert_dredgeBillFollowRecord_Batch" parameterType="java.util.List">
+    	INSERT INTO t_dredge_bill_follow_record 
+		(f_id,t_dredge_bill_f_id,f_content,f_follow_time,f_follow_user,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tDredgeBillFId},#{item.content,jdbcType=VARCHAR},str_to_date(#{item.followTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.followUser,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(维修订单跟进记录)信息。 -->
+    <sql id="update_dredgeBillFollowRecord">
+		UPDATE t_dredge_bill_follow_record		<trim prefix="SET" prefixOverrides=","> 		<if test="tDredgeBillFId != null and !tDredgeBillFId.equals('') "> ,t_dredge_bill_f_id=#{tDredgeBillFId}</if> 		<if test="content != null and !content.equals('') "> ,f_content=#{content}</if> 		<if test="followTime != null and !followTime.equals('') "> ,f_follow_time=str_to_date(#{followTime},'%Y-%m-%d %T')</if> 		<if test="followUser != null and !followUser.equals('') "> ,f_follow_user=#{followUser}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_dredgeBillFollowRecord" parameterType="DredgeBillFollowRecord">
+		<include refid="dredgeBillFollowRecordBase.update_dredgeBillFollowRecord"/>
+    </update>
+    
+    <!-- 批量更新(维修订单跟进记录)信息。 -->
+    <update id="update_dredgeBillFollowRecord_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_bill_follow_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tDredgeBillFId != null and !item.tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{item.tDredgeBillFId}</if> 		<if test="item.content != null and !item.content.equals('')  "> ,f_content=#{item.content}</if> 		<if test="item.followTime != null and !item.followTime.equals('')  "> ,f_follow_time=str_to_date(#{item.followTime},'%Y-%m-%d %T')</if> 		<if test="item.followUser != null and !item.followUser.equals('')  "> ,f_follow_user=#{item.followUser}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(维修订单跟进记录)信息_逻辑删除。 -->
+    <sql id="delete_dredgeBillFollowRecord_Logic">
+		UPDATE t_dredge_bill_follow_record		<trim prefix="SET" prefixOverrides=","> 		<if test="tDredgeBillFId != null and !tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{tDredgeBillFId}</if> 		<if test="content != null and !content.equals('')  "> ,f_content=#{content}</if> 		<if test="followTime != null and !followTime.equals('')  "> ,f_follow_time=str_to_date(#{followTime},'%Y-%m-%d %T')</if> 		<if test="followUser != null and !followUser.equals('')  "> ,f_follow_user=#{followUser}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_dredgeBillFollowRecord_Logic" parameterType="DredgeBillFollowRecord">
+		<include refid="dredgeBillFollowRecordBase.delete_dredgeBillFollowRecord_Logic"/>
+    </update>
+    
+    <!-- 批量删除(维修订单跟进记录)信息_逻辑删除 -->
+    <update id="delete_dredgeBillFollowRecord_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_bill_follow_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tDredgeBillFId != null and !item.tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{item.tDredgeBillFId}</if> 		<if test="item.content != null and !item.content.equals('')  "> ,f_content=#{item.content}</if> 		<if test="item.followTime != null and !item.followTime.equals('')  "> ,f_follow_time=str_to_date(#{item.followTime},'%Y-%m-%d %T')</if> 		<if test="item.followUser != null and !item.followUser.equals('')  "> ,f_follow_user=#{item.followUser}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(维修订单跟进记录)信息。 -->
+    <sql id="delete_dredgeBillFollowRecord">
+		DELETE FROM t_dredge_bill_follow_record WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_dredgeBillFollowRecord" parameterType="java.lang.String">
+		<include refid="dredgeBillFollowRecordBase.delete_dredgeBillFollowRecord"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(维修订单跟进记录)信息。 -->
+    <delete id="delete_dredgeBillFollowRecord_Batch" parameterType="java.util.List">
+		DELETE FROM t_dredge_bill_follow_record WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

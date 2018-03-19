@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:换一换之跪求换 t_community_exchange_wanted -->
+<mapper namespace="communityExchangeWantedBase">
+	<resultMap type="CommunityExchangeWanted" id="communityExchangeWantedBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!-- 想换的用户Id -->        <result column="f_create_time" javaType="java.lang.String" property="createTime"/>  <!-- 求换时间 -->        <result column="t_community_exchange_relation_f_id" javaType="java.math.BigInteger" property="tCommunityExchangeRelationFId"/>  <!-- 换物关系Id -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommunityExchangeWanted" id="communityExchangeWantedExtendMap" extends="communityExchangeWantedBaseMap">
+	</resultMap>
+	<resultMap type="CommunityExchangeWanted" id="communityExchangeWantedBaseMap_AppendTable">
+        <id column="CEWid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CEWuserId" javaType="java.math.BigInteger" property="userId"/>  <!-- 想换的用户Id -->        <result column="CEWcreateTime" javaType="java.lang.String" property="createTime"/>  <!-- 求换时间 -->        <result column="CEWtCommunityExchangeRelationFId" javaType="java.math.BigInteger" property="tCommunityExchangeRelationFId"/>  <!-- 换物关系Id -->        <result column="CEWsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CEWsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CEWsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CEWsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CEWsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CEWsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CEWsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommunityExchangeWanted" id="communityExchangeWantedBaseMap_AppendTable1">
+        <id column="CEW1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CEW1userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 想换的用户Id -->        <result column="CEW1createTime" javaType="java.lang.String" property="createTime"/>  <!-- 求换时间 -->        <result column="CEW1tCommunityExchangeRelationFId" javaType="java.math.BigInteger" property="tCommunityExchangeRelationFId"/>  <!-- 换物关系Id -->        <result column="CEW1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CEW1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CEW1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CEW1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CEW1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CEW1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CEW1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CEW.f_id,CEW.f_user_id,date_format(CEW.f_create_time,'%Y-%m-%d %T') as f_create_time,CEW.t_community_exchange_relation_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CEW.f_id as CEWid,CEW.f_user_id as CEWuserId,date_format(CEW.f_create_time,'%Y-%m-%d %T') as CEWcreateTime,CEW.t_community_exchange_relation_f_id as CEWtCommunityExchangeRelationFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CEW1.f_id as CEW1id,CEW1.f_user_id as CEW1userId,date_format(CEW1.f_create_time,'%Y-%m-%d %T') as CEW1createTime,CEW1.t_community_exchange_relation_f_id as CEW1tCommunityExchangeRelationFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CEW.f_id = #{id} ) </if>        <if test="userId != null">  and (CEW.f_user_id = #{userId} ) </if>        <if test="createTime != null and !createTime.equals('')  ">  and (CEW.f_create_time = str_to_date(#{createTime},'%Y-%m-%d %T') ) </if>        <if test="createTime_START != null and !createTime_START.equals('')  ">              <![CDATA[ and (CEW.f_create_time >= str_to_date(#{createTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="createTime_END != null and !createTime_END.equals('')  ">            <![CDATA[ and (CEW.f_create_time <= str_to_date(#{createTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="tCommunityExchangeRelationFId != null">  and (CEW.t_community_exchange_relation_f_id = #{tCommunityExchangeRelationFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CEW.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CEW.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CEW.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CEW.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CEW.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CEW.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CEW.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CEW.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CEW.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (CEW.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (CEW.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (CEW.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (CEW.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (CEW.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CEW.f_id = #{id} ) </if>        <if test="userId != null and !userId.equals('')  ">  and (CEW.f_user_id = #{userId} ) </if>        <if test="createTime != null and !createTime.equals('')  ">  and (CEW.f_create_time = str_to_date(#{createTime},'%Y-%m-%d %T') ) </if>        <if test="createTime_START != null and !createTime_START.equals('')  ">              <![CDATA[ and (CEW.f_create_time >= str_to_date(#{createTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="createTime_END != null and !createTime_END.equals('')  ">            <![CDATA[ and (CEW.f_create_time <= str_to_date(#{createTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="tCommunityExchangeRelationFId != null and !tCommunityExchangeRelationFId.equals('')  ">  and (CEW.t_community_exchange_relation_f_id = #{tCommunityExchangeRelationFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CEW.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CEW.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CEW.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CEW.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CEW.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CEW.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CEW.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CEW.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CEW.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CEW.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CEW.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CEW.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CEW.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (CEW.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="communityExchangeWantedBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="communityExchangeWantedBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="communityExchangeWantedBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="communityExchangeWantedBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_community_exchange_wanted CEW    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(换一换之跪求换)信息。 -->
+	<sql id="select_communityExchangeWanted">
+		SELECT <include refid="communityExchangeWantedBase.queryHead"/>
+		<include refid="communityExchangeWantedBase.busiQueryCondition"/>
+		<include refid="communityExchangeWantedBase.dimCheckSql"/>
+		ORDER BY CEW.f_id DESC
+	</sql>
+	<select id="select_communityExchangeWanted" parameterType="java.util.Map" resultMap="communityExchangeWantedBase.communityExchangeWantedExtendMap">
+		<include refid="communityExchangeWantedBase.select_communityExchangeWanted"/>
+	</select>
+	
+	<!-- 根据条件分页查询(换一换之跪求换)信息  -->
+	<sql id="select_communityExchangeWanted_withPage">
+		SELECT <include refid="communityExchangeWantedBase.queryHead"/>
+		<include refid="communityExchangeWantedBase.busiQueryCondition"/>
+		<include refid="communityExchangeWantedBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_communityExchangeWanted_withPage" resultMap="communityExchangeWantedBase.communityExchangeWantedExtendMap" parameterType="java.util.Map">
+		<include refid="communityExchangeWantedBase.select_communityExchangeWanted_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(换一换之跪求换)信息。 -->
+	<sql id="select_communityExchangeWanted_bySeqId">
+		SELECT <include refid="communityExchangeWantedBase.queryHead"/>
+		<include refid="communityExchangeWantedBase.busiQueryCondition"/>
+		 and CEW.f_id = #{_parameter}
+	</sql>
+	<select id="select_communityExchangeWanted_bySeqId" parameterType="java.math.BigInteger" resultMap="communityExchangeWantedBase.communityExchangeWantedBaseMap">
+		<include refid="communityExchangeWantedBase.select_communityExchangeWanted_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(换一换之跪求换)记录数  -->
+	<sql id="select_communityExchangeWanted_count">
+		SELECT COUNT(*)
+		<include refid="communityExchangeWantedBase.busiQueryCount"/>
+		<include refid="communityExchangeWantedBase.dimCheckSql"/>
+	</sql>
+	<select id="select_communityExchangeWanted_count" resultType="java.lang.Integer">
+		<include refid="communityExchangeWantedBase.select_communityExchangeWanted_count"/>
+	</select>
+	
+	 <!-- 往(换一换之跪求换)新增一条记录。 -->
+	 <sql id="insert_communityExchangeWanted">
+		INSERT INTO t_community_exchange_wanted 
+		(f_id,f_user_id,f_create_time,t_community_exchange_relation_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{userId},str_to_date(#{createTime,jdbcType=DATE},'%Y-%m-%d %T'),#{tCommunityExchangeRelationFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_communityExchangeWanted" parameterType="CommunityExchangeWanted">
+		<include refid="communityExchangeWantedBase.insert_communityExchangeWanted"/>
+    </insert>
+    
+	<!-- 批量新增(换一换之跪求换)信息 -->
+    <insert id="insert_communityExchangeWanted_Batch" parameterType="java.util.List">
+    	INSERT INTO t_community_exchange_wanted 
+		(f_id,f_user_id,f_create_time,t_community_exchange_relation_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.userId},str_to_date(#{item.createTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.tCommunityExchangeRelationFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(换一换之跪求换)信息。 -->
+    <sql id="update_communityExchangeWanted">
+		UPDATE t_community_exchange_wanted		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="createTime != null and !createTime.equals('') "> ,f_create_time=str_to_date(#{createTime},'%Y-%m-%d %T')</if> 		<if test="tCommunityExchangeRelationFId != null and !tCommunityExchangeRelationFId.equals('') "> ,t_community_exchange_relation_f_id=#{tCommunityExchangeRelationFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_communityExchangeWanted" parameterType="CommunityExchangeWanted">
+		<include refid="communityExchangeWantedBase.update_communityExchangeWanted"/>
+    </update>
+    
+    <!-- 批量更新(换一换之跪求换)信息。 -->
+    <update id="update_communityExchangeWanted_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_community_exchange_wanted		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.createTime != null and !item.createTime.equals('')  "> ,f_create_time=str_to_date(#{item.createTime},'%Y-%m-%d %T')</if> 		<if test="item.tCommunityExchangeRelationFId != null and !item.tCommunityExchangeRelationFId.equals('')  "> ,t_community_exchange_relation_f_id=#{item.tCommunityExchangeRelationFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(换一换之跪求换)信息_逻辑删除。 -->
+    <sql id="delete_communityExchangeWanted_Logic">
+		UPDATE t_community_exchange_wanted		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="createTime != null and !createTime.equals('')  "> ,f_create_time=str_to_date(#{createTime},'%Y-%m-%d %T')</if> 		<if test="tCommunityExchangeRelationFId != null and !tCommunityExchangeRelationFId.equals('')  "> ,t_community_exchange_relation_f_id=#{tCommunityExchangeRelationFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_communityExchangeWanted_Logic" parameterType="CommunityExchangeWanted">
+		<include refid="communityExchangeWantedBase.delete_communityExchangeWanted_Logic"/>
+    </update>
+    
+    <!-- 批量删除(换一换之跪求换)信息_逻辑删除 -->
+    <update id="delete_communityExchangeWanted_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_community_exchange_wanted		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.createTime != null and !item.createTime.equals('')  "> ,f_create_time=str_to_date(#{item.createTime},'%Y-%m-%d %T')</if> 		<if test="item.tCommunityExchangeRelationFId != null and !item.tCommunityExchangeRelationFId.equals('')  "> ,t_community_exchange_relation_f_id=#{item.tCommunityExchangeRelationFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(换一换之跪求换)信息。 -->
+    <sql id="delete_communityExchangeWanted">
+		DELETE FROM t_community_exchange_wanted WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_communityExchangeWanted" parameterType="java.lang.String">
+		<include refid="communityExchangeWantedBase.delete_communityExchangeWanted"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(换一换之跪求换)信息。 -->
+    <delete id="delete_communityExchangeWanted_Batch" parameterType="java.util.List">
+		DELETE FROM t_community_exchange_wanted WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

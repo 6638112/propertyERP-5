@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:微信公众号维修单消息队列 t_wechat_dredgebill_mq -->
+<mapper namespace="wechatDredgebillMqBase">
+	<resultMap type="WechatDredgebillMq" id="wechatDredgebillMqBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_dredge_bill_f_id" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!-- 维修单的id -->        <result column="f_type" javaType="java.lang.Integer" property="type"/>  <!-- 消息类型 -->        <result column="f_send_status" javaType="java.lang.Integer" property="sendStatus"/>  <!-- 消息发送状态 -->        <result column="f_send_respone" javaType="java.lang.String" property="sendRespone"/>  <!-- 推送结果串 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="WechatDredgebillMq" id="wechatDredgebillMqExtendMap" extends="wechatDredgebillMqBaseMap">
+	</resultMap>
+	<resultMap type="WechatDredgebillMq" id="wechatDredgebillMqBaseMap_AppendTable">
+        <id column="WDMid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="WDMtDredgeBillFId" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!-- 维修单的id -->        <result column="WDMtype" javaType="java.lang.Integer" property="type"/>  <!-- 消息类型 -->        <result column="WDMsendStatus" javaType="java.lang.Integer" property="sendStatus"/>  <!-- 消息发送状态 -->        <result column="WDMsendRespone" javaType="java.lang.String" property="sendRespone"/>  <!-- 推送结果串 -->        <result column="WDMsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="WDMsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="WDMsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="WDMsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="WDMsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="WDMsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="WDMsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="WechatDredgebillMq" id="wechatDredgebillMqBaseMap_AppendTable1">
+        <id column="WDM1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="WDM1tDredgeBillFId" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!-- 维修单的id -->        <result column="WDM1type" javaType="java.lang.Integer" property="type"/>  <!-- 消息类型 -->        <result column="WDM1sendStatus" javaType="java.lang.Integer" property="sendStatus"/>  <!-- 消息发送状态 -->        <result column="WDM1sendRespone" javaType="java.lang.String" property="sendRespone"/>  <!-- 推送结果串 -->        <result column="WDM1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="WDM1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="WDM1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="WDM1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="WDM1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="WDM1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="WDM1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		WDM.f_id,WDM.t_dredge_bill_f_id,WDM.f_type,WDM.f_send_status,WDM.f_send_respone
+	</sql>
+	<sql id="queryHead_AppendTable">
+		WDM.f_id as WDMid,WDM.t_dredge_bill_f_id as WDMtDredgeBillFId,WDM.f_type as WDMtype,WDM.f_send_status as WDMsendStatus,WDM.f_send_respone as WDMsendRespone
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		WDM1.f_id as WDM1id,WDM1.t_dredge_bill_f_id as WDM1tDredgeBillFId,WDM1.f_type as WDM1type,WDM1.f_send_status as WDM1sendStatus,WDM1.f_send_respone as WDM1sendRespone
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (WDM.f_id = #{id} ) </if>        <if test="tDredgeBillFId != null">  and (WDM.t_dredge_bill_f_id = #{tDredgeBillFId} ) </if>        <if test="type != null">  and (WDM.f_type = #{type} ) </if>        <if test="sendStatus != null">  and (WDM.f_send_status = #{sendStatus} ) </if>        <if test="sendRespone != null">  and (WDM.f_send_respone = #{sendRespone} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (WDM.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (WDM.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (WDM.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (WDM.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (WDM.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (WDM.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (WDM.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (WDM.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (WDM.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (WDM.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (WDM.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (WDM.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (WDM.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (WDM.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (WDM.f_id = #{id} ) </if>        <if test="tDredgeBillFId != null and !tDredgeBillFId.equals('')  ">  and (WDM.t_dredge_bill_f_id = #{tDredgeBillFId} ) </if>        <if test="type != null and !type.equals('')  ">  and (WDM.f_type = #{type} ) </if>        <if test="sendStatus != null and !sendStatus.equals('')  ">  and (WDM.f_send_status = #{sendStatus} ) </if>        <if test="sendRespone != null and !sendRespone.equals('')  ">  and (WDM.f_send_respone like CONCAT('%',#{sendRespone},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (WDM.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (WDM.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (WDM.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (WDM.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (WDM.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (WDM.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (WDM.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (WDM.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (WDM.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (WDM.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (WDM.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (WDM.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (WDM.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (WDM.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="wechatDredgebillMqBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="wechatDredgebillMqBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="wechatDredgebillMqBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="wechatDredgebillMqBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_wechat_dredgebill_mq WDM    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(微信公众号维修单消息队列)信息。 -->
+	<sql id="select_wechatDredgebillMq">
+		SELECT <include refid="wechatDredgebillMqBase.queryHead"/>
+		<include refid="wechatDredgebillMqBase.busiQueryCondition"/>
+		<include refid="wechatDredgebillMqBase.dimCheckSql"/>
+		ORDER BY WDM.f_id DESC
+	</sql>
+	<select id="select_wechatDredgebillMq" parameterType="java.util.Map" resultMap="wechatDredgebillMqBase.wechatDredgebillMqExtendMap">
+		<include refid="wechatDredgebillMqBase.select_wechatDredgebillMq"/>
+	</select>
+	
+	<!-- 根据条件分页查询(微信公众号维修单消息队列)信息  -->
+	<sql id="select_wechatDredgebillMq_withPage">
+		SELECT <include refid="wechatDredgebillMqBase.queryHead"/>
+		<include refid="wechatDredgebillMqBase.busiQueryCondition"/>
+		<include refid="wechatDredgebillMqBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_wechatDredgebillMq_withPage" resultMap="wechatDredgebillMqBase.wechatDredgebillMqExtendMap" parameterType="java.util.Map">
+		<include refid="wechatDredgebillMqBase.select_wechatDredgebillMq_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(微信公众号维修单消息队列)信息。 -->
+	<sql id="select_wechatDredgebillMq_bySeqId">
+		SELECT <include refid="wechatDredgebillMqBase.queryHead"/>
+		<include refid="wechatDredgebillMqBase.busiQueryCondition"/>
+		 and WDM.f_id = #{_parameter}
+	</sql>
+	<select id="select_wechatDredgebillMq_bySeqId" parameterType="java.math.BigInteger" resultMap="wechatDredgebillMqBase.wechatDredgebillMqBaseMap">
+		<include refid="wechatDredgebillMqBase.select_wechatDredgebillMq_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(微信公众号维修单消息队列)记录数  -->
+	<sql id="select_wechatDredgebillMq_count">
+		SELECT COUNT(*)
+		<include refid="wechatDredgebillMqBase.busiQueryCount"/>
+		<include refid="wechatDredgebillMqBase.dimCheckSql"/>
+	</sql>
+	<select id="select_wechatDredgebillMq_count" resultType="java.lang.Integer">
+		<include refid="wechatDredgebillMqBase.select_wechatDredgebillMq_count"/>
+	</select>
+	
+	 <!-- 往(微信公众号维修单消息队列)新增一条记录。 -->
+	 <sql id="insert_wechatDredgebillMq">
+		INSERT INTO t_wechat_dredgebill_mq 
+		(f_id,t_dredge_bill_f_id,f_type,f_send_status,f_send_respone,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tDredgeBillFId},#{type},#{sendStatus},#{sendRespone,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_wechatDredgebillMq" parameterType="WechatDredgebillMq">
+		<include refid="wechatDredgebillMqBase.insert_wechatDredgebillMq"/>
+    </insert>
+    
+	<!-- 批量新增(微信公众号维修单消息队列)信息 -->
+    <insert id="insert_wechatDredgebillMq_Batch" parameterType="java.util.List">
+    	INSERT INTO t_wechat_dredgebill_mq 
+		(f_id,t_dredge_bill_f_id,f_type,f_send_status,f_send_respone,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tDredgeBillFId},#{item.type},#{item.sendStatus},#{item.sendRespone,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(微信公众号维修单消息队列)信息。 -->
+    <sql id="update_wechatDredgebillMq">
+		UPDATE t_wechat_dredgebill_mq		<trim prefix="SET" prefixOverrides=","> 		<if test="tDredgeBillFId != null and !tDredgeBillFId.equals('') "> ,t_dredge_bill_f_id=#{tDredgeBillFId}</if> 		<if test="type != null and !type.equals('') "> ,f_type=#{type}</if> 		<if test="sendStatus != null and !sendStatus.equals('') "> ,f_send_status=#{sendStatus}</if> 		<if test="sendRespone != null and !sendRespone.equals('') "> ,f_send_respone=#{sendRespone}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_wechatDredgebillMq" parameterType="WechatDredgebillMq">
+		<include refid="wechatDredgebillMqBase.update_wechatDredgebillMq"/>
+    </update>
+    
+    <!-- 批量更新(微信公众号维修单消息队列)信息。 -->
+    <update id="update_wechatDredgebillMq_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_wechat_dredgebill_mq		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tDredgeBillFId != null and !item.tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{item.tDredgeBillFId}</if> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.sendStatus != null and !item.sendStatus.equals('')  "> ,f_send_status=#{item.sendStatus}</if> 		<if test="item.sendRespone != null and !item.sendRespone.equals('')  "> ,f_send_respone=#{item.sendRespone}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(微信公众号维修单消息队列)信息_逻辑删除。 -->
+    <sql id="delete_wechatDredgebillMq_Logic">
+		UPDATE t_wechat_dredgebill_mq		<trim prefix="SET" prefixOverrides=","> 		<if test="tDredgeBillFId != null and !tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{tDredgeBillFId}</if> 		<if test="type != null and !type.equals('')  "> ,f_type=#{type}</if> 		<if test="sendStatus != null and !sendStatus.equals('')  "> ,f_send_status=#{sendStatus}</if> 		<if test="sendRespone != null and !sendRespone.equals('')  "> ,f_send_respone=#{sendRespone}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_wechatDredgebillMq_Logic" parameterType="WechatDredgebillMq">
+		<include refid="wechatDredgebillMqBase.delete_wechatDredgebillMq_Logic"/>
+    </update>
+    
+    <!-- 批量删除(微信公众号维修单消息队列)信息_逻辑删除 -->
+    <update id="delete_wechatDredgebillMq_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_wechat_dredgebill_mq		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tDredgeBillFId != null and !item.tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{item.tDredgeBillFId}</if> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.sendStatus != null and !item.sendStatus.equals('')  "> ,f_send_status=#{item.sendStatus}</if> 		<if test="item.sendRespone != null and !item.sendRespone.equals('')  "> ,f_send_respone=#{item.sendRespone}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(微信公众号维修单消息队列)信息。 -->
+    <sql id="delete_wechatDredgebillMq">
+		DELETE FROM t_wechat_dredgebill_mq WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_wechatDredgebillMq" parameterType="java.lang.String">
+		<include refid="wechatDredgebillMqBase.delete_wechatDredgebillMq"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(微信公众号维修单消息队列)信息。 -->
+    <delete id="delete_wechatDredgebillMq_Batch" parameterType="java.util.List">
+		DELETE FROM t_wechat_dredgebill_mq WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

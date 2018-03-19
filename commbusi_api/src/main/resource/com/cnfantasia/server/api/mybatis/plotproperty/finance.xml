@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="finance">
+	<!-- 物业宝 -->
+	<resultMap type="FinanceDeductionEntity" id="financeDeductionMap">
+		<id column="f_id" javaType="java.lang.Long" property="id" />
+		<result column="t_property_fee_detail_id" javaType="java.lang.Long"
+			property="propertyFeeDetailId" />
+		<result column="f_order_no" javaType="java.lang.String"
+			property="orderNo" />
+		<result column="f_deduction_price" javaType="java.math.BigDecimal"
+			property="deductionPrice" />
+	</resultMap>
+
+	<resultMap type="FinanceDeductionEntity" id="financeDeductionEntityMap"
+		extends="financeDeductionMap">
+		<result column="f_pay_bill_id" javaType="java.lang.Long"
+			property="payBillId" />
+	</resultMap>
+
+	<resultMap type="FinanceReqEntity" id="financeReqEntityMap">
+		<id column="f_id" javaType="java.lang.Long" property="id" />
+		<result column="f_liberate_num" javaType="java.lang.String"
+			property="liberateNum" />
+		<result column="t_room_id" javaType="java.lang.Long" property="roomId" />
+		<result column="f_property_fees" javaType="java.math.BigDecimal"
+			property="propertyFees" />
+	</resultMap>
+
+	<resultMap type="FinanceReqEntity" id="financeReqEntityMapForCar">
+		<id column="f_id" javaType="java.lang.Long" property="id" />
+		<result column="f_liberate_num" javaType="java.lang.String"
+			property="liberateNum" />
+		<result column="t_room_id" javaType="java.lang.Long" property="roomId" />
+		<result column="f_parking_fee" javaType="java.math.BigDecimal"
+			property="parkingFee" />
+	</resultMap>
+
+	<resultMap type="FinanceReqEntity" id="financeReqEntityBaseMap">
+		<!--<id column="f_id" javaType="java.lang.Long" property="id"/> -->
+		<result column="f_liberate_num" javaType="java.lang.String"
+			property="liberateNum" />  <!-- -->
+		<result column="f_real_name" javaType="java.lang.String"
+			property="realName" />  <!-- -->
+		<result column="f_mobile" javaType="java.lang.String" property="mobile" />  <!-- -->
+		<result column="f_province" javaType="java.lang.String"
+			property="province" />  <!-- -->
+		<result column="f_city" javaType="java.lang.String" property="city" />  <!-- -->
+		<result column="f_prefecture" javaType="java.lang.String"
+			property="prefecture" />  <!-- -->
+		<result column="f_residential" javaType="java.lang.String"
+			property="residential" />  <!-- 小区名称 -->
+		<result column="f_building" javaType="java.lang.String"
+			property="building" />  <!-- -->
+		<result column="f_room_num" javaType="java.lang.String"
+			property="roomNum" />  <!-- -->
+		<result column="t_room_id" javaType="java.lang.Long" property="roomId" />  <!-- -->
+		<result column="f_property_fees" javaType="java.math.BigDecimal"
+			property="propertyFees" />  <!-- -->
+	</resultMap>
+
+	<resultMap type="FinanceProfitEntity" id="financeProfitEntityMap">
+		<id column="f_id" javaType="java.lang.Long" property="id" />  <!-- -->
+		<result column="t_order_no" javaType="java.lang.String"
+			property="orderNo" />  <!-- 订单号 -->
+		<result column="f_profit_wy" javaType="java.math.BigDecimal"
+			property="profitWy" />  <!-- 物业收益，元 -->
+		<result column="f_profit_agent" javaType="java.math.BigDecimal"
+			property="profitAgent" />  <!-- 代理收益,元 -->
+		<result column="f_profit_tm" javaType="java.util.Date"
+			property="profitTm" />  <!-- 收益回款时间 -->
+		<association property="financeReqEntity" resultMap="financeReqEntityBaseMap" />
+		<association property="financeBuyEntity" javaType="FinanceBuyEntity">
+			<result column="f_buy_money" javaType="java.math.BigDecimal"
+				property="buyMoney" />
+		</association>
+	</resultMap>
+
+	<resultMap type="FinanceProfitEntity" id="financeProfitEntityAllMap"
+		extends="financeProfitEntityMap">
+		<result column="f_wy_name" javaType="java.lang.String"
+			property="wyName" />  <!-- 物业公司名称 -->
+		<result column="f_agent_name" javaType="java.lang.String"
+			property="agentName" />  <!-- 代理公司名称 -->
+	</resultMap>
+
+	<resultMap type="FinanceBuyEntity" id="FinanceBuyEntityMap">
+		<id column="f_order_no" javaType="java.lang.String" property="orderNo" />  <!-- 订单号，此订单号是钱生花生成，返回时带过来 -->
+		<result column="t_finance_req_id" javaType="java.lang.Long"
+			property="finaceReqId" />  <!-- -->
+		<result column="f_hud_id" javaType="java.lang.String" property="hudId" />  <!-- 花号 -->
+		<result column="t_real_room_id" javaType="java.lang.Long"
+			property="roomId" />  <!-- t_real_room的ID -->
+		<result column="f_buy_person" javaType="java.lang.String"
+			property="buyPerson" />  <!-- 购买人姓名 -->
+		<result column="f_buy_mobile" javaType="java.lang.String"
+			property="buyMobile" />  <!-- 购买人手机号 -->
+		<result column="f_buy_id_no" javaType="java.lang.String"
+			property="buyIdNo" />  <!-- 购买人身份证 -->
+		<result column="f_deduction_begin_time" javaType="java.util.Date"
+			property="deductionBeginTime" />  <!-- 返回抵扣开始时间 -->
+		<result column="f_deduction_end_time" javaType="java.util.Date"
+			property="deductionEndTime" />  <!-- 返回抵扣结束时间 -->
+		<result column="f_deduction_begin_date" javaType="java.util.Date"
+			property="deductionBeginDate" />  <!-- 实际抵扣开始时间 -->
+		<result column="f_deduction_end_date" javaType="java.util.Date"
+			property="deductionEndDate" />  <!-- 实际抵扣结束时间 -->
+		<result column="f_return_money" javaType="java.math.BigDecimal"
+			property="returnMoney" />  <!-- 返回金额，单位元 -->
+		<result column="f_buy_money" javaType="java.math.BigDecimal"
+			property="buyMoney" />  <!-- 购买产品金额，单位元 -->
+		<result column="f_wy_money" javaType="java.math.BigDecimal"
+			property="wyMoney" />  <!-- 每个月物业费，单位元 -->
+		<result column="f_buy_time" javaType="java.util.Date" property="buyTime" />  <!-- 购买时间 -->
+		<result column="f_deduction_count" javaType="java.lang.Integer"
+			property="deductionCount" />
+		<result column="f_wy_rate" javaType="java.math.BigDecimal"
+			property="wyRate" />  <!-- 物业佣金率 -->
+		<result column="f_channel_rate" javaType="java.math.BigDecimal"
+			property="channelRate" />  <!-- 渠道，即代理商佣金率 -->
+		<result column="f_add_tm" javaType="java.util.Date" property="addTm" />  <!-- -->
+	</resultMap>
+
+	<resultMap type="FinanceBuyEntity" id="FinanceBuyEntityAppendReqMap"
+		extends="FinanceBuyEntityMap">
+		<association property="financeReqEntity" resultMap="financeReqEntityBaseMap" />
+	</resultMap>
+
+	<resultMap type="FinanceDeductionDetail" id="FinanceDeductionDetailMap"
+		extends="financeDeductionMap">
+		<result column="f_wy_name" javaType="java.lang.String"
+			property="wyName" />
+		<result column="f_deduction_tm" javaType="java.util.Date"
+			property="deductionTm" />
+		<result column="f_deduction_price" javaType="java.math.BigDecimal"
+			property="deductionPrice2" />
+		<association property="financeReqEntity" resultMap="financeReqEntityBaseMap" />
+	</resultMap>
+
+	<!-- <select id="getPropertyFee" parameterType="java.lang.Long" resultType="java.lang.Long"> 
+		select d.f_total_price from t_pay_bill p left join t_property_fee_detail 
+		d on d.t_pay_bill_f_id = p.f_id where p.t_real_room_f_id = #{realRoomId} 
+		and d.f_type = 1 order by d.f_id desc limit 1 </select> -->
+	<select id="getPropertyFee" parameterType="java.lang.Long"
+		resultType="java.lang.Long">
+		select sum(d.f_total_price) f_total_price from t_pay_bill p
+		left join t_property_fee_detail d on d.t_pay_bill_f_id = p.f_id AND d.f_sys0_del_state = 0
+		where
+		p.t_real_room_f_id = #{realRoomId}
+		and d.f_type in (1, 2) and p.f_sys0_del_state=0
+		group by p.f_id order by p.f_id desc limit 1
+	</select>
+
+	<insert id="insertFinanceReq" parameterType="FinanceReqEntity">
+		INSERT INTO t_finance_req 
+			(f_liberate_num,f_real_name,f_mobile,f_province,f_city,f_prefecture,f_residential,f_building,f_room_num,f_car_num,t_room_id,f_property_fees, f_parking_fee, f_source_click)
+		VALUES 
+			(#{liberateNum}, #{realName}, #{mobile}, #{province}, #{city}, #{prefecture}, #{residential}, #{building}, #{roomNum}, #{licensePlate}, #{roomId}, #{propertyFees}, #{parkingFee}, #{sourceClick})
+	</insert>
+
+	<select id="getFinanceReqForResp" parameterType="java.util.Map"
+		resultMap="financeReqEntityMap">
+		select t.f_id, t.f_liberate_num, t.t_room_id,
+		t.f_property_fees from t_finance_req t
+		where t.f_liberate_num = #{liberateNum}
+		and t.t_room_id = #{roomId}
+		order by t.f_id desc limit 1
+	</select>
+
+	<select id="getFinanceReqForCar" parameterType="java.util.Map"
+		resultMap="financeReqEntityMapForCar">
+		select t.f_id, t.f_liberate_num, t.t_room_id, t.f_parking_fee from
+		t_finance_req t
+		<where>
+			<if test="liberateNum != null"> and t.f_liberate_num = #{liberateNum}</if>
+			<if test="licensePlate != null"> and t.f_car_num = #{licensePlate}</if>
+		</where>
+		order by t.f_id desc limit 1
+	</select>
+
+	<select id="getFinanceBuyCount" parameterType="FinanceBuyEntity"
+		resultType="Integer">
+		select count(*) from t_finance_buy t
+		where f_order_no = #{orderNo}
+	</select>
+
+	<insert id="insertFinanceBuy" parameterType="FinanceBuyEntity">
+		INSERT INTO
+		t_finance_buy
+		(f_order_no,t_finance_req_id,f_hud_id,t_real_room_id,f_car_num,f_buy_person,f_buy_mobile,f_buy_id_no,
+		f_deduction_begin_time,
+		f_deduction_end_time,f_deduction_begin_date,f_deduction_end_date,f_return_money,f_buy_money,f_wy_money,f_parking_fee,
+		f_buy_time,f_deduction_count,f_wy_rate, f_channel_rate,f_add_tm,
+		t_property_company_id, t_channel_partner_id, f_finance_type)
+		VALUES
+		(#{orderNo}, #{finaceReqId}, #{hudId}, #{roomId}, #{licensePlate},
+		#{buyPerson}, #{buyMobile}, #{buyIdNo}, #{deductionBeginTime},
+		#{deductionEndTime}, #{deductionBeginDate}, #{deductionEndDate},
+		#{returnMoney}, #{buyMoney}, #{wyMoney},#{parkingFee},
+		#{buyTime}, #{deductionCount}, #{wyRate}, #{channelRate}, #{addTm},
+		#{propertyCompanyId}, #{channelPartnerId}, #{financeType})
+	</insert>
+
+	<insert id="insertFinanceProfit" parameterType="FinanceProfitEntity">
+		INSERT INTO
+		t_finance_profit
+		(t_order_no,f_profit_wy,f_profit_agent,f_profit_parking,f_profit_tm)
+		VALUES
+		(#{orderNo}, #{profitWy}, #{profitAgent}, #{profitParking}, #{profitTm})
+	</insert>
+
+	<select id="getFinanceForDeductionList" resultMap="financeDeductionEntityMap"
+		parameterType="java.util.Map">
+		select d.f_id, f.f_order_no, b.f_id f_pay_bill_id, d.f_id
+		t_property_fee_detail_id, fr.f_property_fees f_deduction_price
+		from t_finance_buy f
+		inner join t_pay_bill b on f.t_real_room_id = b.t_real_room_f_id
+		inner join t_property_fee_detail d on b.f_id = d.t_pay_bill_f_id AND d.f_sys0_del_state = 0
+		inner join t_finance_req fr on f.t_finance_req_id = fr.f_id
+		left join t_finance_deduction fd on fd.t_order_no = f.f_order_no and
+		fd.t_property_fee_detail_id = d.f_id
+		where
+		<if test="realRoomId != null">
+			f.t_real_room_id = #{realRoomId} and
+		</if>
+		<if test="orderNo != null">
+			f.f_order_no = #{orderNo} and
+		</if>
+		d.f_type = 1 and f.f_finance_type = 1 <!-- and b.f_is_pay = 2 -->
+		and fd.f_id is null and fr.f_property_fees is not null
+		and b.f_sys0_del_state = 0
+		and (b.f_bill_month >= f.f_deduction_begin_date or b.f_month >=
+		f.f_deduction_begin_date or b.f_bill_month_start >= f.f_deduction_begin_date or b.f_pay_day_start >= f.f_deduction_begin_date)
+		<!-- and f.f_deduction_end_date > b.f_month -->
+		and f.f_deduction_count > f.f_has_deduction_count
+		AND b.f_cycle_type = 1
+		<![CDATA[ and ifnull(b.f_bank_collection_status, 0) <> 1 ]]>
+	</select>
+	
+	<!-- 查询物业宝未抵扣月份 -->
+	<select id="getWYBDeduMonth" parameterType="java.util.Map" resultType="java.util.Date">
+		SELECT
+			DATE_ADD(
+				(
+					SELECT
+						IFNULL(PB.f_bill_month, PB.f_month)
+					FROM
+						t_property_fee_detail PFD
+					INNER JOIN t_pay_bill PB ON PB.f_id = PFD.t_pay_bill_f_id
+					WHERE   PFD.f_sys0_del_state = 0 AND
+						PFD.f_id = (
+							SELECT
+								FD.t_property_fee_detail_id
+							FROM
+								t_finance_deduction FD
+							WHERE
+								fd.t_order_no = FB.f_order_no
+							ORDER BY
+								f_id DESC
+							LIMIT 1
+						)
+					ORDER BY
+						PFD.f_id DESC
+					LIMIT 1
+				),
+				INTERVAL + (
+					FB.f_deduction_count - FB.f_has_deduction_count
+				) MONTH
+			)
+		FROM
+			t_finance_buy FB
+		WHERE
+			FB.t_real_room_id = #{realRoomId}
+		AND ifnull(FB.f_finance_type, 1) = 1
+		AND FB.f_deduction_count >= FB.f_has_deduction_count
+		ORDER BY
+			FB.f_add_tm DESC
+		LIMIT 1
+	</select>
+
+	<update id="updatePropertyDeductionPrice" parameterType="FinanceDeductionEntity">
+		update
+		t_property_fee_detail t
+		set t.f_allowance_price = #{deductionPrice}, t.f_sys0_upd_time = now()
+		where t.f_id = #{propertyFeeDetailId}
+	</update>
+
+	<update id="update_parking_expire_date" parameterType="java.util.Map">
+		update
+		t_finance_buy tfb, t_car_num_list tcnl set
+		tfb.f_parking_expire_date=tcnl.f_expire_date
+		where
+		tfb.f_order_no=#{orderNo} and tfb.f_car_num=tcnl.t_car_num
+	</update>
+
+	<insert id="insertFinanceDeduction" parameterType="FinanceDeductionEntity">
+		insert into
+		t_finance_deduction(t_order_no, t_property_fee_detail_id)
+		values(#{orderNo}, #{propertyFeeDetailId})
+	</insert>
+
+	<update id="updateDeductionCount" parameterType="String">
+		update
+		t_finance_buy t
+		set t.f_has_deduction_count = t.f_has_deduction_count + 1
+		where
+		t.f_order_no = #{orderNo}
+	</update>
+
+	<insert id="insertFinanceLog" parameterType="FinanceLogEntity">
+		insert into
+		t_finance_log(t_real_room_id, f_order_no, f_excep_msg)
+		values(#{realRoomId}, #{orderNo}, #{excepMsg})
+	</insert>
+
+	<select id="getPaybillFeeCount" parameterType="java.util.Map"
+		resultType="Integer">
+		<![CDATA[ 
+		select IFNULL(sum(fd.f_total_price), 0) >= #{deductionPrice} from t_pay_bill pb 
+		 inner join t_property_fee_detail fd on pb.f_id = fd.t_pay_bill_f_id
+			where pb.f_id = #{payBillId} and fd.f_type > 2
+		]]>
+	</select>
+
+	<update id="updatePayBillStatus" parameterType="java.util.Map">
+		update t_pay_bill t
+			left join t_ebuy_order_has_t_pay_bill opb on t.f_id = opb.t_pay_bill_f_id
+  			left join t_ebuy_order o on o.f_id = opb.t_ebuy_order_f_id
+  			left join t_finance_buy fb on t.t_real_room_f_id = fb.t_real_room_id
+		set t.f_is_pay = #{isPay}, t.f_finance_status = 1, t.f_dedu_price =	#{deduPrice}, t.f_sys0_upd_time = NOW(), f_payment_way = 4,
+			o.f_sys0_del_state = 1, t.f_sys0_upd_user = fb.f_hud_id
+			<if test="isPay == 1">, t.f_pay_time = NOW()</if>
+		where t.f_id = #{payBillId}
+	</update>
+
+	<!-- api_manager 报表用SQL -->
+	<select id="getProfitListByWyOrAgent" resultMap="financeProfitEntityMap"
+		parameterType="java.util.Map">
+		(select fp.f_id, fp.t_order_no, fp.f_profit_wy, 0 f_profit_agent,
+		fp.f_profit_tm,
+		fr.f_liberate_num, fr.f_real_name, fr.f_mobile,f_province, fr.f_city, fr.f_prefecture,
+		fr.f_residential, fr.f_building, fr.f_room_num, fr.t_room_id,
+		fr.f_property_fees, fb.f_buy_money
+		from t_finance_profit fp
+		inner join t_finance_buy fb on fp.t_order_no = fb.f_order_no
+		inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		inner join t_real_room rr on rr.f_id = fb.t_real_room_id
+		inner join t_building b on b.f_id = rr.t_building_f_id
+		inner join t_group_building gb on gb.f_id = b.t_group_building_f_id
+		inner join t_property_company pc on gb.t_property_company_f_id = pc.f_id
+		<where>
+			<if test="omsUserId != null">pc.f_admin_id = #{omsUserId}</if>
+			<if test="city != null"><![CDATA[ AND fr.f_city like CONCAT('%',#{city},'%')]]></if>
+			<if test="residential != null"><![CDATA[ AND fr.f_residential like CONCAT('%',#{residential},'%')]]></if>
+			<if test="building != null"><![CDATA[ AND fr.f_building like CONCAT('%',#{building},'%')]]></if>
+			<if test="roomNum != null"><![CDATA[ AND fr.f_room_num like CONCAT('%',#{roomNum},'%')]]></if>
+			<if test="startTime != null"><![CDATA[ and fp.f_profit_tm >= #{startTime} ]]></if>
+			<if test="endTime != null"><![CDATA[ and fp.f_profit_tm <= #{endTime} ]]></if>
+		</where>
+		order by fp.f_id desc)
+		union
+		(select fp.f_id, fp.t_order_no, 0 f_profit_wy, fp.f_profit_agent,
+		fp.f_profit_tm,
+		fr.f_liberate_num, fr.f_real_name, fr.f_mobile,f_province, fr.f_city, fr.f_prefecture,
+		fr.f_residential, fr.f_building, fr.f_room_num, fr.t_room_id,
+		fr.f_property_fees, fb.f_buy_money
+		from t_finance_profit fp
+		inner join t_finance_buy fb on fp.t_order_no = fb.f_order_no
+		inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		inner join t_real_room rr on rr.f_id = fb.t_real_room_id
+		inner join t_building b on b.f_id = rr.t_building_f_id
+		inner join t_group_building gb on gb.f_id = b.t_group_building_f_id
+		inner join t_property_company pc on gb.t_property_company_f_id = pc.f_id
+		left join t_channel_partner_recommend pr on pr.f_pc_name = pc.f_name
+		left join t_channel_partner cp on pr.t_channel_partner_f_id = cp.f_id
+		<where>
+			<if test="omsUserId != null">cp.t_oms_user_f_id = #{omsUserId}</if>
+			<if test="city != null"><![CDATA[ AND fr.f_city like CONCAT('%',#{city},'%')]]></if>
+			<if test="residential != null"><![CDATA[ AND fr.f_residential like CONCAT('%',#{residential},'%')]]></if>
+			<if test="building != null"><![CDATA[ AND fr.f_building like CONCAT('%',#{building},'%')]]></if>
+			<if test="roomNum != null"><![CDATA[ AND fr.f_room_num like CONCAT('%',#{roomNum},'%')]]></if>
+			<if test="startTime != null"><![CDATA[ and fp.f_profit_tm >= #{startTime} ]]></if>
+			<if test="endTime != null"><![CDATA[ and fp.f_profit_tm <= #{endTime} ]]></if>
+		</where>
+		order by fp.f_id desc
+		)
+		limit #{_begin},#{_length}
+	</select>
+
+	<select id="getProfitAllList" resultMap="financeProfitEntityAllMap"
+		parameterType="java.util.Map">
+		select fp.f_id, fp.t_order_no, fp.f_profit_wy, fp.f_profit_agent,
+		fp.f_profit_tm,
+		fr.f_liberate_num, fr.f_real_name, fr.f_mobile,f_province, fr.f_city, fr.f_prefecture,
+		fr.f_residential, fr.f_building, fr.f_room_num, fr.t_room_id,
+		fr.f_property_fees, fb.f_buy_money,
+		pc.f_name f_wy_name, ifnull(cp.f_company_name, cp.f_name) f_agent_name
+		from
+		t_finance_profit fp
+		inner join t_finance_buy fb on fp.t_order_no = fb.f_order_no
+		inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		inner join t_property_company pc on fb.t_property_company_id = pc.f_id
+		left join t_channel_partner cp on fb.t_channel_partner_id = cp.f_id
+		<where>
+			<if test="agentName != null"><![CDATA[ AND ifnull(cp.f_company_name, cp.f_name) like CONCAT('%',#{agentName},'%')]]></if>
+			<if test="wyName != null"><![CDATA[ AND pc.f_name like CONCAT('%',#{wyName},'%')]]></if>
+			<if test="city != null"><![CDATA[ AND fr.f_city like CONCAT('%',#{city},'%')]]></if>
+			<if test="residential != null"><![CDATA[ AND fr.f_residential like CONCAT('%',#{residential},'%')]]></if>
+			<if test="building != null"><![CDATA[ AND fr.f_building like CONCAT('%',#{building},'%')]]></if>
+			<if test="roomNum != null"><![CDATA[ AND fr.f_room_num like CONCAT('%',#{roomNum},'%')]]></if>
+			<if test="startTime != null"><![CDATA[ and fp.f_profit_tm >= #{startTime} ]]></if>
+			<if test="endTime != null"><![CDATA[ and fp.f_profit_tm <= #{endTime} ]]></if>
+		</where>
+		order by fp.f_id desc
+		limit #{_begin},#{_length}
+	</select>
+
+	<select id="getProfitListByWyOrAgentCount" resultType="Integer"
+		parameterType="java.util.Map">
+		select count(*) from (
+		select fp.f_id
+		from t_finance_profit fp
+		inner join t_finance_buy fb on fp.t_order_no = fb.f_order_no
+		inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		inner join t_real_room rr on rr.f_id = fb.t_real_room_id
+		inner join t_building b on b.f_id = rr.t_building_f_id
+		inner join t_group_building gb on gb.f_id = b.t_group_building_f_id
+		inner join t_property_company pc on gb.t_property_company_f_id = pc.f_id
+		<where>
+			<if test="omsUserId != null">pc.f_admin_id = #{omsUserId}</if>
+			<if test="city != null"><![CDATA[ AND fr.f_city like CONCAT('%',#{city},'%')]]></if>
+			<if test="residential != null"><![CDATA[ AND fr.f_residential like CONCAT('%',#{residential},'%')]]></if>
+			<if test="building != null"><![CDATA[ AND fr.f_building like CONCAT('%',#{building},'%')]]></if>
+			<if test="roomNum != null"><![CDATA[ AND fr.f_room_num like CONCAT('%',#{roomNum},'%')]]></if>
+			<if test="startTime != null"><![CDATA[ and fp.f_profit_tm >= #{startTime} ]]></if>
+			<if test="endTime != null"><![CDATA[ and fp.f_profit_tm <= #{endTime} ]]></if>
+		</where>
+		union
+		select fp.f_id
+		from t_finance_profit fp
+		inner join t_finance_buy fb on fp.t_order_no = fb.f_order_no
+		inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		inner join t_real_room rr on rr.f_id = fb.t_real_room_id
+		inner join t_building b on b.f_id = rr.t_building_f_id
+		inner join t_group_building gb on gb.f_id = b.t_group_building_f_id
+		inner join t_property_company pc on gb.t_property_company_f_id = pc.f_id
+		left join t_channel_partner_recommend pr on pr.f_pc_name = pc.f_name
+		left join t_channel_partner cp on pr.t_channel_partner_f_id = cp.f_id
+		<where>
+			<if test="omsUserId != null">cp.t_oms_user_f_id = #{omsUserId}</if>
+			<if test="city != null"><![CDATA[ AND fr.f_city like CONCAT('%',#{city},'%')]]></if>
+			<if test="residential != null"><![CDATA[ AND fr.f_residential like CONCAT('%',#{residential},'%')]]></if>
+			<if test="building != null"><![CDATA[ AND fr.f_building like CONCAT('%',#{building},'%')]]></if>
+			<if test="roomNum != null"><![CDATA[ AND fr.f_room_num like CONCAT('%',#{roomNum},'%')]]></if>
+			<if test="startTime != null"><![CDATA[ and fp.f_profit_tm >= #{startTime} ]]></if>
+			<if test="endTime != null"><![CDATA[ and fp.f_profit_tm <= #{endTime} ]]></if>
+		</where>
+		) temp
+	</select>
+
+	<select id="getProfitAllListCount" resultType="Integer"
+		parameterType="java.util.Map">
+		select count(*)
+		from t_finance_profit fp
+		inner join t_finance_buy fb on fp.t_order_no = fb.f_order_no
+		inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		inner join t_property_company pc on fb.t_property_company_id = pc.f_id
+		left join t_channel_partner cp on fb.t_channel_partner_id = cp.f_id
+		<where>
+			<if test="agentName != null"><![CDATA[ AND ifnull(cp.f_company_name, cp.f_name) like CONCAT('%',#{agentName},'%')]]></if>
+			<if test="wyName != null"><![CDATA[ AND pc.f_name like CONCAT('%',#{wyName},'%')]]></if>
+			<if test="city != null"><![CDATA[ AND fr.f_city like CONCAT('%',#{city},'%')]]></if>
+			<if test="residential != null"><![CDATA[ AND fr.f_residential like CONCAT('%',#{residential},'%')]]></if>
+			<if test="building != null"><![CDATA[ AND fr.f_building like CONCAT('%',#{building},'%')]]></if>
+			<if test="roomNum != null"><![CDATA[ AND fr.f_room_num like CONCAT('%',#{roomNum},'%')]]></if>
+			<if test="startTime != null"><![CDATA[ and fp.f_profit_tm >= #{startTime} ]]></if>
+			<if test="endTime != null"><![CDATA[ and fp.f_profit_tm <= #{endTime} ]]></if>
+		</where>
+	</select>
+
+	<select id="getProfitListByWyOrAgentSum"
+		resultType="com.cnfantasia.server.api.plotproperty.entity.FinanceSum"
+		parameterType="java.util.Map">
+		select
+		(select ifnull(sum(fp.f_profit_wy), 0)
+		from t_finance_profit fp
+		inner join t_finance_buy fb on fp.t_order_no = fb.f_order_no
+		inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		inner join t_real_room rr on rr.f_id = fb.t_real_room_id
+		inner join t_building b on b.f_id = rr.t_building_f_id
+		inner join t_group_building gb on gb.f_id = b.t_group_building_f_id
+		inner join t_property_company pc on gb.t_property_company_f_id = pc.f_id
+		<where>
+			<if test="omsUserId != null">pc.f_admin_id = #{omsUserId}</if>
+			<if test="city != null"><![CDATA[ AND fr.f_city like CONCAT('%',#{city},'%')]]></if>
+			<if test="residential != null"><![CDATA[ AND fr.f_residential like CONCAT('%',#{residential},'%')]]></if>
+			<if test="building != null"><![CDATA[ AND fr.f_building like CONCAT('%',#{building},'%')]]></if>
+			<if test="roomNum != null"><![CDATA[ AND fr.f_room_num like CONCAT('%',#{roomNum},'%')]]></if>
+			<if test="startTime != null"><![CDATA[ and fp.f_profit_tm >= #{startTime} ]]></if>
+			<if test="endTime != null"><![CDATA[ and fp.f_profit_tm <= #{endTime} ]]></if>
+		</where>
+		)
+		+
+		(select ifnull(sum(fp.f_profit_agent), 0)
+		from t_finance_profit fp
+		inner join t_finance_buy fb on fp.t_order_no = fb.f_order_no
+		inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		inner join t_real_room rr on rr.f_id = fb.t_real_room_id
+		inner join t_building b on b.f_id = rr.t_building_f_id
+		inner join t_group_building gb on gb.f_id = b.t_group_building_f_id
+		inner join t_property_company pc on gb.t_property_company_f_id = pc.f_id
+		left join t_channel_partner_recommend pr on pr.f_pc_name = pc.f_name
+		left join t_channel_partner cp on pr.t_channel_partner_f_id = cp.f_id
+		<where>
+			<if test="omsUserId != null">cp.t_oms_user_f_id = #{omsUserId}</if>
+			<if test="city != null"><![CDATA[ AND fr.f_city like CONCAT('%',#{city},'%')]]></if>
+			<if test="residential != null"><![CDATA[ AND fr.f_residential like CONCAT('%',#{residential},'%')]]></if>
+			<if test="building != null"><![CDATA[ AND fr.f_building like CONCAT('%',#{building},'%')]]></if>
+			<if test="roomNum != null"><![CDATA[ AND fr.f_room_num like CONCAT('%',#{roomNum},'%')]]></if>
+			<if test="startTime != null"><![CDATA[ and fp.f_profit_tm >= #{startTime} ]]></if>
+			<if test="endTime != null"><![CDATA[ and fp.f_profit_tm <= #{endTime} ]]></if>
+		</where>
+		) profitAll
+	</select>
+
+	<select id="getProfitAllListSum"
+		resultType="com.cnfantasia.server.api.plotproperty.entity.FinanceSum"
+		parameterType="java.util.Map">
+		select sum(temp.f_profit_wy) wyProfit, sum(temp.f_profit_agent)
+		agentProfit from (
+		select fp.f_profit_wy, fp.f_profit_agent
+		from t_finance_profit fp
+		inner join t_finance_buy fb on fp.t_order_no = fb.f_order_no
+		inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		inner join t_property_company pc on fb.t_property_company_id = pc.f_id
+		left join t_channel_partner cp on fb.t_channel_partner_id = cp.f_id
+		<where>
+			<if test="agentName != null"><![CDATA[ AND ifnull(cp.f_company_name, cp.f_name) like CONCAT('%',#{agentName},'%')]]></if>
+			<if test="wyName != null"><![CDATA[ AND pc.f_name like CONCAT('%',#{wyName},'%')]]></if>
+			<if test="city != null"><![CDATA[ AND fr.f_city like CONCAT('%',#{city},'%')]]></if>
+			<if test="residential != null"><![CDATA[ AND fr.f_residential like CONCAT('%',#{residential},'%')]]></if>
+			<if test="building != null"><![CDATA[ AND fr.f_building like CONCAT('%',#{building},'%')]]></if>
+			<if test="roomNum != null"><![CDATA[ AND fr.f_room_num like CONCAT('%',#{roomNum},'%')]]></if>
+			<if test="startTime != null"><![CDATA[ and fp.f_profit_tm >= #{startTime} ]]></if>
+			<if test="endTime != null"><![CDATA[ and fp.f_profit_tm <= #{endTime} ]]></if>
+		</where>
+		) temp
+	</select>
+
+	<select id="getFinanceBuyList" resultMap="FinanceBuyEntityAppendReqMap"
+		parameterType="java.util.Map">
+		select fb.f_order_no, fb.t_finance_req_id, fb.f_hud_id,
+		fb.t_real_room_id, fb.f_buy_person, fb.f_buy_mobile,
+		fb.f_buy_id_no,fb.f_deduction_begin_time,f_deduction_end_time,f_deduction_begin_date,f_deduction_end_date,
+		fb.f_return_money, fb.f_buy_money, fb.f_wy_money, f_buy_time,
+		fb.f_deduction_count, fb.f_wy_rate, fb.f_channel_rate, fb.f_add_tm,
+		fr.f_liberate_num, fr.f_real_name, fr.f_mobile, fr.f_province,
+		fr.f_city, fr.f_prefecture,
+		fr.f_residential, fr.f_building, fr.f_room_num, fr.t_room_id, fr.f_property_fees
+		from t_finance_buy fb
+		inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		<where>
+			fb.f_finance_type=#{financeType}
+			<if test="city != null"><![CDATA[ AND fr.f_city like CONCAT('%',#{city},'%')]]></if>
+			<if test="residential != null"><![CDATA[ AND fr.f_residential like CONCAT('%',#{residential},'%')]]></if>
+			<if test="building != null"><![CDATA[ AND fr.f_building like CONCAT('%',#{building},'%')]]></if>
+			<if test="roomNum != null"><![CDATA[ AND fr.f_room_num like CONCAT('%',#{roomNum},'%')]]></if>
+			<if test="deductionTime != null"><![CDATA[ and fb.f_deduction_begin_date <= #{deductionTime} and fb.f_deduction_end_date > #{deductionTime} ]]></if>
+		</where>
+		order by fb.t_finance_req_id desc
+		limit #{_begin},#{_length}
+	</select>
+
+	<select id="getFinanceBuyListCount" resultType="Integer"
+		parameterType="java.util.Map">
+		select count(*)
+		from t_finance_buy fb
+		inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		<where>
+			fb.f_finance_type=#{financeType}
+			<if test="city != null"><![CDATA[ AND fr.f_city like CONCAT('%',#{city},'%')]]></if>
+			<if test="residential != null"><![CDATA[ AND fr.f_residential like CONCAT('%',#{residential},'%')]]></if>
+			<if test="building != null"><![CDATA[ AND fr.f_building like CONCAT('%',#{building},'%')]]></if>
+			<if test="roomNum != null"><![CDATA[ AND fr.f_room_num like CONCAT('%',#{roomNum},'%')]]></if>
+			<if test="deductionTime != null"><![CDATA[ and fb.f_deduction_begin_date <= #{deductionTime} and fb.f_deduction_end_date > #{deductionTime} ]]></if>
+		</where>
+	</select>
+
+	<select id="getFinanceBuyListSum"
+		resultType="com.cnfantasia.server.api.plotproperty.entity.FinanceSum"
+		parameterType="java.util.Map">
+		select sum(fb.f_return_money) retProfitMoney, sum(fr.f_property_fees)
+		retWyMoney, sum(fb.f_parking_fee) as parkingFees
+		from t_finance_buy fb
+		inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		<where>
+			fb.f_finance_type=#{financeType}
+			<if test="city != null"><![CDATA[ AND fr.f_city like CONCAT('%',#{city},'%')]]></if>
+			<if test="residential != null"><![CDATA[ AND fr.f_residential like CONCAT('%',#{residential},'%')]]></if>
+			<if test="building != null"><![CDATA[ AND fr.f_building like CONCAT('%',#{building},'%')]]></if>
+			<if test="roomNum != null"><![CDATA[ AND fr.f_room_num like CONCAT('%',#{roomNum},'%')]]></if>
+			<if test="deductionTime != null"><![CDATA[ and fb.f_deduction_begin_date <= #{deductionTime} and fb.f_deduction_end_date > #{deductionTime} ]]></if>
+		</where>
+	</select>
+
+	<select id="getFinanceAgent"
+		resultType="com.cnfantasia.server.api.plotproperty.entity.FinanceAgent"
+		parameterType="java.util.Map">
+		select pc.f_id propertyCompanyId, cp.f_id
+		channelPartnerId from t_real_room rr
+		inner join t_building b on b.f_id = rr.t_building_f_id
+		inner join t_group_building gb on gb.f_id = b.t_group_building_f_id
+		inner join t_property_company pc on gb.t_property_company_f_id = pc.f_id
+		left join t_channel_partner_recommend pr on pr.f_pc_name = pc.f_name
+		left join t_channel_partner cp on pr.t_channel_partner_f_id = cp.f_id
+		where rr.f_id = #{roomId}
+		limit 1
+	</select>
+
+	<select id="getFinanceAgent2"
+		resultType="com.cnfantasia.server.api.plotproperty.entity.FinanceAgent"
+		parameterType="java.util.Map">
+		select pc.f_id propertyCompanyId, cp.f_id
+		channelPartnerId from t_real_room rr
+		inner join t_building b on b.f_id = rr.t_building_f_id
+		inner join t_group_building gb on gb.f_id = b.t_group_building_f_id
+		inner join t_property_company pc on gb.t_property_company_f_id = pc.f_id
+		left join t_channel_partner_recommend pr on pr.f_pc_name = pc.f_name
+		left join t_channel_partner cp on pr.t_channel_partner_f_id = cp.f_id
+		where gb.f_id = #{gbId}
+		limit 1
+	</select>
+
+
+	<sql id="getFinanceDeductionDetailWhere">
+		<where>
+			<if test="wyName != null"><![CDATA[ AND pc.f_name like CONCAT('%',#{wyName},'%')]]></if>
+			<if test="city != null"><![CDATA[ AND fr.f_city like CONCAT('%',#{city},'%')]]></if>
+			<if test="residential != null"><![CDATA[ AND fr.f_residential like CONCAT('%',#{residential},'%')]]></if>
+			<if test="building != null"><![CDATA[ AND fr.f_building like CONCAT('%',#{building},'%')]]></if>
+			<if test="roomNum != null"><![CDATA[ AND fr.f_room_num like CONCAT('%',#{roomNum},'%')]]></if>
+			<if test="deductionTime != null"><![CDATA[ and fb.f_deduction_begin_date <= #{deductionTime} and fb.f_deduction_end_date > #{deductionTime} ]]></if>
+		</where>
+	</sql>
+
+	<select id="getFinanceDeductionDetailList" resultMap="FinanceDeductionDetailMap"
+		parameterType="java.util.Map">
+		select fd.f_id, fd.t_property_fee_detail_id, fb.f_order_no,
+		fr.f_property_fees f_deduction_price, fd.f_deduction_tm, pc.f_name
+		f_wy_name,
+		fr.f_liberate_num, fr.f_real_name, fr.f_mobile, fr.f_province, fr.f_city,
+		fr.f_prefecture,
+		fr.f_residential, fr.f_building, fr.f_room_num, fr.t_room_id, fr.f_property_fees
+		from t_finance_buy fb
+		inner join t_finance_deduction fd on fd.t_order_no = fb.f_order_no
+		inner join t_finance_req fr on fb.t_finance_req_id = fr.f_id
+		inner join t_property_company pc on fb.t_property_company_id = pc.f_id
+		<include refid="getFinanceDeductionDetailWhere" />
+		order by fd.f_deduction_tm desc
+	</select>
+
+	<select id="getFinanceDeductionDetailCount" resultType="Integer"
+		parameterType="java.util.Map">
+		select count(*)
+		from t_finance_buy fb
+		inner join t_finance_deduction fd on fd.t_order_no = fb.f_order_no
+		inner join t_finance_req fr on fb.t_finance_req_id = fr.f_id
+		inner join t_property_company pc on fb.t_property_company_id = pc.f_id
+		<include refid="getFinanceDeductionDetailWhere" />
+	</select>
+
+	<select id="getFinanceDeductionDetailSum"
+		resultType="com.cnfantasia.server.api.plotproperty.entity.FinanceSum"
+		parameterType="java.util.Map">
+		select sum(fr.f_property_fees) wyMoney
+		from t_finance_buy fb
+		inner join t_finance_deduction fd on fd.t_order_no = fb.f_order_no
+		inner join t_finance_req fr on fb.t_finance_req_id = fr.f_id
+		inner join t_property_company pc on fb.t_property_company_id = pc.f_id
+		<include refid="getFinanceDeductionDetailWhere" />
+	</select>
+
+</mapper>

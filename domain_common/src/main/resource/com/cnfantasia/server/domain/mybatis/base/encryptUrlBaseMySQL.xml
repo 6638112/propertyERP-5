@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:加密url t_encrypt_url -->
+<mapper namespace="encryptUrlBase">
+	<resultMap type="EncryptUrl" id="encryptUrlBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_url" javaType="java.lang.String" property="url"/>  <!-- 加密的url -->        <result column="f_all_column" javaType="java.lang.Integer" property="allColumn"/>  <!-- 是否校验全部字段 -->        <result column="f_ver" javaType="java.lang.Long" property="ver"/>  <!-- 开始版本 -->        <result column="f_ver_end" javaType="java.lang.Long" property="verEnd"/>  <!-- 最大版本 -->        <result column="f_sign_type" javaType="java.lang.Integer" property="signType"/>  <!-- 加密行为 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EncryptUrl" id="encryptUrlExtendMap" extends="encryptUrlBaseMap">
+	</resultMap>
+	<resultMap type="EncryptUrl" id="encryptUrlBaseMap_AppendTable">
+        <id column="EUid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EUurl" javaType="java.lang.String" property="url"/>  <!-- 加密的url -->        <result column="EUallColumn" javaType="java.lang.Integer" property="allColumn"/>  <!-- 是否校验全部字段 -->        <result column="EUver" javaType="java.lang.Long" property="ver"/>  <!-- 开始版本 -->        <result column="EUverEnd" javaType="java.lang.Long" property="verEnd"/>  <!-- 最大版本 -->        <result column="EUsignType" javaType="java.lang.Integer" property="signType"/>  <!-- 加密行为 -->        <result column="EUsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EUsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EUsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EUsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EUsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EUsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EUsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EncryptUrl" id="encryptUrlBaseMap_AppendTable1">
+        <id column="EU1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EU1url" javaType="java.lang.String" property="url"/>  <!-- 加密的url -->        <result column="EU1allColumn" javaType="java.lang.Integer" property="allColumn"/>  <!-- 是否校验全部字段 -->        <result column="EU1ver" javaType="java.lang.Long" property="ver"/>  <!-- 开始版本 -->        <result column="EU1verEnd" javaType="java.lang.Long" property="verEnd"/>  <!-- 最大版本 -->        <result column="EU1signType" javaType="java.lang.Integer" property="signType"/>  <!-- 加密行为 -->        <result column="EU1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EU1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EU1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EU1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EU1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EU1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EU1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EU.f_id,EU.f_url,EU.f_all_column,EU.f_ver,EU.f_ver_end,EU.f_sign_type
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EU.f_id as EUid,EU.f_url as EUurl,EU.f_all_column as EUallColumn,EU.f_ver as EUver,EU.f_ver_end as EUverEnd,EU.f_sign_type as EUsignType
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EU1.f_id as EU1id,EU1.f_url as EU1url,EU1.f_all_column as EU1allColumn,EU1.f_ver as EU1ver,EU1.f_ver_end as EU1verEnd,EU1.f_sign_type as EU1signType
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EU.f_id = #{id} ) </if>        <if test="url != null">  and (EU.f_url = #{url} ) </if>        <if test="allColumn != null">  and (EU.f_all_column = #{allColumn} ) </if>        <if test="ver != null">  and (EU.f_ver = #{ver} ) </if>        <if test="verEnd != null">  and (EU.f_ver_end = #{verEnd} ) </if>        <if test="signType != null">  and (EU.f_sign_type = #{signType} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EU.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EU.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EU.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EU.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EU.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EU.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EU.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EU.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EU.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EU.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EU.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EU.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EU.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EU.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EU.f_id = #{id} ) </if>        <if test="url != null and !url.equals('')  ">  and (EU.f_url like CONCAT('%',#{url},'%') ) </if>        <if test="allColumn != null and !allColumn.equals('')  ">  and (EU.f_all_column = #{allColumn} ) </if>        <if test="ver != null and !ver.equals('')  ">  and (EU.f_ver = #{ver} ) </if>        <if test="verEnd != null and !verEnd.equals('')  ">  and (EU.f_ver_end = #{verEnd} ) </if>        <if test="signType != null and !signType.equals('')  ">  and (EU.f_sign_type = #{signType} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EU.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EU.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EU.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EU.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EU.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EU.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EU.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EU.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EU.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EU.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EU.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EU.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EU.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EU.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="encryptUrlBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="encryptUrlBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="encryptUrlBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="encryptUrlBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_encrypt_url EU    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(加密url)信息。 -->
+	<sql id="select_encryptUrl">
+		SELECT <include refid="encryptUrlBase.queryHead"/>
+		<include refid="encryptUrlBase.busiQueryCondition"/>
+		<include refid="encryptUrlBase.dimCheckSql"/>
+		ORDER BY EU.f_id DESC
+	</sql>
+	<select id="select_encryptUrl" parameterType="java.util.Map" resultMap="encryptUrlBase.encryptUrlExtendMap">
+		<include refid="encryptUrlBase.select_encryptUrl"/>
+	</select>
+	
+	<!-- 根据条件分页查询(加密url)信息  -->
+	<sql id="select_encryptUrl_withPage">
+		SELECT <include refid="encryptUrlBase.queryHead"/>
+		<include refid="encryptUrlBase.busiQueryCondition"/>
+		<include refid="encryptUrlBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_encryptUrl_withPage" resultMap="encryptUrlBase.encryptUrlExtendMap" parameterType="java.util.Map">
+		<include refid="encryptUrlBase.select_encryptUrl_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(加密url)信息。 -->
+	<sql id="select_encryptUrl_bySeqId">
+		SELECT <include refid="encryptUrlBase.queryHead"/>
+		<include refid="encryptUrlBase.busiQueryCondition"/>
+		 and EU.f_id = #{_parameter}
+	</sql>
+	<select id="select_encryptUrl_bySeqId" parameterType="java.math.BigInteger" resultMap="encryptUrlBase.encryptUrlBaseMap">
+		<include refid="encryptUrlBase.select_encryptUrl_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(加密url)记录数  -->
+	<sql id="select_encryptUrl_count">
+		SELECT COUNT(*)
+		<include refid="encryptUrlBase.busiQueryCount"/>
+		<include refid="encryptUrlBase.dimCheckSql"/>
+	</sql>
+	<select id="select_encryptUrl_count" resultType="java.lang.Integer">
+		<include refid="encryptUrlBase.select_encryptUrl_count"/>
+	</select>
+	
+	 <!-- 往(加密url)新增一条记录。 -->
+	 <sql id="insert_encryptUrl">
+		INSERT INTO t_encrypt_url 
+		(f_id,f_url,f_all_column,f_ver,f_ver_end,f_sign_type,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{url,jdbcType=VARCHAR},#{allColumn},#{ver},#{verEnd},#{signType},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_encryptUrl" parameterType="EncryptUrl">
+		<include refid="encryptUrlBase.insert_encryptUrl"/>
+    </insert>
+    
+	<!-- 批量新增(加密url)信息 -->
+    <insert id="insert_encryptUrl_Batch" parameterType="java.util.List">
+    	INSERT INTO t_encrypt_url 
+		(f_id,f_url,f_all_column,f_ver,f_ver_end,f_sign_type,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.url,jdbcType=VARCHAR},#{item.allColumn},#{item.ver},#{item.verEnd},#{item.signType},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(加密url)信息。 -->
+    <sql id="update_encryptUrl">
+		UPDATE t_encrypt_url		<trim prefix="SET" prefixOverrides=","> 		<if test="url != null and !url.equals('') "> ,f_url=#{url}</if> 		<if test="allColumn != null and !allColumn.equals('') "> ,f_all_column=#{allColumn}</if> 		<if test="ver != null and !ver.equals('') "> ,f_ver=#{ver}</if> 		<if test="verEnd != null and !verEnd.equals('') "> ,f_ver_end=#{verEnd}</if> 		<if test="signType != null and !signType.equals('') "> ,f_sign_type=#{signType}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_encryptUrl" parameterType="EncryptUrl">
+		<include refid="encryptUrlBase.update_encryptUrl"/>
+    </update>
+    
+    <!-- 批量更新(加密url)信息。 -->
+    <update id="update_encryptUrl_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_encrypt_url		<trim prefix="SET" prefixOverrides=","> 		<if test="item.url != null and !item.url.equals('')  "> ,f_url=#{item.url}</if> 		<if test="item.allColumn != null and !item.allColumn.equals('')  "> ,f_all_column=#{item.allColumn}</if> 		<if test="item.ver != null and !item.ver.equals('')  "> ,f_ver=#{item.ver}</if> 		<if test="item.verEnd != null and !item.verEnd.equals('')  "> ,f_ver_end=#{item.verEnd}</if> 		<if test="item.signType != null and !item.signType.equals('')  "> ,f_sign_type=#{item.signType}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(加密url)信息_逻辑删除。 -->
+    <sql id="delete_encryptUrl_Logic">
+		UPDATE t_encrypt_url		<trim prefix="SET" prefixOverrides=","> 		<if test="url != null and !url.equals('')  "> ,f_url=#{url}</if> 		<if test="allColumn != null and !allColumn.equals('')  "> ,f_all_column=#{allColumn}</if> 		<if test="ver != null and !ver.equals('')  "> ,f_ver=#{ver}</if> 		<if test="verEnd != null and !verEnd.equals('')  "> ,f_ver_end=#{verEnd}</if> 		<if test="signType != null and !signType.equals('')  "> ,f_sign_type=#{signType}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_encryptUrl_Logic" parameterType="EncryptUrl">
+		<include refid="encryptUrlBase.delete_encryptUrl_Logic"/>
+    </update>
+    
+    <!-- 批量删除(加密url)信息_逻辑删除 -->
+    <update id="delete_encryptUrl_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_encrypt_url		<trim prefix="SET" prefixOverrides=","> 		<if test="item.url != null and !item.url.equals('')  "> ,f_url=#{item.url}</if> 		<if test="item.allColumn != null and !item.allColumn.equals('')  "> ,f_all_column=#{item.allColumn}</if> 		<if test="item.ver != null and !item.ver.equals('')  "> ,f_ver=#{item.ver}</if> 		<if test="item.verEnd != null and !item.verEnd.equals('')  "> ,f_ver_end=#{item.verEnd}</if> 		<if test="item.signType != null and !item.signType.equals('')  "> ,f_sign_type=#{item.signType}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(加密url)信息。 -->
+    <sql id="delete_encryptUrl">
+		DELETE FROM t_encrypt_url WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_encryptUrl" parameterType="java.lang.String">
+		<include refid="encryptUrlBase.delete_encryptUrl"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(加密url)信息。 -->
+    <delete id="delete_encryptUrl_Batch" parameterType="java.util.List">
+		DELETE FROM t_encrypt_url WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

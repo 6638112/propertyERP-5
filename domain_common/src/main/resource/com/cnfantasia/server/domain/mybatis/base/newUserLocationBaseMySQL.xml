@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:新用户第一次打开app定位结果信息 t_new_user_location -->
+<mapper namespace="newUserLocationBase">
+	<resultMap type="NewUserLocation" id="newUserLocationBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_sign_status" javaType="java.lang.Integer" property="signStatus"/>  <!-- 是否签约 -->        <result column="f_hasFound" javaType="java.lang.Integer" property="hasfound"/>  <!-- 是否根据定位信息精确找到 -->        <result column="f_gbId" javaType="java.math.BigInteger" property="gbid"/>  <!-- 定位到的小区ID -->        <result column="f_deviceid" javaType="java.lang.String" property="deviceid"/>  <!-- 用户设备id -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="NewUserLocation" id="newUserLocationExtendMap" extends="newUserLocationBaseMap">
+	</resultMap>
+	<resultMap type="NewUserLocation" id="newUserLocationBaseMap_AppendTable">
+        <id column="NULid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="NULsignStatus" javaType="java.lang.Integer" property="signStatus"/>  <!-- 是否签约 -->        <result column="NULhasfound" javaType="java.lang.Integer" property="hasfound"/>  <!-- 是否根据定位信息精确找到 -->        <result column="NULgbid" javaType="java.math.BigInteger" property="gbid"/>  <!-- 定位到的小区ID -->        <result column="NULdeviceid" javaType="java.lang.String" property="deviceid"/>  <!-- 用户设备id -->        <result column="NULsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="NULsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="NULsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="NULsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="NULsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="NULsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="NULsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="NewUserLocation" id="newUserLocationBaseMap_AppendTable1">
+        <id column="NUL1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="NUL1signStatus" javaType="java.lang.Integer" property="signStatus"/>  <!-- 是否签约 -->        <result column="NUL1hasfound" javaType="java.lang.Integer" property="hasfound"/>  <!-- 是否根据定位信息精确找到 -->        <result column="NUL1gbid" javaType="java.math.BigInteger" property="gbid"/>  <!-- 定位到的小区ID -->        <result column="NUL1deviceid" javaType="java.lang.String" property="deviceid"/>  <!-- 用户设备id -->        <result column="NUL1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="NUL1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="NUL1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="NUL1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="NUL1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="NUL1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="NUL1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		NUL.f_id,NUL.f_sign_status,NUL.f_hasFound,NUL.f_gbId,NUL.f_deviceid
+	</sql>
+	<sql id="queryHead_AppendTable">
+		NUL.f_id as NULid,NUL.f_sign_status as NULsignStatus,NUL.f_hasFound as NULhasfound,NUL.f_gbId as NULgbid,NUL.f_deviceid as NULdeviceid
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		NUL1.f_id as NUL1id,NUL1.f_sign_status as NUL1signStatus,NUL1.f_hasFound as NUL1hasfound,NUL1.f_gbId as NUL1gbid,NUL1.f_deviceid as NUL1deviceid
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (NUL.f_id = #{id} ) </if>        <if test="signStatus != null">  and (NUL.f_sign_status = #{signStatus} ) </if>        <if test="hasfound != null">  and (NUL.f_hasFound = #{hasfound} ) </if>        <if test="gbid != null">  and (NUL.f_gbId = #{gbid} ) </if>        <if test="deviceid != null">  and (NUL.f_deviceid = #{deviceid} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (NUL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (NUL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (NUL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (NUL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (NUL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (NUL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (NUL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (NUL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (NUL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (NUL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (NUL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (NUL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (NUL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (NUL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (NUL.f_id = #{id} ) </if>        <if test="signStatus != null and !signStatus.equals('')  ">  and (NUL.f_sign_status = #{signStatus} ) </if>        <if test="hasfound != null and !hasfound.equals('')  ">  and (NUL.f_hasFound = #{hasfound} ) </if>        <if test="gbid != null and !gbid.equals('')  ">  and (NUL.f_gbId = #{gbid} ) </if>        <if test="deviceid != null and !deviceid.equals('')  ">  and (NUL.f_deviceid like CONCAT('%',#{deviceid},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (NUL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (NUL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (NUL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (NUL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (NUL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (NUL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (NUL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (NUL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (NUL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (NUL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (NUL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (NUL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (NUL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (NUL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="newUserLocationBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="newUserLocationBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="newUserLocationBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="newUserLocationBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_new_user_location NUL    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(新用户第一次打开app定位结果信息)信息。 -->
+	<sql id="select_newUserLocation">
+		SELECT <include refid="newUserLocationBase.queryHead"/>
+		<include refid="newUserLocationBase.busiQueryCondition"/>
+		<include refid="newUserLocationBase.dimCheckSql"/>
+		ORDER BY NUL.f_id DESC
+	</sql>
+	<select id="select_newUserLocation" parameterType="java.util.Map" resultMap="newUserLocationBase.newUserLocationExtendMap">
+		<include refid="newUserLocationBase.select_newUserLocation"/>
+	</select>
+	
+	<!-- 根据条件分页查询(新用户第一次打开app定位结果信息)信息  -->
+	<sql id="select_newUserLocation_withPage">
+		SELECT <include refid="newUserLocationBase.queryHead"/>
+		<include refid="newUserLocationBase.busiQueryCondition"/>
+		<include refid="newUserLocationBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_newUserLocation_withPage" resultMap="newUserLocationBase.newUserLocationExtendMap" parameterType="java.util.Map">
+		<include refid="newUserLocationBase.select_newUserLocation_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(新用户第一次打开app定位结果信息)信息。 -->
+	<sql id="select_newUserLocation_bySeqId">
+		SELECT <include refid="newUserLocationBase.queryHead"/>
+		<include refid="newUserLocationBase.busiQueryCondition"/>
+		 and NUL.f_id = #{_parameter}
+	</sql>
+	<select id="select_newUserLocation_bySeqId" parameterType="java.math.BigInteger" resultMap="newUserLocationBase.newUserLocationBaseMap">
+		<include refid="newUserLocationBase.select_newUserLocation_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(新用户第一次打开app定位结果信息)记录数  -->
+	<sql id="select_newUserLocation_count">
+		SELECT COUNT(*)
+		<include refid="newUserLocationBase.busiQueryCount"/>
+		<include refid="newUserLocationBase.dimCheckSql"/>
+	</sql>
+	<select id="select_newUserLocation_count" resultType="java.lang.Integer">
+		<include refid="newUserLocationBase.select_newUserLocation_count"/>
+	</select>
+	
+	 <!-- 往(新用户第一次打开app定位结果信息)新增一条记录。 -->
+	 <sql id="insert_newUserLocation">
+		INSERT INTO t_new_user_location 
+		(f_id,f_sign_status,f_hasFound,f_gbId,f_deviceid,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{signStatus},#{hasfound},#{gbid},#{deviceid,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_newUserLocation" parameterType="NewUserLocation">
+		<include refid="newUserLocationBase.insert_newUserLocation"/>
+    </insert>
+    
+	<!-- 批量新增(新用户第一次打开app定位结果信息)信息 -->
+    <insert id="insert_newUserLocation_Batch" parameterType="java.util.List">
+    	INSERT INTO t_new_user_location 
+		(f_id,f_sign_status,f_hasFound,f_gbId,f_deviceid,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.signStatus},#{item.hasfound},#{item.gbid},#{item.deviceid,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(新用户第一次打开app定位结果信息)信息。 -->
+    <sql id="update_newUserLocation">
+		UPDATE t_new_user_location		<trim prefix="SET" prefixOverrides=","> 		<if test="signStatus != null and !signStatus.equals('') "> ,f_sign_status=#{signStatus}</if> 		<if test="hasfound != null and !hasfound.equals('') "> ,f_hasFound=#{hasfound}</if> 		<if test="gbid != null and !gbid.equals('') "> ,f_gbId=#{gbid}</if> 		<if test="deviceid != null and !deviceid.equals('') "> ,f_deviceid=#{deviceid}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_newUserLocation" parameterType="NewUserLocation">
+		<include refid="newUserLocationBase.update_newUserLocation"/>
+    </update>
+    
+    <!-- 批量更新(新用户第一次打开app定位结果信息)信息。 -->
+    <update id="update_newUserLocation_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_new_user_location		<trim prefix="SET" prefixOverrides=","> 		<if test="item.signStatus != null and !item.signStatus.equals('')  "> ,f_sign_status=#{item.signStatus}</if> 		<if test="item.hasfound != null and !item.hasfound.equals('')  "> ,f_hasFound=#{item.hasfound}</if> 		<if test="item.gbid != null and !item.gbid.equals('')  "> ,f_gbId=#{item.gbid}</if> 		<if test="item.deviceid != null and !item.deviceid.equals('')  "> ,f_deviceid=#{item.deviceid}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(新用户第一次打开app定位结果信息)信息_逻辑删除。 -->
+    <sql id="delete_newUserLocation_Logic">
+		UPDATE t_new_user_location		<trim prefix="SET" prefixOverrides=","> 		<if test="signStatus != null and !signStatus.equals('')  "> ,f_sign_status=#{signStatus}</if> 		<if test="hasfound != null and !hasfound.equals('')  "> ,f_hasFound=#{hasfound}</if> 		<if test="gbid != null and !gbid.equals('')  "> ,f_gbId=#{gbid}</if> 		<if test="deviceid != null and !deviceid.equals('')  "> ,f_deviceid=#{deviceid}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_newUserLocation_Logic" parameterType="NewUserLocation">
+		<include refid="newUserLocationBase.delete_newUserLocation_Logic"/>
+    </update>
+    
+    <!-- 批量删除(新用户第一次打开app定位结果信息)信息_逻辑删除 -->
+    <update id="delete_newUserLocation_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_new_user_location		<trim prefix="SET" prefixOverrides=","> 		<if test="item.signStatus != null and !item.signStatus.equals('')  "> ,f_sign_status=#{item.signStatus}</if> 		<if test="item.hasfound != null and !item.hasfound.equals('')  "> ,f_hasFound=#{item.hasfound}</if> 		<if test="item.gbid != null and !item.gbid.equals('')  "> ,f_gbId=#{item.gbid}</if> 		<if test="item.deviceid != null and !item.deviceid.equals('')  "> ,f_deviceid=#{item.deviceid}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(新用户第一次打开app定位结果信息)信息。 -->
+    <sql id="delete_newUserLocation">
+		DELETE FROM t_new_user_location WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_newUserLocation" parameterType="java.lang.String">
+		<include refid="newUserLocationBase.delete_newUserLocation"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(新用户第一次打开app定位结果信息)信息。 -->
+    <delete id="delete_newUserLocation_Batch" parameterType="java.util.List">
+		DELETE FROM t_new_user_location WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

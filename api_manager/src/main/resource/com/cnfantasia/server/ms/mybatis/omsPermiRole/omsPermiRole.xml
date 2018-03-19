@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 角色 -->
+<mapper namespace="omsPermiRole">
+	<resultMap type="com.cnfantasia.server.ms.omsPermiRole.entity.OmsPermiRoleEntity" id="omsPermiRoleEntity_Map_Append" extends="omsPermiRoleBase.omsPermiRoleBaseMap_AppendTable">
+		<!-- 角色所包含的权限 -->
+		<collection  property="omsPermiFunctionList" resultMap="omsPermiFunctionBase.omsPermiFunctionBaseMap_AppendTable"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.omsPermiRole.entity.OmsPermiFunctionEntity" id="omsPermiFunctionEntity_Map_Append" extends="omsPermiFunctionBase.omsPermiFunctionBaseMap">
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.omsPermiRole.entity.DistrictManager" id="DistrictManagerMap" extends="propertyDistrictBase.propertyDistrictBaseMap_AppendTable">
+		<collection  property="omsUserList" resultMap="omsUserBase.omsUserBaseMap_AppendTable"/>
+		<collection  property="groupBuildingList" resultMap="groupBuildingBase.groupBuildingBaseMap_AppendTable"/>
+	</resultMap>
+	
+	<select id="select_funcList_by_role_id" parameterType="java.util.Map" resultMap="omsPermiRoleEntity_Map_Append">
+		SELECT <include refid="omsPermiRoleBase.queryHead_AppendTable"/>
+			,<include refid="omsPermiFunctionBase.queryHead_AppendTable"/>
+		FROM t_oms_permi_role OPR
+			INNER JOIN t_oms_permi_role_has_t_oms_permi_function OPRHTOPF ON OPRHTOPF.t_oms_permi_role_f_id = OPR.f_id
+				AND OPRHTOPF.f_sys0_del_state = 0 
+			INNER JOIN t_oms_permi_function OPF ON OPF.f_id = OPRHTOPF.t_oms_permi_function_f_id
+				AND OPF.f_sys0_del_state = 0 
+    	WHERE 1=1
+    	AND OPR.f_sys0_del_state = 0 
+    	AND OPR.f_id = #{roleId}
+    	<!-- TODO 后面改为List作为参数，可以查出多个角色下所有权限项
+    		 AND OPR.f_id in (
+    		<foreach collection="list" item="" index="index" separator="," >${_parameter}</foreach>
+    	) -->
+	</select>
+	
+	<!-- 查询功能列表 按longNumber 排序-->
+	<select id="select_permiFunction_orderByLN" parameterType="java.util.HashMap" resultMap="omsPermiFunctionEntity_Map_Append">
+		SELECT <include refid="omsPermiFunctionBase.queryHead"/>
+		<include refid="omsPermiFunctionBase.busiQueryCondition"/>
+		<include refid="omsPermiFunctionBase.dimCheckSql"/>
+		and OPF.f_id &gt;= 10000
+		ORDER BY OPF.f_longNumber
+	</select> 
+	
+	<!-- 根据角色Id，删除角色权限中间表中的数据 -->
+    <delete id="delete_roleFunction_byRoleId" parameterType="java.util.Map">
+		UPDATE t_oms_permi_role_has_t_oms_permi_function OPRHTOPF 
+ 		set f_sys0_del_user=#{sys0DelUser}
+ 		,f_sys0_del_time= sysdate()
+ 		,f_sys0_del_state= 1 
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND t_oms_permi_role_f_id = #{roleId} 
+    </delete>
+	
+	<!-- 根据角色Id查询对应的权限Ids -->
+	<select id="select_functionIds_byRoleId" parameterType="java.math.BigInteger" resultType="java.math.BigInteger">
+		SELECT OPRHTOPF.t_oms_permi_function_f_id
+		FROM  t_oms_permi_role_has_t_oms_permi_function OPRHTOPF 
+		WHERE 1 = 1
+		AND OPRHTOPF.f_sys0_del_state = 0 
+		AND OPRHTOPF.t_oms_permi_role_f_id = #{_parameter}
+	</select> 
+	
+	<select id="getUserInfoByRoleCode" parameterType="string" resultType="map">
+		select ou.f_real_name realName, ou.f_id id
+		from t_oms_permi_role opr 
+		left join t_oms_user_has_t_oms_permi_role m on m.t_oms_permi_role_f_id = opr.f_id and m.f_sys0_del_state = 0 
+		left join t_oms_user ou on ou.f_id = m.t_oms_user_f_id and ou.f_sys0_del_state = 0
+		where opr.f_sys0_del_state = 0 
+		and ou.f_real_name is not null
+		<![CDATA[ and ou.f_real_name <> '' ]]>
+		and opr.f_code =  #{roleCode};
+	</select>
+	
+	<select id="select_district_manger_list" parameterType="java.util.Map" resultMap="DistrictManagerMap">
+		SELECT <include refid="propertyDistrictBase.queryHead_AppendTable"/>
+			,<include refid="omsUserBase.queryHead_AppendTable"/>
+			,<include refid="groupBuildingBase.queryHead_AppendTable"/>
+		from t_property_district PD
+		 left join t_property_district_has_group_building PDHGB on PDHGB.t_property_district_f_id = PD.f_id and PDHGB.f_sys0_del_state = 0
+		 left join t_group_building GB on GB.f_id = PDHGB.t_group_building_f_id and GB.f_sys0_del_state = 0
+		 left join t_oms_user_has_property_district OUHPD on OUHPD.t_property_district_f_id = PD.f_id and OUHPD.f_sys0_del_state = 0
+		 left join t_oms_user OU on OU.f_id = OUHPD.t_oms_user_f_id and OU.f_sys0_del_state = 0
+		where PD.f_sys0_del_state = 0
+		<if test="districtId != null and districtId != ''">
+           and PD.f_id = #{districtId}
+        </if>
+	</select>
+	
+	<select id="getOmsUserList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT OU.f_id id, OU.f_user_account account
+			from t_oms_user OU
+        WHERE OU.f_sys0_del_state = 0
+        <if test="qryStr != null and qryStr != ''">
+            and OU.f_user_account like concat('%', #{qryStr}, '%')
+        </if>
+        <if test="begin != null and length != null">
+            limit #{begin}, #{length}
+        </if>
+    </select>
+    
+    <delete id="deleteByDistrictId" parameterType="java.math.BigInteger">
+     	delete from t_oms_user_has_property_district
+			where t_property_district_f_id = #{districtId} or f_sys0_del_state = 1
+    </delete>
+    
+    <delete id="deleteGbByDistrictId" parameterType="java.math.BigInteger">
+     	delete from t_property_district_has_group_building
+			where t_property_district_f_id = #{districtId} or f_sys0_del_state = 1
+    </delete>
+    
+     <!-- <update id="deleteByDistrictId" parameterType="java.math.BigInteger">
+     	update t_oms_user_has_property_district t
+		 set t.f_sys0_del_state = 1
+		 	,f_sys0_del_time= sysdate()
+		where t.t_property_district_f_id = #{districtId}
+    </update>
+    
+    <update id="deleteGbByDistrictId" parameterType="java.math.BigInteger">
+     	update t_property_district_has_group_building t
+		 set t.f_sys0_del_state = 1
+		 	,f_sys0_del_time= sysdate()
+		where t.t_property_district_f_id = #{districtId}
+    </update> -->
+    
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:扫二维码进商品详情日志表 t_ebuy_log -->
+<mapper namespace="ebuyLogBase">
+	<resultMap type="EbuyLog" id="ebuyLogBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_product_id" javaType="java.math.BigInteger" property="productId"/>  <!-- 商品Id -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!--  -->        <result column="f_utm_source" javaType="java.lang.String" property="utmSource"/>  <!--  -->        <result column="f_utm_medium" javaType="java.lang.String" property="utmMedium"/>  <!--  -->        <result column="f_utm_content" javaType="java.lang.String" property="utmContent"/>  <!--  -->        <result column="f_utm_campaingn" javaType="java.lang.String" property="utmCampaingn"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyLog" id="ebuyLogExtendMap" extends="ebuyLogBaseMap">
+	</resultMap>
+	<resultMap type="EbuyLog" id="ebuyLogBaseMap_AppendTable">
+        <id column="ELid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ELproductId" javaType="java.math.BigInteger" property="productId"/>  <!-- 商品Id -->        <result column="ELuserId" javaType="java.math.BigInteger" property="userId"/>  <!--  -->        <result column="ELutmSource" javaType="java.lang.String" property="utmSource"/>  <!--  -->        <result column="ELutmMedium" javaType="java.lang.String" property="utmMedium"/>  <!--  -->        <result column="ELutmContent" javaType="java.lang.String" property="utmContent"/>  <!--  -->        <result column="ELutmCampaingn" javaType="java.lang.String" property="utmCampaingn"/>  <!--  -->        <result column="ELsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="ELsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ELsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ELsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ELsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ELsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ELsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyLog" id="ebuyLogBaseMap_AppendTable1">
+        <id column="EL1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EL1productId" javaType="java.math.BigInteger" property="productId"/>  <!-- 商品Id -->        <result column="EL1userId" javaType="java.math.BigInteger" property="userId"/>  <!--  -->        <result column="EL1utmSource" javaType="java.lang.String" property="utmSource"/>  <!--  -->        <result column="EL1utmMedium" javaType="java.lang.String" property="utmMedium"/>  <!--  -->        <result column="EL1utmContent" javaType="java.lang.String" property="utmContent"/>  <!--  -->        <result column="EL1utmCampaingn" javaType="java.lang.String" property="utmCampaingn"/>  <!--  -->        <result column="EL1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EL1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EL1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EL1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EL1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EL1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EL1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EL.f_id,EL.f_product_id,EL.f_user_id,EL.f_utm_source,EL.f_utm_medium,EL.f_utm_content,EL.f_utm_campaingn
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EL.f_id as ELid,EL.f_product_id as ELproductId,EL.f_user_id as ELuserId,EL.f_utm_source as ELutmSource,EL.f_utm_medium as ELutmMedium,EL.f_utm_content as ELutmContent,EL.f_utm_campaingn as ELutmCampaingn
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EL1.f_id as EL1id,EL1.f_product_id as EL1productId,EL1.f_user_id as EL1userId,EL1.f_utm_source as EL1utmSource,EL1.f_utm_medium as EL1utmMedium,EL1.f_utm_content as EL1utmContent,EL1.f_utm_campaingn as EL1utmCampaingn
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EL.f_id = #{id} ) </if>        <if test="productId != null">  and (EL.f_product_id = #{productId} ) </if>        <if test="userId != null">  and (EL.f_user_id = #{userId} ) </if>        <if test="utmSource != null">  and (EL.f_utm_source = #{utmSource} ) </if>        <if test="utmMedium != null">  and (EL.f_utm_medium = #{utmMedium} ) </if>        <if test="utmContent != null">  and (EL.f_utm_content = #{utmContent} ) </if>        <if test="utmCampaingn != null">  and (EL.f_utm_campaingn = #{utmCampaingn} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EL.f_id = #{id} ) </if>        <if test="productId != null and !productId.equals('')  ">  and (EL.f_product_id = #{productId} ) </if>        <if test="userId != null and !userId.equals('')  ">  and (EL.f_user_id = #{userId} ) </if>        <if test="utmSource != null and !utmSource.equals('')  ">  and (EL.f_utm_source like CONCAT('%',#{utmSource},'%') ) </if>        <if test="utmMedium != null and !utmMedium.equals('')  ">  and (EL.f_utm_medium like CONCAT('%',#{utmMedium},'%') ) </if>        <if test="utmContent != null and !utmContent.equals('')  ">  and (EL.f_utm_content like CONCAT('%',#{utmContent},'%') ) </if>        <if test="utmCampaingn != null and !utmCampaingn.equals('')  ">  and (EL.f_utm_campaingn like CONCAT('%',#{utmCampaingn},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyLogBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyLogBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyLogBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyLogBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_log EL    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(扫二维码进商品详情日志表)信息。 -->
+	<sql id="select_ebuyLog">
+		SELECT <include refid="ebuyLogBase.queryHead"/>
+		<include refid="ebuyLogBase.busiQueryCondition"/>
+		<include refid="ebuyLogBase.dimCheckSql"/>
+		ORDER BY EL.f_id DESC
+	</sql>
+	<select id="select_ebuyLog" parameterType="java.util.Map" resultMap="ebuyLogBase.ebuyLogExtendMap">
+		<include refid="ebuyLogBase.select_ebuyLog"/>
+	</select>
+	
+	<!-- 根据条件分页查询(扫二维码进商品详情日志表)信息  -->
+	<sql id="select_ebuyLog_withPage">
+		SELECT <include refid="ebuyLogBase.queryHead"/>
+		<include refid="ebuyLogBase.busiQueryCondition"/>
+		<include refid="ebuyLogBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyLog_withPage" resultMap="ebuyLogBase.ebuyLogExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyLogBase.select_ebuyLog_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(扫二维码进商品详情日志表)信息。 -->
+	<sql id="select_ebuyLog_bySeqId">
+		SELECT <include refid="ebuyLogBase.queryHead"/>
+		<include refid="ebuyLogBase.busiQueryCondition"/>
+		 and EL.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyLog_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyLogBase.ebuyLogBaseMap">
+		<include refid="ebuyLogBase.select_ebuyLog_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(扫二维码进商品详情日志表)记录数  -->
+	<sql id="select_ebuyLog_count">
+		SELECT COUNT(*)
+		<include refid="ebuyLogBase.busiQueryCount"/>
+		<include refid="ebuyLogBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyLog_count" resultType="java.lang.Integer">
+		<include refid="ebuyLogBase.select_ebuyLog_count"/>
+	</select>
+	
+	 <!-- 往(扫二维码进商品详情日志表)新增一条记录。 -->
+	 <sql id="insert_ebuyLog">
+		INSERT INTO t_ebuy_log 
+		(f_id,f_product_id,f_user_id,f_utm_source,f_utm_medium,f_utm_content,f_utm_campaingn,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{productId},#{userId},#{utmSource,jdbcType=VARCHAR},#{utmMedium,jdbcType=VARCHAR},#{utmContent,jdbcType=VARCHAR},#{utmCampaingn,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_ebuyLog" parameterType="EbuyLog">
+		<include refid="ebuyLogBase.insert_ebuyLog"/>
+    </insert>
+    
+	<!-- 批量新增(扫二维码进商品详情日志表)信息 -->
+    <insert id="insert_ebuyLog_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_log 
+		(f_id,f_product_id,f_user_id,f_utm_source,f_utm_medium,f_utm_content,f_utm_campaingn,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.productId},#{item.userId},#{item.utmSource,jdbcType=VARCHAR},#{item.utmMedium,jdbcType=VARCHAR},#{item.utmContent,jdbcType=VARCHAR},#{item.utmCampaingn,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(扫二维码进商品详情日志表)信息。 -->
+    <sql id="update_ebuyLog">
+		UPDATE t_ebuy_log		<trim prefix="SET" prefixOverrides=","> 		<if test="productId != null and !productId.equals('') "> ,f_product_id=#{productId}</if> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="utmSource != null and !utmSource.equals('') "> ,f_utm_source=#{utmSource}</if> 		<if test="utmMedium != null and !utmMedium.equals('') "> ,f_utm_medium=#{utmMedium}</if> 		<if test="utmContent != null and !utmContent.equals('') "> ,f_utm_content=#{utmContent}</if> 		<if test="utmCampaingn != null and !utmCampaingn.equals('') "> ,f_utm_campaingn=#{utmCampaingn}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyLog" parameterType="EbuyLog">
+		<include refid="ebuyLogBase.update_ebuyLog"/>
+    </update>
+    
+    <!-- 批量更新(扫二维码进商品详情日志表)信息。 -->
+    <update id="update_ebuyLog_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_log		<trim prefix="SET" prefixOverrides=","> 		<if test="item.productId != null and !item.productId.equals('')  "> ,f_product_id=#{item.productId}</if> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.utmSource != null and !item.utmSource.equals('')  "> ,f_utm_source=#{item.utmSource}</if> 		<if test="item.utmMedium != null and !item.utmMedium.equals('')  "> ,f_utm_medium=#{item.utmMedium}</if> 		<if test="item.utmContent != null and !item.utmContent.equals('')  "> ,f_utm_content=#{item.utmContent}</if> 		<if test="item.utmCampaingn != null and !item.utmCampaingn.equals('')  "> ,f_utm_campaingn=#{item.utmCampaingn}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(扫二维码进商品详情日志表)信息_逻辑删除。 -->
+    <sql id="delete_ebuyLog_Logic">
+		UPDATE t_ebuy_log		<trim prefix="SET" prefixOverrides=","> 		<if test="productId != null and !productId.equals('')  "> ,f_product_id=#{productId}</if> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="utmSource != null and !utmSource.equals('')  "> ,f_utm_source=#{utmSource}</if> 		<if test="utmMedium != null and !utmMedium.equals('')  "> ,f_utm_medium=#{utmMedium}</if> 		<if test="utmContent != null and !utmContent.equals('')  "> ,f_utm_content=#{utmContent}</if> 		<if test="utmCampaingn != null and !utmCampaingn.equals('')  "> ,f_utm_campaingn=#{utmCampaingn}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyLog_Logic" parameterType="EbuyLog">
+		<include refid="ebuyLogBase.delete_ebuyLog_Logic"/>
+    </update>
+    
+    <!-- 批量删除(扫二维码进商品详情日志表)信息_逻辑删除 -->
+    <update id="delete_ebuyLog_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_log		<trim prefix="SET" prefixOverrides=","> 		<if test="item.productId != null and !item.productId.equals('')  "> ,f_product_id=#{item.productId}</if> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.utmSource != null and !item.utmSource.equals('')  "> ,f_utm_source=#{item.utmSource}</if> 		<if test="item.utmMedium != null and !item.utmMedium.equals('')  "> ,f_utm_medium=#{item.utmMedium}</if> 		<if test="item.utmContent != null and !item.utmContent.equals('')  "> ,f_utm_content=#{item.utmContent}</if> 		<if test="item.utmCampaingn != null and !item.utmCampaingn.equals('')  "> ,f_utm_campaingn=#{item.utmCampaingn}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(扫二维码进商品详情日志表)信息。 -->
+    <sql id="delete_ebuyLog">
+		DELETE FROM t_ebuy_log WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyLog" parameterType="java.lang.String">
+		<include refid="ebuyLogBase.delete_ebuyLog"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(扫二维码进商品详情日志表)信息。 -->
+    <delete id="delete_ebuyLog_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_log WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

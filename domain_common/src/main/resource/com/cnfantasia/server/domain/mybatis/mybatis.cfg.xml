@@ -1,0 +1,922 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+  
+<!DOCTYPE configuration PUBLIC   
+    "-//mybatis.org//DTD Config 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">  
+  
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.cnfantasia.server.domainbase.addressCityHot.entity.AddressCityHot" alias="AddressCityHot"/> <!--热门城市 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commShareRecord.entity.CommShareRecord" alias="CommShareRecord"/> <!--分享记录表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commSignRecord.entity.CommSignRecord" alias="CommSignRecord"/> <!--签到记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commentsHasTCommentsPoints.entity.CommentsHasTCommentsPoints" alias="CommentsHasTCommentsPoints"/> <!--评论包含哪些评分值 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commentsPoints.entity.CommentsPoints" alias="CommentsPoints"/> <!--评论的评分项 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communitySupplyTypeCanAdd.entity.CommunitySupplyTypeCanAdd" alias="CommunitySupplyTypeCanAdd"/> <!--新增商家时的可选类别 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communitySupplyTypeHasTCommentsPoints.entity.CommunitySupplyTypeHasTCommentsPoints" alias="CommunitySupplyTypeHasTCommentsPoints"/> <!--商家类别支持哪些评分 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyOrderProductExtParam.entity.EbuyOrderProductExtParam" alias="EbuyOrderProductExtParam"/> <!--订单商品关系附件参数信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyOrderProductHasCode.entity.EbuyOrderProductHasCode" alias="EbuyOrderProductHasCode"/> <!--商品订单关系所包含的兑换码 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyPrepayAlipayLog.entity.EbuyPrepayAlipayLog" alias="EbuyPrepayAlipayLog"/> <!--淘宝预支付日志表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductConversionCode.entity.EbuyProductConversionCode" alias="EbuyProductConversionCode"/> <!--商品兑换码表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductIntroducePic.entity.EbuyProductIntroducePic" alias="EbuyProductIntroducePic"/> <!--产品介绍图片信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductSpec.entity.EbuyProductSpec" alias="EbuyProductSpec"/> <!--商品价格规格表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.familyMsg.entity.FamilyMsg" alias="FamilyMsg"/> <!--家庭留言板 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.familyMsgExtData.entity.FamilyMsgExtData" alias="FamilyMsgExtData"/> <!--家庭留言板拓展信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.familyMsgHasTUser.entity.FamilyMsgHasTUser" alias="FamilyMsgHasTUser"/> <!--家庭留言艾特的用户列表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.familyMsgPic.entity.FamilyMsgPic" alias="FamilyMsgPic"/> <!--家庭留言板图片 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.familyWealthOption.entity.FamilyWealthOption" alias="FamilyWealthOption"/> <!--家庭财富选项 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenCookbookCollectIslike.entity.KitchenCookbookCollectIslike" alias="KitchenCookbookCollectIslike"/> <!--家庭成员是否喜欢吃对应菜谱 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.loginNoBindRelation.entity.LoginNoBindRelation" alias="LoginNoBindRelation"/> <!--登录账号绑定关系 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.loginNoOldUpgradeDate.entity.LoginNoOldUpgradeDate" alias="LoginNoOldUpgradeDate"/> <!--微信升级老数据 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.operationConstantData.entity.OperationConstantData" alias="OperationConstantData"/> <!--运维相关的数据 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.pointCostRecord.entity.PointCostRecord" alias="PointCostRecord"/> <!--积分消费记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.pointData.entity.PointData" alias="PointData"/> <!--用户积分表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.pointRule.entity.PointRule" alias="PointRule"/> <!--积分规则 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.pointSourceRecord.entity.PointSourceRecord" alias="PointSourceRecord"/> <!--积分来源记录表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.prizeSurpriseGift.entity.PrizeSurpriseGift" alias="PrizeSurpriseGift"/> <!--抽奖结果的意外惊喜 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyService.entity.PropertyService" alias="PropertyService"/> <!--物业服务信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.redpointContent.entity.RedpointContent" alias="RedpointContent"/> <!--红点信息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.redpointContentSource.entity.RedpointContentSource" alias="RedpointContentSource"/> <!--红点来源表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.redpointModelcodeConfig.entity.RedpointModelcodeConfig" alias="RedpointModelcodeConfig"/> <!--红点模块编码配置表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.surpriseGiftConfigPic.entity.SurpriseGiftConfigPic" alias="SurpriseGiftConfigPic"/> <!--意外惊喜配置图标 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.surpriseGiftUseDetail.entity.SurpriseGiftUseDetail" alias="SurpriseGiftUseDetail"/> <!--意外惊喜的优惠券使用详情 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userPositionInfo.entity.UserPositionInfo" alias="UserPositionInfo"/> <!--用户定位信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userXanaduRecord.entity.UserXanaduRecord" alias="UserXanaduRecord"/> <!--用户世外桃源状态信息 -->
+		
+	
+		<typeAlias type="com.cnfantasia.server.domainbase.achievement.entity.Achievement" alias="Achievement"/> <!--成就表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.addressBlock.entity.AddressBlock" alias="AddressBlock"/> <!--区 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.addressBlockSelfDefined.entity.AddressBlockSelfDefined" alias="AddressBlockSelfDefined"/> <!--自定义片区 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.addressCity.entity.AddressCity" alias="AddressCity"/> <!--市 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.addressCountry.entity.AddressCountry" alias="AddressCountry"/> <!--国家表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.addressProvince.entity.AddressProvince" alias="AddressProvince"/> <!--省 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.appBaseInfo.entity.AppBaseInfo" alias="AppBaseInfo"/> <!--应用信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.appDownLog.entity.AppDownLog" alias="AppDownLog"/> <!--应用下载日志 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.appVersion.entity.AppVersion" alias="AppVersion"/> <!--应用版本信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.building.entity.Building" alias="Building"/> <!--建筑单元 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.channel.entity.Channel" alias="Channel"/> <!--主渠道表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.channelPartner.entity.ChannelPartner" alias="ChannelPartner"/> <!--渠道合伙人 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.channelPartnerRecommend.entity.ChannelPartnerRecommend" alias="ChannelPartnerRecommend"/> <!--渠道合伙人的推荐 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.channelSub.entity.ChannelSub" alias="ChannelSub"/> <!--子渠道表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.collections.entity.Collections" alias="Collections"/> <!--收藏 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commFeedback.entity.CommFeedback" alias="CommFeedback"/> <!--意见反馈表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commFeedbackLabel.entity.CommFeedbackLabel" alias="CommFeedbackLabel"/> <!--意见反馈的标签表 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.commLoggerControl.entity.CommLoggerControl" alias="CommLoggerControl"/> <!--公共日志记录控制表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commSysPara.entity.CommSysPara" alias="CommSysPara"/> <!--系统参数 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commSysUrl.entity.CommSysUrl" alias="CommSysUrl"/> <!--基础的url信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commUserSession.entity.CommUserSession" alias="CommUserSession"/> <!--用户登录session表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commUuid.entity.CommUuid" alias="CommUuid"/> <!--唯一编号 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.comments.entity.Comments" alias="Comments"/> <!--评论 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commentsHasTCommentsLabel.entity.CommentsHasTCommentsLabel" alias="CommentsHasTCommentsLabel"/> <!--评论包含的标签信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commentsLabel.entity.CommentsLabel" alias="CommentsLabel"/> <!--评论标签 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communityExchangeContent.entity.CommunityExchangeContent" alias="CommunityExchangeContent"/> <!--换物信息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communityExchangePic.entity.CommunityExchangePic" alias="CommunityExchangePic"/> <!--换一换图片表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communityExchangeRelation.entity.CommunityExchangeRelation" alias="CommunityExchangeRelation"/> <!--换物关系表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communityExchangeWanted.entity.CommunityExchangeWanted" alias="CommunityExchangeWanted"/> <!--换一换之跪求换 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communityForumContent.entity.CommunityForumContent" alias="CommunityForumContent"/> <!--社区论坛的帖子内容 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communityForumPic.entity.CommunityForumPic" alias="CommunityForumPic"/> <!--社区论坛的帖子图片 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communityForumType.entity.CommunityForumType" alias="CommunityForumType"/> <!--社区论坛的帖子类别 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communityPinyipinContent.entity.CommunityPinyipinContent" alias="CommunityPinyipinContent"/> <!--拼一拼内容表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communityPinyipinPic.entity.CommunityPinyipinPic" alias="CommunityPinyipinPic"/> <!--拼一拼图片列表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communityPinyipinReserve.entity.CommunityPinyipinReserve" alias="CommunityPinyipinReserve"/> <!--拼单预定信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communitySupply.entity.CommunitySupply" alias="CommunitySupply"/> <!--社区商家信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communitySupplyBelong.entity.CommunitySupplyBelong" alias="CommunitySupplyBelong"/> <!--商家认领 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communitySupplyCompany.entity.CommunitySupplyCompany" alias="CommunitySupplyCompany"/> <!--社区商户公司（管理多个社区商家） -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communitySupplyCompanyPic.entity.CommunitySupplyCompanyPic" alias="CommunitySupplyCompanyPic"/> <!--商家图片 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communitySupplyContect.entity.CommunitySupplyContect" alias="CommunitySupplyContect"/> <!--社区商家联系方式 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communitySupplyExtendsRelationship.entity.CommunitySupplyExtendsRelationship" alias="CommunitySupplyExtendsRelationship"/> <!--社区商家拓展对应信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communitySupplyPic.entity.CommunitySupplyPic" alias="CommunitySupplyPic"/> <!--商家图片 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communitySupplyTmp.entity.CommunitySupplyTmp" alias="CommunitySupplyTmp"/> <!--店铺申请审核表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communitySupplyType.entity.CommunitySupplyType" alias="CommunitySupplyType"/> <!--社区商家类别 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communitySupplyTypeHasTCommentLabel.entity.CommunitySupplyTypeHasTCommentLabel" alias="CommunitySupplyTypeHasTCommentLabel"/> <!--社区商家类别所包含的评论标签 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.communitySupplyTypeRecommend.entity.CommunitySupplyTypeRecommend" alias="CommunitySupplyTypeRecommend"/> <!--推荐的商家类别 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.cookieInfo.entity.CookieInfo" alias="CookieInfo"/> <!--记录用户的Cookie -->
+		<typeAlias type="com.cnfantasia.server.domainbase.eatMenu.entity.EatMenu" alias="EatMenu"/> <!--今晚吃什么的菜谱 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.eatMenuRecommend.entity.EatMenuRecommend" alias="EatMenuRecommend"/> <!--推荐菜谱 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyAuth.entity.EbuyAuth" alias="EbuyAuth"/> <!--认证类别信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyBuyCar.entity.EbuyBuyCar" alias="EbuyBuyCar"/> <!--购物车 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyBuyCarHasTEbuyProduct.entity.EbuyBuyCarHasTEbuyProduct" alias="EbuyBuyCarHasTEbuyProduct"/> <!-- -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyDeliveryAddress.entity.EbuyDeliveryAddress" alias="EbuyDeliveryAddress"/> <!--收货地址 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyDeliveryMethod.entity.EbuyDeliveryMethod" alias="EbuyDeliveryMethod"/> <!--配送方式 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyDeliveryOrder.entity.EbuyDeliveryOrder" alias="EbuyDeliveryOrder"/> <!--送货单 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyDeliveryOrderProduct.entity.EbuyDeliveryOrderProduct" alias="EbuyDeliveryOrderProduct"/> <!--供应商配送包含的商品信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyDeliveryPushRecorder.entity.EbuyDeliveryPushRecorder" alias="EbuyDeliveryPushRecorder"/> <!--配送单推送记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyExpressCompany.entity.EbuyExpressCompany" alias="EbuyExpressCompany"/> <!--快递公司 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyHandleAddress.entity.EbuyHandleAddress" alias="EbuyHandleAddress"/> <!--手动输入的收货地址 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyInvoice.entity.EbuyInvoice" alias="EbuyInvoice"/> <!--发票 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyOrder.entity.EbuyOrder" alias="EbuyOrder"/> <!--订单表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyOrderHasTEbuyProduct.entity.EbuyOrderHasTEbuyProduct" alias="EbuyOrderHasTEbuyProduct"/> <!--订单商品关系 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyOrderHasTPayBill.entity.EbuyOrderHasTPayBill" alias="EbuyOrderHasTPayBill"/> <!-- -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyPayRecord.entity.EbuyPayRecord" alias="EbuyPayRecord"/> <!--支付记录表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProduct.entity.EbuyProduct" alias="EbuyProduct"/> <!--商品表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductHasTEbuyAuth.entity.EbuyProductHasTEbuyAuth" alias="EbuyProductHasTEbuyAuth"/> <!-- -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductHasTEbuyDeliveryMethod.entity.EbuyProductHasTEbuyDeliveryMethod" alias="EbuyProductHasTEbuyDeliveryMethod"/> <!--商品支持的配送方式 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductParameters.entity.EbuyProductParameters" alias="EbuyProductParameters"/> <!--产品参数 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductParametersTemp.entity.EbuyProductParametersTemp" alias="EbuyProductParametersTemp"/> <!--产品参数，临时存储从外部抓取的数据 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductPic.entity.EbuyProductPic" alias="EbuyProductPic"/> <!--产品图片信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductRecommend.entity.EbuyProductRecommend" alias="EbuyProductRecommend"/> <!--推荐的商品 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductTemp.entity.EbuyProductTemp" alias="EbuyProductTemp"/> <!--商品表，临时存储从外部抓取的数据 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductType.entity.EbuyProductType" alias="EbuyProductType"/> <!--商品类别 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuySupplyMerchant.entity.EbuySupplyMerchant" alias="EbuySupplyMerchant"/> <!--供应商 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuySupplyMerchantHasGroupBuilding.entity.EbuySupplyMerchantHasGroupBuilding" alias="EbuySupplyMerchantHasGroupBuilding"/> <!--供应商营业执照 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuySupplyMerchantHasTEbuyDeliveryMethod.entity.EbuySupplyMerchantHasTEbuyDeliveryMethod" alias="EbuySupplyMerchantHasTEbuyDeliveryMethod"/> <!--供应商支持的配送方式 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.groupBuilding.entity.GroupBuilding" alias="GroupBuilding"/> <!--小区信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.groupBuildingHasTCommunitySupply.entity.GroupBuildingHasTCommunitySupply" alias="GroupBuildingHasTCommunitySupply"/> <!--小区商家关系表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.groupBuildingHasTCommunitySupplyTmp.entity.GroupBuildingHasTCommunitySupplyTmp" alias="GroupBuildingHasTCommunitySupplyTmp"/> <!--小区临时商家关系表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.groupBuildingHasTPropertyService.entity.GroupBuildingHasTPropertyService" alias="GroupBuildingHasTPropertyService"/> <!--小区服务关系表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.groupBuildingRegister.entity.GroupBuildingRegister" alias="GroupBuildingRegister"/> <!--注册的小区信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.hobby.entity.Hobby" alias="Hobby"/> <!--兴趣爱好表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.inviteRewardConfig.entity.InviteRewardConfig" alias="InviteRewardConfig"/> <!--邀请奖励配置表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.inviteRewardRecord.entity.InviteRewardRecord" alias="InviteRewardRecord"/> <!--邀请奖励纪录表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.inviteRewardRelation.entity.InviteRewardRelation" alias="InviteRewardRelation"/> <!--邀请奖励关系纪录表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenCookbook.entity.KitchenCookbook" alias="KitchenCookbook"/> <!--厨房菜谱 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenCookbookAddressRelation.entity.KitchenCookbookAddressRelation" alias="KitchenCookbookAddressRelation"/> <!--菜谱地址关系表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenCookbookCollect.entity.KitchenCookbookCollect" alias="KitchenCookbookCollect"/> <!--菜谱收藏 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenCookbookMix.entity.KitchenCookbookMix" alias="KitchenCookbookMix"/> <!--厨房组合菜谱 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenCookbookMixHasTKitchenCookbook.entity.KitchenCookbookMixHasTKitchenCookbook" alias="KitchenCookbookMixHasTKitchenCookbook"/> <!--组合菜谱所包含的菜谱 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenCookbookStep.entity.KitchenCookbookStep" alias="KitchenCookbookStep"/> <!--亨饪步骤信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenCookbookStepTips.entity.KitchenCookbookStepTips" alias="KitchenCookbookStepTips"/> <!--菜谱步骤tips信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenCookbookTopType.entity.KitchenCookbookTopType" alias="KitchenCookbookTopType"/> <!--顶级类别 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenCookbookType.entity.KitchenCookbookType" alias="KitchenCookbookType"/> <!--厨房菜谱分类 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenCookbookTypeCollect.entity.KitchenCookbookTypeCollect" alias="KitchenCookbookTypeCollect"/> <!--菜谱类别收藏 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenCookbookTypeHasTKitchenCookbook.entity.KitchenCookbookTypeHasTKitchenCookbook" alias="KitchenCookbookTypeHasTKitchenCookbook"/> <!--菜谱类别与菜谱关系表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenCookbookTypeRecommend.entity.KitchenCookbookTypeRecommend" alias="KitchenCookbookTypeRecommend"/> <!--厨房菜品类别推荐 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.kitchenDetail.entity.KitchenDetail" alias="KitchenDetail"/> <!--厨房菜谱详情 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.loginLog.entity.LoginLog" alias="LoginLog"/> <!--登录历史 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.loginNo.entity.LoginNo" alias="LoginNo"/> <!--用户登录账号 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.lookupLocalMapData.entity.LookupLocalMapData" alias="LookupLocalMapData"/> <!--本地地址信息数据 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.message.entity.Message" alias="Message"/> <!--消息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.messageGroup.entity.MessageGroup" alias="MessageGroup"/> <!--消息小区关联表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.messageParameter.entity.MessageParameter" alias="MessageParameter"/> <!--消息参数表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.messageView.entity.MessageView" alias="MessageView"/> <!--消息推送的视图配置 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.microblogContent.entity.MicroblogContent" alias="MicroblogContent"/> <!--微博内容 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.microblogPic.entity.MicroblogPic" alias="MicroblogPic"/> <!--微博图片信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.microblogType.entity.MicroblogType" alias="MicroblogType"/> <!--微博类别 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.omsCommSysPara.entity.OmsCommSysPara" alias="OmsCommSysPara"/> <!--OMS系统参数表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.omsPermiFunction.entity.OmsPermiFunction" alias="OmsPermiFunction"/> <!--OMS功能表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.omsPermiRole.entity.OmsPermiRole" alias="OmsPermiRole"/> <!--OMS角色表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.omsPermiRoleHasTOmsPermiFunction.entity.OmsPermiRoleHasTOmsPermiFunction" alias="OmsPermiRoleHasTOmsPermiFunction"/> <!--OMS角色功能关系 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.omsUser.entity.OmsUser" alias="OmsUser"/> <!--OMS用户表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.omsUserHasTOmsPermiRole.entity.OmsUserHasTOmsPermiRole" alias="OmsUserHasTOmsPermiRole"/> <!--OMS用户角色关系 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.payBill.entity.PayBill" alias="PayBill"/> <!--物业账单 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.payCoupon.entity.PayCoupon" alias="PayCoupon"/> <!--优惠表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.payRecord.entity.PayRecord" alias="PayRecord"/> <!--物业缴费记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.payRedEnvelope.entity.PayRedEnvelope" alias="PayRedEnvelope"/> <!--粮票信息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.payRedEnvelopeDetail.entity.PayRedEnvelopeDetail" alias="PayRedEnvelopeDetail"/> <!--粮票优惠详情 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.permiFunction.entity.PermiFunction" alias="PermiFunction"/> <!--功能表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.permiRole.entity.PermiRole" alias="PermiRole"/> <!--角色表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.permiRoleHasTPermiFunction.entity.PermiRoleHasTPermiFunction" alias="PermiRoleHasTPermiFunction"/> <!--角色功能关系 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.permiRoleHasTUser.entity.PermiRoleHasTUser" alias="PermiRoleHasTUser"/> <!--用户角色关系 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.prizeRecord.entity.PrizeRecord" alias="PrizeRecord"/> <!--中奖记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.prizeRecordTmp.entity.PrizeRecordTmp" alias="PrizeRecordTmp"/> <!--临时用户中奖记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.prizeRuleConfig.entity.PrizeRuleConfig" alias="PrizeRuleConfig"/> <!--抽奖规则配置 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.prizeRuleDrawOnlinedays.entity.PrizeRuleDrawOnlinedays" alias="PrizeRuleDrawOnlinedays"/> <!--折扣抽奖规则-用户在线时间 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.prizeRuleGenerateArea.entity.PrizeRuleGenerateArea" alias="PrizeRuleGenerateArea"/> <!--折扣生成规则-折扣区间分配因素 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.prizeRuleGenerateUsercount.entity.PrizeRuleGenerateUsercount" alias="PrizeRuleGenerateUsercount"/> <!--折扣生成规则-用户数量因素 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyCompany.entity.PropertyCompany" alias="PropertyCompany"/> <!--物业公司 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyFeeDetail.entity.PropertyFeeDetail" alias="PropertyFeeDetail"/> <!--物业费费用清单详情 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyManagement.entity.PropertyManagement" alias="PropertyManagement"/> <!--物业管理 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyManagementHasOmsUser.entity.PropertyManagementHasOmsUser" alias="PropertyManagementHasOmsUser"/> <!--物业管理与后账号关系 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyProprietor.entity.PropertyProprietor" alias="PropertyProprietor"/> <!--业主信息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyRepair.entity.PropertyRepair" alias="PropertyRepair"/> <!--物业报修单 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyRepairType.entity.PropertyRepairType" alias="PropertyRepairType"/> <!--物业报修类型 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyRepairer.entity.PropertyRepairer" alias="PropertyRepairer"/> <!--管理处维修工 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertySuggestCommsupply.entity.PropertySuggestCommsupply" alias="PropertySuggestCommsupply"/> <!--物业推荐信息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.realRoom.entity.RealRoom" alias="RealRoom"/> <!--真实房间 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.remoteUser.entity.RemoteUser" alias="RemoteUser"/> <!--远程用户信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.room.entity.Room" alias="Room"/> <!--门牌信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.roomValidate.entity.RoomValidate" alias="RoomValidate"/> <!--门牌校验信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.shareActive.entity.ShareActive" alias="ShareActive"/> <!--分享活动 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.shareActiveDetail.entity.ShareActiveDetail" alias="ShareActiveDetail"/> <!--分享活动详情表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.support.entity.Support" alias="Support"/> <!--点赞信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.user.entity.User" alias="User"/> <!--用户表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userHasTAchievement.entity.UserHasTAchievement" alias="UserHasTAchievement"/> <!--用户成就关系表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userHasTHobby.entity.UserHasTHobby" alias="UserHasTHobby"/> <!--用户爱好关系表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userHasTMessage.entity.UserHasTMessage" alias="UserHasTMessage"/> <!--用户消息关系 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userHasTRoom.entity.UserHasTRoom" alias="UserHasTRoom"/> <!--用户门牌关系 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userPushInfo.entity.UserPushInfo" alias="UserPushInfo"/> <!--用户推送配置消息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userTmp.entity.UserTmp" alias="UserTmp"/> <!--临时用户 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyPrepayWeixinLog.entity.EbuyPrepayWeixinLog" alias="EbuyPrepayWeixinLog"/> <!--微信预支付日志表 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.prizeRecordTmpData.entity.PrizeRecordTmpData" alias="PrizeRecordTmpData"/> <!--抽奖结果临时数据 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.microblogQueue.entity.MicroblogQueue" alias="MicroblogQueue"/> <!--小区博客队列表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.appVersionChannel.entity.AppVersionChannel" alias="AppVersionChannel"/> <!--应用版本不同渠道信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commonGatherData.entity.CommonGatherData" alias="CommonGatherData"/> <!--通用模块信息归集 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.operationServiceArea.entity.OperationServiceArea" alias="OperationServiceArea"/> <!--服务范围的运营数据表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commonLock.entity.CommonLock" alias="CommonLock"/> <!--公用的锁表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.operationSaHasEbSupply.entity.OperationSaHasEbSupply" alias="OperationSaHasEbSupply"/> <!--周边服务于电商商家关系表 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.communityAds.entity.CommunityAds" alias="CommunityAds"/> <!--街坊广告信息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.operationHomeSupplyType.entity.OperationHomeSupplyType" alias="OperationHomeSupplyType"/> <!--首页商家类别运营表 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeBill.entity.DredgeBill" alias="DredgeBill"/> <!--疏通工单 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeType.entity.DredgeType" alias="DredgeType"/> <!--疏通类型 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeWorker.entity.DredgeWorker" alias="DredgeWorker"/> <!--疏通师傅 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeWorkerHasDredgeType.entity.DredgeWorkerHasDredgeType" alias="DredgeWorkerHasDredgeType"/> <!--疏通师傅支持的疏通类型 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeWorkerServiceAddressBlock.entity.DredgeWorkerServiceAddressBlock" alias="DredgeWorkerServiceAddressBlock"/> <!--疏通师傅服务行政区 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeWorkerCancel.entity.DredgeWorkerCancel" alias="DredgeWorkerCancel" />
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductShelf.entity.EbuyProductShelf" alias="EbuyProductShelf"/> <!--产品参数 --><typeAlias type="com.cnfantasia.server.domainbase.ebuyProductShelf.entity.EbuyProductShelf" alias="EbuyProductShelf"/> <!--产品参数 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.microblogGbHasQueue.entity.MicroblogGbHasQueue" alias="MicroblogGbHasQueue"/> <!--小区已发送的队列消息记录表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.microblogPushType.entity.MicroblogPushType" alias="MicroblogPushType"/> <!--街坊消息推送类别表 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.msPrizeActHasOpt.entity.MsPrizeActHasOpt" alias="MsPrizeActHasOpt"/> <!--抽奖活动与奖项关系表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.msPrizeActivity.entity.MsPrizeActivity" alias="MsPrizeActivity"/> <!--抽奖活动表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.msPrizeGift.entity.MsPrizeGift" alias="MsPrizeGift"/> <!--奖品详情表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.msPrizeOption.entity.MsPrizeOption" alias="MsPrizeOption"/> <!--奖项表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.msPrizeGiftCode.entity.MsPrizeGiftCode" alias="MsPrizeGiftCode"/> <!--抽奖奖品编码表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.msPrizeOptionCity.entity.MsPrizeOptionCity" alias="MsPrizeOptionCity"/> <!--奖项城市关系表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyPrepaySqLog.entity.EbuyPrepaySqLog" alias="EbuyPrepaySqLog"/> <!--双乾预支付记录表 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuySupplyMerchantLicence.entity.EbuySupplyMerchantLicence" alias="EbuySupplyMerchantLicence"/> <!--供应商营业执照图片 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuySupplyMerchantHasGroupBuilding.entity.EbuySupplyMerchantHasGroupBuilding" alias="EbuySupplyMerchantHasGroupBuilding"/> <!--供应商与小区关联表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuySupplyMerchantHasUser.entity.EbuySupplyMerchantHasUser" alias="EbuySupplyMerchantHasUser"/> <!--用户供应商关系表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.payConfigHb.entity.PayConfigHb" alias="PayConfigHb"/> <!--粮票支付配置表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.revenueConfig.entity.RevenueConfig" alias="RevenueConfig"/> <!--收益规则配置表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyGbAd.entity.PropertyGbAd" alias="PropertyGbAd"/> <!--小区物业打印广告配置表 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.revenueApply.entity.RevenueApply" alias="RevenueApply"/> <!--提款申请记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.revenueSignalAmount.entity.RevenueSignalAmount" alias="RevenueSignalAmount"/> <!--单个提款项的收益参数信息信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.revenueTaskRecord.entity.RevenueTaskRecord" alias="RevenueTaskRecord"/> <!--定时同步收益额记录表 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyRefundOrder.entity.EbuyRefundOrder" alias="EbuyRefundOrder"/> <!--退货订单 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyRefundOrderProduct.entity.EbuyRefundOrderProduct" alias="EbuyRefundOrderProduct"/> <!--退货订单信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyRefundAudit.entity.EbuyRefundAudit" alias="EbuyRefundAudit"/> <!--退款原因 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.refundRecord.entity.RefundRecord" alias="RefundRecord"/> <!--退款粮票记录 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.revenueSignalAmountEbuy.entity.RevenueSignalAmountEbuy" alias="RevenueSignalAmountEbuy"/>
+		<typeAlias type="com.cnfantasia.server.domainbase.supportBank.entity.SupportBank" alias="SupportBank"/> <!--支持的转账银行 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeBankCard.entity.DredgeBankCard" alias="DredgeBankCard"/> <!--维修服务银行卡号信息 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.payBillSplit.entity.PayBillSplit" alias="PayBillSplit"/> <!--费用账单拆分表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.payBillTimeCfg.entity.PayBillTimeCfg" alias="PayBillTimeCfg"/> <!--账单类型对应缴费时间配置 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.payBillType.entity.PayBillType" alias="PayBillType"/> <!--账单类型基础信息 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.buildingKeyList.entity.BuildingKeyList" alias="BuildingKeyList"/> <!--开通门禁的小区楼栋列表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.cloudKeyPaylog.entity.CloudKeyPaylog" alias="CloudKeyPaylog"/> <!--云钥匙付款记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.cloudKeyUserAudit.entity.CloudKeyUserAudit" alias="CloudKeyUserAudit"/> <!--业主门禁认证信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.cloudKeyUserList.entity.CloudKeyUserList" alias="CloudKeyUserList"/> <!--业主门禁密钥表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.payKeyList.entity.PayKeyList" alias="PayKeyList"/> <!--云钥匙付款列表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.carKeyRoomTemp.entity.CarKeyRoomTemp" alias="CarKeyRoomTemp"/> <!--门牌车牌信息临时表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.carNumList.entity.CarNumList" alias="CarNumList"/> <!--车牌表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.parkingRecord.entity.ParkingRecord" alias="ParkingRecord"/> <!--停车记录表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.roomHasCarNum.entity.RoomHasCarNum" alias="RoomHasCarNum"/> <!--房间车牌对应表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.carNumPayLog.entity.CarNumPayLog" alias="CarNumPayLog"/> <!--月卡车缴费记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.payCarCardList.entity.PayCarCardList" alias="PayCarCardList"/> <!--车禁月卡付款列表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.carGroupBuilding.entity.CarGroupBuilding" alias="CarGroupBuilding"/> <!--小区车禁配置表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commercialOpportunity.entity.CommercialOpportunity" alias="CommercialOpportunity"/> <!--商机 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.microblogReport.entity.MicroblogReport" alias="MicroblogReport"/> <!--微博信息举报表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.encryptColum.entity.EncryptColum" alias="EncryptColum"/> <!--加密字段 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.encryptUrl.entity.EncryptUrl" alias="EncryptUrl"/> <!--加密url -->
+		<typeAlias type="com.cnfantasia.server.domainbase.encyptLog.entity.EncyptLog" alias="EncyptLog"/> <!--加密日志记录 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.wechatDredgebillMq.entity.WechatDredgebillMq" alias="WechatDredgebillMq"/> <!--微信公众号维修单消息队列 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.smsMq.entity.SmsMq" alias="SmsMq"/> <!--手机短信消息队列 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyDeliveryOrderComment.entity.EbuyDeliveryOrderComment" alias="EbuyDeliveryOrderComment"/>
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyLog.entity.EbuyLog" alias="EbuyLog"/> <!--扫二维码进商品详情日志表 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.openDoorLog.entity.OpenDoorLog" alias="OpenDoorLog"/> <!--门禁开门记录表 -->
+        <typeAlias type="com.cnfantasia.server.domainbase.parkCache.entity.ParkCache" alias="ParkCache"/> <!--Socket缓存 -->
+		
+  		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductFightGroups.entity.EbuyProductFightGroups" alias="EbuyProductFightGroups"/> <!--拼购商品规则表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyFightSupplyMerchant.entity.EbuyFightSupplyMerchant" alias="EbuyFightSupplyMerchant"/> <!--自提点表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyFightOrder.entity.EbuyFightOrder" alias="EbuyFightOrder"/> <!--拼购详情订单 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyFightMerchantHasGroupBuilding.entity.EbuyFightMerchantHasGroupBuilding" alias="EbuyFightMerchantHasGroupBuilding"/> <!--自提点服务小区关系表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.buildingKeyConfig.entity.BuildingKeyConfig" alias="BuildingKeyConfig"/> <!--门禁认证选项显示配置表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.cloudKeyUserData.entity.CloudKeyUserData" alias="CloudKeyUserData"/> <!--业主门禁认证（可配置）信息 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.bindPhoneLog.entity.BindPhoneLog" alias="BindPhoneLog"/> <!--绑定手机记录表 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.coupon.entity.Coupon" alias="Coupon"/> <!--消费券表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.couponArea.entity.CouponArea" alias="CouponArea"/> <!--消费券发放区域表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyOrderHasCoupon.entity.EbuyOrderHasCoupon" alias="EbuyOrderHasCoupon"/> <!--订单使用消费券表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userCoupon.entity.UserCoupon" alias="UserCoupon"/> <!--用户所持消费券表 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyHomeType.entity.EbuyHomeType" alias="EbuyHomeType"/> <!--首页分类 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyHomeTypeHasProduct.entity.EbuyHomeTypeHasProduct" alias="EbuyHomeTypeHasProduct"/> <!--首页分类名称关联产品分类 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeBillPushTime.entity.DredgeBillPushTime" alias="DredgeBillPushTime"/> <!--疏通工单推送时间记录表 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyAccountInfo.entity.PropertyAccountInfo" alias="PropertyAccountInfo"/> <!--用户物业账户信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyCard.entity.PropertyCard" alias="PropertyCard"/> <!--物业代扣卡 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyCardDiscountTerm.entity.PropertyCardDiscountTerm" alias="PropertyCardDiscountTerm"/> <!--物业代扣卡优惠方案 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyCardTransactionFlowing.entity.PropertyCardTransactionFlowing" alias="PropertyCardTransactionFlowing"/> <!--物业代扣卡交易流水 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userHasPropertyCard.entity.UserHasPropertyCard" alias="UserHasPropertyCard"/> <!--用户购买物业代扣卡 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userSetRealroomDeductionConfig.entity.UserSetRealroomDeductionConfig" alias="UserSetRealroomDeductionConfig"/> <!--用户房间划扣配置 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductFightPic.entity.EbuyProductFightPic" alias="EbuyProductFightPic"/> <!--拼购产品列表图片信息 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeBillAmountDetail.entity.DredgeBillAmountDetail" alias="DredgeBillAmountDetail"/> <!--上门维修费用明细 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyRepairTypeBase.entity.PropertyRepairTypeBase" alias="PropertyRepairTypeBase"/> <!--物业报修类型(解放区预定义的) -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.supplyMerchantDeliveryFeeSettlement.entity.SupplyMerchantDeliveryFeeSettlement" alias="SupplyMerchantDeliveryFeeSettlement"/> <!--与供应商结算邮费规则 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuySupplyMerchantBankAccount.entity.EbuySupplyMerchantBankAccount" alias="EbuySupplyMerchantBankAccount"/> <!--楼下店等电商供应商银行卡信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyAdvertise.entity.EbuyAdvertise" alias="EbuyAdvertise"/> <!--超市广告 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyAdvertiseHasPromoteShelfProduct.entity.EbuyAdvertiseHasPromoteShelfProduct" alias="EbuyAdvertiseHasPromoteShelfProduct"/> <!--商品推广广告对应商品表 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyProductSettleApplyLog.entity.EbuyProductSettleApplyLog" alias="EbuyProductSettleApplyLog"/> <!--购销模式结算申请表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.paybillUserPrefer.entity.PaybillUserPrefer" alias="PaybillUserPrefer"/> <!--账单优惠用户关系表 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.blackList.entity.BlackList" alias="BlackList"/> <!--黑名单 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.groupBuildingBillCycle.entity.GroupBuildingBillCycle" alias="GroupBuildingBillCycle"/> <!--账期管理 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.easPushRecord.entity.EasPushRecord" alias="EasPushRecord"/> <!--EAS接口推送记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeType2nd.entity.DredgeType2nd" alias="DredgeType2nd"/> <!--疏通二级类型 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.deliveryOrderExpressTrace.entity.DeliveryOrderExpressTrace" alias="DeliveryOrderExpressTrace"/> <!--供应商快递记录表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.roomVerifyPayment.entity.RoomVerifyPayment" alias="RoomVerifyPayment"/> <!--门牌验证缴费情况查询表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.cashFlowSummary.entity.CashFlowSummary" alias="CashFlowSummary"/> <!--现金流量汇总表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeCouponConfig.entity.DredgeCouponConfig" alias="DredgeCouponConfig"/> <!--维修券使用配置表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.advertiseClickRecord.entity.AdvertiseClickRecord" alias="AdvertiseClickRecord"/> <!--广告点击记录表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyCardDeductionDetail.entity.PropertyCardDeductionDetail" alias="PropertyCardDeductionDetail"/> <!--物业代扣卡划扣详情 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.carYhsMsg.entity.CarYhsMsg" alias="CarYhsMsg"/> <!--临停车缴费消息发送表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.omsUserHasTEbuySupplyMerchant.entity.OmsUserHasTEbuySupplyMerchant" alias="OmsUserHasTEbuySupplyMerchant"/> <!-- -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeBillHasEbuyProductShelf.entity.DredgeBillHasEbuyProductShelf" alias="DredgeBillHasEbuyProductShelf"/> <!--用户自选耗材明细 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.carPrefer.entity.CarPrefer" alias="CarPrefer"/> <!--车禁随机立减 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.cashSqpayBt.entity.CashSqpayBt" alias="CashSqpayBt"/> <!--双乾支付优惠补贴明细表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.appCrashLog.entity.AppCrashLog" alias="AppCrashLog"/> <!--app崩溃日志 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.devicePayCount.entity.DevicePayCount" alias="DevicePayCount"/> <!--设备缴费限制 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userPayCount.entity.UserPayCount" alias="UserPayCount"/> <!-- 用户缴费限制-->
+		<typeAlias type="com.cnfantasia.server.domainbase.easPushAccount.entity.EasPushAccount" alias="EasPushAccount"/> <!--EAS推送账户信息配置表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.alterPeriodCfg.entity.AlterPeriodCfg" alias="AlterPeriodCfg"/> <!--选择周期配置 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.alterPeriodDataDetail.entity.AlterPeriodDataDetail" alias="AlterPeriodDataDetail"/> <!--选择周期数据详情 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.alterPeriodFeeItem.entity.AlterPeriodFeeItem" alias="AlterPeriodFeeItem"/> <!--选择周期收费项 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.alterPeriodPrefer.entity.AlterPeriodPrefer" alias="AlterPeriodPrefer"/> <!--选择周期缴费优惠表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.alterRoomHasFeeItem.entity.AlterRoomHasFeeItem" alias="AlterRoomHasFeeItem"/> <!--房间收费项表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.alterPeriodCfg.entity.AlterPeriodCfg" alias="AlterPeriodCfg"/> <!--选择周期配置 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.alterPeriodDataDetail.entity.AlterPeriodDataDetail" alias="AlterPeriodDataDetail"/> <!--选择周期数据详情 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.alterPeriodFeeItem.entity.AlterPeriodFeeItem" alias="AlterPeriodFeeItem"/> <!--选择周期收费项 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.alterPeriodPrefer.entity.AlterPeriodPrefer" alias="AlterPeriodPrefer"/> <!--选择周期缴费优惠表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.alterRoomHasFeeItem.entity.AlterRoomHasFeeItem" alias="AlterRoomHasFeeItem"/> <!--房间收费项表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.flashDealActivity.entity.FlashDealActivity" alias="FlashDealActivity"/> <!--秒杀活动表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.flashDealBuyRecord.entity.FlashDealBuyRecord" alias="FlashDealBuyRecord"/> <!--秒杀活动购买记录表 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeBillOtherInfo.entity.DredgeBillOtherInfo" alias="DredgeBillOtherInfo"/> <!--维修单的与第三方供应商的信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.serviceSupplier.entity.ServiceSupplier" alias="ServiceSupplier"/> <!--上门维修第三方服务供应商 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.serviceTypeMapper.entity.ServiceTypeMapper" alias="ServiceTypeMapper"/> <!--与第三方供应商类型对应关系 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeBillFollowRecord.entity.DredgeBillFollowRecord" alias="DredgeBillFollowRecord"/> <!--维修订单跟进记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeWorkerRevenueConfig.entity.DredgeWorkerRevenueConfig" alias="DredgeWorkerRevenueConfig"/> <!--疏通师傅收益配置 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.gbSoftwareConfig.entity.GbSoftwareConfig" alias="GbSoftwareConfig"/> <!--小区物业软件配置 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.realroomSoftwareFee.entity.RealroomSoftwareFee" alias="RealroomSoftwareFee"/> <!--查询的物业账单 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.realroomSoftwareMapper.entity.RealroomSoftwareMapper" alias="RealroomSoftwareMapper"/> <!--房间与物业软件映射 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.lotteryDrawProduct.entity.LotteryDrawProduct" alias="LotteryDrawProduct"/> <!--幸运抽奖奖品表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.lotteryDrawRecord.entity.LotteryDrawRecord" alias="LotteryDrawRecord"/> <!--幸运抽奖记录表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.flashDealRemind.entity.FlashDealRemind" alias="FlashDealRemind"/> <!--一元Go提醒 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.mrFeeItem.entity.MrFeeItem" alias="MrFeeItem"/> <!--抄表费收费 项配置 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.mrFeeItemFormula.entity.MrFeeItemFormula" alias="MrFeeItemFormula"/> <!--抄表费收费项阶梯计算配置 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.mrPayBillRecord.entity.MrPayBillRecord" alias="MrPayBillRecord"/> <!--抄表费收费 账单读表数 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.realRoomHasMrLastRecord.entity.RealRoomHasMrLastRecord" alias="RealRoomHasMrLastRecord"/> <!--房间最后一次抄表读数 -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.limitBuyActivity.entity.LimitBuyActivity" alias="LimitBuyActivity"/> <!--限时抢购 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.lanternFestivalPrize.entity.LanternFestivalPrize" alias="LanternFestivalPrize"/> <!--元宵节猜谜中奖公示表 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.fixedFeeItem.entity.FixedFeeItem" alias="FixedFeeItem"/> <!--固定收费项 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.fixedFeeItemHasRoom.entity.FixedFeeItemHasRoom" alias="FixedFeeItemHasRoom"/> <!--固定收费项和房间关联信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.groupBuildingExt.entity.GroupBuildingExt" alias="GroupBuildingExt"/> <!--小区信息扩展表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.fixedFeeItemRoomData.entity.FixedFeeItemRoomData" alias="FixedFeeItemRoomData"/> <!--房间数据信息表（已经导入数据的） -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyFeeDetailTemp.entity.PropertyFeeDetailTemp" alias="PropertyFeeDetailTemp"/> <!--物业收费项费用明细临时表（生成账单使用） -->
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyDistrict.entity.PropertyDistrict" alias="PropertyDistrict"/> <!--物业片区 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyDistrictHasGroupBuilding.entity.PropertyDistrictHasGroupBuilding" alias="PropertyDistrictHasGroupBuilding"/> <!--物业片区与小区关联 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.groupBuildingExt.entity.GroupBuildingExt" alias="GroupBuildingExt"/> <!--小区信息扩展表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.groupHomeMessage.entity.GroupHomeMessage" alias="GroupHomeMessage"/> <!--首页公共消息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.homeMessageType.entity.HomeMessageType" alias="HomeMessageType"/> <!--首页消息类型表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userHasHomeMessage.entity.UserHasHomeMessage" alias="UserHasHomeMessage"/> <!--用户首页消息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userQuestion.entity.UserQuestion" alias="UserQuestion"/> <!--用户提问信息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.messagePrint.entity.MessagePrint" alias="MessagePrint"/> <!--消息打印 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeBillHasProcessRecording.entity.DredgeBillHasProcessRecording" alias="DredgeBillHasProcessRecording"/> <!--上门服务单流程记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dataChangeRecord.entity.DataChangeRecord" alias="DataChangeRecord"/> <!--数据变更记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userHasTLimitBuyActivity.entity.UserHasTLimitBuyActivity" alias="UserHasTLimitBuyActivity"/> <!--用户在限时促销购买情况表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyOrderRelation.entity.EbuyOrderRelation" alias="EbuyOrderRelation"/> <!--总订单与子订单关系表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.omsUserHasPropertyDistrict.entity.OmsUserHasPropertyDistrict" alias="OmsUserHasPropertyDistrict"/> <!--用户和片区关联表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeTypePriceConfig.entity.DredgeTypePriceConfig" alias="DredgeTypePriceConfig"/> <!--维修价格配置表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.nuomiGb.entity.NuomiGb" alias="NuomiGb"/> <!--百度糯米对接小区信息 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.shortUrl.entity.ShortUrl" alias="ShortUrl"/> <!--短链接映射表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.bankCollectionDate.entity.BankCollectionDate" alias="BankCollectionDate"/> <!--物业公司银行托收日期配置 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.basedataBank.entity.BasedataBank" alias="BasedataBank"/> <!--银行基础资料 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.bcFileDefine.entity.BcFileDefine" alias="BcFileDefine"/> <!--出盘回盘文件格式定义 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.bcFinanceOrg.entity.BcFinanceOrg" alias="BcFinanceOrg"/> <!--银行托收金融机构信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.bcGroupBuildingCycle.entity.BcGroupBuildingCycle" alias="BcGroupBuildingCycle"/> <!--托收账期记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.bcInfoHasTGroupBuilding.entity.BcInfoHasTGroupBuilding" alias="BcInfoHasTGroupBuilding"/> <!--物业公司托收银行信息包含的小区 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.bcInfoHasTPropertyProprietor.entity.BcInfoHasTPropertyProprietor" alias="BcInfoHasTPropertyProprietor"/> <!--物业公司托收银行信息包含的业主 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.bcOfferRecord.entity.BcOfferRecord" alias="BcOfferRecord"/> <!--发盘记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.bcRebackRecord.entity.BcRebackRecord" alias="BcRebackRecord"/> <!--回盘记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyCompanyBankCollectionInfo.entity.PropertyCompanyBankCollectionInfo" alias="PropertyCompanyBankCollectionInfo"/> <!--物业公司托收银行信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyProprietorBankCollectionInfo.entity.PropertyProprietorBankCollectionInfo" alias="PropertyProprietorBankCollectionInfo"/> <!--业主银行托收信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.bcGroupBuildingCycleEntry.entity.BcGroupBuildingCycleEntry" alias="BcGroupBuildingCycleEntry"/> <!--银行托收账期明细 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.payBillMarkLog.entity.PayBillMarkLog" alias="PayBillMarkLog"/> <!--物业缴费账单标记日志 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.printConfig.entity.PrintConfig" alias="PrintConfig"/> <!--物业账单打印小区模板配置表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.printInitTemplate.entity.PrintInitTemplate" alias="PrintInitTemplate"/> <!--账单打印模板初始化表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.groupBuildingBillCycleConfig.entity.GroupBuildingBillCycleConfig" alias="GroupBuildingBillCycleConfig"/> <!--收费时间管理配置（自动生成账期和账单的配置） -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyFeeDetailUnpaid.entity.PropertyFeeDetailUnpaid" alias="PropertyFeeDetailUnpaid"/> <!--账单欠费信息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeBillHasProductSpec.entity.DredgeBillHasProductSpec" alias="DredgeBillHasProductSpec"/> <!--维修服务商品规格表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeProduct.entity.DredgeProduct" alias="DredgeProduct"/> <!--维修服务商品表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeProductSpecification.entity.DredgeProductSpecification" alias="DredgeProductSpecification"/> <!--维修服务商品规格表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.loanBuyLog.entity.LoanBuyLog" alias="LoanBuyLog"/> <!--借贷购买记录表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.loanProduct.entity.LoanProduct" alias="LoanProduct"/> <!--借贷产品表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.loanThird.entity.LoanThird" alias="LoanThird"/> <!--借贷第三方对接信息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.loanType.entity.LoanType" alias="LoanType"/> <!--借贷类型表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.messageToBeSend.entity.MessageToBeSend" alias="MessageToBeSend"/> <!--待发送短信或待推送消息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.operationMsgPushConfig.entity.OperationMsgPushConfig" alias="OperationMsgPushConfig"/> <!--运营消息推送配置表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.htCarGb.entity.HtCarGb" alias="HtCarGb"/> <!--华庭车禁小区表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.carXmfMsg.entity.CarXmfMsg" alias="CarXmfMsg"/> <!--小蜜蜂临停车缴费通知记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.carHuaanMsg.entity.CarHuaanMsg" alias="CarHuaanMsg"/> <!--华安临停车缴费通知记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.newUserLocation.entity.NewUserLocation" alias="NewUserLocation"/> <!--新用户第一次打开app定位结果信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.tmpFeeItem.entity.TmpFeeItem" alias="TmpFeeItem"/> <!--临时收费项 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.selfActivity.entity.SelfActivity" alias="SelfActivity"/> <!--自定義活動 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.selfActivityDetail.entity.SelfActivityDetail" alias="SelfActivityDetail"/> <!--自定義活動詳情 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeAddress.entity.DredgeAddress" alias="DredgeAddress"/> <!--维修地址 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.couponExchange.entity.CouponExchange" alias="CouponExchange"/> <!--消费券兑换表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.couponProduct.entity.CouponProduct" alias="CouponProduct"/> <!--消费券可抵扣商品 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.couponScene.entity.CouponScene" alias="CouponScene"/> <!--券场景 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.sourceOfSupply.entity.SourceOfSupply" alias="SourceOfSupply"/> <!--供应商的货源地 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyOrderDeliveryType.entity.EbuyOrderDeliveryType" alias="EbuyOrderDeliveryType"/> <!--订单的配送设置 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.ebuyOrderExt.entity.EbuyOrderExt" alias="EbuyOrderExt"/> <!--订单扩展表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userSwitchGb.entity.UserSwitchGb" alias="UserSwitchGb"/> <!--用户切换小区表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.userRecommendOrder.entity.UserRecommendOrder" alias="UserRecommendOrder"/> <!--用户推荐产生的订单 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.mrCalculateRuleCfg.entity.MrCalculateRuleCfg" alias="MrCalculateRuleCfg"/> <!--抄表计算规则配置 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.mrStandardBuilding.entity.MrStandardBuilding" alias="MrStandardBuilding"/> <!--抄表收费标准(楼栋) -->
+		<typeAlias type="com.cnfantasia.server.domainbase.mrStandardGroupBuilding.entity.MrStandardGroupBuilding" alias="MrStandardGroupBuilding"/> <!--抄表收费标准(小区) -->
+		<typeAlias type="com.cnfantasia.server.domainbase.mrStandardRoom.entity.MrStandardRoom" alias="MrStandardRoom"/> <!--抄表收费标准(房间) -->
+		<typeAlias type="com.cnfantasia.server.domainbase.jfqStoreProductTypeInfo.entity.JfqStoreProductTypeInfo" alias="JfqStoreProductTypeInfo"/> <!--解放区体验店商品类型信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.dredgeRefund.entity.DredgeRefund" alias="DredgeRefund"/> <!--到家服务退款申请 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.carHpfCardsn.entity.CarHpfCardsn" alias="CarHpfCardsn"/> <!--华鹏飞临停车cardsn -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyRechargePrefer.entity.PropertyRechargePrefer" alias="PropertyRechargePrefer"/> <!--物业充值随机立减记录表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyRechargePreferGroupbuilding.entity.PropertyRechargePreferGroupbuilding" alias="PropertyRechargePreferGroupbuilding"/> <!--物业预充值随机立减小区规则关联表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyRechargePreferRule.entity.PropertyRechargePreferRule" alias="PropertyRechargePreferRule"/> <!--物业预充值随机立减规则表 -->
+
+		<typeAlias type="com.cnfantasia.server.domainbase.livingFeeItem.entity.LivingFeeItem" alias="LivingFeeItem"/> <!--生活缴费支持的项目类别 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.livingFeePayRecord.entity.LivingFeePayRecord" alias="LivingFeePayRecord"/> <!--生活缴费记录 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.livingFeeSp.entity.LivingFeeSp" alias="LivingFeeSp"/> <!--宽带运营商 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.omsUserBankInfo.entity.OmsUserBankInfo" alias="OmsUserBankInfo"/> <!--OMS用户表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.groupBuildingCalculateLatefeeRule.entity.GroupBuildingCalculateLatefeeRule" alias="GroupBuildingCalculateLatefeeRule"/> <!--小区滞纳金配置表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.realRoomHasTPropertyProprietor.entity.RealRoomHasTPropertyProprietor" alias="RealRoomHasTPropertyProprietor"/> <!--房间业主信息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyCompanyThirdPayCfg.entity.PropertyCompanyThirdPayCfg" alias="PropertyCompanyThirdPayCfg"/> <!--物业公司/管理处/自有平台的支付宝信息 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.propertyLessee.entity.PropertyLessee" alias="PropertyLessee"/> <!--租户信息表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.realRoomHasTPropertyLessee.entity.RealRoomHasTPropertyLessee" alias="RealRoomHasTPropertyLessee"/> <!--房间租户信息表 -->
+
+	</typeAliases>
+	<!-- <plugins>
+		<plugin interceptor="com.cnfantasia.server.domain.pub.mybatis.MybatisInterceptor"></plugin>
+	</plugins> -->
+    <mappers> 
+    	<!-- 业务 -->
+        
+        <!--引入sql配置文件base-->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/addressCityHotBaseMySQL.xml"/> <!--热门城市 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commShareRecordBaseMySQL.xml"/> <!--分享记录表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commSignRecordBaseMySQL.xml"/> <!--签到记录 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commentsHasTCommentsPointsBaseMySQL.xml"/> <!--评论包含哪些评分值 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commentsPointsBaseMySQL.xml"/> <!--评论的评分项 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communitySupplyTypeCanAddBaseMySQL.xml"/> <!--新增商家时的可选类别 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communitySupplyTypeHasTCommentsPointsBaseMySQL.xml"/> <!--商家类别支持哪些评分 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyOrderProductExtParamBaseMySQL.xml"/> <!--订单商品关系附件参数信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyOrderProductHasCodeBaseMySQL.xml"/> <!--商品订单关系所包含的兑换码 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyPrepayAlipayLogBaseMySQL.xml"/> <!--淘宝预支付日志表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductConversionCodeBaseMySQL.xml"/> <!--商品兑换码表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductIntroducePicBaseMySQL.xml"/> <!--产品介绍图片信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductSpecBaseMySQL.xml"/> <!--商品价格规格表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/familyMsgBaseMySQL.xml"/> <!--家庭留言板 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/familyMsgExtDataBaseMySQL.xml"/> <!--家庭留言板拓展信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/familyMsgHasTUserBaseMySQL.xml"/> <!--家庭留言艾特的用户列表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/familyMsgPicBaseMySQL.xml"/> <!--家庭留言板图片 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/familyWealthOptionBaseMySQL.xml"/> <!--家庭财富选项 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenCookbookCollectIslikeBaseMySQL.xml"/> <!--家庭成员是否喜欢吃对应菜谱 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/loginNoBindRelationBaseMySQL.xml"/> <!--登录账号绑定关系 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/loginNoOldUpgradeDateBaseMySQL.xml"/> <!--微信升级老数据 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/operationConstantDataBaseMySQL.xml"/> <!--运维相关的数据 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/pointCostRecordBaseMySQL.xml"/> <!--积分消费记录 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/pointDataBaseMySQL.xml"/> <!--用户积分表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/pointRuleBaseMySQL.xml"/> <!--积分规则 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/pointSourceRecordBaseMySQL.xml"/> <!--积分来源记录表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/prizeSurpriseGiftBaseMySQL.xml"/> <!--抽奖结果的意外惊喜 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyServiceBaseMySQL.xml"/> <!--物业服务信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/redpointContentBaseMySQL.xml"/> <!--红点信息表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/redpointContentSourceBaseMySQL.xml"/> <!--红点来源表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/redpointModelcodeConfigBaseMySQL.xml"/> <!--红点模块编码配置表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/surpriseGiftConfigPicBaseMySQL.xml"/> <!--意外惊喜配置图标 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/surpriseGiftUseDetailBaseMySQL.xml"/> <!--意外惊喜的优惠券使用详情 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/userPositionInfoBaseMySQL.xml"/> <!--用户定位信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/userXanaduRecordBaseMySQL.xml"/> <!--用户世外桃源状态信息 -->
+        
+        
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/achievementBaseMySQL.xml"/> <!--成就表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/addressBlockBaseMySQL.xml"/> <!--区 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/addressBlockSelfDefinedBaseMySQL.xml"/> <!--自定义片区 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/addressCityBaseMySQL.xml"/> <!--市 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/addressCountryBaseMySQL.xml"/> <!--国家表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/addressProvinceBaseMySQL.xml"/> <!--省 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/appBaseInfoBaseMySQL.xml"/> <!--应用信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/appDownLogBaseMySQL.xml"/> <!--应用下载日志 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/appVersionBaseMySQL.xml"/> <!--应用版本信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/buildingBaseMySQL.xml"/> <!--建筑单元 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/channelBaseMySQL.xml"/> <!--主渠道表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/channelPartnerBaseMySQL.xml"/> <!--渠道合伙人 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/channelPartnerRecommendBaseMySQL.xml"/> <!--渠道合伙人的推荐 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/channelSubBaseMySQL.xml"/> <!--子渠道表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/collectionsBaseMySQL.xml"/> <!--收藏 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commFeedbackBaseMySQL.xml"/> <!--意见反馈表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commFeedbackLabelBaseMySQL.xml"/> <!--意见反馈的标签表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commLoggerControlBaseMySQL.xml"/> <!--公共日志记录控制表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commSysParaBaseMySQL.xml"/> <!--系统参数 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commSysUrlBaseMySQL.xml"/> <!--基础的url信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commUserSessionBaseMySQL.xml"/> <!--用户登录session表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commUuidBaseMySQL.xml"/> <!--唯一编号 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commentsBaseMySQL.xml"/> <!--评论 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commentsHasTCommentsLabelBaseMySQL.xml"/> <!--评论包含的标签信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commentsLabelBaseMySQL.xml"/> <!--评论标签 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communityExchangeContentBaseMySQL.xml"/> <!--换物信息表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communityExchangePicBaseMySQL.xml"/> <!--换一换图片表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communityExchangeRelationBaseMySQL.xml"/> <!--换物关系表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communityExchangeWantedBaseMySQL.xml"/> <!--换一换之跪求换 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communityForumContentBaseMySQL.xml"/> <!--社区论坛的帖子内容 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communityForumPicBaseMySQL.xml"/> <!--社区论坛的帖子图片 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communityForumTypeBaseMySQL.xml"/> <!--社区论坛的帖子类别 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communityPinyipinContentBaseMySQL.xml"/> <!--拼一拼内容表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communityPinyipinPicBaseMySQL.xml"/> <!--拼一拼图片列表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communityPinyipinReserveBaseMySQL.xml"/> <!--拼单预定信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communitySupplyBaseMySQL.xml"/> <!--社区商家信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communitySupplyBelongBaseMySQL.xml"/> <!--商家认领 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communitySupplyCompanyBaseMySQL.xml"/> <!--社区商户公司（管理多个社区商家） -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communitySupplyCompanyPicBaseMySQL.xml"/> <!--商家图片 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communitySupplyContectBaseMySQL.xml"/> <!--社区商家联系方式 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communitySupplyExtendsRelationshipBaseMySQL.xml"/> <!--社区商家拓展对应信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communitySupplyPicBaseMySQL.xml"/> <!--商家图片 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communitySupplyTmpBaseMySQL.xml"/> <!--店铺申请审核表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communitySupplyTypeBaseMySQL.xml"/> <!--社区商家类别 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communitySupplyTypeHasTCommentLabelBaseMySQL.xml"/> <!--社区商家类别所包含的评论标签 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/communitySupplyTypeRecommendBaseMySQL.xml"/> <!--推荐的商家类别 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/cookieInfoBaseMySQL.xml"/> <!--记录用户的Cookie -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/eatMenuBaseMySQL.xml"/> <!--今晚吃什么的菜谱 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/eatMenuRecommendBaseMySQL.xml"/> <!--推荐菜谱 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyAuthBaseMySQL.xml"/> <!--认证类别信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyBuyCarBaseMySQL.xml"/> <!--购物车 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyBuyCarHasTEbuyProductBaseMySQL.xml"/> <!-- -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyDeliveryAddressBaseMySQL.xml"/> <!--收货地址 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyDeliveryMethodBaseMySQL.xml"/> <!--配送方式 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyDeliveryOrderBaseMySQL.xml"/> <!--送货单 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyDeliveryOrderProductBaseMySQL.xml"/> <!--供应商配送包含的商品信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyDeliveryPushRecorderBaseMySQL.xml"/> <!--配送单推送记录 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyExpressCompanyBaseMySQL.xml"/> <!--快递公司 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyHandleAddressBaseMySQL.xml"/> <!--手动输入的收货地址 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyInvoiceBaseMySQL.xml"/> <!--发票 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyOrderBaseMySQL.xml"/> <!--订单表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyOrderHasTEbuyProductBaseMySQL.xml"/> <!--订单商品关系 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyOrderHasTPayBillBaseMySQL.xml"/> <!-- -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyPayRecordBaseMySQL.xml"/> <!--支付记录表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductBaseMySQL.xml"/> <!--商品表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductHasTEbuyAuthBaseMySQL.xml"/> <!-- -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductHasTEbuyDeliveryMethodBaseMySQL.xml"/> <!--商品支持的配送方式 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductParametersBaseMySQL.xml"/> <!--产品参数 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductParametersTempBaseMySQL.xml"/> <!--产品参数，临时存储从外部抓取的数据 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductPicBaseMySQL.xml"/> <!--产品图片信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductRecommendBaseMySQL.xml"/> <!--推荐的商品 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductTempBaseMySQL.xml"/> <!--商品表，临时存储从外部抓取的数据 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductTypeBaseMySQL.xml"/> <!--商品类别 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuySupplyMerchantBaseMySQL.xml"/> <!--供应商 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuySupplyMerchantHasGroupBuildingBaseMySQL.xml"/> <!--供应商 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuySupplyMerchantHasTEbuyDeliveryMethodBaseMySQL.xml"/> <!--供应商支持的配送方式 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/groupBuildingBaseMySQL.xml"/> <!--小区信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/groupBuildingHasTCommunitySupplyBaseMySQL.xml"/> <!--小区商家关系表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/groupBuildingHasTCommunitySupplyTmpBaseMySQL.xml"/> <!--小区临时商家关系表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/groupBuildingHasTPropertyServiceBaseMySQL.xml"/> <!--小区服务关系表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/groupBuildingRegisterBaseMySQL.xml"/> <!--注册的小区信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/hobbyBaseMySQL.xml"/> <!--兴趣爱好表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/inviteRewardConfigBaseMySQL.xml"/> <!--邀请奖励配置表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/inviteRewardRecordBaseMySQL.xml"/> <!--邀请奖励纪录表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/inviteRewardRelationBaseMySQL.xml"/> <!--邀请奖励关系纪录表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenCookbookBaseMySQL.xml"/> <!--厨房菜谱 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenCookbookAddressRelationBaseMySQL.xml"/> <!--菜谱地址关系表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenCookbookCollectBaseMySQL.xml"/> <!--菜谱收藏 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenCookbookMixBaseMySQL.xml"/> <!--厨房组合菜谱 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenCookbookMixHasTKitchenCookbookBaseMySQL.xml"/> <!--组合菜谱所包含的菜谱 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenCookbookStepBaseMySQL.xml"/> <!--亨饪步骤信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenCookbookStepTipsBaseMySQL.xml"/> <!--菜谱步骤tips信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenCookbookTopTypeBaseMySQL.xml"/> <!--顶级类别 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenCookbookTypeBaseMySQL.xml"/> <!--厨房菜谱分类 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenCookbookTypeCollectBaseMySQL.xml"/> <!--菜谱类别收藏 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenCookbookTypeHasTKitchenCookbookBaseMySQL.xml"/> <!--菜谱类别与菜谱关系表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenCookbookTypeRecommendBaseMySQL.xml"/> <!--厨房菜品类别推荐 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/kitchenDetailBaseMySQL.xml"/> <!--厨房菜谱详情 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/loginLogBaseMySQL.xml"/> <!--登录历史 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/loginNoBaseMySQL.xml"/> <!--用户登录账号 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/lookupLocalMapDataBaseMySQL.xml"/> <!--本地地址信息数据 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/messageBaseMySQL.xml"/> <!--消息表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/messageGroupBaseMySQL.xml"/> <!--消息小区关联表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/messageParameterBaseMySQL.xml"/> <!--消息参数表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/messageViewBaseMySQL.xml"/> <!--消息推送的视图配置 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/microblogContentBaseMySQL.xml"/> <!--微博内容 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/microblogPicBaseMySQL.xml"/> <!--微博图片信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/microblogTypeBaseMySQL.xml"/> <!--微博类别 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/omsCommSysParaBaseMySQL.xml"/> <!--OMS系统参数表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/omsPermiFunctionBaseMySQL.xml"/> <!--OMS功能表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/omsPermiRoleBaseMySQL.xml"/> <!--OMS角色表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/omsPermiRoleHasTOmsPermiFunctionBaseMySQL.xml"/> <!--OMS角色功能关系 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/omsUserBaseMySQL.xml"/> <!--OMS用户表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/omsUserHasTOmsPermiRoleBaseMySQL.xml"/> <!--OMS用户角色关系 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/payBillBaseMySQL.xml"/> <!--物业账单 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/payCouponBaseMySQL.xml"/> <!--优惠表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/payRecordBaseMySQL.xml"/> <!--物业缴费记录 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/payRedEnvelopeBaseMySQL.xml"/> <!--粮票信息表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/payRedEnvelopeDetailBaseMySQL.xml"/> <!--粮票优惠详情 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/permiFunctionBaseMySQL.xml"/> <!--功能表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/permiRoleBaseMySQL.xml"/> <!--角色表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/permiRoleHasTPermiFunctionBaseMySQL.xml"/> <!--角色功能关系 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/permiRoleHasTUserBaseMySQL.xml"/> <!--用户角色关系 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/prizeRecordBaseMySQL.xml"/> <!--中奖记录 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/prizeRecordTmpBaseMySQL.xml"/> <!--临时用户中奖记录 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/prizeRuleConfigBaseMySQL.xml"/> <!--抽奖规则配置 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/prizeRuleDrawOnlinedaysBaseMySQL.xml"/> <!--折扣抽奖规则-用户在线时间 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/prizeRuleGenerateAreaBaseMySQL.xml"/> <!--折扣生成规则-折扣区间分配因素 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/prizeRuleGenerateUsercountBaseMySQL.xml"/> <!--折扣生成规则-用户数量因素 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyCompanyBaseMySQL.xml"/> <!--物业公司 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyFeeDetailBaseMySQL.xml"/> <!--物业费费用清单详情 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyManagementBaseMySQL.xml"/> <!--物业管理 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyManagementHasOmsUserBaseMySQL.xml"/> <!--物业管理与后账号关系 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyProprietorBaseMySQL.xml"/> <!--业主信息表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyRepairBaseMySQL.xml"/> <!--物业报修单 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyRepairTypeBaseMySQL.xml"/> <!--物业报修类型 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyRepairerBaseMySQL.xml"/> <!--管理处维修工 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertySuggestCommsupplyBaseMySQL.xml"/> <!--物业推荐信息表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/realRoomBaseMySQL.xml"/> <!--真实房间 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/remoteUserBaseMySQL.xml"/> <!--远程用户信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/roomBaseMySQL.xml"/> <!--门牌信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/roomValidateBaseMySQL.xml"/> <!--门牌校验信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/shareActiveBaseMySQL.xml"/> <!--分享活动 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/shareActiveDetailBaseMySQL.xml"/> <!--分享活动详情表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/supportBaseMySQL.xml"/> <!--点赞信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/userBaseMySQL.xml"/> <!--用户表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/userHasTAchievementBaseMySQL.xml"/> <!--用户成就关系表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/userHasTHobbyBaseMySQL.xml"/> <!--用户爱好关系表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/userHasTMessageBaseMySQL.xml"/> <!--用户消息关系 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/userHasTRoomBaseMySQL.xml"/> <!--用户门牌关系 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/userPushInfoBaseMySQL.xml"/> <!--用户推送配置消息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/userTmpBaseMySQL.xml"/> <!--临时用户 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyPrepayWeixinLogBaseMySQL.xml"/> <!--微信预支付日志表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/prizeRecordTmpDataBaseMySQL.xml"/> <!--抽奖结果临时数据 -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/microblogQueueBaseMySQL.xml"/> <!--小区博客队列表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/appVersionChannelBaseMySQL.xml"/> <!--应用版本不同渠道信息 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/commonGatherDataBaseMySQL.xml"/> <!--通用模块信息归集 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/operationServiceAreaBaseMySQL.xml"/> <!--服务范围的运营数据表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/commonLockBaseMySQL.xml"/> <!--公用的锁表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/operationSaHasEbSupplyBaseMySQL.xml"/> <!--周边服务于电商商家关系表 -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/communityAdsBaseMySQL.xml"/> <!--街坊广告信息表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/operationHomeSupplyTypeBaseMySQL.xml"/> <!--首页商家类别运营表 -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeBillBaseMySQL.xml"/> <!--疏通工单 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeTypeBaseMySQL.xml"/> <!--疏通类型 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeWorkerBaseMySQL.xml"/> <!--疏通师傅 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeWorkerHasDredgeTypeBaseMySQL.xml"/> <!--疏通师傅支持的疏通类型 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeWorkerServiceAddressBlockBaseMySQL.xml"/> <!--疏通师傅服务行政区 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeWorkerCancelBaseMySQL.xml"/> <!--疏通师傅取消订单 -->
+		
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductShelfBaseMySQL.xml"/> <!--产品参数 -->
+		
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/microblogGbHasQueueBaseMySQL.xml"/> <!--小区已发送的队列消息记录表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/microblogPushTypeBaseMySQL.xml"/> <!--街坊消息推送类别表 -->
+		
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/msPrizeActHasOptBaseMySQL.xml"/> <!--抽奖活动与奖项关系表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/msPrizeActivityBaseMySQL.xml"/> <!--抽奖活动表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/msPrizeGiftBaseMySQL.xml"/> <!--奖品详情表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/msPrizeOptionBaseMySQL.xml"/> <!--奖项表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/msPrizeGiftCodeBaseMySQL.xml"/> <!--抽奖奖品编码表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/msPrizeOptionCityBaseMySQL.xml"/> <!--奖项城市关系表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyPrepaySqLogBaseMySQL.xml"/> <!--双乾预支付记录表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuySupplyMerchantLicenceBaseMySQL.xml"/> <!--供应商营业执照图片 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuySupplyMerchantHasGroupBuildingBaseMySQL.xml"/> <!--供应商与小区关联表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuySupplyMerchantHasUserBaseMySQL.xml"/> <!--用户供应商关系表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/payConfigHbBaseMySQL.xml"/> <!--粮票支付配置表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/revenueConfigBaseMySQL.xml"/> <!--收益规则配置表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyGbAdBaseMySQL.xml"/> <!--小区物业打印广告配置表 -->
+        
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/revenueApplyBaseMySQL.xml"/> <!--提款申请记录 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/revenueSignalAmountBaseMySQL.xml"/> <!--单个提款项的收益参数信息信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/revenueTaskRecordBaseMySQL.xml"/> <!--定时同步收益额记录表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyRefundOrderBaseMySQL.xml"/> <!--退货订单 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyRefundOrderProductBaseMySQL.xml"/> <!--退货订单信息 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyRefundAuditBaseMySQL.xml"/> <!--退款原因 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/refundRecordBaseMySQL.xml"/> <!--退款粮票记录 -->
+	
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/revenueSignalAmountEbuyBaseMySQL.xml"/> <!--单个提款项的收益参数信息信息 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/supportBankBaseMySQL.xml"/> <!--支持的转账银行 -->
+		
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeBankCardBaseMySQL.xml"/> <!--维修服务银行卡号信息 -->
+     	
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/payBillSplitBaseMySQL.xml"/> <!--费用账单拆分表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/payBillTimeCfgBaseMySQL.xml"/> <!--账单类型对应缴费时间配置 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/payBillTypeBaseMySQL.xml"/> <!--账单类型基础信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/revenueGenerationBaseMySQL.xml"/>
+        
+     	
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/buildingKeyListBaseMySQL.xml"/> <!--开通门禁的小区楼栋列表 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/cloudKeyPaylogBaseMySQL.xml"/> <!--云钥匙付款记录 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/cloudKeyUserAuditBaseMySQL.xml"/> <!--业主门禁认证信息 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/cloudKeyUserListBaseMySQL.xml"/> <!--业主门禁密钥表 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/payKeyListBaseMySQL.xml"/> <!--云钥匙付款列表 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/carKeyRoomTempBaseMySQL.xml"/> <!--门牌车牌信息临时表 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/carNumListBaseMySQL.xml"/> <!--车牌表 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/parkingRecordBaseMySQL.xml"/> <!--停车记录表 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/roomHasCarNumBaseMySQL.xml"/> <!--房间车牌对应表 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/carNumPayLogBaseMySQL.xml"/> <!--月卡车缴费记录 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/payCarCardListBaseMySQL.xml"/> <!--车禁月卡付款列表 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/carGroupBuildingBaseMySQL.xml"/> <!--小区车禁配置表 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/commercialOpportunityBaseMySQL.xml"/> <!--商机 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/microblogReportBaseMySQL.xml"/> <!--微博信息举报表 -->
+     	<mapper resource="com/cnfantasia/server/domain/mybatis/base/encryptColumBaseMySQL.xml"/> <!--加密字段 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/encryptUrlBaseMySQL.xml"/> <!--加密url -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/encyptLogBaseMySQL.xml"/> <!--加密日志记录 -->
+        
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/wechatDredgebillMqBaseMySQL.xml"/> <!--微信公众号维修单消息队列 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/smsMqBaseMySQL.xml"/> <!--手机短信消息队列 -->
+        
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyDeliveryOrderCommentBaseMySQL.xml"/>
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyLogBaseMySQL.xml"/> <!--扫二维码进商品详情日志表 -->
+
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/openDoorLogBaseMySQL.xml"/> <!--门禁开门记录表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/parkCacheBaseMySQL.xml"/> <!--Socket缓存 -->
+        
+  		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductFightGroupsBaseMySQL.xml"/> <!--拼购商品规则表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyFightSupplyMerchantBaseMySQL.xml"/> <!--自提点表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyFightOrderBaseMySQL.xml"/> <!--拼购详情订单 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyFightMerchantHasGroupBuildingBaseMySQL.xml"/> <!--自提点服务小区关系表 -->        
+    	<mapper resource="com/cnfantasia/server/domain/mybatis/base/buildingKeyConfigBaseMySQL.xml"/> <!--门禁认证选项显示配置表 -->
+    	<mapper resource="com/cnfantasia/server/domain/mybatis/base/cloudKeyUserDataBaseMySQL.xml"/> <!--业主门禁认证（可配置）信息 -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/bindPhoneLogBaseMySQL.xml"/> <!--绑定手机记录表 -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/couponBaseMySQL.xml"/> <!--消费券表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/couponAreaBaseMySQL.xml"/> <!--消费券发放区域表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyOrderHasCouponBaseMySQL.xml"/> <!--订单使用消费券表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/userCouponBaseMySQL.xml"/> <!--用户所持消费券表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyHomeTypeBaseMySQL.xml"/> <!--首页分类 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyHomeTypeHasProductBaseMySQL.xml"/> <!--首页分类名称关联产品分类 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeBillPushTimeBaseMySQL.xml"/> <!--疏通工单推送时间记录表 -->
+		
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyAccountInfoBaseMySQL.xml"/> <!--用户物业账户信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyCardBaseMySQL.xml"/> <!--物业代扣卡 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyCardDiscountTermBaseMySQL.xml"/> <!--物业代扣卡优惠方案 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyCardTransactionFlowingBaseMySQL.xml"/> <!--物业代扣卡交易流水 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/userHasPropertyCardBaseMySQL.xml"/> <!--用户购买物业代扣卡 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/userSetRealroomDeductionConfigBaseMySQL.xml"/> <!--用户房间划扣配置 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductFightPicBaseMySQL.xml"/> <!--拼购产品列表图片信息 -->
+		
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeBillAmountDetailBaseMySQL.xml"/> <!--上门维修费用明细 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyRepairTypeBaseBaseMySQL.xml"/> <!--物业报修类型(解放区预定义的) -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/supplyMerchantDeliveryFeeSettlementBaseMySQL.xml"/> <!--与供应商结算邮费规则 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuySupplyMerchantBankAccountBaseMySQL.xml"/> <!--楼下店等电商供应商银行卡信息 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyAdvertiseBaseMySQL.xml"/> <!-- 超市广告-->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyAdvertiseHasPromoteShelfProductBaseMySQL.xml"/> <!--商品推广广告对应商品表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyProductSettleApplyLogBaseMySQL.xml"/> <!--购销模式结算申请表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/paybillUserPreferBaseMySQL.xml"/> <!--账单优惠用户关系表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/blackListBaseMySQL.xml"/> <!--黑名单 -->
+    
+    	<mapper resource="com/cnfantasia/server/domain/mybatis/base/groupBuildingBillCycleBaseMySQL.xml"/> <!--账期管理 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/easPushRecordBaseMySQL.xml"/> <!--EAS接口推送记录 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeType2ndBaseMySQL.xml"/> <!--疏通二级类型 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/deliveryOrderExpressTraceBaseMySQL.xml"/> <!--供应商快递记录表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/roomVerifyPaymentBaseMySQL.xml"/> <!--门牌验证缴费情况查询表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/cashFlowSummaryBaseMySQL.xml"/> <!--现金流量汇总表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeCouponConfigBaseMySQL.xml"/> <!--维修券使用配置表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/advertiseClickRecordBaseMySQL.xml"/> <!--广告点击记录表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyCardDeductionDetailBaseMySQL.xml"/> <!--物业代扣卡划扣详情 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/carYhsMsgBaseMySQL.xml"/> <!--临停车缴费消息发送表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/omsUserHasTEbuySupplyMerchantBaseMySQL.xml"/> <!-- -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeBillHasEbuyProductShelfBaseMySQL.xml"/> <!--用户自选耗材明细 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/carPreferBaseMySQL.xml"/> <!--车禁随机立减 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/cashSqpayBtBaseMySQL.xml"/> <!--双乾支付优惠补贴明细表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/appCrashLogBaseMySQL.xml"/> <!--app崩溃日志 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/devicePayCountBaseMySQL.xml"/> <!-- 设备缴费限制-->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/userPayCountBaseMySQL.xml"/> <!--用户缴费限制 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/easPushAccountBaseMySQL.xml"/> <!--EAS推送账户信息配置表 -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/alterPeriodCfgBaseMySQL.xml"/> <!--选择周期配置 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/alterPeriodDataDetailBaseMySQL.xml"/> <!--选择周期数据详情 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/alterPeriodFeeItemBaseMySQL.xml"/> <!--选择周期收费项 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/alterPeriodPreferBaseMySQL.xml"/> <!--选择周期缴费优惠表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/alterRoomHasFeeItemBaseMySQL.xml"/> <!--房间收费项表 -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/flashDealActivityBaseMySQL.xml"/> <!--秒杀活动表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/flashDealBuyRecordBaseMySQL.xml"/> <!--秒杀活动购买记录表 -->
+		
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeBillOtherInfoBaseMySQL.xml"/> <!--维修单的与第三方供应商的信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/serviceSupplierBaseMySQL.xml"/> <!--上门维修第三方服务供应商 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/serviceTypeMapperBaseMySQL.xml"/> <!--与第三方供应商类型对应关系 -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeBillFollowRecordBaseMySQL.xml"/> <!--维修订单跟进记录 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeWorkerRevenueConfigBaseMySQL.xml"/> <!--疏通师傅收益配置 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/gbSoftwareConfigBaseMySQL.xml"/> <!--小区物业软件配置 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/realroomSoftwareFeeBaseMySQL.xml"/> <!--查询的物业账单 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/realroomSoftwareMapperBaseMySQL.xml"/> <!--房间与物业软件映射 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/lotteryDrawProductBaseMySQL.xml"/> <!--幸运抽奖奖品表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/lotteryDrawRecordBaseMySQL.xml"/> <!--幸运抽奖记录表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/flashDealRemindBaseMySQL.xml"/> <!--一元Go提醒 -->
+		
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/mrFeeItemBaseMySQL.xml"/> <!--抄表费收费 项配置 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/mrFeeItemFormulaBaseMySQL.xml"/> <!--抄表费收费项阶梯计算配置 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/mrPayBillRecordBaseMySQL.xml"/> <!--抄表费收费 账单读表数 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/realRoomHasMrLastRecordBaseMySQL.xml"/> <!--房间最后一次抄表读数 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/limitBuyActivityBaseMySQL.xml"/> <!--限时抢购 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/lanternFestivalPrizeBaseMySQL.xml"/> <!--元宵节猜谜中奖公示表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/fixedFeeItemBaseMySQL.xml"/> <!--固定收费项 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/fixedFeeItemHasRoomBaseMySQL.xml"/> <!--固定收费项和房间关联信息 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/groupBuildingExtBaseMySQL.xml"/> <!--小区信息扩展表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/fixedFeeItemRoomDataBaseMySQL.xml"/> <!--房间数据信息表（已经导入数据的） -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyFeeDetailTempBaseMySQL.xml"/> <!--物业收费项费用明细临时表（生成账单使用） -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyDistrictBaseMySQL.xml"/> <!--物业片区 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyDistrictHasGroupBuildingBaseMySQL.xml"/> <!--物业片区与小区关联 -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/groupBuildingExtBaseMySQL.xml"/> <!--小区信息扩展表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/groupHomeMessageBaseMySQL.xml"/> <!--首页公共消息表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/homeMessageTypeBaseMySQL.xml"/> <!--首页消息类型表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/userHasHomeMessageBaseMySQL.xml"/> <!--用户首页消息表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/userQuestionBaseMySQL.xml"/> <!--用户提问信息表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/messagePrintBaseMySQL.xml"/> <!--消息打印 -->
+		
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeBillHasProcessRecordingBaseMySQL.xml"/> <!--上门服务单流程记录 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/userHasTLimitBuyActivityBaseMySQL.xml"/> <!--用户在限时促销购买情况表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dataChangeRecordBaseMySQL.xml"/> <!--数据变更记录 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyOrderRelationBaseMySQL.xml"/> <!--总订单与子订单关系表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/omsUserHasPropertyDistrictBaseMySQL.xml"/> <!--用户和片区关联表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeTypePriceConfigBaseMySQL.xml"/> <!--维修价格配置表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/nuomiGbBaseMySQL.xml"/> <!--百度糯米对接小区信息 -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/bankCollectionDateBaseMySQL.xml"/> <!--物业公司银行托收日期配置 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/basedataBankBaseMySQL.xml"/> <!--银行基础资料 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/bcFileDefineBaseMySQL.xml"/> <!--出盘回盘文件格式定义 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/bcFinanceOrgBaseMySQL.xml"/> <!--银行托收金融机构信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/bcGroupBuildingCycleBaseMySQL.xml"/> <!--托收账期记录 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/bcInfoHasTGroupBuildingBaseMySQL.xml"/> <!--物业公司托收银行信息包含的小区 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/bcInfoHasTPropertyProprietorBaseMySQL.xml"/> <!--物业公司托收银行信息包含的业主 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/bcOfferRecordBaseMySQL.xml"/> <!--发盘记录 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/bcRebackRecordBaseMySQL.xml"/> <!--回盘记录 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyCompanyBankCollectionInfoBaseMySQL.xml"/> <!--物业公司托收银行信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyProprietorBankCollectionInfoBaseMySQL.xml"/> <!--业主银行托收信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/bcGroupBuildingCycleEntryBaseMySQL.xml"/> <!--银行托收账期明细 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/shortUrlBaseMySQL.xml"/> <!--短链接映射表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/payBillMarkLogBaseMySQL.xml"/> <!--物业缴费账单标记日志 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/printConfigBaseMySQL.xml"/> <!--物业账单打印小区模板配置表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/printInitTemplateBaseMySQL.xml"/> <!--账单打印模板初始化表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/groupBuildingBillCycleConfigBaseMySQL.xml"/> <!--收费时间管理配置（自动生成账期和账单的配置） -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyFeeDetailUnpaidBaseMySQL.xml"/> <!--账单欠费信息表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeBillHasProductSpecBaseMySQL.xml"/> <!--维修服务商品规格表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeProductBaseMySQL.xml"/> <!--维修服务商品表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeProductSpecificationBaseMySQL.xml"/> <!--维修服务商品规格表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/loanBuyLogBaseMySQL.xml"/> <!--借贷购买记录表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/loanProductBaseMySQL.xml"/> <!--借贷产品表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/loanThirdBaseMySQL.xml"/> <!--借贷第三方对接信息表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/loanTypeBaseMySQL.xml"/> <!--借贷类型表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/messageToBeSendBaseMySQL.xml"/> <!--待发送短信或待推送消息 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/operationMsgPushConfigBaseMySQL.xml"/> <!--运营消息推送配置表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/htCarGbBaseMySQL.xml"/> <!--华庭车禁小区表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/carXmfMsgBaseMySQL.xml"/> <!--小蜜蜂临停车缴费通知记录 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/carHuaanMsgBaseMySQL.xml"/> <!--华安临停车缴费通知记录 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/newUserLocationBaseMySQL.xml"/> <!--新用户第一次打开app定位结果信息 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/selfActivityBaseMySQL.xml"/> <!--自定义活动 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/selfActivityDetailBaseMySQL.xml"/> <!--自定义活动详情 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeAddressBaseMySQL.xml"/> <!--维修地址 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/tmpFeeItemBaseMySQL.xml"/> <!--临时收费项 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/couponExchangeBaseMySQL.xml"/> <!--消费券兑换表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/couponProductBaseMySQL.xml"/> <!--消费券可抵扣商品 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/couponSceneBaseMySQL.xml"/> <!--券场景 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/sourceOfSupplyBaseMySQL.xml"/> <!--供应商的货源地 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyOrderExtBaseMySQL.xml"/> <!--订单扩展表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/ebuyOrderDeliveryTypeBaseMySQL.xml"/> <!--订单的配送设置 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/userSwitchGbBaseMySQL.xml"/> <!--用户切换小区表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/userRecommendOrderBaseMySQL.xml"/> <!--用户推荐产生的订单 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/mrCalculateRuleCfgBaseMySQL.xml"/> <!--抄表计算规则配置 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/mrStandardBuildingBaseMySQL.xml"/> <!--抄表收费标准(楼栋) -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/mrStandardGroupBuildingBaseMySQL.xml"/> <!--抄表收费标准(小区) -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/mrStandardRoomBaseMySQL.xml"/> <!--抄表收费标准(房间) -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/jfqStoreProductTypeInfoBaseMySQL.xml"/> <!--解放区体验店商品类型信息 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/dredgeRefundBaseMySQL.xml"/> <!--到家服务退款申请 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/carHpfCardsnBaseMySQL.xml"/> <!--华鹏飞临停车cardsn -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyRechargePreferBaseMySQL.xml"/> <!--物业充值随机立减记录表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyRechargePreferGroupbuildingBaseMySQL.xml"/> <!--物业预充值随机立减小区规则关联表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyRechargePreferRuleBaseMySQL.xml"/> <!--物业预充值随机立减规则表 -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/livingFeeItemBaseMySQL.xml"/> <!--生活缴费支持的项目类别 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/livingFeePayRecordBaseMySQL.xml"/> <!--生活缴费记录 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/livingFeeSpBaseMySQL.xml"/> <!--宽带运营商 -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/omsUserBankInfoBaseMySQL.xml"/> <!--OMS用户表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/realRoomHasTPropertyProprietorBaseMySQL.xml"/> <!--房间业主信息表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/groupBuildingCalculateLatefeeRuleBaseMySQL.xml"/> <!--小区滞纳金配置表 -->
+
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyCompanyThirdPayCfgBaseMySQL.xml"/> <!--物业公司/管理处/自有平台的支付宝信息 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/propertyLesseeBaseMySQL.xml"/> <!--租户信息表 -->
+		<mapper resource="com/cnfantasia/server/domain/mybatis/base/realRoomHasTPropertyLesseeBaseMySQL.xml"/> <!--房间租户信息表 -->
+	</mappers>
+
+</configuration> 

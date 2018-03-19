@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:购销模式结算申请表 t_ebuy_product_settle_apply_log -->
+<mapper namespace="ebuyProductSettleApplyLogBase">
+	<resultMap type="EbuyProductSettleApplyLog" id="ebuyProductSettleApplyLogBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="t_revenue_apply_f_id" javaType="java.math.BigInteger" property="tRevenueApplyFId"/>  <!--  -->
+        <result column="t_ebuy_delivery_order_f_id" javaType="java.math.BigInteger" property="tEbuyDeliveryOrderFId"/>  <!--  -->
+        <result column="f_add_time" javaType="java.lang.String" property="addTime"/>  <!-- 提交时间 -->
+	</resultMap>
+	<resultMap type="EbuyProductSettleApplyLog" id="ebuyProductSettleApplyLogExtendMap" extends="ebuyProductSettleApplyLogBaseMap">
+	</resultMap>
+	<resultMap type="EbuyProductSettleApplyLog" id="ebuyProductSettleApplyLogBaseMap_AppendTable">
+        <id column="EPSALid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="EPSALtRevenueApplyFId" javaType="java.math.BigInteger" property="tRevenueApplyFId"/>  <!--  -->
+        <result column="EPSALtEbuyDeliveryOrderFId" javaType="java.math.BigInteger" property="tEbuyDeliveryOrderFId"/>  <!--  -->
+        <result column="EPSALaddTime" javaType="java.lang.String" property="addTime"/>  <!-- 提交时间 -->
+	</resultMap>
+	<resultMap type="EbuyProductSettleApplyLog" id="ebuyProductSettleApplyLogBaseMap_AppendTable1">
+        <id column="EPSAL1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="EPSAL1tRevenueApplyFId" javaType="java.math.BigInteger" property="tRevenueApplyFId"/>  <!--  -->
+        <result column="EPSAL1tEbuyDeliveryOrderFId" javaType="java.math.BigInteger" property="tEbuyDeliveryOrderFId"/>  <!--  -->
+        <result column="EPSAL1addTime" javaType="java.lang.String" property="addTime"/>  <!-- 提交时间 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EPSAL.f_id,EPSAL.t_revenue_apply_f_id,EPSAL.t_ebuy_delivery_order_f_id,date_format(EPSAL.f_add_time,'%Y-%m-%d %T') as f_add_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EPSAL.f_id as EPSALid,EPSAL.t_revenue_apply_f_id as EPSALtRevenueApplyFId,EPSAL.t_ebuy_delivery_order_f_id as EPSALtEbuyDeliveryOrderFId,date_format(EPSAL.f_add_time,'%Y-%m-%d %T') as EPSALaddTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EPSAL1.f_id as EPSAL1id,EPSAL1.t_revenue_apply_f_id as EPSAL1tRevenueApplyFId,EPSAL1.t_ebuy_delivery_order_f_id as EPSAL1tEbuyDeliveryOrderFId,date_format(EPSAL1.f_add_time,'%Y-%m-%d %T') as EPSAL1addTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EPSAL.f_id = #{id} ) </if>
+        <if test="tRevenueApplyFId != null">  and (EPSAL.t_revenue_apply_f_id = #{tRevenueApplyFId} ) </if>
+        <if test="tEbuyDeliveryOrderFId != null">  and (EPSAL.t_ebuy_delivery_order_f_id = #{tEbuyDeliveryOrderFId} ) </if>
+        <if test="addTime != null and !addTime.equals('')  ">  and (EPSAL.f_add_time = str_to_date(#{addTime},'%Y-%m-%d %T') ) </if>
+        <if test="addTime_START != null and !addTime_START.equals('')  ">  
+            <![CDATA[ and (EPSAL.f_add_time >= str_to_date(#{addTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="addTime_END != null and !addTime_END.equals('')  ">
+            <![CDATA[ and (EPSAL.f_add_time <= str_to_date(#{addTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EPSAL.f_id = #{id} ) </if>
+        <if test="tRevenueApplyFId != null and !tRevenueApplyFId.equals('')  ">  and (EPSAL.t_revenue_apply_f_id = #{tRevenueApplyFId} ) </if>
+        <if test="tEbuyDeliveryOrderFId != null and !tEbuyDeliveryOrderFId.equals('')  ">  and (EPSAL.t_ebuy_delivery_order_f_id = #{tEbuyDeliveryOrderFId} ) </if>
+        <if test="addTime != null and !addTime.equals('')  ">  and (EPSAL.f_add_time = str_to_date(#{addTime},'%Y-%m-%d %T') ) </if>
+        <if test="addTime_START != null and !addTime_START.equals('')  ">  
+            <![CDATA[ and (EPSAL.f_add_time >= str_to_date(#{addTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="addTime_END != null and !addTime_END.equals('')  ">
+            <![CDATA[ and (EPSAL.f_add_time <= str_to_date(#{addTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyProductSettleApplyLogBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyProductSettleApplyLogBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyProductSettleApplyLogBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyProductSettleApplyLogBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_product_settle_apply_log EPSAL
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(购销模式结算申请表)信息。 -->
+	<sql id="select_ebuyProductSettleApplyLog">
+		SELECT <include refid="ebuyProductSettleApplyLogBase.queryHead"/>
+		<include refid="ebuyProductSettleApplyLogBase.busiQueryCondition"/>
+		<include refid="ebuyProductSettleApplyLogBase.dimCheckSql"/>
+		ORDER BY EPSAL.f_id DESC
+	</sql>
+	<select id="select_ebuyProductSettleApplyLog" parameterType="java.util.Map" resultMap="ebuyProductSettleApplyLogBase.ebuyProductSettleApplyLogExtendMap">
+		<include refid="ebuyProductSettleApplyLogBase.select_ebuyProductSettleApplyLog"/>
+	</select>
+	
+	<!-- 根据条件分页查询(购销模式结算申请表)信息  -->
+	<sql id="select_ebuyProductSettleApplyLog_withPage">
+		SELECT <include refid="ebuyProductSettleApplyLogBase.queryHead"/>
+		<include refid="ebuyProductSettleApplyLogBase.busiQueryCondition"/>
+		<include refid="ebuyProductSettleApplyLogBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyProductSettleApplyLog_withPage" resultMap="ebuyProductSettleApplyLogBase.ebuyProductSettleApplyLogExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyProductSettleApplyLogBase.select_ebuyProductSettleApplyLog_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(购销模式结算申请表)信息。 -->
+	<sql id="select_ebuyProductSettleApplyLog_bySeqId">
+		SELECT <include refid="ebuyProductSettleApplyLogBase.queryHead"/>
+		<include refid="ebuyProductSettleApplyLogBase.busiQueryCondition"/>
+		 and EPSAL.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyProductSettleApplyLog_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyProductSettleApplyLogBase.ebuyProductSettleApplyLogBaseMap">
+		<include refid="ebuyProductSettleApplyLogBase.select_ebuyProductSettleApplyLog_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(购销模式结算申请表)记录数  -->
+	<sql id="select_ebuyProductSettleApplyLog_count">
+		SELECT COUNT(*)
+		<include refid="ebuyProductSettleApplyLogBase.busiQueryCount"/>
+		<include refid="ebuyProductSettleApplyLogBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyProductSettleApplyLog_count" resultType="java.lang.Integer">
+		<include refid="ebuyProductSettleApplyLogBase.select_ebuyProductSettleApplyLog_count"/>
+	</select>
+	
+	 <!-- 往(购销模式结算申请表)新增一条记录。 -->
+	 <sql id="insert_ebuyProductSettleApplyLog">
+		INSERT INTO t_ebuy_product_settle_apply_log 
+		(f_id,t_revenue_apply_f_id,t_ebuy_delivery_order_f_id,f_add_time) VALUES 
+		(#{id},#{tRevenueApplyFId},#{tEbuyDeliveryOrderFId},str_to_date(#{addTime,jdbcType=DATE},'%Y-%m-%d %T'))
+	 </sql>
+    <insert id="insert_ebuyProductSettleApplyLog" parameterType="EbuyProductSettleApplyLog">
+		<include refid="ebuyProductSettleApplyLogBase.insert_ebuyProductSettleApplyLog"/>
+    </insert>
+    
+	<!-- 批量新增(购销模式结算申请表)信息 -->
+    <insert id="insert_ebuyProductSettleApplyLog_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_product_settle_apply_log 
+		(f_id,t_revenue_apply_f_id,t_ebuy_delivery_order_f_id,f_add_time) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tRevenueApplyFId},#{item.tEbuyDeliveryOrderFId},str_to_date(#{item.addTime,jdbcType=DATE},'%Y-%m-%d %T'))
+		</foreach>
+    </insert>
+    
+    <!-- 更新(购销模式结算申请表)信息。 -->
+    <sql id="update_ebuyProductSettleApplyLog">
+		UPDATE t_ebuy_product_settle_apply_log
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tRevenueApplyFId != null and !tRevenueApplyFId.equals('') "> ,t_revenue_apply_f_id=#{tRevenueApplyFId}</if>
+ 		<if test="tEbuyDeliveryOrderFId != null and !tEbuyDeliveryOrderFId.equals('') "> ,t_ebuy_delivery_order_f_id=#{tEbuyDeliveryOrderFId}</if>
+ 		<if test="addTime != null and !addTime.equals('') "> ,f_add_time=str_to_date(#{addTime},'%Y-%m-%d %T')</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyProductSettleApplyLog" parameterType="EbuyProductSettleApplyLog">
+		<include refid="ebuyProductSettleApplyLogBase.update_ebuyProductSettleApplyLog"/>
+    </update>
+    
+    <!-- 批量更新(购销模式结算申请表)信息。 -->
+    <update id="update_ebuyProductSettleApplyLog_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_product_settle_apply_log
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tRevenueApplyFId != null and !item.tRevenueApplyFId.equals('')  "> ,t_revenue_apply_f_id=#{item.tRevenueApplyFId}</if>
+ 		<if test="item.tEbuyDeliveryOrderFId != null and !item.tEbuyDeliveryOrderFId.equals('')  "> ,t_ebuy_delivery_order_f_id=#{item.tEbuyDeliveryOrderFId}</if>
+ 		<if test="item.addTime != null and !item.addTime.equals('')  "> ,f_add_time=str_to_date(#{item.addTime},'%Y-%m-%d %T')</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(购销模式结算申请表)信息_逻辑删除。 -->
+    <!-- <sql id="delete_ebuyProductSettleApplyLog_Logic">
+		UPDATE t_ebuy_product_settle_apply_log
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tRevenueApplyFId != null and !tRevenueApplyFId.equals('')  "> ,t_revenue_apply_f_id=#{tRevenueApplyFId}</if>
+ 		<if test="tEbuyDeliveryOrderFId != null and !tEbuyDeliveryOrderFId.equals('')  "> ,t_ebuy_delivery_order_f_id=#{tEbuyDeliveryOrderFId}</if>
+ 		<if test="addTime != null and !addTime.equals('')  "> ,f_add_time=str_to_date(#{addTime},'%Y-%m-%d %T')</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyProductSettleApplyLog_Logic" parameterType="EbuyProductSettleApplyLog">
+		<include refid="ebuyProductSettleApplyLogBase.delete_ebuyProductSettleApplyLog_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(购销模式结算申请表)信息_逻辑删除 -->
+    <!-- <update id="delete_ebuyProductSettleApplyLog_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_product_settle_apply_log
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tRevenueApplyFId != null and !item.tRevenueApplyFId.equals('')  "> ,t_revenue_apply_f_id=#{item.tRevenueApplyFId}</if>
+ 		<if test="item.tEbuyDeliveryOrderFId != null and !item.tEbuyDeliveryOrderFId.equals('')  "> ,t_ebuy_delivery_order_f_id=#{item.tEbuyDeliveryOrderFId}</if>
+ 		<if test="item.addTime != null and !item.addTime.equals('')  "> ,f_add_time=str_to_date(#{item.addTime},'%Y-%m-%d %T')</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(购销模式结算申请表)信息。 -->
+    <sql id="delete_ebuyProductSettleApplyLog">
+		DELETE FROM t_ebuy_product_settle_apply_log WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyProductSettleApplyLog" parameterType="java.lang.String">
+		<include refid="ebuyProductSettleApplyLogBase.delete_ebuyProductSettleApplyLog"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(购销模式结算申请表)信息。 -->
+    <delete id="delete_ebuyProductSettleApplyLog_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_product_settle_apply_log WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

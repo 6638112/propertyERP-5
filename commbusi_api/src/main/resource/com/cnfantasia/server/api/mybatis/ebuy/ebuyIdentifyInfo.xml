@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 电商模块 -->
+<mapper namespace="ebuyIdentifyInfo">
+	<resultMap type="EbuyIdentifyInfo" id="ebuyIdentifyInfoMap">
+		<id column="f_id" javaType="java.lang.Long" property="id"/>
+		<result column="t_user_id" javaType="java.lang.Long" property="userId" />
+		<result column="f_identify" javaType="java.lang.String" property="identify"/>
+		<result column="f_id_name" javaType="java.lang.String" property="idName" />
+	</resultMap>
+
+	<insert id="insertIdentifyInfo" parameterType="EbuyIdentifyInfo">
+    	INSERT INTO t_ebuy_identify_info (t_user_id, t_order_id, f_identify, f_id_name)
+ 			values(#{userId}, #{orderId}, #{identify}, #{idName})
+    </insert>
+    
+    <update id="updateIdentifyInfo" parameterType="EbuyIdentifyInfo">
+    	 update t_ebuy_identify_info t
+			set t.f_identify = #{identify}, t.f_id_name = #{idName}
+			 where t.t_user_id = #{userId} and t.f_sys0_del_state = 0
+    </update>
+    
+    <select id="getIdentifyInfo" parameterType="java.util.Map" resultMap="ebuyIdentifyInfoMap">
+    	select f_id, t_user_id, f_identify, f_id_name from t_ebuy_identify_info t
+    	where t.f_sys0_del_state = 0 and t.t_user_id = #{userId}
+    	<if test="idName != null">
+    		and f_id_name = #{idName}
+    	</if>
+    	order by t.f_update_tm desc
+    	limit 1
+    </select>
+    
+    <update id="delIdentifyInfo" parameterType="java.util.Map">
+    	update t_ebuy_identify_info t
+			set t.f_sys0_del_state = 1
+		where t.f_sys0_del_state = 0 and t.t_user_id = #{userId}
+    	<if test="idName != null">
+    		and f_id_name = #{idName}
+    	</if>
+    </update>
+    
+</mapper>

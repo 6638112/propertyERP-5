@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+	<bean id="commonPointService" class="com.cnfantasia.server.api.commonBusiness.service.CommonPointService" >
+		<property name="commonPointDao" ref="commonPointDao" />
+		<!-- <property name="uuidManager" ref="uuidManager" />
+		<property name="pointDataBaseDao" ref="pointDataBaseDao" /> -->
+	</bean>
+	
+	<bean id="commonRoomService" class="com.cnfantasia.server.api.commonBusiness.service.CommonRoomService" >
+		<property name="roomBaseDao" ref="roomBaseDao" />
+		<property name="userHasTRoomBaseDao" ref="userHasTRoomBaseDao" />
+		<property name="userBaseDao" ref="userBaseDao" />
+		<property name="commonRoomDao" ref="commonRoomDao" />
+		<property name="uuidManager" ref="uuidManager"></property>
+		<property name="roomValidateDao" ref="roomValidateDao"></property>
+		<property name="dualDao" ref="dualDao"></property>
+		<property name="realRoomBaseDao" ref="realRoomBaseDao"></property>
+		<property name="achievementService" ref="achievementService"></property>
+		<property name="commDataUpgradeService" ref="commDataUpgradeService" />
+		<property name="inviteRewardService" ref="inviteRewardService" />
+		<property name="roomVerifyPaymentDao" ref="roomVerifyPaymentDao" />
+	</bean>
+	<bean id="commonLoginService" class="com.cnfantasia.server.api.commonBusiness.service.CommonLoginService">
+		<property name="dualDao" ref="dualDao"></property>
+		<property name="commUserSessionBaseDao" ref="commUserSessionBaseDao"></property>
+		<property name="authenticationManager" ref="simpleAuthenticationManager"></property><!-- 引用指向api_springSecurity.xml -->
+		<property name="loginNoBaseDao" ref="loginNoBaseDao"></property>
+		<property name="loginSessionKeyParamParser" ref="loginSessionKeyParamParser"></property>
+		<property name="uuidManager" ref="uuidManager"></property>
+		<property name="commonLoginDao" ref="commonLoginDao"></property>
+		
+		<property name="commEntityConvertService" ref="commEntityConvertService"></property>
+		
+		<property name="qqApplyParamParser" ref="qqApplyParamParser" />
+		<property name="weiXinLoginConfigParamParser" ref="weiXinLoginConfigParamParser"></property>
+		<property name="taobaoApplyParamParser" ref="taobaoApplyParamParser" />
+		<property name="accountManageDao" ref="accountManageDao"></property>
+	</bean>
+	<bean id="commonPrizeService" class="com.cnfantasia.server.api.commonBusiness.service.CommonPrizeService">
+		<property name="commonPrizeDao" ref="commonPrizeDao"></property>
+		<property name="commonRoomDao" ref="commonRoomDao"></property>
+		<!-- <property name="dualDao" ref="dualDao"></property> -->
+		<property name="dualDao" ref="dualDao"></property>
+		<property name="commonRoomService" ref="commonRoomService"></property>
+	</bean>
+	
+	<bean id="commonEbuyService" class="com.cnfantasia.server.api.commonBusiness.service.CommonEbuyService">
+		<property name="commonEbuyDao" ref="commonEbuyDao"></property>
+		<property name="commonRedenvelopeDao" ref="commonRedenvelopeDao"></property>
+		<property name="dualDao" ref="dualDao"></property>
+		<property name="ebuyOrderBaseDao" ref="ebuyOrderBaseDao"></property>
+		<!-- <property name="ebuyPayRecordBaseDao" ref="ebuyPayRecordBaseDao"></property> -->
+		<property name="payCouponBaseDao" ref="payCouponBaseDao"></property>
+		<property name="payRedEnvelopeDetailBaseDao" ref="payRedEnvelopeDetailBaseDao"></property>
+		<property name="payRedEnvelopeBaseDao" ref="payRedEnvelopeBaseDao"></property>
+		<property name="ebuyBuyCarHasTEbuyProductBaseDao" ref="ebuyBuyCarHasTEbuyProductBaseDao"></property>
+		<property name="uuidManager" ref="uuidManager"></property>
+		
+		<property name="sysParamManager" ref="sysParamManager"></property>
+		<property name="ebuyBuyCarBaseDao" ref="ebuyBuyCarBaseDao"></property>
+		
+		<property name="commonRoomService" ref="commonRoomService"></property>
+		<property name="ebuyDeliveryPushRecorderBaseDao" ref="ebuyDeliveryPushRecorderBaseDao"></property>
+		
+		<property name="surpriseGiftService" ref="surpriseGiftService"></property>
+		<property name="surpriseGiftUseDetailBaseDao" ref="surpriseGiftUseDetailBaseDao"></property>
+		
+		<property name="payConfigService" ref="payConfigService"></property>
+		
+		<property name="groupPurchaseDao" ref="groupPurchaseDao"></property>
+
+		<property name="userCouponBaseService" ref="userCouponBaseService"></property>
+		<property name="couponBaseService" ref="couponBaseService"></property>
+		<property name="ebuyOrderHasCouponBaseService" ref="ebuyOrderHasCouponBaseService"></property>
+		<property name="cashCouponSender" ref="cashCouponSender"></property>
+		<property name="ebuyFilmTicketService" ref="ebuyFilmTicketService"/>
+		<property name="ebuyorderService" ref="ebuyorderService"/>
+		<property name="ebuyDeliveryOrderBaseService" ref="ebuyDeliveryOrderBaseService"/>
+		<property name="dredgeBillBaseService" ref="dredgeBillBaseService"/>
+		<property name="homeMessageService" ref="homeMessageService"/>
+		<property name="ebuyOrderHasTEbuyProductBaseService" ref="ebuyOrderHasTEbuyProductBaseService"/>
+		<property name="couponProductBaseService" ref="couponProductBaseService"/>
+	</bean>
+	
+	<bean id="commonRedenvelopeService" class="com.cnfantasia.server.api.commonBusiness.service.CommonRedenvelopeService">
+		<property name="commonRedenvelopeDao" ref="commonRedenvelopeDao"/>
+		<property name="uuidManager" ref="uuidManager"/>
+		<property name="dualDao" ref="dualDao"/>
+		<property name="payRedEnvelopeBaseDao" ref="payRedEnvelopeBaseDao"/>
+	</bean>
+
+	<bean id="commonDeviceService" class="com.cnfantasia.server.api.commonBusiness.service.CommonDeviceService">
+		<property name="userTmpBaseDao" ref="userTmpBaseDao"></property>
+		<property name="uuidManager" ref="uuidManager"></property>
+		<property name="commonUserDao" ref="commonUserDao"></property>
+	</bean>
+	
+	<bean id="commonUserService" class="com.cnfantasia.server.api.commonBusiness.service.CommonUserService">
+		<property name="commonUserDao" ref="commonUserDao"></property>
+	</bean>
+	
+	<bean id="smallPicUploadService" class="com.cnfantasia.server.api.commonBusiness.service.SmallPicUploadService">
+		<property name="fileServerService" ref="fileServerService"></property>
+	</bean>
+	
+	<bean id="commonKitchenService" class="com.cnfantasia.server.api.commonBusiness.service.CommonKitchenService">
+		<property name="fileServerService" ref="fileServerService" />
+		<property name="kitchenCookbookTypePicParamParser" ref="kitchenCookbookTypePicParamParser" />
+		<!-- <property name="kitchenCookbookPicParamParser" ref="kitchenCookbookPicParamParser" /> -->
+		<property name="kitchenCookbookStepPicParamParser" ref="kitchenCookbookStepPicParamParser" />
+		<property name="commEntityConvertService" ref="commEntityConvertService" />
+	</bean>
+	
+	<!-- Entity2Map -->
+	<bean id="commEntityConvertService" class="com.cnfantasia.server.api.commonBusiness.service.CommEntityConvertService">
+		<property name="sysParamManager" ref="sysParamManager" />
+		<property name="userImageParamParser" ref="userImageParamParser" />
+		<property name="fileServerService" ref="fileServerService" />
+		<property name="dualDao" ref="dualDao" />
+		<property name="microblogPicParamParser" ref="microblogPicParamParser" />
+		<property name="productPicSpecialPathParamParser" ref="productPicSpecialPathParamParser" />
+		<property name="kitchenCookbookPicParamParser" ref="kitchenCookbookPicParamParser" />
+	</bean>
+	
+	<bean id="commCommunityService" class="com.cnfantasia.server.api.commonBusiness.service.CommCommunityService">
+		<property name="xanaduService" ref="xanaduService"/>
+	</bean>
+	
+	<bean id="commDataUpgradeService" class="com.cnfantasia.server.api.commonBusiness.service.CommDataUpgradeService">
+		<property name="commDataUpgradeDao" ref="commDataUpgradeDao"/>
+		
+		
+		<property name="uuidManager" ref="uuidManager"/>
+		<property name="dualDao" ref="dualDao"/>
+		<property name="commonRoomService" ref="commonRoomService"/>
+		<property name="loginNoBindRelationBaseDao" ref="loginNoBindRelationBaseDao"/>
+		
+		<property name="loginNoOldUpgradeDateBaseDao" ref="loginNoOldUpgradeDateBaseDao"/>
+		<property name="loginNoBaseDao" ref="loginNoBaseDao"/>
+		<property name="commonLoginService" ref="commonLoginService"/>
+		
+		<property name="accountManageDao" ref="accountManageDao"/>
+		<property name="roomBaseDao" ref="roomBaseDao"/>
+		<property name="userHasTRoomBaseDao" ref="userHasTRoomBaseDao"/>
+		<property name="userDao" ref="userDao"/>
+		<property name="userBaseDao" ref="userBaseDao"/>
+		
+		<property name="commonPrizeService" ref="commonPrizeService"/>
+	</bean>
+	
+	<!-- 数据归集 -->
+	<bean id="commonGatherDataService" class="com.cnfantasia.server.api.commonBusiness.service.CommonGatherDataService">
+		<property name="commonGatherDataDao" ref="commonGatherDataDao"/>
+	</bean>
+</beans>  

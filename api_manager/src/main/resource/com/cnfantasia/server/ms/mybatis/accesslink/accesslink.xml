@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- oos车禁 -->
+<mapper namespace="accesslink">
+	<cache
+		eviction="LRU"
+		flushInterval="1800000"
+		size="10240"
+		readOnly="true"/>
+		
+	<resultMap type="com.cnfantasia.server.ms.accesslink.dto.ParkingRecordDto" id="parking_list_AppendTable" extends="parkingRecordBase.parkingRecordBaseMap">
+        <result column="carNum" javaType="java.lang.String" property="carNum"/>
+        <result column="gbName" javaType="java.lang.String" property="gbName"/>
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.ms.accesslink.dto.BlackListDto" id="black_list_AppendTable" extends="blackListBase.blackListBaseMap">
+        <result column="addMan" javaType="java.lang.String" property="addMan"/>
+        <result column="updateMan" javaType="java.lang.String" property="updateMan"/>
+    </resultMap>
+    
+    <!--===================== 查询停车begin =====================-->
+    <!-- 查询停车记录from -->
+	<sql id="parkingListIndex_QueryFrom">
+	    FROM
+			t_parking_record PR
+		INNER JOIN t_car_num_list CNL ON PR.t_car_num_id = CNL.f_id
+		AND PR.f_sys0_del_state = 0
+		LEFT JOIN t_group_building GB ON PR.t_group_building_id = GB.f_id	
+	</sql>
+	<!-- 查询停车记录where -->
+	<sql id="parkingListIndex_QueryWhere">
+	    WHERE
+			PR.f_sys0_del_state = 0
+		<if test="startTime != null and !startTime.equals('')">
+			AND PR.f_sys0_add_time&gt;=#{startTime}
+		</if>
+		<if test="endTime != null and !endTime.equals('')">
+			AND PR.f_sys0_add_time&lt;=#{endTime}
+		</if>
+		<if test="carNum != null and !carNum.equals('')">
+			AND LOCATE(#{carNum}, CNL.t_car_num)>0
+		</if>
+		<if test="gbName != null and !gbName.equals('')">
+			AND LOCATE(#{gbName}, GB.f_name)>0
+		</if>
+		<include refid="permiOos.dataPermissionCondition" />
+	</sql>
+	
+	<!-- 查询停车记录 -->
+	<select id="select_parkingListIndex_withPage" parameterType="java.util.Map" resultMap="accesslink.parking_list_AppendTable">
+		SELECT
+		<include refid="parkingRecordBase.queryHead"/>,
+		CNL.t_car_num AS carNum,
+		GB.f_name AS gbName
+		<include refid="accesslink.parkingListIndex_QueryFrom"/>
+		<include refid="parkingListIndex_QueryWhere"/>
+		ORDER BY
+			IFNULL(PR.f_parking_end_time, PR.f_parking_start_time) DESC
+		<if test="(_begin != null and !_begin.equals('')) or (_length != null and !_length.equals(''))">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+	
+	<!-- 查询停车记录条数 -->
+	<select id="select_parkingListIndex_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="accesslink.parkingListIndex_QueryFrom"/>
+		<include refid="parkingListIndex_QueryWhere"/>
+	</select>
+	<!--===================== 查询停车end =====================-->
+	
+	<!--===================== 黑名单begin =====================-->
+	<!-- 查询黑名单记录from -->
+	<sql id="blackListIndex_QueryFrom">
+	    FROM
+		t_black_list BL
+		LEFT JOIN t_oms_user OUADD ON BL.f_sys0_add_user = OUADD.f_id
+		LEFT JOIN t_oms_user OUUPDATE ON BL.f_sys0_upd_user = OUUPDATE.f_id
+		WHERE BL.f_sys0_del_state=0 AND BL.f_type=1
+		<if test="startTime != null and !startTime.equals('')">
+			AND BL.f_sys0_add_time&gt;=#{startTime}
+		</if>
+		<if test="endTime != null and !endTime.equals('')">
+			AND BL.f_sys0_add_time&lt;=#{endTime}
+		</if>
+	</sql>
+	
+	<!-- 查询黑名单记录 -->
+	<select id="select_blackListIndex_withPage" parameterType="java.util.Map" resultMap="accesslink.black_list_AppendTable" useCache="false">
+		SELECT
+		<include refid="blackListBase.queryHead"/>,
+		OUADD.f_real_name AS addMan,
+		OUUPDATE.f_real_name AS updateMan,
+		BL.f_sys0_add_time,
+		BL.f_sys0_upd_time
+		<include refid="accesslink.blackListIndex_QueryFrom"/>
+		ORDER BY BL.f_sys0_add_time DESC
+		<if test="(_begin != null and !_begin.equals('')) or (_length != null and !_length.equals(''))">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+	
+	<!-- 查询黑名单记录条数 -->
+	<select id="select_blackListIndex_count" parameterType="java.util.Map" resultType="java.lang.Integer" useCache="false">
+		SELECT COUNT(*)
+		<include refid="accesslink.blackListIndex_QueryFrom"/>
+	</select>
+	<!--===================== 黑名单end =====================-->
+	
+</mapper>

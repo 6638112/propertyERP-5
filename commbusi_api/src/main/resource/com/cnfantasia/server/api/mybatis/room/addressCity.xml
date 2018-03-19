@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:市 t_address_city -->
+<mapper namespace="addressCity">
+	<resultMap type="com.cnfantasia.server.api.room.entity.AddressCityEntity" id="addressCityMap" extends="addressCityBase.addressCityBaseMap">
+		<!-- 省信息 -->
+        <association column="t_province_f_id" javaType="com.cnfantasia.server.api.room.entity.AddressProvinceEntity" 
+        	property="addressProvinceEntity" select="addressProvince.select_addressProvince_bySeqId"/>
+	</resultMap>
+	
+	<!-- 根据序列号查询某个(市)信息。 -->
+	<select id="select_addressCity_bySeqId" parameterType="java.math.BigInteger" resultMap="addressCityMap">
+		<include refid="addressCityBase.select_addressCity_bySeqId"/>
+	</select>
+	
+    
+</mapper>

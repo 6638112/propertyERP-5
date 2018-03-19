@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户登录session表 t_comm_user_session -->
+<mapper namespace="commUserSessionBase">
+	<resultMap type="CommUserSession" id="commUserSessionBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户Id -->        <result column="f_sub_Channel" javaType="java.lang.Integer" property="subChannel"/>  <!-- 渠道信息 -->        <result column="f_session_key" javaType="java.lang.String" property="sessionKey"/>  <!--  -->        <result column="f_create_time" javaType="java.lang.String" property="createTime"/>  <!-- 创建时间 -->        <result column="f_acc_no" javaType="java.lang.String" property="accNo"/>  <!-- 账号 -->        <result column="f_acc_type" javaType="java.lang.Long" property="accType"/>  <!-- 账号类别 -->        <result column="f_auto_session_id" javaType="java.lang.String" property="autoSessionId"/>  <!-- 系统自动生成的sessionId -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommUserSession" id="commUserSessionExtendMap" extends="commUserSessionBaseMap">
+	</resultMap>
+	<resultMap type="CommUserSession" id="commUserSessionBaseMap_AppendTable">
+        <id column="CUSid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CUSuserId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户Id -->        <result column="CUSsubChannel" javaType="java.lang.Integer" property="subChannel"/>  <!-- 渠道信息 -->        <result column="CUSsessionKey" javaType="java.lang.String" property="sessionKey"/>  <!--  -->        <result column="CUScreateTime" javaType="java.lang.String" property="createTime"/>  <!-- 创建时间 -->        <result column="CUSaccNo" javaType="java.lang.String" property="accNo"/>  <!-- 账号 -->        <result column="CUSaccType" javaType="java.lang.Long" property="accType"/>  <!-- 账号类别 -->        <result column="CUSautoSessionId" javaType="java.lang.String" property="autoSessionId"/>  <!-- 系统自动生成的sessionId -->        <result column="CUSsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CUSsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CUSsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CUSsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CUSsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CUSsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CUSsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommUserSession" id="commUserSessionBaseMap_AppendTable1">
+        <id column="CUS1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CUS1userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户Id -->        <result column="CUS1subChannel" javaType="java.lang.Integer" property="subChannel"/>  <!-- 渠道信息 -->        <result column="CUS1sessionKey" javaType="java.lang.String" property="sessionKey"/>  <!--  -->        <result column="CUS1createTime" javaType="java.lang.String" property="createTime"/>  <!-- 创建时间 -->        <result column="CUS1accNo" javaType="java.lang.String" property="accNo"/>  <!-- 账号 -->        <result column="CUS1accType" javaType="java.lang.Long" property="accType"/>  <!-- 账号类别 -->        <result column="CUS1autoSessionId" javaType="java.lang.String" property="autoSessionId"/>  <!-- 系统自动生成的sessionId -->        <result column="CUS1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CUS1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CUS1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CUS1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CUS1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CUS1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CUS1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CUS.f_id,CUS.f_user_id,CUS.f_sub_Channel,CUS.f_session_key,date_format(CUS.f_create_time,'%Y-%m-%d %T') as f_create_time,CUS.f_acc_no,CUS.f_acc_type,CUS.f_auto_session_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CUS.f_id as CUSid,CUS.f_user_id as CUSuserId,CUS.f_sub_Channel as CUSsubChannel,CUS.f_session_key as CUSsessionKey,date_format(CUS.f_create_time,'%Y-%m-%d %T') as CUScreateTime,CUS.f_acc_no as CUSaccNo,CUS.f_acc_type as CUSaccType,CUS.f_auto_session_id as CUSautoSessionId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CUS1.f_id as CUS1id,CUS1.f_user_id as CUS1userId,CUS1.f_sub_Channel as CUS1subChannel,CUS1.f_session_key as CUS1sessionKey,date_format(CUS1.f_create_time,'%Y-%m-%d %T') as CUS1createTime,CUS1.f_acc_no as CUS1accNo,CUS1.f_acc_type as CUS1accType,CUS1.f_auto_session_id as CUS1autoSessionId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CUS.f_id = #{id} ) </if>        <if test="userId != null">  and (CUS.f_user_id = #{userId} ) </if>        <if test="subChannel != null">  and (CUS.f_sub_Channel = #{subChannel} ) </if>        <if test="sessionKey != null">  and (CUS.f_session_key = #{sessionKey} ) </if>        <if test="createTime != null and !createTime.equals('')  ">  and (CUS.f_create_time = str_to_date(#{createTime},'%Y-%m-%d %T') ) </if>        <if test="createTime_START != null and !createTime_START.equals('')  ">              <![CDATA[ and (CUS.f_create_time >= str_to_date(#{createTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="createTime_END != null and !createTime_END.equals('')  ">            <![CDATA[ and (CUS.f_create_time <= str_to_date(#{createTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="accNo != null">  and (CUS.f_acc_no = #{accNo} ) </if>        <if test="accType != null">  and (CUS.f_acc_type = #{accType} ) </if>        <if test="autoSessionId != null">  and (CUS.f_auto_session_id = #{autoSessionId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CUS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CUS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CUS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CUS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CUS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CUS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CUS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CUS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CUS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (CUS.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (CUS.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (CUS.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (CUS.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (CUS.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CUS.f_id = #{id} ) </if>        <if test="userId != null and !userId.equals('')  ">  and (CUS.f_user_id = #{userId} ) </if>        <if test="subChannel != null and !subChannel.equals('')  ">  and (CUS.f_sub_Channel = #{subChannel} ) </if>        <if test="sessionKey != null and !sessionKey.equals('')  ">  and (CUS.f_session_key like CONCAT('%',#{sessionKey},'%') ) </if>        <if test="createTime != null and !createTime.equals('')  ">  and (CUS.f_create_time = str_to_date(#{createTime},'%Y-%m-%d %T') ) </if>        <if test="createTime_START != null and !createTime_START.equals('')  ">              <![CDATA[ and (CUS.f_create_time >= str_to_date(#{createTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="createTime_END != null and !createTime_END.equals('')  ">            <![CDATA[ and (CUS.f_create_time <= str_to_date(#{createTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="accNo != null and !accNo.equals('')  ">  and (CUS.f_acc_no like CONCAT('%',#{accNo},'%') ) </if>        <if test="accType != null and !accType.equals('')  ">  and (CUS.f_acc_type = #{accType} ) </if>        <if test="autoSessionId != null and !autoSessionId.equals('')  ">  and (CUS.f_auto_session_id like CONCAT('%',#{autoSessionId},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CUS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CUS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CUS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CUS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CUS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CUS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CUS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CUS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CUS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CUS.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CUS.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CUS.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CUS.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (CUS.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="commUserSessionBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="commUserSessionBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="commUserSessionBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="commUserSessionBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_comm_user_session CUS    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(用户登录session表)信息。 -->
+	<sql id="select_commUserSession">
+		SELECT <include refid="commUserSessionBase.queryHead"/>
+		<include refid="commUserSessionBase.busiQueryCondition"/>
+		<include refid="commUserSessionBase.dimCheckSql"/>
+		ORDER BY CUS.f_id DESC
+	</sql>
+	<select id="select_commUserSession" parameterType="java.util.Map" resultMap="commUserSessionBase.commUserSessionExtendMap">
+		<include refid="commUserSessionBase.select_commUserSession"/>
+	</select>
+	
+	<!-- 根据条件分页查询(用户登录session表)信息  -->
+	<sql id="select_commUserSession_withPage">
+		SELECT <include refid="commUserSessionBase.queryHead"/>
+		<include refid="commUserSessionBase.busiQueryCondition"/>
+		<include refid="commUserSessionBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_commUserSession_withPage" resultMap="commUserSessionBase.commUserSessionExtendMap" parameterType="java.util.Map">
+		<include refid="commUserSessionBase.select_commUserSession_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(用户登录session表)信息。 -->
+	<sql id="select_commUserSession_bySeqId">
+		SELECT <include refid="commUserSessionBase.queryHead"/>
+		<include refid="commUserSessionBase.busiQueryCondition"/>
+		 and CUS.f_id = #{_parameter}
+	</sql>
+	<select id="select_commUserSession_bySeqId" parameterType="java.math.BigInteger" resultMap="commUserSessionBase.commUserSessionBaseMap">
+		<include refid="commUserSessionBase.select_commUserSession_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(用户登录session表)记录数  -->
+	<sql id="select_commUserSession_count">
+		SELECT COUNT(*)
+		<include refid="commUserSessionBase.busiQueryCount"/>
+		<include refid="commUserSessionBase.dimCheckSql"/>
+	</sql>
+	<select id="select_commUserSession_count" resultType="java.lang.Integer">
+		<include refid="commUserSessionBase.select_commUserSession_count"/>
+	</select>
+	
+	 <!-- 往(用户登录session表)新增一条记录。 -->
+	 <sql id="insert_commUserSession">
+		INSERT INTO t_comm_user_session 
+		(f_id,f_user_id,f_sub_Channel,f_session_key,f_create_time,f_acc_no,f_acc_type,f_auto_session_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{userId},#{subChannel},#{sessionKey,jdbcType=VARCHAR},str_to_date(#{createTime,jdbcType=DATE},'%Y-%m-%d %T'),#{accNo,jdbcType=VARCHAR},#{accType},#{autoSessionId,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_commUserSession" parameterType="CommUserSession">
+		<include refid="commUserSessionBase.insert_commUserSession"/>
+    </insert>
+    
+	<!-- 批量新增(用户登录session表)信息 -->
+    <insert id="insert_commUserSession_Batch" parameterType="java.util.List">
+    	INSERT INTO t_comm_user_session 
+		(f_id,f_user_id,f_sub_Channel,f_session_key,f_create_time,f_acc_no,f_acc_type,f_auto_session_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.userId},#{item.subChannel},#{item.sessionKey,jdbcType=VARCHAR},str_to_date(#{item.createTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.accNo,jdbcType=VARCHAR},#{item.accType},#{item.autoSessionId,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(用户登录session表)信息。 -->
+    <sql id="update_commUserSession">
+		UPDATE t_comm_user_session		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="subChannel != null and !subChannel.equals('') "> ,f_sub_Channel=#{subChannel}</if> 		<if test="sessionKey != null and !sessionKey.equals('') "> ,f_session_key=#{sessionKey}</if> 		<if test="createTime != null and !createTime.equals('') "> ,f_create_time=str_to_date(#{createTime},'%Y-%m-%d %T')</if> 		<if test="accNo != null and !accNo.equals('') "> ,f_acc_no=#{accNo}</if> 		<if test="accType != null and !accType.equals('') "> ,f_acc_type=#{accType}</if> 		<if test="autoSessionId != null and !autoSessionId.equals('') "> ,f_auto_session_id=#{autoSessionId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_commUserSession" parameterType="CommUserSession">
+		<include refid="commUserSessionBase.update_commUserSession"/>
+    </update>
+    
+    <!-- 批量更新(用户登录session表)信息。 -->
+    <update id="update_commUserSession_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_comm_user_session		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.subChannel != null and !item.subChannel.equals('')  "> ,f_sub_Channel=#{item.subChannel}</if> 		<if test="item.sessionKey != null and !item.sessionKey.equals('')  "> ,f_session_key=#{item.sessionKey}</if> 		<if test="item.createTime != null and !item.createTime.equals('')  "> ,f_create_time=str_to_date(#{item.createTime},'%Y-%m-%d %T')</if> 		<if test="item.accNo != null and !item.accNo.equals('')  "> ,f_acc_no=#{item.accNo}</if> 		<if test="item.accType != null and !item.accType.equals('')  "> ,f_acc_type=#{item.accType}</if> 		<if test="item.autoSessionId != null and !item.autoSessionId.equals('')  "> ,f_auto_session_id=#{item.autoSessionId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(用户登录session表)信息_逻辑删除。 -->
+    <sql id="delete_commUserSession_Logic">
+		UPDATE t_comm_user_session		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="subChannel != null and !subChannel.equals('')  "> ,f_sub_Channel=#{subChannel}</if> 		<if test="sessionKey != null and !sessionKey.equals('')  "> ,f_session_key=#{sessionKey}</if> 		<if test="createTime != null and !createTime.equals('')  "> ,f_create_time=str_to_date(#{createTime},'%Y-%m-%d %T')</if> 		<if test="accNo != null and !accNo.equals('')  "> ,f_acc_no=#{accNo}</if> 		<if test="accType != null and !accType.equals('')  "> ,f_acc_type=#{accType}</if> 		<if test="autoSessionId != null and !autoSessionId.equals('')  "> ,f_auto_session_id=#{autoSessionId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_commUserSession_Logic" parameterType="CommUserSession">
+		<include refid="commUserSessionBase.delete_commUserSession_Logic"/>
+    </update>
+    
+    <!-- 批量删除(用户登录session表)信息_逻辑删除 -->
+    <update id="delete_commUserSession_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_comm_user_session		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.subChannel != null and !item.subChannel.equals('')  "> ,f_sub_Channel=#{item.subChannel}</if> 		<if test="item.sessionKey != null and !item.sessionKey.equals('')  "> ,f_session_key=#{item.sessionKey}</if> 		<if test="item.createTime != null and !item.createTime.equals('')  "> ,f_create_time=str_to_date(#{item.createTime},'%Y-%m-%d %T')</if> 		<if test="item.accNo != null and !item.accNo.equals('')  "> ,f_acc_no=#{item.accNo}</if> 		<if test="item.accType != null and !item.accType.equals('')  "> ,f_acc_type=#{item.accType}</if> 		<if test="item.autoSessionId != null and !item.autoSessionId.equals('')  "> ,f_auto_session_id=#{item.autoSessionId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(用户登录session表)信息。 -->
+    <sql id="delete_commUserSession">
+		DELETE FROM t_comm_user_session WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_commUserSession" parameterType="java.lang.String">
+		<include refid="commUserSessionBase.delete_commUserSession"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(用户登录session表)信息。 -->
+    <delete id="delete_commUserSession_Batch" parameterType="java.util.List">
+		DELETE FROM t_comm_user_session WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

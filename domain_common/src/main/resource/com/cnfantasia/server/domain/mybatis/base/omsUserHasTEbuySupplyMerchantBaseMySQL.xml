@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN: t_oms_user_has_t_ebuy_supply_merchant -->
+<mapper namespace="omsUserHasTEbuySupplyMerchantBase">
+	<resultMap type="OmsUserHasTEbuySupplyMerchant" id="omsUserHasTEbuySupplyMerchantBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_oms_user_id" javaType="java.math.BigInteger" property="tOmsUserId"/>  <!--  -->        <result column="t_ebuy_supply_merchant_id" javaType="java.math.BigInteger" property="tEbuySupplyMerchantId"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="OmsUserHasTEbuySupplyMerchant" id="omsUserHasTEbuySupplyMerchantExtendMap" extends="omsUserHasTEbuySupplyMerchantBaseMap">
+	</resultMap>
+	<resultMap type="OmsUserHasTEbuySupplyMerchant" id="omsUserHasTEbuySupplyMerchantBaseMap_AppendTable">
+        <id column="OUHTESMid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="OUHTESMtOmsUserId" javaType="java.math.BigInteger" property="tOmsUserId"/>  <!--  -->        <result column="OUHTESMtEbuySupplyMerchantId" javaType="java.math.BigInteger" property="tEbuySupplyMerchantId"/>  <!--  -->        <result column="OUHTESMsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="OUHTESMsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="OUHTESMsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="OUHTESMsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="OUHTESMsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="OUHTESMsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="OUHTESMsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="OmsUserHasTEbuySupplyMerchant" id="omsUserHasTEbuySupplyMerchantBaseMap_AppendTable1">
+        <id column="OUHTESM1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="OUHTESM1tOmsUserId" javaType="java.math.BigInteger" property="tOmsUserId"/>  <!--  -->        <result column="OUHTESM1tEbuySupplyMerchantId" javaType="java.math.BigInteger" property="tEbuySupplyMerchantId"/>  <!--  -->        <result column="OUHTESM1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="OUHTESM1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="OUHTESM1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="OUHTESM1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="OUHTESM1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="OUHTESM1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="OUHTESM1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		OUHTESM.f_id,OUHTESM.t_oms_user_id,OUHTESM.t_ebuy_supply_merchant_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		OUHTESM.f_id as OUHTESMid,OUHTESM.t_oms_user_id as OUHTESMtOmsUserId,OUHTESM.t_ebuy_supply_merchant_id as OUHTESMtEbuySupplyMerchantId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		OUHTESM1.f_id as OUHTESM1id,OUHTESM1.t_oms_user_id as OUHTESM1tOmsUserId,OUHTESM1.t_ebuy_supply_merchant_id as OUHTESM1tEbuySupplyMerchantId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (OUHTESM.f_id = #{id} ) </if>        <if test="tOmsUserId != null">  and (OUHTESM.t_oms_user_id = #{tOmsUserId} ) </if>        <if test="tEbuySupplyMerchantId != null">  and (OUHTESM.t_ebuy_supply_merchant_id = #{tEbuySupplyMerchantId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (OUHTESM.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (OUHTESM.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (OUHTESM.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (OUHTESM.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (OUHTESM.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (OUHTESM.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (OUHTESM.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (OUHTESM.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (OUHTESM.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (OUHTESM.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (OUHTESM.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (OUHTESM.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (OUHTESM.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (OUHTESM.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (OUHTESM.f_id = #{id} ) </if>        <if test="tOmsUserId != null and !tOmsUserId.equals('')  ">  and (OUHTESM.t_oms_user_id = #{tOmsUserId} ) </if>        <if test="tEbuySupplyMerchantId != null and !tEbuySupplyMerchantId.equals('')  ">  and (OUHTESM.t_ebuy_supply_merchant_id = #{tEbuySupplyMerchantId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (OUHTESM.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (OUHTESM.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (OUHTESM.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (OUHTESM.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (OUHTESM.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (OUHTESM.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (OUHTESM.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (OUHTESM.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (OUHTESM.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (OUHTESM.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (OUHTESM.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (OUHTESM.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (OUHTESM.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (OUHTESM.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="omsUserHasTEbuySupplyMerchantBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="omsUserHasTEbuySupplyMerchantBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="omsUserHasTEbuySupplyMerchantBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="omsUserHasTEbuySupplyMerchantBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_oms_user_has_t_ebuy_supply_merchant OUHTESM    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询()信息。 -->
+	<sql id="select_omsUserHasTEbuySupplyMerchant">
+		SELECT <include refid="omsUserHasTEbuySupplyMerchantBase.queryHead"/>
+		<include refid="omsUserHasTEbuySupplyMerchantBase.busiQueryCondition"/>
+		<include refid="omsUserHasTEbuySupplyMerchantBase.dimCheckSql"/>
+		ORDER BY OUHTESM.f_id DESC
+	</sql>
+	<select id="select_omsUserHasTEbuySupplyMerchant" parameterType="java.util.Map" resultMap="omsUserHasTEbuySupplyMerchantBase.omsUserHasTEbuySupplyMerchantExtendMap">
+		<include refid="omsUserHasTEbuySupplyMerchantBase.select_omsUserHasTEbuySupplyMerchant"/>
+	</select>
+	
+	<!-- 根据条件分页查询()信息  -->
+	<sql id="select_omsUserHasTEbuySupplyMerchant_withPage">
+		SELECT <include refid="omsUserHasTEbuySupplyMerchantBase.queryHead"/>
+		<include refid="omsUserHasTEbuySupplyMerchantBase.busiQueryCondition"/>
+		<include refid="omsUserHasTEbuySupplyMerchantBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_omsUserHasTEbuySupplyMerchant_withPage" resultMap="omsUserHasTEbuySupplyMerchantBase.omsUserHasTEbuySupplyMerchantExtendMap" parameterType="java.util.Map">
+		<include refid="omsUserHasTEbuySupplyMerchantBase.select_omsUserHasTEbuySupplyMerchant_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个()信息。 -->
+	<sql id="select_omsUserHasTEbuySupplyMerchant_bySeqId">
+		SELECT <include refid="omsUserHasTEbuySupplyMerchantBase.queryHead"/>
+		<include refid="omsUserHasTEbuySupplyMerchantBase.busiQueryCondition"/>
+		 and OUHTESM.f_id = #{_parameter}
+	</sql>
+	<select id="select_omsUserHasTEbuySupplyMerchant_bySeqId" parameterType="java.math.BigInteger" resultMap="omsUserHasTEbuySupplyMerchantBase.omsUserHasTEbuySupplyMerchantBaseMap">
+		<include refid="omsUserHasTEbuySupplyMerchantBase.select_omsUserHasTEbuySupplyMerchant_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的()记录数  -->
+	<sql id="select_omsUserHasTEbuySupplyMerchant_count">
+		SELECT COUNT(*)
+		<include refid="omsUserHasTEbuySupplyMerchantBase.busiQueryCount"/>
+		<include refid="omsUserHasTEbuySupplyMerchantBase.dimCheckSql"/>
+	</sql>
+	<select id="select_omsUserHasTEbuySupplyMerchant_count" resultType="java.lang.Integer">
+		<include refid="omsUserHasTEbuySupplyMerchantBase.select_omsUserHasTEbuySupplyMerchant_count"/>
+	</select>
+	
+	 <!-- 往()新增一条记录。 -->
+	 <sql id="insert_omsUserHasTEbuySupplyMerchant">
+		INSERT INTO t_oms_user_has_t_ebuy_supply_merchant 
+		(f_id,t_oms_user_id,t_ebuy_supply_merchant_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tOmsUserId},#{tEbuySupplyMerchantId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_omsUserHasTEbuySupplyMerchant" parameterType="OmsUserHasTEbuySupplyMerchant">
+		<include refid="omsUserHasTEbuySupplyMerchantBase.insert_omsUserHasTEbuySupplyMerchant"/>
+    </insert>
+    
+	<!-- 批量新增()信息 -->
+    <insert id="insert_omsUserHasTEbuySupplyMerchant_Batch" parameterType="java.util.List">
+    	INSERT INTO t_oms_user_has_t_ebuy_supply_merchant 
+		(f_id,t_oms_user_id,t_ebuy_supply_merchant_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tOmsUserId},#{item.tEbuySupplyMerchantId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新()信息。 -->
+    <sql id="update_omsUserHasTEbuySupplyMerchant">
+		UPDATE t_oms_user_has_t_ebuy_supply_merchant		<trim prefix="SET" prefixOverrides=","> 		<if test="tOmsUserId != null and !tOmsUserId.equals('') "> ,t_oms_user_id=#{tOmsUserId}</if> 		<if test="tEbuySupplyMerchantId != null and !tEbuySupplyMerchantId.equals('') "> ,t_ebuy_supply_merchant_id=#{tEbuySupplyMerchantId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_omsUserHasTEbuySupplyMerchant" parameterType="OmsUserHasTEbuySupplyMerchant">
+		<include refid="omsUserHasTEbuySupplyMerchantBase.update_omsUserHasTEbuySupplyMerchant"/>
+    </update>
+    
+    <!-- 批量更新()信息。 -->
+    <update id="update_omsUserHasTEbuySupplyMerchant_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_oms_user_has_t_ebuy_supply_merchant		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tOmsUserId != null and !item.tOmsUserId.equals('')  "> ,t_oms_user_id=#{item.tOmsUserId}</if> 		<if test="item.tEbuySupplyMerchantId != null and !item.tEbuySupplyMerchantId.equals('')  "> ,t_ebuy_supply_merchant_id=#{item.tEbuySupplyMerchantId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除()信息_逻辑删除。 -->
+    <sql id="delete_omsUserHasTEbuySupplyMerchant_Logic">
+		UPDATE t_oms_user_has_t_ebuy_supply_merchant		<trim prefix="SET" prefixOverrides=","> 		<if test="tOmsUserId != null and !tOmsUserId.equals('')  "> ,t_oms_user_id=#{tOmsUserId}</if> 		<if test="tEbuySupplyMerchantId != null and !tEbuySupplyMerchantId.equals('')  "> ,t_ebuy_supply_merchant_id=#{tEbuySupplyMerchantId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_omsUserHasTEbuySupplyMerchant_Logic" parameterType="OmsUserHasTEbuySupplyMerchant">
+		<include refid="omsUserHasTEbuySupplyMerchantBase.delete_omsUserHasTEbuySupplyMerchant_Logic"/>
+    </update>
+    
+    <!-- 批量删除()信息_逻辑删除 -->
+    <update id="delete_omsUserHasTEbuySupplyMerchant_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_oms_user_has_t_ebuy_supply_merchant		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tOmsUserId != null and !item.tOmsUserId.equals('')  "> ,t_oms_user_id=#{item.tOmsUserId}</if> 		<if test="item.tEbuySupplyMerchantId != null and !item.tEbuySupplyMerchantId.equals('')  "> ,t_ebuy_supply_merchant_id=#{item.tEbuySupplyMerchantId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除()信息。 -->
+    <sql id="delete_omsUserHasTEbuySupplyMerchant">
+		DELETE FROM t_oms_user_has_t_ebuy_supply_merchant WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_omsUserHasTEbuySupplyMerchant" parameterType="java.lang.String">
+		<include refid="omsUserHasTEbuySupplyMerchantBase.delete_omsUserHasTEbuySupplyMerchant"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除()信息。 -->
+    <delete id="delete_omsUserHasTEbuySupplyMerchant_Batch" parameterType="java.util.List">
+		DELETE FROM t_oms_user_has_t_ebuy_supply_merchant WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

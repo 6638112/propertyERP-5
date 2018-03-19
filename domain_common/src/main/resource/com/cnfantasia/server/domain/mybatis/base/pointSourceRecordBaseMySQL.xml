@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:积分来源记录表 t_point_source_record -->
+<mapper namespace="pointSourceRecordBase">
+	<resultMap type="PointSourceRecord" id="pointSourceRecordBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户Id -->        <result column="f_room_id" javaType="java.math.BigInteger" property="roomId"/>  <!-- 门牌Id -->        <result column="f_value" javaType="java.lang.Long" property="value"/>  <!-- 积分取值 -->        <result column="f_from_time" javaType="java.lang.String" property="fromTime"/>  <!-- 积分获取时间 -->        <result column="f_type" javaType="java.lang.Integer" property="type"/>  <!-- 来源类型 -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 积分获取描述 -->        <result column="f_sign_day_count" javaType="java.lang.Long" property="signDayCount"/>  <!-- 签到积分对应的天数,f_type=3时有效 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PointSourceRecord" id="pointSourceRecordExtendMap" extends="pointSourceRecordBaseMap">
+	</resultMap>
+	<resultMap type="PointSourceRecord" id="pointSourceRecordBaseMap_AppendTable">
+        <id column="PSRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PSRuserId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户Id -->        <result column="PSRroomId" javaType="java.math.BigInteger" property="roomId"/>  <!-- 门牌Id -->        <result column="PSRvalue" javaType="java.lang.Long" property="value"/>  <!-- 积分取值 -->        <result column="PSRfromTime" javaType="java.lang.String" property="fromTime"/>  <!-- 积分获取时间 -->        <result column="PSRtype" javaType="java.lang.Integer" property="type"/>  <!-- 来源类型 -->        <result column="PSRdesc" javaType="java.lang.String" property="desc"/>  <!-- 积分获取描述 -->        <result column="PSRsignDayCount" javaType="java.lang.Long" property="signDayCount"/>  <!-- 签到积分对应的天数,f_type=3时有效 -->        <result column="PSRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PSRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PSRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PSRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PSRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PSRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PSRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PointSourceRecord" id="pointSourceRecordBaseMap_AppendTable1">
+        <id column="PSR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PSR1userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户Id -->        <result column="PSR1roomId" javaType="java.math.BigInteger" property="roomId"/>  <!-- 门牌Id -->        <result column="PSR1value" javaType="java.lang.Long" property="value"/>  <!-- 积分取值 -->        <result column="PSR1fromTime" javaType="java.lang.String" property="fromTime"/>  <!-- 积分获取时间 -->        <result column="PSR1type" javaType="java.lang.Integer" property="type"/>  <!-- 来源类型 -->        <result column="PSR1desc" javaType="java.lang.String" property="desc"/>  <!-- 积分获取描述 -->        <result column="PSR1signDayCount" javaType="java.lang.Long" property="signDayCount"/>  <!-- 签到积分对应的天数,f_type=3时有效 -->        <result column="PSR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PSR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PSR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PSR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PSR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PSR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PSR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PSR.f_id,PSR.f_user_id,PSR.f_room_id,PSR.f_value,date_format(PSR.f_from_time,'%Y-%m-%d %T') as f_from_time,PSR.f_type,PSR.f_desc,PSR.f_sign_day_count
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PSR.f_id as PSRid,PSR.f_user_id as PSRuserId,PSR.f_room_id as PSRroomId,PSR.f_value as PSRvalue,date_format(PSR.f_from_time,'%Y-%m-%d %T') as PSRfromTime,PSR.f_type as PSRtype,PSR.f_desc as PSRdesc,PSR.f_sign_day_count as PSRsignDayCount
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PSR1.f_id as PSR1id,PSR1.f_user_id as PSR1userId,PSR1.f_room_id as PSR1roomId,PSR1.f_value as PSR1value,date_format(PSR1.f_from_time,'%Y-%m-%d %T') as PSR1fromTime,PSR1.f_type as PSR1type,PSR1.f_desc as PSR1desc,PSR1.f_sign_day_count as PSR1signDayCount
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PSR.f_id = #{id} ) </if>        <if test="userId != null">  and (PSR.f_user_id = #{userId} ) </if>        <if test="roomId != null">  and (PSR.f_room_id = #{roomId} ) </if>        <if test="value != null">  and (PSR.f_value = #{value} ) </if>        <if test="fromTime != null and !fromTime.equals('')  ">  and (PSR.f_from_time = str_to_date(#{fromTime},'%Y-%m-%d %T') ) </if>        <if test="fromTime_START != null and !fromTime_START.equals('')  ">              <![CDATA[ and (PSR.f_from_time >= str_to_date(#{fromTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="fromTime_END != null and !fromTime_END.equals('')  ">            <![CDATA[ and (PSR.f_from_time <= str_to_date(#{fromTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="type != null">  and (PSR.f_type = #{type} ) </if>        <if test="desc != null">  and (PSR.f_desc = #{desc} ) </if>        <if test="signDayCount != null">  and (PSR.f_sign_day_count = #{signDayCount} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PSR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PSR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PSR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PSR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PSR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PSR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PSR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PSR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PSR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (PSR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (PSR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (PSR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (PSR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (PSR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PSR.f_id = #{id} ) </if>        <if test="userId != null and !userId.equals('')  ">  and (PSR.f_user_id = #{userId} ) </if>        <if test="roomId != null and !roomId.equals('')  ">  and (PSR.f_room_id = #{roomId} ) </if>        <if test="value != null and !value.equals('')  ">  and (PSR.f_value = #{value} ) </if>        <if test="fromTime != null and !fromTime.equals('')  ">  and (PSR.f_from_time = str_to_date(#{fromTime},'%Y-%m-%d %T') ) </if>        <if test="fromTime_START != null and !fromTime_START.equals('')  ">              <![CDATA[ and (PSR.f_from_time >= str_to_date(#{fromTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="fromTime_END != null and !fromTime_END.equals('')  ">            <![CDATA[ and (PSR.f_from_time <= str_to_date(#{fromTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="type != null and !type.equals('')  ">  and (PSR.f_type = #{type} ) </if>        <if test="desc != null and !desc.equals('')  ">  and (PSR.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="signDayCount != null and !signDayCount.equals('')  ">  and (PSR.f_sign_day_count = #{signDayCount} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PSR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PSR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PSR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PSR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PSR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PSR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PSR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PSR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PSR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PSR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PSR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PSR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PSR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (PSR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="pointSourceRecordBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="pointSourceRecordBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="pointSourceRecordBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="pointSourceRecordBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_point_source_record PSR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(积分来源记录表)信息。 -->
+	<sql id="select_pointSourceRecord">
+		SELECT <include refid="pointSourceRecordBase.queryHead"/>
+		<include refid="pointSourceRecordBase.busiQueryCondition"/>
+		<include refid="pointSourceRecordBase.dimCheckSql"/>
+		ORDER BY PSR.f_id DESC
+	</sql>
+	<select id="select_pointSourceRecord" parameterType="java.util.Map" resultMap="pointSourceRecordBase.pointSourceRecordExtendMap">
+		<include refid="pointSourceRecordBase.select_pointSourceRecord"/>
+	</select>
+	
+	<!-- 根据条件分页查询(积分来源记录表)信息  -->
+	<sql id="select_pointSourceRecord_withPage">
+		SELECT <include refid="pointSourceRecordBase.queryHead"/>
+		<include refid="pointSourceRecordBase.busiQueryCondition"/>
+		<include refid="pointSourceRecordBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_pointSourceRecord_withPage" resultMap="pointSourceRecordBase.pointSourceRecordExtendMap" parameterType="java.util.Map">
+		<include refid="pointSourceRecordBase.select_pointSourceRecord_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(积分来源记录表)信息。 -->
+	<sql id="select_pointSourceRecord_bySeqId">
+		SELECT <include refid="pointSourceRecordBase.queryHead"/>
+		<include refid="pointSourceRecordBase.busiQueryCondition"/>
+		 and PSR.f_id = #{_parameter}
+	</sql>
+	<select id="select_pointSourceRecord_bySeqId" parameterType="java.math.BigInteger" resultMap="pointSourceRecordBase.pointSourceRecordBaseMap">
+		<include refid="pointSourceRecordBase.select_pointSourceRecord_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(积分来源记录表)记录数  -->
+	<sql id="select_pointSourceRecord_count">
+		SELECT COUNT(*)
+		<include refid="pointSourceRecordBase.busiQueryCount"/>
+		<include refid="pointSourceRecordBase.dimCheckSql"/>
+	</sql>
+	<select id="select_pointSourceRecord_count" resultType="java.lang.Integer">
+		<include refid="pointSourceRecordBase.select_pointSourceRecord_count"/>
+	</select>
+	
+	 <!-- 往(积分来源记录表)新增一条记录。 -->
+	 <sql id="insert_pointSourceRecord">
+		INSERT INTO t_point_source_record 
+		(f_id,f_user_id,f_room_id,f_value,f_from_time,f_type,f_desc,f_sign_day_count,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{userId},#{roomId},#{value},str_to_date(#{fromTime,jdbcType=DATE},'%Y-%m-%d %T'),#{type},#{desc,jdbcType=VARCHAR},#{signDayCount},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_pointSourceRecord" parameterType="PointSourceRecord">
+		<include refid="pointSourceRecordBase.insert_pointSourceRecord"/>
+    </insert>
+    
+	<!-- 批量新增(积分来源记录表)信息 -->
+    <insert id="insert_pointSourceRecord_Batch" parameterType="java.util.List">
+    	INSERT INTO t_point_source_record 
+		(f_id,f_user_id,f_room_id,f_value,f_from_time,f_type,f_desc,f_sign_day_count,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.userId},#{item.roomId},#{item.value},str_to_date(#{item.fromTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.type},#{item.desc,jdbcType=VARCHAR},#{item.signDayCount},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(积分来源记录表)信息。 -->
+    <sql id="update_pointSourceRecord">
+		UPDATE t_point_source_record		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="roomId != null and !roomId.equals('') "> ,f_room_id=#{roomId}</if> 		<if test="value != null and !value.equals('') "> ,f_value=#{value}</if> 		<if test="fromTime != null and !fromTime.equals('') "> ,f_from_time=str_to_date(#{fromTime},'%Y-%m-%d %T')</if> 		<if test="type != null and !type.equals('') "> ,f_type=#{type}</if> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="signDayCount != null and !signDayCount.equals('') "> ,f_sign_day_count=#{signDayCount}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_pointSourceRecord" parameterType="PointSourceRecord">
+		<include refid="pointSourceRecordBase.update_pointSourceRecord"/>
+    </update>
+    
+    <!-- 批量更新(积分来源记录表)信息。 -->
+    <update id="update_pointSourceRecord_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_point_source_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.roomId != null and !item.roomId.equals('')  "> ,f_room_id=#{item.roomId}</if> 		<if test="item.value != null and !item.value.equals('')  "> ,f_value=#{item.value}</if> 		<if test="item.fromTime != null and !item.fromTime.equals('')  "> ,f_from_time=str_to_date(#{item.fromTime},'%Y-%m-%d %T')</if> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.signDayCount != null and !item.signDayCount.equals('')  "> ,f_sign_day_count=#{item.signDayCount}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(积分来源记录表)信息_逻辑删除。 -->
+    <sql id="delete_pointSourceRecord_Logic">
+		UPDATE t_point_source_record		<trim prefix="SET" prefixOverrides=","> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="roomId != null and !roomId.equals('')  "> ,f_room_id=#{roomId}</if> 		<if test="value != null and !value.equals('')  "> ,f_value=#{value}</if> 		<if test="fromTime != null and !fromTime.equals('')  "> ,f_from_time=str_to_date(#{fromTime},'%Y-%m-%d %T')</if> 		<if test="type != null and !type.equals('')  "> ,f_type=#{type}</if> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="signDayCount != null and !signDayCount.equals('')  "> ,f_sign_day_count=#{signDayCount}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_pointSourceRecord_Logic" parameterType="PointSourceRecord">
+		<include refid="pointSourceRecordBase.delete_pointSourceRecord_Logic"/>
+    </update>
+    
+    <!-- 批量删除(积分来源记录表)信息_逻辑删除 -->
+    <update id="delete_pointSourceRecord_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_point_source_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.roomId != null and !item.roomId.equals('')  "> ,f_room_id=#{item.roomId}</if> 		<if test="item.value != null and !item.value.equals('')  "> ,f_value=#{item.value}</if> 		<if test="item.fromTime != null and !item.fromTime.equals('')  "> ,f_from_time=str_to_date(#{item.fromTime},'%Y-%m-%d %T')</if> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.signDayCount != null and !item.signDayCount.equals('')  "> ,f_sign_day_count=#{item.signDayCount}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(积分来源记录表)信息。 -->
+    <sql id="delete_pointSourceRecord">
+		DELETE FROM t_point_source_record WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_pointSourceRecord" parameterType="java.lang.String">
+		<include refid="pointSourceRecordBase.delete_pointSourceRecord"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(积分来源记录表)信息。 -->
+    <delete id="delete_pointSourceRecord_Batch" parameterType="java.util.List">
+		DELETE FROM t_point_source_record WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

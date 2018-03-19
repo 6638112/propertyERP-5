@@ -1,0 +1,274 @@
+/**   
+* Filename:    CommunityController.java   
+* @version:    1.0  
+* Create at:   2014年7月9日 上午2:31:16   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年7月9日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.community.web;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.cnfantasia.server.api.commonBusiness.util.RelativeDateFormat;
+import com.cnfantasia.server.api.community.service.ICommunityService;
+import com.cnfantasia.server.api.fileServer.service.IFileServerService;
+import com.cnfantasia.server.api.pub.BaseController;
+import com.cnfantasia.server.api.pub.ControllerUtils;
+import com.cnfantasia.server.api.pub.session.UserContext;
+import com.cnfantasia.server.business.pub.dao.IDualDao;
+import com.cnfantasia.server.business.pub.entity.PageModel;
+import com.cnfantasia.server.business.pub.utils.DateUtil;
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+import com.cnfantasia.server.common.json.JsonResponse;
+import com.cnfantasia.server.common.utils.StringUtils;
+
+/**
+ * Filename:    CommunityController.java
+ * @version:    1.0.0
+ * Create at:   2014年7月9日 上午2:31:16
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年7月9日       shiyl             1.0             1.0 Version
+ */
+@Controller
+@RequestMapping("/community")
+public class CommunityController extends BaseController{
+	private IFileServerService fileServerService;
+	public void setFileServerService(IFileServerService fileServerService) {
+		this.fileServerService = fileServerService;
+	}
+	private ICommunityService communityService;
+	public void setCommunityService(ICommunityService communityService) {
+		this.communityService = communityService;
+	}
+	
+	
+	private IDualDao dualDao;
+	public void setDualDao(IDualDao dualDao) {
+		this.dualDao = dualDao;
+	}
+	@RequestMapping("/qryHomeShow.json")
+	@ResponseBody
+	public JsonResponse qryHomeShow(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		BigInteger userId = UserContext.getOperIdBigInteger();
+		ForumForum defaultBolck=communityService.getDefaultBolck(userId);
+		Integer fid = defaultBolck.getFid();
+		String areaName = defaultBolck.getName();
+		Map<ForumForum,ForumThread> resMap = communityService.getHomeInfo(fid);
+		//2.交互
+		//3.结果处理
+		jsonResponse.putData("areaName", areaName);
+		jsonResponse.putData("areaIcoUrl", fileServerService.getAccessUrl("tmpPic/areaIco.png",""));
+		jsonResponse.putData("areaDescUrl", fileServerService.getAccessUrl("tmpPic/areaDesc.png",""));
+		List<Map<String,Object>> topicList = new ArrayList<Map<String,Object>>();
+		String nowTime = dualDao.getNowTime();
+		Long nowTimeLong = DateUtil.timeToLong(nowTime);
+		for(ForumForum forumForumTmp:resMap.keySet()){
+			ForumThread forumPostTmp = resMap.get(forumForumTmp);
+			Map<String,Object> map = new HashMap<String, Object>();
+			map.put("topicId", forumForumTmp.getFid());
+			map.put("topicName", forumForumTmp.getName());
+			map.put("topicUrl", fileServerService.getAccessUrl("tmpPic/huanyihuan.png",""));
+			map.put("hotMessageContent", forumPostTmp.getSubject());
+			map.put("hotMessageTime",  RelativeDateFormat.format(nowTimeLong-forumPostTmp.getDateline()*1000L,nowTimeLong));
+			topicList.add(map);
+		}
+//		{
+//			Map<String,Object> map = new HashMap<String, Object>();
+//			map.put("topicId", "01");
+//			map.put("topicName", "换一换");
+//			map.put("topicUrl", fileServerService.getAccessUrl("tmpPic/huanyihuan.png"));
+//			map.put("hotMessageContent", "这里有个沙发，有没有需要的，请联系我。");
+//			map.put("hotMessageTime", "10分钟前");
+//			topicList.add(map);
+//		}
+//		{
+//			Map<String,Object> map = new HashMap<String, Object>();
+//			map.put("topicId", "02");
+//			map.put("topicName", "拼一拼");
+//			map.put("topicUrl", fileServerService.getAccessUrl("tmpPic/pinyipin.png"));
+//			map.put("hotMessageContent", "有没有人拼车去福田保税区。");
+//			map.put("hotMessageTime", "昨天");
+//			topicList.add(map);
+//		}
+		jsonResponse.putData("topicList", topicList);
+		return jsonResponse;
+	}
+	@RequestMapping("/qryTopicList.json")
+	@ResponseBody
+	public JsonResponse qryTopicList(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		BigInteger userId = UserContext.getOperIdBigInteger();
+		ForumForum defaultBolck=communityService.getDefaultBolck(userId);
+		Integer fid = defaultBolck.getFid();
+		//2.交互
+		List<ForumForum> forumForumList = communityService.getSubForumForumList(fid);
+		//3.结果处理
+		List<Map<String,Object>> resList = new ArrayList<Map<String,Object>>();
+		for(ForumForum tmp:forumForumList){
+			if(tmp.getName().contains("拼一拼")||tmp.getName().contains("换一换")){
+				boolean isExist = false;
+				for(Map<String,Object> existMap:resList){
+					if(existMap.get("topicName").toString().contains(tmp.getName())){
+						isExist = true;
+						break;
+					}
+				}
+				if(!isExist){
+					Map<String,Object> map = new HashMap<String, Object>();
+					map.put("topicId", tmp.getFid());
+					map.put("topicName", tmp.getName());
+					if(tmp.getName().contains("拼一拼")){
+						map.put("topicUrl", fileServerService.getAccessUrl("tmpPic/pinyipin.png",""));
+					}else if(tmp.getName().contains("换一换")){
+						map.put("topicUrl", fileServerService.getAccessUrl("tmpPic/huanyihuan.png",""));
+					}
+					resList.add(map);
+				}
+			}
+			
+		}
+//		{
+//			Map<String,Object> map = new HashMap<String, Object>();
+//			map.put("topicId", "01");
+//			map.put("topicName", "换一换");
+//			map.put("topicUrl", fileServerService.getAccessUrl("tmpPic/huanyihuan.png"));
+//			topicList.add(map);
+//		}
+//		{
+//			Map<String,Object> map = new HashMap<String, Object>();
+//			map.put("topicId", "02");
+//			map.put("topicName", "拼一拼");
+//			map.put("topicUrl", fileServerService.getAccessUrl("tmpPic/pinyipin.png"));
+//			topicList.add(map);
+//		}
+		return ControllerUtils.addPageInfo(jsonResponse, resList);
+	}
+	@RequestMapping("/qryMessageList.json")
+	@ResponseBody
+	public JsonResponse qryMessageList(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		Integer topicId = null;
+		try {
+			topicId=Integer.parseInt(request.getParameter("topicId"));
+		} catch (Exception e) {
+		}
+		PageModel pageModel=ControllerUtils.getPageModel(request);
+//		PageModel pageModel=null;
+//		try {
+//			pageModel=ControllerUtils.getPageModel(request);
+//		} catch (Exception e) {
+//			pageModel = new PageModel(0, 1000);
+//		}
+		//2.交互
+		List<ForumThread> forumPostList=communityService.getMessageList(topicId, pageModel);
+		String nowTime = dualDao.getNowTime();
+		Long nowTimeLong = DateUtil.timeToLong(nowTime);
+		//3.结果处理
+		List<Map<String,Object>> resList = new ArrayList<Map<String,Object>>();
+		for(ForumThread tmp:forumPostList){
+			Map<String,Object> map = new HashMap<String, Object>();
+			map.put("id", tmp.getFid());
+			map.put("txt", tmp.getSubject());
+			map.put("createTime", RelativeDateFormat.format(nowTimeLong-tmp.getDateline()*1000L,nowTimeLong));
+			{//图片列表
+//				List<String> picList = new ArrayList<String>();
+//				picList.add("http://127.0.0.1/a.jpg");
+//				picList.add("http://127.0.0.1/b.jpg");
+//				map.put("picList", picList);
+				map.put("picList", null);
+			}
+			
+			map.put("userName", tmp.getAuthor());
+			map.put("userPicUrl", null);
+			resList.add(map);
+		}
+		
+//		{
+//			Map<String,Object> map = new HashMap<String, Object>();
+//			map.put("id", "5001");
+//			map.put("txt", "明天有人拼车一起去福田保税区3号门吗？有的话请在评论里面联系我哦！");
+//			map.put("createTime", "13分钟前");
+//			{//图片列表
+//				List<String> picList = new ArrayList<String>();
+//				picList.add("http://127.0.0.1/a.jpg");
+//				picList.add("http://127.0.0.1/b.jpg");
+//				map.put("picList", picList);
+//			}
+//			map.put("userName", "花小年");
+//			map.put("userPicUrl", null);
+//			messageList.add(map);
+//		}
+//		{
+//			Map<String,Object> map = new HashMap<String, Object>();
+//			map.put("id", "5002");
+//			map.put("txt", "我要换租啦，家用电器便宜出售！");
+//			map.put("createTime", "昨天");
+//			map.put("picList", null);
+//			map.put("userName", "huaxiaonian");
+//			map.put("userPicUrl", null);
+//			messageList.add(map);
+//		}
+		return ControllerUtils.addPageInfo(jsonResponse, resList, pageModel.isLast, pageModel.count);
+	}
+	
+	@RequestMapping("/postMessage.json")
+	@ResponseBody
+	public JsonResponse postMessage(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		String topicIdStr=request.getParameter("topicId");
+		Integer topicId = null;
+		if(!StringUtils.isEmpty(topicIdStr)){
+			topicId =Integer.parseInt(topicIdStr);
+		}else{
+			BigInteger userId = UserContext.getOperIdBigInteger();
+			ForumForum defaultBolck=communityService.getDefaultBolck(userId);
+			Integer fid = defaultBolck.getFid();
+			PageModel pageModel = new PageModel(0, 1);
+			List<ForumForum> forumForumList = communityService.getSubForumForumList(fid,pageModel);
+			if(forumForumList!=null&&forumForumList.size()>=1){
+				topicId = forumForumList.get(0).getFid();
+			}
+		}
+		if(topicId==null){
+			throw new BusinessRuntimeException("CommunityController.postMessage.topicId.isEmpty");
+		}
+		String messageTxt = request.getParameter("messageTxt");
+		String useip = request.getRemoteAddr();
+		UserContext.getOperIdMustExistBigInteger();
+		//
+		String remoteUserName = UserContext.getCurrLoginNo().getUserEntity().getRemoteUser().getUserName();
+		Long remoteUserId = UserContext.getCurrLoginNo().getUserEntity().getRemoteUser().getUid();
+		String subject = messageTxt;
+		Integer port = 0;
+		//2.交互
+		communityService.postMessage(remoteUserName, remoteUserId.intValue(), topicId, subject, messageTxt, useip, port);
+//		int res = communityService.postMessage("hua50036", 8, 73, "", "messageTxt", "192.168.9.155", 0);
+		//3.结果处理
+		return jsonResponse;
+	}
+	
+	
+}

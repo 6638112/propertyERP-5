@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <bean id="commPayService" class="com.cnfantasia.server.api.payment.serviceUntran.CommPayService">
+	</bean>
+    
+	<bean id="abstractWeiXinPayService" class="com.cnfantasia.server.api.payment.serviceUntran.AbstractWeiXinPayService" abstract="true">
+		<property name="ebuyPrepayWeixinLogBaseDao" ref="ebuyPrepayWeixinLogBaseDao"/>
+		<property name="commonEbuyService" ref="commonEbuyService"/>
+		<property name="uuidManager" ref="uuidManager"></property>
+		<property name="dualDao" ref="dualDao"></property>
+		<property name="commEbuyPayRecordService" ref="commEbuyPayRecordService"></property>
+	</bean>
+	
+	<bean id="weiXinLightAppPayService" class="com.cnfantasia.server.api.payment.serviceUntran.WeiXinLightAppPayService" abstract="false">
+		<property name="ebuyPrepayWeixinLogBaseDao" ref="ebuyPrepayWeixinLogBaseDao"/>
+		<property name="commEbuyPayRecordService" ref="commEbuyPayRecordService"/>
+		<property name="commonEbuyService" ref="commonEbuyService"/>
+		<property name="uuidManager" ref="uuidManager"></property>
+		<property name="dualDao" ref="dualDao"></property>
+		<property name="commPayService" ref="commPayService"/>
+		
+	</bean>
+	
+	<bean id="weiXinPayService" class="com.cnfantasia.server.api.payment.serviceUntran.WeiXinPayService" parent="abstractWeiXinPayService">
+		<property name="commPayService" ref="commPayService"/>
+	</bean>
+	
+	<bean id="abstractAlipayService" class="com.cnfantasia.server.api.payment.serviceUntran.AbstractAlipayService" abstract="true">
+		<property name="ebuyPrepayAlipayLogBaseDao" ref="ebuyPrepayAlipayLogBaseDao"/>
+		<property name="commEbuyPayRecordService" ref="commEbuyPayRecordService"/>
+		<property name="commonEbuyService" ref="commonEbuyService"/>
+		<property name="uuidManager" ref="uuidManager"/>
+		<property name="dualDao" ref="dualDao"/>
+	</bean>
+	
+	<bean id="alipayService" class="com.cnfantasia.server.api.payment.serviceUntran.AlipayService" parent="abstractAlipayService">
+		<property name="commPayService" ref="commPayService"/>
+	</bean>
+	
+	<bean id="sqpayService" class="com.cnfantasia.server.api.payment.serviceUntran.SqpayService">
+		<property name="dualDao" ref="dualDao"/>
+		<property name="commPayService" ref="commPayService"/>
+		<property name="commonEbuyService" ref="commonEbuyService"/>
+		<property name="commEbuyPayRecordService" ref="commEbuyPayRecordService"/>
+		<property name="paymentDao" ref="paymentDao"/>
+	</bean>
+	
+	<bean id="payConfigService" class="com.cnfantasia.server.api.payment.serviceUntran.PayConfigService">
+		<property name="payConfigDao" ref="payConfigDao"/>
+	</bean>
+	
+	<bean id="thirdCarPayNotify" class="com.cnfantasia.server.api.payment.serviceUntran.ThirdCarPayNotify">
+	</bean>
+	
+	<bean id="sqpayBtService" class="com.cnfantasia.server.api.payment.serviceUntran.SqpayBtService">
+		<property name="dualDao" ref="dualDao"/>
+		<property name="sysParamManager" ref="sysParamManager"/>
+		<property name="userBaseDao" ref="userBaseDao"/>
+		<property name="ebuyorderDao" ref="ebuyorderDao"/>
+		<property name="ebuyPrepaySqLogBaseDao" ref="ebuyPrepaySqLogBaseDao"/>
+		<property name="commPayService" ref="commPayService"/>
+		<property name="commonEbuyService" ref="commonEbuyService"/>
+		<property name="commEbuyPayRecordService" ref="commEbuyPayRecordService"/>
+		<property name="ebuyOrderRelationBaseDao" ref="ebuyOrderRelationBaseDao"/>
+		<property name="uuidManager" ref="uuidManager" />
+	</bean>
+
+	<bean id="aliDifferenceMerchantPayService" class="com.cnfantasia.server.api.payment.serviceUntran.AliDifferenceMerchantPayService">
+	</bean>
+</beans>  

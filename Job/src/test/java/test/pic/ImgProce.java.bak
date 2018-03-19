@@ -1,0 +1,64 @@
+package test.pic;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+
+public class ImgProce {
+	private int wideth;
+	private int height;
+	private String t = null;
+
+	public void setT(String t) {
+		this.t = t;
+	}
+
+	public void setWideth(int wideth) {
+		this.wideth = wideth;
+	}
+
+	public int getWideth() {
+		return this.wideth;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getHeight(int w,int h) {
+		if (w > wideth) {
+			float ww;
+			ww = (float) w / (float) wideth;
+			float hh = h / ww;
+			return (int) hh;
+		} else {
+			this.setWideth(w);
+			return h;
+		}
+	}
+
+	public void proce(String fpath) throws Exception {
+		File _file = new File(fpath);
+		Image src = javax.imageio.ImageIO.read(_file);
+		int wideth = src.getWidth(null);
+		int height = src.getHeight(null);
+		int h = this.getHeight(wideth, height);
+		BufferedImage tag = new BufferedImage(this.getWideth(), h, BufferedImage.TYPE_INT_RGB);
+		Graphics g = tag.getGraphics();
+		g.drawImage(src, 0, 0, this.getWideth(), h, null);
+		if (t != null) {
+			g.setColor(new Color(242, 242, 242));
+			g.fillRect(this.getWideth() - 120, h - 18, 120, 18);
+			g.setColor(new Color(180, 180, 180));
+			g.drawRect(this.getWideth() - 120, h - 18, 119, 17);
+			g.setColor(new Color(255, 102, 0));
+			g.drawString(t, this.getWideth() - 100, h - 5);
+		}
+
+		ImageIO.write(tag, "jpg", new File(fpath));
+	}
+}

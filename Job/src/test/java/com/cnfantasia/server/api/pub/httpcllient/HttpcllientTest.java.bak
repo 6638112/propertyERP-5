@@ -1,0 +1,46 @@
+/**   
+* Filename:    HttpcllientTest.java   
+* @version:    1.0  
+* Create at:   2014年7月21日 上午10:38:42   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年7月21日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.pub.httpcllient;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.Test;
+
+import com.cnfantasia.server.api.BaseTest;
+
+/**
+ * Filename:    HttpcllientTest.java
+ * @version:    1.0.0
+ * Create at:   2014年7月21日 上午10:38:42
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年7月21日       shiyl             1.0             1.0 Version
+ */
+public class HttpcllientTest extends BaseTest{
+	
+//	@Test
+	public void testSso() throws Exception{
+		SsoHttpClient ssoHttpClient=ctx.getBean("ssoHttpClient", SsoHttpClient.class);
+		Map<String,Object> param = new HashMap<String, Object>();
+		param.put("username", "hua40001");
+		param.put("password", "222222");
+		param.put("type", "2");
+		param.put("service", "http://www.baidu.com");
+		String res = ssoHttpClient.submitSimple("registerLogin", param);
+		System.out.println(res);
+	}
+	
+}

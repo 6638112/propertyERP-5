@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:收益中心 -->
+<mapper namespace="revenueFinance">
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.FinanceRevenue" id="FinanceRevenueMap" extends="finance.FinanceBuyEntityAppendReqMap">
+		<result column="propertyCompanyName" property="propertyCompanyName" javaType="java.lang.String"/>
+		<result column="channelPartnerName" property="channelPartnerName" javaType="java.lang.String"/>
+		<result column="propertyCompanyId" property="propertyCompanyId" javaType="java.lang.Long"/>
+		<result column="channelPartnerId" property="channelPartnerId" javaType="java.lang.Long"/>
+		<result column="gbId" property="gbId" javaType="java.math.BigInteger"/>
+		<result column="propManagementId" property="propManagementId" javaType="java.math.BigInteger" />
+		<result column="carNum" property="carNum" javaType="java.lang.String"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.revenue.entity.FinanceRevenueSignalAmount" id="FinanceRevenueSignalAmountMap" extends="revenueSignalAmountBase.revenueSignalAmountBaseMap_AppendTable">
+		<result column="RSAamountAgent" javaType="java.lang.Double" property="amountAgent"/>
+		<result column="RSTkStatusAgent" javaType="java.lang.Integer" property="tkStatusAgent"/>
+		<result column="RSAamountWy" javaType="java.lang.Double" property="amountWy"/>
+		<result column="RSTkStatusWy" javaType="java.lang.Integer" property="tkStatusWy"/>
+		<result column="RSAamountPlatform" javaType="java.lang.Double" property="amountPlatform"/>
+		<result column="RSTkStatusPlatform" javaType="java.lang.Integer" property="tkStatusPlatform"/>
+		<association property="financeBuyEntity" resultMap="FinanceRevenueMap"/>
+		<!-- <collection property="rsaList" resultMap="revenueSignalAmountBase.revenueSignalAmountBaseMap_AppendTable" /> -->
+	</resultMap>
+	
+	<update id="updateForFinanceRevenue" parameterType="java.util.Map">
+		update t_finance_buy t set t.f_revenue_status = 1, t.f_revenue_tm = #{currentDate}
+ 			where t.f_revenue_status = 0 and t.f_finance_type = #{financeType}
+ 			limit 100
+	</update>
+	
+	<update id="updateFinanceRevenueStatus" parameterType="java.util.Map">
+		update t_finance_buy t set t.f_revenue_status = #{revenueStatusTo}
+ 		  <where>
+ 			<if test="financeReqId != null">and t.t_finance_req_id = #{financeReqId}</if>
+ 			<if test="revenueStatus != null">and t.f_revenue_status = #{revenueStatus} </if>
+ 			<if test="financeType != null">and t.f_finance_type = #{financeType} </if>
+ 			<![CDATA[ and t.f_revenue_status < 99 ]]>
+ 		  </where>
+	</update>
+	
+	<select id="selectFinanceRevenueList" parameterType="java.util.Map" resultMap="FinanceRevenueMap">
+		select  fb.f_order_no, fb.t_finance_req_id, fb.f_hud_id, fb.t_real_room_id, fb.f_buy_person, fb.f_buy_mobile,
+		     fb.f_buy_id_no,fb.f_deduction_begin_time,f_deduction_end_time,f_deduction_begin_date,f_deduction_end_date,
+		     fb.f_return_money, fb.f_buy_money, fb.f_wy_money, f_buy_time, fb.f_deduction_count, fb.f_wy_rate, fb.f_channel_rate, fb.f_add_tm,
+		     fr.f_liberate_num, fr.f_real_name, fr.f_mobile, fr.f_province, fr.f_city, fr.f_prefecture,
+			 fr.f_residential, fr.f_building, fr.f_room_num, fr.t_room_id, fr.f_property_fees, pc.f_name propertyCompanyName, cp.f_name channelPartnerName,
+			 fb.t_property_company_id propertyCompanyId, fb.t_channel_partner_id channelPartnerId, GB.f_id gbId, GB.t_property_management_f_id propManagementId
+		   from t_finance_buy fb
+		   inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		   <!-- 增加小区id查询 -->
+		   inner join t_real_room RR on RR.f_id = fb.t_real_room_id  and RR.f_sys0_del_state = 0
+		   inner join t_building B on RR.t_building_f_id = B.f_id  and B.f_sys0_del_state = 0
+		   inner join t_group_building GB on B.t_group_building_f_id = GB.f_id  and GB.f_sys0_del_state = 0
+		   
+		   left join t_property_company pc on fb.t_property_company_id = pc.f_id
+		   left join t_channel_partner cp on fb.t_channel_partner_id = cp.f_id
+		  WHERE
+			fb.f_revenue_status in(1, -1)
+			<if test="financeType != null"> and fb.f_finance_type = #{financeType} </if>
+			AND fb.f_revenue_tm >= date_sub(now(), interval 1 hour) <!-- 跑失败后，一小时内会重复跑收益，一小时内仍未跑成功收益，则不生成收益 -->
+	</select>
+	
+	<select id="selectRevenueConfig" parameterType="java.util.Map" resultMap="revenueConfigBase.revenueConfigBaseMap_AppendTable">
+		SELECT <include refid="revenueConfigBase.queryHead_AppendTable"/>
+		  FROM t_revenue_config RC
+    	WHERE 
+    	  RC.f_sys0_del_state = 0
+    	  <if test="projectType != null"> AND RC.f_project_type = #{projectType}</if>
+    	  AND RC.f_active_status = 1
+    	  <if test="pcId != null"> and RC.f_company_id = #{pcId} </if>
+    	  <if test="goalRevTime != null"> AND (#{goalRevTime} between RC.f_start_date and ADDDATE(RC.f_end_date, INTERVAL +1 DAY)) </if>
+    	  limit 1
+	</select>
+	
+	<sql id="financeRevenueWhere">
+		where RSA.f_sys0_del_state = 0 and RSA.f_goal_type = #{revenueProject}
+			<![CDATA[ and RSA.f_goal_rev_time <= now() ]]>
+			<if test="wyOrAgentName != null and wyOrAgentName != ''">
+				AND (pc.f_name like CONCAT('%',#{wyOrAgentName},'%')  or cp.f_name like CONCAT('%',#{wyOrAgentName},'%'))
+			</if>
+			<if test="gbName != null and gbName != ''">
+				AND (fr.f_residential like CONCAT('%',#{gbName},'%') )
+			</if>
+			<if test="applyId == null and roleId != null and roleId != ''">
+				<choose>
+					<when test="roleType == 13"><!-- 管理处 -->
+						AND RSA.f_mini_role_type = 2
+						and RSA.t_property_management_f_id = #{roleId}
+					</when>
+					<otherwise>
+						AND RSA.f_mini_role_id = #{roleId}
+					</otherwise>
+				</choose>
+			</if>
+			
+			<if test="roleIdList != null">
+				AND RSA.f_mini_role_id in
+				<foreach item="tempRoleId" collection="roleIdList" open="(" separator="," close=")">
+					#{tempRoleId}
+				</foreach>
+			</if>
+			<if test="(roleId == null or roleId == '') and roleIdList == null">
+				and RSA.f_mini_role_type = 2
+			</if>
+			<if test="pcUserId != null and pcUserId != ''">
+				AND RSA.f_mini_role_id = #{roleId}
+			</if>
+			<if test="smId != null and smId != ''">
+				AND RSA.f_mini_role_id = #{smId}
+			</if>
+			<if test="goalRevTimeStart != null and goalRevTimeStart != ''">
+				<![CDATA[ AND RSA.f_goal_rev_time >= #{goalRevTimeStart} ]]>
+			</if>
+			<if test="goalRevTimeEnd != null and goalRevTimeEnd != ''">
+				<![CDATA[ AND RSA.f_goal_rev_time <= #{goalRevTimeEnd} ]]>
+			</if>
+			<if test="tkStatus != null and tkStatus != ''">
+				AND RSA.f_tk_status = #{tkStatus}
+			</if>
+			
+			<if test="tkStatusWy != null and tkStatusWy != ''">
+				AND RSA3.f_tk_status = #{tkStatusWy}
+			</if>
+			<if test="tkStatusAgent != null and tkStatusAgent != ''">
+				AND RSA2.f_tk_status = #{tkStatusAgent}
+			</if>
+			<if test="tkStatusPlatform != null and tkStatusPlatform != ''">
+				AND RSA4.f_tk_status = #{tkStatusPlatform}
+			</if>
+			
+			<if test="applyId != null and applyId != ''">
+				AND (RSA.f_rev_apply_id = #{applyId} or RSA.f_rev_apply_finance_id = #{applyId})
+			</if>
+			and EXISTS (select 1 from t_group_building GB where GB.f_id = RSA.t_group_building_id <include refid="permiOos.dataPermissionCondition" />)
+	</sql>
+	
+	
+	<sql id="queryHead_AppendTable_buy_req">
+			 fb.f_order_no, fb.t_finance_req_id, fb.f_hud_id, fb.t_real_room_id, fb.f_buy_person, fb.f_buy_mobile,
+		     fb.f_buy_id_no,fb.f_deduction_begin_time,f_deduction_end_time,f_deduction_begin_date,f_deduction_end_date,
+		     fb.f_return_money, fb.f_buy_money, fb.f_wy_money, f_buy_time, fb.f_deduction_count, fb.f_wy_rate, fb.f_channel_rate, fb.f_add_tm,
+		     fr.f_liberate_num, fr.f_real_name, fr.f_mobile, fr.f_province, fr.f_city, fr.f_prefecture,
+			 fr.f_residential, fr.f_building, fr.f_room_num, fr.t_room_id, fr.f_property_fees, pc.f_name propertyCompanyName, cp.f_name channelPartnerName,
+			 fb.t_property_company_id propertyCompanyId, fb.t_channel_partner_id channelPartnerId, fb.f_car_num carNum
+	</sql>
+	
+	<select id="selectFinanceRevenueSaList" parameterType="java.util.Map" resultMap="FinanceRevenueSignalAmountMap">
+		SELECT <include refid="revenueSignalAmountBase.queryHead_AppendTable"/>
+			,<include refid="queryHead_AppendTable_buy_req"/>, RSA2.f_amount RSAamountAgent, RSA2.f_tk_status RSTkStatusAgent,
+			RSA3.f_amount RSAamountWy, RSA3.f_tk_status RSTkStatusWy, RSA4.f_amount RSAamountPlatform, RSA4.f_tk_status RSTkStatusPlatform
+		FROM t_finance_buy fb 
+		  inner join t_revenue_signal_amount RSA on fb.t_finance_req_id = RSA.f_goal_id and RSA.f_goal_type = #{revenueProject}
+		  left join t_revenue_signal_amount RSA2 on RSA2.f_goal_type = #{revenueProject} and fb.t_finance_req_id = RSA2.f_goal_id and RSA2.f_mini_role_type = 3 and (RSA.f_goal_rev_time_str = RSA2.f_goal_rev_time_str or RSA.f_goal_rev_time_str is null or RSA2.f_goal_rev_time_str is null)
+		  left join t_revenue_signal_amount RSA3 on RSA3.f_goal_type = #{revenueProject} and fb.t_finance_req_id = RSA3.f_goal_id and RSA3.f_mini_role_type = 2 and (RSA.f_goal_rev_time_str = RSA3.f_goal_rev_time_str or RSA.f_goal_rev_time_str is null or RSA3.f_goal_rev_time_str is null)
+		  left join t_revenue_signal_amount RSA4 on RSA4.f_goal_type = #{revenueProject} and fb.t_finance_req_id = RSA4.f_goal_id and RSA4.f_mini_role_type = 1 and (RSA.f_goal_rev_time_str = RSA4.f_goal_rev_time_str or RSA.f_goal_rev_time_str is null or RSA4.f_goal_rev_time_str is null)
+		  inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		  left join t_property_company pc on fb.t_property_company_id = pc.f_id
+		  left join t_channel_partner cp on fb.t_channel_partner_id = cp.f_id
+		<include refid="financeRevenueWhere" />
+		order by RSA.f_goal_rev_time desc
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<select id="selectFinanceRevenueSaCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT count(*)
+		FROM t_finance_buy fb 
+		  inner join t_revenue_signal_amount RSA on fb.t_finance_req_id = RSA.f_goal_id and RSA.f_goal_type = #{revenueProject}
+		  inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		  left join t_property_company pc on fb.t_property_company_id = pc.f_id
+		  left join t_channel_partner cp on fb.t_channel_partner_id = cp.f_id
+		  left join t_revenue_signal_amount RSA2 on RSA2.f_goal_type = #{revenueProject} and fb.t_finance_req_id = RSA2.f_goal_id and RSA2.f_mini_role_type = 3 and (RSA.f_goal_rev_time_str = RSA2.f_goal_rev_time_str or RSA.f_goal_rev_time_str is null or RSA2.f_goal_rev_time_str is null)
+		  left join t_revenue_signal_amount RSA3 on RSA3.f_goal_type = #{revenueProject} and fb.t_finance_req_id = RSA3.f_goal_id and RSA3.f_mini_role_type = 2 and (RSA.f_goal_rev_time_str = RSA3.f_goal_rev_time_str or RSA.f_goal_rev_time_str is null or RSA3.f_goal_rev_time_str is null)
+		   left join t_revenue_signal_amount RSA4 on  RSA4.f_goal_type = #{revenueProject} and fb.t_finance_req_id = RSA4.f_goal_id and RSA4.f_mini_role_type = 1 and (RSA.f_goal_rev_time_str = RSA4.f_goal_rev_time_str or RSA.f_goal_rev_time_str is null or RSA4.f_goal_rev_time_str is null)
+		<include refid="financeRevenueWhere" />
+	</select>
+	
+	<select id="selectFinanceRevenueTotal" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.revenue.entity.EbuyRevenueTotal">
+		select sum(RSA.f_amount) totalAmount, sum(RSA2.f_amount) totalAmountReal, sum(RSA3.f_amount) totalAmountDiscount, sum(RSA4.f_amount) totalPlatform
+		, sum(fb.f_buy_money) totalOrder
+		    FROM t_finance_buy fb 
+		  inner join t_revenue_signal_amount RSA on fb.t_finance_req_id = RSA.f_goal_id and RSA.f_goal_type = #{revenueProject}
+		  inner join t_finance_req fr on fr.f_id = fb.t_finance_req_id
+		  left join t_property_company pc on fb.t_property_company_id = pc.f_id
+		  left join t_channel_partner cp on fb.t_channel_partner_id = cp.f_id
+		  left join t_revenue_signal_amount RSA2 on RSA2.f_goal_type = #{revenueProject} and fb.t_finance_req_id = RSA2.f_goal_id and RSA2.f_mini_role_type = 3 and (RSA.f_goal_rev_time_str = RSA2.f_goal_rev_time_str or RSA.f_goal_rev_time_str is null or RSA2.f_goal_rev_time_str is null)
+		  left join t_revenue_signal_amount RSA3 on RSA3.f_goal_type = #{revenueProject} and fb.t_finance_req_id = RSA3.f_goal_id and RSA3.f_mini_role_type = 2 and (RSA.f_goal_rev_time_str = RSA3.f_goal_rev_time_str or RSA.f_goal_rev_time_str is null or RSA3.f_goal_rev_time_str is null)
+		   left join t_revenue_signal_amount RSA4 on RSA4.f_goal_type = #{revenueProject} and fb.t_finance_req_id = RSA4.f_goal_id and RSA4.f_mini_role_type = 1 and (RSA.f_goal_rev_time_str = RSA4.f_goal_rev_time_str or RSA.f_goal_rev_time_str is null or RSA4.f_goal_rev_time_str is null)
+			<include refid="financeRevenueWhere" />
+	</select>
+
+</mapper>

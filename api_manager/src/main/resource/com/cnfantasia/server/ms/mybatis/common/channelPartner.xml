@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:渠道合伙人 t_channel_partner -->
+<mapper namespace="channelPartner">
+	<resultMap type="com.cnfantasia.server.ms.channelPartner.entity.ChannelPartnerEntity" id="channelPartnerEntity" extends="channelPartnerBase.channelPartnerBaseMap_AppendTable">
+        <result column="OUuserAccount" javaType="java.lang.String" property="omsUserName"/>  <!-- 后台账号 -->
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.channelPartner.entity.ChannelPartnerRecommendEntity" id="channelPartnerRecommendEntity" extends="channelPartnerRecommendBase.channelPartnerRecommendBaseMap_AppendTable">
+       <result column="signStatus" javaType="int" property="signStatus"/> 
+       <result column="lockDate" javaType="string" property="lockDate"/> 
+	</resultMap>
+	
+	<!-- 包含推荐物业公司信息列表的合伙人 -->
+	<resultMap type="com.cnfantasia.server.ms.channelPartner.entity.ChannelPartnerDetailEntity" id="channelPartnerDetailEntity" extends="channelPartnerEntity">
+       <collection property="channelPartnerRecommendList" resultMap="channelPartnerRecommendEntity"></collection>
+	</resultMap>
+    
+    <select id="select_cp_list" parameterType="java.util.Map" resultMap="channelPartnerEntity">
+    	select <include refid="channelPartnerBase.queryHead_AppendTable" />,
+    	<include refid="omsUserBase.queryHead_AppendTable"></include>,
+    	GROUP_CONCAT(OU2.f_real_name) inviteName
+    	from t_channel_partner CP
+    	left join t_oms_user OU on OU.f_id = CP.t_oms_user_f_id and OU.f_sys0_del_state = 0
+    	left join t_oms_user OU2 on OU2.f_invite_code = CP.f_invite_code
+    	where CP.f_sys0_del_state = 0 
+    	 <if test="name != null and name != '' ">  and CP.f_name like CONCAT('%', #{name}, '%') </if>
+    	 <if test="phone != null and phone != '' ">  and CP.f_phone like CONCAT('%', #{phone}, '%') </if>
+    	 <if test="omsUserName != null and omsUserName != '' ">  and OU.f_user_account like CONCAT('%', #{omsUserName}, '%') </if>
+    	 <if test="partnerType != null and partnerType != '' ">  and CP.f_partnerType = #{partnerType} </if>
+    	GROUP BY CP.f_id 
+    	order by CP.f_id desc
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+    </select>
+    
+    <select id="select_cp_detail" parameterType="Map" resultMap="channelPartnerDetailEntity">
+    	select <include refid="channelPartnerBase.queryHead_AppendTable" />,
+    	<include refid="omsUserBase.queryHead_AppendTable"/>,
+    	<include refid="channelPartnerRecommendBase.queryHead_AppendTable"/>
+    	, PC.f_is_all_cooperation signStatus, date_add(CPR.f_sys0_add_time, INTERVAL 60 DAY) lockDate
+    	from t_channel_partner CP
+    	inner join t_oms_user OU on OU.f_id = CP.t_oms_user_f_id
+    	left join t_channel_partner_recommend CPR on CPR.t_channel_partner_f_id = CP.f_id and CPR.f_is_relevance = 0 <!-- 默认查询未关联的物业公司信息 -->
+    	left join t_property_company PC ON PC.f_name = CPR.f_pc_name
+    	where 1=1
+    	<if test="id != null and id != '' ">  and CP.f_id = #{id} </if>
+    	<if test="omsUserId != null and omsUserId != '' ">  and OU.f_id = #{omsUserId} </if>
+    </select>
+    
+    <resultMap type="com.cnfantasia.server.ms.propertyCompany.entity.PropertyCompanySimple" id="PropertyCompanySimple">
+    	<result column="pcId" javaType="java.math.BigInteger" property="pcId"/>  
+    	<result column="pcName" javaType="java.lang.String" property="pcName"/>  
+    	<result column="groupBuildingCount" javaType="int" property="groupBuildingCount"/>  
+    	<result column="cooperationType" javaType="int" property="cooperationType"/>  
+    	<result column="cooperationTime" javaType="java.lang.String" property="cooperationTime"/>  
+    </resultMap>
+    
+    <select id="select_cp_detail_check" parameterType="Map" resultMap="PropertyCompanySimple">
+    	SELECT PC.f_id pcId, PC.f_name pcName, COUNT(GB.f_id) groupBuildingCount, date_format(CPR.f_sys0_upd_time,'%Y-%m-%d %T') cooperationTime, PC.f_cooperation_type cooperationType
+    	FROM t_channel_partner CP
+    	INNER JOIN t_oms_user OU ON OU.f_id = CP.t_oms_user_f_id
+    	INNER JOIN t_channel_partner_recommend CPR ON CPR.t_channel_partner_f_id = CP.f_id
+    	INNER JOIN t_property_company PC ON PC.f_name = CPR.f_pc_name
+    	LEFT JOIN t_group_building GB ON GB.t_property_company_f_id = PC.f_id
+    	WHERE 1=1
+    	AND CPR.f_is_relevance = 1
+    	<if test="id != null and id != '' ">  AND CP.f_id = #{id} </if>
+    	<if test="omsUserId != null and omsUserId != '' ">  AND OU.f_id = #{omsUserId} </if>
+    	GROUP BY PC.f_id
+    </select>
+    
+    <resultMap type="com.cnfantasia.server.ms.channelPartner.entity.GroupBuildingRegisterEntiy" id="groupBuildingRegisterMap" extends="groupBuildingRegisterBase.groupBuildingRegisterBaseMap_AppendTable">
+    	<result column="apName" javaType="java.lang.String" property="apName"/>  
+    	<result column="acName" javaType="java.lang.String" property="acName"/>  
+    	<result column="abName" javaType="java.lang.String" property="abName"/>  
+    	<result column="signStatus" javaType="int" property="signStatus"/>  
+    </resultMap>
+    
+    <select id="select_gbr_by_cprId" parameterType="java.lang.String" resultMap="groupBuildingRegisterMap">
+    	select <include refid="groupBuildingRegisterBase.queryHead_AppendTable" />,
+		ap.f_name apName, ac.f_name acName, ab.f_name abName, gb.f_sign_status signStatus
+    	from t_group_building_register GBR
+    	inner join t_address_block ab ON ab.f_id = GBR.t_address_block_f_id 
+   		inner join t_address_city ac on ac.f_id = ab.t_city_f_id  
+   		inner join t_address_province ap on ap.f_id = ac.t_province_f_id  
+    	left join t_group_building gb ON gb.f_name = GBR.f_name
+    	where GBR.f_sys0_del_state = 0 and GBR.t_channel_partner_recommend_f_id = #{id}
+    </select>
+    
+    <!-- 查询待推荐的小区是否已被物业公司推荐 -->
+    <select id="select_groupbuilding_with_gbname_and_blockname" resultType="int" parameterType="map">
+    	select count(*) from t_group_building gb
+		left join t_address_block ab on ab.f_id = gb.t_block_f_id
+		where gb.f_name = #{gbName}
+		and ab.f_name = #{blockName}
+		and (gb.t_property_company_f_id is not null or gb.t_property_management_f_id is not null);
+    </select>
+    
+    <select id="select_channel_partner_list_ByCpnameAndType" parameterType="java.util.Map" resultType="java.util.Map">
+    	SELECT 
+			CP.f_id as id,
+    	CASE WHEN CP.f_partnerType='company' THEN CP.f_company_name
+			ELSE CONCAT(CP.f_name,'--',IFNULL(CP.f_id_number,'')) END as name1
+    	FROM t_channel_partner CP 
+    	WHERE CP.f_id NOT IN(
+			SELECT
+			CP.f_id
+		FROM
+			t_channel_partner CP
+		INNER JOIN t_channel_partner_recommend CPR ON CP.f_id = CPR.t_channel_partner_f_id
+		WHERE
+			CPR.f_pc_name = #{cpName} AND CPR.f_is_relevance = 1
+		)
+		AND CP.f_partnerType = #{channelType}
+		AND CP.f_sys0_del_state = 0
+		<if test="channelType != null and channelType == 'company' ">
+			AND CP.f_company_name IS NOT NULL AND CP.f_company_name != '';
+		</if>
+		<if test="channelType != null and channelType == 'person' ">
+			AND CP.f_name IS NOT NULL AND CP.f_name != '';
+		</if>
+    </select>
+</mapper>

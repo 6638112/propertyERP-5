@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="userHasPropertyCard">
+
+	<!-- 更新用户购买记录表（加锁校验） -->
+	<update id="update_userHasPropertyCard_withLock" parameterType="com.cnfantasia.server.api.userHasPropertyCard.entity.UserHasPropertyCardEntity">
+		UPDATE t_user_has_property_card
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="cardAmount != null and !cardAmount.equals('') "> ,f_card_amount=#{cardAmount}</if>
+ 		<if test="discountAmt != null and !discountAmt.equals('') "> ,f_discount_amt=#{discountAmt}</if>
+ 		<if test="realPayAmt != null and !realPayAmt.equals('') "> ,f_real_pay_amt=#{realPayAmt}</if>
+ 		<if test="orderNo != null and !orderNo.equals('') "> ,f_order_no=#{orderNo}</if>
+ 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('') "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if>
+ 		<if test="balanceAmt != null and !balanceAmt.equals('') "> ,f_balance_amt=#{balanceAmt}</if>
+ 		<if test="buyTime != null and !buyTime.equals('') "> ,f_buy_time=str_to_date(#{buyTime},'%Y-%m-%d %T')</if>
+ 		<if test="tUserFId != null and !tUserFId.equals('') "> ,t_user_f_id=#{tUserFId}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+ 		<if test="tPropertyCardFId != null and !tPropertyCardFId.equals('') "> ,t_property_card_f_id=#{tPropertyCardFId}</if>
+		</trim>
+		WHERE f_id=#{id}
+			<if test="oldUpdateTime == null or oldUpdateTime.equals('') "> AND f_sys0_upd_time IS NULL</if>
+			<if test="oldUpdateTime != null and !oldUpdateTime.equals('') "> AND f_sys0_upd_time= #{oldUpdateTime}</if>
+	</update>
+	
+	<select id="select_userHasPropertyCard_with_userId" parameterType="java.util.Map" resultMap="userHasPropertyCardBase.userHasPropertyCardExtendMap">
+		SELECT <include refid="userHasPropertyCardBase.queryHead"/>
+		<include refid="userHasPropertyCardBase.busiQueryCondition"/>
+		<include refid="userHasPropertyCardBase.dimCheckSql"/>
+		and UHPC.t_user_f_id = #{userId}
+        and (UHPC.f_balance_amt is null or UHPC.f_balance_amt>0)
+        and UHPC.f_sys0_del_state = 0
+	</select>
+
+</mapper>

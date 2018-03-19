@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 物业代扣卡账户 -->
+<mapper namespace="propertyAccountInfo">
+
+	<!-- 更新代扣卡账户（加锁校验） -->
+	<update id="update_propertyAccountInfo_withLock" parameterType="com.cnfantasia.server.api.propertyAccountInfo.entity.PropertyAccountInfoEntity">
+		UPDATE t_property_account_info
+		<trim prefix="SET" prefixOverrides=",">
+			<if test="balanceAmt != null and !balanceAmt.equals('') "> ,f_balance_amt=#{balanceAmt}</if>
+			<if test="tUserFId != null and !tUserFId.equals('') "> ,t_user_f_id=#{tUserFId}</if>
+			<if test="notifyPhone != null and !notifyPhone.equals('') "> ,f_notify_phone=#{notifyPhone}</if>
+			<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d
+				%T')</if>
+			<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d
+				%T')</if>
+			<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+			<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d
+				%T')</if>
+			<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+			<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+			<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+			<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+			<if test="isfirstcharge != null and !isfirstcharge.equals('') "> ,f_isFirstCharge=#{isfirstcharge}</if>
+		</trim>
+		WHERE f_id=#{id}
+			<if test="oldUpdateTime == null or oldUpdateTime.equals('') "> AND f_sys0_upd_time IS NULL</if>
+			<if test="oldUpdateTime != null and !oldUpdateTime.equals('') "> AND f_sys0_upd_time= #{oldUpdateTime}</if>
+	</update>
+
+</mapper>

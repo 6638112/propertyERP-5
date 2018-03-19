@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:费用账单拆分表 t_pay_bill_split -->
+<mapper namespace="payBillSplitBase">
+	<resultMap type="PayBillSplit" id="payBillSplitBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_parent_bill_id" javaType="java.math.BigInteger" property="parentBillId"/>  <!-- 所属上级账单Id -->        <result column="f_manage_amount" javaType="java.lang.Long" property="manageAmount"/>  <!-- 拆分的管理费金额 -->        <result column="f_name_desc" javaType="java.lang.String" property="nameDesc"/>  <!-- 名称描述 -->        <result column="f_succ_pay_amount" javaType="java.lang.Long" property="succPayAmount"/>  <!-- 实际支付金额 -->        <result column="f_discount" javaType="java.lang.Double" property="discount"/>  <!-- 优惠的折扣 -->        <result column="f_prize_record_id" javaType="java.math.BigInteger" property="prizeRecordId"/>  <!-- 折扣记录Id -->        <result column="f_bill_sub_month" javaType="java.lang.String" property="billSubMonth"/>  <!-- 费用单拆分月份 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="f_discount_month" javaType="java.lang.String" property="discountMonth"/>  <!-- 可用折扣月份 -->
+	</resultMap>
+	<resultMap type="PayBillSplit" id="payBillSplitExtendMap" extends="payBillSplitBaseMap">
+	</resultMap>
+	<resultMap type="PayBillSplit" id="payBillSplitBaseMap_AppendTable">
+        <id column="PBSid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PBSparentBillId" javaType="java.math.BigInteger" property="parentBillId"/>  <!-- 所属上级账单Id -->        <result column="PBSmanageAmount" javaType="java.lang.Long" property="manageAmount"/>  <!-- 拆分的管理费金额 -->        <result column="PBSnameDesc" javaType="java.lang.String" property="nameDesc"/>  <!-- 名称描述 -->        <result column="PBSsuccPayAmount" javaType="java.lang.Long" property="succPayAmount"/>  <!-- 实际支付金额 -->        <result column="PBSdiscount" javaType="java.lang.Double" property="discount"/>  <!-- 优惠的折扣 -->        <result column="PBSprizeRecordId" javaType="java.math.BigInteger" property="prizeRecordId"/>  <!-- 折扣记录Id -->        <result column="PBSbillSubMonth" javaType="java.lang.String" property="billSubMonth"/>  <!-- 费用单拆分月份 -->        <result column="PBSsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PBSsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PBSsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PBSsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PBSsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PBSsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PBSsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="PBSdiscountMonth" javaType="java.lang.String" property="discountMonth"/>  <!-- 可用折扣月份 -->
+	</resultMap>
+	<resultMap type="PayBillSplit" id="payBillSplitBaseMap_AppendTable1">
+        <id column="PBS1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PBS1parentBillId" javaType="java.math.BigInteger" property="parentBillId"/>  <!-- 所属上级账单Id -->        <result column="PBS1manageAmount" javaType="java.lang.Long" property="manageAmount"/>  <!-- 拆分的管理费金额 -->        <result column="PBS1nameDesc" javaType="java.lang.String" property="nameDesc"/>  <!-- 名称描述 -->        <result column="PBS1succPayAmount" javaType="java.lang.Long" property="succPayAmount"/>  <!-- 实际支付金额 -->        <result column="PBS1discount" javaType="java.lang.Double" property="discount"/>  <!-- 优惠的折扣 -->        <result column="PBS1prizeRecordId" javaType="java.math.BigInteger" property="prizeRecordId"/>  <!-- 折扣记录Id -->        <result column="PBS1billSubMonth" javaType="java.lang.String" property="billSubMonth"/>  <!-- 费用单拆分月份 -->        <result column="PBS1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PBS1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PBS1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PBS1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PBS1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PBS1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PBS1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="PBS1discountMonth" javaType="java.lang.String" property="discountMonth"/>  <!-- 可用折扣月份 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PBS.f_id,PBS.f_parent_bill_id,PBS.f_manage_amount,PBS.f_name_desc,PBS.f_succ_pay_amount,PBS.f_discount,PBS.f_prize_record_id,date_format(PBS.f_bill_sub_month,'%Y-%m-%d %T') as f_bill_sub_month,date_format(PBS.f_discount_month,'%Y-%m-%d %T') as f_discount_month
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PBS.f_id as PBSid,PBS.f_parent_bill_id as PBSparentBillId,PBS.f_manage_amount as PBSmanageAmount,PBS.f_name_desc as PBSnameDesc,PBS.f_succ_pay_amount as PBSsuccPayAmount,PBS.f_discount as PBSdiscount,PBS.f_prize_record_id as PBSprizeRecordId,date_format(PBS.f_bill_sub_month,'%Y-%m-%d %T') as PBSbillSubMonth,date_format(PBS.f_discount_month,'%Y-%m-%d %T') as PBSdiscountMonth
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PBS1.f_id as PBS1id,PBS1.f_parent_bill_id as PBS1parentBillId,PBS1.f_manage_amount as PBS1manageAmount,PBS1.f_name_desc as PBS1nameDesc,PBS1.f_succ_pay_amount as PBS1succPayAmount,PBS1.f_discount as PBS1discount,PBS1.f_prize_record_id as PBS1prizeRecordId,date_format(PBS1.f_bill_sub_month,'%Y-%m-%d %T') as PBS1billSubMonth,date_format(PBS1.f_discount_month,'%Y-%m-%d %T') as PBS1discountMonth
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PBS.f_id = #{id} ) </if>        <if test="parentBillId != null">  and (PBS.f_parent_bill_id = #{parentBillId} ) </if>        <if test="manageAmount != null">  and (PBS.f_manage_amount = #{manageAmount} ) </if>        <if test="nameDesc != null">  and (PBS.f_name_desc = #{nameDesc} ) </if>        <if test="succPayAmount != null">  and (PBS.f_succ_pay_amount = #{succPayAmount} ) </if>        <if test="discount != null">  and (PBS.f_discount = #{discount} ) </if>        <if test="prizeRecordId != null">  and (PBS.f_prize_record_id = #{prizeRecordId} ) </if>        <if test="billSubMonth != null and !billSubMonth.equals('')  ">  and (PBS.f_bill_sub_month = str_to_date(#{billSubMonth},'%Y-%m-%d %T') ) </if>        <if test="billSubMonth_START != null and !billSubMonth_START.equals('')  ">              <![CDATA[ and (PBS.f_bill_sub_month >= str_to_date(#{billSubMonth_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="billSubMonth_END != null and !billSubMonth_END.equals('')  ">            <![CDATA[ and (PBS.f_bill_sub_month <= str_to_date(#{billSubMonth_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PBS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PBS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PBS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PBS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PBS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PBS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PBS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PBS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PBS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (PBS.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (PBS.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (PBS.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (PBS.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (PBS.f_sys0_del_state = 0 ) </if>        <if test="discountMonth != null and !discountMonth.equals('')  ">  and (PBS.f_discount_month = str_to_date(#{discountMonth},'%Y-%m-%d %T') ) </if>        <if test="discountMonth_START != null and !discountMonth_START.equals('')  ">              <![CDATA[ and (PBS.f_discount_month >= str_to_date(#{discountMonth_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="discountMonth_END != null and !discountMonth_END.equals('')  ">            <![CDATA[ and (PBS.f_discount_month <= str_to_date(#{discountMonth_END},'%Y-%m-%d %T') ) ]]>        </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PBS.f_id = #{id} ) </if>        <if test="parentBillId != null and !parentBillId.equals('')  ">  and (PBS.f_parent_bill_id = #{parentBillId} ) </if>        <if test="manageAmount != null and !manageAmount.equals('')  ">  and (PBS.f_manage_amount = #{manageAmount} ) </if>        <if test="nameDesc != null and !nameDesc.equals('')  ">  and (PBS.f_name_desc like CONCAT('%',#{nameDesc},'%') ) </if>        <if test="succPayAmount != null and !succPayAmount.equals('')  ">  and (PBS.f_succ_pay_amount = #{succPayAmount} ) </if>        <if test="discount != null and !discount.equals('')  ">  and (PBS.f_discount = #{discount} ) </if>        <if test="prizeRecordId != null and !prizeRecordId.equals('')  ">  and (PBS.f_prize_record_id = #{prizeRecordId} ) </if>        <if test="billSubMonth != null and !billSubMonth.equals('')  ">  and (PBS.f_bill_sub_month = str_to_date(#{billSubMonth},'%Y-%m-%d %T') ) </if>        <if test="billSubMonth_START != null and !billSubMonth_START.equals('')  ">              <![CDATA[ and (PBS.f_bill_sub_month >= str_to_date(#{billSubMonth_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="billSubMonth_END != null and !billSubMonth_END.equals('')  ">            <![CDATA[ and (PBS.f_bill_sub_month <= str_to_date(#{billSubMonth_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PBS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PBS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PBS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PBS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PBS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PBS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PBS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PBS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PBS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PBS.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PBS.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PBS.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PBS.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (PBS.f_sys0_del_state = 0 ) </if>        <if test="discountMonth != null and !discountMonth.equals('')  ">  and (PBS.f_discount_month = str_to_date(#{discountMonth},'%Y-%m-%d %T') ) </if>        <if test="discountMonth_START != null and !discountMonth_START.equals('')  ">              <![CDATA[ and (PBS.f_discount_month >= str_to_date(#{discountMonth_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="discountMonth_END != null and !discountMonth_END.equals('')  ">            <![CDATA[ and (PBS.f_discount_month <= str_to_date(#{discountMonth_END},'%Y-%m-%d %T') ) ]]>        </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="payBillSplitBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="payBillSplitBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="payBillSplitBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="payBillSplitBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_pay_bill_split PBS    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(费用账单拆分表)信息。 -->
+	<sql id="select_payBillSplit">
+		SELECT <include refid="payBillSplitBase.queryHead"/>
+		<include refid="payBillSplitBase.busiQueryCondition"/>
+		<include refid="payBillSplitBase.dimCheckSql"/>
+		ORDER BY PBS.f_id DESC
+	</sql>
+	<select id="select_payBillSplit" parameterType="java.util.Map" resultMap="payBillSplitBase.payBillSplitExtendMap">
+		<include refid="payBillSplitBase.select_payBillSplit"/>
+	</select>
+	
+	<!-- 根据条件分页查询(费用账单拆分表)信息  -->
+	<sql id="select_payBillSplit_withPage">
+		SELECT <include refid="payBillSplitBase.queryHead"/>
+		<include refid="payBillSplitBase.busiQueryCondition"/>
+		<include refid="payBillSplitBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_payBillSplit_withPage" resultMap="payBillSplitBase.payBillSplitExtendMap" parameterType="java.util.Map">
+		<include refid="payBillSplitBase.select_payBillSplit_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(费用账单拆分表)信息。 -->
+	<sql id="select_payBillSplit_bySeqId">
+		SELECT <include refid="payBillSplitBase.queryHead"/>
+		<include refid="payBillSplitBase.busiQueryCondition"/>
+		 and PBS.f_id = #{_parameter}
+	</sql>
+	<select id="select_payBillSplit_bySeqId" parameterType="java.math.BigInteger" resultMap="payBillSplitBase.payBillSplitBaseMap">
+		<include refid="payBillSplitBase.select_payBillSplit_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(费用账单拆分表)记录数  -->
+	<sql id="select_payBillSplit_count">
+		SELECT COUNT(*)
+		<include refid="payBillSplitBase.busiQueryCount"/>
+		<include refid="payBillSplitBase.dimCheckSql"/>
+	</sql>
+	<select id="select_payBillSplit_count" resultType="java.lang.Integer">
+		<include refid="payBillSplitBase.select_payBillSplit_count"/>
+	</select>
+	
+	 <!-- 往(费用账单拆分表)新增一条记录。 -->
+	 <sql id="insert_payBillSplit">
+		INSERT INTO t_pay_bill_split 
+		(f_id,f_parent_bill_id,f_manage_amount,f_name_desc,f_succ_pay_amount,f_discount,f_prize_record_id,f_bill_sub_month,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_discount_month) VALUES 
+		(#{id},#{parentBillId},#{manageAmount},#{nameDesc,jdbcType=VARCHAR},#{succPayAmount},#{discount},#{prizeRecordId},str_to_date(#{billSubMonth,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0,str_to_date(#{discountMonth,jdbcType=DATE},'%Y-%m-%d %T'))
+	 </sql>
+    <insert id="insert_payBillSplit" parameterType="PayBillSplit">
+		<include refid="payBillSplitBase.insert_payBillSplit"/>
+    </insert>
+    
+	<!-- 批量新增(费用账单拆分表)信息 -->
+    <insert id="insert_payBillSplit_Batch" parameterType="java.util.List">
+    	INSERT INTO t_pay_bill_split 
+		(f_id,f_parent_bill_id,f_manage_amount,f_name_desc,f_succ_pay_amount,f_discount,f_prize_record_id,f_bill_sub_month,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_discount_month) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.parentBillId},#{item.manageAmount},#{item.nameDesc,jdbcType=VARCHAR},#{item.succPayAmount},#{item.discount},#{item.prizeRecordId},str_to_date(#{item.billSubMonth,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0,str_to_date(#{item.discountMonth,jdbcType=DATE},'%Y-%m-%d %T'))
+		</foreach>
+    </insert>
+    
+    <!-- 更新(费用账单拆分表)信息。 -->
+    <sql id="update_payBillSplit">
+		UPDATE t_pay_bill_split		<trim prefix="SET" prefixOverrides=","> 		<if test="parentBillId != null and !parentBillId.equals('') "> ,f_parent_bill_id=#{parentBillId}</if> 		<if test="manageAmount != null and !manageAmount.equals('') "> ,f_manage_amount=#{manageAmount}</if> 		<if test="nameDesc != null and !nameDesc.equals('') "> ,f_name_desc=#{nameDesc}</if> 		<if test="succPayAmount != null and !succPayAmount.equals('') "> ,f_succ_pay_amount=#{succPayAmount}</if> 		<if test="discount != null and !discount.equals('') "> ,f_discount=#{discount}</if> 		<if test="prizeRecordId != null and !prizeRecordId.equals('') "> ,f_prize_record_id=#{prizeRecordId}</if> 		<if test="billSubMonth != null and !billSubMonth.equals('') "> ,f_bill_sub_month=str_to_date(#{billSubMonth},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if> 		<if test="discountMonth != null and !discountMonth.equals('') "> ,f_discount_month=str_to_date(#{discountMonth},'%Y-%m-%d %T')</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_payBillSplit" parameterType="PayBillSplit">
+		<include refid="payBillSplitBase.update_payBillSplit"/>
+    </update>
+    
+    <!-- 批量更新(费用账单拆分表)信息。 -->
+    <update id="update_payBillSplit_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_bill_split		<trim prefix="SET" prefixOverrides=","> 		<if test="item.parentBillId != null and !item.parentBillId.equals('')  "> ,f_parent_bill_id=#{item.parentBillId}</if> 		<if test="item.manageAmount != null and !item.manageAmount.equals('')  "> ,f_manage_amount=#{item.manageAmount}</if> 		<if test="item.nameDesc != null and !item.nameDesc.equals('')  "> ,f_name_desc=#{item.nameDesc}</if> 		<if test="item.succPayAmount != null and !item.succPayAmount.equals('')  "> ,f_succ_pay_amount=#{item.succPayAmount}</if> 		<if test="item.discount != null and !item.discount.equals('')  "> ,f_discount=#{item.discount}</if> 		<if test="item.prizeRecordId != null and !item.prizeRecordId.equals('')  "> ,f_prize_record_id=#{item.prizeRecordId}</if> 		<if test="item.billSubMonth != null and !item.billSubMonth.equals('')  "> ,f_bill_sub_month=str_to_date(#{item.billSubMonth},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if> 		<if test="item.discountMonth != null and !item.discountMonth.equals('')  "> ,f_discount_month=str_to_date(#{item.discountMonth},'%Y-%m-%d %T')</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(费用账单拆分表)信息_逻辑删除。 -->
+    <sql id="delete_payBillSplit_Logic">
+		UPDATE t_pay_bill_split		<trim prefix="SET" prefixOverrides=","> 		<if test="parentBillId != null and !parentBillId.equals('')  "> ,f_parent_bill_id=#{parentBillId}</if> 		<if test="manageAmount != null and !manageAmount.equals('')  "> ,f_manage_amount=#{manageAmount}</if> 		<if test="nameDesc != null and !nameDesc.equals('')  "> ,f_name_desc=#{nameDesc}</if> 		<if test="succPayAmount != null and !succPayAmount.equals('')  "> ,f_succ_pay_amount=#{succPayAmount}</if> 		<if test="discount != null and !discount.equals('')  "> ,f_discount=#{discount}</if> 		<if test="prizeRecordId != null and !prizeRecordId.equals('')  "> ,f_prize_record_id=#{prizeRecordId}</if> 		<if test="billSubMonth != null and !billSubMonth.equals('')  "> ,f_bill_sub_month=str_to_date(#{billSubMonth},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="discountMonth != null and !discountMonth.equals('')  "> ,f_discount_month=str_to_date(#{discountMonth},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_payBillSplit_Logic" parameterType="PayBillSplit">
+		<include refid="payBillSplitBase.delete_payBillSplit_Logic"/>
+    </update>
+    
+    <!-- 批量删除(费用账单拆分表)信息_逻辑删除 -->
+    <update id="delete_payBillSplit_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_bill_split		<trim prefix="SET" prefixOverrides=","> 		<if test="item.parentBillId != null and !item.parentBillId.equals('')  "> ,f_parent_bill_id=#{item.parentBillId}</if> 		<if test="item.manageAmount != null and !item.manageAmount.equals('')  "> ,f_manage_amount=#{item.manageAmount}</if> 		<if test="item.nameDesc != null and !item.nameDesc.equals('')  "> ,f_name_desc=#{item.nameDesc}</if> 		<if test="item.succPayAmount != null and !item.succPayAmount.equals('')  "> ,f_succ_pay_amount=#{item.succPayAmount}</if> 		<if test="item.discount != null and !item.discount.equals('')  "> ,f_discount=#{item.discount}</if> 		<if test="item.prizeRecordId != null and !item.prizeRecordId.equals('')  "> ,f_prize_record_id=#{item.prizeRecordId}</if> 		<if test="item.billSubMonth != null and !item.billSubMonth.equals('')  "> ,f_bill_sub_month=str_to_date(#{item.billSubMonth},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.discountMonth != null and !item.discountMonth.equals('')  "> ,f_discount_month=str_to_date(#{item.discountMonth},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(费用账单拆分表)信息。 -->
+    <sql id="delete_payBillSplit">
+		DELETE FROM t_pay_bill_split WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_payBillSplit" parameterType="java.lang.String">
+		<include refid="payBillSplitBase.delete_payBillSplit"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(费用账单拆分表)信息。 -->
+    <delete id="delete_payBillSplit_Batch" parameterType="java.util.List">
+		DELETE FROM t_pay_bill_split WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

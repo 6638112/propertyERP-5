@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:业主表 t_property_management -->
+<mapper namespace="propertyManagement">
+	<resultMap type="com.cnfantasia.server.ms.propertyManagement.entity.PropertyManagementEntity" id="propertyManagementEntity" extends="propertyManagementBase.propertyManagementBaseMap">
+		<result column="omsUserId" property="omsUserId" />
+		<result column="userAccount" property="userAccount" />
+		<result column="userPassword" property="password" />
+		<result column="companyName" property="companyName" />
+	</resultMap>
+	<sql id="entityQueryHead">
+		PM.f_id,PM.f_tel,PM.f_name,PM.t_property_company_f_id,date_format(PM.f_sys0_add_time,'%Y-%m-%d %T') as f_sys0_add_time,date_format(PM.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time,date_format(PM.f_sys0_del_time,'%Y-%m-%d %T') as f_sys0_del_time,PM.f_sys0_add_user,PM.f_sys0_upd_user,PM.f_sys0_del_user,PM.f_sys0_del_state,MOU.f_id omsUserId,MOU.f_user_account userAccount,MOU.f_password userPassword
+	</sql>
+	<!-- 根据id查询管理处信息 -->
+	<select id="select_propertyManagement_byId" parameterType="java.math.BigInteger" resultMap="propertyManagementEntity">
+		SELECT 
+			<include refid="propertyManagementBase.queryHead"/>,
+			MOU.f_id omsUserId,MOU.f_user_account userAccount,MOU.f_password password
+		FROM t_property_management PM
+		LEFT JOIN t_property_management_has_oms_user PMHOU ON PM.f_id=PMHOU.t_property_management_f_id AND PMHOU.f_sys0_del_state=0
+		LEFT JOIN t_oms_user MOU ON PMHOU.t_oms_user_f_id = MOU.f_id
+		WHERE 1=1 
+		AND PM.f_sys0_del_state = 0
+		AND PM.f_id=#{_parameter}
+		limit 1
+	</select>
+	
+	<!-- 根据ID号批量删除(商铺小区关联表)信息。 -->
+    <delete id="del_PM_Has_Ou_byMgtId" parameterType="java.util.Map">
+		update t_property_management_has_oms_user PMHOU
+		set PMHOU.f_sys0_del_state=1,PMHOU.f_sys0_del_user=#{delUser},PMHOU.f_sys0_del_time=sysdate()
+		where PMHOU.t_property_management_f_id=#{managementId};
+		
+		update t_property_management PM
+		set PM.f_sys0_del_state=1,PM.f_sys0_del_user=#{delUser},PM.f_sys0_del_time=sysdate()
+		where PM.f_id=#{managementId};
+		
+		update t_oms_user OU
+		set OU.f_sys0_del_state=1,OU.f_sys0_del_user=#{delUser},OU.f_sys0_del_time=sysdate()
+		WHERE EXISTS(
+			SELECT 1 FROM t_property_management_has_oms_user PMHOU WHERE PMHOU.t_oms_user_f_id = OU.f_id AND PMHOU.t_property_management_f_id=#{managementId}
+		);
+    </delete>
+    
+    <!-- 根据物业公司id查询管理处信息 -->
+	<select id="select_propertyManagement_forList" resultMap="propertyManagementEntity">
+		SELECT 
+			<include refid="propertyManagementBase.queryHead"/>,
+			MOU.f_id omsUserId,MOU.f_user_account userAccount,MOU.f_password password,PC.f_name companyName
+		FROM t_property_management PM
+		INNER JOIN t_property_company PC ON PC.f_id=PM.t_property_company_f_id AND PC.f_sys0_del_state=0
+		LEFT JOIN t_property_management_has_oms_user PMHOU ON PM.f_id=PMHOU.t_property_management_f_id AND PMHOU.f_sys0_del_state=0
+		LEFT JOIN t_oms_user MOU ON PMHOU.t_oms_user_f_id = MOU.f_id
+		WHERE 1=1 
+		AND PM.f_sys0_del_state = 0
+		<if test="companyId != null and companyId != '' ">  AND PM.t_property_company_f_id=#{companyId} </if>
+		<if test="userId != null and userId != '' ">  AND MOU.f_id=#{userId} </if>
+		<if test="isAdmin == null or isAdmin == 0 ">
+			<if test="pcAdminId != null and pcAdminId != '' ">  AND PC.f_admin_id=#{pcAdminId} </if>
+		</if>
+	</select>
+	
+	<!-- 更新(物业管理)信息。 -->
+	<update id="update_propertyManagement" parameterType="PropertyManagement">
+		UPDATE t_property_management
+		<trim prefix="SET" prefixOverrides=",">
+			,f_tel=#{tel},f_person_charge_name=#{personChargeName},f_person_charge_tel=#{personChargeTel}
+ 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if>
+ 		<if test="tPropertyCompanyFId != null and !tPropertyCompanyFId.equals('') "> ,t_property_company_f_id=#{tPropertyCompanyFId}</if>
+ 		<if test="isOpenReceivables != null and !isOpenReceivables.equals('') "> ,f_is_open_receivables=#{isOpenReceivables}</if>
+ 		<if test="isOpenReveivablesEdit != null and !isOpenReveivablesEdit.equals('') "> ,f_is_open_reveivables_edit=#{isOpenReveivablesEdit}</if>
+ 		<if test="accountNo != null and !accountNo.equals('') "> ,f_account_no=#{accountNo}</if>
+ 		<if test="bankName != null and !bankName.equals('') "> ,f_bank_name=#{bankName}</if>
+ 		<if test="accountName != null and !accountName.equals('') "> ,f_account_name=#{accountName}</if>
+ 		<if test="bankBranch != null and !bankBranch.equals('') "> ,f_bank_branch=#{bankBranch}</if>
+ 		<if test="bankProvince != null and !bankProvince.equals('') "> ,f_bank_province=#{bankProvince}</if>
+ 		<if test="bankCity != null and !bankCity.equals('') "> ,f_bank_city=#{bankCity}</if>
+ 		<if test="editResult != null and !editResult.equals('') "> ,f_edit_result=#{editResult}</if>
+ 		<if test="isEdit != null and !isEdit.equals('') "> ,f_is_edit=#{isEdit}</if>
+ 		<if test="settlementDay != null and !settlementDay.equals('') "> ,f_settlement_day=#{settlementDay}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </update>
+</mapper>

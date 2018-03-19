@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:云钥匙付款列表 t_pay_key_list -->
+<mapper namespace="payKeyListBase">
+	<resultMap type="PayKeyList" id="payKeyListBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键,同t_ebuy_product.f_id -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 付费详情描述 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="f_pay_price" javaType="java.lang.Long" property="payPrice"/>  <!-- 支付价格 -->        <result column="f_pay_time" javaType="java.lang.Long" property="payTime"/>  <!-- 有效时间 -->
+	</resultMap>
+	<resultMap type="PayKeyList" id="payKeyListExtendMap" extends="payKeyListBaseMap">
+	</resultMap>
+	<resultMap type="PayKeyList" id="payKeyListBaseMap_AppendTable">
+        <id column="PKLid" javaType="java.math.BigInteger" property="id"/>  <!-- 主键,同t_ebuy_product.f_id -->        <result column="PKLdesc" javaType="java.lang.String" property="desc"/>  <!-- 付费详情描述 -->        <result column="PKLsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="PKLpayPrice" javaType="java.lang.Long" property="payPrice"/>  <!-- 支付价格 -->        <result column="PKLpayTime" javaType="java.lang.Long" property="payTime"/>  <!-- 有效时间 -->
+	</resultMap>
+	<resultMap type="PayKeyList" id="payKeyListBaseMap_AppendTable1">
+        <id column="PKL1id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键,同t_ebuy_product.f_id -->        <result column="PKL1desc" javaType="java.lang.String" property="desc"/>  <!-- 付费详情描述 -->        <result column="PKL1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="PKL1payPrice" javaType="java.lang.Long" property="payPrice"/>  <!-- 支付价格 -->        <result column="PKL1payTime" javaType="java.lang.Long" property="payTime"/>  <!-- 有效时间 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PKL.f_id,PKL.f_desc,PKL.f_pay_price,PKL.f_pay_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PKL.f_id as PKLid,PKL.f_desc as PKLdesc,PKL.f_pay_price as PKLpayPrice,PKL.f_pay_time as PKLpayTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PKL1.f_id as PKL1id,PKL1.f_desc as PKL1desc,PKL1.f_pay_price as PKL1payPrice,PKL1.f_pay_time as PKL1payTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PKL.f_id = #{id} ) </if>        <if test="desc != null">  and (PKL.f_desc = #{desc} ) </if>        <if test="sys0DelState != null">  and (PKL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (PKL.f_sys0_del_state = 0 ) </if>        <if test="payPrice != null">  and (PKL.f_pay_price = #{payPrice} ) </if>        <if test="payTime != null">  and (PKL.f_pay_time = #{payTime} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PKL.f_id = #{id} ) </if>        <if test="desc != null and !desc.equals('')  ">  and (PKL.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PKL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (PKL.f_sys0_del_state = 0 ) </if>        <if test="payPrice != null and !payPrice.equals('')  ">  and (PKL.f_pay_price = #{payPrice} ) </if>        <if test="payTime != null and !payTime.equals('')  ">  and (PKL.f_pay_time = #{payTime} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="payKeyListBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="payKeyListBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="payKeyListBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="payKeyListBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_pay_key_list PKL    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(云钥匙付款列表)信息。 -->
+	<sql id="select_payKeyList">
+		SELECT <include refid="payKeyListBase.queryHead"/>
+		<include refid="payKeyListBase.busiQueryCondition"/>
+		<include refid="payKeyListBase.dimCheckSql"/>
+		ORDER BY PKL.f_id DESC
+	</sql>
+	<select id="select_payKeyList" parameterType="java.util.Map" resultMap="payKeyListBase.payKeyListExtendMap">
+		<include refid="payKeyListBase.select_payKeyList"/>
+	</select>
+	
+	<!-- 根据条件分页查询(云钥匙付款列表)信息  -->
+	<sql id="select_payKeyList_withPage">
+		SELECT <include refid="payKeyListBase.queryHead"/>
+		<include refid="payKeyListBase.busiQueryCondition"/>
+		<include refid="payKeyListBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_payKeyList_withPage" resultMap="payKeyListBase.payKeyListExtendMap" parameterType="java.util.Map">
+		<include refid="payKeyListBase.select_payKeyList_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(云钥匙付款列表)信息。 -->
+	<sql id="select_payKeyList_bySeqId">
+		SELECT <include refid="payKeyListBase.queryHead"/>
+		<include refid="payKeyListBase.busiQueryCondition"/>
+		 and PKL.f_id = #{_parameter}
+	</sql>
+	<select id="select_payKeyList_bySeqId" parameterType="java.math.BigInteger" resultMap="payKeyListBase.payKeyListBaseMap">
+		<include refid="payKeyListBase.select_payKeyList_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(云钥匙付款列表)记录数  -->
+	<sql id="select_payKeyList_count">
+		SELECT COUNT(*)
+		<include refid="payKeyListBase.busiQueryCount"/>
+		<include refid="payKeyListBase.dimCheckSql"/>
+	</sql>
+	<select id="select_payKeyList_count" resultType="java.lang.Integer">
+		<include refid="payKeyListBase.select_payKeyList_count"/>
+	</select>
+	
+	 <!-- 往(云钥匙付款列表)新增一条记录。 -->
+	 <sql id="insert_payKeyList">
+		INSERT INTO t_pay_key_list 
+		(f_id,f_desc,f_sys0_del_state,f_pay_price,f_pay_time) VALUES 
+		(#{id},#{desc,jdbcType=VARCHAR},0,#{payPrice},#{payTime})
+	 </sql>
+    <insert id="insert_payKeyList" parameterType="PayKeyList">
+		<include refid="payKeyListBase.insert_payKeyList"/>
+    </insert>
+    
+	<!-- 批量新增(云钥匙付款列表)信息 -->
+    <insert id="insert_payKeyList_Batch" parameterType="java.util.List">
+    	INSERT INTO t_pay_key_list 
+		(f_id,f_desc,f_sys0_del_state,f_pay_price,f_pay_time) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.desc,jdbcType=VARCHAR},0,#{item.payPrice},#{item.payTime})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(云钥匙付款列表)信息。 -->
+    <sql id="update_payKeyList">
+		UPDATE t_pay_key_list		<trim prefix="SET" prefixOverrides=","> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if> 		<if test="payPrice != null and !payPrice.equals('') "> ,f_pay_price=#{payPrice}</if> 		<if test="payTime != null and !payTime.equals('') "> ,f_pay_time=#{payTime}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_payKeyList" parameterType="PayKeyList">
+		<include refid="payKeyListBase.update_payKeyList"/>
+    </update>
+    
+    <!-- 批量更新(云钥匙付款列表)信息。 -->
+    <update id="update_payKeyList_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_key_list		<trim prefix="SET" prefixOverrides=","> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if> 		<if test="item.payPrice != null and !item.payPrice.equals('')  "> ,f_pay_price=#{item.payPrice}</if> 		<if test="item.payTime != null and !item.payTime.equals('')  "> ,f_pay_time=#{item.payTime}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(云钥匙付款列表)信息_逻辑删除。 -->
+    <sql id="delete_payKeyList_Logic">
+		UPDATE t_pay_key_list		<trim prefix="SET" prefixOverrides=","> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="payPrice != null and !payPrice.equals('')  "> ,f_pay_price=#{payPrice}</if> 		<if test="payTime != null and !payTime.equals('')  "> ,f_pay_time=#{payTime}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_payKeyList_Logic" parameterType="PayKeyList">
+		<include refid="payKeyListBase.delete_payKeyList_Logic"/>
+    </update>
+    
+    <!-- 批量删除(云钥匙付款列表)信息_逻辑删除 -->
+    <update id="delete_payKeyList_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_key_list		<trim prefix="SET" prefixOverrides=","> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.payPrice != null and !item.payPrice.equals('')  "> ,f_pay_price=#{item.payPrice}</if> 		<if test="item.payTime != null and !item.payTime.equals('')  "> ,f_pay_time=#{item.payTime}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(云钥匙付款列表)信息。 -->
+    <sql id="delete_payKeyList">
+		DELETE FROM t_pay_key_list WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_payKeyList" parameterType="java.lang.String">
+		<include refid="payKeyListBase.delete_payKeyList"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(云钥匙付款列表)信息。 -->
+    <delete id="delete_payKeyList_Batch" parameterType="java.util.List">
+		DELETE FROM t_pay_key_list WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

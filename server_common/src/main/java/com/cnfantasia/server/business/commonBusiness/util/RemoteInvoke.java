@@ -1,0 +1,55 @@
+/**
+ * 
+ */
+package com.cnfantasia.server.business.commonBusiness.util;
+
+import java.util.Map;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
+import org.apache.commons.httpclient.params.HttpMethodParams;
+
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+
+/**
+ * 类说明：
+ *
+ * @author hunter
+ * @since 2014年6月9日下午4:33:30
+ */
+public class RemoteInvoke {
+	
+	public static String call(String url,Map<String, Object> params) throws Exception{
+		/* 创建HttpClient实例 */
+		HttpClient client = new HttpClient();
+		String encoding = "UTF-8";
+		HttpConnectionManagerParams connectionManagerParams = client.getHttpConnectionManager().getParams();
+		connectionManagerParams.setConnectionTimeout(5000);//连接超时 5s
+		connectionManagerParams.setSoTimeout(5000);//读数超时 5s
+		PostMethod postMethod = new PostMethod(url);
+		try {
+			/* 执行post方法 */
+			postMethod.getParams().setContentCharset(encoding);
+			postMethod.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, encoding);
+			//模拟form表单post方法提交
+			postMethod.addRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+			postMethod.getParams().setUriCharset(encoding);
+			for(String key : params.keySet()){
+				postMethod.addParameter(key,String.valueOf(params.get(key)));
+			}
+			int statusCode = client.executeMethod(postMethod);
+			if (statusCode != HttpStatus.SC_OK) {
+				System.err.println("Method failed: " + postMethod.getStatusLine());
+				throw new BusinessRuntimeException("Method failed: " + postMethod.getStatusLine());
+			}
+			/* 获得返回的结果 */
+			byte[] responseBody = postMethod.getResponseBody();
+			return new String(responseBody);
+		} finally {
+			postMethod.releaseConnection();
+		}
+	}
+
+}

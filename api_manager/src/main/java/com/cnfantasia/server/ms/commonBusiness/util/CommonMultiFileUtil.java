@@ -1,0 +1,69 @@
+/**   
+* Filename:    CommonMultiFileUtil.java   
+* @version:    1.0  
+* Create at:   2014年6月5日 上午11:15:49   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年6月5日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.ms.commonBusiness.util;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+import com.cnfantasia.server.common.exception.ValidateRuntimeException;
+import com.cnfantasia.server.ms.commonBusiness.entity.MultiFileEntity;
+
+/**
+ * Filename:    CommonMultiFileUtil.java
+ * @version:    1.0.0
+ * Create at:   2014年6月5日 上午11:15:49
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年6月5日       shiyl             1.0             1.0 Version
+ */
+public class CommonMultiFileUtil {
+	private static Log logger = LogFactory.getLog(CommonMultiFileUtil.class);
+	public static MultiFileEntity parseRequsetFileInfo(HttpServletRequest request,String parameter) {
+		String resultFileName = null;
+		byte[] datas = null;
+		InputStream inputStream;
+		if(!(request instanceof MultipartHttpServletRequest)){
+			throw new ValidateRuntimeException("CommonMultiFileUtil.parseRequsetFileInfo.unsupportedRequest.error");
+		}
+		{// 获取文件
+			// 转型为MultipartHttpRequest(重点的所在)
+			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+			// 根据前台的name名称得到上传的文件
+			MultipartFile uploadFile = multipartRequest.getFile(parameter);
+			String fileName = uploadFile.getOriginalFilename();
+//			String format = fileName.substring(fileName.lastIndexOf(".")+1);
+			try {
+				datas = uploadFile.getBytes();
+				resultFileName = fileName;
+				inputStream = uploadFile.getInputStream();
+			} catch (IOException e) {
+				logger.debug("parseRequsetFileInfo.getBytes cause IOException:" + e.getMessage());
+				throw new BusinessRuntimeException("CommonMultiFileUtil.parseRequsetFileInfo.getBytes.error");
+			}
+		}
+		MultiFileEntity multiFileEntity = new MultiFileEntity(resultFileName, datas,inputStream);
+		return multiFileEntity;
+	}
+	
+
+}

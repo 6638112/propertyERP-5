@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:秒杀活动购买记录表 t_flash_deal_buy_record -->
+<mapper namespace="flashDealBuyRecordBase">
+	<resultMap type="FlashDealBuyRecord" id="flashDealBuyRecordBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键ID -->        <result column="t_user_f_id" javaType="java.math.BigInteger" property="tUserFId"/>  <!-- 用户ID -->        <result column="f_user_mobile" javaType="java.lang.String" property="userMobile"/>  <!-- 联系方式 -->        <result column="t_flash_deal_activity_f_id" javaType="java.math.BigInteger" property="tFlashDealActivityFId"/>  <!-- 秒杀活动ID -->        <result column="t_ebuy_order_f_id" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 订单ID -->        <result column="f_record_status" javaType="java.lang.Integer" property="recordStatus"/>  <!-- 状态（1 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="FlashDealBuyRecord" id="flashDealBuyRecordExtendMap" extends="flashDealBuyRecordBaseMap">
+	</resultMap>
+	<resultMap type="FlashDealBuyRecord" id="flashDealBuyRecordBaseMap_AppendTable">
+        <id column="FDBRid" javaType="java.math.BigInteger" property="id"/>  <!-- 主键ID -->        <result column="FDBRtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!-- 用户ID -->        <result column="FDBRuserMobile" javaType="java.lang.String" property="userMobile"/>  <!-- 联系方式 -->        <result column="FDBRtFlashDealActivityFId" javaType="java.math.BigInteger" property="tFlashDealActivityFId"/>  <!-- 秒杀活动ID -->        <result column="FDBRtEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 订单ID -->        <result column="FDBRrecordStatus" javaType="java.lang.Integer" property="recordStatus"/>  <!-- 状态（1 -->        <result column="FDBRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="FDBRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="FDBRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="FDBRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="FDBRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="FDBRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="FDBRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="FlashDealBuyRecord" id="flashDealBuyRecordBaseMap_AppendTable1">
+        <id column="FDBR1id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键ID -->        <result column="FDBR1tUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!-- 用户ID -->        <result column="FDBR1userMobile" javaType="java.lang.String" property="userMobile"/>  <!-- 联系方式 -->        <result column="FDBR1tFlashDealActivityFId" javaType="java.math.BigInteger" property="tFlashDealActivityFId"/>  <!-- 秒杀活动ID -->        <result column="FDBR1tEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 订单ID -->        <result column="FDBR1recordStatus" javaType="java.lang.Integer" property="recordStatus"/>  <!-- 状态（1 -->        <result column="FDBR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="FDBR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="FDBR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="FDBR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="FDBR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="FDBR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="FDBR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		FDBR.f_id,FDBR.t_user_f_id,FDBR.f_user_mobile,FDBR.t_flash_deal_activity_f_id,FDBR.t_ebuy_order_f_id,FDBR.f_record_status,date_format(FDBR.f_sys0_add_time,'%Y-%m-%d %T') as f_sys0_add_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		FDBR.f_id as FDBRid,FDBR.t_user_f_id as FDBRtUserFId,FDBR.f_user_mobile as FDBRuserMobile,FDBR.t_flash_deal_activity_f_id as FDBRtFlashDealActivityFId,FDBR.t_ebuy_order_f_id as FDBRtEbuyOrderFId,FDBR.f_record_status as FDBRrecordStatus,date_format(FDBR.f_sys0_add_time,'%Y-%m-%d %T') as FDBRsys0AddTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		FDBR1.f_id as FDBR1id,FDBR1.t_user_f_id as FDBR1tUserFId,FDBR1.f_user_mobile as FDBR1userMobile,FDBR1.t_flash_deal_activity_f_id as FDBR1tFlashDealActivityFId,FDBR1.t_ebuy_order_f_id as FDBR1tEbuyOrderFId,FDBR1.f_record_status as FDBR1recordStatus,date_format(FDBR1.f_sys0_add_time,'%Y-%m-%d %T') as FDBR1sys0AddTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (FDBR.f_id = #{id} ) </if>        <if test="tUserFId != null">  and (FDBR.t_user_f_id = #{tUserFId} ) </if>        <if test="userMobile != null">  and (FDBR.f_user_mobile = #{userMobile} ) </if>        <if test="tFlashDealActivityFId != null">  and (FDBR.t_flash_deal_activity_f_id = #{tFlashDealActivityFId} ) </if>        <if test="tEbuyOrderFId != null">  and (FDBR.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="recordStatus != null">  and (FDBR.f_record_status = #{recordStatus} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (FDBR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (FDBR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (FDBR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (FDBR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (FDBR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (FDBR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (FDBR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (FDBR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (FDBR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (FDBR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (FDBR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (FDBR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (FDBR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (FDBR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (FDBR.f_id = #{id} ) </if>        <if test="tUserFId != null and !tUserFId.equals('')  ">  and (FDBR.t_user_f_id = #{tUserFId} ) </if>        <if test="userMobile != null and !userMobile.equals('')  ">  and (FDBR.f_user_mobile like CONCAT('%',#{userMobile},'%') ) </if>        <if test="tFlashDealActivityFId != null and !tFlashDealActivityFId.equals('')  ">  and (FDBR.t_flash_deal_activity_f_id = #{tFlashDealActivityFId} ) </if>        <if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  ">  and (FDBR.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="recordStatus != null and !recordStatus.equals('')  ">  and (FDBR.f_record_status = #{recordStatus} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (FDBR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (FDBR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (FDBR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (FDBR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (FDBR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (FDBR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (FDBR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (FDBR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (FDBR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (FDBR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (FDBR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (FDBR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (FDBR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (FDBR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="flashDealBuyRecordBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="flashDealBuyRecordBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="flashDealBuyRecordBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="flashDealBuyRecordBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_flash_deal_buy_record FDBR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(秒杀活动购买记录表)信息。 -->
+	<sql id="select_flashDealBuyRecord">
+		SELECT <include refid="flashDealBuyRecordBase.queryHead"/>
+		<include refid="flashDealBuyRecordBase.busiQueryCondition"/>
+		<include refid="flashDealBuyRecordBase.dimCheckSql"/>
+		ORDER BY FDBR.f_id DESC
+	</sql>
+	<select id="select_flashDealBuyRecord" parameterType="java.util.Map" resultMap="flashDealBuyRecordBase.flashDealBuyRecordExtendMap">
+		<include refid="flashDealBuyRecordBase.select_flashDealBuyRecord"/>
+	</select>
+	
+	<!-- 根据条件分页查询(秒杀活动购买记录表)信息  -->
+	<sql id="select_flashDealBuyRecord_withPage">
+		SELECT <include refid="flashDealBuyRecordBase.queryHead"/>
+		<include refid="flashDealBuyRecordBase.busiQueryCondition"/>
+		<include refid="flashDealBuyRecordBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_flashDealBuyRecord_withPage" resultMap="flashDealBuyRecordBase.flashDealBuyRecordExtendMap" parameterType="java.util.Map">
+		<include refid="flashDealBuyRecordBase.select_flashDealBuyRecord_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(秒杀活动购买记录表)信息。 -->
+	<sql id="select_flashDealBuyRecord_bySeqId">
+		SELECT <include refid="flashDealBuyRecordBase.queryHead"/>
+		<include refid="flashDealBuyRecordBase.busiQueryCondition"/>
+		 and FDBR.f_id = #{_parameter}
+	</sql>
+	<select id="select_flashDealBuyRecord_bySeqId" parameterType="java.math.BigInteger" resultMap="flashDealBuyRecordBase.flashDealBuyRecordBaseMap">
+		<include refid="flashDealBuyRecordBase.select_flashDealBuyRecord_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(秒杀活动购买记录表)记录数  -->
+	<sql id="select_flashDealBuyRecord_count">
+		SELECT COUNT(*)
+		<include refid="flashDealBuyRecordBase.busiQueryCount"/>
+		<include refid="flashDealBuyRecordBase.dimCheckSql"/>
+	</sql>
+	<select id="select_flashDealBuyRecord_count" resultType="java.lang.Integer">
+		<include refid="flashDealBuyRecordBase.select_flashDealBuyRecord_count"/>
+	</select>
+	
+	 <!-- 往(秒杀活动购买记录表)新增一条记录。 -->
+	 <sql id="insert_flashDealBuyRecord">
+		INSERT INTO t_flash_deal_buy_record 
+		(f_id,t_user_f_id,f_user_mobile,t_flash_deal_activity_f_id,t_ebuy_order_f_id,f_record_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tUserFId},#{userMobile,jdbcType=VARCHAR},#{tFlashDealActivityFId},#{tEbuyOrderFId},#{recordStatus},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_flashDealBuyRecord" parameterType="FlashDealBuyRecord">
+		<include refid="flashDealBuyRecordBase.insert_flashDealBuyRecord"/>
+    </insert>
+    
+	<!-- 批量新增(秒杀活动购买记录表)信息 -->
+    <insert id="insert_flashDealBuyRecord_Batch" parameterType="java.util.List">
+    	INSERT INTO t_flash_deal_buy_record 
+		(f_id,t_user_f_id,f_user_mobile,t_flash_deal_activity_f_id,t_ebuy_order_f_id,f_record_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tUserFId},#{item.userMobile,jdbcType=VARCHAR},#{item.tFlashDealActivityFId},#{item.tEbuyOrderFId},#{item.recordStatus},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(秒杀活动购买记录表)信息。 -->
+    <sql id="update_flashDealBuyRecord">
+		UPDATE t_flash_deal_buy_record		<trim prefix="SET" prefixOverrides=","> 		<if test="tUserFId != null and !tUserFId.equals('') "> ,t_user_f_id=#{tUserFId}</if> 		<if test="userMobile != null and !userMobile.equals('') "> ,f_user_mobile=#{userMobile}</if> 		<if test="tFlashDealActivityFId != null and !tFlashDealActivityFId.equals('') "> ,t_flash_deal_activity_f_id=#{tFlashDealActivityFId}</if> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('') "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="recordStatus != null and !recordStatus.equals('') "> ,f_record_status=#{recordStatus}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_flashDealBuyRecord" parameterType="FlashDealBuyRecord">
+		<include refid="flashDealBuyRecordBase.update_flashDealBuyRecord"/>
+    </update>
+    
+    <!-- 批量更新(秒杀活动购买记录表)信息。 -->
+    <update id="update_flashDealBuyRecord_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_flash_deal_buy_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.userMobile != null and !item.userMobile.equals('')  "> ,f_user_mobile=#{item.userMobile}</if> 		<if test="item.tFlashDealActivityFId != null and !item.tFlashDealActivityFId.equals('')  "> ,t_flash_deal_activity_f_id=#{item.tFlashDealActivityFId}</if> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.recordStatus != null and !item.recordStatus.equals('')  "> ,f_record_status=#{item.recordStatus}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(秒杀活动购买记录表)信息_逻辑删除。 -->
+    <sql id="delete_flashDealBuyRecord_Logic">
+		UPDATE t_flash_deal_buy_record		<trim prefix="SET" prefixOverrides=","> 		<if test="tUserFId != null and !tUserFId.equals('')  "> ,t_user_f_id=#{tUserFId}</if> 		<if test="userMobile != null and !userMobile.equals('')  "> ,f_user_mobile=#{userMobile}</if> 		<if test="tFlashDealActivityFId != null and !tFlashDealActivityFId.equals('')  "> ,t_flash_deal_activity_f_id=#{tFlashDealActivityFId}</if> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="recordStatus != null and !recordStatus.equals('')  "> ,f_record_status=#{recordStatus}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_flashDealBuyRecord_Logic" parameterType="FlashDealBuyRecord">
+		<include refid="flashDealBuyRecordBase.delete_flashDealBuyRecord_Logic"/>
+    </update>
+    
+    <!-- 批量删除(秒杀活动购买记录表)信息_逻辑删除 -->
+    <update id="delete_flashDealBuyRecord_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_flash_deal_buy_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.userMobile != null and !item.userMobile.equals('')  "> ,f_user_mobile=#{item.userMobile}</if> 		<if test="item.tFlashDealActivityFId != null and !item.tFlashDealActivityFId.equals('')  "> ,t_flash_deal_activity_f_id=#{item.tFlashDealActivityFId}</if> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.recordStatus != null and !item.recordStatus.equals('')  "> ,f_record_status=#{item.recordStatus}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(秒杀活动购买记录表)信息。 -->
+    <sql id="delete_flashDealBuyRecord">
+		DELETE FROM t_flash_deal_buy_record WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_flashDealBuyRecord" parameterType="java.lang.String">
+		<include refid="flashDealBuyRecordBase.delete_flashDealBuyRecord"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(秒杀活动购买记录表)信息。 -->
+    <delete id="delete_flashDealBuyRecord_Batch" parameterType="java.util.List">
+		DELETE FROM t_flash_deal_buy_record WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

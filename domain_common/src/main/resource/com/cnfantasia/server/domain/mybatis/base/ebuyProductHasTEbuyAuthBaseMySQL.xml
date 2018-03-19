@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN: t_ebuy_product_has_t_ebuy_auth -->
+<mapper namespace="ebuyProductHasTEbuyAuthBase">
+	<resultMap type="EbuyProductHasTEbuyAuth" id="ebuyProductHasTEbuyAuthBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_ebuy_product_f_id" javaType="java.math.BigInteger" property="tEbuyProductFId"/>  <!--  -->        <result column="t_ebuy_auth_f_id" javaType="java.math.BigInteger" property="tEbuyAuthFId"/>  <!--  -->        <result column="f_auth_detail_img" javaType="java.lang.String" property="authDetailImg"/>  <!-- 产品图片认证url -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyProductHasTEbuyAuth" id="ebuyProductHasTEbuyAuthExtendMap" extends="ebuyProductHasTEbuyAuthBaseMap">
+	</resultMap>
+	<resultMap type="EbuyProductHasTEbuyAuth" id="ebuyProductHasTEbuyAuthBaseMap_AppendTable">
+        <id column="EPHTEAid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EPHTEAtEbuyProductFId" javaType="java.math.BigInteger" property="tEbuyProductFId"/>  <!--  -->        <result column="EPHTEAtEbuyAuthFId" javaType="java.math.BigInteger" property="tEbuyAuthFId"/>  <!--  -->        <result column="EPHTEAauthDetailImg" javaType="java.lang.String" property="authDetailImg"/>  <!-- 产品图片认证url -->        <result column="EPHTEAsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EPHTEAsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EPHTEAsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EPHTEAsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EPHTEAsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EPHTEAsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EPHTEAsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyProductHasTEbuyAuth" id="ebuyProductHasTEbuyAuthBaseMap_AppendTable1">
+        <id column="EPHTEA1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EPHTEA1tEbuyProductFId" javaType="java.math.BigInteger" property="tEbuyProductFId"/>  <!--  -->        <result column="EPHTEA1tEbuyAuthFId" javaType="java.math.BigInteger" property="tEbuyAuthFId"/>  <!--  -->        <result column="EPHTEA1authDetailImg" javaType="java.lang.String" property="authDetailImg"/>  <!-- 产品图片认证url -->        <result column="EPHTEA1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EPHTEA1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EPHTEA1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EPHTEA1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EPHTEA1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EPHTEA1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EPHTEA1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EPHTEA.f_id,EPHTEA.t_ebuy_product_f_id,EPHTEA.t_ebuy_auth_f_id,EPHTEA.f_auth_detail_img,date_format(EPHTEA.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EPHTEA.f_id as EPHTEAid,EPHTEA.t_ebuy_product_f_id as EPHTEAtEbuyProductFId,EPHTEA.t_ebuy_auth_f_id as EPHTEAtEbuyAuthFId,EPHTEA.f_auth_detail_img as EPHTEAauthDetailImg,date_format(EPHTEA.f_sys0_upd_time,'%Y-%m-%d %T') as EPHTEAsys0UpdTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EPHTEA1.f_id as EPHTEA1id,EPHTEA1.t_ebuy_product_f_id as EPHTEA1tEbuyProductFId,EPHTEA1.t_ebuy_auth_f_id as EPHTEA1tEbuyAuthFId,EPHTEA1.f_auth_detail_img as EPHTEA1authDetailImg,date_format(EPHTEA1.f_sys0_upd_time,'%Y-%m-%d %T') as EPHTEA1sys0UpdTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EPHTEA.f_id = #{id} ) </if>        <if test="tEbuyProductFId != null">  and (EPHTEA.t_ebuy_product_f_id = #{tEbuyProductFId} ) </if>        <if test="tEbuyAuthFId != null">  and (EPHTEA.t_ebuy_auth_f_id = #{tEbuyAuthFId} ) </if>        <if test="authDetailImg != null">  and (EPHTEA.f_auth_detail_img = #{authDetailImg} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EPHTEA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EPHTEA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EPHTEA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EPHTEA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EPHTEA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EPHTEA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EPHTEA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EPHTEA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EPHTEA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EPHTEA.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EPHTEA.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EPHTEA.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EPHTEA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EPHTEA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EPHTEA.f_id = #{id} ) </if>        <if test="tEbuyProductFId != null and !tEbuyProductFId.equals('')  ">  and (EPHTEA.t_ebuy_product_f_id = #{tEbuyProductFId} ) </if>        <if test="tEbuyAuthFId != null and !tEbuyAuthFId.equals('')  ">  and (EPHTEA.t_ebuy_auth_f_id = #{tEbuyAuthFId} ) </if>        <if test="authDetailImg != null and !authDetailImg.equals('')  ">  and (EPHTEA.f_auth_detail_img like CONCAT('%',#{authDetailImg},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EPHTEA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EPHTEA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EPHTEA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EPHTEA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EPHTEA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EPHTEA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EPHTEA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EPHTEA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EPHTEA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EPHTEA.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EPHTEA.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EPHTEA.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EPHTEA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EPHTEA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyProductHasTEbuyAuthBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyProductHasTEbuyAuthBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyProductHasTEbuyAuthBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyProductHasTEbuyAuthBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_product_has_t_ebuy_auth EPHTEA    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询()信息。 -->
+	<sql id="select_ebuyProductHasTEbuyAuth">
+		SELECT <include refid="ebuyProductHasTEbuyAuthBase.queryHead"/>
+		<include refid="ebuyProductHasTEbuyAuthBase.busiQueryCondition"/>
+		<include refid="ebuyProductHasTEbuyAuthBase.dimCheckSql"/>
+		ORDER BY EPHTEA.f_id DESC
+	</sql>
+	<select id="select_ebuyProductHasTEbuyAuth" parameterType="java.util.Map" resultMap="ebuyProductHasTEbuyAuthBase.ebuyProductHasTEbuyAuthExtendMap">
+		<include refid="ebuyProductHasTEbuyAuthBase.select_ebuyProductHasTEbuyAuth"/>
+	</select>
+	
+	<!-- 根据条件分页查询()信息  -->
+	<sql id="select_ebuyProductHasTEbuyAuth_withPage">
+		SELECT <include refid="ebuyProductHasTEbuyAuthBase.queryHead"/>
+		<include refid="ebuyProductHasTEbuyAuthBase.busiQueryCondition"/>
+		<include refid="ebuyProductHasTEbuyAuthBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyProductHasTEbuyAuth_withPage" resultMap="ebuyProductHasTEbuyAuthBase.ebuyProductHasTEbuyAuthExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyProductHasTEbuyAuthBase.select_ebuyProductHasTEbuyAuth_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个()信息。 -->
+	<sql id="select_ebuyProductHasTEbuyAuth_bySeqId">
+		SELECT <include refid="ebuyProductHasTEbuyAuthBase.queryHead"/>
+		<include refid="ebuyProductHasTEbuyAuthBase.busiQueryCondition"/>
+		 and EPHTEA.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyProductHasTEbuyAuth_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyProductHasTEbuyAuthBase.ebuyProductHasTEbuyAuthBaseMap">
+		<include refid="ebuyProductHasTEbuyAuthBase.select_ebuyProductHasTEbuyAuth_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的()记录数  -->
+	<sql id="select_ebuyProductHasTEbuyAuth_count">
+		SELECT COUNT(*)
+		<include refid="ebuyProductHasTEbuyAuthBase.busiQueryCount"/>
+		<include refid="ebuyProductHasTEbuyAuthBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyProductHasTEbuyAuth_count" resultType="java.lang.Integer">
+		<include refid="ebuyProductHasTEbuyAuthBase.select_ebuyProductHasTEbuyAuth_count"/>
+	</select>
+	
+	 <!-- 往()新增一条记录。 -->
+	 <sql id="insert_ebuyProductHasTEbuyAuth">
+		INSERT INTO t_ebuy_product_has_t_ebuy_auth 
+		(f_id,t_ebuy_product_f_id,t_ebuy_auth_f_id,f_auth_detail_img,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tEbuyProductFId},#{tEbuyAuthFId},#{authDetailImg,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_ebuyProductHasTEbuyAuth" parameterType="EbuyProductHasTEbuyAuth">
+		<include refid="ebuyProductHasTEbuyAuthBase.insert_ebuyProductHasTEbuyAuth"/>
+    </insert>
+    
+	<!-- 批量新增()信息 -->
+    <insert id="insert_ebuyProductHasTEbuyAuth_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_product_has_t_ebuy_auth 
+		(f_id,t_ebuy_product_f_id,t_ebuy_auth_f_id,f_auth_detail_img,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tEbuyProductFId},#{item.tEbuyAuthFId},#{item.authDetailImg,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新()信息。 -->
+    <sql id="update_ebuyProductHasTEbuyAuth">
+		UPDATE t_ebuy_product_has_t_ebuy_auth		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyProductFId != null and !tEbuyProductFId.equals('') "> ,t_ebuy_product_f_id=#{tEbuyProductFId}</if> 		<if test="tEbuyAuthFId != null and !tEbuyAuthFId.equals('') "> ,t_ebuy_auth_f_id=#{tEbuyAuthFId}</if> 		<if test="authDetailImg != null and !authDetailImg.equals('') "> ,f_auth_detail_img=#{authDetailImg}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyProductHasTEbuyAuth" parameterType="EbuyProductHasTEbuyAuth">
+		<include refid="ebuyProductHasTEbuyAuthBase.update_ebuyProductHasTEbuyAuth"/>
+    </update>
+    
+    <!-- 批量更新()信息。 -->
+    <update id="update_ebuyProductHasTEbuyAuth_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_product_has_t_ebuy_auth		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyProductFId != null and !item.tEbuyProductFId.equals('')  "> ,t_ebuy_product_f_id=#{item.tEbuyProductFId}</if> 		<if test="item.tEbuyAuthFId != null and !item.tEbuyAuthFId.equals('')  "> ,t_ebuy_auth_f_id=#{item.tEbuyAuthFId}</if> 		<if test="item.authDetailImg != null and !item.authDetailImg.equals('')  "> ,f_auth_detail_img=#{item.authDetailImg}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除()信息_逻辑删除。 -->
+    <sql id="delete_ebuyProductHasTEbuyAuth_Logic">
+		UPDATE t_ebuy_product_has_t_ebuy_auth		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyProductFId != null and !tEbuyProductFId.equals('')  "> ,t_ebuy_product_f_id=#{tEbuyProductFId}</if> 		<if test="tEbuyAuthFId != null and !tEbuyAuthFId.equals('')  "> ,t_ebuy_auth_f_id=#{tEbuyAuthFId}</if> 		<if test="authDetailImg != null and !authDetailImg.equals('')  "> ,f_auth_detail_img=#{authDetailImg}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyProductHasTEbuyAuth_Logic" parameterType="EbuyProductHasTEbuyAuth">
+		<include refid="ebuyProductHasTEbuyAuthBase.delete_ebuyProductHasTEbuyAuth_Logic"/>
+    </update>
+    
+    <!-- 批量删除()信息_逻辑删除 -->
+    <update id="delete_ebuyProductHasTEbuyAuth_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_product_has_t_ebuy_auth		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyProductFId != null and !item.tEbuyProductFId.equals('')  "> ,t_ebuy_product_f_id=#{item.tEbuyProductFId}</if> 		<if test="item.tEbuyAuthFId != null and !item.tEbuyAuthFId.equals('')  "> ,t_ebuy_auth_f_id=#{item.tEbuyAuthFId}</if> 		<if test="item.authDetailImg != null and !item.authDetailImg.equals('')  "> ,f_auth_detail_img=#{item.authDetailImg}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除()信息。 -->
+    <sql id="delete_ebuyProductHasTEbuyAuth">
+		DELETE FROM t_ebuy_product_has_t_ebuy_auth WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyProductHasTEbuyAuth" parameterType="java.lang.String">
+		<include refid="ebuyProductHasTEbuyAuthBase.delete_ebuyProductHasTEbuyAuth"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除()信息。 -->
+    <delete id="delete_ebuyProductHasTEbuyAuth_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_product_has_t_ebuy_auth WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

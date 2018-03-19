@@ -1,0 +1,56 @@
+/**   
+ * Filename:    EbuyPayService.java   
+ * @version:    1.0  
+ * Create at:   2014年6月30日 上午2:31:46   
+ * Description:  
+ *   
+ * Modification History:   
+ * Date        Author      Version     Description   
+ * ----------------------------------------------------------------- 
+ * 2014年6月30日    shiyl      1.0         1.0 Version   
+ */
+package com.cnfantasia.server.api.payment.service;
+
+import java.math.BigInteger;
+import java.util.Map;
+
+import com.cnfantasia.server.api.ebuy.dao.IEbuyDao;
+import com.cnfantasia.server.api.ebuy.entity.EbuyOrderEntity;
+import com.cnfantasia.server.apibase.ebuyProduct.entity.EbuyProduct;
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+import com.tenpay.ClientRequestHandler;
+import com.tenpay.PackageRequestHandler;
+import com.tenpay.PrepayIdRequestHandler;
+
+/**
+ * Filename: EbuyPayService.java
+ * 
+ * @version: 1.0.0 Create at: 2014年6月30日 上午2:31:46 Description:
+ * 
+ *           Modification History: Date Author Version Description
+ *           ------------------------------------------------------------------
+ *           2014年6月30日 shiyl 1.0 1.0 Version
+ */
+public class EbuyPayService extends AbstractPaymentService implements IEbuyPayService{
+	private IEbuyDao ebuyDao;
+	public void setEbuyDao(IEbuyDao ebuyDao) {
+		this.ebuyDao = ebuyDao;
+	}
+	
+	@Override
+	public Map<String, Object> weixinPrePay(BigInteger userId, BigInteger orderId, String notify_url,
+			String remoteAddr, PackageRequestHandler packageReqHandler, PrepayIdRequestHandler prepayReqHandler,
+			ClientRequestHandler clientHandler) {
+		EbuyOrderEntity order = ebuyDao.getEbuyOrderEntityDetail(userId, orderId);
+		if(order==null){
+			throw new BusinessRuntimeException("EbuyPayService.weixinPrePay.order.isNull");
+		}
+		EbuyProduct ebuyProductEntity = order.getEbuyOrderHasTEbuyProductEntity_ProductList().get(0)
+				.getEbuyProductEntity();
+		String productInfo = ebuyProductEntity.getName();
+		Long tofalAmount = order.getAmount();
+		String out_trade_no = order.getOrderNo();
+		return weixinPrePay(userId, orderId, notify_url, remoteAddr, packageReqHandler, prepayReqHandler, clientHandler, productInfo, tofalAmount, out_trade_no);
+	}
+	
+}

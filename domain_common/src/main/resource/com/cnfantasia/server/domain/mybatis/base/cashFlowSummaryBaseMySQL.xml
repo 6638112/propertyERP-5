@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:现金流量汇总表 t_cash_flow_summary -->
+<mapper namespace="cashFlowSummaryBase">
+	<resultMap type="CashFlowSummary" id="cashFlowSummaryBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="t_real_room_id" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!--  -->
+        <result column="f_province_name" javaType="java.lang.String" property="provinceName"/>  <!-- 所在省 -->
+        <result column="f_city_name" javaType="java.lang.String" property="cityName"/>  <!-- 所在市 -->
+        <result column="t_group_building_id" javaType="java.math.BigInteger" property="tGroupBuildingId"/>  <!-- 小区id -->
+        <result column="f_gb_name" javaType="java.lang.String" property="gbName"/>  <!-- 小区名称 -->
+        <result column="t_building_id" javaType="java.math.BigInteger" property="tBuildingId"/>  <!-- 楼栋id -->
+        <result column="f_building_name" javaType="java.lang.String" property="buildingName"/>  <!-- 楼栋名称 -->
+        <result column="f_unit" javaType="java.lang.String" property="unit"/>  <!-- 单元名称 -->
+        <result column="f_room_num" javaType="java.lang.String" property="roomNum"/>  <!-- 房间号 -->
+        <result column="f_amount" javaType="java.lang.Long" property="amount"/>  <!-- 金额（单位 -->
+        <result column="f_src_bill_id" javaType="java.lang.String" property="srcBillId"/>  <!--  -->
+        <result column="f_bill_type" javaType="java.lang.Integer" property="billType"/>  <!-- 业务类型 -->
+        <result column="f_bill_time" javaType="java.lang.String" property="billTime"/>  <!-- 业务时间 -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CashFlowSummary" id="cashFlowSummaryExtendMap" extends="cashFlowSummaryBaseMap">
+	</resultMap>
+	<resultMap type="CashFlowSummary" id="cashFlowSummaryBaseMap_AppendTable">
+        <id column="CFSid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="CFStRealRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!--  -->
+        <result column="CFSprovinceName" javaType="java.lang.String" property="provinceName"/>  <!-- 所在省 -->
+        <result column="CFScityName" javaType="java.lang.String" property="cityName"/>  <!-- 所在市 -->
+        <result column="CFStGroupBuildingId" javaType="java.math.BigInteger" property="tGroupBuildingId"/>  <!-- 小区id -->
+        <result column="CFSgbName" javaType="java.lang.String" property="gbName"/>  <!-- 小区名称 -->
+        <result column="CFStBuildingId" javaType="java.math.BigInteger" property="tBuildingId"/>  <!-- 楼栋id -->
+        <result column="CFSbuildingName" javaType="java.lang.String" property="buildingName"/>  <!-- 楼栋名称 -->
+        <result column="CFSunit" javaType="java.lang.String" property="unit"/>  <!-- 单元名称 -->
+        <result column="CFSroomNum" javaType="java.lang.String" property="roomNum"/>  <!-- 房间号 -->
+        <result column="CFSamount" javaType="java.lang.Long" property="amount"/>  <!-- 金额（单位 -->
+        <result column="CFSsrcBillId" javaType="java.lang.String" property="srcBillId"/>  <!--  -->
+        <result column="CFSbillType" javaType="java.lang.Integer" property="billType"/>  <!-- 业务类型 -->
+        <result column="CFSbillTime" javaType="java.lang.String" property="billTime"/>  <!-- 业务时间 -->
+        <result column="CFSsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="CFSsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="CFSsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="CFSsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="CFSsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="CFSsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="CFSsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CashFlowSummary" id="cashFlowSummaryBaseMap_AppendTable1">
+        <id column="CFS1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="CFS1tRealRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!--  -->
+        <result column="CFS1provinceName" javaType="java.lang.String" property="provinceName"/>  <!-- 所在省 -->
+        <result column="CFS1cityName" javaType="java.lang.String" property="cityName"/>  <!-- 所在市 -->
+        <result column="CFS1tGroupBuildingId" javaType="java.math.BigInteger" property="tGroupBuildingId"/>  <!-- 小区id -->
+        <result column="CFS1gbName" javaType="java.lang.String" property="gbName"/>  <!-- 小区名称 -->
+        <result column="CFS1tBuildingId" javaType="java.math.BigInteger" property="tBuildingId"/>  <!-- 楼栋id -->
+        <result column="CFS1buildingName" javaType="java.lang.String" property="buildingName"/>  <!-- 楼栋名称 -->
+        <result column="CFS1unit" javaType="java.lang.String" property="unit"/>  <!-- 单元名称 -->
+        <result column="CFS1roomNum" javaType="java.lang.String" property="roomNum"/>  <!-- 房间号 -->
+        <result column="CFS1amount" javaType="java.lang.Long" property="amount"/>  <!-- 金额（单位 -->
+        <result column="CFS1srcBillId" javaType="java.lang.String" property="srcBillId"/>  <!--  -->
+        <result column="CFS1billType" javaType="java.lang.Integer" property="billType"/>  <!-- 业务类型 -->
+        <result column="CFS1billTime" javaType="java.lang.String" property="billTime"/>  <!-- 业务时间 -->
+        <result column="CFS1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="CFS1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="CFS1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="CFS1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="CFS1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="CFS1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="CFS1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CFS.f_id,CFS.t_real_room_id,CFS.f_province_name,CFS.f_city_name,CFS.t_group_building_id,CFS.f_gb_name,CFS.t_building_id,CFS.f_building_name,CFS.f_unit,CFS.f_room_num,CFS.f_amount,CFS.f_src_bill_id,CFS.f_bill_type,date_format(CFS.f_bill_time,'%Y-%m-%d %T') as f_bill_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CFS.f_id as CFSid,CFS.t_real_room_id as CFStRealRoomId,CFS.f_province_name as CFSprovinceName,CFS.f_city_name as CFScityName,CFS.t_group_building_id as CFStGroupBuildingId,CFS.f_gb_name as CFSgbName,CFS.t_building_id as CFStBuildingId,CFS.f_building_name as CFSbuildingName,CFS.f_unit as CFSunit,CFS.f_room_num as CFSroomNum,CFS.f_amount as CFSamount,CFS.f_src_bill_id as CFSsrcBillId,CFS.f_bill_type as CFSbillType,date_format(CFS.f_bill_time,'%Y-%m-%d %T') as CFSbillTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CFS1.f_id as CFS1id,CFS1.t_real_room_id as CFS1tRealRoomId,CFS1.f_province_name as CFS1provinceName,CFS1.f_city_name as CFS1cityName,CFS1.t_group_building_id as CFS1tGroupBuildingId,CFS1.f_gb_name as CFS1gbName,CFS1.t_building_id as CFS1tBuildingId,CFS1.f_building_name as CFS1buildingName,CFS1.f_unit as CFS1unit,CFS1.f_room_num as CFS1roomNum,CFS1.f_amount as CFS1amount,CFS1.f_src_bill_id as CFS1srcBillId,CFS1.f_bill_type as CFS1billType,date_format(CFS1.f_bill_time,'%Y-%m-%d %T') as CFS1billTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CFS.f_id = #{id} ) </if>
+        <if test="tRealRoomId != null">  and (CFS.t_real_room_id = #{tRealRoomId} ) </if>
+        <if test="provinceName != null">  and (CFS.f_province_name = #{provinceName} ) </if>
+        <if test="cityName != null">  and (CFS.f_city_name = #{cityName} ) </if>
+        <if test="tGroupBuildingId != null">  and (CFS.t_group_building_id = #{tGroupBuildingId} ) </if>
+        <if test="gbName != null">  and (CFS.f_gb_name = #{gbName} ) </if>
+        <if test="tBuildingId != null">  and (CFS.t_building_id = #{tBuildingId} ) </if>
+        <if test="buildingName != null">  and (CFS.f_building_name = #{buildingName} ) </if>
+        <if test="unit != null">  and (CFS.f_unit = #{unit} ) </if>
+        <if test="roomNum != null">  and (CFS.f_room_num = #{roomNum} ) </if>
+        <if test="amount != null">  and (CFS.f_amount = #{amount} ) </if>
+        <if test="srcBillId != null">  and (CFS.f_src_bill_id = #{srcBillId} ) </if>
+        <if test="billType != null">  and (CFS.f_bill_type = #{billType} ) </if>
+        <if test="billTime != null and !billTime.equals('')  ">  and (CFS.f_bill_time = str_to_date(#{billTime},'%Y-%m-%d %T') ) </if>
+        <if test="billTime_START != null and !billTime_START.equals('')  ">  
+            <![CDATA[ and (CFS.f_bill_time >= str_to_date(#{billTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billTime_END != null and !billTime_END.equals('')  ">
+            <![CDATA[ and (CFS.f_bill_time <= str_to_date(#{billTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CFS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (CFS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (CFS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CFS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (CFS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (CFS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CFS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (CFS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (CFS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (CFS.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (CFS.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (CFS.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (CFS.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (CFS.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CFS.f_id = #{id} ) </if>
+        <if test="tRealRoomId != null and !tRealRoomId.equals('')  ">  and (CFS.t_real_room_id = #{tRealRoomId} ) </if>
+        <if test="provinceName != null and !provinceName.equals('')  ">  and (CFS.f_province_name like CONCAT('%',#{provinceName},'%') ) </if>
+        <if test="cityName != null and !cityName.equals('')  ">  and (CFS.f_city_name like CONCAT('%',#{cityName},'%') ) </if>
+        <if test="tGroupBuildingId != null and !tGroupBuildingId.equals('')  ">  and (CFS.t_group_building_id = #{tGroupBuildingId} ) </if>
+        <if test="gbName != null and !gbName.equals('')  ">  and (CFS.f_gb_name like CONCAT('%',#{gbName},'%') ) </if>
+        <if test="tBuildingId != null and !tBuildingId.equals('')  ">  and (CFS.t_building_id = #{tBuildingId} ) </if>
+        <if test="buildingName != null and !buildingName.equals('')  ">  and (CFS.f_building_name like CONCAT('%',#{buildingName},'%') ) </if>
+        <if test="unit != null and !unit.equals('')  ">  and (CFS.f_unit like CONCAT('%',#{unit},'%') ) </if>
+        <if test="roomNum != null and !roomNum.equals('')  ">  and (CFS.f_room_num like CONCAT('%',#{roomNum},'%') ) </if>
+        <if test="amount != null and !amount.equals('')  ">  and (CFS.f_amount = #{amount} ) </if>
+        <if test="srcBillId != null and !srcBillId.equals('')  ">  and (CFS.f_src_bill_id like CONCAT('%',#{srcBillId},'%') ) </if>
+        <if test="billType != null and !billType.equals('')  ">  and (CFS.f_bill_type = #{billType} ) </if>
+        <if test="billTime != null and !billTime.equals('')  ">  and (CFS.f_bill_time = str_to_date(#{billTime},'%Y-%m-%d %T') ) </if>
+        <if test="billTime_START != null and !billTime_START.equals('')  ">  
+            <![CDATA[ and (CFS.f_bill_time >= str_to_date(#{billTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billTime_END != null and !billTime_END.equals('')  ">
+            <![CDATA[ and (CFS.f_bill_time <= str_to_date(#{billTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CFS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (CFS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (CFS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CFS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (CFS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (CFS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CFS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (CFS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (CFS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CFS.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CFS.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CFS.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CFS.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (CFS.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="cashFlowSummaryBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="cashFlowSummaryBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="cashFlowSummaryBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="cashFlowSummaryBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_cash_flow_summary CFS
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(现金流量汇总表)信息。 -->
+	<sql id="select_cashFlowSummary">
+		SELECT <include refid="cashFlowSummaryBase.queryHead"/>
+		<include refid="cashFlowSummaryBase.busiQueryCondition"/>
+		<include refid="cashFlowSummaryBase.dimCheckSql"/>
+		ORDER BY CFS.f_id DESC
+	</sql>
+	<select id="select_cashFlowSummary" parameterType="java.util.Map" resultMap="cashFlowSummaryBase.cashFlowSummaryExtendMap">
+		<include refid="cashFlowSummaryBase.select_cashFlowSummary"/>
+	</select>
+	
+	<!-- 根据条件分页查询(现金流量汇总表)信息  -->
+	<sql id="select_cashFlowSummary_withPage">
+		SELECT <include refid="cashFlowSummaryBase.queryHead"/>
+		<include refid="cashFlowSummaryBase.busiQueryCondition"/>
+		<include refid="cashFlowSummaryBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_cashFlowSummary_withPage" resultMap="cashFlowSummaryBase.cashFlowSummaryExtendMap" parameterType="java.util.Map">
+		<include refid="cashFlowSummaryBase.select_cashFlowSummary_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(现金流量汇总表)信息。 -->
+	<sql id="select_cashFlowSummary_bySeqId">
+		SELECT <include refid="cashFlowSummaryBase.queryHead"/>
+		<include refid="cashFlowSummaryBase.busiQueryCondition"/>
+		 and CFS.f_id = #{_parameter}
+	</sql>
+	<select id="select_cashFlowSummary_bySeqId" parameterType="java.math.BigInteger" resultMap="cashFlowSummaryBase.cashFlowSummaryBaseMap">
+		<include refid="cashFlowSummaryBase.select_cashFlowSummary_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(现金流量汇总表)记录数  -->
+	<sql id="select_cashFlowSummary_count">
+		SELECT COUNT(*)
+		<include refid="cashFlowSummaryBase.busiQueryCount"/>
+		<include refid="cashFlowSummaryBase.dimCheckSql"/>
+	</sql>
+	<select id="select_cashFlowSummary_count" resultType="java.lang.Integer">
+		<include refid="cashFlowSummaryBase.select_cashFlowSummary_count"/>
+	</select>
+	
+	 <!-- 往(现金流量汇总表)新增一条记录。 -->
+	 <sql id="insert_cashFlowSummary">
+		INSERT INTO t_cash_flow_summary 
+		(f_id,t_real_room_id,f_province_name,f_city_name,t_group_building_id,f_gb_name,t_building_id,f_building_name,f_unit,f_room_num,f_amount,f_src_bill_id,f_bill_type,f_bill_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tRealRoomId},#{provinceName,jdbcType=VARCHAR},#{cityName,jdbcType=VARCHAR},#{tGroupBuildingId},#{gbName,jdbcType=VARCHAR},#{tBuildingId},#{buildingName,jdbcType=VARCHAR},#{unit,jdbcType=VARCHAR},#{roomNum,jdbcType=VARCHAR},#{amount},#{srcBillId,jdbcType=VARCHAR},#{billType},str_to_date(#{billTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_cashFlowSummary" parameterType="CashFlowSummary">
+		<include refid="cashFlowSummaryBase.insert_cashFlowSummary"/>
+    </insert>
+    
+	<!-- 批量新增(现金流量汇总表)信息 -->
+    <insert id="insert_cashFlowSummary_Batch" parameterType="java.util.List">
+    	INSERT INTO t_cash_flow_summary 
+		(f_id,t_real_room_id,f_province_name,f_city_name,t_group_building_id,f_gb_name,t_building_id,f_building_name,f_unit,f_room_num,f_amount,f_src_bill_id,f_bill_type,f_bill_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tRealRoomId},#{item.provinceName,jdbcType=VARCHAR},#{item.cityName,jdbcType=VARCHAR},#{item.tGroupBuildingId},#{item.gbName,jdbcType=VARCHAR},#{item.tBuildingId},#{item.buildingName,jdbcType=VARCHAR},#{item.unit,jdbcType=VARCHAR},#{item.roomNum,jdbcType=VARCHAR},#{item.amount},#{item.srcBillId,jdbcType=VARCHAR},#{item.billType},str_to_date(#{item.billTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(现金流量汇总表)信息。 -->
+    <sql id="update_cashFlowSummary">
+		UPDATE t_cash_flow_summary
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tRealRoomId != null and !tRealRoomId.equals('') "> ,t_real_room_id=#{tRealRoomId}</if>
+ 		<if test="provinceName != null and !provinceName.equals('') "> ,f_province_name=#{provinceName}</if>
+ 		<if test="cityName != null and !cityName.equals('') "> ,f_city_name=#{cityName}</if>
+ 		<if test="tGroupBuildingId != null and !tGroupBuildingId.equals('') "> ,t_group_building_id=#{tGroupBuildingId}</if>
+ 		<if test="gbName != null and !gbName.equals('') "> ,f_gb_name=#{gbName}</if>
+ 		<if test="tBuildingId != null and !tBuildingId.equals('') "> ,t_building_id=#{tBuildingId}</if>
+ 		<if test="buildingName != null and !buildingName.equals('') "> ,f_building_name=#{buildingName}</if>
+ 		<if test="unit != null and !unit.equals('') "> ,f_unit=#{unit}</if>
+ 		<if test="roomNum != null and !roomNum.equals('') "> ,f_room_num=#{roomNum}</if>
+ 		<if test="amount != null and !amount.equals('') "> ,f_amount=#{amount}</if>
+ 		<if test="srcBillId != null and !srcBillId.equals('') "> ,f_src_bill_id=#{srcBillId}</if>
+ 		<if test="billType != null and !billType.equals('') "> ,f_bill_type=#{billType}</if>
+ 		<if test="billTime != null and !billTime.equals('') "> ,f_bill_time=str_to_date(#{billTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_cashFlowSummary" parameterType="CashFlowSummary">
+		<include refid="cashFlowSummaryBase.update_cashFlowSummary"/>
+    </update>
+    
+    <!-- 批量更新(现金流量汇总表)信息。 -->
+    <update id="update_cashFlowSummary_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_cash_flow_summary
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tRealRoomId != null and !item.tRealRoomId.equals('')  "> ,t_real_room_id=#{item.tRealRoomId}</if>
+ 		<if test="item.provinceName != null and !item.provinceName.equals('')  "> ,f_province_name=#{item.provinceName}</if>
+ 		<if test="item.cityName != null and !item.cityName.equals('')  "> ,f_city_name=#{item.cityName}</if>
+ 		<if test="item.tGroupBuildingId != null and !item.tGroupBuildingId.equals('')  "> ,t_group_building_id=#{item.tGroupBuildingId}</if>
+ 		<if test="item.gbName != null and !item.gbName.equals('')  "> ,f_gb_name=#{item.gbName}</if>
+ 		<if test="item.tBuildingId != null and !item.tBuildingId.equals('')  "> ,t_building_id=#{item.tBuildingId}</if>
+ 		<if test="item.buildingName != null and !item.buildingName.equals('')  "> ,f_building_name=#{item.buildingName}</if>
+ 		<if test="item.unit != null and !item.unit.equals('')  "> ,f_unit=#{item.unit}</if>
+ 		<if test="item.roomNum != null and !item.roomNum.equals('')  "> ,f_room_num=#{item.roomNum}</if>
+ 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if>
+ 		<if test="item.srcBillId != null and !item.srcBillId.equals('')  "> ,f_src_bill_id=#{item.srcBillId}</if>
+ 		<if test="item.billType != null and !item.billType.equals('')  "> ,f_bill_type=#{item.billType}</if>
+ 		<if test="item.billTime != null and !item.billTime.equals('')  "> ,f_bill_time=str_to_date(#{item.billTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(现金流量汇总表)信息_逻辑删除。 -->
+    <sql id="delete_cashFlowSummary_Logic">
+		UPDATE t_cash_flow_summary
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tRealRoomId != null and !tRealRoomId.equals('')  "> ,t_real_room_id=#{tRealRoomId}</if>
+ 		<if test="provinceName != null and !provinceName.equals('')  "> ,f_province_name=#{provinceName}</if>
+ 		<if test="cityName != null and !cityName.equals('')  "> ,f_city_name=#{cityName}</if>
+ 		<if test="tGroupBuildingId != null and !tGroupBuildingId.equals('')  "> ,t_group_building_id=#{tGroupBuildingId}</if>
+ 		<if test="gbName != null and !gbName.equals('')  "> ,f_gb_name=#{gbName}</if>
+ 		<if test="tBuildingId != null and !tBuildingId.equals('')  "> ,t_building_id=#{tBuildingId}</if>
+ 		<if test="buildingName != null and !buildingName.equals('')  "> ,f_building_name=#{buildingName}</if>
+ 		<if test="unit != null and !unit.equals('')  "> ,f_unit=#{unit}</if>
+ 		<if test="roomNum != null and !roomNum.equals('')  "> ,f_room_num=#{roomNum}</if>
+ 		<if test="amount != null and !amount.equals('')  "> ,f_amount=#{amount}</if>
+ 		<if test="srcBillId != null and !srcBillId.equals('')  "> ,f_src_bill_id=#{srcBillId}</if>
+ 		<if test="billType != null and !billType.equals('')  "> ,f_bill_type=#{billType}</if>
+ 		<if test="billTime != null and !billTime.equals('')  "> ,f_bill_time=str_to_date(#{billTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_cashFlowSummary_Logic" parameterType="CashFlowSummary">
+		<include refid="cashFlowSummaryBase.delete_cashFlowSummary_Logic"/>
+    </update>
+    
+    <!-- 批量删除(现金流量汇总表)信息_逻辑删除 -->
+    <update id="delete_cashFlowSummary_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_cash_flow_summary
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tRealRoomId != null and !item.tRealRoomId.equals('')  "> ,t_real_room_id=#{item.tRealRoomId}</if>
+ 		<if test="item.provinceName != null and !item.provinceName.equals('')  "> ,f_province_name=#{item.provinceName}</if>
+ 		<if test="item.cityName != null and !item.cityName.equals('')  "> ,f_city_name=#{item.cityName}</if>
+ 		<if test="item.tGroupBuildingId != null and !item.tGroupBuildingId.equals('')  "> ,t_group_building_id=#{item.tGroupBuildingId}</if>
+ 		<if test="item.gbName != null and !item.gbName.equals('')  "> ,f_gb_name=#{item.gbName}</if>
+ 		<if test="item.tBuildingId != null and !item.tBuildingId.equals('')  "> ,t_building_id=#{item.tBuildingId}</if>
+ 		<if test="item.buildingName != null and !item.buildingName.equals('')  "> ,f_building_name=#{item.buildingName}</if>
+ 		<if test="item.unit != null and !item.unit.equals('')  "> ,f_unit=#{item.unit}</if>
+ 		<if test="item.roomNum != null and !item.roomNum.equals('')  "> ,f_room_num=#{item.roomNum}</if>
+ 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if>
+ 		<if test="item.srcBillId != null and !item.srcBillId.equals('')  "> ,f_src_bill_id=#{item.srcBillId}</if>
+ 		<if test="item.billType != null and !item.billType.equals('')  "> ,f_bill_type=#{item.billType}</if>
+ 		<if test="item.billTime != null and !item.billTime.equals('')  "> ,f_bill_time=str_to_date(#{item.billTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(现金流量汇总表)信息。 -->
+    <sql id="delete_cashFlowSummary">
+		DELETE FROM t_cash_flow_summary WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_cashFlowSummary" parameterType="java.lang.String">
+		<include refid="cashFlowSummaryBase.delete_cashFlowSummary"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(现金流量汇总表)信息。 -->
+    <delete id="delete_cashFlowSummary_Batch" parameterType="java.util.List">
+		DELETE FROM t_cash_flow_summary WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

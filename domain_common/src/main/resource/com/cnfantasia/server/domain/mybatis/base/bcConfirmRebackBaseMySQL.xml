@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:银行托收确认回盘 t_bc_confirm_reback -->
+<mapper namespace="bcConfirmRebackBase">
+	<resultMap type="BcConfirmReback" id="bcConfirmRebackBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_bank_collection_info_has_t_property_proprietor_f_id" javaType="java.math.BigInteger" property="tBankCollectionInfoHasTPropertyProprietorFId"/>  <!--  -->        <result column="t_bank_collection_info_has_t_group_building_f_id" javaType="java.math.BigInteger" property="tBankCollectionInfoHasTGroupBuildingFId"/>  <!--  -->        <result column="f_confirm_time" javaType="java.lang.String" property="confirmTime"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="BcConfirmReback" id="bcConfirmRebackExtendMap" extends="bcConfirmRebackBaseMap">
+	</resultMap>
+	<resultMap type="BcConfirmReback" id="bcConfirmRebackBaseMap_AppendTable">
+        <id column="BCRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="BCRtBankCollectionInfoHasTPropertyProprietorFId" javaType="java.math.BigInteger" property="tBankCollectionInfoHasTPropertyProprietorFId"/>  <!--  -->        <result column="BCRtBankCollectionInfoHasTGroupBuildingFId" javaType="java.math.BigInteger" property="tBankCollectionInfoHasTGroupBuildingFId"/>  <!--  -->        <result column="BCRconfirmTime" javaType="java.lang.String" property="confirmTime"/>  <!--  -->        <result column="BCRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="BCRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="BCRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="BCRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="BCRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="BCRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="BCRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="BcConfirmReback" id="bcConfirmRebackBaseMap_AppendTable1">
+        <id column="BCR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="BCR1tBankCollectionInfoHasTPropertyProprietorFId" javaType="java.math.BigInteger" property="tBankCollectionInfoHasTPropertyProprietorFId"/>  <!--  -->        <result column="BCR1tBankCollectionInfoHasTGroupBuildingFId" javaType="java.math.BigInteger" property="tBankCollectionInfoHasTGroupBuildingFId"/>  <!--  -->        <result column="BCR1confirmTime" javaType="java.lang.String" property="confirmTime"/>  <!--  -->        <result column="BCR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="BCR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="BCR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="BCR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="BCR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="BCR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="BCR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		BCR.f_id,BCR.t_bank_collection_info_has_t_property_proprietor_f_id,BCR.t_bank_collection_info_has_t_group_building_f_id,date_format(BCR.f_confirm_time,'%Y-%m-%d %T') as f_confirm_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		BCR.f_id as BCRid,BCR.t_bank_collection_info_has_t_property_proprietor_f_id as BCRtBankCollectionInfoHasTPropertyProprietorFId,BCR.t_bank_collection_info_has_t_group_building_f_id as BCRtBankCollectionInfoHasTGroupBuildingFId,date_format(BCR.f_confirm_time,'%Y-%m-%d %T') as BCRconfirmTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		BCR1.f_id as BCR1id,BCR1.t_bank_collection_info_has_t_property_proprietor_f_id as BCR1tBankCollectionInfoHasTPropertyProprietorFId,BCR1.t_bank_collection_info_has_t_group_building_f_id as BCR1tBankCollectionInfoHasTGroupBuildingFId,date_format(BCR1.f_confirm_time,'%Y-%m-%d %T') as BCR1confirmTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (BCR.f_id = #{id} ) </if>        <if test="tBankCollectionInfoHasTPropertyProprietorFId != null">  and (BCR.t_bank_collection_info_has_t_property_proprietor_f_id = #{tBankCollectionInfoHasTPropertyProprietorFId} ) </if>        <if test="tBankCollectionInfoHasTGroupBuildingFId != null">  and (BCR.t_bank_collection_info_has_t_group_building_f_id = #{tBankCollectionInfoHasTGroupBuildingFId} ) </if>        <if test="confirmTime != null and !confirmTime.equals('')  ">  and (BCR.f_confirm_time = str_to_date(#{confirmTime},'%Y-%m-%d %T') ) </if>        <if test="confirmTime_START != null and !confirmTime_START.equals('')  ">              <![CDATA[ and (BCR.f_confirm_time >= str_to_date(#{confirmTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="confirmTime_END != null and !confirmTime_END.equals('')  ">            <![CDATA[ and (BCR.f_confirm_time <= str_to_date(#{confirmTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (BCR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (BCR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (BCR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (BCR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (BCR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (BCR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (BCR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (BCR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (BCR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (BCR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (BCR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (BCR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (BCR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (BCR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (BCR.f_id = #{id} ) </if>        <if test="tBankCollectionInfoHasTPropertyProprietorFId != null and !tBankCollectionInfoHasTPropertyProprietorFId.equals('')  ">  and (BCR.t_bank_collection_info_has_t_property_proprietor_f_id = #{tBankCollectionInfoHasTPropertyProprietorFId} ) </if>        <if test="tBankCollectionInfoHasTGroupBuildingFId != null and !tBankCollectionInfoHasTGroupBuildingFId.equals('')  ">  and (BCR.t_bank_collection_info_has_t_group_building_f_id = #{tBankCollectionInfoHasTGroupBuildingFId} ) </if>        <if test="confirmTime != null and !confirmTime.equals('')  ">  and (BCR.f_confirm_time = str_to_date(#{confirmTime},'%Y-%m-%d %T') ) </if>        <if test="confirmTime_START != null and !confirmTime_START.equals('')  ">              <![CDATA[ and (BCR.f_confirm_time >= str_to_date(#{confirmTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="confirmTime_END != null and !confirmTime_END.equals('')  ">            <![CDATA[ and (BCR.f_confirm_time <= str_to_date(#{confirmTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (BCR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (BCR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (BCR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (BCR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (BCR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (BCR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (BCR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (BCR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (BCR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (BCR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (BCR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (BCR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (BCR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (BCR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="bcConfirmRebackBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="bcConfirmRebackBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="bcConfirmRebackBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="bcConfirmRebackBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_bc_confirm_reback BCR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(银行托收确认回盘)信息。 -->
+	<sql id="select_bcConfirmReback">
+		SELECT <include refid="bcConfirmRebackBase.queryHead"/>
+		<include refid="bcConfirmRebackBase.busiQueryCondition"/>
+		<include refid="bcConfirmRebackBase.dimCheckSql"/>
+		ORDER BY BCR.f_id DESC
+	</sql>
+	<select id="select_bcConfirmReback" parameterType="java.util.Map" resultMap="bcConfirmRebackBase.bcConfirmRebackExtendMap">
+		<include refid="bcConfirmRebackBase.select_bcConfirmReback"/>
+	</select>
+	
+	<!-- 根据条件分页查询(银行托收确认回盘)信息  -->
+	<sql id="select_bcConfirmReback_withPage">
+		SELECT <include refid="bcConfirmRebackBase.queryHead"/>
+		<include refid="bcConfirmRebackBase.busiQueryCondition"/>
+		<include refid="bcConfirmRebackBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_bcConfirmReback_withPage" resultMap="bcConfirmRebackBase.bcConfirmRebackExtendMap" parameterType="java.util.Map">
+		<include refid="bcConfirmRebackBase.select_bcConfirmReback_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(银行托收确认回盘)信息。 -->
+	<sql id="select_bcConfirmReback_bySeqId">
+		SELECT <include refid="bcConfirmRebackBase.queryHead"/>
+		<include refid="bcConfirmRebackBase.busiQueryCondition"/>
+		 and BCR.f_id = #{_parameter}
+	</sql>
+	<select id="select_bcConfirmReback_bySeqId" parameterType="java.math.BigInteger" resultMap="bcConfirmRebackBase.bcConfirmRebackBaseMap">
+		<include refid="bcConfirmRebackBase.select_bcConfirmReback_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(银行托收确认回盘)记录数  -->
+	<sql id="select_bcConfirmReback_count">
+		SELECT COUNT(*)
+		<include refid="bcConfirmRebackBase.busiQueryCount"/>
+		<include refid="bcConfirmRebackBase.dimCheckSql"/>
+	</sql>
+	<select id="select_bcConfirmReback_count" resultType="java.lang.Integer">
+		<include refid="bcConfirmRebackBase.select_bcConfirmReback_count"/>
+	</select>
+	
+	 <!-- 往(银行托收确认回盘)新增一条记录。 -->
+	 <sql id="insert_bcConfirmReback">
+		INSERT INTO t_bc_confirm_reback 
+		(f_id,t_bank_collection_info_has_t_property_proprietor_f_id,t_bank_collection_info_has_t_group_building_f_id,f_confirm_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tBankCollectionInfoHasTPropertyProprietorFId},#{tBankCollectionInfoHasTGroupBuildingFId},str_to_date(#{confirmTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_bcConfirmReback" parameterType="BcConfirmReback">
+		<include refid="bcConfirmRebackBase.insert_bcConfirmReback"/>
+    </insert>
+    
+	<!-- 批量新增(银行托收确认回盘)信息 -->
+    <insert id="insert_bcConfirmReback_Batch" parameterType="java.util.List">
+    	INSERT INTO t_bc_confirm_reback 
+		(f_id,t_bank_collection_info_has_t_property_proprietor_f_id,t_bank_collection_info_has_t_group_building_f_id,f_confirm_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tBankCollectionInfoHasTPropertyProprietorFId},#{item.tBankCollectionInfoHasTGroupBuildingFId},str_to_date(#{item.confirmTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(银行托收确认回盘)信息。 -->
+    <sql id="update_bcConfirmReback">
+		UPDATE t_bc_confirm_reback		<trim prefix="SET" prefixOverrides=","> 		<if test="tBankCollectionInfoHasTPropertyProprietorFId != null and !tBankCollectionInfoHasTPropertyProprietorFId.equals('') "> ,t_bank_collection_info_has_t_property_proprietor_f_id=#{tBankCollectionInfoHasTPropertyProprietorFId}</if> 		<if test="tBankCollectionInfoHasTGroupBuildingFId != null and !tBankCollectionInfoHasTGroupBuildingFId.equals('') "> ,t_bank_collection_info_has_t_group_building_f_id=#{tBankCollectionInfoHasTGroupBuildingFId}</if> 		<if test="confirmTime != null and !confirmTime.equals('') "> ,f_confirm_time=str_to_date(#{confirmTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_bcConfirmReback" parameterType="BcConfirmReback">
+		<include refid="bcConfirmRebackBase.update_bcConfirmReback"/>
+    </update>
+    
+    <!-- 批量更新(银行托收确认回盘)信息。 -->
+    <update id="update_bcConfirmReback_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_bc_confirm_reback		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tBankCollectionInfoHasTPropertyProprietorFId != null and !item.tBankCollectionInfoHasTPropertyProprietorFId.equals('')  "> ,t_bank_collection_info_has_t_property_proprietor_f_id=#{item.tBankCollectionInfoHasTPropertyProprietorFId}</if> 		<if test="item.tBankCollectionInfoHasTGroupBuildingFId != null and !item.tBankCollectionInfoHasTGroupBuildingFId.equals('')  "> ,t_bank_collection_info_has_t_group_building_f_id=#{item.tBankCollectionInfoHasTGroupBuildingFId}</if> 		<if test="item.confirmTime != null and !item.confirmTime.equals('')  "> ,f_confirm_time=str_to_date(#{item.confirmTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(银行托收确认回盘)信息_逻辑删除。 -->
+    <sql id="delete_bcConfirmReback_Logic">
+		UPDATE t_bc_confirm_reback		<trim prefix="SET" prefixOverrides=","> 		<if test="tBankCollectionInfoHasTPropertyProprietorFId != null and !tBankCollectionInfoHasTPropertyProprietorFId.equals('')  "> ,t_bank_collection_info_has_t_property_proprietor_f_id=#{tBankCollectionInfoHasTPropertyProprietorFId}</if> 		<if test="tBankCollectionInfoHasTGroupBuildingFId != null and !tBankCollectionInfoHasTGroupBuildingFId.equals('')  "> ,t_bank_collection_info_has_t_group_building_f_id=#{tBankCollectionInfoHasTGroupBuildingFId}</if> 		<if test="confirmTime != null and !confirmTime.equals('')  "> ,f_confirm_time=str_to_date(#{confirmTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_bcConfirmReback_Logic" parameterType="BcConfirmReback">
+		<include refid="bcConfirmRebackBase.delete_bcConfirmReback_Logic"/>
+    </update>
+    
+    <!-- 批量删除(银行托收确认回盘)信息_逻辑删除 -->
+    <update id="delete_bcConfirmReback_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_bc_confirm_reback		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tBankCollectionInfoHasTPropertyProprietorFId != null and !item.tBankCollectionInfoHasTPropertyProprietorFId.equals('')  "> ,t_bank_collection_info_has_t_property_proprietor_f_id=#{item.tBankCollectionInfoHasTPropertyProprietorFId}</if> 		<if test="item.tBankCollectionInfoHasTGroupBuildingFId != null and !item.tBankCollectionInfoHasTGroupBuildingFId.equals('')  "> ,t_bank_collection_info_has_t_group_building_f_id=#{item.tBankCollectionInfoHasTGroupBuildingFId}</if> 		<if test="item.confirmTime != null and !item.confirmTime.equals('')  "> ,f_confirm_time=str_to_date(#{item.confirmTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(银行托收确认回盘)信息。 -->
+    <sql id="delete_bcConfirmReback">
+		DELETE FROM t_bc_confirm_reback WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_bcConfirmReback" parameterType="java.lang.String">
+		<include refid="bcConfirmRebackBase.delete_bcConfirmReback"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(银行托收确认回盘)信息。 -->
+    <delete id="delete_bcConfirmReback_Batch" parameterType="java.util.List">
+		DELETE FROM t_bc_confirm_reback WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

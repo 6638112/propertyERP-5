@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 借贷 -->
+<mapper namespace="loan">
+	<resultMap type="com.cnfantasia.server.api.loan.entity.LoanEntity" id="loanEntityMap">
+        <id column="ltId" javaType="java.math.BigInteger" property="ltId"/>
+        <result column="typeName" javaType="java.lang.String" property="typeName"/>
+        <result column="typeDesc" javaType="java.lang.String" property="typeDesc"/>
+        <association property="loanProductList" resultMap="loanProductMap" />
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.api.loan.entity.LoanProduct" id="loanProductMap">
+        <id column="lpId" javaType="java.math.BigInteger" property="lpId"/>
+        <result column="picUrl" javaType="java.lang.String" property="picUrl"/>
+        <result column="lpName" javaType="java.lang.String" property="lpName"/>
+        <result column="lpDesc" javaType="java.lang.String" property="lpDesc"/>
+        <result column="maxLoanDesc" javaType="java.lang.String" property="maxLoanDesc"/>
+        <result column="rateDesc" javaType="java.lang.String" property="rateDesc"/>
+        <result column="expire" javaType="java.lang.String" property="expire"/>
+        <result column="code" javaType="java.lang.String" property="code"/>
+    </resultMap>
+
+	<!-- 查询“物业费”、“其他代收费用”数据 -->
+	<select id="selectLoanProductWithList" parameterType="java.util.Map" resultMap="loanEntityMap">
+		SELECT
+			lt.f_id ltId,
+			lt.f_name typeName,
+			lt.f_desc typeDesc,
+			lp.f_id lpId,
+			lp.f_pic_url picUrl,
+			lp.f_name lpName,
+			lp.f_desc lpDesc,
+			lp.f_max_loan_desc maxLoanDesc,
+			lp.f_rate_desc rateDesc,
+			lp.f_expire expire,
+			lthird.f_code `code`
+		FROM
+			t_loan_type lt
+			INNER JOIN t_loan_product lp ON lt.f_id = lp.t_loan_type_f_id AND lp.f_sys0_del_state = 0
+			INNER JOIN t_loan_third lthird ON lp.t_loan_third_f_id=lthird.f_id
+		WHERE
+			lt.f_sys0_del_state = 0
+		ORDER BY
+			lt.f_order DESC,
+			lp.f_order DESC
+		<![CDATA[ LIMIT #{_begin}, #{_length} ]]>
+	</select>
+	
+	<!-- 查询“停车费”数据-->
+	<select id="selectLoanProductWithCount" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_loan_type lt WHERE lt.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 根据useId获取用户借贷基本信息 -->
+	<select id="selectLoanUserBaseInfo" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.loan.entity.LoanUserBaseInfo">
+		SELECT
+			U.f_real_name `name`,
+			IF (
+				U.f_real_name = PP.f_name,
+				PP.f_identify_no,
+				NULL
+			) cardId,
+			 U.f_mobile mobile,
+			 AC.f_name cityName,
+			 RR.f_room_size roomSize,
+			 TIMESTAMPDIFF(
+				MONTH,
+				GB.f_sys0_add_time,
+				NOW()
+			) residenceTime,
+			(PP.f_phone = U.f_mobile) isPropertyProprietor
+		FROM
+			t_user U
+			LEFT JOIN t_room R ON R.f_id = U.f_default_room_id
+			LEFT JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id
+			LEFT JOIN t_building B ON B.f_id = RR.t_building_f_id
+			LEFT JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id
+			LEFT JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id
+			LEFT JOIN t_address_city AC ON AC.f_id = AB.t_city_f_id
+			LEFT JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id
+		WHERE
+			U.f_id = #{userId};
+	</select>
+	
+	<!--近6个月月均用水缴费金额 -->
+	<select id="selectLoanUserWaterOrEnergyFee" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+		SELECT
+			SUM(
+				IFNULL(PDF.f_total_price, 0)
+			) / 6 totalFee
+		FROM
+			t_user U
+			INNER JOIN t_room R ON R.f_id = U.f_default_room_id
+			INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id
+			INNER JOIN t_pay_bill PB ON PB.t_real_room_f_id = RR.f_id
+			INNER JOIN t_property_fee_detail PDF ON PDF.t_pay_bill_f_id = PB.f_id
+			AND PDF.f_sys0_del_state = 0
+			AND LOCATE(#{feeName}, f_name) > 0
+			AND IFNULL(
+				PB.f_sys0_upd_time,
+				PB.f_sys0_add_time
+			) >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+			AND PB.f_is_pay = 1
+		WHERE
+			U.f_id = #{userId};
+	</select>
+	
+	<!--近6个月物业缴费记录 -->
+	<select id="selectLoanUserPropertyChargeInfo" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.loan.entity.ChargeInfoEntity">
+		SELECT
+			COUNT(*) chargeCount,
+			SUM(IFNULL(PB.f_amount, 0)) totalAmount,
+			SUM(
+				IFNULL(PB.f_succ_pay_amount, 0)
+			) realAmount,
+			MAX(
+				IFNULL(
+					PB.f_sys0_upd_time,
+					PB.f_sys0_add_time
+				)
+			) lastPayTime
+		FROM
+			t_user U
+			INNER JOIN t_room R ON R.f_id = U.f_default_room_id
+			INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id
+			INNER JOIN t_pay_bill PB ON PB.t_real_room_f_id = RR.f_id
+			AND IFNULL(
+				PB.f_sys0_upd_time,
+				PB.f_sys0_add_time
+			) >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+			AND PB.f_is_pay = 1
+			AND PB.f_is_prop_fee = 1
+		WHERE
+			U.f_id = #{userId};
+	</select>
+	
+	<!--近6个月非缴费的交易次数 -->
+	<select id="selectLoanUserUnPropertyChargeCount" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			t_ebuy_order EO
+		WHERE
+			EO.f_buyer_id = #{userId}
+			AND EO.f_pay_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+			AND EO.f_pay_status = 2
+			AND EO.f_type != 2;
+	</select>
+	
+	<!--近6个月理财记录条数 -->
+	<select id="selectLoanUserFinanceLogCount" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			t_finance_buy FB
+		WHERE
+			FB.f_hud_id = #{userId}
+		AND FB.f_buy_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH);
+	</select>
+</mapper>

@@ -1,0 +1,1305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 电商模块 -->
+<mapper namespace="ebuy">
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyProductEntity" id="ebuyProductShelfMap_Append" extends="commonEbuy.ebuyProductMap_Append">
+		<result column="sosName" javaType="string" property="sosName" />
+		<result column="sosIntroduceUrl" javaType="string" property="sosIntroduceUrl" />
+		<association property="productShelf" javaType="com.cnfantasia.server.api.ebuy.entity.EbuyProductShelf">
+			<id column="EPSHid" javaType="java.lang.Long" property="id"/>
+			<result column="f_shelf_price_discount" javaType="java.math.BigDecimal" property="priceDicount"/>
+			<result column="f_op_name" javaType="java.lang.String" property="opName"/>
+			<result column="f_op_type" javaType="java.lang.Integer" property="opType"/>
+			<result column="f_can_buy_num" javaType="java.lang.Integer" property="canBuyNum"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyProductEntity" id="ebuyProductEntityMap_AppendTable" extends="ebuyProductBase.ebuyProductBaseMap_AppendTable">
+		<association property="productShelf" javaType="com.cnfantasia.server.api.ebuy.entity.EbuyProductShelf">
+			<id column="EPSHid" javaType="java.lang.Long" property="id"/>
+			<result column="f_shelf_price_discount" javaType="java.math.BigDecimal" property="priceDicount"/>
+			<result column="f_op_name" javaType="java.lang.String" property="opName"/>
+			<result column="f_op_type" javaType="java.lang.Integer" property="opType"/>
+			<result column="f_can_buy_num" javaType="java.lang.Integer" property="canBuyNum"/>
+		</association>
+	</resultMap>
+		
+	<sql id="user_condition_check_comm">
+		AND CASE 
+			WHEN #{userType} = 1 THEN 
+			EXISTS ( SELECT 1 FROM (
+				<include refid="commonSql.qry_userIds_family_by_userInfo_select"/>
+			)t WHERE EBC.f_user_id  = t.t_user_f_id) 
+
+			ELSE  EBC.f_user_id = #{userId} 
+			END
+		AND EBC.f_user_type = #{userType}
+	</sql>
+	<!-- 增加商品规格约束的查询条件 -->
+	<sql id="productSpecId_append_condition_for_signal_ebuyProduct">
+		LEFT JOIN t_ebuy_product_spec_shelf EPSSH ON EPSSH.f_sys0_del_state = 0 AND EPSSH.f_id = #{productSpecId}
+		LEFT JOIN t_ebuy_product_spec EPS on EPS.f_id = EPSSH.t_ebuy_product_spec_id and EPS.f_sys0_del_state = 0 
+			<if test="pointType != null and !(pointType.equals(''))">
+				AND EPS.f_point_type = #{pointType}
+			</if>
+			
+		<!-- <if test="productSpecId != null and !(productSpecId.equals(''))">
+			
+		</if>
+		<if test="productSpecId == null">
+			LEFT JOIN t_ebuy_product_spec EPS ON 1=2
+		</if> -->
+	</sql>
+	<sql id="productSpecId_append_condition_for_List_ebuyProduct">
+		LEFT JOIN t_ebuy_product_spec_shelf EPSSH ON EPSSH.t_ebuy_product_shelf_id = EPSH.f_id AND EPSSH.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_product_spec EPS ON EPSSH.t_ebuy_product_spec_id = EPS.f_id AND EPS.f_sys0_del_state = 0
+	</sql>
+	<sql id="productSpecId_append_condition_for_buyCar">
+		left join t_ebuy_product_spec_shelf EPSSH on EBCHTEP.t_ebuy_product_spec_f_id = EPSSH.f_id and EPSSH.f_sys0_del_state = 0
+ 		left join t_ebuy_product_spec EPS on EPS.f_id = EPSSH.t_ebuy_product_spec_id and EPS.f_sys0_del_state = 0
+	</sql>
+	<sql id="productSpecId_append_condition_for_ebuyOrder">
+		left join t_ebuy_product_spec_shelf EPSSH on EOHTEP.t_ebuy_product_spec_f_id = EPSSH.f_id
+ 		left join t_ebuy_product_spec EPS on EPS.f_id = EPSSH.t_ebuy_product_spec_id
+	</sql>
+	
+	<sql id="queryProdShelfHead_AppendTable">
+		<!-- EPSH.f_id as ebuyProduct_f_id,EP.t_supply_merchant_f_id as ebuyProduct_t_supply_merchant_f_id,EP.f_name as ebuyProduct_f_name,EP.f_name_mini as ebuyProduct_f_name_mini,ifnull(EPSH.f_price, EP.f_price) as ebuyProduct_f_price,ifnull(EPSH.f_price_discount, EP.f_price_discount) as ebuyProduct_f_price_discount,EP.f_purchase_price as ebuyProduct_f_purchase_price,EP.f_default_delivery_id as ebuyProduct_f_default_delivery_id,EP.f_left_count as ebuyProduct_f_left_count,date_format(EP.f_create_time,'%Y-%m-%d %T') as ebuyProduct_f_create_time,EP.f_sel_num as ebuyProduct_f_sel_num,EP.f_pic_base as ebuyProduct_f_pic_base,EP.f_pic_base_mini as ebuyProduct_f_pic_base_mini,EP.t_ebuy_product_type_f_id as ebuyProduct_t_ebuy_product_type_f_id,EP.t_ebuy_product_type_for_enter_f_id as ebuyProduct_t_ebuy_product_type_for_enter_f_id,EP.t_ebuy_delivery_desc_id as ebuyProduct_t_ebuy_delivery_desc_id,EP.f_price_unit as ebuyProduct_f_price_unit,EP.f_specification as ebuyProduct_f_specification,EP.f_desc as ebuyProduct_f_desc,EP.f_status as ebuyProduct_f_status,EP.f_status_audit as ebuyProduct_f_status_audit,date_format(EP.f_up_shelf_time,'%Y-%m-%d %T') as ebuyProduct_f_up_shelf_time,date_format(EP.f_down_shelf_time,'%Y-%m-%d %T') as ebuyProduct_f_down_shelf_time,EP.f_pic_special as ebuyProduct_f_pic_special,EP.f_price_point as ebuyProduct_f_price_point,EP.f_price_discount_point as ebuyProduct_f_price_discount_point,EP.f_point_type as ebuyProduct_f_point_type,EP.f_wlApp_type as ebuyProduct_f_wlApp_type,EP.f_special_product_type as ebuyProduct_f_special_product_type,EP.f_src_id as ebuyProduct_f_src_id,EP.f_application_rang as ebuyProduct_f_application_rang,date_format(EP.f_end_time,'%Y-%m-%d %T') as ebuyProduct_f_end_time,EP.f_convert_process as ebuyProduct_f_convert_process,EP.f_attention_info as ebuyProduct_f_attention_info,EP.f_film_ticket_num as ebuyProduct_f_film_ticket_num,date_format(EP.f_sys0_add_time,'%Y-%m-%d %T') as ebuyProduct_f_sys0_add_time,date_format(EP.f_sys0_upd_time,'%Y-%m-%d %T') as ebuyProduct_f_sys0_upd_time,date_format(EP.f_sys0_del_time,'%Y-%m-%d %T') as ebuyProduct_f_sys0_del_time,EP.f_sys0_add_user as ebuyProduct_f_sys0_add_user,EP.f_sys0_upd_user as ebuyProduct_f_sys0_upd_user,EP.f_sys0_del_user as ebuyProduct_f_sys0_del_user,EP.f_sys0_del_state as ebuyProduct_f_sys0_del_state -->
+		EPSH.f_id EPSHid, EPSH.f_id as EPid,EP.f_src_id as EPsrcId,EP.t_supply_merchant_f_id as EPtSupplyMerchantFId,EP.f_name as EPname,EP.f_name_mini as EPnameMini,EP.f_price as EPprice,EPSH.f_price_discount as EPpriceDiscount,EP.f_purchase_price as EPpurchasePrice,EP.f_default_delivery_id as EPdefaultDeliveryId,EP.f_left_count as EPleftCount,date_format(EP.f_create_time,'%Y-%m-%d %T') as EPcreateTime,EP.f_sel_num as EPselNum,EP.f_pic_base as EPpicBase,EP.f_pic_base_mini as EPpicBaseMini,EP.t_ebuy_product_type_f_id as EPtEbuyProductTypeFId,EP.t_ebuy_product_type_for_enter_f_id as EPtEbuyProductTypeForEnterFId,EP.t_ebuy_delivery_desc_id as EPtEbuyDeliveryDescId,EP.f_price_unit as EPpriceUnit,EP.f_specification as EPspecification,EP.f_desc as EPdesc,EP.f_status as EPstatus,EP.f_status_audit as EPstatusAudit,date_format(EP.f_up_shelf_time,'%Y-%m-%d %T') as EPupShelfTime,date_format(EP.f_down_shelf_time,'%Y-%m-%d %T') as EPdownShelfTime,EP.f_pic_special as EPpicSpecial,EP.f_price_point as EPpricePoint,EP.f_price_discount_point as EPpriceDiscountPoint,EP.f_point_type as EPpointType,EP.f_wlApp_type as EPwlappType,EP.f_special_product_type as EPspecialProductType,EP.f_application_rang as EPapplicationRang,date_format(EP.f_end_time,'%Y-%m-%d %T') as EPendTime,EP.f_convert_process as EPconvertProcess,EP.f_attention_info as EPattentionInfo,EP.f_film_ticket_num as EPfilmTicketNum,date_format(EP.f_sys0_upd_time,'%Y-%m-%d %T') as EPsys0UpdTime
+	</sql>
+	<sql id="queryProductShelfHead_AppendTable">
+		<!-- EPSH.f_id as ebuyProduct_f_id,EP.t_supply_merchant_f_id as ebuyProduct_t_supply_merchant_f_id,EP.f_name as ebuyProduct_f_name,EP.f_name_mini as ebuyProduct_f_name_mini,ifnull(EPSH.f_price, EP.f_price) as ebuyProduct_f_price,ifnull(EPSH.f_price_discount, EP.f_price_discount) as ebuyProduct_f_price_discount,EP.f_purchase_price as ebuyProduct_f_purchase_price,EP.f_default_delivery_id as ebuyProduct_f_default_delivery_id,EP.f_left_count as ebuyProduct_f_left_count,date_format(EP.f_create_time,'%Y-%m-%d %T') as ebuyProduct_f_create_time,EP.f_sel_num as ebuyProduct_f_sel_num,EP.f_pic_base as ebuyProduct_f_pic_base,EP.f_pic_base_mini as ebuyProduct_f_pic_base_mini,EP.t_ebuy_product_type_f_id as ebuyProduct_t_ebuy_product_type_f_id,EP.t_ebuy_product_type_for_enter_f_id as ebuyProduct_t_ebuy_product_type_for_enter_f_id,EP.t_ebuy_delivery_desc_id as ebuyProduct_t_ebuy_delivery_desc_id,EP.f_price_unit as ebuyProduct_f_price_unit,EP.f_specification as ebuyProduct_f_specification,EP.f_desc as ebuyProduct_f_desc,EP.f_status as ebuyProduct_f_status,EP.f_status_audit as ebuyProduct_f_status_audit,date_format(EP.f_up_shelf_time,'%Y-%m-%d %T') as ebuyProduct_f_up_shelf_time,date_format(EP.f_down_shelf_time,'%Y-%m-%d %T') as ebuyProduct_f_down_shelf_time,EP.f_pic_special as ebuyProduct_f_pic_special,EP.f_price_point as ebuyProduct_f_price_point,EP.f_price_discount_point as ebuyProduct_f_price_discount_point,EP.f_point_type as ebuyProduct_f_point_type,EP.f_wlApp_type as ebuyProduct_f_wlApp_type,EP.f_special_product_type as ebuyProduct_f_special_product_type,EP.f_src_id as ebuyProduct_f_src_id,EP.f_application_rang as ebuyProduct_f_application_rang,date_format(EP.f_end_time,'%Y-%m-%d %T') as ebuyProduct_f_end_time,EP.f_convert_process as ebuyProduct_f_convert_process,EP.f_attention_info as ebuyProduct_f_attention_info,EP.f_film_ticket_num as ebuyProduct_f_film_ticket_num,date_format(EP.f_sys0_add_time,'%Y-%m-%d %T') as ebuyProduct_f_sys0_add_time,date_format(EP.f_sys0_upd_time,'%Y-%m-%d %T') as ebuyProduct_f_sys0_upd_time,date_format(EP.f_sys0_del_time,'%Y-%m-%d %T') as ebuyProduct_f_sys0_del_time,EP.f_sys0_add_user as ebuyProduct_f_sys0_add_user,EP.f_sys0_upd_user as ebuyProduct_f_sys0_upd_user,EP.f_sys0_del_user as ebuyProduct_f_sys0_del_user,EP.f_sys0_del_state as ebuyProduct_f_sys0_del_state -->
+		EPSH.f_id EPSHid, EPSH.f_id as EPid,EP.f_src_id as EPsrcId,EP.t_supply_merchant_f_id as EPtSupplyMerchantFId,EP.f_name as EPname,EP.f_name_mini as EPnameMini,EP.f_price as EPprice,EP.f_price_discount as EPpriceDiscount,EP.f_purchase_price as EPpurchasePrice,EP.f_default_delivery_id as EPdefaultDeliveryId,EP.f_left_count as EPleftCount,date_format(EP.f_create_time,'%Y-%m-%d %T') as EPcreateTime,EP.f_sel_num as EPselNum,EP.f_pic_base as EPpicBase,EP.f_pic_base_mini as EPpicBaseMini,EP.t_ebuy_product_type_f_id as EPtEbuyProductTypeFId,EP.t_ebuy_product_type_for_enter_f_id as EPtEbuyProductTypeForEnterFId,EP.t_ebuy_delivery_desc_id as EPtEbuyDeliveryDescId,EP.f_price_unit as EPpriceUnit,EP.f_specification as EPspecification,EP.f_desc as EPdesc,EP.f_status as EPstatus,EP.f_status_audit as EPstatusAudit,date_format(EP.f_up_shelf_time,'%Y-%m-%d %T') as EPupShelfTime,date_format(EP.f_down_shelf_time,'%Y-%m-%d %T') as EPdownShelfTime,EP.f_pic_special as EPpicSpecial,EP.f_price_point as EPpricePoint,EP.f_price_discount_point as EPpriceDiscountPoint,EP.f_point_type as EPpointType,EP.f_wlApp_type as EPwlappType,EP.f_special_product_type as EPspecialProductType,EP.f_application_rang as EPapplicationRang,date_format(EP.f_end_time,'%Y-%m-%d %T') as EPendTime,EP.f_convert_process as EPconvertProcess,EP.f_attention_info as EPattentionInfo,EP.f_film_ticket_num as EPfilmTicketNum,date_format(EP.f_sys0_upd_time,'%Y-%m-%d %T') as EPsys0UpdTime,
+		EPSH.f_price_discount f_shelf_price_discount, sp.f_name f_op_name, sp.f_type f_op_type, sp.f_can_buy_num
+	</sql>
+	
+	<sql id="queryProdSpecShelHead_AppendTable">
+		<!-- EPSSH.f_id as ebuyProductSpec_f_id,EPS.t_ebuy_product_f_id as ebuyProductSpec_t_ebuy_product_f_id,EPS.f_point_type as ebuyProductSpec_f_point_type,ifnull(EPSSH.f_price, EPSSH.f_price) as ebuyProductSpec_f_price,ifnull(EPSSH.f_price_discount, EPS.f_price_discount) as ebuyProductSpec_f_price_discount,EPS.f_price_point as ebuyProductSpec_f_price_point,EPS.f_price_discount_point as ebuyProductSpec_f_price_discount_point,EPS.f_phone_amount as ebuyProductSpec_f_phone_amount,EPS.f_phone_agent_type as ebuyProductSpec_f_phone_agent_type,EPS.f_size as ebuyProductSpec_f_size,EPS.f_colour as ebuyProductSpec_f_colour,EPS.f_left_count as ebuyProductSpec_f_left_count,EPS.f_sel_num as ebuyProductSpec_f_sel_num,EPS.f_pic_base as ebuyProductSpec_f_pic_base,date_format(EPS.f_sys0_add_time,'%Y-%m-%d %T') as ebuyProductSpec_f_sys0_add_time,date_format(EPS.f_sys0_upd_time,'%Y-%m-%d %T') as ebuyProductSpec_f_sys0_upd_time,date_format(EPS.f_sys0_del_time,'%Y-%m-%d %T') as ebuyProductSpec_f_sys0_del_time,EPS.f_sys0_add_user as ebuyProductSpec_f_sys0_add_user,EPS.f_sys0_upd_user as ebuyProductSpec_f_sys0_upd_user,EPS.f_sys0_del_user as ebuyProductSpec_f_sys0_del_user,EPS.f_sys0_del_state as ebuyProductSpec_f_sys0_del_state -->
+		EPSSH.f_id as EPSid,EPS.t_ebuy_product_f_id as EPStEbuyProductFId,EPS.f_point_type as EPSpointType,EPS.f_price as EPSprice,EPS.f_price_discount as EPSpriceDiscount,EPS.f_price_point as EPSpricePoint,EPS.f_price_discount_point as EPSpriceDiscountPoint,EPS.f_phone_amount as EPSphoneAmount,EPS.f_phone_agent_type as EPSphoneAgentType,EPS.f_size as EPSsize,EPS.f_colour as EPScolour,EPS.f_left_count as EPSleftCount,EPS.f_sel_num as EPSselNum,EPS.f_pic_base as EPSpicBase,date_format(EPS.f_sys0_upd_time,'%Y-%m-%d %T') as EPSsys0UpdTime
+	</sql>
+	<!-- 
+	<sql id="queryCommonProdShelfHead_AppendTable">
+		EPSH.f_id as ebuyProduct_f_id,EP.f_src_id as ebuyProduct_f_src_id,EP.t_supply_merchant_f_id as ebuyProduct_t_supply_merchant_f_id,EP.f_name as ebuyProduct_f_name,EP.f_name_mini as ebuyProduct_f_name_mini,ifnull(EPSH.f_price, EP.f_price) as ebuyProduct_f_price,ifnull(EPSH.f_price_discount, EP.f_price_discount) as ebuyProduct_f_price_discount,EP.f_purchase_price as ebuyProduct_f_purchase_price,EP.f_default_delivery_id as ebuyProduct_f_default_delivery_id,EP.f_left_count as ebuyProduct_f_left_count,date_format(EP.f_create_time,'%Y-%m-%d %T') as ebuyProduct_f_create_time,EP.f_sel_num as ebuyProduct_f_sel_num,EP.f_pic_base as ebuyProduct_f_pic_base,EP.f_pic_base_mini as ebuyProduct_f_pic_base_mini,EP.t_ebuy_product_type_f_id as ebuyProduct_t_ebuy_product_type_f_id,EP.f_price_unit as ebuyProduct_f_price_unit,EP.f_specification as ebuyProduct_f_specification,EP.f_desc as ebuyProduct_f_desc,EP.f_status as ebuyProduct_f_status,date_format(EP.f_up_shelf_time,'%Y-%m-%d %T') as ebuyProduct_f_up_shelf_time,date_format(EP.f_down_shelf_time,'%Y-%m-%d %T') as ebuyProduct_f_down_shelf_time,EP.f_pic_special as ebuyProduct_f_pic_special,EP.f_price_point as ebuyProduct_f_price_point,EP.f_price_discount_point as ebuyProduct_f_price_discount_point,EP.f_point_type as ebuyProduct_f_point_type,EP.f_wlApp_type as ebuyProduct_f_wlApp_type,EP.f_special_product_type as ebuyProduct_f_special_product_type,EP.f_application_rang as ebuyProduct_f_application_rang,date_format(EP.f_end_time,'%Y-%m-%d %T') as ebuyProduct_f_end_time,EP.f_convert_process as ebuyProduct_f_convert_process,EP.f_attention_info as ebuyProduct_f_attention_info,date_format(EP.f_sys0_add_time,'%Y-%m-%d %T') as ebuyProduct_f_sys0_add_time,date_format(EP.f_sys0_upd_time,'%Y-%m-%d %T') as ebuyProduct_f_sys0_upd_time,date_format(EP.f_sys0_del_time,'%Y-%m-%d %T') as ebuyProduct_f_sys0_del_time,EP.f_sys0_add_user as ebuyProduct_f_sys0_add_user,EP.f_sys0_upd_user as ebuyProduct_f_sys0_upd_user,EP.f_sys0_del_user as ebuyProduct_f_sys0_del_user,EP.f_sys0_del_state as ebuyProduct_f_sys0_del_state
+	</sql>
+	 -->
+	<!-- 查询所有商品类别列表 -->
+	<select id="select_ProductType_List_All" parameterType="java.util.Map" resultMap="ebuyProductTypeBase.ebuyProductTypeBaseMap_AppendTable">
+		SELECT <include refid="ebuyProductTypeBase.queryHead_AppendTable"/>
+		FROM t_ebuy_product_type EPT
+    	WHERE 1=1
+		AND EPT.f_sys0_del_state = 0
+		AND EPT.f_point_type = #{pointType}
+		AND EPT.f_wlApp_type = #{wlAppType}
+		<if test="version != null">
+    		and <![CDATA[ EPT.f_version <= #{version}]]>
+    	</if>
+		ORDER BY EPT.f_order DESC
+	</select>
+	
+	<!-- 推荐的产品列表Map -->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyProductRecommendEntity" id="ebuyProductRecommendMap" extends="ebuyProductRecommendBase.ebuyProductRecommendBaseMap_AppendTable">
+		<association property="ebuyProductInfo" resultMap="commonEbuy.ebuyProductMap_Append" />
+	</resultMap>
+	
+	<sql id="select_ebuyProduct_withPage_common">
+		SELECT <include refid="queryProdShelfHead_AppendTable"/>
+    		<!-- 供应商信息 -->
+    		,<include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>
+    		FROM t_ebuy_product_shelf EPSH
+ 			 INNER JOIN t_ebuy_product EP on EPSH.t_ebuy_product_id = EP.f_id <!--  and EPSH.f_sys0_del_state = 0 -->
+    		 INNER JOIN t_ebuy_supply_merchant ESM ON  EP.t_supply_merchant_f_id = ESM.f_id AND ESM.f_sys0_del_state = 0
+    	WHERE
+    	EPSH.f_up_shelf_state=0 and 
+    	EP.f_sys0_del_state = 0
+    	AND EP.f_point_type = #{pointType} 
+    	<!-- AND EP.f_wlApp_type = #{wlAppType} -->
+    	AND EP.f_status = 0 <!-- 产品状态=={"0":"上架","1":"下架"} -->
+    	<if test="searchKey != null and searchKey != '' ">  
+            <![CDATA[ AND ( EP.f_name like CONCAT('%',#{searchKey},'%') OR EP.f_price_unit like CONCAT('%',#{searchKey},'%') ) ]]>
+        </if>
+        <if test="productTypeId != null and !(productTypeId.equals('')) ">
+	    	AND EPSH.t_ebuy_product_type_id = #{productTypeId}
+        </if>
+	</sql>
+    <!-- 分页查询商品列表信息 -->
+    <select id="select_ebuyProduct_withPage" resultMap="commonEbuy.ebuyProductMap_Append" parameterType="java.util.Map">
+    	SELECT _tmp.* 
+    		,<include refid="ebuySupplyMerchantHasTEbuyDeliveryMethodBase.queryHead_AppendTable"/>
+			,<include refid="ebuyDeliveryMethodBase.queryHead_AppendTable"/>
+			<!-- 认证信息 -->
+    		,<include refid="ebuyProductHasTEbuyAuthBase.queryHead_AppendTable"/>
+    		,<include refid="ebuyAuthBase.queryHead_AppendTable"/>
+    	FROM (
+    		<include refid="ebuy.select_ebuyProduct_withPage_common"/>
+	    	ORDER BY EP.f_id DESC
+    		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+    	) _tmp
+    	INNER JOIN (
+    		t_ebuy_supply_merchant_has_t_ebuy_delivery_method ESMHTEDM
+    		INNER JOIN t_ebuy_delivery_method EDM ON EDM.f_id = ESMHTEDM.t_ebuy_delivery_method_f_id AND EDM.f_sys0_del_state = 0
+    	) ON _tmp.ESMid = ESMHTEDM.t_ebuy_supply_merchant_f_id  AND ESMHTEDM.f_sys0_del_state = 0
+		LEFT JOIN (
+			t_ebuy_product_has_t_ebuy_auth EPHTEA 
+   			INNER JOIN t_ebuy_auth EA ON EA.f_id = EPHTEA.t_ebuy_auth_f_id AND EA.f_sys0_del_state = 0
+		) ON _tmp.EPid = EPHTEA.t_ebuy_product_f_id AND EPHTEA.f_sys0_del_state = 0
+    </select>
+    <select id="select_ebuyProduct_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT COUNT(*) 
+    	FROM (
+    		<include refid="ebuy.select_ebuyProduct_withPage_common"/>
+    	) _tmp
+    	INNER JOIN (
+    		t_ebuy_supply_merchant_has_t_ebuy_delivery_method ESMHTEDM
+    		INNER JOIN t_ebuy_delivery_method EDM ON EDM.f_id = ESMHTEDM.t_ebuy_delivery_method_f_id AND EDM.f_sys0_del_state = 0
+    	) ON _tmp.ESMid = ESMHTEDM.t_ebuy_supply_merchant_f_id  AND ESMHTEDM.f_sys0_del_state = 0
+	</select>
+	<!-- <select id="select_ebuyProduct_withPage" resultMap="commonEbuy.ebuyProductMap_Append" parameterType="java.util.Map">
+    	SELECT <include refid="ebuyProductBase.queryHead_AppendTable"/>
+    		供应商信息
+    		,<include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>
+			,<include refid="ebuySupplyMerchantHasTEbuyDeliveryMethodBase.queryHead_AppendTable"/>
+			,<include refid="ebuyDeliveryMethodBase.queryHead_AppendTable"/>
+    		认证信息
+    		,<include refid="ebuyProductHasTEbuyAuthBase.queryHead_AppendTable"/>
+    		,<include refid="ebuyAuthBase.queryHead_AppendTable"/>
+    	<include refid="ebuy.select_ebuyProduct_withPage_common"/>
+    	ORDER BY EP.f_id ASC
+    	<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select> -->
+	<!-- 根据条件查询满足条件的商品数目 -->
+    <!-- <select id="select_ebuyProduct_count" resultType="java.lang.Integer">
+    	SELECT COUNT(*) <include refid="ebuy.select_ebuyProduct_withPage_common"/>
+	</select> -->
+	
+	<!-- 根据商品Id查询商品详情 -->
+	<select id="select_ebuyProduct_bySeqId" parameterType="java.util.Map" resultMap="ebuyProductShelfMap_Append">
+		SELECT <include refid="queryProductShelfHead_AppendTable"/>
+    		<!-- 供应商信息 -->
+    		,<include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>
+			,<include refid="ebuySupplyMerchantHasTEbuyDeliveryMethodBase.queryHead_AppendTable"/>
+			,<include refid="ebuyDeliveryMethodBase.queryHead_AppendTable"/>
+			<!-- 认证信息 -->
+			,<include refid="ebuyProductHasTEbuyAuthBase.queryHead_AppendTable"/>
+			,<include refid="ebuyAuthBase.queryHead_AppendTable"/>
+			<!-- 图片信息 -->
+			,<include refid="ebuyProductPicBase.queryHead_AppendTable"/>
+			<!-- 产品介绍的图片信息 -->
+			,<include refid="ebuyProductIntroducePicBase.queryHead_AppendTable"/>
+			<!-- 产品规格信息 -->
+			,<include refid="queryProdSpecShelHead_AppendTable"/>
+			,sos.f_name sosName, sos.f_introduce_url sosIntroduceUrl
+		FROM t_ebuy_product EP 
+			inner join t_ebuy_product_shelf EPSH on EP.f_id = EPSH.t_ebuy_product_id  
+			left join t_ebuy_sales_promotion sp ON EPSH.t_sales_promotion_id = sp.f_id and sp.f_sys0_del_state = 0
+    		INNER JOIN (
+				t_ebuy_supply_merchant ESM 
+    			INNER JOIN t_ebuy_supply_merchant_has_t_ebuy_delivery_method ESMHTEDM ON ESM.f_id = ESMHTEDM.t_ebuy_supply_merchant_f_id AND ESMHTEDM.f_sys0_del_state = 0
+				INNER JOIN t_ebuy_delivery_method EDM ON EDM.f_id = ESMHTEDM.t_ebuy_delivery_method_f_id AND EDM.f_sys0_del_state = 0
+			) ON  EP.t_supply_merchant_f_id = ESM.f_id AND ESM.f_sys0_del_state = 0
+			LEFT JOIN (
+				t_ebuy_auth EA 
+				INNER JOIN t_ebuy_product_has_t_ebuy_auth EPHTEA ON EA.f_id = EPHTEA.t_ebuy_auth_f_id AND EPHTEA.f_sys0_del_state = 0
+			) ON EPHTEA.t_ebuy_product_f_id = EP.f_id AND EA.f_sys0_del_state = 0
+			LEFT JOIN (
+				t_ebuy_product_pic EPP
+			) ON EPP.t_ebuy_product_f_id = EP.f_id AND EPP.f_sys0_del_state = 0
+			LEFT JOIN (
+				t_ebuy_product_introduce_pic EPIP
+			)ON EPIP.t_ebuy_product_f_id = EP.f_id AND EPIP.f_sys0_del_state = 0
+			LEFT JOIN t_source_of_supply sos on sos.f_id = EP.t_source_of_supply_f_id
+			<include refid="productSpecId_append_condition_for_List_ebuyProduct"/>
+    	WHERE 1 = 1
+    	AND EP.f_sys0_del_state = 0
+    	AND EP.f_point_type = #{pointType}
+    	<!-- AND EP.f_wlApp_type = #{wlAppType} -->
+    	AND EPSH.f_id = #{productId}
+	</select>
+	
+	<!-- 根据商品Id查询认证列表信息 -->
+	<!-- <resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyProductHasTEbuyAuthEntity_EbuyAuth" id="ebuyProductHasTEbuyAuthEntity_EbuyAuth_AppendMap" 
+		extends="ebuyProductHasTEbuyAuthBase.ebuyProductHasTEbuyAuthBaseMap_AppendTable">
+		<association property="ebuyAuth" resultMap="ebuyAuthBase.ebuyAuthBaseMap_AppendTable"></association>
+	</resultMap> -->
+	<!-- <select id="select_ebuyAuthList_byProductId" parameterType="java.math.BigInteger" resultMap="ebuyProductHasTEbuyAuthEntity_EbuyAuth_AppendMap">
+		SELECT <include refid="ebuyAuthBase.queryHead_AppendTable"/>,<include refid="ebuyProductHasTEbuyAuthBase.queryHead_AppendTable"/>
+		FROM t_ebuy_auth EA 
+			INNER JOIN t_ebuy_product_has_t_ebuy_auth EPHTEA ON EA.f_id = EPHTEA.t_ebuy_auth_f_id AND EPHTEA.f_sys0_del_state = 0
+     	WHERE 1=1
+     	AND EA.f_sys0_del_state = 0
+     	AND EPHTEA.t_ebuy_product_f_id = #{_parameter}
+		ORDER BY EA.f_id DESC
+	</select> -->
+	
+	<!-- 根据商品Id查询其支持的配送方式 (仅商品支持的)-->
+	<select id="select_ebuyDeliveryMethodList_byProductId" parameterType="java.math.BigInteger" resultMap="ebuyDeliveryMethodBase.ebuyDeliveryMethodBaseMap">
+		SELECT <include refid="ebuyDeliveryMethodBase.queryHead"/>
+		FROM t_ebuy_delivery_method EDM 
+			INNER JOIN t_ebuy_product_has_t_ebuy_delivery_method EPHTEDM ON EDM.f_id = EPHTEDM.t_ebuy_delivery_method_f_id AND EPHTEDM.f_sys0_del_state = 0
+     	WHERE 1=1
+     	AND EDM.f_sys0_del_state = 0
+     	AND EPHTEDM.t_ebuy_product_f_id = #{_parameter}
+     	ORDER BY EDM.f_id DESC
+	</select>
+	<!-- 根据商品Id查询其支持的配送方式 (商品对应的供应商支持的)-->
+	<select id="select_ebuyDeliveryMethodListFromMerchant_byProductId" parameterType="java.util.Map" resultMap="ebuyDeliveryMethodBase.ebuyDeliveryMethodBaseMap">
+		SELECT <include refid="ebuyDeliveryMethodBase.queryHead"/>
+		FROM t_ebuy_product EP 
+			INNER JOIN t_ebuy_supply_merchant ESM ON EP.t_supply_merchant_f_id=ESM.f_id AND ESM.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_supply_merchant_has_t_ebuy_delivery_method ESMHTEDM ON ESM.f_id = ESMHTEDM.t_ebuy_supply_merchant_f_id AND ESMHTEDM.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_delivery_method EDM ON EDM.f_id = ESMHTEDM.t_ebuy_delivery_method_f_id AND EDM.f_sys0_del_state = 0
+		WHERE 1=1
+		AND EP.f_sys0_del_state = 0
+		AND EP.f_point_type = #{pointType}
+		<!-- AND EP.f_wlApp_type = #{wlAppType} -->
+		AND EP.f_id = #{productId}
+	</select>
+	
+	<!-- 配送方式实体类 -->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyDeliveryMethodEntity" id="ebuyDeliveryMethodEntity_Map_Append"
+		extends="ebuyDeliveryMethodBase.ebuyDeliveryMethodBaseMap">
+	</resultMap>
+	<!-- 根据供应商Id查询支持的配送方式 -->
+	<select id="select_EbuyDeliveryMethodList_ByMerId" parameterType="java.util.Map" resultMap="ebuyDeliveryMethodEntity_Map_Append">
+		SELECT <include refid="ebuyDeliveryMethodBase.queryHead"/>
+		FROM t_ebuy_delivery_method EDM
+			INNER JOIN t_ebuy_supply_merchant_has_t_ebuy_delivery_method ESMHTEDM ON EDM.f_id = ESMHTEDM.t_ebuy_delivery_method_f_id AND ESMHTEDM.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = ESMHTEDM.t_ebuy_supply_merchant_f_id AND ESM.f_sys0_del_state = 0
+				AND ESM.f_id = #{merchantId}
+		WHERE 1=1
+		AND EDM.f_sys0_del_state = 0
+		ORDER BY EDM.f_price_amount_start ASC 
+	</select>
+	
+	<!--  查询推荐的产品列表 -->
+	<select id="select_RecommendProducts" parameterType="java.util.Map" resultMap="ebuyProductRecommendMap">
+		SELECT <include refid="ebuyProductRecommendBase.queryHead_AppendTable"/>
+		<!-- 商品基本信息 -->
+		,<include refid="ebuyProductBase.queryHead_AppendTable"/>
+		<!-- 供应商信息 -->
+   		,<include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>
+		,<include refid="ebuySupplyMerchantHasTEbuyDeliveryMethodBase.queryHead_AppendTable"/>
+		,<include refid="ebuyDeliveryMethodBase.queryHead_AppendTable"/>
+		<!-- 认证信息 -->
+		,<include refid="ebuyProductHasTEbuyAuthBase.queryHead_AppendTable"/>
+		,<include refid="ebuyAuthBase.queryHead_AppendTable"/>
+			
+		FROM t_ebuy_product_recommend EPR 
+			INNER JOIN t_ebuy_product EP ON EPR.t_ebuy_product_f_id = EP.f_id  AND EP.f_sys0_del_state = 0
+				AND EP.f_status = 0 <!-- 产品状态=={"0":"上架","1":"下架"} -->
+				AND EP.f_point_type = #{pointType}
+				<!-- AND EP.f_wlApp_type = #{wlAppType} -->
+			INNER JOIN (
+				t_ebuy_supply_merchant ESM 
+    			INNER JOIN t_ebuy_supply_merchant_has_t_ebuy_delivery_method ESMHTEDM ON ESM.f_id = ESMHTEDM.t_ebuy_supply_merchant_f_id AND ESMHTEDM.f_sys0_del_state = 0
+				INNER JOIN t_ebuy_delivery_method EDM ON EDM.f_id = ESMHTEDM.t_ebuy_delivery_method_f_id AND EDM.f_sys0_del_state = 0
+			) ON  EP.t_supply_merchant_f_id = ESM.f_id AND ESM.f_sys0_del_state = 0
+			LEFT JOIN (
+				t_ebuy_auth EA 
+				INNER JOIN t_ebuy_product_has_t_ebuy_auth EPHTEA ON EA.f_id = EPHTEA.t_ebuy_auth_f_id AND EPHTEA.f_sys0_del_state = 0
+			) ON EPHTEA.t_ebuy_product_f_id = EP.f_id AND EA.f_sys0_del_state = 0
+			
+		WHERE 1=1 
+		AND EPR.f_sys0_del_state = 0
+		AND EPR.f_point_type = #{pointType}
+	</select>
+	
+	<!-- 查询所有的收货地址信息，包含对应的详细信息 -->
+	<sql id="select_selectEbuyReceiveAddressDetailBase_Common">
+		SELECT <include refid="ebuyDeliveryAddressBase.queryHead_AppendTable"/>
+    			,<include refid="ebuyHandleAddressBase.queryHead_AppendTable"/>
+				,EHA.t_group_building_f_id gbId, EHA.f_gb_name gbName, EHA.f_block_id blockId, ab.f_name blockName, ac.f_id cityId, ac.f_name cityName, ap.f_id provinceId, ap.f_name provinceName
+				,concat(ifnull(EHA.f_address_area,''),EHA.f_address_detail) AS addressDetail
+		FROM t_ebuy_delivery_address EDA
+		INNER JOIN t_ebuy_handle_address EHA ON EDA.t_ebuy_handle_address_f_id = EHA.f_id AND EDA.f_target_type = 2 AND EHA.f_sys0_del_state = 0
+		LEFT JOIN t_address_block ab on ab.f_id = EHA.f_block_id
+		LEFT JOIN t_address_city ac on ac.f_id = ab.t_city_f_id
+		LEFT JOIN t_address_province ap on ap.f_id = ac.t_province_f_id
+		WHERE 1 = 1
+		AND EDA.f_sys0_del_state = 0
+		AND EDA.t_user_f_id = #{tUserFId}
+		union
+		SELECT <include refid="ebuyDeliveryAddressBase.queryHead_AppendTable"/>
+		,<include refid="ebuyHandleAddressBase.queryHead_AppendTable"/>
+		,gb.f_id gbId, gb.f_name gbName, ab.f_id blockId, ab.f_name blockName, ac.f_id cityId, ac.f_name cityName, ap.f_id provinceId, ap.f_name provinceName
+		,concat(ac.f_name, ab.f_name, gb.f_name,b.f_name,'-', rr.f_num) AS addressDetail
+		FROM t_ebuy_delivery_address EDA
+		LEFT JOIN t_ebuy_handle_address EHA ON EDA.t_ebuy_handle_address_f_id = EHA.f_id AND EHA.f_sys0_del_state = 0
+		LEFT JOIN t_room r on r.f_sys0_del_state = 0 and r.f_id = EDA.t_room_f_id
+		LEFT JOIN t_real_room rr on rr.f_sys0_del_state = 0 and rr.f_id = r.t_real_room_f_id
+		LEFT JOIN t_building b on b.f_sys0_del_state = 0 and b.f_id = rr.t_building_f_id
+		LEFT JOIN t_group_building gb on gb.f_sys0_del_state = 0 and gb.f_id = b.t_group_building_f_id
+		LEFT JOIN t_address_block ab on ab.f_id = gb.t_block_f_id
+		LEFT JOIN t_address_city ac on ac.f_id = ab.t_city_f_id
+		LEFT JOIN t_address_province ap on ap.f_id = ac.t_province_f_id
+		WHERE EDA.f_target_type = 1
+		AND EDA.f_sys0_del_state = 0
+		AND EDA.t_user_f_id = #{tUserFId}
+	</sql>
+	<sql id="select_selectEbuyReceiveAddressList_Common">
+		(
+			<include refid="ebuy.select_selectEbuyReceiveAddressDetailBase_Common"/>
+		) as table1
+		
+	</sql>
+	<!-- 分页查询 -->
+	<select id="select_selectEbuyReceiveAddressList_withPage" resultMap="commonEbuy.ebuyDeliveryAddressEntityMap" parameterType="java.util.Map">
+		SELECT table1.* FROM
+		<include refid="ebuy.select_selectEbuyReceiveAddressList_Common"/>
+		ORDER BY table1.EDAid ASC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	<!-- 记录数 -->
+	<select id="select_selectEbuyReceiveAddressList_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT COUNT(*) FROM
+		<include refid="ebuy.select_selectEbuyReceiveAddressList_Common"/>
+    </select>
+	<!-- 查询详情，根据用户Id和记录Id -->
+	<select id="select_selectEbuyReceiveAddressDetail_ByIdUserId" parameterType="java.util.Map" resultMap="commonEbuy.ebuyDeliveryAddressEntityMap">
+		select * from (<include refid="ebuy.select_selectEbuyReceiveAddressDetailBase_Common"/>) tmp
+		where tmp.EDAid = #{id}
+    </select>
+    <!-- 根据Id逻辑删除收货地址 -->
+	<update id="delete_EbuyDeliveryAddress_ByIdUserId_Logic" parameterType="java.util.Map" >
+		UPDATE t_ebuy_delivery_address
+		SET f_sys0_del_state = 1
+			,f_sys0_del_time= SYSDATE()
+		WHERE 1=1
+		AND f_id = #{deliveryAddressId}
+		AND t_user_f_id = #{userId}
+		AND f_sys0_del_state = 0
+	</update>
+	<!-- 设置默认收货地址 -->
+	<update id="update_EbuyReceiveAddress_setDefaultId" parameterType="java.util.Map">
+		UPDATE t_ebuy_delivery_address 
+		SET f_isDefault = 
+		CASE 
+		WHEN f_id=#{deliveryAddressId} and t_user_f_id = #{userId} then 1 
+		WHEN f_id!=#{deliveryAddressId} and t_user_f_id = #{userId} then 0 
+		END
+		,f_sys0_upd_time = SYSDATE()
+		WHERE 1 = 1
+		AND f_sys0_del_state = 0
+		AND t_user_f_id = #{userId}
+	</update>
+	<!-- 根据用户Id查询默认收货地址 -->
+	<select id="select_selectEbuyReceiveAddressDefault_ByUserId" parameterType="java.util.Map" resultMap="commonEbuy.ebuyDeliveryAddressEntityMap">
+		select * from (<include refid="ebuy.select_selectEbuyReceiveAddressDetailBase_Common"/>) tmp
+		where tmp.EDAisdefault = #{isdefault}
+		limit 1
+    </select>
+	
+	<!-- 根据用户Id查询订单列表 -->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyOrderEntity" id="ebuyOrderEntityMapForList" 
+		extends="ebuyOrderBase.ebuyOrderBaseMap_AppendTable">
+		<!-- 订单包含的商品信息列表 -->
+		<collection property="ebuyOrderHasTEbuyProductEntity_ProductList" resultMap="ebuyOrderHasTEbuyProductEntity_ProductMap" 
+        	javaType="java.util.List" ofType="com.cnfantasia.server.api.ebuy.entity.EbuyOrderHasTEbuyProductEntity_Product"/>
+        <!-- 订单对应的配送单信息 -->
+		<collection property="ebuyDeliveryOrderEntityList" resultMap="ebuyDeliveryOrderEntityMap" 
+        	javaType="java.util.List" ofType="com.cnfantasia.server.api.ebuy.entity.EbuyDeliveryOrderEntity"/>
+        <!-- 订单对应的优惠信息 -->
+		<!-- <collection property="payCouponList" resultMap="payCouponBase.payCouponBaseMap_AppendTable" 
+        	javaType="java.util.List" ofType="PayCoupon"/> -->
+	</resultMap>
+	<!-- 根据Id查询订单详情 -->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyOrderEntity" id="ebuyOrderEntityMap" extends="ebuyOrderEntityMapForList">
+		<!-- 收货地址 -->
+		<!-- <association column="{tUserFId=ebuyOrder_f_buyer_id,id=ebuyOrder_t_ebuy_delivery_address_f_id}" 
+			javaType="com.cnfantasia.server.api.ebuy.entity.EbuyDeliveryAddressEntity" 
+        	property="ebuyDeliveryAddressEntity" select="ebuy.select_selectEbuyReceiveAddressDetail_ByIdUserId"/> -->
+	</resultMap>
+	<!-- 订单包含的商品List的信息Map -->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyOrderHasTEbuyProductEntity_Product" id="ebuyOrderHasTEbuyProductEntity_ProductMap" 
+		extends="ebuyOrderHasTEbuyProductBase.ebuyOrderHasTEbuyProductBaseMap_AppendTable">
+		<!-- 商品信息 -->
+		<!-- <association property="ebuyProductEntity" resultMap="ebuyProductEntityAppendMap_Order" /> -->
+		<result column="EROPhasRefund" javaType="java.lang.Boolean" property="hasRefund"/>
+		<association property="ebuyProductEntity" resultMap="ebuyProductShelfMap_Append" />
+		<association property="ebuyProductSpec" resultMap="ebuyProductSpecBase.ebuyProductSpecBaseMap_AppendTable" /><!-- 产品规格 -->
+		 <!-- 兑换码列表 -->
+		<collection property="ebuyOrderProductHasCodeList" resultMap="ebuyOrderProductHasCodeBase.ebuyOrderProductHasCodeBaseMap_AppendTable" 
+        	javaType="java.util.List" ofType="EbuyOrderProductHasCode"/>
+	</resultMap>
+	
+	<!-- 商品信息Map -->
+	<!-- <resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyProductEntity" id="ebuyProductEntityAppendMap_Order" 
+		extends="ebuyProductBase.ebuyProductBaseMap_AppendTable">
+        <association column="ebuyProduct_t_supply_merchant_f_id" javaType="com.cnfantasia.server.api.ebuy.entity.EbuySupplyMerchantEntity" 
+        	property="ebuySupplyMerchantEntity" select="ebuyMerchant.select_ebuySupplyMerchantDetail_bySeqId"/>
+	</resultMap> -->
+	
+	<!-- 配送单信息Map -->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyDeliveryOrderEntity" id="ebuyDeliveryOrderEntityMap" 
+		extends="ebuyDeliveryOrderBase.ebuyDeliveryOrderBaseMap_AppendTable">
+		<result property="hasFullyRefund" column="EDOhasFullyRefund" javaType="java.lang.Boolean"/>
+		<result property="refundFee" column="EROrefundFee" javaType="java.math.BigDecimal"/>
+		<result property="deliveryType" column="EODTdeliveryType" javaType="int" />
+		<!-- 快递公司信息 -->
+		<association property="ebuyExpressCompany" resultMap="ebuyExpressCompanyBase.ebuyExpressCompanyBaseMap_AppendTable"/>
+		<!-- 配送方式 -->
+		<association property="ebuyDeliveryMethod" resultMap="ebuyDeliveryMethodBase.ebuyDeliveryMethodBaseMap_AppendTable" />
+		<!-- 供应商信息 -->
+		<association property="ebuySupplyMerchant" resultMap="ebuySupplyMerchantBase.ebuySupplyMerchantBaseMap_AppendTable"/>
+		 <!-- 配送单对应的商品信息 -->
+		<collection property="ebuyDeliveryOrderProductList" resultMap="ebuyDeliveryOrderProductBase.ebuyDeliveryOrderProductBaseMap_AppendTable"/>
+       	<!-- javaType="java.util.List" ofType="EbuyDeliveryOrderProduct" -->
+	</resultMap>
+	
+	<sql id="select_EbuyOrderEntity_list_comm">
+		SELECT <include refid="ebuyOrderBase.queryHead_AppendTable"/><!-- 订单基本信息 -->
+			,@var_order := @var_order + 1 ext_var_order
+		FROM t_ebuy_order EO , (select @var_order :=0) t
+		WHERE 1=1
+		AND EO.f_sys0_del_state = 0
+		AND EO.f_type in (1, 8) <!-- 订单类型=={"1":"电商商品","2":"物业费账单"} -->
+	</sql>
+	
+	<!-- 根据用户Id,订单Id查询订单详情 -->
+	<select id="select_EbuyOrderEntity_Detail_ByIdUserId" parameterType="java.util.Map" resultMap="ebuyOrderEntityMap">
+		SELECT _tmp.*
+				,case when ERO.f_id is null then 0 WHEN ERO.f_status = 1 THEN 0 else 1 end as EDOhasFullyRefund
+				,IFNULL(ERO.f_refund_fee,0) as EROrefundFee
+				,case when EROP.f_id is null then 0 else 1 end as EROPhasRefund
+			,<include refid="ebuyOrderHasTEbuyProductBase.queryHead_AppendTable"/><!-- 订单包含的商品信息列表 -->
+			,<include refid="queryProductShelfHead_AppendTable"/><!-- 产品信息 -->
+			,<include refid="queryProdSpecShelHead_AppendTable"/><!-- 产品规格信息 -->
+			,<include refid="ebuyOrderProductHasCodeBase.queryHead_AppendTable"/><!-- 兑换码信息 -->
+			,<include refid="ebuyDeliveryOrderBase.queryHead_AppendTable"/><!-- 配送单信息 -->
+			,<include refid="ebuyDeliveryOrderProductBase.queryHead_AppendTable"/><!-- 配送单商品关系 -->
+			,<include refid="ebuyExpressCompanyBase.queryHead_AppendTable"/><!-- 快递公司 -->
+			,<include refid="ebuyDeliveryMethodBase.queryHead_AppendTable"/><!-- 配送方式 -->
+			,<include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/><!-- 供应商信息 -->
+            ,<include refid="ebuyOrderDeliveryTypeBase.queryHead_AppendTable"/>
+		FROM (
+			<include refid="select_EbuyOrderEntity_list_comm"/>
+			AND EO.f_buyer_id=#{userId}
+			AND EO.f_id=#{orderId}
+		) _tmp
+		INNER JOIN (
+			t_ebuy_order_has_t_ebuy_product EOHTEP 
+			inner join t_ebuy_product_shelf EPSH ON EOHTEP.t_ebuy_product_f_id=EPSH.f_id
+			 inner join t_ebuy_product EP on EPSH.t_ebuy_product_id = EP.f_id
+			 left join t_ebuy_sales_promotion sp on EPSH.t_sales_promotion_id = sp.f_id
+			<if test="pointType != null and !(pointType.equals(''))">
+				AND EP.f_point_type = #{pointType}
+			</if>
+			<!-- 
+			<if test="wlAppType != null and !(wlAppType.equals(''))">
+				AND EP.f_wlApp_type = #{wlAppType}
+			</if>
+			 -->
+			<include refid="productSpecId_append_condition_for_ebuyOrder"/>
+			LEFT JOIN t_ebuy_order_product_has_code EOPHC ON EOPHC.t_ebuy_order_has_t_ebuy_product_f_id = EOHTEP.f_id AND EOPHC.f_sys0_del_state = 0
+		) ON EOHTEP.t_ebuy_order_f_id=_tmp.EOid AND EOHTEP.f_sys0_del_state = 0
+		INNER JOIN (
+			t_ebuy_delivery_order EDO
+			INNER JOIN t_ebuy_delivery_method EDM ON EDM.f_id = EDO.f_delivery_id
+			INNER JOIN t_ebuy_delivery_order_product EDOP ON EDOP.t_ebuy_delivery_order_f_id = EDO.f_id
+			INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EDO.t_supply_merchant_f_id <!-- 2014-10-16 16:42:56增加供应商信息 -->
+			LEFT JOIN t_ebuy_express_company EEC ON EEC.f_id = EDO.t_ebuy_express_company_f_id
+		) ON EDO.t_ebuy_order_f_id = _tmp.EOid AND EDO.f_buyer_id = #{userId} AND EDO.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_refund_order ERO ON ERO.t_ebuy_delivery_order_f_id = EDO.f_id AND ERO.f_sys0_del_state = 0 AND ERO.f_refund_status = 2
+		LEFT JOIN t_ebuy_refund_order_product EROP ON
+		EROP.t_ebuy_refund_order_f_id = ERO.f_id AND EROP.t_ebuy_delivery_order_f_id = EDO.f_id AND EROP.t_ebuy_order_has_t_ebuy_product_f_id = EOHTEP.f_id AND EROP.f_sys0_del_state = 0
+        left join t_ebuy_order_delivery_type EODT ON EODT.t_ebuy_supply_merchant = EDO.t_supply_merchant_f_id AND EODT.t_ebuy_order_f_id = _tmp.EOid
+	</select>
+	
+	<sql id="select_selectEbuyOrderList_tail">
+		<if test="_YesorderStatus != null and _YesorderStatus != '' ">
+			AND EO.f_status IN
+			<foreach item="_statusYes" collection="_YesorderStatus" open="(" separator="," close=")">
+			#{_statusYes}
+			</foreach>
+		</if>
+		<if test="_NoorderStatus != null and _NoorderStatus != '' ">
+			AND EO.f_status NOT IN
+			<foreach item="_statusNo" collection="_NoorderStatus" open="(" separator="," close=")">
+			#{_statusNo}
+			</foreach>
+		</if>
+	</sql>
+	<!-- 查询订单列表分页 -->
+	<select id="select_selectEbuyOrderList_withPage" resultMap="ebuyOrderEntityMapForList" parameterType="java.util.Map">
+		SELECT _tmp.*
+			,<include refid="ebuyOrderHasTEbuyProductBase.queryHead_AppendTable"/><!-- 订单包含的商品信息列表 -->
+			,<include refid="queryProductShelfHead_AppendTable"/><!-- 产品信息 -->
+			,<include refid="ebuyProductSpecBase.queryHead_AppendTable"/><!-- 产品规格信息 -->
+			,<include refid="ebuyOrderProductHasCodeBase.queryHead_AppendTable"/><!-- 兑换码信息 -->
+			,<include refid="ebuyDeliveryOrderBase.queryHead_AppendTable"/><!-- 配送单信息 -->
+			,<include refid="ebuyDeliveryOrderProductBase.queryHead_AppendTable"/><!-- 配送单商品关系 -->
+			,<include refid="ebuyExpressCompanyBase.queryHead_AppendTable"/><!-- 快递公司 -->
+			,<include refid="ebuyDeliveryMethodBase.queryHead_AppendTable"/><!-- 配送方式 -->
+			,<include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/><!-- 供应商信息 -->
+			,<include refid="ebuyOrderDeliveryTypeBase.queryHead_AppendTable" /> <!-- 供应商的配送设置 -->
+		FROM (
+			<include refid="ebuy.select_EbuyOrderEntity_list_comm"/>
+			<include refid="ebuy.select_selectEbuyOrderList_tail"/>
+			AND EO.f_buyer_id=#{userId}
+			ORDER BY EO.f_id DESC <!-- 
+				CASE WHEN EO.f_status = 1 THEN EO.f_id END DESC
+				,CASE WHEN ( ISNULL(EO.f_sys0_upd_time) AND ISNULL(EO.f_sys0_add_time) ) THEN  1 ELSE 2 END DESC
+				,CASE WHEN ( NOT ISNULL(EO.f_sys0_upd_time) OR NOT ISNULL(EO.f_sys0_add_time) ) THEN  
+					CASE WHEN ISNULL(EO.f_sys0_upd_time) THEN  EO.f_sys0_add_time ELSE EO.f_sys0_upd_time END
+				END DESC
+				,CASE WHEN ( ISNULL(EO.f_sys0_upd_time) AND ISNULL(EO.f_sys0_add_time) ) THEN  EO.f_id END DESC
+				 -->
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		) _tmp
+		INNER JOIN (
+			t_ebuy_order_has_t_ebuy_product EOHTEP 
+			inner join t_ebuy_product_shelf EPSH ON EOHTEP.t_ebuy_product_f_id=EPSH.f_id <!--  AND EPSH.f_sys0_del_state = 0  -->
+			 inner join t_ebuy_product EP on EPSH.t_ebuy_product_id = EP.f_id <!--  and EP.f_sys0_del_state = 0 -->
+				AND EP.f_point_type = #{pointType}
+				<!-- 
+				AND EP.f_wlApp_type = #{wlAppType}
+				 -->
+			left join t_ebuy_sales_promotion sp on EPSH.t_sales_promotion_id = sp.f_id
+			<include refid="productSpecId_append_condition_for_ebuyOrder"/>
+			LEFT JOIN t_ebuy_order_product_has_code EOPHC ON EOPHC.t_ebuy_order_has_t_ebuy_product_f_id = EOHTEP.f_id AND EOPHC.f_sys0_del_state = 0
+		) ON EOHTEP.t_ebuy_order_f_id=_tmp.EOid AND EOHTEP.f_sys0_del_state = 0
+		INNER JOIN (
+			t_ebuy_delivery_order EDO
+			INNER JOIN t_ebuy_delivery_method EDM ON EDM.f_id = EDO.f_delivery_id
+			INNER JOIN t_ebuy_delivery_order_product EDOP ON EDOP.t_ebuy_delivery_order_f_id = EDO.f_id
+			INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EDO.t_supply_merchant_f_id <!-- 2014-10-16 16:42:56增加供应商信息 -->
+			LEFT JOIN t_ebuy_express_company EEC ON EEC.f_id = EDO.t_ebuy_express_company_f_id
+		) ON EDO.t_ebuy_order_f_id = _tmp.EOid AND EDO.f_buyer_id = #{userId} AND EDO.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_order_delivery_type EODT ON EODT.t_ebuy_supply_merchant = EDO.t_supply_merchant_f_id AND EODT.t_ebuy_order_f_id = _tmp.EOid
+		ORDER BY _tmp.ext_var_order
+	</select>
+	<!-- 查询订单列表总记录数 -->
+	<select id="select_selectEbuyOrderList_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM ( 
+			<include refid="select_EbuyOrderEntity_list_comm"/>
+			<include refid="select_selectEbuyOrderList_tail"/>
+			AND EO.f_buyer_id=#{userId}
+		) as table1
+	</select>
+	
+	<!-- 购物车商品增加数量 -->
+	<!-- <update id="append_Product2BuyCar" parameterType="java.util.Map">
+		UPDATE t_ebuy_buy_car_has_t_ebuy_product EBCHTEP
+			INNER JOIN t_ebuy_buy_car EBC ON EBCHTEP.t_ebuy_buy_car_f_id = EBC.f_id AND EBC.f_sys0_del_state = 0
+		SET f_product_qty =  
+			CASE WHEN f_product_qty+#{productQty} > 0  
+			THEN f_product_qty+#{productQty} 
+			ELSE 0 END
+		WHERE 1=1
+		AND EBCHTEP.f_sys0_del_state = 0
+		AND EBC.f_user_id = #{userId}
+		AND EBCHTEP.t_ebuy_product_f_id = #{productId} 
+	</update> -->
+	
+	<!-- 查询购物车详情 -->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyBuyCarEntity" id="ebuyBuyCarEntityMap_Append" 
+		extends="ebuyBuyCarBase.ebuyBuyCarBaseMap_AppendTable">
+		<association property="regUser" resultMap="commonUser.userSimpleEntity_Map_Append"/>
+		<collection property="ebuyBuyCarHasTEbuyProductEntity_ProductList" resultMap="ebuyBuyCarHasTEbuyProductEntity_ProductMap_Append"/>
+	</resultMap>
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyBuyCarHasTEbuyProductEntity_Product" id="ebuyBuyCarHasTEbuyProductEntity_ProductMap_Append"
+		extends="ebuyBuyCarHasTEbuyProductBase.ebuyBuyCarHasTEbuyProductBaseMap_AppendTable">
+		<association property="ebuyProductEntity" resultMap="ebuyProductShelfMap_Append"/><!-- 引用公共的 -->
+		<association property="buyCarEbuyProductSpec" resultMap="ebuyProductSpecBase.ebuyProductSpecBaseMap_AppendTable"/><!-- 购物车中商品的规格信息 -->
+	</resultMap>
+	<sql id="select_BuyCar_Detail_base">
+		SELECT <include refid="ebuyBuyCarBase.queryHead_AppendTable"/>
+			,<include refid="ebuyBuyCarHasTEbuyProductBase.queryHead_AppendTable"/><!-- 商品购物车关系 -->
+			,<include refid="queryProductShelfHead_AppendTable"/><!-- 商品 -->
+			,<include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/><!-- 供应商 -->
+			,<include refid="ebuySupplyMerchantHasTEbuyDeliveryMethodBase.queryHead_AppendTable"/><!-- 供应商与配送方式 关系 -->
+			,<include refid="ebuyDeliveryMethodBase.queryHead_AppendTable"/><!-- 配送方式 -->
+			,<include refid="ebuyProductHasTEbuyAuthBase.queryHead_AppendTable"/><!-- 产品认证关系 -->
+			,<include refid="ebuyAuthBase.queryHead_AppendTable"/><!-- 认证信息 -->
+			<!-- ,<include refid="ebuyProductParametersBase.queryHead_AppendTable"/>产品参数
+			,<include refid="ebuyProductPicBase.queryHead_AppendTable"/>产品图片 -->
+			,<include refid="commonUser.userSimple_common_select"/> <!-- 已注册的购买者信息 -->
+			,<include refid="queryProdSpecShelHead_AppendTable"/> <!-- 商品规格信息 -->
+		FROM t_ebuy_buy_car EBC
+			INNER JOIN t_ebuy_buy_car_has_t_ebuy_product EBCHTEP ON EBCHTEP.t_ebuy_buy_car_f_id = EBC.f_id AND EBCHTEP.f_sys0_del_state = 0
+				<![CDATA[ AND EBCHTEP.f_product_qty > 0 ]]> <!-- syl-add-2015-4-20 09:57:08 购买数量大于0的 -->
+			INNER JOIN t_ebuy_product_shelf EPSH ON EPSH.f_id = EBCHTEP.t_ebuy_product_f_id and EPSH.f_up_shelf_state=0 and EPSH.f_sys0_del_state = 0
+			left join t_ebuy_sales_promotion sp on EPSH.t_sales_promotion_id = sp.f_id and sp.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product EP ON EPSH.t_ebuy_product_id = EP.f_id <!-- and EP.f_sys0_del_state = 0 -->
+				AND EP.f_status = 0 <!-- 产品状态=={"0":"上架","1":"下架"} -->
+				AND EP.f_point_type = #{pointType}
+				<!-- 
+				AND EP.f_wlApp_type = #{wlAppType}
+				-->
+			<include refid="productSpecId_append_condition_for_buyCar"/> <!-- syl-add商品规格 -->
+			INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id AND ESM.f_sys0_del_state = 0
+			LEFT JOIN (
+				t_ebuy_supply_merchant_has_t_ebuy_delivery_method ESMHTEDM 
+				INNER JOIN t_ebuy_delivery_method EDM ON EDM.f_id = ESMHTEDM.t_ebuy_delivery_method_f_id AND EDM.f_sys0_del_state = 0
+			) ON ESMHTEDM.t_ebuy_supply_merchant_f_id = ESM.f_id AND ESMHTEDM.f_sys0_del_state = 0
+			LEFT JOIN (
+				t_ebuy_product_has_t_ebuy_auth EPHTEA 
+				INNER JOIN t_ebuy_auth EA ON EA.f_id = EPHTEA.t_ebuy_auth_f_id AND EA.f_sys0_del_state = 0
+			)ON EPHTEA.t_ebuy_product_f_id = EP.f_id AND EPHTEA.f_sys0_del_state = 0
+			<!-- 用户信息 -->
+			LEFT JOIN t_user U ON U.f_id = EBC.f_user_id AND U.f_sys0_del_state = 0
+				AND EBC.f_user_type = 1  <!-- 用户类别=={"1":"注册用户","2":"临时用户"} -->
+			<include refid="commonUser.userSimple_common_from_leftJoin"/>
+		WHERE 1=1
+		AND EBC.f_sys0_del_state = 0
+	</sql>
+	<select id="select_BuyCar_Detail" resultMap="ebuyBuyCarEntityMap_Append" parameterType="java.util.Map">
+		<include refid="select_BuyCar_Detail_base"/>
+		<!-- AND EBC.f_user_id = #{userId}
+		AND EBC.f_user_type = #{userType} -->
+		<include refid="user_condition_check_comm"/>
+		ORDER BY CASE WHEN EBC.f_user_id = #{userId} AND EBC.f_user_type = #{userType} THEN 1 ELSE 2 END ASC
+			<!-- ,CASE WHEN NOT ISNULL(EBCHTEP.f_sys0_upd_time) THEN EBCHTEP.f_sys0_upd_time ELSE EBCHTEP.f_sys0_add_time END DESC -->
+			,EBCHTEP.f_sys0_add_time DESC
+	</select>
+	
+	<!-- 查询购物车的部分商品信息 -->
+	<select id="select_BuyCarPart_Detail_ByProdIds" resultMap="ebuyBuyCarEntityMap_Append" parameterType="java.util.Map">
+		<include refid="select_BuyCar_Detail_base"/>
+		<!-- AND EBC.f_user_id = #{userId}
+		AND EBC.f_user_type = #{userType} -->
+		<include refid="user_condition_check_comm"/>
+		AND
+		<foreach item="tmpItem" collection="productIdQtyList" open="(" separator="OR" close=")">
+			(
+			EBCHTEP.t_ebuy_product_f_id = #{tmpItem.productId}
+			<if test="tmpItem.productSpecId != null">
+				AND EBCHTEP.t_ebuy_product_spec_f_id = #{tmpItem.productSpecId}
+			</if>
+			<if test="tmpItem.productSpecId == null">
+				AND EBCHTEP.t_ebuy_product_spec_f_id IS NULL
+			</if>
+			)
+		</foreach>
+		
+	</select>
+	<!-- <select id="select_BuyCar_All_Detail" resultMap="ebuyBuyCarEntityMap_Append" parameterType="java.util.Map">
+		<include refid="select_BuyCar_Detail_base"/>
+		注释 AND EBC.f_user_id = #{userId} AND EBC.f_user_type = #{userType}
+		<include refid="user_condition_check_comm"/>
+	</select> -->
+	
+	<select id="select_BuyCarProduct_TotalCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT 
+		    sum(EBCHTEP.f_product_qty)
+		FROM
+		    t_ebuy_buy_car EBC
+	        INNER JOIN t_ebuy_buy_car_has_t_ebuy_product EBCHTEP ON EBCHTEP.t_ebuy_buy_car_f_id = EBC.f_id
+		        AND EBCHTEP.f_sys0_del_state = 0
+		    INNER JOIN t_ebuy_product_shelf EPSH ON EPSH.f_id = EBCHTEP.t_ebuy_product_f_id and EPSH.f_up_shelf_state=0 AND EPSH.f_sys0_del_state = 0
+	        INNER JOIN t_ebuy_product EP ON EP.f_id = EPSH.t_ebuy_product_id
+		        AND EP.f_sys0_del_state = 0
+		        AND EP.f_status = 0
+		        AND EP.f_point_type = #{pointType}
+		        <!-- 
+		        AND EP.f_wlApp_type = #{wlAppType}
+		         -->
+	        INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id
+		        AND ESM.f_sys0_del_state = 0
+		WHERE 1 = 1 
+		AND EBC.f_sys0_del_state = 0
+		<!-- AND EBC.f_user_id = #{userId}
+		AND EBC.f_user_type = #{userType} -->
+		<include refid="user_condition_check_comm"/>
+	</select>
+	
+	<sql id="remove_Prod_From_BuyCar_comm">
+		UPDATE t_ebuy_buy_car_has_t_ebuy_product EBCHTEP
+			INNER JOIN t_ebuy_buy_car EBC ON EBCHTEP.t_ebuy_buy_car_f_id = EBC.f_id AND EBC.f_sys0_del_state = 0
+		SET EBCHTEP.f_sys0_del_state = 1,EBCHTEP.f_sys0_del_time = sysdate()
+		WHERE 1=1
+		AND EBCHTEP.f_sys0_del_state = 0
+	</sql>
+	<!-- 将商品从购物车中删除(Logic) -->
+	<!-- 单个-old -->
+	<update id="remove_Prod_From_BuyCar_Logic_Old" parameterType="java.util.Map">
+		<include refid="remove_Prod_From_BuyCar_comm"/>
+		<!-- AND EBC.f_user_id = #{userId}
+		AND EBC.f_user_type = #{userType} -->
+		<include refid="user_condition_check_comm"/>
+		AND EBCHTEP.t_ebuy_product_f_id = #{productId}
+	</update>
+	<update id="remove_Prod_From_BuyCar_Logic" parameterType="java.util.Map">
+		<include refid="remove_Prod_From_BuyCar_comm"/>
+		<!-- AND EBC.f_user_id = #{userId}
+		AND EBC.f_user_type = #{userType} -->
+		<include refid="user_condition_check_comm"/>
+		AND EBCHTEP.t_ebuy_product_f_id = #{productId}
+		
+		<!-- AND EBCHTEP.t_ebuy_product_spec_f_id = #{productSpecId} -->
+		<if test="productSpecId != null">
+			AND EBCHTEP.t_ebuy_product_spec_f_id = #{productSpecId}
+		</if>
+		<if test="productSpecId == null">
+			AND EBCHTEP.t_ebuy_product_spec_f_id IS NULL
+		</if>
+	</update>
+	
+	<!-- 批量-old -->
+	<update id="remove_Prod_From_BuyCar_Batch_Logic_Old" parameterType="java.util.Map">
+		<include refid="remove_Prod_From_BuyCar_comm"/>
+		<!-- AND EBC.f_user_id = #{userId}
+		AND EBC.f_user_type = #{userType} -->
+		<include refid="user_condition_check_comm"/>
+		AND EBCHTEP.t_ebuy_product_f_id IN
+		<foreach item="idItem" collection="productIdList" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</update>
+	<update id="remove_Prod_From_BuyCar_Batch_Logic" parameterType="java.util.Map">
+		<include refid="remove_Prod_From_BuyCar_comm"/>
+		<!-- AND EBC.f_user_id = #{userId}
+		AND EBC.f_user_type = #{userType} -->
+		<include refid="user_condition_check_comm"/>
+		AND
+		<foreach item="tmpItem" collection="productIdQtyList" open="(" separator="OR" close=")">
+			(
+			EBCHTEP.t_ebuy_product_f_id = #{tmpItem.productId}
+			<!-- AND EBCHTEP.t_ebuy_product_spec_f_id = #{tmpItem.productSpecId} -->
+			<if test="tmpItem.productSpecId != null">
+				AND EBCHTEP.t_ebuy_product_spec_f_id = #{tmpItem.productSpecId}
+			</if>
+			<if test="tmpItem.productSpecId == null">
+				AND EBCHTEP.t_ebuy_product_spec_f_id IS NULL
+			</if>
+			)
+		</foreach>
+	</update>
+	<!-- 全部 -->
+	<update id="remove_Prod_From_BuyCar_AllLogic" parameterType="java.util.Map">
+		<include refid="remove_Prod_From_BuyCar_comm"/>
+		<!-- AND EBC.f_user_id = #{userId}
+		AND EBC.f_user_type = #{userType} -->
+		<include refid="user_condition_check_comm"/>
+	</update>
+	
+	<update id="remove_Prod_From_BuyCar_NewUser" parameterType="java.util.Map">
+		UPDATE t_ebuy_buy_car_has_t_ebuy_product EBCHTEP
+			INNER JOIN t_ebuy_buy_car EBC ON EBCHTEP.t_ebuy_buy_car_f_id = EBC.f_id AND EBC.f_sys0_del_state = 0
+			inner join t_ebuy_product_shelf ps on EBCHTEP.t_ebuy_product_f_id = ps.f_id
+			inner join t_ebuy_sales_promotion esp on ps.t_sales_promotion_id = esp.f_id and esp.f_sys0_del_state = 0 and esp.f_type = 1
+		SET EBCHTEP.f_sys0_del_state = 1,EBCHTEP.f_sys0_del_time = sysdate()
+		WHERE 1=1  
+		AND EBCHTEP.f_sys0_del_state = 0
+		<include refid="user_condition_check_comm"/>
+	</update>
+	
+	<!-- 释放商品库存 -->
+	<!-- <update id="release_ProductLeft_Count" parameterType="java.util.Map">
+		UPDATE t_ebuy_product EP
+			SET EP.f_left_count =  
+			CASE WHEN EP.f_left_count+#{toReleaseCount} > 0  
+			THEN EP.f_left_count+#{toReleaseCount}
+			ELSE 0 END
+			,EP.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND EP.f_sys0_del_state = 0
+		AND EP.f_point_type = #{pointType}
+		AND EP.f_wlApp_type = #{wlAppType}
+		AND EP.f_id=#{productId}
+	</update> -->
+	
+	<!-- 通过订单Id锁定库存 -->
+	<update id="lock_Product_LeftCount_ByOrderId" parameterType="java.util.Map">
+		UPDATE t_ebuy_product_shelf EPSH
+			 inner join t_ebuy_product EP on EPSH.t_ebuy_product_id = EP.f_id and EPSH.f_sys0_del_state = 0 and EP.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_order_has_t_ebuy_product EOHTEP ON EPSH.f_id =EOHTEP.t_ebuy_product_f_id AND EOHTEP.f_sys0_del_state = 0
+			<include refid="productSpecId_append_condition_for_ebuyOrder"/>
+			INNER JOIN t_ebuy_order EO ON EO.f_id = EOHTEP.t_ebuy_order_f_id AND EO.f_sys0_del_state = 0
+			<!-- 锁定,减库存 -->
+			SET EP.f_left_count = CASE WHEN ISNULL(EPS.f_left_count) THEN  EP.f_left_count-EOHTEP.f_product_qty ELSE EP.f_left_count END
+			,EPS.f_left_count = CASE WHEN ISNULL(EPS.f_left_count) THEN EPS.f_left_count ELSE EPS.f_left_count-EOHTEP.f_product_qty END
+			,EPS.f_sys0_upd_time = CASE WHEN ISNULL(EPS.f_left_count) THEN EPS.f_sys0_upd_time ELSE SYSDATE() END
+			,EP.f_sys0_upd_time = SYSDATE()
+			
+		WHERE 1=1 
+		AND EP.f_point_type = #{pointType}
+		<!-- 
+		AND EP.f_wlApp_type = #{wlAppType}
+		-->
+		AND EO.f_id = #{orderId}
+		AND EO.f_buyer_id = #{buyerId}
+	</update>
+	<!-- 通过订单Id释放商品库存 -->
+	<update id="release_Product_LeftCount_ByOrderId" parameterType="java.util.Map">
+		UPDATE t_ebuy_product_shelf EPSH
+			 inner join t_ebuy_product EP on EPSH.t_ebuy_product_id = EP.f_id
+			INNER JOIN t_ebuy_order_has_t_ebuy_product EOHTEP ON EPSH.f_id =EOHTEP.t_ebuy_product_f_id AND EOHTEP.f_sys0_del_state = 0 
+			<include refid="productSpecId_append_condition_for_ebuyOrder"/>
+			INNER JOIN t_ebuy_order EO ON EO.f_id = EOHTEP.t_ebuy_order_f_id AND EO.f_sys0_del_state = 0 
+			<!-- 释放,加库存 -->
+			<!-- SET EP.f_left_count =  EP.f_left_count+EOHTEP.f_product_qty 
+				,EP.f_sys0_upd_time = SYSDATE() -->
+			SET EP.f_left_count = CASE WHEN ISNULL(EPS.f_left_count) THEN  EP.f_left_count+EOHTEP.f_product_qty ELSE EP.f_left_count END
+			,EPS.f_left_count = CASE WHEN ISNULL(EPS.f_left_count) THEN EPS.f_left_count ELSE EPS.f_left_count+EOHTEP.f_product_qty END
+			,EPS.f_sys0_upd_time = CASE WHEN ISNULL(EPS.f_left_count) THEN EPS.f_sys0_upd_time ELSE SYSDATE() END
+			,EP.f_sys0_upd_time = SYSDATE()
+			
+		WHERE 1=1 
+		AND EP.f_point_type = #{pointType}
+		<!-- 
+		AND EP.f_wlApp_type = #{wlAppType}
+		-->
+		AND EO.f_id = #{orderId}
+		AND EO.f_buyer_id = #{buyerId}
+	</update>
+	<!-- 通过订单Id增加商品销量 -->
+	<update id="add_Product_SellCount_ByOrderId" parameterType="java.util.Map">
+		UPDATE t_ebuy_product_shelf EPSH
+			 inner join t_ebuy_product EP on EPSH.t_ebuy_product_id = EP.f_id and EPSH.f_sys0_del_state = 0 and EP.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_order_has_t_ebuy_product EOHTEP ON EPSH.f_id =EOHTEP.t_ebuy_product_f_id AND EOHTEP.f_sys0_del_state = 0 
+			<!-- <include refid="productSpecId_append_condition_for_ebuyOrder"/> -->
+			INNER JOIN t_ebuy_order EO ON EO.f_id = EOHTEP.t_ebuy_order_f_id AND EO.f_sys0_del_state = 0 
+			<!-- 增加销量 -->
+			<!-- SET EP.f_sel_num =  EP.f_sel_num+EOHTEP.f_product_qty 
+				,EP.f_sys0_upd_time = SYSDATE() -->
+			SET EP.f_sel_num = IFNULL(EP.f_sel_num, 0)+EOHTEP.f_product_qty 
+			<!-- SET EP.f_sel_num = CASE WHEN ISNULL(EPS.f_sel_num) THEN  EP.f_sel_num+EOHTEP.f_product_qty ELSE EP.f_sel_num END
+			,EPS.f_sel_num = CASE WHEN ISNULL(EPS.f_sel_num) THEN EPS.f_sel_num ELSE EPS.f_sel_num+EOHTEP.f_product_qty END
+			,EPS.f_sys0_upd_time = CASE WHEN ISNULL(EPS.f_sel_num) THEN EPS.f_sys0_upd_time ELSE SYSDATE() END -->
+			,EP.f_sys0_upd_time = SYSDATE()
+			
+		WHERE 1=1 
+		<!--AND EP.f_point_type = #{pointType}
+		AND EP.f_wlApp_type = #{wlAppType}
+		-->
+		AND EO.f_id = #{orderId}
+		AND EO.f_buyer_id = #{buyerId}
+	</update>
+	
+	<!-- 根据商品Id集合批量查询商品信息 -->
+	<select id="select_EbuyProductList_ByProdIds" parameterType="java.util.Map" resultMap="ebuyProductEntityMap_AppendTable">
+		SELECT <include refid="queryProductShelfHead_AppendTable"/>
+		from t_ebuy_product_shelf EPSH
+		 inner join t_ebuy_product EP on EPSH.t_ebuy_product_id = EP.f_id and EPSH.f_sys0_del_state = 0 and EPSH.f_up_shelf_state=0 and EP.f_sys0_del_state = 0
+		 left join t_ebuy_sales_promotion sp ON EPSH.t_sales_promotion_id = sp.f_id and sp.f_sys0_del_state = 0
+		WHERE 1=1
+		AND EP.f_point_type = #{pointType}
+		<!-- 
+		AND EP.f_wlApp_type = #{wlAppType}
+		-->
+		AND EPSH.f_id IN
+		<foreach item="idItem" collection="productIds" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</select>
+	
+	<!-- 根据商品规格Id集合批量查询商品规格及商品信息 -->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyProductSpecEntity" 
+		id="ebuyProductSpecEntity_Map_Append" extends="ebuyProductSpecBase.ebuyProductSpecBaseMap_AppendTable">
+		<association property="ebuyProduct" resultMap="ebuyProductBase.ebuyProductBaseMap_AppendTable"/>
+	</resultMap>
+	<select id="select_EbuyProductSpec_EntityList_BySpecIds" parameterType="java.util.Map" resultMap="ebuyProductSpecEntity_Map_Append">
+		SELECT <include refid="queryProdSpecShelHead_AppendTable"/>
+			,<include refid="queryProdShelfHead_AppendTable"/>
+		from t_ebuy_product_shelf EPSH
+			 inner join t_ebuy_product EP on EPSH.t_ebuy_product_id = EP.f_id and EPSH.f_sys0_del_state = 0 and EPSH.f_up_shelf_state=0 and EP.f_sys0_del_state = 0
+			 inner join t_ebuy_product_spec_shelf EPSSH on EPSSH.t_ebuy_product_shelf_id = EPSH.f_id
+			 inner join t_ebuy_product_spec EPS on EPS.f_id = EPSSH.t_ebuy_product_spec_id and EPS.f_sys0_del_state = 0
+		WHERE 1=1
+		AND EPSSH.f_sys0_del_state = 0
+		AND EP.f_point_type = #{pointType}
+		<!-- 
+		AND EP.f_wlApp_type = #{wlAppType}
+		-->
+		AND EPS.f_point_type = #{pointType}
+		AND EPSSH.f_id IN
+		<foreach item="idItem" collection="specIds" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</select>
+	
+	<!-- 根据商品Ids批量查询对应供应商信息 -->
+	<select id="select_Merchant_ByProductIds" parameterType="java.util.Map" resultMap="commonEbuy.ebuyProductMap_Append">
+		SELECT <include refid="queryProdShelfHead_AppendTable"/>
+    		<!-- 供应商信息 -->
+    		,<include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>
+    	from t_ebuy_product_shelf EPSH
+ 		  inner join t_ebuy_product EP on EPSH.t_ebuy_product_id = EP.f_id and EPSH.f_sys0_del_state = 0 and EPSH.f_up_shelf_state=0 and EP.f_sys0_del_state = 0
+   		INNER JOIN (
+			t_ebuy_supply_merchant ESM 
+		) ON  EP.t_supply_merchant_f_id = ESM.f_id AND ESM.f_sys0_del_state = 0
+		WHERE 1 = 1
+    	AND EP.f_point_type = #{pointType}
+    	<!-- 
+    	AND EP.f_wlApp_type = #{wlAppType}
+    	-->
+    	AND EPSH.f_id IN
+		<foreach item="idItem" collection="productIds" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</select>
+	
+	<!-- 根据订单Id,删除送货单及送货单商品信息 -->
+	<update id="delete_EbuyDeliveryOrder_AndProduct_Logic_ByOrderId" parameterType="java.util.Map">
+		UPDATE t_ebuy_delivery_order EDO
+			INNER JOIN t_ebuy_order EO ON EO.f_id = EDO.t_ebuy_order_f_id AND EO.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_delivery_order_product EDOP ON EDOP.t_ebuy_delivery_order_f_id = EDO.f_id AND EDOP.f_sys0_del_state = 0
+		SET 
+			EDO.f_sys0_del_state = 1
+			,EDOP.f_sys0_del_state = 1
+			,EDO.f_sys0_del_time = SYSDATE()
+			,EDOP.f_sys0_del_time = SYSDATE()
+		WHERE 1=1
+		AND EDO.f_sys0_del_state = 0
+		AND EO.f_id = #{orderId}
+		AND EO.f_buyer_id = #{buyerId}
+	</update>
+	
+	<!-- 关联省市区的HandleAddress -->
+	<!-- <sql id="select_selectEbuyReceiveAddressList_Common">
+		(
+			SELECT <include refid="ebuyDeliveryAddressBase.queryHead_AppendTable"/>
+				,<include refid="roomBase.queryHead_AppendTable"/>
+				,<include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+    			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+    			
+    			,<include refid="ebuyHandleAddressBase.queryHead_AppendTable"/>
+			FROM t_ebuy_delivery_address EDA
+			,t_group_building GB,t_address_block AB,t_address_city AC,t_address_province AP
+			,t_room R,t_real_room RR,t_building B
+			,t_ebuy_handle_address EHA
+			WHERE 1 = 1
+			AND EDA.t_user_f_id = #{tUserFId}
+			AND ((
+					EDA.f_target_id=R.f_id
+					AND R.t_real_room_f_id = RR.f_id 
+					AND RR.t_building_f_id = B.f_id 
+					AND EDA.f_target_type = 1
+					AND B.t_group_building_f_id = GB.f_id 
+					AND GB.t_block_f_id = AB.f_id 
+					AND AB.t_city_f_id = AC.f_id 
+					AND AC.t_province_f_id = AP.f_id 
+				) OR (
+					EDA.f_target_id=EHA.f_id
+					AND EDA.f_target_type = 2
+					AND EHA.t_group_building_f_id = GB.f_id
+					AND GB.t_block_f_id = AB.f_id 
+					AND AB.t_city_f_id = AC.f_id 
+					AND AC.t_province_f_id = AP.f_id 
+				))
+		) as table1
+	</sql> -->
+	
+	<!-- 查询收货地址列表,查询某一个类别的 -->
+	<!-- <resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyReceiveAddressEntity" id="ebuyReceiveAddressEntity" extends="ebuyDeliveryAddressBase.ebuyDeliveryAddressBaseMap_AppendTable">
+		<association  property="singalDetail">
+			<discriminator javaType="int" column="ebuyReceiveAddress_f_target_type">
+				<case value="1" resultMap="commonRoom.roomMap_Search" />门牌信息 此处引用公共
+				<case value="2" resultMap="ebuyHandleAddressBase.ebuyHandleAddressBaseMap_AppendTable"  />手动输入地址信息
+			</discriminator>
+		</association>
+	</resultMap> -->
+	<!-- 根据用户Id,收货地址列类别 分页查询收货地址列列表 -->
+	<!-- <sql id="select_ebuyReceiveAddressList_byCondition_Page">
+		<if test="targetType == 1">
+			SELECT <include refid="ebuyDeliveryAddressBase.queryHead_AppendTable"/>,<include refid="roomBase.queryHead_AppendTable"/>,
+				<include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>,
+    			<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+			FROM t_ebuy_receive_address ERA LEFT JOIN t_room R ON ERA.f_target_id=R.f_id
+			WHERE 1 = 1
+			AND ERA.t_user_f_id = #{tUserFId}
+			AND ERA.f_target_type = #{targetType}
+		</if>
+		<if test="targetType == 2">
+			SELECT <include refid="ebuyDeliveryAddressBase.queryHead_AppendTable"/>,<include refid="ebuyHandleAddressBase.queryHead_AppendTable"/>
+			 FROM t_ebuy_receive_address ERA LEFT JOIN t_ebuy_handle_address EHA ON ERA.f_target_id=EHA.f_id
+			WHERE 1 = 1
+			AND ERA.t_user_f_id = #{tUserFId}
+			AND ERA.f_target_type = #{targetType}
+		</if>
+	</sql>
+	<select id="select_ebuyReceiveAddressList_byCondition_Page" parameterType="java.util.Map" resultMap="ebuyReceiveAddressEntity">
+		<include refid="ebuy.select_ebuyReceiveAddressList_byCondition_Page"/>
+		 ORDER BY ERA.f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	<select id="select_ebuyReceiveAddressList_byCondition_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_ebuy_receive_address ERA
+		WHERE 1 = 1
+		AND ERA.t_user_f_id = #{tUserFId}
+		AND ERA.f_target_type =#{targetType}
+	</select> -->
+	<!-- <select id="select_ebuyReceiveAddressList_byTypes_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_ebuy_receive_address ERA
+		WHERE 1 = 1
+		AND ERA.t_user_f_id = #{tUserFId}
+		AND ERA.f_target_type IN
+		<foreach item="currType" collection="targetTypeList" open="(" separator="," close=")">
+		#{currType}
+		</foreach>
+	</select> -->
+	
+	<!-- 查询所有商品相关信息的最新更新时间 -->
+	<select id="select_All_Product_LastUpdTime" parameterType="java.util.Map" resultType="java.lang.String">
+		<!-- select date_format(now(),'%Y-%m-%d %T')  -->
+		SELECT 
+			date_format(MAX(
+				greatest(
+					CASE WHEN NOT ISNULL(_tmp.maxTimeInside) THEN _tmp.maxTimeInside ELSE 0 END
+					,CASE WHEN NOT ISNULL(ESMHTEDM.f_sys0_add_time) THEN ESMHTEDM.f_sys0_add_time ELSE 0 END
+					,CASE WHEN NOT ISNULL(ESMHTEDM.f_sys0_upd_time) THEN ESMHTEDM.f_sys0_upd_time ELSE 0 END
+					,CASE WHEN NOT ISNULL(ESMHTEDM.f_sys0_del_time) THEN ESMHTEDM.f_sys0_del_time ELSE 0 END
+		
+					,CASE WHEN NOT ISNULL(EDM.f_sys0_add_time) THEN EDM.f_sys0_add_time ELSE 0 END
+					,CASE WHEN NOT ISNULL(EDM.f_sys0_upd_time) THEN EDM.f_sys0_upd_time ELSE 0 END
+					,CASE WHEN NOT ISNULL(EDM.f_sys0_del_time) THEN EDM.f_sys0_del_time ELSE 0 END
+		
+					,CASE WHEN NOT ISNULL(EPHTEA.f_sys0_add_time) THEN EPHTEA.f_sys0_add_time ELSE 0 END
+					,CASE WHEN NOT ISNULL(EPHTEA.f_sys0_upd_time) THEN EPHTEA.f_sys0_upd_time ELSE 0 END
+					,CASE WHEN NOT ISNULL(EPHTEA.f_sys0_del_time) THEN EPHTEA.f_sys0_del_time ELSE 0 END
+		
+					,CASE WHEN NOT ISNULL(EA.f_sys0_add_time) THEN EA.f_sys0_add_time ELSE 0 END
+					,CASE WHEN NOT ISNULL(EA.f_sys0_upd_time) THEN EA.f_sys0_upd_time ELSE 0 END
+					,CASE WHEN NOT ISNULL(EA.f_sys0_del_time) THEN EA.f_sys0_del_time ELSE 0 END
+				) 
+			) ,'%Y-%m-%d %T') AS maxTime
+		   
+		FROM
+		    (SELECT 
+		        EPSH.f_id as ebuyProduct_f_id,ESM.f_id AS ebuySupplyMerchant_f_id,
+					greatest(
+						CASE WHEN NOT ISNULL(EPSH.f_sys0_add_time) THEN EPSH.f_sys0_add_time ELSE 0 END
+						,CASE WHEN NOT ISNULL(EPSH.f_sys0_upd_time) THEN EPSH.f_sys0_upd_time ELSE 0 END
+						,CASE WHEN NOT ISNULL(EPSH.f_sys0_del_time) THEN EPSH.f_sys0_del_time ELSE 0 END
+						,CASE WHEN NOT ISNULL(EP.f_sys0_add_time) THEN EP.f_sys0_add_time ELSE 0 END
+						,CASE WHEN NOT ISNULL(EP.f_sys0_upd_time) THEN EP.f_sys0_upd_time ELSE 0 END
+						,CASE WHEN NOT ISNULL(EP.f_sys0_del_time) THEN EP.f_sys0_del_time ELSE 0 END
+						,CASE WHEN NOT ISNULL(ESM.f_sys0_add_time) THEN ESM.f_sys0_add_time ELSE 0 END
+						,CASE WHEN NOT ISNULL(ESM.f_sys0_upd_time) THEN ESM.f_sys0_upd_time ELSE 0 END
+						,CASE WHEN NOT ISNULL(ESM.f_sys0_del_time) THEN ESM.f_sys0_del_time ELSE 0 END
+					) AS maxTimeInside
+		    FROM
+		    	t_ebuy_product_shelf EPSH
+		    	inner join t_ebuy_product EP on EPSH.t_ebuy_product_id = EP.f_id and EPSH.f_up_shelf_state=0 and EPSH.f_sys0_del_state = 0
+		    INNER JOIN t_ebuy_supply_merchant ESM ON EP.t_supply_merchant_f_id = ESM.f_id
+		        AND ESM.f_sys0_del_state = 0
+		    WHERE
+		        1 = 1 AND EP.f_sys0_del_state = 0
+		            AND EP.f_status = 0
+		            AND EP.f_point_type = #{pointType}
+		            <!-- 
+		            AND EP.f_wlApp_type = #{wlAppType}
+		            -->
+		            <if test="productTypeId != null and !(productTypeId.equals('')) ">
+			    		AND EPSH.t_ebuy_product_type_id = #{productTypeId}
+		        	</if>
+			GROUP BY ebuyProduct_f_id
+		     ) _tmp
+		        INNER JOIN
+		    (t_ebuy_supply_merchant_has_t_ebuy_delivery_method ESMHTEDM
+		    INNER JOIN t_ebuy_delivery_method EDM ON EDM.f_id = ESMHTEDM.t_ebuy_delivery_method_f_id
+		        AND EDM.f_sys0_del_state = 0) ON _tmp.ebuySupplyMerchant_f_id = ESMHTEDM.t_ebuy_supply_merchant_f_id
+		        AND ESMHTEDM.f_sys0_del_state = 0
+		        LEFT JOIN
+		    (t_ebuy_product_has_t_ebuy_auth EPHTEA
+		    INNER JOIN t_ebuy_auth EA ON EA.f_id = EPHTEA.t_ebuy_auth_f_id
+		        AND EA.f_sys0_del_state = 0) ON _tmp.ebuyProduct_f_id = EPHTEA.t_ebuy_product_f_id
+		        AND EPHTEA.f_sys0_del_state = 0
+	</select>
+	
+	<select id="select_EbuyBuyCarHasTEbuyProduct_List_ByProductId_Family" parameterType="java.util.Map" 
+		resultMap="ebuyBuyCarHasTEbuyProductBase.ebuyBuyCarHasTEbuyProductBaseMap_AppendTable">
+		SELECT <include refid="ebuyBuyCarHasTEbuyProductBase.queryHead_AppendTable"/>
+		FROM t_ebuy_buy_car EBC
+			INNER JOIN t_ebuy_buy_car_has_t_ebuy_product EBCHTEP ON EBCHTEP.t_ebuy_buy_car_f_id = EBC.f_id AND EBCHTEP.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product_shelf EPSH on EPSH.f_id = EBCHTEP.t_ebuy_product_f_id and EPSH.f_up_shelf_state=0 AND EPSH.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product EP ON EPSH.t_ebuy_product_id = EP.f_id and EP.f_sys0_del_state = 0
+				AND EP.f_status = 0 <!-- 产品状态=={"0":"上架","1":"下架"} -->
+				AND EP.f_point_type = #{pointType}
+				<!-- 
+				AND EP.f_wlApp_type = #{wlAppType}
+				-->
+			<include refid="productSpecId_append_condition_for_signal_ebuyProduct"/><!-- syl-add-2015-3-22 16:23:05 -->
+			INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id AND ESM.f_sys0_del_state = 0
+   	 	WHERE 1=1
+   	 	AND EBC.f_sys0_del_state = 0
+   	 	AND EBCHTEP.t_ebuy_product_f_id = #{productId}
+   	 	<include refid="user_condition_check_comm"/>
+   	 	ORDER BY CASE WHEN EBC.f_user_id = #{userId} AND EBC.f_user_type = #{userType} THEN 1 ELSE 2 END ASC
+   	 	<!-- ,CASE WHEN NOT ISNULL(EBCHTEP.f_sys0_upd_time) THEN EBCHTEP.f_sys0_upd_time ELSE EBCHTEP.f_sys0_add_time END DESC -->
+   	 		,EBCHTEP.f_sys0_add_time DESC
+	</select>
+	
+	<select id="select_HaveBuyCount_ByProductId_Family" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT SUM(EBCHTEP.f_product_qty)
+		FROM t_ebuy_buy_car EBC
+			INNER JOIN t_ebuy_buy_car_has_t_ebuy_product EBCHTEP ON EBCHTEP.t_ebuy_buy_car_f_id = EBC.f_id AND EBCHTEP.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product_shelf EPSH on EPSH.f_id = EBCHTEP.t_ebuy_product_f_id and EPSH.f_up_shelf_state=0 AND EPSH.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product EP ON EPSH.t_ebuy_product_id = EP.f_id and EP.f_sys0_del_state = 0
+				AND EP.f_status = 0 <!-- 产品状态=={"0":"上架","1":"下架"} -->
+				AND EP.f_point_type = #{pointType}
+				<!-- 
+				AND EP.f_wlApp_type = #{wlAppType}
+				-->
+			INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id AND ESM.f_sys0_del_state = 0
+   	 	WHERE 1=1
+   	 	AND EBC.f_sys0_del_state = 0
+   	 	AND EBCHTEP.t_ebuy_product_f_id = #{productId}
+   	 	<include refid="user_condition_check_comm"/>
+	</select>
+	
+	<!-- 将购物车中商品数量为0的商品逻辑删除掉 -->
+	<update id="delete_ZeroCount_BuyData_EbuyCarHasProduct_Logic" parameterType="java.util.Map">
+		UPDATE t_ebuy_buy_car EBC
+			INNER JOIN t_ebuy_buy_car_has_t_ebuy_product EBCHTEP ON EBCHTEP.t_ebuy_buy_car_f_id = EBC.f_id AND EBCHTEP.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product_shelf EPSH ON EPSH.f_id = EBCHTEP.t_ebuy_product_f_id and EPSH.f_up_shelf_state=0 AND EPSH.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product EP ON EP.f_id = EPSH.t_ebuy_product_id AND EP.f_sys0_del_state = 0
+				AND EP.f_status = 0 <!-- 产品状态=={"0":"上架","1":"下架"} -->
+				AND EP.f_point_type = #{pointType}
+				<!-- 
+				AND EP.f_wlApp_type = #{wlAppType}
+				-->
+			INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id AND ESM.f_sys0_del_state = 0
+		SET EBCHTEP.f_sys0_del_state = 1,EBCHTEP.f_sys0_del_time= sysdate()
+		WHERE 1=1
+   	 	AND EBC.f_sys0_del_state = 0
+		<![CDATA[ AND EBCHTEP.f_product_qty<=0 ]]> <!-- 购买数量小于等于0的 -->
+   	 	<include refid="user_condition_check_comm"/>
+	</update>
+	
+	<!-- 查询商品剩余库存 -->
+	<select id="select_Product_LeftCount" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT CASE WHEN ISNULL(EPS.f_left_count) THEN EP.f_left_count ELSE EPS.f_left_count END 
+		FROM t_ebuy_product_shelf EPSH
+		 inner join t_ebuy_product EP on EPSH.t_ebuy_product_id = EP.f_id and EPSH.f_up_shelf_state=0 and EPSH.f_sys0_del_state = 0
+			<include refid="productSpecId_append_condition_for_signal_ebuyProduct"/><!-- syl-add-2015-3-22 16:23:05 -->
+		WHERE 1=1
+		AND EP.f_sys0_del_state = 0
+		AND EP.f_status = 0 <!-- 产品状态=={"0":"上架","1":"下架"} -->
+		AND EP.f_point_type = #{pointType}
+		<!-- 
+		AND EP.f_wlApp_type = #{wlAppType}
+		-->
+		AND EPSH.f_id = #{productId}
+	</select>
+	
+	<!-- 查询限时购里的设置的商品库存 added by wenfq 2017-08-31 -->
+	<select id="select_limitBuy_leftCount" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT
+		lba.f_left_count
+		FROM
+			t_limit_buy_activity lba
+		JOIN t_ebuy_product_shelf eps ON eps.t_ebuy_product_id = lba.t_ebuy_product_f_id
+		WHERE
+			eps.f_id = #{productId}
+		AND lba.f_activity_end_time &gt; SYSDATE()
+		AND lba.f_activity_start_time &lt; SYSDATE()
+		AND lba.f_sys0_del_state = 0;
+	</select>
+	
+	<!-- 查询购物车当前对应商品的购买信息 -->
+	<select id="select_EbuyBuyCarHasTEbuyProduct_By_BuyCarId" parameterType="java.util.Map" 
+		resultMap="ebuyBuyCarHasTEbuyProductBase.ebuyBuyCarHasTEbuyProductBaseMap_AppendTable">
+		SELECT <include refid="ebuyBuyCarHasTEbuyProductBase.queryHead_AppendTable"/>
+		FROM t_ebuy_buy_car_has_t_ebuy_product EBCHTEP
+			INNER JOIN t_ebuy_product_shelf EPSH ON EPSH.f_id = EBCHTEP.t_ebuy_product_f_id and EPSH.f_up_shelf_state=0 AND EPSH.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product EP ON EP.f_id = EPSH.t_ebuy_product_id AND EP.f_sys0_del_state = 0
+				AND EP.f_status = 0 <!-- 产品状态=={"0":"上架","1":"下架"} -->
+				AND EP.f_point_type = #{pointType}
+				<!-- 
+				AND EP.f_wlApp_type = #{wlAppType}
+				-->
+			<include refid="productSpecId_append_condition_for_buyCar"/><!-- syl-add-2015-3-22 18:22:14 商品规格 -->
+    	WHERE 1=1
+    	AND EBCHTEP.f_sys0_del_state = 0
+    	AND EBCHTEP.t_ebuy_buy_car_f_id = #{buyCarId}
+    	AND EBCHTEP.t_ebuy_product_f_id = #{productId}
+    	<!-- AND EBCHTEP.t_ebuy_product_spec_f_id = #{productSpecId} -->
+    	<if test="productSpecId != null">
+			AND EBCHTEP.t_ebuy_product_spec_f_id = #{productSpecId}
+		</if>
+		<if test="productSpecId == null">
+			AND EBCHTEP.t_ebuy_product_spec_f_id IS NULL
+		</if>
+	</select>
+	
+	<update id="upadte_Order_IsClientPay" parameterType="java.util.Map">
+		UPDATE t_ebuy_order EO
+		SET EO.f_client_pay_status = 2 <!-- 客户端支付状态=={"2":"返回支付成功"} -->
+			,EO.f_sys0_upd_time = SYSDATE()
+			,EO.f_sys0_upd_user = #{userId}
+		WHERE 1=1
+		AND EO.f_sys0_del_state = 0
+		AND EO.f_id = #{orderId}
+		AND EO.f_buyer_id = #{userId}
+	</update>
+	
+	<select id="select_ebuyProductParameters" parameterType="java.util.Map" resultMap="ebuyProductParametersBase.ebuyProductParametersExtendMap">
+		SELECT distinct <include refid="ebuyProductParametersBase.queryHead"/>
+			from  
+				t_ebuy_product_parameters EPP 
+				left join t_ebuy_product EP on EPP.t_ebuy_product_f_id = EP.f_id and EPP.f_sys0_del_state = 0
+				left join t_ebuy_product_shelf EPS on EPS.t_ebuy_product_id = EP.f_id and EPS.f_sys0_del_state = 0
+    	 		WHERE 1=1
+			<if test="tEbuyProductFId != null">  and (EP.f_id = #{tEbuyProductFId} or  EPS.f_id = #{tEbuyProductFId}) </if>
+			ORDER BY EPP.f_id DESC
+	</select>
+	
+	<select id="select_EbuyDeliveryOrder_by_id"	parameterType="java.util.Map"  resultMap="ebuyDeliveryOrderEntityMap">
+		SELECT
+		<include refid="ebuyDeliveryOrderBase.queryHead_AppendTable"/>,
+		<include refid="ebuyExpressCompanyBase.queryHead_AppendTable"/>,
+		<include refid="ebuyDeliveryMethodBase.queryHead_AppendTable"/>,
+		<include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>,
+		<include refid="ebuyDeliveryOrderProductBase.queryHead_AppendTable"/>,
+		<include refid="ebuyOrderDeliveryTypeBase.queryHead_AppendTable"/>
+		FROM  t_ebuy_delivery_order EDO
+			INNER JOIN t_ebuy_delivery_order_product EDOP ON EDOP.t_ebuy_delivery_order_f_id = EDO.f_id AND EDOP.f_sys0_del_state = 0
+		 	INNER JOIN t_ebuy_product_shelf EPSH ON EDOP.t_ebuy_product_f_id=EPSH.f_id AND EPSH.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_product EP on EPSH.t_ebuy_product_id = EP.f_id and EP.f_sys0_del_state = 0
+		 	INNER JOIN t_ebuy_delivery_method EDM ON EDM.f_id = EDO.f_delivery_id AND EDM.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EDO.t_supply_merchant_f_id /*AND ESM.f_sys0_del_state = 0 */
+			LEFT JOIN t_ebuy_order_delivery_type EODT on EODT.t_ebuy_supply_merchant = ESM.f_id and EODT.t_ebuy_order_f_id = EDO.f_id
+			LEFT JOIN t_ebuy_express_company EEC ON EEC.f_id = EDO.t_ebuy_express_company_f_id  AND EEC.f_sys0_del_state = 0
+			WHERE 1=1 AND EDO.f_id=#{edoId}
+	</select>
+	
+	<select id="selectRefundProductbyRefundId" parameterType="java.math.BigInteger" resultMap="ebuyRefundOrderProductBase.ebuyRefundOrderProductBaseMap">
+		SELECT 
+		<include refid="ebuyRefundOrderProductBase.queryHead"/>
+			FROM t_ebuy_refund_order_product EROP
+			WHERE 1=1
+			  AND EROP.t_ebuy_refund_order_f_id = #{_parameter}
+	</select>
+	
+	<select id="selectRefundOrderbyRefundId" parameterType="java.math.BigInteger" resultMap="ebuyRefundOrderBase.ebuyRefundOrderBaseMap">
+		SELECT 
+		<include refid="ebuyRefundOrderBase.queryHead"/>,
+		date_format(ERO.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time
+			FROM t_ebuy_refund_order ERO
+			WHERE 1=1
+			  AND ERO.t_ebuy_delivery_order_f_id = #{_parameter}
+			 AND ERO.f_sys0_del_state=0
+	</select>
+	
+	<select id="select_limitBuyId_prdtQty" parameterType="map" resultType="com.cnfantasia.server.api.limitBuy.entity.LimitBuyId_PrdtQty">
+		SELECT lba.f_id limitBuyId, eohtep.f_product_qty prdtQty from t_ebuy_order eo
+		JOIN t_ebuy_order_has_t_ebuy_product eohtep on eohtep.t_ebuy_order_f_id = eo.f_id and eohtep.f_sys0_del_state = 0
+		JOIN t_ebuy_product_shelf eps on eps.f_id = eohtep.t_ebuy_product_f_id and eps.f_sys0_del_state = 0
+		JOIN t_limit_buy_activity lba on lba.t_ebuy_product_f_id = eps.t_ebuy_product_id and lba.f_sys0_del_state = 0
+		where eo.f_id = #{orderId}
+		and eo.f_buyer_id = #{userId}
+		AND lba.f_activity_end_time &gt; SYSDATE()
+		AND lba.f_activity_start_time &lt; SYSDATE();
+	</select>
+
+	<update id="ebuy.updEbuyHandlerAdressAreaNull" parameterType="map">
+		update t_ebuy_handle_address set f_address_area = null where f_id = #{_parameter}
+	</update>
+
+	<resultMap id="orderProductListMap" type="com.cnfantasia.server.api.ebuy.entity.EbuyProductEntity" extends="ebuyProductBase.ebuyProductBaseMap">
+		<result property="buyNum" column="buyNum" javaType="java.lang.Integer"/>
+	</resultMap>
+
+	<select id="getOrderProductList" resultMap="orderProductListMap">
+		select eop.f_product_qty buyNum, <include refid="ebuyProductBase.queryHead"/>
+		from t_ebuy_order_has_t_ebuy_product eop
+		INNER join t_ebuy_product_shelf eps on eps.f_id = eop.t_ebuy_product_f_id
+		inner join t_ebuy_product ep on eps.t_ebuy_product_id = ep.f_id
+		where eop.f_sys0_del_state = 0 and eop.t_ebuy_order_f_id = #{_parameter}
+	</select>
+</mapper>

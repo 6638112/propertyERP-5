@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:订单的配送设置 t_ebuy_order_delivery_type -->
+<mapper namespace="ebuyOrderDeliveryTypeBase">
+	<resultMap type="EbuyOrderDeliveryType" id="ebuyOrderDeliveryTypeBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_ebuy_order_f_id" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 订单id -->        <result column="t_ebuy_supply_merchant" javaType="java.math.BigInteger" property="tEbuySupplyMerchant"/>  <!-- 供应商id -->        <result column="f_delivery_type" javaType="java.lang.Integer" property="deliveryType"/>  <!-- 配送方式 -->
+	</resultMap>
+	<resultMap type="EbuyOrderDeliveryType" id="ebuyOrderDeliveryTypeExtendMap" extends="ebuyOrderDeliveryTypeBaseMap">
+	</resultMap>
+	<resultMap type="EbuyOrderDeliveryType" id="ebuyOrderDeliveryTypeBaseMap_AppendTable">
+        <id column="EODTid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EODTtEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 订单id -->        <result column="EODTtEbuySupplyMerchant" javaType="java.math.BigInteger" property="tEbuySupplyMerchant"/>  <!-- 供应商id -->        <result column="EODTdeliveryType" javaType="java.lang.Integer" property="deliveryType"/>  <!-- 配送方式 -->
+	</resultMap>
+	<resultMap type="EbuyOrderDeliveryType" id="ebuyOrderDeliveryTypeBaseMap_AppendTable1">
+        <id column="EODT1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EODT1tEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 订单id -->        <result column="EODT1tEbuySupplyMerchant" javaType="java.math.BigInteger" property="tEbuySupplyMerchant"/>  <!-- 供应商id -->        <result column="EODT1deliveryType" javaType="java.lang.Integer" property="deliveryType"/>  <!-- 配送方式 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EODT.f_id,EODT.t_ebuy_order_f_id,EODT.t_ebuy_supply_merchant,EODT.f_delivery_type
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EODT.f_id as EODTid,EODT.t_ebuy_order_f_id as EODTtEbuyOrderFId,EODT.t_ebuy_supply_merchant as EODTtEbuySupplyMerchant,EODT.f_delivery_type as EODTdeliveryType
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EODT1.f_id as EODT1id,EODT1.t_ebuy_order_f_id as EODT1tEbuyOrderFId,EODT1.t_ebuy_supply_merchant as EODT1tEbuySupplyMerchant,EODT1.f_delivery_type as EODT1deliveryType
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EODT.f_id = #{id} ) </if>        <if test="tEbuyOrderFId != null">  and (EODT.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="tEbuySupplyMerchant != null">  and (EODT.t_ebuy_supply_merchant = #{tEbuySupplyMerchant} ) </if>        <if test="deliveryType != null">  and (EODT.f_delivery_type = #{deliveryType} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EODT.f_id = #{id} ) </if>        <if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  ">  and (EODT.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="tEbuySupplyMerchant != null and !tEbuySupplyMerchant.equals('')  ">  and (EODT.t_ebuy_supply_merchant = #{tEbuySupplyMerchant} ) </if>        <if test="deliveryType != null and !deliveryType.equals('')  ">  and (EODT.f_delivery_type = #{deliveryType} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyOrderDeliveryTypeBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyOrderDeliveryTypeBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyOrderDeliveryTypeBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyOrderDeliveryTypeBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_order_delivery_type EODT    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(订单的配送设置)信息。 -->
+	<sql id="select_ebuyOrderDeliveryType">
+		SELECT <include refid="ebuyOrderDeliveryTypeBase.queryHead"/>
+		<include refid="ebuyOrderDeliveryTypeBase.busiQueryCondition"/>
+		<include refid="ebuyOrderDeliveryTypeBase.dimCheckSql"/>
+		ORDER BY EODT.f_id DESC
+	</sql>
+	<select id="select_ebuyOrderDeliveryType" parameterType="java.util.Map" resultMap="ebuyOrderDeliveryTypeBase.ebuyOrderDeliveryTypeExtendMap">
+		<include refid="ebuyOrderDeliveryTypeBase.select_ebuyOrderDeliveryType"/>
+	</select>
+	
+	<!-- 根据条件分页查询(订单的配送设置)信息  -->
+	<sql id="select_ebuyOrderDeliveryType_withPage">
+		SELECT <include refid="ebuyOrderDeliveryTypeBase.queryHead"/>
+		<include refid="ebuyOrderDeliveryTypeBase.busiQueryCondition"/>
+		<include refid="ebuyOrderDeliveryTypeBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyOrderDeliveryType_withPage" resultMap="ebuyOrderDeliveryTypeBase.ebuyOrderDeliveryTypeExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyOrderDeliveryTypeBase.select_ebuyOrderDeliveryType_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(订单的配送设置)信息。 -->
+	<sql id="select_ebuyOrderDeliveryType_bySeqId">
+		SELECT <include refid="ebuyOrderDeliveryTypeBase.queryHead"/>
+		<include refid="ebuyOrderDeliveryTypeBase.busiQueryCondition"/>
+		 and EODT.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyOrderDeliveryType_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyOrderDeliveryTypeBase.ebuyOrderDeliveryTypeBaseMap">
+		<include refid="ebuyOrderDeliveryTypeBase.select_ebuyOrderDeliveryType_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(订单的配送设置)记录数  -->
+	<sql id="select_ebuyOrderDeliveryType_count">
+		SELECT COUNT(*)
+		<include refid="ebuyOrderDeliveryTypeBase.busiQueryCount"/>
+		<include refid="ebuyOrderDeliveryTypeBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyOrderDeliveryType_count" resultType="java.lang.Integer">
+		<include refid="ebuyOrderDeliveryTypeBase.select_ebuyOrderDeliveryType_count"/>
+	</select>
+	
+	 <!-- 往(订单的配送设置)新增一条记录。 -->
+	 <sql id="insert_ebuyOrderDeliveryType">
+		INSERT INTO t_ebuy_order_delivery_type 
+		(f_id,t_ebuy_order_f_id,t_ebuy_supply_merchant,f_delivery_type) VALUES 
+		(#{id},#{tEbuyOrderFId},#{tEbuySupplyMerchant},#{deliveryType})
+	 </sql>
+    <insert id="insert_ebuyOrderDeliveryType" parameterType="EbuyOrderDeliveryType">
+		<include refid="ebuyOrderDeliveryTypeBase.insert_ebuyOrderDeliveryType"/>
+    </insert>
+    
+	<!-- 批量新增(订单的配送设置)信息 -->
+    <insert id="insert_ebuyOrderDeliveryType_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_order_delivery_type 
+		(f_id,t_ebuy_order_f_id,t_ebuy_supply_merchant,f_delivery_type) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tEbuyOrderFId},#{item.tEbuySupplyMerchant},#{item.deliveryType})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(订单的配送设置)信息。 -->
+    <sql id="update_ebuyOrderDeliveryType">
+		UPDATE t_ebuy_order_delivery_type		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('') "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="tEbuySupplyMerchant != null and !tEbuySupplyMerchant.equals('') "> ,t_ebuy_supply_merchant=#{tEbuySupplyMerchant}</if> 		<if test="deliveryType != null and !deliveryType.equals('') "> ,f_delivery_type=#{deliveryType}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyOrderDeliveryType" parameterType="EbuyOrderDeliveryType">
+		<include refid="ebuyOrderDeliveryTypeBase.update_ebuyOrderDeliveryType"/>
+    </update>
+    
+    <!-- 批量更新(订单的配送设置)信息。 -->
+    <update id="update_ebuyOrderDeliveryType_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_order_delivery_type		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.tEbuySupplyMerchant != null and !item.tEbuySupplyMerchant.equals('')  "> ,t_ebuy_supply_merchant=#{item.tEbuySupplyMerchant}</if> 		<if test="item.deliveryType != null and !item.deliveryType.equals('')  "> ,f_delivery_type=#{item.deliveryType}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(订单的配送设置)信息_逻辑删除。 -->
+    <!-- <sql id="delete_ebuyOrderDeliveryType_Logic">
+		UPDATE t_ebuy_order_delivery_type		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="tEbuySupplyMerchant != null and !tEbuySupplyMerchant.equals('')  "> ,t_ebuy_supply_merchant=#{tEbuySupplyMerchant}</if> 		<if test="deliveryType != null and !deliveryType.equals('')  "> ,f_delivery_type=#{deliveryType}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyOrderDeliveryType_Logic" parameterType="EbuyOrderDeliveryType">
+		<include refid="ebuyOrderDeliveryTypeBase.delete_ebuyOrderDeliveryType_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(订单的配送设置)信息_逻辑删除 -->
+    <!-- <update id="delete_ebuyOrderDeliveryType_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_order_delivery_type		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.tEbuySupplyMerchant != null and !item.tEbuySupplyMerchant.equals('')  "> ,t_ebuy_supply_merchant=#{item.tEbuySupplyMerchant}</if> 		<if test="item.deliveryType != null and !item.deliveryType.equals('')  "> ,f_delivery_type=#{item.deliveryType}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(订单的配送设置)信息。 -->
+    <sql id="delete_ebuyOrderDeliveryType">
+		DELETE FROM t_ebuy_order_delivery_type WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyOrderDeliveryType" parameterType="java.lang.String">
+		<include refid="ebuyOrderDeliveryTypeBase.delete_ebuyOrderDeliveryType"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(订单的配送设置)信息。 -->
+    <delete id="delete_ebuyOrderDeliveryType_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_order_delivery_type WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

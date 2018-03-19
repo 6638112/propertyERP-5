@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+
+	<bean id="prizeRuleService" class="com.cnfantasia.server.api.prizeRule.service.PrizeRuleService" >
+		<property name="prizeRuleDao" ref="prizeRuleDao" />
+		<property name="prizeRuleConfigBaseDao" ref="prizeRuleConfigBaseDao" />
+		<!-- <property name="prizeRuleGenerateAreaBaseDao" ref="prizeRuleGenerateAreaBaseDao" />
+		<property name="prizeRuleDrawOnlinedaysBaseDao" ref="prizeRuleDrawOnlinedaysBaseDao" /> -->
+	</bean>
+	
+	<bean id="prizeRuleManager" class="com.cnfantasia.server.api.prizeRule.service.PrizeRuleManager" init-method="init" scope="singleton">
+		<property name="prizeRuleService" ref="prizeRuleService"></property>
+	</bean>
+	
+	<bean id="prizeRuleLoaderService" class="com.cnfantasia.server.api.prizeRule.service.PrizeRuleLoaderService">
+		<property name="prizePoolGroup" ref="prizePoolGroup"></property>
+		<property name="prizeRuleManager" ref="prizeRuleManager"></property>
+	</bean>
+	
+</beans>  

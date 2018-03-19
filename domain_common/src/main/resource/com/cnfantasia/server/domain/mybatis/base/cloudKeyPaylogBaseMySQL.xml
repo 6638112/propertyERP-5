@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:云钥匙付款记录 t_cloud_key_paylog -->
+<mapper namespace="cloudKeyPaylogBase">
+	<resultMap type="CloudKeyPaylog" id="cloudKeyPaylogBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_ebuy_order_id" javaType="java.math.BigInteger" property="tEbuyOrderId"/>  <!-- 付款编号 -->        <result column="t_pay_key_list_id" javaType="java.math.BigInteger" property="tPayKeyListId"/>  <!-- 付费列表Id -->        <result column="f_hua_id" javaType="java.math.BigInteger" property="huaId"/>  <!-- 购买人id -->        <result column="f_create_time" javaType="java.lang.String" property="createTime"/>  <!-- 购买时间 -->        <result column="f_status" javaType="java.lang.Integer" property="status"/>  <!-- 是否过期 -->        <result column="f_pay_status" javaType="java.lang.Integer" property="payStatus"/>  <!-- 付款状态 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CloudKeyPaylog" id="cloudKeyPaylogExtendMap" extends="cloudKeyPaylogBaseMap">
+	</resultMap>
+	<resultMap type="CloudKeyPaylog" id="cloudKeyPaylogBaseMap_AppendTable">
+        <id column="CKPid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CKPtEbuyOrderId" javaType="java.math.BigInteger" property="tEbuyOrderId"/>  <!-- 付款编号 -->        <result column="CKPtPayKeyListId" javaType="java.math.BigInteger" property="tPayKeyListId"/>  <!-- 付费列表Id -->        <result column="CKPhuaId" javaType="java.math.BigInteger" property="huaId"/>  <!-- 购买人id -->        <result column="CKPcreateTime" javaType="java.lang.String" property="createTime"/>  <!-- 购买时间 -->        <result column="CKPstatus" javaType="java.lang.Integer" property="status"/>  <!-- 是否过期 -->        <result column="CKPpayStatus" javaType="java.lang.Integer" property="payStatus"/>  <!-- 付款状态 -->        <result column="CKPsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CKPsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CKPsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CKPsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CKPsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CKPsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CKPsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CloudKeyPaylog" id="cloudKeyPaylogBaseMap_AppendTable1">
+        <id column="CKP1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CKP1tEbuyOrderId" javaType="java.math.BigInteger" property="tEbuyOrderId"/>  <!-- 付款编号 -->        <result column="CKP1tPayKeyListId" javaType="java.math.BigInteger" property="tPayKeyListId"/>  <!-- 付费列表Id -->        <result column="CKP1huaId" javaType="java.math.BigInteger" property="huaId"/>  <!-- 购买人id -->        <result column="CKP1createTime" javaType="java.lang.String" property="createTime"/>  <!-- 购买时间 -->        <result column="CKP1status" javaType="java.lang.Integer" property="status"/>  <!-- 是否过期 -->        <result column="CKP1payStatus" javaType="java.lang.Integer" property="payStatus"/>  <!-- 付款状态 -->        <result column="CKP1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CKP1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CKP1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CKP1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CKP1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CKP1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CKP1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CKP.f_id,CKP.t_ebuy_order_id,CKP.t_pay_key_list_id,CKP.f_hua_id,date_format(CKP.f_create_time,'%Y-%m-%d %T') as f_create_time,CKP.f_status,CKP.f_pay_status
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CKP.f_id as CKPid,CKP.t_ebuy_order_id as CKPtEbuyOrderId,CKP.t_pay_key_list_id as CKPtPayKeyListId,CKP.f_hua_id as CKPhuaId,date_format(CKP.f_create_time,'%Y-%m-%d %T') as CKPcreateTime,CKP.f_status as CKPstatus,CKP.f_pay_status as CKPpayStatus
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CKP1.f_id as CKP1id,CKP1.t_ebuy_order_id as CKP1tEbuyOrderId,CKP1.t_pay_key_list_id as CKP1tPayKeyListId,CKP1.f_hua_id as CKP1huaId,date_format(CKP1.f_create_time,'%Y-%m-%d %T') as CKP1createTime,CKP1.f_status as CKP1status,CKP1.f_pay_status as CKP1payStatus
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CKP.f_id = #{id} ) </if>        <if test="tEbuyOrderId != null">  and (CKP.t_ebuy_order_id = #{tEbuyOrderId} ) </if>        <if test="tPayKeyListId != null">  and (CKP.t_pay_key_list_id = #{tPayKeyListId} ) </if>        <if test="huaId != null">  and (CKP.f_hua_id = #{huaId} ) </if>        <if test="createTime != null and !createTime.equals('')  ">  and (CKP.f_create_time = str_to_date(#{createTime},'%Y-%m-%d %T') ) </if>        <if test="createTime_START != null and !createTime_START.equals('')  ">              <![CDATA[ and (CKP.f_create_time >= str_to_date(#{createTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="createTime_END != null and !createTime_END.equals('')  ">            <![CDATA[ and (CKP.f_create_time <= str_to_date(#{createTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="status != null">  and (CKP.f_status = #{status} ) </if>        <if test="payStatus != null">  and (CKP.f_pay_status = #{payStatus} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CKP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CKP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CKP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CKP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CKP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CKP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CKP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CKP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CKP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (CKP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (CKP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (CKP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (CKP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (CKP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CKP.f_id = #{id} ) </if>        <if test="tEbuyOrderId != null and !tEbuyOrderId.equals('')  ">  and (CKP.t_ebuy_order_id = #{tEbuyOrderId} ) </if>        <if test="tPayKeyListId != null and !tPayKeyListId.equals('')  ">  and (CKP.t_pay_key_list_id = #{tPayKeyListId} ) </if>        <if test="huaId != null and !huaId.equals('')  ">  and (CKP.f_hua_id = #{huaId} ) </if>        <if test="createTime != null and !createTime.equals('')  ">  and (CKP.f_create_time = str_to_date(#{createTime},'%Y-%m-%d %T') ) </if>        <if test="createTime_START != null and !createTime_START.equals('')  ">              <![CDATA[ and (CKP.f_create_time >= str_to_date(#{createTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="createTime_END != null and !createTime_END.equals('')  ">            <![CDATA[ and (CKP.f_create_time <= str_to_date(#{createTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="status != null and !status.equals('')  ">  and (CKP.f_status = #{status} ) </if>        <if test="payStatus != null and !payStatus.equals('')  ">  and (CKP.f_pay_status = #{payStatus} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CKP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CKP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CKP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CKP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CKP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CKP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CKP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CKP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CKP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CKP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CKP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CKP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CKP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (CKP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="cloudKeyPaylogBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="cloudKeyPaylogBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="cloudKeyPaylogBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="cloudKeyPaylogBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_cloud_key_paylog CKP    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(云钥匙付款记录)信息。 -->
+	<sql id="select_cloudKeyPaylog">
+		SELECT <include refid="cloudKeyPaylogBase.queryHead"/>
+		<include refid="cloudKeyPaylogBase.busiQueryCondition"/>
+		<include refid="cloudKeyPaylogBase.dimCheckSql"/>
+		ORDER BY CKP.f_id DESC
+	</sql>
+	<select id="select_cloudKeyPaylog" parameterType="java.util.Map" resultMap="cloudKeyPaylogBase.cloudKeyPaylogExtendMap">
+		<include refid="cloudKeyPaylogBase.select_cloudKeyPaylog"/>
+	</select>
+	
+	<!-- 根据条件分页查询(云钥匙付款记录)信息  -->
+	<sql id="select_cloudKeyPaylog_withPage">
+		SELECT <include refid="cloudKeyPaylogBase.queryHead"/>
+		<include refid="cloudKeyPaylogBase.busiQueryCondition"/>
+		<include refid="cloudKeyPaylogBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_cloudKeyPaylog_withPage" resultMap="cloudKeyPaylogBase.cloudKeyPaylogExtendMap" parameterType="java.util.Map">
+		<include refid="cloudKeyPaylogBase.select_cloudKeyPaylog_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(云钥匙付款记录)信息。 -->
+	<sql id="select_cloudKeyPaylog_bySeqId">
+		SELECT <include refid="cloudKeyPaylogBase.queryHead"/>
+		<include refid="cloudKeyPaylogBase.busiQueryCondition"/>
+		 and CKP.f_id = #{_parameter}
+	</sql>
+	<select id="select_cloudKeyPaylog_bySeqId" parameterType="java.math.BigInteger" resultMap="cloudKeyPaylogBase.cloudKeyPaylogBaseMap">
+		<include refid="cloudKeyPaylogBase.select_cloudKeyPaylog_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(云钥匙付款记录)记录数  -->
+	<sql id="select_cloudKeyPaylog_count">
+		SELECT COUNT(*)
+		<include refid="cloudKeyPaylogBase.busiQueryCount"/>
+		<include refid="cloudKeyPaylogBase.dimCheckSql"/>
+	</sql>
+	<select id="select_cloudKeyPaylog_count" resultType="java.lang.Integer">
+		<include refid="cloudKeyPaylogBase.select_cloudKeyPaylog_count"/>
+	</select>
+	
+	 <!-- 往(云钥匙付款记录)新增一条记录。 -->
+	 <sql id="insert_cloudKeyPaylog">
+		INSERT INTO t_cloud_key_paylog 
+		(f_id,t_ebuy_order_id,t_pay_key_list_id,f_hua_id,f_create_time,f_status,f_pay_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tEbuyOrderId},#{tPayKeyListId},#{huaId},str_to_date(#{createTime,jdbcType=DATE},'%Y-%m-%d %T'),#{status},#{payStatus},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_cloudKeyPaylog" parameterType="CloudKeyPaylog">
+		<include refid="cloudKeyPaylogBase.insert_cloudKeyPaylog"/>
+    </insert>
+    
+	<!-- 批量新增(云钥匙付款记录)信息 -->
+    <insert id="insert_cloudKeyPaylog_Batch" parameterType="java.util.List">
+    	INSERT INTO t_cloud_key_paylog 
+		(f_id,t_ebuy_order_id,t_pay_key_list_id,f_hua_id,f_create_time,f_status,f_pay_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tEbuyOrderId},#{item.tPayKeyListId},#{item.huaId},str_to_date(#{item.createTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.status},#{item.payStatus},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(云钥匙付款记录)信息。 -->
+    <sql id="update_cloudKeyPaylog">
+		UPDATE t_cloud_key_paylog		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderId != null and !tEbuyOrderId.equals('') "> ,t_ebuy_order_id=#{tEbuyOrderId}</if> 		<if test="tPayKeyListId != null and !tPayKeyListId.equals('') "> ,t_pay_key_list_id=#{tPayKeyListId}</if> 		<if test="huaId != null and !huaId.equals('') "> ,f_hua_id=#{huaId}</if> 		<if test="createTime != null and !createTime.equals('') "> ,f_create_time=str_to_date(#{createTime},'%Y-%m-%d %T')</if> 		<if test="status != null and !status.equals('') "> ,f_status=#{status}</if> 		<if test="payStatus != null and !payStatus.equals('') "> ,f_pay_status=#{payStatus}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_cloudKeyPaylog" parameterType="CloudKeyPaylog">
+		<include refid="cloudKeyPaylogBase.update_cloudKeyPaylog"/>
+    </update>
+    
+    <!-- 批量更新(云钥匙付款记录)信息。 -->
+    <update id="update_cloudKeyPaylog_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_cloud_key_paylog		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderId != null and !item.tEbuyOrderId.equals('')  "> ,t_ebuy_order_id=#{item.tEbuyOrderId}</if> 		<if test="item.tPayKeyListId != null and !item.tPayKeyListId.equals('')  "> ,t_pay_key_list_id=#{item.tPayKeyListId}</if> 		<if test="item.huaId != null and !item.huaId.equals('')  "> ,f_hua_id=#{item.huaId}</if> 		<if test="item.createTime != null and !item.createTime.equals('')  "> ,f_create_time=str_to_date(#{item.createTime},'%Y-%m-%d %T')</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.payStatus != null and !item.payStatus.equals('')  "> ,f_pay_status=#{item.payStatus}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(云钥匙付款记录)信息_逻辑删除。 -->
+    <sql id="delete_cloudKeyPaylog_Logic">
+		UPDATE t_cloud_key_paylog		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderId != null and !tEbuyOrderId.equals('')  "> ,t_ebuy_order_id=#{tEbuyOrderId}</if> 		<if test="tPayKeyListId != null and !tPayKeyListId.equals('')  "> ,t_pay_key_list_id=#{tPayKeyListId}</if> 		<if test="huaId != null and !huaId.equals('')  "> ,f_hua_id=#{huaId}</if> 		<if test="createTime != null and !createTime.equals('')  "> ,f_create_time=str_to_date(#{createTime},'%Y-%m-%d %T')</if> 		<if test="status != null and !status.equals('')  "> ,f_status=#{status}</if> 		<if test="payStatus != null and !payStatus.equals('')  "> ,f_pay_status=#{payStatus}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_cloudKeyPaylog_Logic" parameterType="CloudKeyPaylog">
+		<include refid="cloudKeyPaylogBase.delete_cloudKeyPaylog_Logic"/>
+    </update>
+    
+    <!-- 批量删除(云钥匙付款记录)信息_逻辑删除 -->
+    <update id="delete_cloudKeyPaylog_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_cloud_key_paylog		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderId != null and !item.tEbuyOrderId.equals('')  "> ,t_ebuy_order_id=#{item.tEbuyOrderId}</if> 		<if test="item.tPayKeyListId != null and !item.tPayKeyListId.equals('')  "> ,t_pay_key_list_id=#{item.tPayKeyListId}</if> 		<if test="item.huaId != null and !item.huaId.equals('')  "> ,f_hua_id=#{item.huaId}</if> 		<if test="item.createTime != null and !item.createTime.equals('')  "> ,f_create_time=str_to_date(#{item.createTime},'%Y-%m-%d %T')</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.payStatus != null and !item.payStatus.equals('')  "> ,f_pay_status=#{item.payStatus}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(云钥匙付款记录)信息。 -->
+    <sql id="delete_cloudKeyPaylog">
+		DELETE FROM t_cloud_key_paylog WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_cloudKeyPaylog" parameterType="java.lang.String">
+		<include refid="cloudKeyPaylogBase.delete_cloudKeyPaylog"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(云钥匙付款记录)信息。 -->
+    <delete id="delete_cloudKeyPaylog_Batch" parameterType="java.util.List">
+		DELETE FROM t_cloud_key_paylog WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

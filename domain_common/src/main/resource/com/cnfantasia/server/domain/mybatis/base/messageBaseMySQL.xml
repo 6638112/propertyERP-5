@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:消息表 t_message -->
+<mapper namespace="messageBase">
+	<resultMap type="Message" id="messageBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!-- 消息编号 -->
+        <result column="f_type" javaType="java.lang.Long" property="type"/>  <!-- 消息类型 -->
+        <result column="f_is_relate_room" javaType="java.lang.Integer" property="isRelateRoom"/>  <!-- 是否和门牌有关（1 是 0 不是） -->
+        <result column="f_title" javaType="java.lang.String" property="title"/>  <!-- 标题 -->
+        <result column="f_content" javaType="java.lang.String" property="content"/>  <!-- 消息内容 -->
+        <result column="f_time" javaType="java.lang.String" property="time"/>  <!-- 发布时间 -->
+        <result column="f_expiry_date_start" javaType="java.lang.String" property="expiryDateStart"/>  <!-- 有效开始时间 -->
+        <result column="f_expiry_date_end" javaType="java.lang.String" property="expiryDateEnd"/>  <!-- 有效截止时间 -->
+        <result column="f_creater" javaType="java.math.BigInteger" property="creater"/>  <!-- 创建人 -->
+        <result column="f_source_id" javaType="java.math.BigInteger" property="sourceId"/>  <!-- 消息来源ID，跟type字段共同确定 -->
+        <result column="f_pic_url" javaType="java.lang.String" property="picUrl"/>  <!-- 图片路径 -->
+        <result column="f_msggroup_fid" javaType="java.math.BigInteger" property="msggroupFid"/>  <!--  -->
+        <result column="f_android_target_view" javaType="java.lang.String" property="androidTargetView"/>  <!-- 安卓跳转页面 -->
+        <result column="f_ios_target__view" javaType="java.lang.String" property="iosTargetView"/>  <!-- IOS跳转页面 -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="f_visible_type" javaType="java.lang.Integer" property="visibleType"/>  <!-- 可见范围标识 -->
+        <result column="f_send_state" javaType="java.lang.Integer" property="sendState"/>  <!-- 物业公告发送状态 -->
+	</resultMap>
+	<resultMap type="Message" id="messageExtendMap" extends="messageBaseMap">
+	</resultMap>
+	<resultMap type="Message" id="messageBaseMap_AppendTable">
+        <id column="Mid" javaType="java.math.BigInteger" property="id"/>  <!-- 消息编号 -->
+        <result column="Mtype" javaType="java.lang.Long" property="type"/>  <!-- 消息类型 -->
+        <result column="MisRelateRoom" javaType="java.lang.Integer" property="isRelateRoom"/>  <!-- 是否和门牌有关（1 是 0 不是） -->
+        <result column="Mtitle" javaType="java.lang.String" property="title"/>  <!-- 标题 -->
+        <result column="Mcontent" javaType="java.lang.String" property="content"/>  <!-- 消息内容 -->
+        <result column="Mtime" javaType="java.lang.String" property="time"/>  <!-- 发布时间 -->
+        <result column="MexpiryDateStart" javaType="java.lang.String" property="expiryDateStart"/>  <!-- 有效开始时间 -->
+        <result column="MexpiryDateEnd" javaType="java.lang.String" property="expiryDateEnd"/>  <!-- 有效截止时间 -->
+        <result column="Mcreater" javaType="java.math.BigInteger" property="creater"/>  <!-- 创建人 -->
+        <result column="MsourceId" javaType="java.math.BigInteger" property="sourceId"/>  <!-- 消息来源ID，跟type字段共同确定 -->
+        <result column="MpicUrl" javaType="java.lang.String" property="picUrl"/>  <!-- 图片路径 -->
+        <result column="MmsggroupFid" javaType="java.math.BigInteger" property="msggroupFid"/>  <!--  -->
+        <result column="MandroidTargetView" javaType="java.lang.String" property="androidTargetView"/>  <!-- 安卓跳转页面 -->
+        <result column="MiosTargetView" javaType="java.lang.String" property="iosTargetView"/>  <!-- IOS跳转页面 -->
+        <result column="Msys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="Msys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="Msys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="Msys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="Msys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="Msys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="Msys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="MvisibleType" javaType="java.lang.Integer" property="visibleType"/>  <!-- 可见范围标识 -->
+        <result column="MsendState" javaType="java.lang.Integer" property="sendState"/>  <!-- 物业公告发送状态 -->
+	</resultMap>
+	<resultMap type="Message" id="messageBaseMap_AppendTable1">
+        <id column="M1id" javaType="java.math.BigInteger" property="id"/>  <!-- 消息编号 -->
+        <result column="M1type" javaType="java.lang.Long" property="type"/>  <!-- 消息类型 -->
+        <result column="M1isRelateRoom" javaType="java.lang.Integer" property="isRelateRoom"/>  <!-- 是否和门牌有关（1 是 0 不是） -->
+        <result column="M1title" javaType="java.lang.String" property="title"/>  <!-- 标题 -->
+        <result column="M1content" javaType="java.lang.String" property="content"/>  <!-- 消息内容 -->
+        <result column="M1time" javaType="java.lang.String" property="time"/>  <!-- 发布时间 -->
+        <result column="M1expiryDateStart" javaType="java.lang.String" property="expiryDateStart"/>  <!-- 有效开始时间 -->
+        <result column="M1expiryDateEnd" javaType="java.lang.String" property="expiryDateEnd"/>  <!-- 有效截止时间 -->
+        <result column="M1creater" javaType="java.math.BigInteger" property="creater"/>  <!-- 创建人 -->
+        <result column="M1sourceId" javaType="java.math.BigInteger" property="sourceId"/>  <!-- 消息来源ID，跟type字段共同确定 -->
+        <result column="M1picUrl" javaType="java.lang.String" property="picUrl"/>  <!-- 图片路径 -->
+        <result column="M1msggroupFid" javaType="java.math.BigInteger" property="msggroupFid"/>  <!--  -->
+        <result column="M1androidTargetView" javaType="java.lang.String" property="androidTargetView"/>  <!-- 安卓跳转页面 -->
+        <result column="M1iosTargetView" javaType="java.lang.String" property="iosTargetView"/>  <!-- IOS跳转页面 -->
+        <result column="M1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="M1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="M1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="M1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="M1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="M1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="M1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="M1visibleType" javaType="java.lang.Integer" property="visibleType"/>  <!-- 可见范围标识 -->
+        <result column="M1sendState" javaType="java.lang.Integer" property="sendState"/>  <!-- 物业公告发送状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		M.f_id,M.f_type,M.f_is_relate_room,M.f_title,M.f_content,date_format(M.f_time,'%Y-%m-%d %T') as f_time,date_format(M.f_expiry_date_start,'%Y-%m-%d %T') as f_expiry_date_start,date_format(M.f_expiry_date_end,'%Y-%m-%d %T') as f_expiry_date_end,M.f_creater,M.f_source_id,M.f_pic_url,M.f_msggroup_fid,M.f_android_target_view,M.f_ios_target__view,date_format(M.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time,M.f_visible_type,M.f_send_state
+	</sql>
+	<sql id="queryHead_AppendTable">
+		M.f_id as Mid,M.f_type as Mtype,M.f_is_relate_room as MisRelateRoom,M.f_title as Mtitle,M.f_content as Mcontent,date_format(M.f_time,'%Y-%m-%d %T') as Mtime,date_format(M.f_expiry_date_start,'%Y-%m-%d %T') as MexpiryDateStart,date_format(M.f_expiry_date_end,'%Y-%m-%d %T') as MexpiryDateEnd,M.f_creater as Mcreater,M.f_source_id as MsourceId,M.f_pic_url as MpicUrl,M.f_msggroup_fid as MmsggroupFid,M.f_android_target_view as MandroidTargetView,M.f_ios_target__view as MiosTargetView,date_format(M.f_sys0_upd_time,'%Y-%m-%d %T') as Msys0UpdTime,M.f_visible_type as MvisibleType,M.f_send_state as MsendState
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		M1.f_id as M1id,M1.f_type as M1type,M1.f_is_relate_room as M1isRelateRoom,M1.f_title as M1title,M1.f_content as M1content,date_format(M1.f_time,'%Y-%m-%d %T') as M1time,date_format(M1.f_expiry_date_start,'%Y-%m-%d %T') as M1expiryDateStart,date_format(M1.f_expiry_date_end,'%Y-%m-%d %T') as M1expiryDateEnd,M1.f_creater as M1creater,M1.f_source_id as M1sourceId,M1.f_pic_url as M1picUrl,M1.f_msggroup_fid as M1msggroupFid,M1.f_android_target_view as M1androidTargetView,M1.f_ios_target__view as M1iosTargetView,date_format(M1.f_sys0_upd_time,'%Y-%m-%d %T') as M1sys0UpdTime,M1.f_visible_type as M1visibleType,M1.f_send_state as M1sendState
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (M.f_id = #{id} ) </if>
+        <if test="type != null">  and (M.f_type = #{type} ) </if>
+        <if test="isRelateRoom != null">  and (M.f_is_relate_room = #{isRelateRoom} ) </if>
+        <if test="title != null">  and (M.f_title = #{title} ) </if>
+        <if test="content != null">  and (M.f_content = #{content} ) </if>
+        <if test="time != null and !time.equals('')  ">  and (M.f_time = str_to_date(#{time},'%Y-%m-%d %T') ) </if>
+        <if test="time_START != null and !time_START.equals('')  ">  
+            <![CDATA[ and (M.f_time >= str_to_date(#{time_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="time_END != null and !time_END.equals('')  ">
+            <![CDATA[ and (M.f_time <= str_to_date(#{time_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="expiryDateStart != null and !expiryDateStart.equals('')  ">  and (M.f_expiry_date_start = str_to_date(#{expiryDateStart},'%Y-%m-%d %T') ) </if>
+        <if test="expiryDateStart_START != null and !expiryDateStart_START.equals('')  ">  
+            <![CDATA[ and (M.f_expiry_date_start >= str_to_date(#{expiryDateStart_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="expiryDateStart_END != null and !expiryDateStart_END.equals('')  ">
+            <![CDATA[ and (M.f_expiry_date_start <= str_to_date(#{expiryDateStart_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="expiryDateEnd != null and !expiryDateEnd.equals('')  ">  and (M.f_expiry_date_end = str_to_date(#{expiryDateEnd},'%Y-%m-%d %T') ) </if>
+        <if test="expiryDateEnd_START != null and !expiryDateEnd_START.equals('')  ">  
+            <![CDATA[ and (M.f_expiry_date_end >= str_to_date(#{expiryDateEnd_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="expiryDateEnd_END != null and !expiryDateEnd_END.equals('')  ">
+            <![CDATA[ and (M.f_expiry_date_end <= str_to_date(#{expiryDateEnd_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="creater != null">  and (M.f_creater = #{creater} ) </if>
+        <if test="sourceId != null">  and (M.f_source_id = #{sourceId} ) </if>
+        <if test="picUrl != null">  and (M.f_pic_url = #{picUrl} ) </if>
+        <if test="msggroupFid != null">  and (M.f_msggroup_fid = #{msggroupFid} ) </if>
+        <if test="androidTargetView != null">  and (M.f_android_target_view = #{androidTargetView} ) </if>
+        <if test="iosTargetView != null">  and (M.f_ios_target__view = #{iosTargetView} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (M.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (M.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (M.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (M.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (M.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (M.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (M.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (M.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (M.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (M.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (M.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (M.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (M.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (M.f_sys0_del_state = 0 ) </if>
+        <if test="visibleType != null">  and (M.f_visible_type = #{visibleType} ) </if>
+        <if test="sendState != null">  and (M.f_send_state = #{sendState} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (M.f_id = #{id} ) </if>
+        <if test="type != null and !type.equals('')  ">  and (M.f_type = #{type} ) </if>
+        <if test="isRelateRoom != null and !isRelateRoom.equals('')  ">  and (M.f_is_relate_room = #{isRelateRoom} ) </if>
+        <if test="title != null and !title.equals('')  ">  and (M.f_title like CONCAT('%',#{title},'%') ) </if>
+        <if test="content != null and !content.equals('')  ">  and (M.f_content like CONCAT('%',#{content},'%') ) </if>
+        <if test="time != null and !time.equals('')  ">  and (M.f_time = str_to_date(#{time},'%Y-%m-%d %T') ) </if>
+        <if test="time_START != null and !time_START.equals('')  ">  
+            <![CDATA[ and (M.f_time >= str_to_date(#{time_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="time_END != null and !time_END.equals('')  ">
+            <![CDATA[ and (M.f_time <= str_to_date(#{time_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="expiryDateStart != null and !expiryDateStart.equals('')  ">  and (M.f_expiry_date_start = str_to_date(#{expiryDateStart},'%Y-%m-%d %T') ) </if>
+        <if test="expiryDateStart_START != null and !expiryDateStart_START.equals('')  ">  
+            <![CDATA[ and (M.f_expiry_date_start >= str_to_date(#{expiryDateStart_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="expiryDateStart_END != null and !expiryDateStart_END.equals('')  ">
+            <![CDATA[ and (M.f_expiry_date_start <= str_to_date(#{expiryDateStart_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="expiryDateEnd != null and !expiryDateEnd.equals('')  ">  and (M.f_expiry_date_end = str_to_date(#{expiryDateEnd},'%Y-%m-%d %T') ) </if>
+        <if test="expiryDateEnd_START != null and !expiryDateEnd_START.equals('')  ">  
+            <![CDATA[ and (M.f_expiry_date_end >= str_to_date(#{expiryDateEnd_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="expiryDateEnd_END != null and !expiryDateEnd_END.equals('')  ">
+            <![CDATA[ and (M.f_expiry_date_end <= str_to_date(#{expiryDateEnd_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="creater != null and !creater.equals('')  ">  and (M.f_creater = #{creater} ) </if>
+        <if test="sourceId != null and !sourceId.equals('')  ">  and (M.f_source_id = #{sourceId} ) </if>
+        <if test="picUrl != null and !picUrl.equals('')  ">  and (M.f_pic_url like CONCAT('%',#{picUrl},'%') ) </if>
+        <if test="msggroupFid != null and !msggroupFid.equals('')  ">  and (M.f_msggroup_fid = #{msggroupFid} ) </if>
+        <if test="androidTargetView != null and !androidTargetView.equals('')  ">  and (M.f_android_target_view like CONCAT('%',#{androidTargetView},'%') ) </if>
+        <if test="iosTargetView != null and !iosTargetView.equals('')  ">  and (M.f_ios_target__view like CONCAT('%',#{iosTargetView},'%') ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (M.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (M.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (M.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (M.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (M.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (M.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (M.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (M.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (M.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (M.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (M.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (M.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (M.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (M.f_sys0_del_state = 0 ) </if>
+        <if test="visibleType != null and !visibleType.equals('')  ">  and (M.f_visible_type = #{visibleType} ) </if>
+        <if test="sendState != null and !sendState.equals('')  ">  and (M.f_send_state = #{sendState} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="messageBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="messageBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="messageBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="messageBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_message M
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(消息表)信息。 -->
+	<sql id="select_message">
+		SELECT <include refid="messageBase.queryHead"/>
+		<include refid="messageBase.busiQueryCondition"/>
+		<include refid="messageBase.dimCheckSql"/>
+		ORDER BY M.f_id DESC
+	</sql>
+	<select id="select_message" parameterType="java.util.Map" resultMap="messageBase.messageExtendMap">
+		<include refid="messageBase.select_message"/>
+	</select>
+	
+	<!-- 根据条件分页查询(消息表)信息  -->
+	<sql id="select_message_withPage">
+		SELECT <include refid="messageBase.queryHead"/>
+		<include refid="messageBase.busiQueryCondition"/>
+		<include refid="messageBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_message_withPage" resultMap="messageBase.messageExtendMap" parameterType="java.util.Map">
+		<include refid="messageBase.select_message_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(消息表)信息。 -->
+	<sql id="select_message_bySeqId">
+		SELECT <include refid="messageBase.queryHead"/>
+		<include refid="messageBase.busiQueryCondition"/>
+		 and M.f_id = #{_parameter}
+	</sql>
+	<select id="select_message_bySeqId" parameterType="java.math.BigInteger" resultMap="messageBase.messageBaseMap">
+		<include refid="messageBase.select_message_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(消息表)记录数  -->
+	<sql id="select_message_count">
+		SELECT COUNT(*)
+		<include refid="messageBase.busiQueryCount"/>
+		<include refid="messageBase.dimCheckSql"/>
+	</sql>
+	<select id="select_message_count" resultType="java.lang.Integer">
+		<include refid="messageBase.select_message_count"/>
+	</select>
+	
+	 <!-- 往(消息表)新增一条记录。 -->
+	 <sql id="insert_message">
+		INSERT INTO t_message 
+		(f_id,f_type,f_is_relate_room,f_title,f_content,f_time,f_expiry_date_start,f_expiry_date_end,f_creater,f_source_id,f_pic_url,f_msggroup_fid,f_android_target_view,f_ios_target__view,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_visible_type,f_send_state) VALUES 
+		(#{id},#{type},#{isRelateRoom},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},str_to_date(#{time,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{expiryDateStart,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{expiryDateEnd,jdbcType=DATE},'%Y-%m-%d %T'),#{creater},#{sourceId},#{picUrl,jdbcType=VARCHAR},#{msggroupFid},#{androidTargetView,jdbcType=VARCHAR},#{iosTargetView,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0,#{visibleType},#{sendState})
+	 </sql>
+    <insert id="insert_message" parameterType="Message">
+		<include refid="messageBase.insert_message"/>
+    </insert>
+    
+	<!-- 批量新增(消息表)信息 -->
+    <insert id="insert_message_Batch" parameterType="java.util.List">
+    	INSERT INTO t_message 
+		(f_id,f_type,f_is_relate_room,f_title,f_content,f_time,f_expiry_date_start,f_expiry_date_end,f_creater,f_source_id,f_pic_url,f_msggroup_fid,f_android_target_view,f_ios_target__view,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_visible_type,f_send_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.type},#{item.isRelateRoom},#{item.title,jdbcType=VARCHAR},#{item.content,jdbcType=VARCHAR},str_to_date(#{item.time,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.expiryDateStart,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.expiryDateEnd,jdbcType=DATE},'%Y-%m-%d %T'),#{item.creater},#{item.sourceId},#{item.picUrl,jdbcType=VARCHAR},#{item.msggroupFid},#{item.androidTargetView,jdbcType=VARCHAR},#{item.iosTargetView,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0,#{item.visibleType},#{item.sendState})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(消息表)信息。 -->
+    <sql id="update_message">
+		UPDATE t_message
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="type != null and !type.equals('') "> ,f_type=#{type}</if>
+ 		<if test="isRelateRoom != null and !isRelateRoom.equals('') "> ,f_is_relate_room=#{isRelateRoom}</if>
+ 		<if test="title != null and !title.equals('') "> ,f_title=#{title}</if>
+ 		<if test="content != null and !content.equals('') "> ,f_content=#{content}</if>
+ 		<if test="time != null and !time.equals('') "> ,f_time=str_to_date(#{time},'%Y-%m-%d %T')</if>
+ 		<if test="expiryDateStart != null and !expiryDateStart.equals('') "> ,f_expiry_date_start=str_to_date(#{expiryDateStart},'%Y-%m-%d %T')</if>
+ 		<if test="expiryDateEnd != null and !expiryDateEnd.equals('') "> ,f_expiry_date_end=str_to_date(#{expiryDateEnd},'%Y-%m-%d %T')</if>
+ 		<if test="creater != null and !creater.equals('') "> ,f_creater=#{creater}</if>
+ 		<if test="sourceId != null and !sourceId.equals('') "> ,f_source_id=#{sourceId}</if>
+ 		<if test="picUrl != null and !picUrl.equals('') "> ,f_pic_url=#{picUrl}</if>
+ 		<if test="msggroupFid != null and !msggroupFid.equals('') "> ,f_msggroup_fid=#{msggroupFid}</if>
+ 		<if test="androidTargetView != null and !androidTargetView.equals('') "> ,f_android_target_view=#{androidTargetView}</if>
+ 		<if test="iosTargetView != null and !iosTargetView.equals('') "> ,f_ios_target__view=#{iosTargetView}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+ 		<if test="visibleType != null and !visibleType.equals('') "> ,f_visible_type=#{visibleType}</if>
+ 		<if test="sendState != null and !sendState.equals('') "> ,f_send_state=#{sendState}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_message" parameterType="Message">
+		<include refid="messageBase.update_message"/>
+    </update>
+    
+    <!-- 批量更新(消息表)信息。 -->
+    <update id="update_message_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_message
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if>
+ 		<if test="item.isRelateRoom != null and !item.isRelateRoom.equals('')  "> ,f_is_relate_room=#{item.isRelateRoom}</if>
+ 		<if test="item.title != null and !item.title.equals('')  "> ,f_title=#{item.title}</if>
+ 		<if test="item.content != null and !item.content.equals('')  "> ,f_content=#{item.content}</if>
+ 		<if test="item.time != null and !item.time.equals('')  "> ,f_time=str_to_date(#{item.time},'%Y-%m-%d %T')</if>
+ 		<if test="item.expiryDateStart != null and !item.expiryDateStart.equals('')  "> ,f_expiry_date_start=str_to_date(#{item.expiryDateStart},'%Y-%m-%d %T')</if>
+ 		<if test="item.expiryDateEnd != null and !item.expiryDateEnd.equals('')  "> ,f_expiry_date_end=str_to_date(#{item.expiryDateEnd},'%Y-%m-%d %T')</if>
+ 		<if test="item.creater != null and !item.creater.equals('')  "> ,f_creater=#{item.creater}</if>
+ 		<if test="item.sourceId != null and !item.sourceId.equals('')  "> ,f_source_id=#{item.sourceId}</if>
+ 		<if test="item.picUrl != null and !item.picUrl.equals('')  "> ,f_pic_url=#{item.picUrl}</if>
+ 		<if test="item.msggroupFid != null and !item.msggroupFid.equals('')  "> ,f_msggroup_fid=#{item.msggroupFid}</if>
+ 		<if test="item.androidTargetView != null and !item.androidTargetView.equals('')  "> ,f_android_target_view=#{item.androidTargetView}</if>
+ 		<if test="item.iosTargetView != null and !item.iosTargetView.equals('')  "> ,f_ios_target__view=#{item.iosTargetView}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+ 		<if test="item.visibleType != null and !item.visibleType.equals('')  "> ,f_visible_type=#{item.visibleType}</if>
+ 		<if test="item.sendState != null and !item.sendState.equals('')  "> ,f_send_state=#{item.sendState}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(消息表)信息_逻辑删除。 -->
+    <sql id="delete_message_Logic">
+		UPDATE t_message
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="type != null and !type.equals('')  "> ,f_type=#{type}</if>
+ 		<if test="isRelateRoom != null and !isRelateRoom.equals('')  "> ,f_is_relate_room=#{isRelateRoom}</if>
+ 		<if test="title != null and !title.equals('')  "> ,f_title=#{title}</if>
+ 		<if test="content != null and !content.equals('')  "> ,f_content=#{content}</if>
+ 		<if test="time != null and !time.equals('')  "> ,f_time=str_to_date(#{time},'%Y-%m-%d %T')</if>
+ 		<if test="expiryDateStart != null and !expiryDateStart.equals('')  "> ,f_expiry_date_start=str_to_date(#{expiryDateStart},'%Y-%m-%d %T')</if>
+ 		<if test="expiryDateEnd != null and !expiryDateEnd.equals('')  "> ,f_expiry_date_end=str_to_date(#{expiryDateEnd},'%Y-%m-%d %T')</if>
+ 		<if test="creater != null and !creater.equals('')  "> ,f_creater=#{creater}</if>
+ 		<if test="sourceId != null and !sourceId.equals('')  "> ,f_source_id=#{sourceId}</if>
+ 		<if test="picUrl != null and !picUrl.equals('')  "> ,f_pic_url=#{picUrl}</if>
+ 		<if test="msggroupFid != null and !msggroupFid.equals('')  "> ,f_msggroup_fid=#{msggroupFid}</if>
+ 		<if test="androidTargetView != null and !androidTargetView.equals('')  "> ,f_android_target_view=#{androidTargetView}</if>
+ 		<if test="iosTargetView != null and !iosTargetView.equals('')  "> ,f_ios_target__view=#{iosTargetView}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="visibleType != null and !visibleType.equals('')  "> ,f_visible_type=#{visibleType}</if>
+ 		<if test="sendState != null and !sendState.equals('')  "> ,f_send_state=#{sendState}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_message_Logic" parameterType="Message">
+		<include refid="messageBase.delete_message_Logic"/>
+    </update>
+    
+    <!-- 批量删除(消息表)信息_逻辑删除 -->
+    <update id="delete_message_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_message
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if>
+ 		<if test="item.isRelateRoom != null and !item.isRelateRoom.equals('')  "> ,f_is_relate_room=#{item.isRelateRoom}</if>
+ 		<if test="item.title != null and !item.title.equals('')  "> ,f_title=#{item.title}</if>
+ 		<if test="item.content != null and !item.content.equals('')  "> ,f_content=#{item.content}</if>
+ 		<if test="item.time != null and !item.time.equals('')  "> ,f_time=str_to_date(#{item.time},'%Y-%m-%d %T')</if>
+ 		<if test="item.expiryDateStart != null and !item.expiryDateStart.equals('')  "> ,f_expiry_date_start=str_to_date(#{item.expiryDateStart},'%Y-%m-%d %T')</if>
+ 		<if test="item.expiryDateEnd != null and !item.expiryDateEnd.equals('')  "> ,f_expiry_date_end=str_to_date(#{item.expiryDateEnd},'%Y-%m-%d %T')</if>
+ 		<if test="item.creater != null and !item.creater.equals('')  "> ,f_creater=#{item.creater}</if>
+ 		<if test="item.sourceId != null and !item.sourceId.equals('')  "> ,f_source_id=#{item.sourceId}</if>
+ 		<if test="item.picUrl != null and !item.picUrl.equals('')  "> ,f_pic_url=#{item.picUrl}</if>
+ 		<if test="item.msggroupFid != null and !item.msggroupFid.equals('')  "> ,f_msggroup_fid=#{item.msggroupFid}</if>
+ 		<if test="item.androidTargetView != null and !item.androidTargetView.equals('')  "> ,f_android_target_view=#{item.androidTargetView}</if>
+ 		<if test="item.iosTargetView != null and !item.iosTargetView.equals('')  "> ,f_ios_target__view=#{item.iosTargetView}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.visibleType != null and !item.visibleType.equals('')  "> ,f_visible_type=#{item.visibleType}</if>
+ 		<if test="item.sendState != null and !item.sendState.equals('')  "> ,f_send_state=#{item.sendState}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(消息表)信息。 -->
+    <sql id="delete_message">
+		DELETE FROM t_message WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_message" parameterType="java.lang.String">
+		<include refid="messageBase.delete_message"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(消息表)信息。 -->
+    <delete id="delete_message_Batch" parameterType="java.util.List">
+		DELETE FROM t_message WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

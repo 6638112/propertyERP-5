@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  首页图标 -->
+<mapper namespace="homeMessage">
+    <resultMap id="homeMessageEntityMap" type="com.cnfantasia.server.api.homeMessage.entity.HomeMessageEntity">
+        <id property="iconUrl" column="iconUrl" javaType="java.lang.String"/>
+        <result property="code" column="code" javaType="java.lang.String"/>
+        <result property="name" column="name" javaType="java.lang.String"/>
+        <result property="updTime" column="updTime" javaType="java.lang.String"/>
+        <result property="content" column="content" javaType="java.lang.String"/>
+        <result property="extInfo" column="extInfo" javaType="java.lang.String"/>
+        <result property="order" column="order" javaType="java.lang.Integer"/>
+        <result property="linkUrl" column="linkUrl" javaType="java.lang.String"/>
+    </resultMap>
+    <select id="getHomeMessageListByUserId" parameterType="map" resultMap="homeMessageEntityMap">
+        SELECT DISTINCT hmt.f_code `code`, hmt.f_name `name`, hmt.f_icon_url iconUrl, hhm.f_content content, hhm.f_ext_info extInfo,
+          date_format(ifnull(hhm.f_sys0_upd_time, hhm.f_sys0_add_time),'%Y-%m-%d %T') updTime,hmt.f_order `order`, hhm.f_link_url linkUrl
+        FROM t_home_message_type hmt
+        LEFT JOIN t_user_has_home_message hhm ON hhm.f_sys0_del_state = 0
+          AND hhm.f_message_code = hmt.f_code
+          AND ( (hmt.f_is_relate_room = 1 AND hhm.t_room_f_id = #{roomId}) OR hmt.f_is_relate_room = 0 ) AND hhm.f_user_id = #{userId}
+        INNER JOIN t_operation_sa_has_eb_supply hes ON hes.f_sys0_del_state = 0 AND hes.f_type = 6 AND hmt.f_id = hes.f_eb_supply_id
+        WHERE hmt.f_sys0_del_state = 0 AND (hhm.f_content is not null OR hmt.f_code = 'HOME_ADS' OR hmt.f_code = 'PROPERTY_PAYBILL')
+        AND now() >= IFNULL(hhm.f_valid_time, '2017-01-01 00:00:01') AND now() &lt;= IFNULL(hhm.f_expire_time, '2117-01-01 00:00:01')
+        AND hes.f_sa_id IN
+        <foreach collection="codeIdList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND IFNULL(hmt.f_start_version, 0) &lt;= #{version} AND IFNULL(hmt.f_end_version, 99999) >= #{version}
+        UNION
+        SELECT DISTINCT hmt.f_code `code`, hmt.f_name `name`, hmt.f_icon_url iconUrl, ghm.f_content content, ghm.f_ext_info extInfo,
+          date_format(ifnull(ghm.f_sys0_upd_time, ghm.f_sys0_add_time), '%Y-%m-%d %T') updTime, hmt.f_order `order`, ghm.f_link_url linkUrl
+        FROM t_home_message_type hmt
+        INNER JOIN t_group_home_message ghm ON ghm.f_message_code = hmt.f_code AND ghm.f_sys0_del_state = 0
+        INNER JOIN t_operation_sa_has_eb_supply hes ON hes.f_sys0_del_state = 0 AND hes.f_type = 6 AND hmt.f_id = hes.f_eb_supply_id
+        WHERE hmt.f_sys0_del_state = 0
+        AND now() >= IFNULL(ghm.f_valid_time, '2017-01-01 00:00:01') AND now() &lt;= IFNULL(ghm.f_expire_time, '2117-01-01 00:00:01')
+        AND ghm.f_gb_id = #{gbId} AND hes.f_sa_id IN
+        <foreach collection="codeIdList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+          AND IFNULL(hmt.f_start_version, 0) &lt;= #{version} AND IFNULL(hmt.f_end_version, 99999) >= #{version}
+        ORDER BY `order` DESC,updTime DESC
+    </select>
+
+    <update id="delGroupHomeMsgByGbIds" parameterType="map">
+        UPDATE t_group_home_message SET f_sys0_del_state = 1, f_sys0_upd_time = now() WHERE f_sys0_del_state = 0 AND f_message_code = #{code} AND f_gb_id IN
+        <foreach collection="gbIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="delUserHomeMsgByParam" parameterType="map">
+        UPDATE t_user_has_home_message SET f_sys0_del_state = 1, f_sys0_upd_time = now() WHERE f_sys0_del_state = 0 AND f_message_code = #{code}
+        <if test="roomId != null and roomId != ''">
+            AND t_room_f_id = #{roomId}
+        </if>
+        <if test="resourceId != null and resourceId != ''">
+            AND f_resouce_id = #{resourceId}
+        </if>
+        <if test="userId != null and userId != ''">
+            AND f_user_id = #{userId}
+        </if>
+    </update>
+
+    <select id="getGbIdByRoomId" parameterType="bigInteger" resultType="bigInteger">
+        SELECT b.t_group_building_f_id FROM t_room r
+        INNER JOIN t_real_room rr ON r.t_real_room_f_id = rr.f_id
+        INNER JOIN t_building b ON rr.t_building_f_id = b.f_id
+        WHERE r.f_id = #{_parameter} limit 1
+    </select>
+
+    <select id="getUnReceivedDelivOrderCount" parameterType="bigInteger" resultType="com.cnfantasia.server.api.homeMessage.entity.UserUnReceiveDelivOrderEntity">
+        SELECT edo.f_buyer_id userId, eo.f_curr_room_id roomId, count(edo2.f_id) delivOrderCount
+        FROM t_ebuy_delivery_order edo
+        INNER JOIN t_ebuy_order eo ON eo.f_sys0_del_state = 0 AND edo.t_ebuy_order_f_id = eo.f_id
+        INNER JOIN t_ebuy_delivery_order edo2 ON edo2.f_sys0_del_state = 0 AND edo.f_buyer_id = edo2.f_buyer_id
+        INNER JOIN t_ebuy_order eo2 ON eo2.f_sys0_del_state = 0 AND edo2.t_ebuy_order_f_id = eo2.f_id AND edo2.f_status = 2
+        WHERE edo.f_sys0_del_state = 0 AND eo.f_curr_room_id = eo2.f_curr_room_id AND (edo2.f_refund_status is null or edo2.f_refund_status in (0,3)) AND edo.f_id = #{_parameter}
+        GROUP BY userId, roomId
+    </select>
+
+    <select id="canTransRepairCount" parameterType="map" resultType="integer">
+        SELECT count(1) FROM t_dredge_bill
+        WHERE f_sys0_del_state = 0 and f_bill_type = 4 and f_status = 6 and t_worker_f_id IS NULL
+        AND f_sys0_upd_time > DATE_SUB(now(), INTERVAL #{canTransDay} DAY)
+        AND t_user_f_id = #{userId} AND f_roomId = #{roomId}
+    </select>
+
+    <select id="getUnPaidBillMessageList" parameterType="map" resultType="com.cnfantasia.server.api.homeMessage.entity.PayBillMessageEntity">
+    select userId, roomId, payStart, payEnd, sum(payBillAmount) payBillAmount, sum(feeDetailCount) feeDetailCount, max(billTime) maxBillTime from (
+        SELECT u.f_id userId, pb.f_amount - IFNULL(pb.f_dedu_price,0) payBillAmount, r.f_id roomId,
+          date_format(pb.f_sys0_add_time,'%Y-%m-%d %T') billTime,
+          date_format(gbbc.f_bill_pay_start,'%Y-%m-%d %T') payStart, date_format(gbbc.f_bill_pay_end,'%Y-%m-%d %T') payEnd, count(pb.f_id) feeDetailCount
+        FROM t_room r
+        INNER JOIN t_real_room rr ON r.t_real_room_f_id = rr.f_id AND rr.f_sys0_del_state = 0
+        INNER JOIN t_building b ON rr.t_building_f_id = b.f_id AND b.f_sys0_del_state = 0
+        INNER JOIN t_group_building gb ON b.t_group_building_f_id = gb.f_id AND gb.f_sys0_del_state = 0
+        INNER JOIN t_pay_bill pb ON pb.f_sys0_del_state = 0 AND pb.t_real_room_f_id = rr.f_id
+        INNER JOIN t_pay_bill_type pbt ON pbt.f_id = pb.f_bill_type_id AND pbt.f_sys0_del_state = 0
+        INNER JOIN t_group_building_bill_cycle gbbc ON gbbc.f_sys0_del_state = 0 AND pb.t_bill_cycle_id = gbbc.f_id
+        INNER JOIN t_user u ON u.f_sys0_del_state = 0 AND r.f_id = u.f_default_room_id
+        WHERE r.f_sys0_del_state = 0 AND pbt.f_active_status = 1
+        AND (
+          (pb.f_cycle_type = 2 AND pb.f_pay_day_start &lt;= SYSDATE())
+          OR (pb.f_cycle_type = 1 AND pb.f_pay_day_start &lt;= SYSDATE() AND DATE_ADD(pb.f_pay_day_end, INTERVAL 1 DAY ) > SYSDATE())
+        )
+        AND pb.f_is_pay = 2
+        <if test="gbId != null and gbId != ''">
+            AND gb.f_id = #{gbId}
+        </if>
+        <if test="userId != null and userId != ''">
+            AND u.f_id = #{userId}
+        </if>
+        <if test="roomId != null and roomId != ''">
+            AND r.f_id = #{roomId}
+        </if>
+        <if test="realRoomId != null and realRoomId != ''">
+            AND rr.f_id = #{realRoomId}
+        </if>
+        <!-- GROUP BY userId, roomId -->
+        GROUP BY pb.f_id) tt
+         group by userId
+    </select>
+
+    <select id="getDredgeBillInServiceCount" parameterType="map" resultType="integer">
+        SELECT count(1) from t_dredge_bill
+        where f_sys0_del_state = 0 and t_user_f_id = #{userId}
+        <if test="dredgeOrRepair != null and dredgeOrRepair == 1">
+            and f_bill_type in (1,2,5) and f_status in(1,2)
+        </if>
+        <if test="dredgeOrRepair != null and dredgeOrRepair == 2">
+            and f_bill_type = 4 and f_status in(1,2)
+        </if>
+    </select>
+</mapper>

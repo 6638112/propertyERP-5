@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:订单扩展表 t_ebuy_order_ext -->
+<mapper namespace="ebuyOrderExtBase">
+	<resultMap type="EbuyOrderExt" id="ebuyOrderExtBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_ebuy_order_f_id" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!--  -->        <result column="f_wy_coupon_amount" javaType="java.lang.Long" property="wyCouponAmount"/>  <!-- 物业公司优惠金额（单位 -->        <result column="f_payment_to" javaType="java.lang.Integer" property="paymentTo"/>  <!-- 付款到哪里（0为自己平台，1物业公司，2管理处） -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyOrderExt" id="ebuyOrderExtExtendMap" extends="ebuyOrderExtBaseMap">
+	</resultMap>
+	<resultMap type="EbuyOrderExt" id="ebuyOrderExtBaseMap_AppendTable">
+        <id column="EOEid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EOEtEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!--  -->        <result column="EOEwyCouponAmount" javaType="java.lang.Long" property="wyCouponAmount"/>  <!-- 物业公司优惠金额（单位 -->        <result column="EOEpaymentTo" javaType="java.lang.Integer" property="paymentTo"/>  <!-- 付款到哪里（0为自己平台，1物业公司，2管理处） -->        <result column="EOEsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="EOEsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="EOEsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="EOEsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="EOEsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="EOEsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="EOEsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyOrderExt" id="ebuyOrderExtBaseMap_AppendTable1">
+        <id column="EOE1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EOE1tEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!--  -->        <result column="EOE1wyCouponAmount" javaType="java.lang.Long" property="wyCouponAmount"/>  <!-- 物业公司优惠金额（单位 -->        <result column="EOE1paymentTo" javaType="java.lang.Integer" property="paymentTo"/>  <!-- 付款到哪里（0为自己平台，1物业公司，2管理处） -->        <result column="EOE1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="EOE1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="EOE1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="EOE1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="EOE1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="EOE1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="EOE1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EOE.f_id,EOE.t_ebuy_order_f_id,EOE.f_wy_coupon_amount,EOE.f_payment_to
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EOE.f_id as EOEid,EOE.t_ebuy_order_f_id as EOEtEbuyOrderFId,EOE.f_wy_coupon_amount as EOEwyCouponAmount,EOE.f_payment_to as EOEpaymentTo
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EOE1.f_id as EOE1id,EOE1.t_ebuy_order_f_id as EOE1tEbuyOrderFId,EOE1.f_wy_coupon_amount as EOE1wyCouponAmount,EOE1.f_payment_to as EOE1paymentTo
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EOE.f_id = #{id} ) </if>        <if test="tEbuyOrderFId != null">  and (EOE.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="wyCouponAmount != null">  and (EOE.f_wy_coupon_amount = #{wyCouponAmount} ) </if>        <if test="paymentTo != null">  and (EOE.f_payment_to = #{paymentTo} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EOE.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EOE.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EOE.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EOE.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EOE.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EOE.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EOE.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EOE.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EOE.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EOE.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EOE.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EOE.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EOE.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EOE.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EOE.f_id = #{id} ) </if>        <if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  ">  and (EOE.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="wyCouponAmount != null and !wyCouponAmount.equals('')  ">  and (EOE.f_wy_coupon_amount = #{wyCouponAmount} ) </if>        <if test="paymentTo != null and !paymentTo.equals('')  ">  and (EOE.f_payment_to = #{paymentTo} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EOE.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EOE.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EOE.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EOE.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EOE.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EOE.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EOE.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EOE.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EOE.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EOE.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EOE.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EOE.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EOE.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EOE.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyOrderExtBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyOrderExtBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyOrderExtBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyOrderExtBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_order_ext EOE    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(订单扩展表)信息。 -->
+	<sql id="select_ebuyOrderExt">
+		SELECT <include refid="ebuyOrderExtBase.queryHead"/>
+		<include refid="ebuyOrderExtBase.busiQueryCondition"/>
+		<include refid="ebuyOrderExtBase.dimCheckSql"/>
+		ORDER BY EOE.f_id DESC
+	</sql>
+	<select id="select_ebuyOrderExt" parameterType="java.util.Map" resultMap="ebuyOrderExtBase.ebuyOrderExtExtendMap">
+		<include refid="ebuyOrderExtBase.select_ebuyOrderExt"/>
+	</select>
+	
+	<!-- 根据条件分页查询(订单扩展表)信息  -->
+	<sql id="select_ebuyOrderExt_withPage">
+		SELECT <include refid="ebuyOrderExtBase.queryHead"/>
+		<include refid="ebuyOrderExtBase.busiQueryCondition"/>
+		<include refid="ebuyOrderExtBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyOrderExt_withPage" resultMap="ebuyOrderExtBase.ebuyOrderExtExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyOrderExtBase.select_ebuyOrderExt_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(订单扩展表)信息。 -->
+	<sql id="select_ebuyOrderExt_bySeqId">
+		SELECT <include refid="ebuyOrderExtBase.queryHead"/>
+		<include refid="ebuyOrderExtBase.busiQueryCondition"/>
+		 and EOE.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyOrderExt_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyOrderExtBase.ebuyOrderExtBaseMap">
+		<include refid="ebuyOrderExtBase.select_ebuyOrderExt_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(订单扩展表)记录数  -->
+	<sql id="select_ebuyOrderExt_count">
+		SELECT COUNT(*)
+		<include refid="ebuyOrderExtBase.busiQueryCount"/>
+		<include refid="ebuyOrderExtBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyOrderExt_count" resultType="java.lang.Integer">
+		<include refid="ebuyOrderExtBase.select_ebuyOrderExt_count"/>
+	</select>
+	
+	 <!-- 往(订单扩展表)新增一条记录。 -->
+	 <sql id="insert_ebuyOrderExt">
+		INSERT INTO t_ebuy_order_ext 
+		(f_id,t_ebuy_order_f_id,f_wy_coupon_amount,f_payment_to,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tEbuyOrderFId},#{wyCouponAmount},#{paymentTo},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_ebuyOrderExt" parameterType="EbuyOrderExt">
+		<include refid="ebuyOrderExtBase.insert_ebuyOrderExt"/>
+    </insert>
+    
+	<!-- 批量新增(订单扩展表)信息 -->
+    <insert id="insert_ebuyOrderExt_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_order_ext 
+		(f_id,t_ebuy_order_f_id,f_wy_coupon_amount,f_payment_to,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tEbuyOrderFId},#{item.wyCouponAmount},#{item.paymentTo},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(订单扩展表)信息。 -->
+    <sql id="update_ebuyOrderExt">
+		UPDATE t_ebuy_order_ext		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('') "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="wyCouponAmount != null and !wyCouponAmount.equals('') "> ,f_wy_coupon_amount=#{wyCouponAmount}</if> 		<if test="paymentTo != null and !paymentTo.equals('') "> ,f_payment_to=#{paymentTo}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyOrderExt" parameterType="EbuyOrderExt">
+		<include refid="ebuyOrderExtBase.update_ebuyOrderExt"/>
+    </update>
+    
+    <!-- 批量更新(订单扩展表)信息。 -->
+    <update id="update_ebuyOrderExt_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_order_ext		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.wyCouponAmount != null and !item.wyCouponAmount.equals('')  "> ,f_wy_coupon_amount=#{item.wyCouponAmount}</if> 		<if test="item.paymentTo != null and !item.paymentTo.equals('')  "> ,f_payment_to=#{item.paymentTo}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(订单扩展表)信息_逻辑删除。 -->
+    <sql id="delete_ebuyOrderExt_Logic">
+		UPDATE t_ebuy_order_ext		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="wyCouponAmount != null and !wyCouponAmount.equals('')  "> ,f_wy_coupon_amount=#{wyCouponAmount}</if> 		<if test="paymentTo != null and !paymentTo.equals('')  "> ,f_payment_to=#{paymentTo}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyOrderExt_Logic" parameterType="EbuyOrderExt">
+		<include refid="ebuyOrderExtBase.delete_ebuyOrderExt_Logic"/>
+    </update>
+    
+    <!-- 批量删除(订单扩展表)信息_逻辑删除 -->
+    <update id="delete_ebuyOrderExt_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_order_ext		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.wyCouponAmount != null and !item.wyCouponAmount.equals('')  "> ,f_wy_coupon_amount=#{item.wyCouponAmount}</if> 		<if test="item.paymentTo != null and !item.paymentTo.equals('')  "> ,f_payment_to=#{item.paymentTo}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(订单扩展表)信息。 -->
+    <sql id="delete_ebuyOrderExt">
+		DELETE FROM t_ebuy_order_ext WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyOrderExt" parameterType="java.lang.String">
+		<include refid="ebuyOrderExtBase.delete_ebuyOrderExt"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(订单扩展表)信息。 -->
+    <delete id="delete_ebuyOrderExt_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_order_ext WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

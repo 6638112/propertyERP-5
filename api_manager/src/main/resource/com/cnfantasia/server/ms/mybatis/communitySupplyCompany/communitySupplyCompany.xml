@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户表 t_community_supply_tmp -->
+<mapper namespace="communitySupplyCompany">
+    <resultMap type="com.cnfantasia.server.ms.communitySupplyCompany.entity.CommunitySupplyCompanyEntity" id="communitySupplyCompanyEntity"
+    	extends="communitySupplyCompanyBase.communitySupplyCompanyBaseMap_AppendTable">
+    	<collection property="communitySupplyList" resultMap="communitySupplyBase.communitySupplyBaseMap_AppendTable"></collection>
+    </resultMap>
+    <resultMap type="com.cnfantasia.server.ms.communitySupplyCompany.entity.CommunitySupplyEditEntity" id="communitySupplyEditEntity" extends="communitySupplyBase.communitySupplyBaseMap_AppendTable">
+    	<result column="supplyType" property="supplyType"/><!-- 商家编辑店铺类型 -->
+    	<result column="supplyName" property="supplyName"/><!-- 商家编辑店铺名称 -->
+    	<result column="belongUserName" property="belongUserName"/><!-- 联系人 -->
+    	<result column="belongUserPhone" property="belongUserPhone"/><!-- 店主电话 -->
+    	<result column="tmpContectPhone" property="tmpContectPhone"/><!-- 商家编辑店铺电话 -->
+    	<result column="companyId" property="companyId"/><!-- 商户ID -->
+    	<result column="companyName" property="companyName"/><!-- 商户名称 -->
+    	<result column="groupBuildingName" property="groupBuildingName"/><!-- 商家编辑店铺服务小区 -->
+    	<result column="provinceName" property="provinceName"/><!-- 商家编辑店铺所在省 -->
+    	<result column="cityName" property="cityName"/><!-- 商家编辑店铺所在市 -->
+    	<result column="blockName" property="blockName"/><!-- 商家编辑店铺所在区 -->
+    	<result column="addressBlockId" property="addressBlockId"/><!-- 商家编辑店铺所在区ID -->
+    	<result column="tmpId" property="tmpId"/><!-- 商家编辑店铺临时信息ID -->
+    	<result column="auditStatus" property="auditStatus"/><!-- 商家编辑店铺审核状态 -->
+    	<result column="auditDesc" property="auditDesc"/><!-- 商家编辑店铺审核内容 -->
+    	<result column="editAddressDetail" property="editAddressDetail"/><!-- 商家编辑店铺详细地址 -->
+    	<collection property="csContects" resultMap="communitySupplyContectBase.communitySupplyContectBaseMap_AppendTable"></collection>
+    </resultMap>
+    <!-- 根据登录用户查找所属商家的店铺 -->
+    <select id="select_communitySupply_withCompany" parameterType="java.util.Map" resultMap="communitySupplyCompanyEntity">
+		SELECT <include refid="communitySupplyCompanyBase.queryHead_AppendTable"/>
+		,<include refid="communitySupplyBase.queryHead_AppendTable"/>
+		FROM t_community_supply_company CSC
+		LEFT JOIN t_community_supply_belong CSB on CSB.t_community_supply_company_f_id = CSC.f_id and CSB.f_audit_status = 2 and CSB.f_sys0_del_state = 0
+		LEFT JOIN t_community_supply CS ON CS.f_id = CSB.f_community_supply_id and CS.f_sys0_del_state = 0
+		LEFT JOIN t_community_supply_type CST on CST.f_id = CS.t_community_supply_type_f_id
+    	WHERE 1=1 
+    	AND CSC.t_oms_user_f_id = #{omsUserId}
+    	<if test="supplyType != null and supplyType != '' "> and CST.f_name = #{supplyType} </if>
+    	<if test="supplyName != null and supplyName != '' "> and CSC.f_supply_name like CONCAT('%', #{supplyName}, '%') </if>
+    	<if test="auditStatus != null and auditStatus != '' "> and CSC.f_audit_status = #{auditStatus} </if>
+	</select>
+	<!-- 根据登录用户查找所属商家的店铺数量 -->
+	<select id="select_count_withCompany" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	select 	count(CSC.f_id)
+    	FROM t_community_supply_company CSC
+		LEFT JOIN t_community_supply_belong CSB on CSB.t_community_supply_company_f_id = CSC.f_id and CSB.f_audit_status = 2 and CSB.f_sys0_del_state = 0
+		LEFT JOIN t_community_supply CS ON CS.f_id = CSB.f_community_supply_id and CS.f_sys0_del_state = 0
+		LEFT JOIN t_community_supply_type CST on CST.f_id = CS.t_community_supply_type_f_id
+    	WHERE 1=1 
+    	<if test="isadmin !=null and isadmin == 0" >AND CSC.t_oms_user_f_id = #{omsUserId}</if>
+    	<if test="supplyType != null and supplyType != '' "> and CST.f_name = #{supplyType} </if>
+    	<if test="supplyName != null and supplyName != '' "> and CSC.f_supply_name like CONCAT('%', #{supplyName}, '%') </if>
+    	<if test="auditStatus != null and auditStatus != '' "> and CSC.f_audit_status = #{auditStatus} </if>
+    </select>
+    
+    <!-- 为解放区商家管理找出所屬店铺 列表-->
+    <select id="select_csEditList_forOmsUser" resultMap="communitySupplyEditEntity">
+		SELECT 	
+		<include refid="communitySupplyBase.queryHead_AppendTable"/>,
+		IFNULL(TCST.f_name,CST.f_name) supplyType,
+		IFNULL(TMP.f_supply_name,CS.f_name) supplyName,
+		IFNULL(TAB.f_id,AB.f_id) addressBlockId,
+		IFNULL(TAB.f_name,AB.f_name) blockName,
+		IFNULL(TAC.f_name,AC.f_name) cityName,
+		IFNULL(TAP.f_name,AP.f_name) provinceName,
+		IFNULL(TMP.f_audit_status,2) auditStatus,
+		IFNULL(TMP.f_address_detail,CS.f_address_detail) editAddressDetail,
+		TMP.f_audit_desc auditDesc,
+		GB.f_name groupBuildingName,
+		OU.f_nick_name belongUserName,
+		CSB.f_supply_company_phone belongUserPhone,
+		CSCC.f_id companyId,
+		CSCC.f_name companyName,
+		TMP.f_contect_phone tmpContectPhone,
+		TMP.f_id tmpId
+		FROM t_community_supply CS
+		INNER JOIN t_community_supply_type CST ON CST.f_id = CS.t_community_supply_type_f_id AND CST.f_sys0_del_state = 0
+		INNER JOIN t_community_supply_belong CSB ON CS.f_id = CSB.f_community_supply_id AND CSB.f_sys0_del_state = 0 AND CSB.f_audit_status=2
+		INNER JOIN t_community_supply_company CSCC ON CSB.t_community_supply_company_f_id=CSCC.f_id AND CSCC.f_sys0_del_state = 0
+		INNER JOIN t_group_building GB ON GB.f_id = CSB.f_group_building_id AND GB.f_sys0_del_state = 0
+		INNER JOIN t_user OU ON OU.f_id=CSB.f_claim_user_id
+		INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+		INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+		INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+		LEFT JOIN t_community_supply_tmp TMP ON TMP.t_community_supply_f_id=CS.f_id AND TMP.f_sys0_del_state=0 AND TMP.f_add_type=3
+		LEFT JOIN t_community_supply_type TCST ON TCST.f_id = TMP.t_community_supply_type_f_id AND TCST.f_sys0_del_state = 0
+		LEFT JOIN t_address_block TAB ON TMP.f_address_block_id = TAB.f_id  AND TAB.f_sys0_del_state = 0
+		LEFT JOIN t_address_city TAC ON TAB.t_city_f_id = TAC.f_id  AND TAC.f_sys0_del_state = 0
+		LEFT JOIN t_address_province TAP ON TAC.t_province_f_id = TAP.f_id  AND TAP.f_sys0_del_state = 0
+		WHERE CS.f_sys0_del_state=0 
+		AND CST.f_importance_level &gt;=1
+		<if test="isadmin !=null and isadmin == 0" >AND CSCC.t_oms_user_f_id=#{omsUserId}</if>
+    	<if test="csName != null and csName != '' "> and CS.f_name like CONCAT('%', #{csName}, '%') </if>
+    	<if test="cstId != null and cstId != '' "> and CST.f_id = #{cstId} </if>
+    	<if test="auditStatus != null and auditStatus != '' and auditStatus!=2"> and TMP.f_audit_status = #{auditStatus} </if>
+    	<if test="auditStatus != null and auditStatus != '' and auditStatus==2 "> and (TMP.f_audit_status = #{auditStatus} OR TMP.f_audit_status IS NULL) </if>
+    	order by CSB.f_sys0_upd_time DESC
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+    </select>
+    
+     <!-- 为解放区商家管理找出所屬店铺 列表-->
+    <select id="select_csEdit_byId" resultMap="communitySupplyEditEntity">
+    	SELECT 	
+		<include refid="communitySupplyBase.queryHead_AppendTable"/>,
+		<include refid="communitySupplyContectBase.queryHead_AppendTable"/>,
+		IFNULL(TCST.f_name,CST.f_name) supplyType,
+		IFNULL(TMP.f_supply_name,CS.f_name) supplyName,
+		IFNULL(TAB.f_id,AB.f_id) addressBlockId,
+		IFNULL(TAB.f_name,AB.f_name) blockName,
+		IFNULL(TAC.f_name,AC.f_name) cityName,
+		IFNULL(TAP.f_name,AP.f_name) provinceName,
+		IFNULL(TMP.f_audit_status,2) auditStatus,
+		IFNULL(TMP.f_address_detail,CS.f_address_detail) editAddressDetail,
+		TMP.f_audit_desc auditDesc,
+		GB.f_name groupBuildingName,
+		OU.f_nick_name belongUserName,
+		CSB.f_supply_company_phone belongUserPhone,
+		CSCC.f_id companyId,
+		CSCC.f_name companyName,
+		TMP.f_contect_phone tmpContectPhone,
+		TMP.f_id tmpId
+		FROM t_community_supply CS
+		INNER JOIN t_community_supply_type CST ON CST.f_id = CS.t_community_supply_type_f_id AND CST.f_sys0_del_state = 0
+		INNER JOIN t_community_supply_belong CSB ON CS.f_id = CSB.f_community_supply_id AND CSB.f_sys0_del_state = 0 AND CSB.f_audit_status=2
+		INNER JOIN t_community_supply_company CSCC ON CSB.t_community_supply_company_f_id=CSCC.f_id AND CSCC.f_sys0_del_state = 0
+		LEFT JOIN t_community_supply_contect CSC ON CSC.t_community_supply_f_id=CS.f_id AND CSC.f_sys0_del_state = 0
+		INNER JOIN t_group_building GB ON GB.f_id = CSB.f_group_building_id AND GB.f_sys0_del_state = 0
+		INNER JOIN t_user OU ON OU.f_id=CSB.f_claim_user_id
+		INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+		INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+		INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+		LEFT JOIN t_community_supply_tmp TMP ON TMP.t_community_supply_f_id=CS.f_id AND TMP.f_sys0_del_state=0 AND TMP.f_add_type=3
+		LEFT JOIN t_community_supply_type TCST ON TCST.f_id = TMP.t_community_supply_type_f_id AND TCST.f_sys0_del_state = 0
+		LEFT JOIN t_address_block TAB ON TMP.f_address_block_id = TAB.f_id  AND TAB.f_sys0_del_state = 0
+		LEFT JOIN t_address_city TAC ON TAB.t_city_f_id = TAC.f_id  AND TAC.f_sys0_del_state = 0
+		LEFT JOIN t_address_province TAP ON TAC.t_province_f_id = TAP.f_id  AND TAP.f_sys0_del_state = 0
+		WHERE CS.f_id = #{id}
+    </select>
+</mapper>

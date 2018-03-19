@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="alterPeriodSynTask" class="com.cnfantasia.server.ms.AlterPeriod.AlterPeriodSynTask" >
+	</bean>
+	<bean id="latefeeCalculateService" class="com.cnfantasia.server.commbusi.alterPeriod.service.LatefeeCalculateService"></bean>
+	
+	<bean id="alterPeriodService" class="com.cnfantasia.server.api.alterPeriodService.service.AlterPeriodService">
+		<property name="alterPeriodDataDetailBaseService" ref="alterPeriodDataDetailBaseService"/>
+		<property name="alterRoomHasFeeItemBaseService" ref="alterRoomHasFeeItemBaseService"/>
+		<property name="latefeeCalculateService" ref="latefeeCalculateService"/>
+	</bean>
+</beans>  

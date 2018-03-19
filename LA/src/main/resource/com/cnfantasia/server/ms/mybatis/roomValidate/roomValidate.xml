@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN: 门牌审核 t_room_validate -->
+<mapper namespace="roomValidate">
+	<resultMap type="com.cnfantasia.server.ms.roomValidate.entity.RoomValidateEntity" id="roomValidateEntity" extends="roomValidateBase.roomValidateBaseMap">
+	</resultMap>
+	
+	<!-- 根据 登录用户Id，找 所属 门牌信息  -->
+    <select id="select_rvList_ByOmsUserId" parameterType="java.util.Map" resultType="java.util.Map">
+		select concat(ap.f_name, ac.f_name, ab.f_name, gb.f_name,b.f_name, rr.f_num) as rvDesc, 
+		date_format(rv.f_sys0_add_time,'%Y-%m-%d %T') rvSubmitTime, rv.f_verify_status rvStatus, rv.f_id rvId, rv.f_user_id uId,
+		r.f_id rId, rr.f_id rrId 
+		from t_room_validate rv
+		inner join t_room r on r.f_id  = rv.t_room_f_id and  r.f_sys0_del_state = 0
+		inner join t_real_room rr on rr.f_id = r.t_real_room_f_id and rr.f_sys0_del_state = 0
+		inner join t_building b on b.f_id = rr.t_building_f_id and b.f_sys0_del_state = 0
+		inner join t_group_building gb on gb.f_id = b.t_group_building_f_id and gb.f_sys0_del_state = 0
+		inner join t_address_block ab on ab.f_id = gb.t_block_f_id and ab.f_sys0_del_state = 0
+		inner join t_address_city ac on ac.f_id = ab.t_city_f_id and ac.f_sys0_del_state = 0
+		inner join t_address_province ap on ap.f_id = ac.t_province_f_id and ap.f_sys0_del_state = 0
+		left join t_property_company pc on pc.f_id = gb.t_property_company_f_id and pc.f_sys0_del_state = 0
+		left join t_oms_user ou on ou.f_id = pc.f_admin_id and ou.f_sys0_del_state = 0
+		where 1 = 1 and rv.f_user_id !=-1
+		<if test="omsUserId != null and omsUserId != 1 ">  and pc.f_admin_id = #{omsUserId} </if> <!-- 管理员要看到所有 -->
+		<if test="rvStatus != null and rvStatus != '' ">  and rv.f_verify_status = #{rvStatus} </if> 
+		<if test="startTime != null and startTime != '' ">  and rv.f_sys0_add_time &gt;= #{startTime} </if> 
+		<if test="endTime != null and endTime != '' ">  and rv.f_sys0_add_time &lt;= #{endTime} </if> 
+		<if test="uId != null and uId != '' ">  and rv.f_user_id like CONCAT('%', #{uId} ,'%') </if> 
+		order by rv.f_sys0_add_time desc
+		<if test="_begin != null and _length != null "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<!-- 根据rommValidate的ID找到对应的信息，供审批人查看审核 -->
+	<select id="select_rm_forAudit" parameterType="java.lang.String" resultType="java.util.Map" >
+		select r.f_hua_id, concat(ap.f_name, ac.f_name, ab.f_name, gb.f_name, b.f_name, rr.f_num) as rvDesc , 
+		rv.f_sys0_add_time rvSubmitTime, rv.f_verify_status rvStatus, rv.f_id rvId, rv.f_verify_pic_url picURL,rv.f_verify_result_desc auditResultDesc,rv.f_user_id userId,
+		u.f_real_name userRealName, u.f_mobile userMobile, rr.f_id rrId, r.f_id rId
+		from t_room_validate rv
+		inner join t_room r on r.f_id  = rv.t_room_f_id and  r.f_sys0_del_state = 0
+		inner join t_real_room rr on rr.f_id = r.t_real_room_f_id and rr.f_sys0_del_state = 0
+		inner join t_building b on b.f_id = rr.t_building_f_id and b.f_sys0_del_state = 0
+		inner join t_group_building gb on gb.f_id = b.t_group_building_f_id and gb.f_sys0_del_state = 0
+		inner join t_address_block ab on ab.f_id = gb.t_block_f_id and ab.f_sys0_del_state = 0
+		inner join t_address_city ac on ac.f_id = ab.t_city_f_id and ac.f_sys0_del_state = 0
+		inner join t_address_province ap on ap.f_id = ac.t_province_f_id and ap.f_sys0_del_state = 0
+		inner join t_user u on u.f_id = rv.f_user_id
+		where rv.f_id = #{_parameter};
+	</select>
+	
+	<!-- 审核通过 -->
+	<update id="update_roomValidate_forAuditPass">
+		update t_room_validate set f_verify_status = 4, f_verify_result_desc=#{auditResultDesc}, f_verify_succ_time = sysdate(), f_sys0_upd_time = sysDate(), f_sys0_upd_user = #{omsUserId}
+		where f_id = #{rvId}
+	</update>
+	
+	<!-- 审核通过，还要更新RealRoom表 -->
+	<update id="update_realRoom_forAudit">
+		update t_real_room set f_validate_user_id = #{userId}, f_validate_status =5, f_validate_time = sysDate(), f_validate_room_id = #{roomId}, f_sys0_upd_time = sysDate(), f_sys0_upd_user = #{omsUserId}
+		where f_id = #{rrId}
+	</update>
+	
+	<!-- 审核不通过 -->
+	<update id="update_roomValidate_forAuditNotPass">
+		update t_room_validate set f_verify_status = 3, f_verify_result_desc=#{auditNotPassResultDesc}, f_verify_succ_time = sysdate(), f_sys0_upd_time = sysDate(), f_sys0_upd_user = #{omsUserId}
+		where f_id = #{rvId}
+	</update>
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 支付配置 -->
+<mapper namespace="payConfig">
+	
+	<select id="select_PayConfig_HbPercent" parameterType="java.util.Map" resultType="java.lang.Double">
+		SELECT f_percent 
+		FROM t_pay_config_hb 
+		WHERE 1=1
+		AND f_sys0_del_state = 0 
+		AND f_type = #{orderType}
+	</select>
+
+	<!--根据小区id，查询支付宝配置信息-->
+	<select id="getDefaultAliPayInfo" parameterType="java.math.BigInteger" resultMap="propertyCompanyThirdPayCfgBase.propertyCompanyThirdPayCfgBaseMap">
+		SELECT
+			_tmp.*
+		FROM
+		(
+			(
+				SELECT
+					PCTPC.*
+				FROM
+					t_property_company_third_pay_cfg PCTPC
+					INNER JOIN t_group_building GB ON ((GB.t_property_management_f_id = PCTPC.t_pm_id and GB.t_property_company_f_id = PCTPC.t_pc_id)
+							or (GB.t_property_company_f_id = PCTPC.t_pc_id and PCTPC.t_pm_id is NULL))
+					INNER JOIN t_group_building_ext GBE ON GBE.f_id = #{gbId} AND GBE.f_pay_to_pc = 1
+				WHERE
+					GB.f_id = #{gbId}
+					AND PCTPC.f_open_status = 1
+					AND PCTPC.f_sys0_del_state = 0
+				ORDER BY
+					PCTPC.t_pm_id DESC
+				LIMIT 1
+			)
+			UNION
+			(
+				SELECT
+					PCTPC.*
+				FROM
+					t_property_company_third_pay_cfg PCTPC ORDER BY f_id ASC
+				LIMIT 1
+			)
+		)_tmp
+		 LIMIT 1;
+	</select>
+
+	<select id="getCarnumGbId" parameterType="java.math.BigInteger" resultType="java.math.BigInteger">
+		SELECT
+			IF (
+				cnpl.f_pay_num > 0,
+				cnl.t_group_building_f_id,
+				cnpl.t_group_building_f_id
+			) gbId
+		FROM
+			t_ebuy_order eo
+		INNER JOIN t_car_num_pay_log cnpl ON eo.f_id = cnpl.t_ebuy_order_id
+		INNER JOIN t_car_num_list cnl ON cnpl.t_car_num_id = cnl.f_id
+		WHERE
+			eo.f_id = #{orderId}
+		LIMIT 1
+	</select>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+	
+	<bean id="roomController" class="com.cnfantasia.server.api.room.web.RoomController">
+		<property name="roomService" ref="roomService" />
+		<!-- <property name="realRoomBaseService" ref="realRoomBaseService" /> -->
+		<property name="userBaseService" ref="userBaseService" />
+		<property name="fileServerService" ref="fileServerService" />
+		<property name="roomInfoPicParamParser" ref="roomInfoPicParamParser" />
+		<!-- <property name="userImageParamParser" ref="userImageParamParser"></property> -->
+		<property name="commEntityConvertService" ref="commEntityConvertService"></property>
+		<property name="commonRoomService" ref="commonRoomService"></property>
+		<property name="sysParamManager" ref="sysParamManager"></property>
+		
+		<property name="dualDao" ref="dualDao"></property>
+	</bean>
+	<bean id="groupBuildingController" class="com.cnfantasia.server.api.room.web.GroupBuildingController">
+		<property name="groupBuildingBaseService" ref="groupBuildingBaseService" />
+		
+	</bean>
+	<bean id="buildingController" class="com.cnfantasia.server.api.room.web.BuildingController">
+		<!-- <property name="buildingBaseService" ref="buildingBaseService" /> -->
+		<property name="commEntityConvertService" ref="commEntityConvertService" />
+		<property name="roomService" ref="roomService" />
+		
+	</bean>
+	<bean id="addressBlockController" class="com.cnfantasia.server.api.room.web.AddressBlockController">
+		<property name="addressBlockBaseService" ref="addressBlockBaseService" />
+		
+	</bean>
+	<bean id="addressCityController" class="com.cnfantasia.server.api.room.web.AddressCityController">
+		<property name="addressCityBaseService" ref="addressCityBaseService" />
+		<property name="roomService" ref="roomService" />
+		
+	</bean>
+	<bean id="addressProvinceController" class="com.cnfantasia.server.api.room.web.AddressProvinceController">
+		<property name="addressProvinceBaseService" ref="addressProvinceBaseService" />
+		
+	</bean>
+	
+	<!-- 门牌校验 -->
+	<bean id="roomValidateController" class="com.cnfantasia.server.api.room.web.RoomValidateController">
+		<property name="roomService" ref="roomService" />
+		<property name="fileServerService" ref="fileServerService" />
+		<property name="sysParamManager" ref="sysParamManager" />
+	</bean>
+</beans>  

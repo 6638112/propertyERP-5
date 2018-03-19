@@ -1,0 +1,276 @@
+package com.cnfantasia.server.api.login.web;
+
+import java.math.BigInteger;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.cnfantasia.server.api.login.service.ILoginService;
+import com.cnfantasia.server.api.loginNo.entity.LoginNoEntity;
+import com.cnfantasia.server.api.pub.BaseController;
+import com.cnfantasia.server.api.pub.constant.DictConstants;
+import com.cnfantasia.server.api.pub.constant.FocConstants;
+import com.cnfantasia.server.api.pub.header.HeaderManager;
+import com.cnfantasia.server.api.pub.session.SessionManager;
+import com.cnfantasia.server.api.pub.session.UserContext;
+import com.cnfantasia.server.api.pub.utils.MapConverter;
+import com.cnfantasia.server.api.room.entity.RoomEntity;
+import com.cnfantasia.server.apibase.loginNo.entity.LoginNo;
+import com.cnfantasia.server.apibase.loginNo.service.ILoginNoBaseService;
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+import com.cnfantasia.server.common.exception.ValidateRuntimeException;
+import com.cnfantasia.server.common.json.JsonResponse;
+import com.cnfantasia.server.common.utils.RandomUtils;
+import com.cnfantasia.server.common.utils.StringUtils;
+
+@Controller
+@RequestMapping("/login")
+public class LoginController extends BaseController{
+	private Log logger = LogFactory.getLog(getClass());
+	private static final String VALIDATE_CODE="validateCode";
+	private ILoginService loginService;
+	public void setLoginService(ILoginService loginService) {
+		this.loginService = loginService;
+	}
+	private ILoginNoBaseService loginNoBaseService;
+	public void setLoginNoBaseService(ILoginNoBaseService loginNoBaseService) {
+		this.loginNoBaseService = loginNoBaseService;
+	}
+	
+	/**
+	 * 获取验证码
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getValidateCode.json")
+	@ResponseBody
+	public JsonResponse getValidateCode(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		String mobile = request.getParameter("mobile");
+		String type = request.getParameter("type");
+		//校验
+		if(DictConstants.LoginType.MOBILE_VALICODE.equals(type)){
+			//校验手机号是否已经注册
+			LoginNo loginNo = new LoginNo();
+			loginNo.setNo(mobile);
+			int count = loginNoBaseService.getLoginNoCount(MapConverter.toMap(loginNo));
+			if(count<=0){
+				throw new ValidateRuntimeException("login.getValidateCode.MOBILE_VALICODE.notRegist.error");
+			}
+		}else if(DictConstants.LoginType.MAIL.equals(type)||DictConstants.LoginType.MOBILE.equals(type)){
+			
+		}else{
+			throw new ValidateRuntimeException("login.getValidateCode.unkonwnType.error");
+		}
+		//2.交互
+		//生产6位数字的随机短信验证码
+		String validateCode=RandomUtils.createRandom(true, 6);
+		//3.结果处理
+		boolean msgSendRes = loginService.sendMsg(mobile,validateCode);
+		if(!msgSendRes){
+			throw new ValidateRuntimeException("login.getValidateCode.get.error");
+		}else{
+			logger.debug("valicode for "+mobile+" is "+validateCode+"。");
+			SessionManager.getSession().setAttribute(VALIDATE_CODE, validateCode);
+			SessionManager.getSession().setAttribute("type", type);
+			//TODO ..临时测试加上,上线时需删除
+			jsonResponse.putData("code", validateCode);
+		}
+		return jsonResponse;
+	}
+	/**
+	 * 注册
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/regist.json")
+	@ResponseBody
+	public JsonResponse regist(HttpServletRequest request){
+//		Enumeration params = request.getParameterNames();
+//		while(params.hasMoreElements()){
+//			String name = (String)params.nextElement();
+//			System.out.println(name+"="+request.getParameter(name));
+//		}
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		Long regType = Long.parseLong(request.getParameter("regType"));//注册方式
+		String account = request.getParameter("mobile");//接收短信验证码的手机号
+		String verifyCode = request.getParameter("verifyCode");//验证码
+//		String subChannelId = HeaderManager.getSubChannelId();//注册媒介
+		String utmCampaign = request.getParameter("utmCampaign");//用户注册参加的活动
+		String utmContent = request.getParameter("utmContent");//推广内容
+		String inviteNo = request.getParameter("inviteNo");//邀请码
+		String deviceId = request.getParameter("deviceId");//设备Id TODO 作用？用于从临时表中获取抽奖记录信息
+		//2.交互
+		//校验验证码是否正确
+		if(!verifyCode.equals(SessionManager.getSession().getAttribute(VALIDATE_CODE))){
+			throw new ValidateRuntimeException("login.regist.valicodeCheck.failed");
+		}
+		//校验账号是否已被注册
+		LoginNo loginNo = new LoginNo();
+		loginNo.setType(regType);
+		loginNo.setNo(account);
+		int existCount = loginNoBaseService.getLoginNoCount(MapConverter.toMap(loginNo));
+		if(existCount>0){
+			throw new ValidateRuntimeException("login.regist.loginNoCheck.failed");
+		}
+		//注册
+		LoginNoEntity loginRes = loginService.regist(account, regType, Long.parseLong(HeaderManager.getSubChannelId()), utmCampaign, utmContent, inviteNo);
+		//3.结果处理
+		return afterLoginCheck(loginRes);
+	}
+	
+	@RequestMapping("/doLogin.json")
+	@ResponseBody
+	public JsonResponse doLogin(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		String number = request.getParameter("number");
+		String password = request.getParameter("password");
+		Long loginType = Long.parseLong(request.getParameter("loginType"));
+		//数据验证
+		if(DictConstants.LoginType.MOBILE_VALICODE==loginType){//手机短信验证码登录
+			//校验验证码是否正确
+			String verifyCode = password;//验证码
+			if(!verifyCode.equals(SessionManager.getSession().getAttribute(VALIDATE_CODE))){
+				throw new ValidateRuntimeException("login.doLogin.checkValicode.error");
+			}
+		}else if(DictConstants.LoginType.MOBILE==loginType||DictConstants.LoginType.MAIL==loginType){
+			
+		}else{//登录方式不正确
+			throw new ValidateRuntimeException("login.doLogin.valiLoginType.error");
+		}
+		//2.交互
+		LoginNoEntity loginRes = loginService.login(number, password, loginType);
+		//3.结果处理
+		jsonResponse = afterLoginCheck(loginRes);
+		return jsonResponse;
+	}
+	/**
+	 * 找回方式，获取随机密码
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/doForgetPwd.json")
+	@ResponseBody
+	public JsonResponse doForgetPwd(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		Long backType = Long.parseLong(request.getParameter("backType"));
+		String number = request.getParameter("number");
+		String verifyCode = request.getParameter("verifyCode");
+		//2.交互
+		//校验验证码是否正确
+		if(!verifyCode.equals(SessionManager.getSession().getAttribute(VALIDATE_CODE))){
+			throw new ValidateRuntimeException("login.valicode.check.error");
+		}else{
+			//随机生产6位密码
+			String tmpPasswd=RandomUtils.createRandom(true, 6);
+			logger.debug("Forget passwd result is: account="+number+",passwd="+tmpPasswd+"。");
+			//更改数据库密码信息,并发送邮件或短信
+			boolean setNewPwdRes= loginService.setNewPassword(number, tmpPasswd,backType);
+			if(!setNewPwdRes){
+				throw new BusinessRuntimeException("login.password.forget.failed");
+			}
+			
+		}
+		//3.结果处理
+		return jsonResponse;
+	}
+	/**
+	 * 找回方式，设置指定密码
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/setNewPwd.json")
+	@ResponseBody
+	public JsonResponse setNewPwd(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		Long backType = Long.parseLong(request.getParameter("backType"));
+		String number = request.getParameter("number");
+		String verifyCode = request.getParameter("verifyCode");
+		String password = request.getParameter("password");
+		//2.交互
+		//校验验证码是否正确
+		if(!verifyCode.equals(SessionManager.getSession().getAttribute(VALIDATE_CODE))){
+			throw new ValidateRuntimeException("login.valicode.check.error");
+		}else{
+			//更改数据库密码信息,并发送邮件或短信
+			boolean setNewPwdRes= loginService.setNewPassword(number, password,backType);
+			if(!setNewPwdRes){
+				throw new BusinessRuntimeException("login.password.setnew.failed");
+			}
+			
+		}
+		//3.结果处理
+		return jsonResponse;
+	}
+	/**
+	 * 登录后，修改密码
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/resetPwd.json")
+	@ResponseBody
+	public JsonResponse changePwd(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		String password = request.getParameter("password");
+		String oldPassword = request.getParameter("oldPassword");
+		//2.交互
+		//获取登录用户信息
+		String userId = UserContext.getOperId();
+		if(StringUtils.isEmpty(userId)){
+			throw new BusinessRuntimeException("login.password.reset.failed");
+		}else{
+			BigInteger id = new BigInteger(userId);
+			//验证旧密码是否正确
+			if(!loginService.validatePwdByUserId(id, oldPassword)){
+				throw new BusinessRuntimeException("login.password.oldpwd.wrong");
+			}
+			//更改数据库密码信息
+			boolean setNewPwdRes= loginService.changePassword(id, password);
+			if(!setNewPwdRes){
+				throw new BusinessRuntimeException("login.password.update.failed");
+			}
+		}
+		//3.结果处理
+		return jsonResponse;
+	}
+	
+	
+	/**
+	 * 成功获取登录信息后的处理
+	 * @param obj
+	 * @return
+	 */
+	private JsonResponse afterLoginCheck(LoginNoEntity obj){
+		JsonResponse jsonResponse = new JsonResponse();
+		if(obj==null){
+			throw new BusinessRuntimeException("login.afterLoginCheck.failed");
+		}
+		//存入Session
+		UserContext.setCurrUser(obj);
+		jsonResponse.putData("realName", obj.getUserEntity().getRealName());
+		jsonResponse.putData("userId",  obj.getUserEntity().getId());
+		jsonResponse.putData("loginType", obj.getType());
+		jsonResponse.putData("imgProfile",obj.getUserEntity().getImgprofile());
+		jsonResponse.putData("defaultRoomId", obj.getUserEntity().getDefaultRoomId());
+		jsonResponse.putData("discount", 5);//TODO...待处理
+		RoomEntity defaultRoomEntity = obj.getUserEntity().getDefaultRoomEntity();
+		if(defaultRoomEntity!=null&&defaultRoomEntity.getAdmin().compareTo(obj.getUserEntity().getId())==0){
+			jsonResponse.putData("isAdmin", true);
+		}else{
+			jsonResponse.putData("isAdmin", false);
+		}
+		return jsonResponse;
+	}
+	
+}

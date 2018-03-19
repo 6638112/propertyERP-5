@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户表 t_group_building_bill_cycle -->
+<mapper namespace="billcycle">
+
+	<resultMap type="com.cnfantasia.server.ms.groupBuildingBillCycle.entity.GroupBuildingBillCycleEntity" id="select_billcycle_forList_Map">
+		<result column="GBBCid" javaType="java.math.BigInteger" property="id" />
+		<result column="GBBCtGroupBuildingId" javaType="java.math.BigInteger" property="tGroupBuildingId" />
+		<result column="GBBCtPayBillTypeId" javaType="java.math.BigInteger" property="tPayBillTypeId" />
+		<result column="GBBCtPayBillTimeCfgId" javaType="java.math.BigInteger" property="tPayBillTimeCfgId" />
+		<result column="GBBCbillMonth" javaType="java.lang.String" property="billMonth" />
+		<result column="GBBCbillPayStart" javaType="java.lang.String" property="billPayStart" />
+		<result column="GBBCbillPayEnd" javaType="java.lang.String" property="billPayEnd" />
+		<result column="GBBCbillMonthStart" javaType="java.lang.String" property="billMonthStart" />
+		<result column="GBBCbillMonthEnd" javaType="java.lang.String" property="billMonthEnd" />
+		<result column="GBBCpaytimeType" javaType="java.lang.Integer" property="paytimeType" />
+		<result column="groupBuildingName" javaType="java.lang.String" property="groupBuildingName" />
+		<result column="billName" javaType="java.lang.String" property="billName" />
+		<result column="GBBCbillMonthStr" javaType="java.lang.String" property="billMonthStr" />
+		<result column="GBBCbillMonthStartStr" javaType="java.lang.String" property="billMonthStartStr" />
+		<result column="GBBCbillMonthEndStr" javaType="java.lang.String" property="billMonthEndStr" />
+		<result column="operateStatus" javaType="java.lang.Integer" property="operateStatus" />
+		<result column="pcId" javaType="java.math.BigInteger" property="pcId" />
+		<result column="pmId" javaType="java.math.BigInteger" property="pmId" />
+		<result column="feeType" javaType="java.lang.String" property="feeType" />
+		<result column="fixedFeeStatus" javaType="java.lang.Integer" property="fixedFeeStatus" />
+		<result column="meterFeeStatus" javaType="java.lang.Integer" property="meterFeeStatus" />
+		<result column="tempFeeStatus" javaType="java.lang.Integer" property="tempFeeStatus" />
+		<result column="hasPayBillNum" javaType="java.lang.Integer" property="hasPayBillNum" />
+		<result column="chargingMode" javaType="java.lang.Integer" property="chargingMode" />
+		<result column="gbbcCfgId" javaType="java.math.BigInteger" property="gbbcCfgId" />
+	</resultMap>
+
+    <!-- 分页查询 -->
+    <select id="select_billcycle_forList" parameterType="java.util.Map" resultMap="select_billcycle_forList_Map">
+		SELECT 
+			GBBC.f_id as GBBCid,
+			GBBC.t_group_building_id as GBBCtGroupBuildingId,
+			GBBC.t_pay_bill_type_id as GBBCtPayBillTypeId,
+			GBBC.t_pay_bill_time_cfg_id as GBBCtPayBillTimeCfgId,
+			date_format(GBBC.f_bill_month,'%Y年-%m月') as GBBCbillMonth,
+			date_format(GBBC.f_bill_pay_start,'%Y年-%m月-%d日') as GBBCbillPayStart,
+			date_format(GBBC.f_bill_pay_end,'%Y年-%m月-%d日') as GBBCbillPayEnd,
+			date_format(GBBC.f_bill_month_start,'%Y年-%m月') as GBBCbillMonthStart,
+			date_format(GBBC.f_bill_month_end,'%Y年-%m月') as GBBCbillMonthEnd,
+			date_format(GBBC.f_bill_month,'%Y-%m') as GBBCbillMonthStr,
+			date_format(GBBC.f_bill_month_start,'%Y-%m') as GBBCbillMonthStartStr,
+			date_format(GBBC.f_bill_month_end,'%Y-%m') as GBBCbillMonthEndStr,
+			GBBC.f_paytime_type as GBBCpaytimeType,
+			GBBC.f_operate_status as operateStatus,
+			GBBC.f_fee_type as feeType,
+			GB.f_name as groupBuildingName,
+			PBT.f_name as billName,
+			GB.t_property_management_f_id as pmId,
+			GB.t_property_company_f_id pcId,
+			(SELECT count(1) FROM  t_pay_bill pb WHERE pb.t_bill_cycle_id = GBBC.f_id AND pb.f_is_pay=1 AND pb.f_sys0_del_state=0 limit 1) AS hasPayBillNum,/*已缴拥有账单数量*/
+			GBBC.f_charging_mode AS chargingMode,
+		    GBBC.f_gbbc_cfg_id AS gbbcCfgId
+		FROM t_group_building_bill_cycle GBBC
+		INNER JOIN 
+			t_group_building GB ON GBBC.t_group_building_id = GB.f_id
+		INNER JOIN
+			t_pay_bill_type PBT ON GBBC.t_pay_bill_type_id = PBT.f_id
+		LEFT JOIN/*原来使用的是inner为了新旧兼容改为left：v349*/
+			t_pay_bill_time_cfg PBTC ON GBBC.t_pay_bill_time_cfg_id = PBTC.f_id
+		<!-- <if test="isPmUser !=null and isPmUser == 1" > 
+   			管理处账号只能看到它所管辖的小区，所以用inner join
+			INNER JOIN t_property_management PM on PM.f_id=GB.t_property_management_f_id and PM.f_sys0_del_state=0
+			INNER JOIN t_property_management_has_oms_user PMHOU on PM.f_id = PMHOU.t_property_management_f_id and PMHOU.f_sys0_del_state=0
+		</if>
+		<if test="isPmUser == 0">
+			LEFT JOIN t_property_management PM on PM.f_id=GB.t_property_management_f_id 
+		</if> -->
+   		LEFT JOIN t_property_company PC on GB.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+		WHERE 1=1
+		<if test="billName != null and billName != '' "> AND PBT.f_name =#{billName}</if><!-- 王冲要求精确匹配 -->
+		<!--v501不需要根据类型中的f_is_prop_fee进行判断，而是使用groupBuildingCycle中的feeType进行判断-->
+		<!--<choose> &lt;!&ndash; 账单类型 &ndash;&gt;
+			<when test="pbtType != null and pbtType == 3 ">
+				AND PBT.f_is_prop_fee = 3 &lt;!&ndash; 抄表类型 &ndash;&gt;
+			</when>
+			<otherwise>
+				AND PBT.f_is_prop_fee in (1,2)
+			</otherwise>
+		</choose>-->
+    	<if test="groupBuildingName != null and groupBuildingName != '' "> AND GB.f_name like CONCAT('%',#{groupBuildingName}, '%') </if><!-- 小区 -->
+    	<if test="gbId != null and gbId != '' "> AND GB.f_id = #{gbId} </if><!-- 小区Id -->
+		<include refid="permi.dataPermissionCondition"/>
+    	<if test="feeType != null and feeType != '' "> AND locate(#{feeType}, GBBC.f_fee_type) > 0 </if><!-- 收费模式 -->
+    	
+    	<if test="billCycleStart != null and !billCycleStart.equals('')">
+    	AND left(GBBC.f_bill_month_start, 7) >= #{billCycleStart}
+		</if>
+		<if test="billCycleEnd != null and !billCycleEnd.equals('')">
+		AND left(GBBC.f_bill_month_end, 7) &lt;= #{billCycleEnd}
+		</if>
+		
+		<if test="payTimeStart != null and !payTimeStart.equals('')">
+		AND left(GBBC.f_bill_pay_start, 10) >= #{payTimeStart}
+		</if>
+		<if test="payTimeEnd != null and !payTimeEnd.equals('')">
+		AND left(GBBC.f_bill_pay_end, 10) &lt;= #{payTimeEnd}
+		</if>
+			
+    	AND GBBC.f_sys0_del_state = 0
+    	AND GB.f_sys0_del_state = 0
+    	AND PBT.f_sys0_del_state = 0
+    	AND GB.f_sign_status = 1
+		AND GB.f_propfee_canpay = 1
+		AND (GBBC.f_charging_mode = 1 OR
+				(GBBC.f_charging_mode = 2 AND
+						(
+							date_format(SYSDATE(),'%Y-%m-%d') &gt;= date_format(GBBC.f_bill_pay_start,'%Y-%m-%d')
+						)
+				)
+			)
+		<if test="isAdmin ==null or isAdmin == 0">
+			<if test="isPmUser !=null and isPmUser == 0" >and PC.f_admin_id=#{adminId}</if>
+			<if test="isPmUser !=null and isPmUser == 1" >and PMHOU.t_oms_user_f_id=#{adminId}</if>
+		</if>
+    	ORDER BY GBBC.f_sys0_add_time DESC
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<select id="select_billcycle_by_id" parameterType="java.math.BigInteger" resultMap="select_billcycle_forList_Map">
+		SELECT 
+			GBBC.f_id as GBBCid,
+			GBBC.t_group_building_id as GBBCtGroupBuildingId,
+			GBBC.t_pay_bill_type_id as GBBCtPayBillTypeId,
+			GBBC.t_pay_bill_time_cfg_id as GBBCtPayBillTimeCfgId,
+			date_format(GBBC.f_bill_month,'%Y-%m') as GBBCbillMonth,
+			date_format(GBBC.f_bill_pay_start,'%Y-%m-%d') as GBBCbillPayStart,
+			date_format(GBBC.f_bill_pay_end,'%Y-%m-%d') as GBBCbillPayEnd,
+			date_format(GBBC.f_bill_month_start,'%Y-%m') as GBBCbillMonthStart,
+			date_format(GBBC.f_bill_month_end,'%Y-%m') as GBBCbillMonthEnd,
+			date_format(GBBC.f_bill_month,'%Y年-%m月') as GBBCbillMonthStr,
+			date_format(GBBC.f_bill_month_start,'%Y年-%m月') as GBBCbillMonthStartStr,
+			date_format(GBBC.f_bill_month_end,'%Y年-%m月') as GBBCbillMonthEndStr,
+			GBBC.f_paytime_type as GBBCpaytimeType,
+			GBBC.f_fee_type as feeType,
+			GB.f_name as groupBuildingName,
+			PBT.f_name as billName,
+			gbe.f_fixed_fee_status AS fixedFeeStatus,
+			gbe.f_meter_fee_status AS meterFeeStatus,
+			gbe.f_temp_fee_status AS tempFeeStatus
+		FROM t_group_building_bill_cycle GBBC
+		INNER JOIN 
+			t_group_building GB ON GBBC.t_group_building_id = GB.f_id
+		INNER JOIN
+			t_group_building_ext gbe ON GB.f_id = gbe.f_id
+		INNER JOIN
+			t_pay_bill_type PBT ON GBBC.t_pay_bill_type_id = PBT.f_id
+		WHERE 1=1
+    	AND GBBC.f_id = #{id}
+	</select>
+
+	<select id="is_has_billCycle_by_condition" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			COUNT(0)
+		FROM
+			t_group_building_bill_cycle GBBC
+		WHERE
+			GBBC.t_group_building_id = #{gbId}
+		AND GBBC.t_pay_bill_type_id = #{billTypeId}
+		AND (
+			(GBBC.f_bill_pay_start &lt;= str_to_date(#{billPayStart},'%Y-%m-%d %T') and GBBC.f_bill_pay_end >= str_to_date(#{billPayStart},'%Y-%m-%d %T'))
+			or 
+			(GBBC.f_bill_pay_start >= str_to_date(#{billPayStart},'%Y-%m-%d %T') and GBBC.f_bill_pay_end &lt;= str_to_date(#{billPayEnd},'%Y-%m-%d %T'))
+			or 
+			(GBBC.f_bill_pay_start >= str_to_date(#{billPayStart},'%Y-%m-%d %T')
+			 and GBBC.f_bill_pay_start &lt;= str_to_date(#{billPayEnd},'%Y-%m-%d %T')
+			 and GBBC.f_bill_pay_end >= str_to_date(#{billPayEnd},'%Y-%m-%d %T')
+			 )
+			or 
+			(GBBC.f_bill_pay_start &lt;= str_to_date(#{billPayStart},'%Y-%m-%d %T')
+			 and GBBC.f_bill_pay_start >= str_to_date(#{billPayEnd},'%Y-%m-%d %T')
+			 and GBBC.f_bill_pay_end &lt;= str_to_date(#{billPayEnd},'%Y-%m-%d %T')
+			 )
+			 OR GBBC.f_bill_month = str_to_date(#{billMonth},'%Y-%m-%d %T')
+		)
+		<if test="id != null">
+           AND GBBC.f_id != #{id}
+        </if>
+        AND GBBC.f_sys0_del_state = 0
+	</select>
+	
+	<select id="is_has_billPeriod_by_condition" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(0) from t_group_building_bill_cycle  
+		where t_group_building_id = #{gbId} 
+		and t_pay_bill_type_id = #{billTypeId} 
+		and (
+			(	f_bill_month_start &lt;= str_to_date(#{billMonthStart},'%Y-%m-%d %T') 
+				and f_bill_month_end >= str_to_date(#{billMonthEnd},'%Y-%m-%d %T')
+			)
+			or 
+			(	f_bill_month_start >= str_to_date(#{billMonthStart},'%Y-%m-%d %T') 
+				and f_bill_month_end &lt;= str_to_date(#{billMonthEnd},'%Y-%m-%d %T')
+			)
+			or 
+			(
+				f_bill_month_start >= str_to_date(#{billMonthStart},'%Y-%m-%d %T')
+				and f_bill_month_start &lt;= str_to_date(#{billMonthEnd},'%Y-%m-%d %T')
+				and f_bill_month_end >= str_to_date(#{billMonthEnd},'%Y-%m-%d %T')
+			 )
+			or 
+			(
+				 f_bill_month_start &lt;= str_to_date(#{billMonthStart},'%Y-%m-%d %T')
+				 and f_bill_month_end >= str_to_date(#{billMonthStart},'%Y-%m-%d %T')
+				 and f_bill_month_end &lt;= str_to_date(#{billMonthEnd},'%Y-%m-%d %T')
+			 )
+			 or
+			(
+				f_bill_pay_start &lt;= str_to_date(#{billPayStart},'%Y-%m-%d %T') 
+				and f_bill_pay_end >= str_to_date(#{billPayEnd},'%Y-%m-%d %T'))
+			or 
+			(	f_bill_pay_start >= str_to_date(#{billPayStart},'%Y-%m-%d %T') 
+				and f_bill_pay_end &lt;= str_to_date(#{billPayEnd},'%Y-%m-%d %T')
+			)
+			or 
+			(
+				 f_bill_pay_start >= str_to_date(#{billPayStart},'%Y-%m-%d %T')
+				 and f_bill_pay_start &lt;= str_to_date(#{billPayEnd},'%Y-%m-%d %T')
+				 and f_bill_pay_end >= str_to_date(#{billPayEnd},'%Y-%m-%d %T')
+			 )
+			or 
+			(
+				 f_bill_pay_start &lt;= str_to_date(#{billPayStart},'%Y-%m-%d %T')
+				 and f_bill_pay_end >= str_to_date(#{billPayStart},'%Y-%m-%d %T')
+				 and f_bill_pay_end &lt;= str_to_date(#{billPayEnd},'%Y-%m-%d %T')
+			 )
+			)
+		<if test="id != null">
+           AND f_id != #{id}
+        </if>
+	</select>
+	
+	<update id="delete_billcycle_by_id" parameterType="java.util.Map">
+		UPDATE t_pay_bill PB 
+		LEFT JOIN t_real_room_has_mr_last_record rrlr on rrlr.t_real_room_f_id = PB.t_real_room_f_id
+		SET PB.f_sys0_del_state = 1, PB.f_sys0_del_time=SYSDATE(), rrlr.f_last_record = 0, rrlr.f_last_upd_time = SYSDATE(),PB.f_sys0_del_user=#{userId} <!-- 顺便要清除上期读数 added by wenfq 2016-12-30 -->
+		WHERE 
+			1 = 1
+		AND PB.t_real_room_f_id
+		AND PB.f_is_pay = 2
+		AND (PB.f_finance_status = 0 OR PB.f_finance_status IS NULL)
+		AND PB.t_real_room_f_id IN 
+        <foreach item="item" collection="roomList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		AND PB.f_bank_collection_status != 1/*托收中账单不清除*/
+		AND PB.t_bill_cycle_id = #{billCycleId};
+		/*解决：选择周期账单删除状态初始为1的问题。其他缴费在删除账单时需要把订单账单表中的状态改变，这样客户端才会生成新的订单。（因为选择周期缴费去除了公共代码里面的t_pay_bill.f_sys0_del_state=0的限制条件）*/
+		UPDATE t_ebuy_order_has_t_pay_bill EOHPB, t_pay_bill PB SET EOHPB.f_sys0_del_state = 1, EOHPB.f_sys0_del_user=#{userId},
+			EOHPB.f_sys0_del_time = SYSDATE()
+		WHERE PB.f_id = EOHPB.t_pay_bill_f_id
+			AND PB.t_bill_cycle_id = #{billCycleId}
+			AND PB.f_is_pay = 2
+			AND (PB.f_finance_status = 0 OR PB.f_finance_status IS NULL)
+			AND PB.t_real_room_f_id IN
+			<foreach item="item" collection="roomList" open="(" separator="," close=")">
+				#{item}
+			</foreach>;
+    </update>
+    
+    <resultMap type="com.cnfantasia.server.api.paybill.entity.PayBillCycle" id="selectPayBillForBillCycle_Map">
+		<result column="billTypeId" javaType="java.math.BigInteger" property="billTypeId" />
+		<result column="billTimeCfgId" javaType="java.math.BigInteger" property="billTimeCfgId" />
+		<result column="gbId" javaType="java.math.BigInteger" property="gbId" />
+		<result column="billMonth" javaType="java.lang.String" property="billMonth" />
+		<result column="billMonthStart" javaType="java.lang.String" property="billMonthStart" />
+		<result column="billMonthEnd" javaType="java.lang.String" property="billMonthEnd" />
+		<result column="payStart" javaType="java.lang.String" property="payStart" />
+		<result column="payEnd" javaType="java.lang.String" property="payEnd" />
+		<result column="paytimeType" javaType="java.lang.Integer" property="paytimeType" />
+	</resultMap>
+	<select id="select_pay_bill_for_bill_cycle_month" resultMap="selectPayBillForBillCycle_Map">
+		SELECT
+		  DISTINCT
+			PB.f_bill_type_id as billTypeId,
+			PB.f_bill_time_cfg_id as billTimeCfgId,
+			IFNULL(PB.f_bill_month,PB.f_month) as billMonth,
+			PB.f_paytime_type as paytimeType,
+			gb.f_id as gbId
+		FROM
+			t_pay_bill PB
+			INNER JOIN 
+			t_real_room RR ON RR.f_id = PB.t_real_room_f_id
+			INNER	JOIN
+			t_building b ON b.f_id = RR.t_building_f_id AND b.f_sys0_del_state = 0
+			INNER JOIN
+			t_group_building gb ON gb.f_id = b.t_group_building_f_id AND gb.f_sys0_del_state = 0
+		WHERE
+			PB.f_paytime_type = 1
+		AND PB.f_is_pay = 2
+		AND PB.f_sys0_del_state = 0
+		GROUP BY
+			PB.t_real_room_f_id,
+			PB.f_bill_type_id,
+			PB.f_bill_time_cfg_id,
+			PB.f_bill_month,
+			PB.f_paytime_type
+		ORDER BY PB.f_month DESC
+	</select>
+	<select id="select_pay_bill_for_bill_cycle_period" resultMap="selectPayBillForBillCycle_Map">
+		SELECT
+		  DISTINCT
+			PB.f_bill_type_id as billTypeId,
+			PB.f_bill_time_cfg_id as billTimeCfgId,
+			PB.f_bill_month_start as billMonthStart,
+			PB.f_bill_month_end as billMonthEnd,
+			PB.f_paytime_type as paytimeType,
+			PB.f_pay_day_start as payStart,
+			PB.f_pay_day_end as payEnd,
+			gb.f_id as gbId
+		FROM
+			t_pay_bill PB
+			INNER JOIN 
+			t_real_room RR ON RR.f_id = PB.t_real_room_f_id
+			INNER	JOIN
+			t_building b ON b.f_id = RR.t_building_f_id AND b.f_sys0_del_state = 0
+			INNER JOIN
+			t_group_building gb ON gb.f_id = b.t_group_building_f_id AND gb.f_sys0_del_state = 0
+		WHERE
+			PB.f_paytime_type = 2
+		AND PB.f_is_pay = 2
+		AND PB.f_sys0_del_state = 0
+		GROUP BY
+			PB.t_real_room_f_id,
+			PB.f_bill_type_id,
+			PB.f_bill_time_cfg_id,
+			PB.f_bill_month_start,
+			PB.f_bill_month_end,
+			PB.f_paytime_type,
+			PB.f_pay_day_start,
+			PB.f_pay_day_end
+		ORDER BY PB.f_month DESC
+	</select>
+
+	<select id="getNeedCreateBillRealRoom" parameterType="java.util.Map" resultType="com.cnfantasia.server.domainbase.realRoom.entity.RealRoom">
+		SELECT rr.f_id as id, rr.t_property_proprietor_f_id as tPropertyProprietorFId FROM t_real_room rr
+		INNER JOIN t_building b ON rr.t_building_f_id = b.f_id AND b.f_check_status in (1,9)
+		INNER JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id AND gb.f_id = #{gbId}
+		WHERE rr.f_check_status in (1,9) AND rr.f_id not in(
+			SELECT pb.t_real_room_f_id FROM t_pay_bill pb WHERE pb.t_bill_cycle_id = #{cycleId} AND pb.f_sys0_del_state = 0
+		);
+	</select>
+
+	<update id="freeze_billcycle_by_type_id" parameterType="java.util.Map">
+		UPDATE t_group_building_bill_cycle
+		SET f_operate_status = #{operateStatus}
+		WHERE
+			t_group_building_id = #{gbId}
+		AND t_pay_bill_type_id = #{billTypeId}
+		AND f_sys0_del_state = 0;
+	</update>
+
+    <select id="getGroupBuildingBillCycleByTypeId" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT f_id AS id FROM t_group_building_bill_cycle WHERE t_group_building_id = #{gbId} AND t_pay_bill_type_id = #{payBillTypeId} AND f_sys0_del_state = 0;
+	</select>
+
+	<update id="updatePayBillByCycleIds" parameterType="java.util.List">
+		UPDATE t_pay_bill SET f_sys0_del_state = 1 WHERE f_is_pay = 2 AND t_bill_cycle_id IN
+		<foreach collection="list" item="item" open="(" separator="," close=")" index="i">
+			#{item}
+		</foreach>;
+	</update>
+
+	<delete id="deleteFeeDetailTempByCycleAndGb" parameterType="java.util.Map">
+		UPDATE t_property_fee_detail_temp SET f_sys0_del_state=1 WHERE t_gb_id=#{gbId} AND t_bill_cycle_id=#{cycleId} AND f_type =#{type};
+	</delete>
+</mapper>

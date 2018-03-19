@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 文案信息模块 -->
+<mapper namespace="operation">
+
+	<!-- LRU 最新最少使用, FIFO先进先出-->
+	<cache
+		eviction="FIFO"
+		flushInterval="300000"
+		size="512"
+		readOnly="true"/>
+	
+	<!-- 手动调用清除缓存使用 -->
+	<select id="cleanCache" resultType="long" useCache="false" flushCache="true">
+    	select 1
+    </select>
+	
+	<resultMap type="com.cnfantasia.server.api.operation.entity.OperationConstantDataEntity" id="operationConstantDataEntity_MapAppend"
+		extends="operationConstantDataBase.operationConstantDataBaseMap_AppendTable">
+	</resultMap>
+	<!-- 根据编码查询对应的文案信息 -->
+	<select id="select_OperationConstantData_Multi" parameterType="java.util.Map" 
+		resultMap="operationConstantDataEntity_MapAppend" useCache="true">
+		SELECT <include refid="operationConstantDataBase.queryHead_AppendTable"/>
+		FROM t_operation_constant_data OCD
+    	WHERE 1=1
+    	AND OCD.f_sys0_del_state = 0
+    	AND OCD.f_code IN
+    	<foreach item="item" collection="codeList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+		
+	<resultMap type="com.cnfantasia.server.api.operation.entity.AddressIdEntity" id="addressIdEntity_Map">
+		<result column="countryId" property="countryId" javaType="java.math.BigInteger"/>
+		<result column="provinceId" property="provinceId" javaType="java.math.BigInteger"/>
+		<result column="cityId" property="cityId" javaType="java.math.BigInteger"/>
+		<result column="blockId" property="blockId" javaType="java.math.BigInteger"/>
+		<result column="gbId" property="gbId" javaType="java.math.BigInteger"/>
+	</resultMap>
+	<select id="select_addressIdEntity_ByGbId" parameterType="java.math.BigInteger" resultMap="addressIdEntity_Map" useCache="true">
+		SELECT ACC.f_id AS countryId,AP.f_id AS provinceId,AC.f_id AS cityId,AB.f_id AS blockId,GB.f_id AS gbId
+		FROM t_group_building GB
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+			INNER JOIN t_address_country ACC ON AP.t_address_country_f_id = ACC.f_id AND ACC.f_sys0_del_state = 0
+		WHERE 1=1
+		AND GB.f_sys0_del_state = 0
+		AND GB.f_id = #{_parameter}
+	</select>
+	<select id="select_addressIdEntity_ByBlockId" parameterType="java.math.BigInteger" resultMap="addressIdEntity_Map" useCache="true">
+		SELECT ACC.f_id AS countryId,AP.f_id AS provinceId,AC.f_id AS cityId,AB.f_id AS blockId
+		FROM t_address_block AB
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+			INNER JOIN t_address_country ACC ON AP.t_address_country_f_id = ACC.f_id AND ACC.f_sys0_del_state = 0
+		WHERE 1=1
+		AND AB.f_sys0_del_state = 0
+		AND AB.f_id = #{_parameter}
+	</select>
+	<select id="select_addressIdEntity_ByCityId" parameterType="java.math.BigInteger" resultMap="addressIdEntity_Map" useCache="true">
+		SELECT ACC.f_id AS countryId,AP.f_id AS provinceId,AC.f_id AS cityId
+		FROM t_address_city AC
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+			INNER JOIN t_address_country ACC ON AP.t_address_country_f_id = ACC.f_id AND ACC.f_sys0_del_state = 0
+		WHERE 1=1
+		AND AC.f_sys0_del_state = 0
+		AND AC.f_id = #{_parameter}
+	</select>
+	<select id="select_addressIdEntity_ByProvinceId" parameterType="java.math.BigInteger" resultMap="addressIdEntity_Map" useCache="true">
+		SELECT ACC.f_id AS countryId,AP.f_id AS provinceId
+		FROM t_address_province AP
+			INNER JOIN t_address_country ACC ON AP.t_address_country_f_id = ACC.f_id AND ACC.f_sys0_del_state = 0
+		WHERE 1=1
+		AND AP.f_sys0_del_state = 0
+		AND AP.f_id = #{_parameter}
+	</select>
+	
+	<!-- 根据编码查询对应的记录Id,已用缓存实现 -->
+	<!-- <select id="select_CodeId_List" parameterType="java.util.List" resultType="java.math.BigInteger"  useCache="true">
+		SELECT OSA.f_id
+		FROM ( 
+			<foreach collection="list" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item} uniqueCode
+			</foreach>
+			) A_tmp
+		INNER JOIN t_operation_service_area OSA ON OSA.f_sys0_del_state = 0
+			AND OSA.f_address_unique = A_tmp.uniqueCode
+		WHERE 1=1
+	</select> -->
+	
+	<!-- 查询所有的可用服务范围数据 -->
+	<select id="select_OperationServiceArea_All" resultMap="operationServiceAreaBase.operationServiceAreaBaseMap_AppendTable" useCache="false">
+		SELECT <include refid="operationServiceAreaBase.queryHead_AppendTable"/>
+		FROM t_operation_service_area OSA
+   	 	WHERE 1=1
+		AND OSA.f_sys0_del_state = 0
+	</select>
+	
+	<!-- demo-查询商家列表 -->
+	<select id="select_EbuySupplyMerchant_List" parameterType="java.util.List" resultMap="ebuySupplyMerchantBase.ebuySupplyMerchantBaseMap_AppendTable" useCache="true">
+		SELECT <include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>
+		FROM ( 
+			<foreach collection="list" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item} saId
+			</foreach>
+			) A_tmp
+		INNER JOIN t_operation_sa_has_eb_supply OSHES ON OSHES.f_sys0_del_state = 0
+			AND OSHES.f_type = 1 <!-- 运营数据类型=={"1":"电商商家","2":"街坊广告"} -->
+			AND OSHES.f_sa_id = A_tmp.saId
+		INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_sys0_del_state = 0
+			AND ESM.f_id = OSHES.f_eb_supply_id
+		WHERE 1=1
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.operation.entity.CommunityAdsWithRela" id="CommunityAdsWithRela_Append_Map"
+		extends="communityAdsBase.communityAdsBaseMap">
+		<result column="ext_relation" javaType="java.lang.Integer" property="relation"/><!-- 包含关系 -->
+	</resultMap>
+	<!-- 查询街坊广告列表 -->
+	<select id="select_CommunityAds_List" parameterType="java.util.List" resultMap="CommunityAdsWithRela_Append_Map" useCache="true">
+		SELECT <include refid="communityAdsBase.queryHead"/>
+			,OSHES.f_relation AS ext_relation
+		FROM (
+			<foreach collection="list" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item} saId
+			</foreach>
+		) A_tmp
+		INNER JOIN t_operation_sa_has_eb_supply OSHES ON OSHES.f_sys0_del_state = 0
+			AND OSHES.f_type = 2 <!-- 运营数据类型=={"1":"电商商家","2":"街坊广告"} -->
+			AND OSHES.f_sa_id = A_tmp.saId
+		INNER JOIN t_community_ads CA ON CA.f_sys0_del_state = 0
+			AND CA.f_id = OSHES.f_eb_supply_id
+			AND NOW() >= CA.f_start_time
+			AND CA.f_end_time > NOW()
+		WHERE 1=1
+		ORDER BY CA.f_order ASC
+		LIMIT 0,4
+	</select>
+	
+	<!-- 查询街坊广告列表 -->
+	<select id="select_CommunityAds_List2" parameterType="java.util.Map" resultMap="CommunityAdsWithRela_Append_Map" useCache="true">
+		SELECT <include refid="communityAdsBase.queryHead"/>
+			,OSHES.f_relation AS ext_relation
+		FROM (
+			<foreach collection="list" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item} saId
+			</foreach>
+		) A_tmp
+		INNER JOIN t_operation_sa_has_eb_supply OSHES ON OSHES.f_sys0_del_state = 0
+			AND OSHES.f_type = 2 <!-- 运营数据类型=={"1":"电商商家","2":"街坊广告"} -->
+			AND OSHES.f_sa_id = A_tmp.saId
+		INNER JOIN t_community_ads CA ON CA.f_sys0_del_state = 0
+			AND CA.f_id = OSHES.f_eb_supply_id
+			AND NOW() >= CA.f_start_time
+			AND CA.f_end_time > NOW()
+			<if test="version != null">
+			  AND (#{version} BETWEEN ifnull(CA.f_min_version, 0) and ifnull(CA.f_max_version, 9999))
+			</if>
+		WHERE 1=1
+		ORDER BY CA.f_order DESC
+		LIMIT 0,4
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.operation.entity.OperationHomeSupplyTypeWithRela" id="OperationHomeSupplyTypeWithRela_Append_Map"
+		extends="operationHomeSupplyTypeBase.operationHomeSupplyTypeBaseMap">
+		<result column="ext_relation" javaType="java.lang.Integer" property="relation"/><!-- 包含关系 -->
+	</resultMap>
+	<!-- 查询首页图标列表 -->
+	<select id="select_OperationHomeSupplyType_List" parameterType="java.util.Map" resultMap="OperationHomeSupplyTypeWithRela_Append_Map" useCache="true">
+		SELECT <include refid="operationHomeSupplyTypeBase.queryHead"/>
+			,OSHES.f_relation AS ext_relation
+		FROM (
+			<foreach collection="codeIdList" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item} saId
+			</foreach>
+		) A_tmp
+		INNER JOIN t_operation_sa_has_eb_supply OSHES ON OSHES.f_sys0_del_state = 0
+			AND OSHES.f_type = 3 <!-- 运营数据类型=={"1":"电商商家","2":"街坊广告","3":"首页动态图标"} -->
+			AND OSHES.f_sa_id = A_tmp.saId
+		INNER JOIN t_operation_home_supply_type OHST ON OHST.f_sys0_del_state = 0
+			AND OHST.f_id = OSHES.f_eb_supply_id
+		WHERE
+		(#{version} BETWEEN ifnull(OHST.f_version, 0) and ifnull(OHST.f_max_version, 99999))
+		AND (NOW() BETWEEN OHST.f_start_time AND OHST.f_end_time)
+		ORDER BY OHST.f_order DESC
+	</select>
+
+	<select id="getAddressIdEntity" parameterType="map" resultType="com.cnfantasia.server.api.operation.entity.AddressIdEntity">
+		select ac.f_id cityId, ab.f_id blockId, ap.f_id provinceId
+		from t_address_city ac
+		left join t_address_block ab on ac.f_id = ab.t_city_f_id and ac.f_sys0_del_state = 0
+		left join t_address_province ap on ap.f_sys0_del_state = 0 and ap.f_id = ac.t_province_f_id
+		where ab.f_sys0_del_state = 0 and ac.f_name like concat('%', #{city}, '%')
+		<if test="block != null and block != ''">
+			and ab.f_name like concat('%', #{block}, '%')
+		</if>
+		<if test="block == null">
+			and ab.f_id is null
+		</if>
+		limit 1
+	</select>
+
+</mapper>

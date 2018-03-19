@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:选择周期缴费优惠表 t_alter_period_prefer -->
+<mapper namespace="alterPeriodPreferBase">
+	<resultMap type="AlterPeriodPrefer" id="alterPeriodPreferBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_user_f_id" javaType="java.math.BigInteger" property="tUserFId"/>  <!-- 解放号 -->        <result column="t_pay_bill_id" javaType="java.math.BigInteger" property="tPayBillId"/>  <!-- 账单id（支付成功回写） -->        <result column="t_real_room_id" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!-- 真实房间id -->        <result column="f_pay_month" javaType="java.lang.Long" property="payMonth"/>  <!-- 缴费月数 -->        <result column="f_amount" javaType="java.lang.Long" property="amount"/>  <!-- 总金额（单位 -->        <result column="f_coupon_amount" javaType="java.lang.Long" property="couponAmount"/>  <!-- 优惠金额（单位 -->        <result column="f_operation_date" javaType="java.lang.String" property="operationDate"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AlterPeriodPrefer" id="alterPeriodPreferExtendMap" extends="alterPeriodPreferBaseMap">
+	</resultMap>
+	<resultMap type="AlterPeriodPrefer" id="alterPeriodPreferBaseMap_AppendTable">
+        <id column="APPid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="APPtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!-- 解放号 -->        <result column="APPtPayBillId" javaType="java.math.BigInteger" property="tPayBillId"/>  <!-- 账单id（支付成功回写） -->        <result column="APPtRealRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!-- 真实房间id -->        <result column="APPpayMonth" javaType="java.lang.Long" property="payMonth"/>  <!-- 缴费月数 -->        <result column="APPamount" javaType="java.lang.Long" property="amount"/>  <!-- 总金额（单位 -->        <result column="APPcouponAmount" javaType="java.lang.Long" property="couponAmount"/>  <!-- 优惠金额（单位 -->        <result column="APPoperationDate" javaType="java.lang.String" property="operationDate"/>  <!--  -->        <result column="APPsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="APPsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="APPsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="APPsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="APPsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="APPsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="APPsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AlterPeriodPrefer" id="alterPeriodPreferBaseMap_AppendTable1">
+        <id column="APP1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="APP1tUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!-- 解放号 -->        <result column="APP1tPayBillId" javaType="java.math.BigInteger" property="tPayBillId"/>  <!-- 账单id（支付成功回写） -->        <result column="APP1tRealRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!-- 真实房间id -->        <result column="APP1payMonth" javaType="java.lang.Long" property="payMonth"/>  <!-- 缴费月数 -->        <result column="APP1amount" javaType="java.lang.Long" property="amount"/>  <!-- 总金额（单位 -->        <result column="APP1couponAmount" javaType="java.lang.Long" property="couponAmount"/>  <!-- 优惠金额（单位 -->        <result column="APP1operationDate" javaType="java.lang.String" property="operationDate"/>  <!--  -->        <result column="APP1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="APP1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="APP1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="APP1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="APP1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="APP1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="APP1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		APP.f_id,APP.t_user_f_id,APP.t_pay_bill_id,APP.t_real_room_id,APP.f_pay_month,APP.f_amount,APP.f_coupon_amount,date_format(APP.f_operation_date,'%Y-%m-%d %T') as f_operation_date
+	</sql>
+	<sql id="queryHead_AppendTable">
+		APP.f_id as APPid,APP.t_user_f_id as APPtUserFId,APP.t_pay_bill_id as APPtPayBillId,APP.t_real_room_id as APPtRealRoomId,APP.f_pay_month as APPpayMonth,APP.f_amount as APPamount,APP.f_coupon_amount as APPcouponAmount,date_format(APP.f_operation_date,'%Y-%m-%d %T') as APPoperationDate
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		APP1.f_id as APP1id,APP1.t_user_f_id as APP1tUserFId,APP1.t_pay_bill_id as APP1tPayBillId,APP1.t_real_room_id as APP1tRealRoomId,APP1.f_pay_month as APP1payMonth,APP1.f_amount as APP1amount,APP1.f_coupon_amount as APP1couponAmount,date_format(APP1.f_operation_date,'%Y-%m-%d %T') as APP1operationDate
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (APP.f_id = #{id} ) </if>        <if test="tUserFId != null">  and (APP.t_user_f_id = #{tUserFId} ) </if>        <if test="tPayBillId != null">  and (APP.t_pay_bill_id = #{tPayBillId} ) </if>        <if test="tRealRoomId != null">  and (APP.t_real_room_id = #{tRealRoomId} ) </if>        <if test="payMonth != null">  and (APP.f_pay_month = #{payMonth} ) </if>        <if test="amount != null">  and (APP.f_amount = #{amount} ) </if>        <if test="couponAmount != null">  and (APP.f_coupon_amount = #{couponAmount} ) </if>        <if test="operationDate != null and !operationDate.equals('')  ">  and (APP.f_operation_date = str_to_date(#{operationDate},'%Y-%m-%d %T') ) </if>        <if test="operationDate_START != null and !operationDate_START.equals('')  ">              <![CDATA[ and (APP.f_operation_date >= str_to_date(#{operationDate_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="operationDate_END != null and !operationDate_END.equals('')  ">            <![CDATA[ and (APP.f_operation_date <= str_to_date(#{operationDate_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (APP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (APP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (APP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (APP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (APP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (APP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (APP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (APP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (APP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (APP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (APP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (APP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (APP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (APP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (APP.f_id = #{id} ) </if>        <if test="tUserFId != null and !tUserFId.equals('')  ">  and (APP.t_user_f_id = #{tUserFId} ) </if>        <if test="tPayBillId != null and !tPayBillId.equals('')  ">  and (APP.t_pay_bill_id = #{tPayBillId} ) </if>        <if test="tRealRoomId != null and !tRealRoomId.equals('')  ">  and (APP.t_real_room_id = #{tRealRoomId} ) </if>        <if test="payMonth != null and !payMonth.equals('')  ">  and (APP.f_pay_month = #{payMonth} ) </if>        <if test="amount != null and !amount.equals('')  ">  and (APP.f_amount = #{amount} ) </if>        <if test="couponAmount != null and !couponAmount.equals('')  ">  and (APP.f_coupon_amount = #{couponAmount} ) </if>        <if test="operationDate != null and !operationDate.equals('')  ">  and (APP.f_operation_date = str_to_date(#{operationDate},'%Y-%m-%d %T') ) </if>        <if test="operationDate_START != null and !operationDate_START.equals('')  ">              <![CDATA[ and (APP.f_operation_date >= str_to_date(#{operationDate_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="operationDate_END != null and !operationDate_END.equals('')  ">            <![CDATA[ and (APP.f_operation_date <= str_to_date(#{operationDate_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (APP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (APP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (APP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (APP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (APP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (APP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (APP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (APP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (APP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (APP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (APP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (APP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (APP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (APP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="alterPeriodPreferBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="alterPeriodPreferBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="alterPeriodPreferBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="alterPeriodPreferBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_alter_period_prefer APP    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(选择周期缴费优惠表)信息。 -->
+	<sql id="select_alterPeriodPrefer">
+		SELECT <include refid="alterPeriodPreferBase.queryHead"/>
+		<include refid="alterPeriodPreferBase.busiQueryCondition"/>
+		<include refid="alterPeriodPreferBase.dimCheckSql"/>
+		ORDER BY APP.f_id DESC
+	</sql>
+	<select id="select_alterPeriodPrefer" parameterType="java.util.Map" resultMap="alterPeriodPreferBase.alterPeriodPreferExtendMap">
+		<include refid="alterPeriodPreferBase.select_alterPeriodPrefer"/>
+	</select>
+	
+	<!-- 根据条件分页查询(选择周期缴费优惠表)信息  -->
+	<sql id="select_alterPeriodPrefer_withPage">
+		SELECT <include refid="alterPeriodPreferBase.queryHead"/>
+		<include refid="alterPeriodPreferBase.busiQueryCondition"/>
+		<include refid="alterPeriodPreferBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_alterPeriodPrefer_withPage" resultMap="alterPeriodPreferBase.alterPeriodPreferExtendMap" parameterType="java.util.Map">
+		<include refid="alterPeriodPreferBase.select_alterPeriodPrefer_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(选择周期缴费优惠表)信息。 -->
+	<sql id="select_alterPeriodPrefer_bySeqId">
+		SELECT <include refid="alterPeriodPreferBase.queryHead"/>
+		<include refid="alterPeriodPreferBase.busiQueryCondition"/>
+		 and APP.f_id = #{_parameter}
+	</sql>
+	<select id="select_alterPeriodPrefer_bySeqId" parameterType="java.math.BigInteger" resultMap="alterPeriodPreferBase.alterPeriodPreferBaseMap">
+		<include refid="alterPeriodPreferBase.select_alterPeriodPrefer_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(选择周期缴费优惠表)记录数  -->
+	<sql id="select_alterPeriodPrefer_count">
+		SELECT COUNT(*)
+		<include refid="alterPeriodPreferBase.busiQueryCount"/>
+		<include refid="alterPeriodPreferBase.dimCheckSql"/>
+	</sql>
+	<select id="select_alterPeriodPrefer_count" resultType="java.lang.Integer">
+		<include refid="alterPeriodPreferBase.select_alterPeriodPrefer_count"/>
+	</select>
+	
+	 <!-- 往(选择周期缴费优惠表)新增一条记录。 -->
+	 <sql id="insert_alterPeriodPrefer">
+		INSERT INTO t_alter_period_prefer 
+		(f_id,t_user_f_id,t_pay_bill_id,t_real_room_id,f_pay_month,f_amount,f_coupon_amount,f_operation_date,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tUserFId},#{tPayBillId},#{tRealRoomId},#{payMonth},#{amount},#{couponAmount},str_to_date(#{operationDate,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_alterPeriodPrefer" parameterType="AlterPeriodPrefer">
+		<include refid="alterPeriodPreferBase.insert_alterPeriodPrefer"/>
+    </insert>
+    
+	<!-- 批量新增(选择周期缴费优惠表)信息 -->
+    <insert id="insert_alterPeriodPrefer_Batch" parameterType="java.util.List">
+    	INSERT INTO t_alter_period_prefer 
+		(f_id,t_user_f_id,t_pay_bill_id,t_real_room_id,f_pay_month,f_amount,f_coupon_amount,f_operation_date,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tUserFId},#{item.tPayBillId},#{item.tRealRoomId},#{item.payMonth},#{item.amount},#{item.couponAmount},str_to_date(#{item.operationDate,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(选择周期缴费优惠表)信息。 -->
+    <sql id="update_alterPeriodPrefer">
+		UPDATE t_alter_period_prefer		<trim prefix="SET" prefixOverrides=","> 		<if test="tUserFId != null and !tUserFId.equals('') "> ,t_user_f_id=#{tUserFId}</if> 		<if test="tPayBillId != null and !tPayBillId.equals('') "> ,t_pay_bill_id=#{tPayBillId}</if> 		<if test="tRealRoomId != null and !tRealRoomId.equals('') "> ,t_real_room_id=#{tRealRoomId}</if> 		<if test="payMonth != null and !payMonth.equals('') "> ,f_pay_month=#{payMonth}</if> 		<if test="amount != null and !amount.equals('') "> ,f_amount=#{amount}</if> 		<if test="couponAmount != null and !couponAmount.equals('') "> ,f_coupon_amount=#{couponAmount}</if> 		<if test="operationDate != null and !operationDate.equals('') "> ,f_operation_date=str_to_date(#{operationDate},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_alterPeriodPrefer" parameterType="AlterPeriodPrefer">
+		<include refid="alterPeriodPreferBase.update_alterPeriodPrefer"/>
+    </update>
+    
+    <!-- 批量更新(选择周期缴费优惠表)信息。 -->
+    <update id="update_alterPeriodPrefer_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_alter_period_prefer		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.tPayBillId != null and !item.tPayBillId.equals('')  "> ,t_pay_bill_id=#{item.tPayBillId}</if> 		<if test="item.tRealRoomId != null and !item.tRealRoomId.equals('')  "> ,t_real_room_id=#{item.tRealRoomId}</if> 		<if test="item.payMonth != null and !item.payMonth.equals('')  "> ,f_pay_month=#{item.payMonth}</if> 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if> 		<if test="item.couponAmount != null and !item.couponAmount.equals('')  "> ,f_coupon_amount=#{item.couponAmount}</if> 		<if test="item.operationDate != null and !item.operationDate.equals('')  "> ,f_operation_date=str_to_date(#{item.operationDate},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(选择周期缴费优惠表)信息_逻辑删除。 -->
+    <sql id="delete_alterPeriodPrefer_Logic">
+		UPDATE t_alter_period_prefer		<trim prefix="SET" prefixOverrides=","> 		<if test="tUserFId != null and !tUserFId.equals('')  "> ,t_user_f_id=#{tUserFId}</if> 		<if test="tPayBillId != null and !tPayBillId.equals('')  "> ,t_pay_bill_id=#{tPayBillId}</if> 		<if test="tRealRoomId != null and !tRealRoomId.equals('')  "> ,t_real_room_id=#{tRealRoomId}</if> 		<if test="payMonth != null and !payMonth.equals('')  "> ,f_pay_month=#{payMonth}</if> 		<if test="amount != null and !amount.equals('')  "> ,f_amount=#{amount}</if> 		<if test="couponAmount != null and !couponAmount.equals('')  "> ,f_coupon_amount=#{couponAmount}</if> 		<if test="operationDate != null and !operationDate.equals('')  "> ,f_operation_date=str_to_date(#{operationDate},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_alterPeriodPrefer_Logic" parameterType="AlterPeriodPrefer">
+		<include refid="alterPeriodPreferBase.delete_alterPeriodPrefer_Logic"/>
+    </update>
+    
+    <!-- 批量删除(选择周期缴费优惠表)信息_逻辑删除 -->
+    <update id="delete_alterPeriodPrefer_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_alter_period_prefer		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.tPayBillId != null and !item.tPayBillId.equals('')  "> ,t_pay_bill_id=#{item.tPayBillId}</if> 		<if test="item.tRealRoomId != null and !item.tRealRoomId.equals('')  "> ,t_real_room_id=#{item.tRealRoomId}</if> 		<if test="item.payMonth != null and !item.payMonth.equals('')  "> ,f_pay_month=#{item.payMonth}</if> 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if> 		<if test="item.couponAmount != null and !item.couponAmount.equals('')  "> ,f_coupon_amount=#{item.couponAmount}</if> 		<if test="item.operationDate != null and !item.operationDate.equals('')  "> ,f_operation_date=str_to_date(#{item.operationDate},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(选择周期缴费优惠表)信息。 -->
+    <sql id="delete_alterPeriodPrefer">
+		DELETE FROM t_alter_period_prefer WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_alterPeriodPrefer" parameterType="java.lang.String">
+		<include refid="alterPeriodPreferBase.delete_alterPeriodPrefer"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(选择周期缴费优惠表)信息。 -->
+    <delete id="delete_alterPeriodPrefer_Batch" parameterType="java.util.List">
+		DELETE FROM t_alter_period_prefer WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

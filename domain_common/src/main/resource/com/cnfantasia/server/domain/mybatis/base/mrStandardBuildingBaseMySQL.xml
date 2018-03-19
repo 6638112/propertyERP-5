@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:抄表收费标准(楼栋) t_mr_standard_building -->
+<mapper namespace="mrStandardBuildingBase">
+	<resultMap type="MrStandardBuilding" id="mrStandardBuildingBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_gb_id" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->        <result column="t_building_id" javaType="java.math.BigInteger" property="tBuildingId"/>  <!-- 楼栋id -->        <result column="t_mr_fee_item_id" javaType="java.math.BigInteger" property="tMrFeeItemId"/>  <!-- 收费项id -->        <result column="t_mr_calculate_rule_cfg_id" javaType="java.math.BigInteger" property="tMrCalculateRuleCfgId"/>  <!-- 计费规则配置id -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="MrStandardBuilding" id="mrStandardBuildingExtendMap" extends="mrStandardBuildingBaseMap">
+	</resultMap>
+	<resultMap type="MrStandardBuilding" id="mrStandardBuildingBaseMap_AppendTable">
+        <id column="MSBid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MSBtGbId" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->        <result column="MSBtBuildingId" javaType="java.math.BigInteger" property="tBuildingId"/>  <!-- 楼栋id -->        <result column="MSBtMrFeeItemId" javaType="java.math.BigInteger" property="tMrFeeItemId"/>  <!-- 收费项id -->        <result column="MSBtMrCalculateRuleCfgId" javaType="java.math.BigInteger" property="tMrCalculateRuleCfgId"/>  <!-- 计费规则配置id -->        <result column="MSBsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="MSBsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="MSBsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="MSBsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="MSBsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="MSBsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="MSBsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="MrStandardBuilding" id="mrStandardBuildingBaseMap_AppendTable1">
+        <id column="MSB1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MSB1tGbId" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->        <result column="MSB1tBuildingId" javaType="java.math.BigInteger" property="tBuildingId"/>  <!-- 楼栋id -->        <result column="MSB1tMrFeeItemId" javaType="java.math.BigInteger" property="tMrFeeItemId"/>  <!-- 收费项id -->        <result column="MSB1tMrCalculateRuleCfgId" javaType="java.math.BigInteger" property="tMrCalculateRuleCfgId"/>  <!-- 计费规则配置id -->        <result column="MSB1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="MSB1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="MSB1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="MSB1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="MSB1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="MSB1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="MSB1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		MSB.f_id,MSB.t_gb_id,MSB.t_building_id,MSB.t_mr_fee_item_id,MSB.t_mr_calculate_rule_cfg_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		MSB.f_id as MSBid,MSB.t_gb_id as MSBtGbId,MSB.t_building_id as MSBtBuildingId,MSB.t_mr_fee_item_id as MSBtMrFeeItemId,MSB.t_mr_calculate_rule_cfg_id as MSBtMrCalculateRuleCfgId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		MSB1.f_id as MSB1id,MSB1.t_gb_id as MSB1tGbId,MSB1.t_building_id as MSB1tBuildingId,MSB1.t_mr_fee_item_id as MSB1tMrFeeItemId,MSB1.t_mr_calculate_rule_cfg_id as MSB1tMrCalculateRuleCfgId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (MSB.f_id = #{id} ) </if>        <if test="tGbId != null">  and (MSB.t_gb_id = #{tGbId} ) </if>        <if test="tBuildingId != null">  and (MSB.t_building_id = #{tBuildingId} ) </if>        <if test="tMrFeeItemId != null">  and (MSB.t_mr_fee_item_id = #{tMrFeeItemId} ) </if>        <if test="tMrCalculateRuleCfgId != null">  and (MSB.t_mr_calculate_rule_cfg_id = #{tMrCalculateRuleCfgId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MSB.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MSB.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MSB.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MSB.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MSB.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MSB.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MSB.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MSB.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MSB.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (MSB.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (MSB.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (MSB.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (MSB.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (MSB.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (MSB.f_id = #{id} ) </if>        <if test="tGbId != null and !tGbId.equals('')  ">  and (MSB.t_gb_id = #{tGbId} ) </if>        <if test="tBuildingId != null and !tBuildingId.equals('')  ">  and (MSB.t_building_id = #{tBuildingId} ) </if>        <if test="tMrFeeItemId != null and !tMrFeeItemId.equals('')  ">  and (MSB.t_mr_fee_item_id = #{tMrFeeItemId} ) </if>        <if test="tMrCalculateRuleCfgId != null and !tMrCalculateRuleCfgId.equals('')  ">  and (MSB.t_mr_calculate_rule_cfg_id = #{tMrCalculateRuleCfgId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MSB.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MSB.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MSB.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MSB.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MSB.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MSB.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MSB.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MSB.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MSB.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (MSB.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (MSB.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (MSB.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (MSB.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (MSB.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="mrStandardBuildingBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="mrStandardBuildingBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="mrStandardBuildingBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="mrStandardBuildingBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_mr_standard_building MSB    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(抄表收费标准(楼栋))信息。 -->
+	<sql id="select_mrStandardBuilding">
+		SELECT <include refid="mrStandardBuildingBase.queryHead"/>
+		<include refid="mrStandardBuildingBase.busiQueryCondition"/>
+		<include refid="mrStandardBuildingBase.dimCheckSql"/>
+		ORDER BY MSB.f_id DESC
+	</sql>
+	<select id="select_mrStandardBuilding" parameterType="java.util.Map" resultMap="mrStandardBuildingBase.mrStandardBuildingExtendMap">
+		<include refid="mrStandardBuildingBase.select_mrStandardBuilding"/>
+	</select>
+	
+	<!-- 根据条件分页查询(抄表收费标准(楼栋))信息  -->
+	<sql id="select_mrStandardBuilding_withPage">
+		SELECT <include refid="mrStandardBuildingBase.queryHead"/>
+		<include refid="mrStandardBuildingBase.busiQueryCondition"/>
+		<include refid="mrStandardBuildingBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_mrStandardBuilding_withPage" resultMap="mrStandardBuildingBase.mrStandardBuildingExtendMap" parameterType="java.util.Map">
+		<include refid="mrStandardBuildingBase.select_mrStandardBuilding_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(抄表收费标准(楼栋))信息。 -->
+	<sql id="select_mrStandardBuilding_bySeqId">
+		SELECT <include refid="mrStandardBuildingBase.queryHead"/>
+		<include refid="mrStandardBuildingBase.busiQueryCondition"/>
+		 and MSB.f_id = #{_parameter}
+	</sql>
+	<select id="select_mrStandardBuilding_bySeqId" parameterType="java.math.BigInteger" resultMap="mrStandardBuildingBase.mrStandardBuildingBaseMap">
+		<include refid="mrStandardBuildingBase.select_mrStandardBuilding_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(抄表收费标准(楼栋))记录数  -->
+	<sql id="select_mrStandardBuilding_count">
+		SELECT COUNT(*)
+		<include refid="mrStandardBuildingBase.busiQueryCount"/>
+		<include refid="mrStandardBuildingBase.dimCheckSql"/>
+	</sql>
+	<select id="select_mrStandardBuilding_count" resultType="java.lang.Integer">
+		<include refid="mrStandardBuildingBase.select_mrStandardBuilding_count"/>
+	</select>
+	
+	 <!-- 往(抄表收费标准(楼栋))新增一条记录。 -->
+	 <sql id="insert_mrStandardBuilding">
+		INSERT INTO t_mr_standard_building 
+		(f_id,t_gb_id,t_building_id,t_mr_fee_item_id,t_mr_calculate_rule_cfg_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tGbId},#{tBuildingId},#{tMrFeeItemId},#{tMrCalculateRuleCfgId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_mrStandardBuilding" parameterType="MrStandardBuilding">
+		<include refid="mrStandardBuildingBase.insert_mrStandardBuilding"/>
+    </insert>
+    
+	<!-- 批量新增(抄表收费标准(楼栋))信息 -->
+    <insert id="insert_mrStandardBuilding_Batch" parameterType="java.util.List">
+    	INSERT INTO t_mr_standard_building 
+		(f_id,t_gb_id,t_building_id,t_mr_fee_item_id,t_mr_calculate_rule_cfg_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tGbId},#{item.tBuildingId},#{item.tMrFeeItemId},#{item.tMrCalculateRuleCfgId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(抄表收费标准(楼栋))信息。 -->
+    <sql id="update_mrStandardBuilding">
+		UPDATE t_mr_standard_building		<trim prefix="SET" prefixOverrides=","> 		<if test="tGbId != null and !tGbId.equals('') "> ,t_gb_id=#{tGbId}</if> 		<if test="tBuildingId != null and !tBuildingId.equals('') "> ,t_building_id=#{tBuildingId}</if> 		<if test="tMrFeeItemId != null and !tMrFeeItemId.equals('') "> ,t_mr_fee_item_id=#{tMrFeeItemId}</if> 		<if test="tMrCalculateRuleCfgId != null and !tMrCalculateRuleCfgId.equals('') "> ,t_mr_calculate_rule_cfg_id=#{tMrCalculateRuleCfgId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_mrStandardBuilding" parameterType="MrStandardBuilding">
+		<include refid="mrStandardBuildingBase.update_mrStandardBuilding"/>
+    </update>
+    
+    <!-- 批量更新(抄表收费标准(楼栋))信息。 -->
+    <update id="update_mrStandardBuilding_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_mr_standard_building		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if> 		<if test="item.tBuildingId != null and !item.tBuildingId.equals('')  "> ,t_building_id=#{item.tBuildingId}</if> 		<if test="item.tMrFeeItemId != null and !item.tMrFeeItemId.equals('')  "> ,t_mr_fee_item_id=#{item.tMrFeeItemId}</if> 		<if test="item.tMrCalculateRuleCfgId != null and !item.tMrCalculateRuleCfgId.equals('')  "> ,t_mr_calculate_rule_cfg_id=#{item.tMrCalculateRuleCfgId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(抄表收费标准(楼栋))信息_逻辑删除。 -->
+    <sql id="delete_mrStandardBuilding_Logic">
+		UPDATE t_mr_standard_building		<trim prefix="SET" prefixOverrides=","> 		<if test="tGbId != null and !tGbId.equals('')  "> ,t_gb_id=#{tGbId}</if> 		<if test="tBuildingId != null and !tBuildingId.equals('')  "> ,t_building_id=#{tBuildingId}</if> 		<if test="tMrFeeItemId != null and !tMrFeeItemId.equals('')  "> ,t_mr_fee_item_id=#{tMrFeeItemId}</if> 		<if test="tMrCalculateRuleCfgId != null and !tMrCalculateRuleCfgId.equals('')  "> ,t_mr_calculate_rule_cfg_id=#{tMrCalculateRuleCfgId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_mrStandardBuilding_Logic" parameterType="MrStandardBuilding">
+		<include refid="mrStandardBuildingBase.delete_mrStandardBuilding_Logic"/>
+    </update>
+    
+    <!-- 批量删除(抄表收费标准(楼栋))信息_逻辑删除 -->
+    <update id="delete_mrStandardBuilding_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_mr_standard_building		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if> 		<if test="item.tBuildingId != null and !item.tBuildingId.equals('')  "> ,t_building_id=#{item.tBuildingId}</if> 		<if test="item.tMrFeeItemId != null and !item.tMrFeeItemId.equals('')  "> ,t_mr_fee_item_id=#{item.tMrFeeItemId}</if> 		<if test="item.tMrCalculateRuleCfgId != null and !item.tMrCalculateRuleCfgId.equals('')  "> ,t_mr_calculate_rule_cfg_id=#{item.tMrCalculateRuleCfgId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(抄表收费标准(楼栋))信息。 -->
+    <sql id="delete_mrStandardBuilding">
+		DELETE FROM t_mr_standard_building WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_mrStandardBuilding" parameterType="java.lang.String">
+		<include refid="mrStandardBuildingBase.delete_mrStandardBuilding"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(抄表收费标准(楼栋))信息。 -->
+    <delete id="delete_mrStandardBuilding_Batch" parameterType="java.util.List">
+		DELETE FROM t_mr_standard_building WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

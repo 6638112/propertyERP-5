@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 红点提示模块 -->
+<mapper namespace="redpoint">
+	
+	<resultMap type="com.cnfantasia.server.api.redpoint.entity.RedpointContentEntity" id="redpointContentEntity_Map_Append"
+		extends="redpointContentBase.redpointContentBaseMap_AppendTable">
+		
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.redpoint.entity.RedpointModelcodeConfigEntity" id="redpointModelcodeConfigEntity_Map"
+		extends="redpointModelcodeConfigBase.redpointModelcodeConfigBaseMap">
+		<result column="depth" javaType="java.lang.Integer" property="depth"/>
+	</resultMap>
+	
+	<!-- 查询模块及子模块编码列表 -->
+	<select id="select_RedpointModelcode_WithSub_List" parameterType="java.util.Map" statementType="CALLABLE" resultMap="redpointModelcodeConfigEntity_Map">
+		call redPoint_showChildLst(#{modelCode})
+	</select>
+	
+	<sql id="select_RedpointContent_order_by_comm">
+		ORDER BY CASE WHEN RC.f_click_status = 2 THEN 0 ELSE 1 END ASC <!-- 点击状态=={"1":"已点","2":"未点"} 优先获取未点击的-->
+    	,RC.f_last_modify_time DESC <!-- 其次获取最新修改时间的 -->
+	</sql>
+	
+	<!-- 查询单个模块的红点详情 -->
+	<select id="select_RedpointContent_By_ModelCode" parameterType="java.util.Map" resultMap="redpointContentEntity_Map_Append">
+		SELECT <include refid="redpointContentBase.queryHead_AppendTable"/>
+		FROM t_redpoint_content RC
+    	WHERE 1=1
+    	AND RC.f_sys0_del_state = 0
+    	AND RC.f_user_type = #{userType}
+    	AND RC.f_user_id = #{userId}
+		<if test="roomId != null and roomId != ''">
+			AND RC.f_room_id = #{roomId}
+		</if>
+    	and (RC.f_expire_time is null or (RC.f_expire_time is not null and SYSDATE() &lt;= f_expire_time ))
+    	AND RC.f_model_code IN 
+		<foreach item="item" collection="modelCodeList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    	<include refid="select_RedpointContent_order_by_comm"/>
+    	LIMIT 0,1
+	</select>
+	
+	<!-- 更新红点为已点击 -->
+	<update id="update_RedpointContent_Clicked" parameterType="java.util.Map">
+		UPDATE t_redpoint_content RC
+			<!-- INNER JOIN t_user U ON U.f_id = #{userId} AND U.f_sys0_del_state = 0
+				AND U.f_default_room_id = RC.f_room_id -->
+		SET RC.f_click_status = 1 <!-- 点击状态=={"1":"已点","2":"未点"} -->
+			,RC.f_last_click_time = SYSDATE()
+		WHERE 1=1
+    	AND RC.f_sys0_del_state = 0
+    	AND RC.f_user_type = #{userType}
+    	AND RC.f_user_id = #{userId}
+		<if test="roomId != null and roomId != ''">
+			AND RC.f_room_id = #{roomId}
+		</if>
+    	AND RC.f_model_code = #{modelCode}
+	</update>
+	
+	<!-- 刷新红点信息表的更新时间和信息 -->
+	<update id="fresh_RedpointContent_ClickStatus" parameterType="java.util.Map">
+		UPDATE (
+				SELECT RC.f_id
+				FROM t_redpoint_content RC
+		    	WHERE 1=1
+		    	AND RC.f_sys0_del_state = 0
+		    	AND RC.f_user_type = #{userType}
+		    	AND RC.f_user_id = #{userId}
+		    	AND RC.f_room_id = #{roomId}
+		    	AND RC.f_model_code = #{modelCode} 
+		    	<include refid="select_RedpointContent_order_by_comm"/>
+		    	LIMIT 0,1
+			)AS RC_tmp
+			INNER JOIN t_redpoint_content RC ON RC_tmp.f_id = RC.f_id
+			LEFT JOIN (
+					SELECT RCS.t_redpoint_content_f_id,MAX(RCS.f_last_modify_time) max_last_modify_time
+					FROM t_redpoint_content_source RCS
+					WHERE 1=1 
+					AND RCS.f_sys0_del_state = 0
+					GROUP BY RCS.t_redpoint_content_f_id
+				)AS RCS_group ON RCS_group.t_redpoint_content_f_id = RC.f_id
+		SET RC.f_click_status = CASE WHEN
+			<!-- 分组修改时间不为空，点击时间不为空，且分组更新时间大于点击时间 -->
+			(NOT ISNULL(RCS_group.max_last_modify_time) AND NOT ISNULL(RC.f_last_click_time) AND RCS_group.max_last_modify_time> RC.f_last_click_time) 
+			<!-- 或者 分组修改时间不为空，点击时间为空 -->
+			OR ( NOT ISNULL(RCS_group.max_last_modify_time) AND ISNULL(RC.f_last_click_time) )
+			THEN 2 <!-- 点击状态=={"1":"已点","2":"未点"} -->
+			ELSE RC.f_click_status END
+			,RC.f_last_modify_time = CASE WHEN (NOT ISNULL(RCS_group.max_last_modify_time)) THEN RCS_group.max_last_modify_time ELSE RC.f_last_modify_time END
+		WHERE 1=1
+    	AND RC.f_sys0_del_state = 0
+	</update>
+	
+	<!-- 刷新红点信息表的更新时间和信息, 不关联其它表更新 -->
+	<update id="fresh_RedpointContent_ClickStatus2" parameterType="com.cnfantasia.server.domainbase.redpointContent.entity.RedpointContent">
+		UPDATE t_redpoint_content RC
+		SET RC.f_click_status = #{clickStatus},
+		RC.f_last_modify_time = NOW()
+		WHERE 1 = 1
+    	AND RC.f_user_type = #{userType}
+    	AND RC.f_user_id = #{userId}
+    	AND RC.f_room_id = #{roomId}
+    	AND RC.f_model_code = #{modelCode};
+	</update>
+</mapper>

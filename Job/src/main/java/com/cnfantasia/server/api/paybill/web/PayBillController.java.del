@@ -1,0 +1,169 @@
+package com.cnfantasia.server.api.paybill.web;
+
+import java.math.BigInteger;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSON;
+import com.cnfantasia.server.api.commonBusiness.service.ICommonRoomService;
+import com.cnfantasia.server.api.commonBusiness.util.CommonRoomUtil;
+import com.cnfantasia.server.api.pub.BaseController;
+import com.cnfantasia.server.api.pub.ControllerUtils;
+import com.cnfantasia.server.api.pub.session.UserContext;
+import com.cnfantasia.server.api.room.entity.RoomBaseInfo;
+import com.cnfantasia.server.api.room.entity.RoomEntity;
+import com.cnfantasia.server.business.pub.dao.IDualDao;
+import com.cnfantasia.server.business.pub.utils.DateUtil;
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+import com.cnfantasia.server.common.json.JsonResponse;
+
+@Controller
+//@RequestMapping("/payBill")
+public class PayBillController extends BaseController{
+	private Log logger = LogFactory.getLog(getClass());
+//	private IPayBillService payBillService;
+//	public void setPayBillService(IPayBillService payBillService) {
+//		this.payBillService = payBillService;
+//	}
+	
+	private ICommonRoomService commonRoomService;
+	public void setCommonRoomService(ICommonRoomService commonRoomService) {
+		this.commonRoomService = commonRoomService;
+	}
+	
+	private IDualDao dualDao; 
+	public void setDualDao(IDualDao dualDao) {
+		this.dualDao = dualDao;
+	}
+	
+	public static void main(String[] args) {
+		String nowTime = "2014-08-02 11:22:31";
+		System.out.println(DateUtil.getMonthFirstDay(nowTime));
+		System.out.println(DateUtil.getMonthLastDay(nowTime));
+	}
+//	@RequestMapping("/qryPayBill.json")
+	@ResponseBody
+	public JsonResponse qryPayBill(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		BigInteger userId = UserContext.getOperIdMustExistBigInteger();
+		//2.交互
+		RoomEntity roomEntity = commonRoomService.getDefaultRoomInfo(userId);
+		//3.结果处理
+		RoomBaseInfo roomBaseInfo= null;
+		if(roomEntity==null||roomEntity.checkIsEmptyRoom()){
+			throw new BusinessRuntimeException("payBillController.qryPayBill.defaultRoom.isEmpty");
+		}else{
+			roomBaseInfo=CommonRoomUtil.getRoomBaseInfo(roomEntity);
+		}
+		Map<String,Object> resMap = payBill2Map(roomBaseInfo);
+		jsonResponse.setDataValue(resMap);
+		return jsonResponse;
+	}
+	
+//	@RequestMapping("/qryPayBillMulti.json")
+	@ResponseBody
+	public JsonResponse qryPayBillMulti(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+			BigInteger userId = UserContext.getOperIdMustExistBigInteger();
+		//2.交互
+		RoomEntity roomEntity = commonRoomService.getDefaultRoomInfo(userId);
+		//3.结果处理
+		RoomBaseInfo roomBaseInfo=null;
+		if(roomEntity==null||roomEntity.checkIsEmptyRoom()){
+			throw new BusinessRuntimeException("payBillController.qryPayBill.defaultRoom.isEmpty");
+		}else{
+			roomBaseInfo=CommonRoomUtil.getRoomBaseInfo(roomEntity);
+		}
+		List<Map<String,Object>> resList = new ArrayList<Map<String,Object>>();//list组装
+		{
+			Map<String,Object> resMap = payBill2Map(roomBaseInfo);
+			resList.add(resMap);
+		}
+		
+		/*{
+			Map<String,Object> data02 = new HashMap<String, Object>();
+			data02.put("id", "bill002");
+			data02.put("amount", 187.33);
+			data02.put("month", 4);
+			data02.put("isPay", true);
+			data02.put("roomDetail","广东省深圳市福田区XXX小区A栋A102室");
+			data02.put("payLimiteStart","2014-04-01");
+			data02.put("payLimiteEnd","2014-04-25");
+			data02.put("miniDiscount",2.5);
+			data02.put("realAmount",0);
+			resList.add(data02);
+		}*/
+		return ControllerUtils.addPageInfo(jsonResponse, resList, true);
+	}
+//	@RequestMapping("/doPay.json")
+	@ResponseBody
+	public String doPay(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		jsonResponse.putData("userId", "hua001");
+		jsonResponse.putData("roomDetail", "广东省深圳市南山区美年广场A1栋301");
+		jsonResponse.putData("paydate", "2014-02-13 19:50");
+		jsonResponse.putData("amount", 198.33);
+		jsonResponse.putData("amount", 8.0);
+		jsonResponse.putData("realAmount", 158.66);
+		return JSON.toJSONString(jsonResponse);
+	}
+	
+//	@RequestMapping("/qryPayRecord.json")
+	@ResponseBody
+	public String qryPayRecord(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		List<Map<String,Object>> payRecList = new ArrayList<Map<String,Object>>();
+		Map<String,Object> rec01 = new HashMap<String, Object>();
+		rec01.put("userId", "hua001");
+		rec01.put("roomDetail", "广东省深圳市南山区美年广场A1栋301");
+		rec01.put("paydate", "2014-02-13 19:50");
+		rec01.put("amount", 198.33);
+		rec01.put("discount", 8.0);
+		rec01.put("realAmount", 158.66);
+		rec01.put("payResult", 0);
+		jsonResponse.putData("list",payRecList);
+		return JSON.toJSONString(jsonResponse);
+	}
+	
+	
+	private Map<String,Object> payBill2Map(RoomBaseInfo roomBaseInfo){
+		Map<String,Object> resMap = new HashMap<String, Object>();
+		String nowTime = dualDao.getNowTime();
+		String month="0";
+		try {
+			month = DateUtil.formatOnlyMonth.get().format(DateUtil.formatSecond.get().parse(nowTime));
+		} catch (ParseException e) {
+			logger.debug("DateUtil.formatOnlyMonth.format(DateUtil.formatSecond.par",e);
+			e.printStackTrace();
+		}
+		resMap.put("id", "bill001");
+		resMap.put("amount", null);
+		resMap.put("month", month);
+		resMap.put("isPay", true);
+		resMap.put("payLimiteStart",DateUtil.getMonthFirstDay(nowTime));
+		resMap.put("payLimiteEnd",DateUtil.getMonthLastDay(nowTime));
+		resMap.put("miniDiscount",9.8);
+		resMap.put("realAmount",null);
+		if(roomBaseInfo!=null){
+			resMap.put("roomDetail",new StringBuffer()
+			.append(roomBaseInfo.getProvince()).append(roomBaseInfo.getCity()).append(roomBaseInfo.getBlock())
+			.append(roomBaseInfo.getGroupBuilding()).append(roomBaseInfo.getBuilding()).append(roomBaseInfo.getRoomNum()).toString());
+		}else{
+			resMap.put("roomDetail",null);
+		}
+		return resMap;
+	}
+	
+}

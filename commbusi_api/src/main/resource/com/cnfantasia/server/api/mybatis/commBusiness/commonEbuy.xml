@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 电商管理公共模块 -->
+<mapper namespace="commonEbuy">
+	<!-- 商品 -->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyProductEntity" id="ebuyProductMap_Append" extends="ebuyProductBase.ebuyProductBaseMap_AppendTable">
+		<association property="ebuySupplyMerchantEntity" resultMap="ebuySupplyMerchantMap_Append"/>
+		<!-- <association property="defaultEbuyDeliveryMethod" resultMap=""/> -->
+		<collection property="ebuyProductHasTEbuyAuthEntityList" resultMap="ebuyProductHasTEbuyAuthEntity_EbuyAuth_Append"/>
+		<collection property="ebuyProductParametersList" resultMap="ebuyProductParametersMap_Append"/>
+		<collection property="ebuyProductPicList" resultMap="ebuyProductPicMap_Append"/>
+		<collection property="ebuyProductIntroducePicList" resultMap="ebuyProductIntroducePicMap_Append"/>
+		<collection property="ebuyProductSpecList" resultMap="ebuyProductSpecMap_Append"/>
+	</resultMap>
+	
+	<!-- 供应商 -->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuySupplyMerchantEntity" 
+		id="ebuySupplyMerchantMap_Append" extends="ebuySupplyMerchantBase.ebuySupplyMerchantBaseMap_AppendTable">
+		<collection property="merchantHasDeliveryMethodList" resultMap="ebuySupplyMerchantHasTEbuyDeliveryMethodEntity_DeliveryMethod_Append"/>
+	</resultMap>
+	<!-- 供应商与配送方式 关系-->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuySupplyMerchantHasTEbuyDeliveryMethodEntity_DeliveryMethod" 
+		id="ebuySupplyMerchantHasTEbuyDeliveryMethodEntity_DeliveryMethod_Append" extends="ebuySupplyMerchantHasTEbuyDeliveryMethodBase.ebuySupplyMerchantHasTEbuyDeliveryMethodBaseMap_AppendTable">
+		<association property="ebuyDeliveryMethod" resultMap="ebuyDeliveryMethod_Append"/>
+	</resultMap>
+	<!-- 配送方式 -->
+	<resultMap type="EbuyDeliveryMethod" 
+		id="ebuyDeliveryMethod_Append" extends="ebuyDeliveryMethodBase.ebuyDeliveryMethodBaseMap_AppendTable">
+	</resultMap>
+	
+	<!-- 产品认证关系 -->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyProductHasTEbuyAuthEntity_EbuyAuth" 
+		id="ebuyProductHasTEbuyAuthEntity_EbuyAuth_Append" extends="ebuyProductHasTEbuyAuthBase.ebuyProductHasTEbuyAuthBaseMap_AppendTable">
+		<association property="ebuyAuth" resultMap="ebuyAuthMap_Append"/>
+	</resultMap>
+	<!-- 认证信息 -->
+	<resultMap type="EbuyAuth" 
+		id="ebuyAuthMap_Append" extends="ebuyAuthBase.ebuyAuthBaseMap_AppendTable">
+	</resultMap>
+	
+	<!-- 产品参数 -->
+	<resultMap type="EbuyProductParameters" 
+		id="ebuyProductParametersMap_Append" extends="ebuyProductParametersBase.ebuyProductParametersBaseMap_AppendTable">
+	</resultMap>
+	<!-- 产品图片 -->
+	<resultMap type="EbuyProductPic" 
+		id="ebuyProductPicMap_Append" extends="ebuyProductPicBase.ebuyProductPicBaseMap_AppendTable">
+	</resultMap>
+	<!-- 产品介绍附加图片 -->
+	<resultMap type="EbuyProductIntroducePic" 
+		id="ebuyProductIntroducePicMap_Append" extends="ebuyProductIntroducePicBase.ebuyProductIntroducePicBaseMap_AppendTable">
+	</resultMap>
+	<!-- 产品规格 -->
+	<resultMap type="EbuyProductSpec" 
+		id="ebuyProductSpecMap_Append" extends="ebuyProductSpecBase.ebuyProductSpecBaseMap_AppendTable">
+	</resultMap>
+    
+    
+    <!-- 批量退回粮票 -->
+    <update id="back_Money2Hb_Batch" parameterType="java.util.List">
+   		UPDATE t_pay_red_envelope PRE
+   			INNER JOIN (
+   				<foreach collection="list" item="item" index="index" separator=" union all select " open=" select " close="">
+   				#{item.id} f_id
+				,#{item.backMmoney} backMmoney
+   				</foreach>
+   			)PRE_tmp ON PRE.f_id = PRE_tmp.f_id
+    	SET PRE.f_amount_avaible = PRE.f_amount_avaible + PRE_tmp.backMmoney
+    		,PRE.f_sys0_upd_time = SYSDATE()
+    	WHERE 1 = 1
+    	AND PRE.f_sys0_del_state = 0 
+    </update>
+    
+    <resultMap type="com.cnfantasia.server.api.commonBusiness.entity.PayCouponEntity" id="payCouponEntityMap_Append" 
+    	extends="payCouponBase.payCouponBaseMap_AppendTable">
+    	<collection property="payCouponDetailCommonEntityList" resultMap="payCouponDetailCommonEntityMap_Append"/>
+    </resultMap>
+    <resultMap type="com.cnfantasia.server.api.commonBusiness.entity.PayCouponDetailCommonEntity" id="payCouponDetailCommonEntityMap_Append">
+    	<id column="singalDetail_id" javaType="java.math.BigInteger" property="id"/>  <!-- Id -->
+        <result column="singalDetail_anount" javaType="java.lang.Long" property="anount"/>  <!-- 对应粮票使用的金额 -->
+        <result column="singalDetail_tPayCouponFId" javaType="java.math.BigInteger" property="tPayCouponFId"/>  <!-- 对应的优惠信息Id -->
+        <result column="singalDetail_userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 使用者Id -->
+        <result column="singalDetail_consumTime" javaType="java.lang.String" property="consumTime"/>  <!-- 使用时间 -->
+        <result column="singalDetail_otherInfo" javaType="java.lang.Object" property="otherInfo"/>  <!-- 其它详情 -->
+    	<!-- <association property="signalDetail"></association> -->
+    </resultMap>
+    <!-- 根据订单Id查询订单的优惠信息 -->
+    <select id="select_PayCoupon_List_ByOrderId" resultMap="payCouponEntityMap_Append" parameterType="java.math.BigInteger">
+    	SELECT <include refid="payCouponBase.queryHead_AppendTable"/>
+    		,CASE 
+		        WHEN PC.f_type = 1 THEN PRED.f_id
+		        WHEN PC.f_type = 2 THEN SGUD.f_id
+			END AS singalDetail_id
+    		,CASE 
+		        WHEN PC.f_type = 1 THEN PRED.f_anount
+		        WHEN PC.f_type = 2 THEN SGUD.f_amount
+			END AS singalDetail_anount
+    		,CASE 
+		        WHEN PC.f_type = 1 THEN PRED.t_pay_coupon_f_id
+		        WHEN PC.f_type = 2 THEN SGUD.t_pay_coupon_f_id
+			END AS singalDetail_tPayCouponFId
+    		,CASE 
+		        WHEN PC.f_type = 1 THEN PRED.f_user_id
+		        WHEN PC.f_type = 2 THEN SGUD.f_user_id
+			END AS singalDetail_userId
+    		,CASE 
+		        WHEN PC.f_type = 1 THEN PRED.f_consum_time
+		        WHEN PC.f_type = 2 THEN SGUD.f_consum_time
+			END AS singalDetail_consumTime
+    		,CASE 
+		        WHEN PC.f_type = 1 THEN PRED.f_pay_red_envelope_id
+		        WHEN PC.f_type = 2 THEN SGUD.f_surprise_gift_id
+			END AS singalDetail_otherInfo
+	   	FROM t_pay_coupon PC
+   			INNER JOIN t_ebuy_order EO ON EO.f_id = PC.t_ebuy_order_f_id AND EO.f_sys0_del_state = 0
+   			LEFT JOIN t_pay_red_envelope_detail PRED ON PRED.t_pay_coupon_f_id = PC.f_id AND PRED.f_sys0_del_state = 0
+   				AND PC.f_type = 1 <!-- 优惠类别=={"1":"粮票","2":"优惠券"} -->
+   			LEFT JOIN t_surprise_gift_use_detail SGUD ON SGUD.t_pay_coupon_f_id = PC.f_id AND SGUD.f_sys0_del_state = 0
+   				AND PC.f_type = 2 <!-- 优惠类别=={"1":"粮票","2":"优惠券"} -->
+    	WHERE 1=1 
+    	AND PC.f_sys0_del_state = 0
+    	AND PC.t_ebuy_order_f_id = #{_parameter}
+    	AND ( (PC.f_type = 1 AND PRED.f_id is not null) 
+    		OR (PC.f_type = 2 AND SGUD.f_id is not null) 
+    		)<!-- 增加为空过滤的筛选 -->
+    </select>
+    
+   <!--  <select id="select_PayCoupon_List_ByOrderId" resultMap="payCouponEntityMap_Append" parameterType="java.math.BigInteger">
+    	SELECT <include refid="payCouponBase.queryHead_AppendTable"/>
+    	FROM t_ebuy_order EO
+    		LEFT JOIN (
+    			t_pay_coupon PC
+    			LEFT JOIN t_pay_red_envelope_detail PRED ON PRED.t_pay_coupon_f_id = PC.f_id AND PRED.f_sys0_del_state = 0
+    		) ON EO.f_id = PC.t_ebuy_order_f_id AND PC.f_sys0_del_state = 0
+    	WHERE 1=1 
+    	AND EO.f_sys0_del_state = 0
+    	AND EO.f_id = #{_parameter}
+    </select> -->
+    
+    <!-- 根据用户Id和用户类型查询用户的购物车商品Id列表 -->
+    <select id="select_EbuyBuyCarHasTEbuyProduct_List" parameterType="java.util.Map"
+    	resultMap="ebuyBuyCarHasTEbuyProductBase.ebuyBuyCarHasTEbuyProductBaseMap_AppendTable">
+    	SELECT <include refid="ebuyBuyCarHasTEbuyProductBase.queryHead_AppendTable"/> 
+    	FROM t_ebuy_buy_car EBC 
+    		INNER JOIN t_ebuy_buy_car_has_t_ebuy_product EBCHTEP ON EBC.f_id = EBCHTEP.t_ebuy_buy_car_f_id AND EBC.f_sys0_del_state = 0
+    	WHERE 1=1 
+    	AND EBCHTEP.f_sys0_del_state = 0
+    	AND EBC.f_user_id = #{userId}
+		AND EBC.f_user_type = #{userType}
+    </select>
+    <!-- 转移购物车商品 -->
+    <update id="convert_EbuyBuyCar_Prodcts" parameterType="java.util.Map">
+    	UPDATE t_ebuy_buy_car_has_t_ebuy_product EBCHTEP
+    	SET EBCHTEP.t_ebuy_buy_car_f_id = (
+    		SELECT EBC.f_id 
+    		FROM t_ebuy_buy_car EBC 
+    		WHERE 1=1
+    		AND EBC.f_sys0_del_state = 0
+	    	AND EBC.f_user_id = #{toUser}
+			AND EBC.f_user_type = #{toType}
+    	)
+    	,EBCHTEP.f_sys0_upd_time = SYSDATE()
+    	WHERE 1=1
+    	AND EBCHTEP.f_sys0_del_state = 0
+    	AND EBCHTEP.t_ebuy_buy_car_f_id = (
+    		SELECT EBC.f_id 
+    		FROM t_ebuy_buy_car EBC 
+    		WHERE 1=1
+    		AND EBC.f_sys0_del_state = 0
+	    	AND EBC.f_user_id = #{fromUser}
+			AND EBC.f_user_type = #{fromType}
+    	)
+    	<!-- UPDATE t_ebuy_buy_car EBC
+    	SET EBC.f_user_id = #{toUser}, EBC.f_user_type = #{toType}
+    	WHERE 1=1 
+   	 	AND EBC.f_sys0_del_state = 0
+    	AND EBC.f_user_id = #{fromUser}
+		AND EBC.f_user_type = #{fromType} -->
+    </update>
+    
+    <!-- 收货地址详情 -->
+    <resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyDeliveryAddressEntity" id="ebuyDeliveryAddressEntityMap" 
+    	extends="ebuyDeliveryAddressBase.ebuyDeliveryAddressBaseMap_AppendTable">
+		<result property="gbId" column="gbId" javaType="java.math.BigInteger"/>
+		<result property="gbName" column="gbName" javaType="java.lang.String"/>
+		<result property="blockId" column="blockId" javaType="java.math.BigInteger"/>
+		<result property="blockName" column="blockName" javaType="java.lang.String"/>
+		<result property="cityId" column="cityId" javaType="java.math.BigInteger"/>
+		<result property="cityName" column="cityName" javaType="java.lang.String"/>
+		<result property="provinceId" column="provinceId" javaType="java.math.BigInteger"/>
+		<result property="provinceName" column="provinceName" javaType="java.lang.String"/>
+		<result property="addressDetail" column="addressDetail" javaType="java.lang.String"/>
+		<association  property="singalDetail" resultMap="ebuyHandleAddressEntity"/>
+	</resultMap>
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyHandleAddressEntity" id="ebuyHandleAddressEntity" 
+		extends="ebuyHandleAddressBase.ebuyHandleAddressBaseMap_AppendTable">
+		<association property="groupBuildingEntity" resultMap="commonRoom.groupBuildingMap_Search" />
+	</resultMap>
+    
+    
+	<!-- start 根据订单ID及供应商名称，查询配送单及商品信息 by Owen 2015-01-27 -->
+	<resultMap type="com.cnfantasia.server.business.pub.entity.Goods" id="goodsMap" >
+		<result column="tag" property="tag"/>
+		<result column="title" property="title"/>
+		<result column="description" property="description"/>
+		<result column="price" property="price"/>
+		<result column="quantity" property="quantity"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.business.pub.entity.Order4HJX" id="order4HJXMap" >
+		<result column="orderId" property="orderId"/>
+		<result column="edoId" property="edoId"/>
+		<result column="source_order_tag" property="source_order_tag"/>
+		<result column="receiver" property="receiver"/>
+		<result column="phone" property="phone"/>
+		<result column="address" property="address"/>
+		<collection property="goods" resultMap="goodsMap"></collection>
+	</resultMap>
+	
+	<select id="getDeliveryAndProducts_byOrderIdAndSplChantName" parameterType="java.util.Map" resultMap="order4HJXMap">
+		select distinct eo.f_id orderId, edo.f_id as edoId,
+		eo.f_order_no source_order_tag, ept.f_src_id tag, ep.f_name title, ep.f_desc description, ep.f_purchase_price/100 price, EOHTEP.f_product_qty quantity, 
+		eo.f_deliv_people_name receiver, eo.f_deliv_phone phone, concat(eo.f_deliv_address_area, eo.f_deliv_address_detail) address
+		from t_ebuy_order eo
+		left join t_ebuy_order_has_t_ebuy_product EOHTEP on EOHTEP.t_ebuy_order_f_id = eo.f_id
+		left join t_ebuy_delivery_order edo on eo.f_id = edo.t_ebuy_order_f_id
+		left join t_ebuy_product ep on ep.f_id = EOHTEP.t_ebuy_product_f_id
+		left join t_ebuy_supply_merchant esm on esm.f_id = edo.t_supply_merchant_f_id
+		left join t_ebuy_product_temp ept on ept.f_id = ep.f_src_id
+		where esm.f_id = #{splMerchantId}
+		and eo.f_id = #{orderId} and ept.f_src_id is not null;
+	</select>
+	
+	<!-- 获取当天所有海吉星待推送的订单  by wenfq 2015/7/22 -->
+	<select id="getDeliveryAndProducts_forHJXOrderPusher" parameterType="java.util.Map" resultMap="order4HJXMap">
+		select distinct eo.f_id orderId, edo.f_id as edoId,
+		eo.f_order_no source_order_tag, ept.f_src_id tag, ep.f_name title, ep.f_desc description, ep.f_purchase_price/100 price, EOHTEP.f_product_qty quantity, 
+		eo.f_deliv_people_name receiver, eo.f_deliv_phone phone, concat(eo.f_deliv_address_area, eo.f_deliv_address_detail) address
+		from t_ebuy_order eo
+		 join t_ebuy_order_has_t_ebuy_product EOHTEP on EOHTEP.t_ebuy_order_f_id = eo.f_id
+		 join t_ebuy_delivery_order edo on eo.f_id = edo.t_ebuy_order_f_id
+		 join t_ebuy_product ep on ep.f_id = EOHTEP.t_ebuy_product_f_id AND ep.t_supply_merchant_f_id = edo.t_supply_merchant_f_id
+		 join t_ebuy_supply_merchant esm on esm.f_id = edo.t_supply_merchant_f_id
+		join t_ebuy_product_temp ept on ept.f_id = ep.f_src_id
+		LEFT JOIN t_ebuy_delivery_push_recorder edp on edp.t_ebuy_delivery_order_f_id = edo.f_id 
+		where eo.f_pay_status =2 <!-- 支付完成的订单 -->
+        AND esm.f_id = 200 <!-- 海吉星供应商 -->
+        and eo.f_pay_time >= subdate(sysdate(),interval 1 DAY)  <!-- 只推送过去24小时内的 -->
+        AND edp.f_id is NULL <!-- 没有推送过的配送单 -->
+	</select>
+	
+	<!-- end 根据订单ID及供应商名称，查询配送单及商品信息 by Owen 2015-01-27 -->
+	
+	<!-- 查询没有推送过的配送单，根据Id，forUpdate -->
+	<select id="select_EbuyDeliveryOrder_ForUpdate" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT distinct edo.f_id
+		FROM t_ebuy_delivery_order edo
+		WHERE 1=1
+		AND edo.f_sys0_del_state = 0
+		AND edo.f_id = #{ebuyDeliveryOrderId}
+		<!-- 没有推送过的配送单 -->
+		AND not exists(select 0 from t_ebuy_delivery_push_recorder edp where edp.t_ebuy_delivery_order_f_id = edo.f_id AND edp.f_sys0_del_state = 0)
+		for update
+	</select>
+	
+</mapper>

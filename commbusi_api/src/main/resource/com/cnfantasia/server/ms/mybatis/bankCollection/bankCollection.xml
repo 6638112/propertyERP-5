@@ -1,0 +1,909 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:银行托收 -->
+<mapper namespace="bankCollection">
+	
+	<resultMap type="com.cnfantasia.server.api.bankCollection.entity.BcBankInfoDto" id="bcBankInfoMap">
+		<id column="pcbciId" javaType="java.math.BigInteger" property="pcbciId"/>
+		<result column="no" javaType="java.lang.String" property="no"/>
+		<result column="collectionRange" javaType="java.lang.Integer" property="collectionRange"/>
+		<result column="bankName" javaType="java.lang.String" property="bankName"/>
+		<collection property="gbNameSet" ofType="java.lang.String">
+			<constructor>
+				<arg column="gbName"/>
+			</constructor>
+		</collection>
+	</resultMap>
+	
+	<!-- 查询托收银行维护列表 -->
+	<select id="selectBcBankInfoList" parameterType="java.math.BigInteger" resultMap="bcBankInfoMap">
+		SELECT
+			pcbci.f_id pcbciId,
+			pcbci.f_no `no`,
+			pcbci.f_collection_range collectionRange,
+			bcfo.f_org_name bankName,		
+			IF(gbe.f_open_bank_collection=1, gb.f_name, null)  gbName
+		FROM
+			t_property_company_bank_collection_info pcbci
+			INNER JOIN t_bc_finance_org bcfo ON bcfo.f_id = pcbci.t_bank_collection_finance_org_f_id
+			AND bcfo.f_sys0_del_state = 0
+			INNER JOIN t_bc_info_has_t_group_building bcihgb ON bcihgb.t_property_company_bank_collection_info_f_id = pcbci.f_id
+			AND bcihgb.f_sys0_del_state = 0
+			INNER JOIN t_group_building gb ON gb.f_id = bcihgb.t_group_building_f_id
+			AND gb.f_sys0_del_state = 0
+			LEFT JOIN t_group_building_ext gbe ON gbe.f_id=gb.f_id	
+		WHERE
+			pcbci.t_property_company_f_id = #{pcId}
+		AND pcbci.f_sys0_del_state = 0
+		ORDER BY
+			pcbci.f_id DESC
+	</select>
+
+
+	<resultMap type="com.cnfantasia.server.api.bankCollection.entity.PropertyCompanyBCInfo" id="bcInfoMap" extends="propertyCompanyBankCollectionInfoBase.propertyCompanyBankCollectionInfoBaseMap_AppendTable">
+	 	<collection property="gbIdList" javaType="list" ofType="java.math.BigInteger" >
+	 		<result column="gbId" />
+	 	</collection>
+	</resultMap>
+	 
+	<!--出盘step1： 查询所有物业公司银行托收信息，不管按小区还按业主托收，t_bc_info_has_t_group_building里都应该有数据 -->
+	<select id="selectAllBankCollectionInfoList" resultMap="bcInfoMap">
+		SELECT
+			<include refid = "propertyCompanyBankCollectionInfoBase.queryHead_AppendTable"/>, 
+			pcgb.t_group_building_f_id gbId
+		FROM
+			t_property_company_bank_collection_info PCBCI
+		JOIN t_bank_collection_date bcd ON bcd.t_property_company_f_id = PCBCI.t_property_company_f_id 
+			and bcd.f_bank_collection_date = day(SYSDATE()) 
+			and bcd.f_sys0_del_state = 0
+		JOIN t_bc_info_has_t_group_building pcgb on pcgb.t_property_company_bank_collection_info_f_id = PCBCI.f_id 
+			and pcgb.f_sys0_del_state = 0
+		where PCBCI.f_sys0_del_state = 0;
+	</select>
+	
+	<!--出盘step2： 传入托收小区ID集，找出其名下可托收及所有可缴账期列表 -->
+	<select id="selectGBBCListByGbIDList" parameterType="list" resultType="com.cnfantasia.server.api.bankCollection.entity.BillCycleAndTypeName">
+		SELECT date_format(gbbc.f_bill_month_start,'%Y-%m-%d %T') billMonthStart, date_format(gbbc.f_bill_month_end,'%Y-%m-%d %T') billMonthEnd,
+		 gbbc.f_id gbbcId, pbt.f_name pbtName, gb.f_name gbName
+		FROM t_group_building_bill_cycle gbbc
+		JOIN t_pay_bill_type pbt on pbt.f_id = gbbc.t_pay_bill_type_id
+		JOIN t_group_building gb on gb.f_id = gbbc.t_group_building_id 
+		where gbbc.f_sys0_del_state = 0
+		and gbbc.f_bank_collection_status = 1 <!-- 账期上添加了银行托收开关 -->
+		and (SYSDATE() BETWEEN gbbc.f_bill_pay_start and gbbc.f_bill_pay_end )
+		and t_group_building_id in (
+		<foreach item="item" collection="list"  separator=",">
+			#{item}
+		</foreach>)
+		ORDER BY gbbc.t_pay_bill_type_id, gbbc.f_bill_month_start, gbbc.f_bill_month_end
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.bankCollection.entity.PPBankCollectionWithPayBill" id="PPBankCollectionWithPayBillMap" extends="propertyProprietorBankCollectionInfoBase.propertyProprietorBankCollectionInfoBaseMap_AppendTable">
+	 	<result column="pbId" javaType="java.math.BigInteger" property="pbId" />
+	 	<result column="pbAmount" javaType="java.math.BigDecimal" property="pbAmount" />
+	 	<result column="bankNumber" javaType="string" property="bankNumber" />
+	 	<result column="ppName" javaType="string" property="ppName" />
+	 	<result column="ppPhone" javaType="string" property="ppPhone" />
+	 </resultMap>
+	 
+	<!--出盘step3： 传入账期id列表，查询托收配置中所有可缴账单:按小区托收  -->
+	<select id="selectPayBllWithBCCycleIdForGBRange" parameterType="list" resultMap="PPBankCollectionWithPayBillMap">
+		SELECT 
+			DISTINCT PB.f_id pbId, 
+				CASE WHEN gbbc.f_is_collect_arrears = 2 -- 加上往月欠费的
+				THEN (PB.f_amount - IFNULL(PB.f_dedu_price,0)) + 
+					IFNULL((SELECT SUM(If(pb1.f_is_pay = 2, pb1.f_amount - IFNULL(pb1.f_dedu_price,0), 0))
+						FROM t_property_fee_detail_unpaid pfdu
+						INNER JOIN t_pay_bill pb1 ON pb1.f_id = pfdu.t_unpaid_pay_bill_id
+						WHERE pfdu.t_pay_bill_id = PB.f_id AND pb1.f_sys0_del_state = 0), 0)
+				ELSE (PB.f_amount - IFNULL(PB.f_dedu_price,0)) END pbAmount,
+			bb.f_number bankNumber, PPBCI.f_bank_owner_name ppName, pp.f_phone ppPhone,
+			 <include refid="propertyProprietorBankCollectionInfoBase.queryHead_AppendTable"/>
+		FROM
+			t_pay_bill PB
+		JOIN t_group_building_bill_cycle gbbc on gbbc.f_id = PB.t_bill_cycle_id and ( SYSDATE() BETWEEN gbbc.f_bill_pay_start and gbbc.f_bill_pay_end )
+		JOIN t_group_building gb on gb.f_id = gbbc.t_group_building_id 
+		JOIN t_group_building_ext gbe ON gbe.f_id = gb.f_id and gbe.f_open_bank_collection = 1
+		JOIN t_bank_collection_date bcd on bcd.t_property_company_f_id = gb.t_property_company_f_id and bcd.f_sys0_del_state = 0 and bcd.f_bank_collection_date = day(SYSDATE())
+		JOIN t_property_proprietor_bank_collection_info PPBCI on PPBCI.t_real_room_f_id = PB.t_real_room_f_id
+		JOIN t_real_room rr on PB.t_real_room_f_id = rr.f_id		
+		JOIN t_property_proprietor pp on pp.f_id = rr.t_property_proprietor_f_id
+		left join t_basedata_bank bb on bb.f_id = PPBCI.t_basedata_bank_f_id
+		where PB.f_is_pay = 2 and PB.f_sys0_del_state = 0
+		and PPBCI.f_bank_account is not null and PPBCI.f_bank_account &lt;&gt; ''
+		and gbbc.f_id in (
+			<foreach collection="list" item="item" index="index" separator=",">
+				#{item.gbbcId}
+			</foreach>
+		)
+	</select>
+	<!--出盘step3： 传入账期id列表，查询托收配置中所有可缴账单: 按业主范围托收 -->
+		<select id="selectPayBllWithBCCycleIdForPPRange" parameterType="map" resultMap="PPBankCollectionWithPayBillMap">
+		SELECT 
+			DISTINCT PB.f_id pbId, 
+				CASE WHEN gbbc.f_is_collect_arrears = 2 -- 加上往月欠费的
+				THEN (PB.f_amount - IFNULL(PB.f_dedu_price,0)) + 
+					IFNULL((SELECT SUM(If(pb1.f_is_pay = 2, pb1.f_amount - IFNULL(pb1.f_dedu_price,0), 0))
+						FROM t_property_fee_detail_unpaid pfdu
+						INNER JOIN t_pay_bill pb1 ON pb1.f_id = pfdu.t_unpaid_pay_bill_id
+						WHERE pfdu.t_pay_bill_id = PB.f_id AND pb1.f_sys0_del_state = 0), 0)
+				ELSE (PB.f_amount - IFNULL(PB.f_dedu_price,0)) END pbAmount, 
+			bb.f_number bankNumber,PPBCI.f_bank_owner_name ppName, pp.f_phone ppPhone,
+			<include refid="propertyProprietorBankCollectionInfoBase.queryHead_AppendTable"/>
+		FROM
+			t_pay_bill PB
+		JOIN t_group_building_bill_cycle gbbc on gbbc.f_id = PB.t_bill_cycle_id and ( SYSDATE() BETWEEN gbbc.f_bill_pay_start and gbbc.f_bill_pay_end )
+		JOIN t_group_building gb on gb.f_id = gbbc.t_group_building_id 
+		JOIN t_group_building_ext gbe ON gbe.f_id = gb.f_id and gbe.f_open_bank_collection = 1
+		JOIN t_bank_collection_date bcd on bcd.t_property_company_f_id = gb.t_property_company_f_id and bcd.f_sys0_del_state = 0 and bcd.f_bank_collection_date = day(SYSDATE())
+		JOIN t_property_proprietor_bank_collection_info PPBCI on PPBCI.t_real_room_f_id = PB.t_real_room_f_id 
+		JOIN t_bc_info_has_t_property_proprietor bcpp on PPBCI.f_id = bcpp.t_property_proprietor_bank_collection_info_f_id and bcpp.f_sys0_del_state = 0
+		
+		JOIN t_real_room rr on PB.t_real_room_f_id = rr.f_id
+		
+		JOIN t_property_proprietor pp on pp.f_id = rr.t_property_proprietor_f_id
+		left join t_basedata_bank bb on bb.f_id = PPBCI.t_basedata_bank_f_id
+		where PB.f_is_pay = 2 and PB.f_sys0_del_state = 0
+		and PPBCI.f_bank_account is not null and PPBCI.f_bank_account &lt;&gt; ''
+		and bcpp.t_property_company_bank_collection_info_f_id = #{bcInfoId}
+		and gbbc.f_id in (
+			<foreach collection="bcgbcIdList" item="item" index="index" separator=",">
+				#{item.gbbcId}
+			</foreach>
+		)
+	</select>
+	
+	<!--step 3+   找到当期未缴费的账单下历史欠费未缴的 Addedy wenfq 2017-06-15 -->
+	 <select id="selectUnPaidPayBllWithPayBillList" parameterType="list" resultMap="PPBankCollectionWithPayBillMap">
+		SELECT 
+			DISTINCT PB.f_id pbId, (PB.f_amount - IFNULL(PB.f_dedu_price,0)) pbAmount, 
+			bb.f_number bankNumber, pp.f_name ppName, pp.f_phone ppPhone,
+			 <include refid="propertyProprietorBankCollectionInfoBase.queryHead_AppendTable"/>
+		FROM
+			t_pay_bill PB
+		JOIN t_property_proprietor_bank_collection_info PPBCI on PPBCI.t_real_room_f_id = PB.t_real_room_f_id
+		JOIN t_real_room rr on PB.t_real_room_f_id = rr.f_id		
+		JOIN t_property_proprietor pp on pp.f_id = rr.t_property_proprietor_f_id
+		JOIN t_property_fee_detail_unpaid pfdu on pfdu.t_unpaid_pay_bill_id = PB.f_id	
+		left join t_basedata_bank bb on bb.f_id = PPBCI.t_basedata_bank_f_id
+		where PB.f_is_pay = 2 and PB.f_sys0_del_state = 0
+		AND pfdu.t_pay_bill_id in 
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item.pbId}
+		</foreach>
+	 </select>
+	
+	<!--出盘step4： 传入物业配置托收ID，查询出盘文件定义 -->
+	<select id="selectFileDefineList" parameterType="map" resultMap="bcFileDefineBase.bcFileDefineBaseMap">
+		SELECT <include refid="bcFileDefineBase.queryHead"/>
+		from t_bc_file_define BFD
+		JOIN t_property_company_bank_collection_info pcbc on pcbc.t_bank_collection_finance_org_f_id = BFD.t_bc_finance_org_f_id
+		where BFD.f_sys0_del_state = 0
+		and BFD.f_isSum_column = #{isSumFile}
+		and pcbc.f_id = #{bcInfoId}
+		ORDER BY BFD.f_order_seq;
+	</select>
+	
+	<!--出盘step5：更新账单状态为托收中,  -->
+	<update id="updatePayBillAfterOffer" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index">
+			UPDATE t_pay_bill 
+			set f_bank_collection_status = 1,
+				f_short_code = #{item.shortCode},
+			 	f_sys0_upd_time = SYSDATE()
+			where f_id = #{item.paybillId};
+		</foreach>
+	</update>
+
+	<select id="selectFileDefineListByFinanceOrgId" parameterType="java.math.BigInteger" resultMap="bcFileDefineBase.bcFileDefineBaseMap">
+		SELECT <include refid="bcFileDefineBase.queryHead"/>
+		from t_bc_file_define BFD
+		where BFD.f_sys0_del_state = 0
+		and BFD.f_isSum_column = 0
+		and BFD.t_bc_finance_org_f_id = #{financeOrgId}
+		ORDER BY BFD.f_order_seq;
+	</select>
+
+	<resultMap type="com.cnfantasia.server.api.bankCollection.entity.PPBCInfo4List" id="ProprietorBankCollectionInfoMap">
+		<id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+		<result column="t_real_room_f_id" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->
+		<result column="f_pp_name" javaType="java.lang.String" property="ppName"/>  <!-- 业主姓名 -->
+		<result column="f_pp_phone" javaType="java.lang.String" property="ppPhone"/>  <!-- 业主联系电话 -->
+		<result column="f_gb_id" javaType="java.math.BigInteger" property="gbId"/>  <!-- 小区id -->
+		<result column="f_gb_name" javaType="java.lang.String" property="gbName"/>  <!-- 小区名称（冗余） -->
+		<result column="f_building_name" javaType="java.lang.String" property="buildingName"/>  <!-- 楼栋号（冗余） -->
+		<result column="f_unit_name" javaType="java.lang.String" property="unitName"/>  <!-- 单元号（冗余） -->
+		<result column="f_rr_num" javaType="java.lang.String" property="rrNum"/>  <!-- 房号（冗余） -->
+		<result column="f_room_no" javaType="java.lang.String" property="roomNo"/>  <!-- 房间编码，出盘时用来标识房间的唯一标识 -->
+		<result column="f_bank_account" javaType="java.lang.String" property="bankAccount"/>  <!-- 业主开卡账号 -->
+		<result column="t_basedata_bank_f_id" javaType="java.math.BigInteger" property="tBasedataBankFId"/>  <!--  -->
+		<result column="f_bank_name" javaType="java.lang.String" property="bankName"/>  <!-- 业主开卡银行（冗余） -->
+		<result column="f_bank_owner_name" javaType="java.lang.String" property="bankOwnerName"/>  <!-- 开卡人姓名  -->
+	</resultMap>
+	
+	<!--业主托收信息列表-->
+	<select id="getPropertyProprietorBankCollectionInfoByCondition" parameterType="java.util.Map" resultMap="ProprietorBankCollectionInfoMap">
+		SELECT
+			PPBCI.f_id,
+			PPBCI.t_real_room_f_id,
+			pp.f_phone f_pp_phone,
+			PPBCI.f_gb_id,
+			PPBCI.f_gb_name,
+			PPBCI.f_building_name,
+			PPBCI.f_unit_name,
+			PPBCI.f_rr_num,
+			PPBCI.f_room_no,
+			PPBCI.f_bank_account,
+			PPBCI.t_basedata_bank_f_id,
+			PPBCI.f_bank_name,
+			PPBCI.f_bank_owner_name
+		FROM
+			t_property_proprietor_bank_collection_info PPBCI
+		INNER JOIN t_group_building GB ON GB.f_id = PPBCI.f_gb_id
+		inner join t_real_room rr on rr.f_id = PPBCI.t_real_room_f_id
+		inner join t_property_proprietor pp on pp.f_id = rr.t_property_proprietor_f_id
+		WHERE 1=1 AND PPBCI.f_sys0_del_state = 0
+		<if test="gbId != null and !gbId.equals('')  ">  and (PPBCI.f_gb_id = #{gbId} ) </if>
+		<if test="bankOwnerName != null and !bankOwnerName.equals('')  ">  and (PPBCI.f_bank_owner_name like CONCAT('%',#{bankOwnerName},'%') ) </if>
+		<if test="ppPhone != null and !ppPhone.equals('')  ">  and (pp.f_phone like CONCAT('%',#{ppPhone},'%') ) </if>
+		<if test="gbName != null and !gbName.equals('')  ">  and (PPBCI.f_gb_name like CONCAT('%',#{gbName},'%') ) </if>
+		<if test="buildingName != null and !buildingName.equals('')  ">  and (PPBCI.f_building_name like CONCAT('%',#{buildingName},'%') ) </if>
+		<if test="unitName != null and !unitName.equals('')  ">  and (PPBCI.f_unit_name like CONCAT('%',#{unitName},'%') ) </if>
+		<if test="rrNum != null and !rrNum.equals('')  ">  and (PPBCI.f_rr_num like CONCAT('%',#{rrNum},'%') ) </if>
+		<if test="roomNo != null and !roomNo.equals('')  ">  and (PPBCI.f_room_no like CONCAT('%',#{roomNo},'%') ) </if>
+		<if test="bankAccount != null and !bankAccount.equals('')  ">  and (PPBCI.f_bank_account like CONCAT('%',#{bankAccount},'%') ) </if>
+		<if test="bankName != null and !bankName.equals('')  ">  and (PPBCI.f_bank_name like CONCAT('%',#{bankName},'%') ) </if>
+		<include refid="permiOos.dataPermissionCondition"/>
+		ORDER BY f_id DESC
+		<if test="_begin != null and _length != '' ">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+
+	<!-- 逻辑删除托收时间配置 -->
+	<update id="deleteBankCollectionDateByPcId" parameterType="java.math.BigInteger">
+		UPDATE t_bank_collection_date SET f_sys0_del_state=1, f_sys0_upd_time=NOW() WHERE t_property_company_f_id=#{pcId} AND f_sys0_del_state=0
+	</update>
+
+
+	<resultMap type="com.cnfantasia.server.api.bankCollection.entity.RoomEntity" id="roomEntity" extends="realRoomBase.realRoomBaseMap_AppendTable">
+		<result column="groupbuildingName" property="groupbuildingName"/>
+		<result column="buildingName" property="buildingName"/>
+		<association property="proprietor" resultMap="propertyProprietorBase.propertyProprietorBaseMap_AppendTable" />
+	</resultMap>
+	<!--查询小区下的房间信息-->
+	<select id="queryRoomForList" parameterType="java.math.BigInteger" resultMap="roomEntity">
+		SELECT
+		<include refid="realRoomBase.queryHead_AppendTable"/>,
+		<include refid="propertyProprietorBase.queryHead_AppendTable"/>,
+		GB.f_name groupbuildingName,B.f_name buildingName
+		FROM t_real_room RR
+		INNER JOIN t_building B ON RR.t_building_f_id = B.f_id AND B.f_sys0_del_state=0
+		INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id AND GB.f_sys0_del_state=0
+		INNER JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id AND PP.f_sys0_del_state=0
+		WHERE RR.f_sys0_del_state=0
+		and RR.f_check_status in (1,9)
+		and B.f_check_status in (1,9) <!-- "1":"审核通过","9":"无需审核" -->
+		and GB.f_id=#{gbId}
+
+		ORDER BY B.f_name_char_order, B.f_name_digit_order+0, RR.f_unit_name, RR.f_num_tail_char_order, RR.f_num_tail_digit_order+0
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.bankCollection.entity.BcInfoByGbDto" id="bcInfoByGbMap">
+		<id column="gbId" javaType="java.math.BigInteger" property="gbId"/>
+		<result column="gbName" javaType="java.lang.String" property="gbName"/>
+		<result column="pmName" javaType="java.lang.String" property="pmName"/>
+		<result column="bcStatus" javaType="java.lang.String" property="bcStatus"/>
+	</resultMap>
+	
+	<!-- 物业公司对应的所有管理处、小区信息 -->
+	<select id="selectBcInfoByGB" parameterType="java.util.Map" resultMap="bcInfoByGbMap">
+		SELECT
+			GB.f_id gbId,
+			GB.f_name gbName,
+			PM.f_name pmName,
+		  	IF (BCHGB.f_id IS NULL, 1, 2) bcStatus
+		FROM
+			t_group_building GB
+			INNER JOIN t_group_building_ext GBE ON GBE.f_id=GB.f_id AND f_open_bank_collection=1
+			LEFT JOIN t_property_management PM ON GB.t_property_management_f_id = PM.f_id
+			AND PM.f_sys0_del_state = 0
+			LEFT JOIN t_property_company_bank_collection_info PCBCI ON 
+			PCBCI.f_id=#{pcbciId}
+			AND PCBCI.t_property_company_f_id = GB.t_property_company_f_id
+			AND PCBCI.f_collection_range=1 AND PCBCI.f_sys0_del_state = 0
+			LEFT JOIN t_bc_info_has_t_group_building BCHGB ON BCHGB.t_property_company_bank_collection_info_f_id = PCBCI.f_id
+			AND BCHGB.t_group_building_f_id = GB.f_id
+			AND BCHGB.f_sys0_del_state = 0
+		WHERE
+			GB.t_property_company_f_id = #{pcId}
+			AND NOT EXISTS(
+				SELECT
+					1
+				FROM t_property_company_bank_collection_info _PCBCI
+				INNER JOIN t_bc_info_has_t_group_building _BCHGB ON _BCHGB.t_property_company_bank_collection_info_f_id = _PCBCI.f_id
+				AND _BCHGB.f_sys0_del_state = 0
+				WHERE 1=1
+					AND _PCBCI.f_sys0_del_state=0
+					<if test="pcbciId != null and !pcbciId.equals('')">
+					AND _PCBCI.f_id!=#{pcbciId}
+					</if>
+					AND GB.f_id=_BCHGB.t_group_building_f_id
+			)
+			AND GB.f_sign_status = 1
+			AND GB.f_sys0_del_state = 0
+		ORDER BY
+			GB.f_id DESC
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.bankCollection.entity.BcInfoByPPDto" id="bcInfoByPPMap">
+		<id column="ppbciId" javaType="java.math.BigInteger" property="ppbciId"/>
+		<result column="pmName" javaType="java.lang.String" property="pmName"/>
+		<result column="gbId" javaType="java.math.BigInteger" property="gbId"/>
+		<result column="gbName" javaType="java.lang.String" property="gbName"/>
+		<result column="buildingName" javaType="java.lang.String" property="buildingName"/>
+		<result column="unitName" javaType="java.lang.String" property="unitName"/>
+		<result column="roomName" javaType="java.lang.String" property="roomName"/>
+		<result column="ppName" javaType="java.lang.String" property="ppName"/>
+		<result column="bankAcount" javaType="java.lang.String" property="bankAcount"/>
+		<result column="bankName" javaType="java.lang.String" property="bankName"/>
+		<result column="bcStatus" javaType="java.lang.String" property="bcStatus"/>
+	</resultMap>
+	
+	<!-- 物业公司对应的所有用户托收信息 -->
+	<select id="selectBcInfoByPP" parameterType="java.util.Map" resultMap="bcInfoByPPMap">
+		SELECT
+			PPBCI.f_id ppbciId,
+			PM.f_name pmName,
+			GB.f_name gbName,
+			GB.f_id gbId,
+			B.f_name buildingName,
+			RR.f_unit_name unitName,
+			RR.f_num roomName,
+			pp.f_name ppName,
+			PPBCI.f_bank_account bankAcount,
+			PPBCI.f_bank_name bankName,		
+			IF (BIHPP.f_id IS NULL, 1, 2) bcStatus
+		FROM
+			t_group_building GB
+			INNER JOIN t_group_building_ext GBE ON GBE.f_id=GB.f_id AND f_open_bank_collection=1
+			LEFT JOIN t_property_management PM ON GB.t_property_management_f_id = PM.f_id
+			AND PM.f_sys0_del_state = 0
+			INNER JOIN t_building B ON B.t_group_building_f_id = GB.f_id
+			AND B.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON RR.t_building_f_id = B.f_id
+			AND (
+				RR.f_check_status = 1
+				OR RR.f_check_status = 9
+			)
+			AND RR.f_sys0_del_state = 0
+			INNER JOIN t_property_proprietor_bank_collection_info PPBCI ON PPBCI.t_real_room_f_id = RR.f_id
+			AND PPBCI.f_sys0_del_state = 0
+			LEFT JOIN t_bc_info_has_t_property_proprietor BIHPP ON 
+			BIHPP.t_property_company_bank_collection_info_f_id=#{pcbciId}
+			AND BIHPP.t_property_proprietor_bank_collection_info_f_id = PPBCI.f_id
+			AND BIHPP.f_sys0_del_state = 0
+			LEFT JOIN t_property_proprietor pp ON pp.f_id=RR.t_property_proprietor_f_id
+		WHERE
+			GB.t_property_company_f_id = #{pcId}
+		<!-- 排除小区 -->
+		AND NOT EXISTS(
+				SELECT
+					1
+				FROM t_property_company_bank_collection_info _PCBCI
+				INNER JOIN t_bc_info_has_t_group_building _BCHGB ON _BCHGB.t_property_company_bank_collection_info_f_id = _PCBCI.f_id
+				AND _BCHGB.f_sys0_del_state = 0
+				WHERE 1=1  
+					AND _PCBCI.f_sys0_del_state=0
+					AND _PCBCI.f_collection_range=1
+					<if test="pcbciId != null and !pcbciId.equals('')">
+					AND _PCBCI.f_id!=#{pcbciId}
+					</if>
+					AND GB.f_id=_BCHGB.t_group_building_f_id
+		)
+		<!-- 排除业主 -->
+		AND NOT EXISTS(
+				SELECT
+					1
+				FROM t_property_company_bank_collection_info _PCBCI
+				INNER JOIN t_bc_info_has_t_property_proprietor _BIHPP ON _BIHPP.t_property_company_bank_collection_info_f_id = _PCBCI.f_id
+				AND _BIHPP.f_sys0_del_state = 0
+				INNER JOIN t_property_proprietor_bank_collection_info _PPBCI ON _PPBCI.f_id=_BIHPP.t_property_proprietor_bank_collection_info_f_id
+				AND _PPBCI.f_sys0_del_state=0
+				WHERE 1=1 
+					AND _PCBCI.f_sys0_del_state=0
+					AND _PCBCI.f_collection_range=2
+					<if test="pcbciId != null and !pcbciId.equals('')">
+					AND _PCBCI.f_id!=#{pcbciId}
+					</if>
+					AND RR.f_id=_PPBCI.t_real_room_f_id
+		)
+		AND GB.f_sign_status = 1
+		AND GB.f_sys0_del_state = 0
+		ORDER BY
+			GB.f_id DESC
+	</select>
+	
+	<!-- 按小区托盘重复性校验 -->
+	<select id="selectRepeatGbCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM t_property_company_bank_collection_info PCBCI
+		INNER JOIN t_bc_info_has_t_group_building BIHGB ON BIHGB.t_property_company_bank_collection_info_f_id = PCBCI.f_id
+		AND BIHGB.f_sys0_del_state = 0
+		WHERE 1=1
+			<if test="pcbciId != null and !pcbciId.equals('')">
+			AND PCBCI.f_id!=#{pcbciId}
+			</if>
+			AND BIHGB.t_group_building_f_id IN(
+				<foreach item="item" collection="gbIds" open="" separator="," close="">
+					#{item}
+				</foreach>
+			)
+	</select>
+	
+	<!-- 按业主托盘重复性校验 -->
+	<select id="selectRepeatPpCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM 
+			t_property_proprietor_bank_collection_info PPBCI
+		WHERE 1=1
+			AND PPBCI.f_sys0_del_state=0
+			AND PPBCI.f_id IN(
+				<foreach item="item" collection="ppbciIds" open="" separator="," close="">
+					#{item}
+				</foreach>
+			)
+			AND (
+				EXISTS(
+					SELECT
+						1
+					FROM t_property_company_bank_collection_info _PCBCI
+					INNER JOIN t_bc_info_has_t_group_building _BCHGB ON _BCHGB.t_property_company_bank_collection_info_f_id = _PCBCI.f_id
+					AND _BCHGB.f_sys0_del_state = 0
+					INNER JOIN t_group_building _GB ON _GB.f_id=_BCHGB.t_group_building_f_id AND _GB.f_sys0_del_state = 0
+					INNER JOIN t_building _B ON _B.t_group_building_f_id = _GB.f_id
+					AND _B.f_sys0_del_state = 0
+					INNER JOIN t_real_room _RR ON _RR.t_building_f_id = _B.f_id
+					AND (
+						_RR.f_check_status = 1
+						OR _RR.f_check_status = 9
+					)
+					AND _RR.f_sys0_del_state = 0
+					WHERE 1=1  
+						AND _PCBCI.f_sys0_del_state=0
+						AND _PCBCI.f_collection_range=1
+						<if test="pcbciId != null and !pcbciId.equals('')">
+						AND _PCBCI.f_id!=#{pcbciId}
+						</if>
+						AND PPBCI.t_real_room_f_id=_RR.f_id
+					)
+				OR 
+				EXISTS(
+					SELECT
+						1
+					FROM t_property_company_bank_collection_info _PCBCI
+					INNER JOIN t_bc_info_has_t_property_proprietor _BIHPP ON _BIHPP.t_property_company_bank_collection_info_f_id = _PCBCI.f_id
+					AND _BIHPP.f_sys0_del_state = 0
+					INNER JOIN t_property_proprietor_bank_collection_info _PPBCI ON _PPBCI.f_id=_BIHPP.t_property_proprietor_bank_collection_info_f_id
+					AND _PPBCI.f_sys0_del_state=0
+					WHERE 1=1 
+						AND _PCBCI.f_sys0_del_state=0
+						AND _PCBCI.f_collection_range=2
+						<if test="pcbciId != null and !pcbciId.equals('')">
+						AND _PCBCI.f_id!=#{pcbciId}
+						</if>
+						AND PPBCI.t_real_room_f_id=_PPBCI.t_real_room_f_id
+					)
+				)
+	</select>
+
+	<select id="getBcFinanceOrg" parameterType="java.math.BigInteger" resultMap="bcFinanceOrgBase.bcFinanceOrgBaseMap">
+		SELECT <include refid="bcFinanceOrgBase.queryHead"/>
+		FROM t_bc_finance_org BFO INNER JOIN t_property_company_bank_collection_info pcbci ON pcbci.t_bank_collection_finance_org_f_id = BFO.f_id AND pcbci.f_sys0_del_state = 0
+		INNER JOIN t_bc_group_building_cycle bcgbc ON bcgbc.t_property_company_bank_collection_info_f_id = pcbci.f_id AND pcbci.f_sys0_del_state = 0
+		WHERE bcgbc.f_id = #{bcgroupBuildingCycleId} AND BFO.f_sys0_del_state = 0
+	</select>
+
+	<!-- 根据t_property_company_bank_collection_info表字段逻辑删除t_bc_info_has_t_group_building -->
+	<update id="deleteBcInfoHasTGroupBuildingByPcbciId" parameterType="java.math.BigInteger">
+		UPDATE t_bc_info_has_t_group_building SET f_sys0_del_state=1, f_sys0_upd_time=NOW() WHERE t_property_company_bank_collection_info_f_id=#{pcbciId} AND f_sys0_del_state=0
+	</update>
+	
+	<!-- 根据t_bc_info_has_t_property_proprietor表字段逻辑删除t_bc_info_has_t_group_building -->
+	<update id="deleteBcInfoHasTPropertyProprietorByPcbciId" parameterType="java.math.BigInteger">
+		UPDATE t_bc_info_has_t_property_proprietor SET f_sys0_del_state=1, f_sys0_upd_time=NOW() WHERE t_property_company_bank_collection_info_f_id=#{pcbciId} AND f_sys0_del_state=0
+	</update>
+
+	<!-- 更新(业主银行托收信息)信息。 -->
+	<sql id="update_propertyProprietorBankCollectionInfo">
+		UPDATE t_property_proprietor_bank_collection_info
+		<trim prefix="SET" prefixOverrides=",">
+			f_room_no=#{roomNo}
+			,f_bank_account=#{bankAccount}
+			,t_basedata_bank_f_id=#{tBasedataBankFId}
+			,f_bank_name=#{bankName}
+			,f_bank_owner_name=#{bankOwnerName}
+			,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')
+		</trim>
+		WHERE f_id=#{id}
+	</sql>
+	<update id="update_propertyProprietorBankCollectionInfo" parameterType="com.cnfantasia.server.domainbase.propertyProprietorBankCollectionInfo.entity.PropertyProprietorBankCollectionInfo">
+		<include refid="update_propertyProprietorBankCollectionInfo"/>
+	</update>
+	
+	<resultMap type="com.cnfantasia.server.api.bankCollection.entity.BcBankInfoDto" id="bcBankInfoForBCHistoryMap">
+		<id column="pcbciId" javaType="java.math.BigInteger" property="pcbciId"/>
+		<result column="no" javaType="java.lang.String" property="no"/>
+		<result column="collectionRange" javaType="java.lang.Integer" property="collectionRange"/>
+		<result column="gbNames" javaType="java.lang.String" property="gbNames"/>
+		<result column="bankName" javaType="java.lang.String" property="bankName"/>
+		<result column="detailFileUrl" javaType="java.lang.String" property="detailFileUrl"/>
+		<result column="sumFileUrl" javaType="java.lang.String" property="sumFileUrl"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.bankCollection.entity.BCHistoryDto" id="bCHistoryMap" extends="bcBankInfoForBCHistoryMap">
+		<id column="bgbcId" javaType="java.math.BigInteger" property="bgbcId"/>
+		<result column="billName" javaType="java.lang.String" property="billName"/>
+		<result column="billMonthStart" javaType="java.lang.String" property="billMonthStart"/>
+		<result column="billMonthEnd" javaType="java.lang.String" property="billMonthEnd"/>
+		<result column="importFileStats" javaType="java.lang.Boolean" property="importFileStats"/>
+		<result column="rebackStatus" javaType="java.lang.Integer" property="rebackStatus"/>
+		<result column="bgbcIds" javaType="java.lang.String" property="bgbcIds"/>
+		<result column="className" javaType="java.lang.String" property="className"/>
+	</resultMap>
+	
+	<!-- t_bc_info_has_t_group_building中包含按小区、业主的，所有不用再去关联t_bc_info_has_t_property_proprietor表查询 -->
+	<sql id="selectBcBankInfoComm">
+		FROM
+				t_property_company_bank_collection_info pcbci
+			INNER JOIN t_bc_group_building_cycle bgbc ON bgbc.t_property_company_bank_collection_info_f_id = pcbci.f_id
+			AND bgbc.f_sys0_del_state = 0
+			LEFT JOIN t_bc_finance_org bcfo ON bcfo.f_id = pcbci.t_bank_collection_finance_org_f_id
+			AND bcfo.f_sys0_del_state = 0
+			LEFT JOIN t_bc_group_building_cycle_entry bgbce ON bgbce.t_bc_group_building_cycle_f_id=bgbc.f_id
+			AND bgbce.f_sys0_del_state=0
+			LEFT JOIN t_group_building_bill_cycle gbbc ON gbbc.f_id=bgbce.f_gbbc_id
+			LEFT JOIN t_group_building gb ON gb.f_id = gbbc.t_group_building_id
+		WHERE
+			pcbci.t_property_company_f_id = #{pcId}
+			AND pcbci.f_sys0_del_state = 0
+			<if test="no != null and !no.equals('')">
+				AND pcbci.f_no=#{no}
+			</if>
+			<if test="bankOrg != null and !bankOrg.equals('')">
+				AND pcbci.t_bank_collection_finance_org_f_id=#{bankOrg}
+			</if>
+			<if test="billMonthStart != null and !billMonthStart.equals('')">
+				AND bgbc.f_bill_month_start>=#{billMonthStart}
+			</if>
+			<if test="billMonthEnd != null and !billMonthEnd.equals('')">
+				<![CDATA[AND bgbc.f_bill_month_end<=#{billMonthEnd}]]>
+			</if>
+			<if test="billName != null and !billName.equals('')">
+				AND bgbc.f_pay_bill_type_name=#{billName}
+			</if>
+		<!-- 同个账期时间，显示最新的一条记录 -->
+		GROUP BY
+			pcbci.f_id, bgbc.f_bill_month_start, bgbc.f_bill_month_end, bgbc.f_pay_bill_type_name
+			<if test="gbName != null and !gbName.equals('')">
+				HAVING LOCATE(#{gbName}, GROUP_CONCAT(DISTINCT gb.f_name  SEPARATOR ','))>0
+			</if>
+	</sql>
+	
+	<!-- 托收数据列表查询 -->
+	<select id="selectBCHistoryForList" parameterType="java.util.Map" resultMap="bCHistoryMap">
+		SELECT
+			_tmp.pcbciId,
+			_tmp.no,
+			_tmp.collectionRange,
+			_tmp.bankName,
+			_tmp.gbNames,
+			_tmp.bgbcId,
+			_tmp.billName,
+			_tmp.billMonthStart,
+			_tmp.billMonthEnd,
+			(select (_bgbc.f_detail_file_url IS NOT NULL) AND (_bgbc.f_detail_file_url!='') from t_bc_group_building_cycle _bgbc where _bgbc.f_id=_tmp.bgbcId) importFileStats,
+			(select _bgbc.f_reback_status from t_bc_group_building_cycle _bgbc where _bgbc.f_id=_tmp.bgbcId) rebackStatus,
+			_tmp.bgbcIds,
+			_tmp.f_class_name className,
+			_tmp.f_detail_file_url detailFileUrl,
+			_tmp.f_sum_file_url sumFileUrl
+		FROM (
+			SELECT
+				pcbci.f_id pcbciId,
+				pcbci.f_no `no`,
+				pcbci.f_collection_range collectionRange,
+				bcfo.f_org_name bankName,
+				GROUP_CONCAT(		
+					DISTINCT gb.f_name SEPARATOR ','
+				) gbNames,
+				MAX(bgbc.f_id) bgbcId,
+				bgbc.f_pay_bill_type_name billName,
+				DATE_FORMAT(
+					bgbc.f_bill_month_start,
+					'%Y年%m月'
+				) billMonthStart,
+				DATE_FORMAT(
+					bgbc.f_bill_month_end,
+					'%Y年%m月'
+				) billMonthEnd,
+				GROUP_CONCAT(bgbc.f_id) bgbcIds,
+				bcfo.f_class_name,
+				GROUP_CONCAT(bgbc.f_detail_file_url) f_detail_file_url,
+				GROUP_CONCAT(bgbc.f_sum_file_url)f_sum_file_url
+			<include refid="selectBcBankInfoComm"></include>
+			ORDER BY
+				bgbc.f_id DESC
+			<if test="(_begin != null and !_begin.equals('')) or (_length != null and !_length.equals(''))">
+				<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+			</if>
+		) _tmp
+	</select>
+	
+	<!-- 托收数据列表条数查询 -->
+	<select id="selectBCHistoryForCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM (
+			SELECT 1 
+			<include refid="selectBcBankInfoComm"></include>
+		) _tmp
+	</select>
+	
+	<!-- 按小区确认回盘 -->
+	<update id="confirmBcByGB" parameterType="java.math.BigInteger">
+		UPDATE t_bc_group_building_cycle_entry BGBCE
+		INNER JOIN t_pay_bill PB ON PB.t_bill_cycle_id = BGBCE.f_gbbc_id
+		AND PB.f_sys0_del_state = 0
+		SET PB.f_bank_collection_status = 2
+		WHERE
+			BGBCE.t_bc_group_building_cycle_f_id = #{bgbcId}
+		AND BGBCE.f_sys0_del_state = 0
+	</update>
+	
+	<!-- 按业主确认回盘 -->
+	<update id="confirmBcByPP" parameterType="java.util.Map">
+		UPDATE t_bc_info_has_t_property_proprietor BIHPP
+		INNER JOIN t_property_proprietor_bank_collection_info PPBCI ON PPBCI.f_id = BIHPP.t_property_proprietor_bank_collection_info_f_id
+		INNER JOIN t_bc_group_building_cycle_entry BGBCE ON BGBCE.t_bc_group_building_cycle_f_id = #{bgbcId}
+		AND BGBCE.f_sys0_del_state = 0
+		INNER JOIN t_pay_bill PB ON PB.t_bill_cycle_id = BGBCE.f_gbbc_id
+		AND PB.t_real_room_f_id = PPBCI.t_real_room_f_id
+		SET PB.f_bank_collection_status = 2
+		WHERE
+			BIHPP.t_property_company_bank_collection_info_f_id = #{pcbciId}
+		AND BIHPP.f_sys0_del_state = 0
+	</update>
+	
+	<resultMap type="com.cnfantasia.server.api.bankCollection.entity.RebackRecordDto" id="rebackRecordMap">
+		<result column="gbName" javaType="java.lang.String" property="gbName"/>
+		<result column="buildingName" javaType="java.lang.String" property="buildingName"/>
+		<result column="unitName" javaType="java.lang.String" property="unitName"/>
+		<result column="roomName" javaType="java.lang.String" property="roomName"/>
+		<result column="ppName" javaType="java.lang.String" property="ppName"/>
+		<result column="rebackContent" javaType="java.lang.String" property="rebackContent"/>
+		<result column="rebackTime" javaType="java.lang.String" property="rebackTime"/>
+		<result column="rtStatus" javaType="java.lang.Integer" property="rtStatus"/>
+	</resultMap>
+	
+	<sql id="selectRebackRecordComm">
+		FROM
+				t_bc_group_building_cycle BGBC
+			INNER JOIN t_bc_reback_record BRR ON BRR.t_bc_group_building_cycle_f_id = BGBC.f_id
+			INNER JOIN t_pay_bill PB ON PB.f_id = BRR.f_payBill_id
+			LEFT JOIN t_real_room RR ON RR.f_id = PB.t_real_room_f_id
+			LEFT JOIN t_building B ON B.f_id = RR.t_building_f_id
+			LEFT JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id
+			LEFT JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id
+			WHERE
+				BGBC.f_id IN(
+					<foreach item="item" collection="bgbcIds" open="" separator="," close="">
+						 #{item}
+					</foreach>
+				)
+				AND BGBC.f_sys0_del_state = 0
+				<if test="gbName != null and !gbName.equals('')">
+					AND LOCATE(#{gbName}, GB.f_name)>0
+				</if>
+				<if test="buildingName != null and !buildingName.equals('')">
+					AND B.f_name=#{buildingName}
+				</if>
+				<if test="unitName != null and !unitName.equals('')">
+					AND RR.f_unit_name=#{unitName}
+				</if>
+				<if test="roomName != null and !roomName.equals('')">
+					AND RR.f_num=#{roomName}
+				</if>
+				<if test="ppName != null and !ppName.equals('')">
+					AND PP.f_name=#{ppName}
+				</if>
+				<if test="rebackContent != null and !rebackContent.equals('')">
+					AND LOCATE(#{rebackContent}, BRR.f_reback_content)>0
+				</if>
+				<if test="bankResult != null and !bankResult.equals('')">
+					<if test="bankResult=='1'.toString()">
+					AND (BRR.f_status=1 OR BRR.f_status=5)
+					</if>
+					<if test="bankResult=='2'.toString()">
+					AND (BRR.f_status=2 OR BRR.f_status=3 OR BRR.f_status=4)
+					</if>
+				</if>
+				<if test="rebackStartTime != null and !rebackStartTime.equals('')">
+					AND BRR.f_reback_time>=#{rebackStartTime}
+				</if>
+				<if test="rebackEndTime != null and !rebackEndTime.equals('')">
+					<![CDATA[AND BRR.f_reback_time<=#{rebackEndTime}]]>
+				</if>
+				<if test="rtStatus != null and !rtStatus.equals('')">
+					AND BRR.f_status=#{rtStatus}
+				</if>
+	</sql>
+	
+	<!-- 查看回盘结果列表 -->
+	<select id="selectRebackRecordForList" parameterType="java.util.Map" resultMap="rebackRecordMap">
+		SELECT
+			GB.f_name gbName,
+			B.f_name buildingName,
+			RR.f_unit_name unitName,
+			RR.f_num roomName,
+			PP.f_name ppName,
+			BRR.f_reback_content rebackContent,
+			DATE_FORMAT(
+				BRR.f_reback_time,
+				'%Y-%m-%d %H:%i:%s'
+			) rebackTime,
+			BRR.f_status rtStatus
+		<include refid="selectRebackRecordComm"></include>
+		ORDER BY
+			BRR.f_id DESC
+	</select>
+	
+	<!-- 查看回盘结果列表数据条数 -->
+	<select id="selectRebackRecordForCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		<include refid="selectRebackRecordComm"></include>
+	</select>
+
+	<resultMap type="com.cnfantasia.server.api.bankCollection.entity.PPBCInfo4List" id="propertyProprietorBankCollectionInfoBaseMap">
+		<id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+		<result column="t_real_room_f_id" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->
+		<result column="f_gb_id" javaType="java.math.BigInteger" property="gbId"/>  <!-- 小区id -->
+		<result column="f_gb_name" javaType="java.lang.String" property="gbName"/>  <!-- 小区名称（冗余） -->
+		<result column="f_building_name" javaType="java.lang.String" property="buildingName"/>  <!-- 楼栋号（冗余） -->
+		<result column="f_unit_name" javaType="java.lang.String" property="unitName"/>  <!-- 单元号（冗余） -->
+		<result column="f_rr_num" javaType="java.lang.String" property="rrNum"/>  <!-- 房号（冗余） -->
+		<result column="f_room_no" javaType="java.lang.String" property="roomNo"/>  <!-- 房间编码，出盘时用来标识房间的唯一标识 -->
+		<result column="f_bank_account" javaType="java.lang.String" property="bankAccount"/>  <!-- 业主开卡账号 -->
+		<result column="t_basedata_bank_f_id" javaType="java.math.BigInteger" property="tBasedataBankFId"/>  <!--  -->
+		<result column="f_bank_name" javaType="java.lang.String" property="bankName"/>  <!-- 业主开卡银行（冗余） -->
+		<result column="f_bank_owner_name" javaType="java.lang.String" property="bankOwnerName"/>  <!-- 开卡人姓名  -->
+		<result column="ppName" javaType="java.lang.String" property="ppName"/>  <!-- 业主姓名 -->
+		<result column="ppPhone" javaType="java.lang.String" property="ppPhone"/>  <!-- 业主电话 -->
+		<result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+		<result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+		<result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+		<result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+		<result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+		<result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+		<result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 根据序列号查询某个(业主银行托收信息)信息。 -->
+	<select id="select_propertyProprietorBankCollectionInfo_bySeqId" parameterType="java.math.BigInteger" resultMap="propertyProprietorBankCollectionInfoBaseMap">
+		SELECT
+			PPBCI.f_id,
+			PPBCI.t_real_room_f_id,
+			PPBCI.f_gb_id,
+			PPBCI.f_gb_name,
+			PPBCI.f_building_name,
+			PPBCI.f_unit_name,
+			PPBCI.f_rr_num,
+			PPBCI.f_room_no,
+			PPBCI.f_bank_account,
+			PPBCI.t_basedata_bank_f_id,
+			PPBCI.f_bank_name,
+			PPBCI.f_bank_owner_name,
+			pp.f_name ppName,
+			pp.f_phone ppPhone
+		FROM
+			t_property_proprietor_bank_collection_info PPBCI
+		INNER JOIN t_real_room rr ON rr.f_id = PPBCI.t_real_room_f_id
+		AND RR.f_check_status IN (1, 9)
+		AND rr.f_sys0_del_state = 0
+		INNER JOIN t_property_proprietor PP ON PP.f_id = rr.t_property_proprietor_f_id
+		AND pp.f_sys0_del_state = 0
+		WHERE
+			1 = 1
+		AND PPBCI.f_id = #{_parameter}
+	</select>
+
+	<!--平安银行回盘信息校验-->
+	<select id="getPayBillCheckForPingAnBankCollection" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT DISTINCT pb.f_id FROM t_property_proprietor_bank_collection_info ppbci
+		INNER JOIN t_pay_bill pb ON pb.t_real_room_f_id = ppbci.t_real_room_f_id
+				AND pb.f_is_pay = 2 AND pb.f_sys0_del_state = 0 AND ppbci.f_sys0_del_state = 0
+		INNER JOIN t_bc_group_building_cycle_entry bgbce on bgbce.f_gbbc_id = pb.t_bill_cycle_id
+			  AND bgbce.t_bc_group_building_cycle_f_id = #{bcgroupBuildingCycleId}
+		WHERE pb.f_bank_collection_status = 1 AND ppbci.f_bank_account = #{bankNo} AND (pb.f_amount - IFNULL(pb.f_dedu_price,0)) &lt;= #{amount}
+		<if test="ids != null and ids.size() > 0">
+			AND pb.f_id NOT IN
+			<foreach item="item" collection="ids" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<!--金融、ICBC回盘信息校验-->
+	<select id="getPayBillCheckForJinRongAndICBCCollection" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT DISTINCT pb.f_id FROM t_property_proprietor_bank_collection_info ppbci
+		INNER JOIN t_pay_bill pb ON pb.t_real_room_f_id = ppbci.t_real_room_f_id
+		AND pb.f_is_pay = 2 AND pb.f_sys0_del_state = 0 AND ppbci.f_sys0_del_state = 0
+		INNER JOIN t_bc_group_building_cycle_entry bgbce on bgbce.f_gbbc_id = pb.t_bill_cycle_id
+		AND bgbce.t_bc_group_building_cycle_f_id = #{bcgroupBuildingCycleId}
+		WHERE pb.f_bank_collection_status = 1 AND ppbci.f_room_no = #{roomNo} AND (pb.f_amount - IFNULL(pb.f_dedu_price,0)) &lt;= #{amount}
+	</select>
+
+	<!-- ========================================= 打印 start =========================================-->
+	<resultMap type="com.cnfantasia.server.api.bankCollection.entity.BcPrintDetail" id="bcPrintDetailMap">
+		<result column="gbId" javaType="java.math.BigInteger" property="gbId"/>
+		<result column="bId" javaType="java.math.BigInteger" property="bId"/>
+		<result column="roomNo" javaType="java.lang.String" property="roomNo"/>
+		<result column="ppName" javaType="java.lang.String" property="ppName"/>
+		<result column="bankAccount" javaType="java.lang.String" property="bankAccount"/>
+		<result column="outAmount" javaType="java.math.BigDecimal" property="outAmount"/>
+		<result column="dealAmount" javaType="java.math.BigDecimal" property="dealAmount"/>
+		<result column="dealLateAmount" javaType="java.math.BigDecimal" property="dealLateAmount"/>
+	</resultMap>
+	
+	<!-- 查询银行出盘明细（按小区） -->
+	<select id="getBcPrintDetailByBgbcId" parameterType="java.math.BigInteger" resultMap="bcPrintDetailMap">
+		SELECT 
+			ppbc.f_gb_id gbId,
+			ppbc.f_gb_name gbName,
+			rr.t_building_f_id bId,
+			ppbc.f_building_name bName,
+			ppbc.f_room_no roomNo,
+			ppbc.f_bank_owner_name ppName,
+			ppbc.f_bank_account bankAccount,
+			CASE WHEN gbbc.f_is_collect_arrears = 2  -- 加上往月欠费的
+			THEN
+				(IFNULL(pb.f_amount, 0) - IFNULL(PB.f_dedu_price,0) +
+				IFNULL((SELECT SUM(If(pb1.f_is_pay = 2, pb1.f_amount - IFNULL(pb1.f_dedu_price,0), 0))
+						FROM t_property_fee_detail_unpaid pfdu
+						INNER JOIN t_pay_bill pb1 ON pb1.f_id = pfdu.t_unpaid_pay_bill_id
+						WHERE pb1.f_sys0_del_state = 0 and pfdu.t_pay_bill_id = pb.f_id), 0))/100
+			ELSE (IFNULL(pb.f_amount, 0) - IFNULL(PB.f_dedu_price,0))/100 END outAmount,
+			<!-- dealAmount 与outAmount一样，所以不再查询了
+			(IFNULL(pb.f_amount, 0) - IFNULL(PB.f_dedu_price,0) +
+			IFNULL((SELECT SUM(If(pb1.f_is_pay = 2, pb1.f_amount - IFNULL(pb1.f_dedu_price,0), 0))
+					FROM t_property_fee_detail_unpaid pfdu
+					INNER JOIN t_pay_bill pb1 ON pb1.f_id = pfdu.t_unpaid_pay_bill_id
+					WHERE pfdu.t_pay_bill_id = PB.f_id), 0))/100 dealAmount, -->
+			0 dealLateAmount
+		FROM
+			t_pay_bill pb 
+		INNER JOIN t_real_room rr ON rr.f_id = pb.t_real_room_f_id AND rr.f_sys0_del_state = 0
+		INNER JOIN t_property_proprietor_bank_collection_info ppbc ON ppbc.t_real_room_f_id = pb.t_real_room_f_id AND ppbc.f_sys0_del_state = 0
+		inner join t_bc_offer_record bcor on bcor.f_payBill_id = pb.f_id
+		INNER JOIN t_group_building_bill_cycle gbbc on gbbc.f_id = pb.t_bill_cycle_id
+		where
+			bcor.t_bc_group_building_cycle_f_id = #{bgbcId}
+			AND (ppbc.f_room_no IS NOT NULL AND ppbc.f_room_no!='')
+			AND (ppbc.f_bank_account IS NOT NULL AND ppbc.f_bank_account!='')
+		ORDER BY
+			gbId,
+			bId,
+			ppbc.f_room_no
+	</select>
+	
+	<!-- ========================================= 打印 end =========================================-->
+
+	<select id="selectUnPaidPayBllWithPayBillId" parameterType="java.math.BigInteger" resultMap="payBillBase.payBillBaseMap_AppendTable">
+		SELECT <include refid="payBillBase.queryHead_AppendTable"/> FROM t_property_fee_detail_unpaid pfdu INNER JOIN t_pay_bill PB ON PB.f_id = pfdu.t_unpaid_pay_bill_id
+		WHERE pfdu.t_pay_bill_id = #{id};
+	</select>
+
+</mapper>

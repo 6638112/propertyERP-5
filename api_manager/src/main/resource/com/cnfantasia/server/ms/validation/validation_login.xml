@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+            
+	
+	<bean id="ValidationContext" class="com.cnfantasia.server.ms.pub.validation.ValidationContext">
+		<constructor-arg type="java.util.List">
+			<list>
+				<!-- 单个请求验证的配置 -->
+				<bean class="com.cnfantasia.server.ms.pub.validation.ValidateEntity">
+					<property name="url" value="/login/getValidateCode.json" />
+					<property name="regulations">
+						<map>
+							<entry key="mobile" value="number{blength=11,11}" />
+						</map>
+					</property>
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+</beans>  

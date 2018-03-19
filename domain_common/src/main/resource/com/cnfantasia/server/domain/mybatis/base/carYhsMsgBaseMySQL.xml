@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:临停车缴费消息发送表 t_car_yhs_msg -->
+<mapper namespace="carYhsMsgBase">
+	<resultMap type="CarYhsMsg" id="carYhsMsgBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="t_car_num_pay_log_f_id" javaType="java.math.BigInteger" property="tCarNumPayLogFId"/>  <!--  -->
+        <result column="t_group_building_f_id" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 停车小区 -->
+        <result column="t_car_num" javaType="java.lang.String" property="tCarNum"/>  <!-- 车牌 -->
+        <result column="f_fee" javaType="java.lang.Long" property="fee"/>  <!-- 停车费（单位元） -->
+        <result column="f_pay_time" javaType="java.lang.String" property="payTime"/>  <!-- 缴费时间 -->
+        <result column="f_send_status" javaType="java.lang.Integer" property="sendStatus"/>  <!-- 发送状态 -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CarYhsMsg" id="carYhsMsgExtendMap" extends="carYhsMsgBaseMap">
+	</resultMap>
+	<resultMap type="CarYhsMsg" id="carYhsMsgBaseMap_AppendTable">
+        <id column="CYMid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="CYMtCarNumPayLogFId" javaType="java.math.BigInteger" property="tCarNumPayLogFId"/>  <!--  -->
+        <result column="CYMtGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 停车小区 -->
+        <result column="CYMtCarNum" javaType="java.lang.String" property="tCarNum"/>  <!-- 车牌 -->
+        <result column="CYMfee" javaType="java.lang.Long" property="fee"/>  <!-- 停车费（单位元） -->
+        <result column="CYMpayTime" javaType="java.lang.String" property="payTime"/>  <!-- 缴费时间 -->
+        <result column="CYMsendStatus" javaType="java.lang.Integer" property="sendStatus"/>  <!-- 发送状态 -->
+        <result column="CYMsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->
+        <result column="CYMsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->
+        <result column="CYMsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->
+        <result column="CYMsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->
+        <result column="CYMsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->
+        <result column="CYMsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->
+        <result column="CYMsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CarYhsMsg" id="carYhsMsgBaseMap_AppendTable1">
+        <id column="CYM1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="CYM1tCarNumPayLogFId" javaType="java.math.BigInteger" property="tCarNumPayLogFId"/>  <!--  -->
+        <result column="CYM1tGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!-- 停车小区 -->
+        <result column="CYM1tCarNum" javaType="java.lang.String" property="tCarNum"/>  <!-- 车牌 -->
+        <result column="CYM1fee" javaType="java.lang.Long" property="fee"/>  <!-- 停车费（单位元） -->
+        <result column="CYM1payTime" javaType="java.lang.String" property="payTime"/>  <!-- 缴费时间 -->
+        <result column="CYM1sendStatus" javaType="java.lang.Integer" property="sendStatus"/>  <!-- 发送状态 -->
+        <result column="CYM1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->
+        <result column="CYM1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->
+        <result column="CYM1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->
+        <result column="CYM1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->
+        <result column="CYM1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->
+        <result column="CYM1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->
+        <result column="CYM1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CYM.f_id,CYM.t_car_num_pay_log_f_id,CYM.t_group_building_f_id,CYM.t_car_num,CYM.f_fee,date_format(CYM.f_pay_time,'%Y-%m-%d %T') as f_pay_time,CYM.f_send_status
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CYM.f_id as CYMid,CYM.t_car_num_pay_log_f_id as CYMtCarNumPayLogFId,CYM.t_group_building_f_id as CYMtGroupBuildingFId,CYM.t_car_num as CYMtCarNum,CYM.f_fee as CYMfee,date_format(CYM.f_pay_time,'%Y-%m-%d %T') as CYMpayTime,CYM.f_send_status as CYMsendStatus
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CYM1.f_id as CYM1id,CYM1.t_car_num_pay_log_f_id as CYM1tCarNumPayLogFId,CYM1.t_group_building_f_id as CYM1tGroupBuildingFId,CYM1.t_car_num as CYM1tCarNum,CYM1.f_fee as CYM1fee,date_format(CYM1.f_pay_time,'%Y-%m-%d %T') as CYM1payTime,CYM1.f_send_status as CYM1sendStatus
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CYM.f_id = #{id} ) </if>
+        <if test="tCarNumPayLogFId != null">  and (CYM.t_car_num_pay_log_f_id = #{tCarNumPayLogFId} ) </if>
+        <if test="tGroupBuildingFId != null">  and (CYM.t_group_building_f_id = #{tGroupBuildingFId} ) </if>
+        <if test="tCarNum != null">  and (CYM.t_car_num = #{tCarNum} ) </if>
+        <if test="fee != null">  and (CYM.f_fee = #{fee} ) </if>
+        <if test="payTime != null and !payTime.equals('')  ">  and (CYM.f_pay_time = str_to_date(#{payTime},'%Y-%m-%d %T') ) </if>
+        <if test="payTime_START != null and !payTime_START.equals('')  ">  
+            <![CDATA[ and (CYM.f_pay_time >= str_to_date(#{payTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payTime_END != null and !payTime_END.equals('')  ">
+            <![CDATA[ and (CYM.f_pay_time <= str_to_date(#{payTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sendStatus != null">  and (CYM.f_send_status = #{sendStatus} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CYM.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (CYM.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (CYM.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CYM.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (CYM.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (CYM.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CYM.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (CYM.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (CYM.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (CYM.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (CYM.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (CYM.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (CYM.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (CYM.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CYM.f_id = #{id} ) </if>
+        <if test="tCarNumPayLogFId != null and !tCarNumPayLogFId.equals('')  ">  and (CYM.t_car_num_pay_log_f_id = #{tCarNumPayLogFId} ) </if>
+        <if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  ">  and (CYM.t_group_building_f_id = #{tGroupBuildingFId} ) </if>
+        <if test="tCarNum != null and !tCarNum.equals('')  ">  and (CYM.t_car_num like CONCAT('%',#{tCarNum},'%') ) </if>
+        <if test="fee != null and !fee.equals('')  ">  and (CYM.f_fee = #{fee} ) </if>
+        <if test="payTime != null and !payTime.equals('')  ">  and (CYM.f_pay_time = str_to_date(#{payTime},'%Y-%m-%d %T') ) </if>
+        <if test="payTime_START != null and !payTime_START.equals('')  ">  
+            <![CDATA[ and (CYM.f_pay_time >= str_to_date(#{payTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payTime_END != null and !payTime_END.equals('')  ">
+            <![CDATA[ and (CYM.f_pay_time <= str_to_date(#{payTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sendStatus != null and !sendStatus.equals('')  ">  and (CYM.f_send_status = #{sendStatus} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CYM.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (CYM.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (CYM.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CYM.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (CYM.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (CYM.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CYM.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (CYM.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (CYM.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CYM.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CYM.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CYM.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CYM.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (CYM.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="carYhsMsgBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="carYhsMsgBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="carYhsMsgBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="carYhsMsgBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_car_yhs_msg CYM
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(临停车缴费消息发送表)信息。 -->
+	<sql id="select_carYhsMsg">
+		SELECT <include refid="carYhsMsgBase.queryHead"/>
+		<include refid="carYhsMsgBase.busiQueryCondition"/>
+		<include refid="carYhsMsgBase.dimCheckSql"/>
+		ORDER BY CYM.f_id DESC
+	</sql>
+	<select id="select_carYhsMsg" parameterType="java.util.Map" resultMap="carYhsMsgBase.carYhsMsgExtendMap">
+		<include refid="carYhsMsgBase.select_carYhsMsg"/>
+	</select>
+	
+	<!-- 根据条件分页查询(临停车缴费消息发送表)信息  -->
+	<sql id="select_carYhsMsg_withPage">
+		SELECT <include refid="carYhsMsgBase.queryHead"/>
+		<include refid="carYhsMsgBase.busiQueryCondition"/>
+		<include refid="carYhsMsgBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_carYhsMsg_withPage" resultMap="carYhsMsgBase.carYhsMsgExtendMap" parameterType="java.util.Map">
+		<include refid="carYhsMsgBase.select_carYhsMsg_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(临停车缴费消息发送表)信息。 -->
+	<sql id="select_carYhsMsg_bySeqId">
+		SELECT <include refid="carYhsMsgBase.queryHead"/>
+		<include refid="carYhsMsgBase.busiQueryCondition"/>
+		 and CYM.f_id = #{_parameter}
+	</sql>
+	<select id="select_carYhsMsg_bySeqId" parameterType="java.math.BigInteger" resultMap="carYhsMsgBase.carYhsMsgBaseMap">
+		<include refid="carYhsMsgBase.select_carYhsMsg_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(临停车缴费消息发送表)记录数  -->
+	<sql id="select_carYhsMsg_count">
+		SELECT COUNT(*)
+		<include refid="carYhsMsgBase.busiQueryCount"/>
+		<include refid="carYhsMsgBase.dimCheckSql"/>
+	</sql>
+	<select id="select_carYhsMsg_count" resultType="java.lang.Integer">
+		<include refid="carYhsMsgBase.select_carYhsMsg_count"/>
+	</select>
+	
+	 <!-- 往(临停车缴费消息发送表)新增一条记录。 -->
+	 <sql id="insert_carYhsMsg">
+		INSERT INTO t_car_yhs_msg 
+		(f_id,t_car_num_pay_log_f_id,t_group_building_f_id,t_car_num,f_fee,f_pay_time,f_send_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tCarNumPayLogFId},#{tGroupBuildingFId},#{tCarNum,jdbcType=VARCHAR},#{fee},str_to_date(#{payTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sendStatus},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_carYhsMsg" parameterType="CarYhsMsg">
+		<include refid="carYhsMsgBase.insert_carYhsMsg"/>
+    </insert>
+    
+	<!-- 批量新增(临停车缴费消息发送表)信息 -->
+    <insert id="insert_carYhsMsg_Batch" parameterType="java.util.List">
+    	INSERT INTO t_car_yhs_msg 
+		(f_id,t_car_num_pay_log_f_id,t_group_building_f_id,t_car_num,f_fee,f_pay_time,f_send_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tCarNumPayLogFId},#{item.tGroupBuildingFId},#{item.tCarNum,jdbcType=VARCHAR},#{item.fee},str_to_date(#{item.payTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sendStatus},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(临停车缴费消息发送表)信息。 -->
+    <sql id="update_carYhsMsg">
+		UPDATE t_car_yhs_msg
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tCarNumPayLogFId != null and !tCarNumPayLogFId.equals('') "> ,t_car_num_pay_log_f_id=#{tCarNumPayLogFId}</if>
+ 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('') "> ,t_group_building_f_id=#{tGroupBuildingFId}</if>
+ 		<if test="tCarNum != null and !tCarNum.equals('') "> ,t_car_num=#{tCarNum}</if>
+ 		<if test="fee != null and !fee.equals('') "> ,f_fee=#{fee}</if>
+ 		<if test="payTime != null and !payTime.equals('') "> ,f_pay_time=str_to_date(#{payTime},'%Y-%m-%d %T')</if>
+ 		<if test="sendStatus != null and !sendStatus.equals('') "> ,f_send_status=#{sendStatus}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_carYhsMsg" parameterType="CarYhsMsg">
+		<include refid="carYhsMsgBase.update_carYhsMsg"/>
+    </update>
+    
+    <!-- 批量更新(临停车缴费消息发送表)信息。 -->
+    <update id="update_carYhsMsg_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_car_yhs_msg
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tCarNumPayLogFId != null and !item.tCarNumPayLogFId.equals('')  "> ,t_car_num_pay_log_f_id=#{item.tCarNumPayLogFId}</if>
+ 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if>
+ 		<if test="item.tCarNum != null and !item.tCarNum.equals('')  "> ,t_car_num=#{item.tCarNum}</if>
+ 		<if test="item.fee != null and !item.fee.equals('')  "> ,f_fee=#{item.fee}</if>
+ 		<if test="item.payTime != null and !item.payTime.equals('')  "> ,f_pay_time=str_to_date(#{item.payTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sendStatus != null and !item.sendStatus.equals('')  "> ,f_send_status=#{item.sendStatus}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(临停车缴费消息发送表)信息_逻辑删除。 -->
+    <sql id="delete_carYhsMsg_Logic">
+		UPDATE t_car_yhs_msg
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tCarNumPayLogFId != null and !tCarNumPayLogFId.equals('')  "> ,t_car_num_pay_log_f_id=#{tCarNumPayLogFId}</if>
+ 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{tGroupBuildingFId}</if>
+ 		<if test="tCarNum != null and !tCarNum.equals('')  "> ,t_car_num=#{tCarNum}</if>
+ 		<if test="fee != null and !fee.equals('')  "> ,f_fee=#{fee}</if>
+ 		<if test="payTime != null and !payTime.equals('')  "> ,f_pay_time=str_to_date(#{payTime},'%Y-%m-%d %T')</if>
+ 		<if test="sendStatus != null and !sendStatus.equals('')  "> ,f_send_status=#{sendStatus}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_carYhsMsg_Logic" parameterType="CarYhsMsg">
+		<include refid="carYhsMsgBase.delete_carYhsMsg_Logic"/>
+    </update>
+    
+    <!-- 批量删除(临停车缴费消息发送表)信息_逻辑删除 -->
+    <update id="delete_carYhsMsg_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_car_yhs_msg
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tCarNumPayLogFId != null and !item.tCarNumPayLogFId.equals('')  "> ,t_car_num_pay_log_f_id=#{item.tCarNumPayLogFId}</if>
+ 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if>
+ 		<if test="item.tCarNum != null and !item.tCarNum.equals('')  "> ,t_car_num=#{item.tCarNum}</if>
+ 		<if test="item.fee != null and !item.fee.equals('')  "> ,f_fee=#{item.fee}</if>
+ 		<if test="item.payTime != null and !item.payTime.equals('')  "> ,f_pay_time=str_to_date(#{item.payTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sendStatus != null and !item.sendStatus.equals('')  "> ,f_send_status=#{item.sendStatus}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(临停车缴费消息发送表)信息。 -->
+    <sql id="delete_carYhsMsg">
+		DELETE FROM t_car_yhs_msg WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_carYhsMsg" parameterType="java.lang.String">
+		<include refid="carYhsMsgBase.delete_carYhsMsg"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(临停车缴费消息发送表)信息。 -->
+    <delete id="delete_carYhsMsg_Batch" parameterType="java.util.List">
+		DELETE FROM t_car_yhs_msg WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

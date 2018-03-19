@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:微博模块 -->
+<mapper namespace="microblogQueue">
+	
+	<resultMap type="com.cnfantasia.server.commbusi.microblogQueue.entity.GBWithPropMonthYear" id="gbWithPropMonthYear_Map">
+		<id column="f_gbId" javaType="java.math.BigInteger" property="gbId"/>
+		<result column="f_gbName" javaType="java.lang.String" property="gbName"/>
+		<result column="f_propYear" javaType="java.lang.String" property="propYear"/>
+		<result column="f_propMonth" javaType="java.lang.String" property="propMonth"/>
+		<result column="f_propPayDateBegin" javaType="java.lang.String" property="propPayDateBegin"/>
+		<result column="f_propPayDateEnd" javaType="java.lang.String" property="propPayDateEnd"/>
+	</resultMap>
+	<sql id="select_CanPay_GbList_comm_base">
+		SELECT
+				gb.f_id,
+				gb.f_name,
+				IFNULL(
+					gb.f_property_month_change,
+					0
+				) f_property_month_change,
+				CASE
+			WHEN DAY (NOW()) > gb.f_pay_period_end THEN
+				ADDDATE(
+					STR_TO_DATE(
+						CONCAT(
+							YEAR (NOW()),
+							LPAD(MONTH(NOW()), 2, '0'),
+							LPAD(
+								gb.f_pay_period_start,
+								2,
+								'0'
+							)
+						),
+						'%Y%m%d'
+					),
+					INTERVAL - 1 + 1 MONTH
+				)
+			ELSE
+				ADDDATE(
+					STR_TO_DATE(
+						CONCAT(
+							YEAR (NOW()),
+							LPAD(MONTH(NOW()), 2, '0'),
+							LPAD(
+								gb.f_pay_period_start,
+								2,
+								'0'
+							)
+						),
+						'%Y%m%d'
+					),
+					INTERVAL - 1 MONTH
+				)
+			END f_month_property_start,
+			CASE
+		WHEN DAY (NOW()) > gb.f_pay_period_end THEN
+			ADDDATE(
+				STR_TO_DATE(
+					CONCAT(
+						YEAR (NOW()),
+						LPAD(MONTH(NOW()), 2, '0'),
+						LPAD(gb.f_pay_period_end, 2, '0')
+					),
+					'%Y%m%d'
+				),
+				INTERVAL 1 MONTH
+			)
+		ELSE
+			ADDDATE(
+				STR_TO_DATE(
+					CONCAT(
+						YEAR (NOW()),
+						LPAD(MONTH(NOW()), 2, '0'),
+						LPAD(gb.f_pay_period_end, 2, '0')
+					),
+					'%Y%m%d'
+				),
+				INTERVAL 0 MONTH
+			)
+		END f_month_property_end
+		FROM
+			t_group_building gb
+		WHERE 1=1
+	</sql>
+	<!-- 查询距离缴费截止日期指定天数的小区列表 -->
+	<select id="select_CanPay_GbList_ByDayDistance" parameterType="java.util.Map" resultMap="gbWithPropMonthYear_Map">
+		SELECT
+			f_id as f_gbId,
+			f_name as f_gbName,
+			YEAR (
+				ADDDATE(
+					f_month_property_end,
+					INTERVAL - 1 + f_property_month_change MONTH
+				)
+			) f_propYear,
+			MONTH (
+				ADDDATE(
+					f_month_property_end,
+					INTERVAL - 1 + f_property_month_change MONTH
+				)
+			) f_propMonth,
+			ADDDATE(
+				f_month_property_start,
+				INTERVAL - 1 MONTH
+			) f_propPayDateBegin,
+			ADDDATE(
+				f_month_property_end,
+				INTERVAL - 1 MONTH
+			) f_propPayDateEnd
+		FROM
+			(
+			<include refid="select_CanPay_GbList_comm_base"/>
+			AND gb.f_propfee_canpay = 1
+			) t
+		WHERE 1=1
+		AND NOT EXISTS(<!-- 当天没有存在对应小区对应code的队列消息 -->
+			SELECT 1 FROM t_microblog_queue MQ 
+			WHERE 1=1
+			AND MQ.f_sys0_del_state=0
+			AND MQ.f_group_building_id = t.f_id AND MQ.f_sa_id =0 
+			AND MQ.f_level_code =#{mqLevelCode}
+			AND MQ.f_create_time >= CURDATE() <!-- TODO 按日期分区 -->
+		)
+		AND TO_DAYS(
+			ADDDATE(
+				f_month_property_end,
+				INTERVAL - 1 MONTH
+			)
+		) = TO_DAYS(NOW()) + #{dayDistance} 
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.commbusi.microblogQueue.entity.PropertyGoodNewsRowDataEntity" id="propertyGoodNewsRowDataEntity_Map">
+		<id column="f_order" javaType="java.lang.Integer" property="order"/>
+		<result column="f_buildingName" javaType="java.lang.String" property="buildingName"/>
+		<result column="f_jfNum" javaType="java.math.BigInteger" property="jfNum"/>
+		<result column="f_phoneTail" javaType="java.lang.String" property="phoneTail"/>
+		<result column="f_discount" javaType="java.lang.Double" property="discount"/>
+		<result column="f_savedMoney" javaType="java.lang.Long" property="savedMoney"/>
+	</resultMap>
+	<!-- 查询喜报信息列表 -->
+	<select id="select_GoodNews_DataList" parameterType="java.util.Map" resultMap="propertyGoodNewsRowDataEntity_Map">
+		SELECT f_row_num as f_order,
+		 t_building_f_name as f_buildingName,
+		 f_hua_id as f_jfNum,
+		 CASE
+			WHEN SUBSTR(f_mobile, 8, 4) IS NULL THEN
+				'****'
+			ELSE
+				SUBSTR(f_mobile, 8, 4)
+			END f_phoneTail,
+		 round(f_discount, 1) f_discount,
+			f_amount_property_fee as f_savedMoney
+		FROM
+		(
+			SELECT
+				@rownum :=@rownum + 1 f_row_num,
+				t_building_f_name,
+				f_hua_id,
+				f_mobile,
+				f_discount,
+				f_amount_property_fee
+			FROM
+				(
+					SELECT
+						tab.t_building_f_name,
+						tab.f_hua_id,
+						tab.f_mobile,
+						tab.f_discount,
+						nullif(
+							round(
+								nullif(fd.f_total_price, 0) * (10 - tab.f_discount) / 10 ,
+								0
+							),
+							''
+						) f_amount_property_fee
+					FROM
+						(
+							SELECT
+								b.t_group_building_f_id,
+								gb.f_name t_group_building_f_name,
+								rr.t_building_f_id,
+								b.f_name t_building_f_name,
+								tr.t_real_room_f_id,
+								rr.f_num,
+								hr.t_user_f_id,
+								u.f_hua_id,
+								u.f_nick_name,
+								u.f_real_name,
+								u.f_mobile,
+								count(1) f_count,
+								min(r.f_discount) f_discount,
+								max(r.f_prize_time) f_prize_time_last
+							FROM
+								t_prize_record r
+							JOIN t_user_has_t_room hr ON hr.f_id = r.t_user_has_t_room_f_id
+							JOIN t_room tr ON tr.f_id = hr.t_room_f_id
+							JOIN t_real_room rr ON rr.f_id = tr.t_real_room_f_id
+							JOIN t_building b ON rr.t_building_f_id = b.f_id
+							JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id
+							JOIN t_user u ON hr.t_user_f_id = u.f_id
+							WHERE 1=1
+							<!-- AND u.f_id not in (40033,70041,50037,50005,70886,50036,40005,40001,40002,40003,40004,40028,70222,50001,40039,40031,50022,70174,70061,50023,40038,40014) -->
+							AND r.f_prize_time >= #{p_date_begin}
+							AND r.f_prize_time &lt;= CONCAT(#{p_date_end},' 23:59:59')
+							AND gb.f_id = #{f_id_t_group_building}
+							GROUP BY
+								b.t_group_building_f_id,
+								gb.f_name,
+								rr.t_building_f_id,
+								b.f_name,
+								tr.t_real_room_f_id,
+								rr.f_num,
+								hr.t_user_f_id,
+								u.f_hua_id,
+								u.f_nick_name,
+								u.f_real_name,
+								u.f_mobile
+						) tab
+					LEFT JOIN t_pay_bill pb ON pb.t_real_room_f_id = tab.t_real_room_f_id
+					AND date_format(pb.f_month, '%Y%m') = concat(#{p_year},lpad(#{p_month},2,'0'))
+					LEFT JOIN t_property_fee_detail fd ON fd.t_pay_bill_f_id = pb.f_id AND fd.f_sys0_del_state = 0
+					AND fd.f_type = 1
+					ORDER BY
+						ifnull(
+							round(
+								nullif(fd.f_total_price, 0) * (10 - tab.f_discount) / 10 / 100,
+								2
+							),
+							0
+						) DESC,tab.f_discount
+					LIMIT 10
+				) t
+			CROSS JOIN (SELECT @rownum := 0) rn
+		) TAB
+	</select>
+	
+	<select id="select_Pay_UserCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT
+			count(DISTINCT t_user_f_id) <!-- + 20 --> f_count_user
+		FROM
+			(
+				SELECT
+					b.t_group_building_f_id,
+					gb.f_name t_group_building_f_name,
+					rr.t_building_f_id,
+					b.f_name t_building_f_name,
+					tr.t_real_room_f_id,
+					rr.f_num,
+					hr.t_user_f_id,
+					u.f_hua_id,
+					u.f_nick_name,
+					u.f_real_name,
+					u.f_mobile,
+					count(1) f_count,
+					min(r.f_discount) f_discount,
+					max(r.f_prize_time) f_prize_time_last
+				FROM
+					t_prize_record r
+				JOIN t_user_has_t_room hr ON hr.f_id = r.t_user_has_t_room_f_id
+				JOIN t_room tr ON tr.f_id = hr.t_room_f_id
+				JOIN t_real_room rr ON rr.f_id = tr.t_real_room_f_id
+				JOIN t_building b ON rr.t_building_f_id = b.f_id
+				JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id
+				JOIN t_user u ON hr.t_user_f_id = u.f_id
+				WHERE 1=1
+					<!-- AND u.f_id NOT IN (40033,70041,50037,50005,70886,50036,40005,40001,40002,40003,40004,40028,70222,50001,40039,40031,50022,70174,70061,50023,40038,40014) -->
+					AND r.f_prize_time >= #{p_date_begin}
+					AND r.f_prize_time &lt;=  CONCAT(#{p_date_end},' 23:59:59')
+					AND gb.f_id = #{f_id_t_group_building}
+				GROUP BY
+					b.t_group_building_f_id,
+					gb.f_name,
+					rr.t_building_f_id,
+					b.f_name,
+					tr.t_real_room_f_id,
+					rr.f_num,
+					hr.t_user_f_id,
+					u.f_hua_id,
+					u.f_nick_name,
+					u.f_real_name,
+					u.f_mobile
+			) tab
+		GROUP BY
+			t_group_building_f_id,
+			t_group_building_f_name
+	</select>
+	
+	<!-- 查询全部类别 Redis缓存 -->
+	<!-- <select id="select_MicroblogPushType_All_List" resultMap="microblogPushTypeBase.microblogPushTypeBaseMap">
+		SELECT <include refid="microblogPushTypeBase.queryHead"/>
+		FROM t_microblog_push_type MPT
+    	WHERE 1=1
+    	AND MPT.f_sys0_del_state = 0
+	</select> -->
+	
+	<!-- 查询当天截止到当前优先级最高的一条消息 -->
+	<select id="select_Top_MicroblogQueue_Today" parameterType="java.util.Map" resultMap="microblogQueueBase.microblogQueueBaseMap_AppendTable">
+		SELECT <include refid="microblogQueueBase.queryHead_AppendTable"/>
+		FROM 
+		( 
+			<foreach collection="saIdList" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item} saId
+			</foreach>
+		) tbl_saId
+		INNER JOIN (
+				<foreach collection="priorityList" item="item" index="index" separator=" union all select " open=" select " close="">
+					#{item.code} code
+					,#{item.priority} priority
+				</foreach>
+		) tbl_cp
+		INNER JOIN t_microblog_queue MQ ON MQ.f_sys0_del_state = 0
+			 <!-- 小区Id or 服务范围 只要有一个满足即可 TODO 是否会都走索引 --> 
+			AND ((MQ.f_group_building_id = #{gbId} AND MQ.f_sa_id =0) OR (MQ.f_group_building_id = 0 AND MQ.f_sa_id !=0 AND MQ.f_sa_id = tbl_saId.saId)) 
+			AND MQ.f_level_code = tbl_cp.code<!-- 类型不同是否会匹配相等 -->
+			AND MQ.f_push_able = 0 <!-- 是否可被推送到微博表=={"0":"否","1":"是"} -->
+			AND MQ.f_create_time >= CURDATE()  <!-- TODO 按日期分区 -->
+   	 	WHERE 1=1
+   	 	AND NOT EXISTS(<!-- 不存在已推送的关系,即:小区Id+消息队列Id -->
+			SELECT f_id 
+			FROM t_microblog_gb_has_queue
+			WHERE 1=1
+			AND f_sys0_del_state = 0
+			AND f_gb_id = #{gbId}
+			AND f_blog_queue_id = MQ.f_id
+		)
+		AND NOT EXISTS(<!-- 小区30天之内没有相同信息的 -->
+			SELECT f_id
+			FROM t_microblog_content
+			WHERE 1=1
+			AND f_sys0_del_state = 0
+			AND t_group_building_f_id = #{gbId}
+			AND f_source_type = 2 <!-- 系统消息类别=={"1":"普通消息","2":"系统消息"} -->
+			AND f_text = MQ.f_text
+			AND f_create_time > ADDDATE(CURDATE(), INTERVAL -15 DAY) <!-- 时间到天 -->
+		)
+   	 	ORDER BY tbl_cp.priority <!-- 临时表如何走索引 -->
+   	 	LIMIT 1
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.commbusi.microblogQueue.entity.TypeCodeSendCount" id="TypeCodeSendCount_Map">
+		<id column="f_code" javaType="java.lang.String" property="code"/>
+		<result column="f_sendCount" javaType="java.lang.Long" property="sendCount"/>
+	</resultMap>
+	<!-- 各个类别及发送的次数 -->
+	<select id="select_TypeCode_SendCount_ByGbId" parameterType="java.math.BigInteger" resultMap="TypeCodeSendCount_Map">
+		SELECT f_level_code as f_code,COUNT(0) as f_sendCount
+		FROM t_microblog_gb_has_queue
+		WHERE 1=1
+		AND f_sys0_del_state = 0
+		AND f_gb_id = #{_parameter}
+		AND f_create_time >= CURDATE()<!-- TODO 按日期分区 -->
+		GROUP BY f_level_code
+	</select>
+	
+	<!-- 根据Id查询notPushAble队列数据,forUpdate -->
+	<select id="select_MicroblogQueue_ForUpdate" parameterType="java.util.Map" resultMap="microblogQueueBase.microblogQueueBaseMap_AppendTable">
+		SELECT <include refid="microblogQueueBase.queryHead_AppendTable"/>
+		FROM t_microblog_queue MQ
+		WHERE 1=1
+   	 	AND MQ.f_id = #{queueId}
+   	 	AND MQ.f_sys0_del_state = 0
+   	 	AND ( MQ.f_push_able = 1 OR (MQ.f_push_able = 0 AND MQ.f_sa_id !=0) ) <!-- 是否可被推送到微博表=={"0":"否","1":"是"} -->
+   	 	AND NOT EXISTS(<!-- 不存在已推送的关系,即:小区Id+消息队列Id -->
+			SELECT f_id 
+			FROM t_microblog_gb_has_queue
+			WHERE 1=1
+			AND f_sys0_del_state = 0
+			AND f_gb_id = #{gbId}
+			AND f_blog_queue_id = #{queueId}
+		)
+   	 	FOR UPDATE
+	</select>
+	<!-- 标记为可推送 -->
+	<update id="update_MicroblogQueue_asPushAble_ById" parameterType="java.math.BigInteger">
+		UPDATE t_microblog_queue MQ
+		SET MQ.f_push_able = 1 <!-- 是否可被推送到微博表=={"0":"否","1":"是"} -->
+		WHERE 1=1
+		AND MQ.f_id = #{_parameter}
+   	 	AND MQ.f_sys0_del_state = 0
+   	 	AND MQ.f_push_able = 0 <!-- 是否可被推送到微博表=={"0":"否","1":"是"} -->
+	</update>
+	
+	<!-- 查询属于服务范围的可推送的消息列表,属于城市以上级别的，且没有存入到微博表 -->
+	<!-- <select id="select_PuashAble_MicroblogQueue_List" parameterType="java.util.Map" resultMap="microblogQueueBase.microblogQueueBaseMap_AppendTable">
+		SELECT <include refid="microblogQueueBase.queryHead_AppendTable"/>
+		FROM ( 
+			<foreach collection="saIdList" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item} saId
+			</foreach>
+			) A_tmp
+		INNER JOIN t_microblog_queue MQ ON MQ.f_sys0_del_state = 0
+			AND MQ.f_group_building_id = 0 默认空小区
+			AND MQ.f_sa_id = A_tmp.saId 服务范围
+			AND MQ.f_push_able = 1 是否可被推送到微博表=={"0":"否","1":"是"}
+		WHERE 1=1
+		AND NOT EXISTS(不存在已推送的关系,即:小区Id+消息队列Id
+			SELECT f_id 
+			FROM t_microblog_gb_has_queue
+			WHERE 1=1
+			AND f_sys0_del_state = 0
+			AND f_gb_id = #{gbId}
+			AND f_blog_queue_id = MQ.f_id
+		)
+	</select> -->
+	
+	<!-- 查询小区+MqId的已存在的关系数 -->
+	<select id="select_exsit_gbHasQueue_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		FROM t_microblog_gb_has_queue
+		WHERE 1=1
+		AND f_sys0_del_state = 0
+		AND f_gb_id = #{gbId}
+		AND f_blog_queue_id = #{queueId}
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.commbusi.microblogQueue.entity.SimpleAddressInfo" id="simpleAddressInfo_Map">
+		<id column="f_provName" javaType="java.lang.String" property="provName"/>
+		<id column="f_cityName" javaType="java.lang.String" property="cityName"/>
+		<id column="f_blockName" javaType="java.lang.String" property="blockName"/>
+		<id column="f_gbName" javaType="java.lang.String" property="gbName"/>
+		<id column="f_buildName" javaType="java.lang.String" property="buildName"/>
+		<id column="f_roomNum" javaType="java.lang.String" property="roomNum"/>
+		
+		<id column="f_gbId" javaType="java.math.BigInteger" property="gbId"/>
+		<id column="f_addressCityId" javaType="java.math.BigInteger" property="addressCityId"/>
+	</resultMap>
+	<sql id="join_rela_address">
+		INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id AND RR.f_sys0_del_state = 0
+		INNER JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0
+		INNER JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id AND GB.f_sys0_del_state = 0
+		INNER JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id AND AB.f_sys0_del_state = 0
+		INNER JOIN t_address_city AC ON AC.f_id = AB.t_city_f_id AND AC.f_sys0_del_state = 0
+		INNER JOIN t_address_province AP ON AP.f_id = AC.t_province_f_id AND AP.f_sys0_del_state = 0
+	</sql>
+	<!-- 根据用户门牌关系id查询地址基本信息 -->
+	<select id="select_SimpleAddressInfo_ByUserHasRoomId" parameterType="java.math.BigInteger" resultMap="simpleAddressInfo_Map">
+		SELECT AP.f_name f_provName,AC.f_name f_cityName,AB.f_name f_blockName,GB.f_name AS f_gbName,B.f_name f_buildName,RR.f_num f_roomNum
+			,GB.f_id AS f_gbId,AC.f_id AS f_addressCityId
+		FROM t_user_has_t_room UHTR
+		INNER JOIN t_room R ON R.f_id = UHTR.t_room_f_id AND R.f_sys0_del_state = 0
+		<include refid="join_rela_address"/>
+		WHERE 1=1
+		AND UHTR.f_sys0_del_state = 0
+		AND UHTR.f_id = #{_parameter}
+	</select>
+	<!-- 根据roomId查询地址基本信息 -->
+	<select id="select_SimpleAddressInfo_ByRoomId" parameterType="java.math.BigInteger" resultMap="simpleAddressInfo_Map">
+		SELECT AP.f_name f_provName,AC.f_name f_cityName,AB.f_name f_blockName,GB.f_name AS f_gbName,B.f_name f_buildName,RR.f_num f_roomNum
+			,GB.f_id AS f_gbId,AC.f_id AS f_addressCityId
+		FROM t_room R
+		<include refid="join_rela_address"/>
+		WHERE 1=1
+		AND R.f_sys0_del_state = 0
+		AND R.f_id = #{_parameter}
+	</select>
+	<!-- 查询用户默认门牌的地址基本信息 -->
+	<select id="select_SimpleAddressInfo_ByUserDefaultRoomId" parameterType="java.math.BigInteger" resultMap="simpleAddressInfo_Map">
+		SELECT AP.f_name f_provName,AC.f_name f_cityName,AB.f_name f_blockName,GB.f_name AS f_gbName,B.f_name f_buildName,RR.f_num f_roomNum
+			,GB.f_id AS f_gbId,AC.f_id AS f_addressCityId
+		FROM t_user U
+		INNER JOIN t_room R ON R.f_id = U.f_default_room_id AND R.f_sys0_del_state = 0
+		<include refid="join_rela_address"/>
+		WHERE 1=1
+		AND U.f_sys0_del_state = 0
+		AND U.f_id = #{_parameter}
+	</select>
+	
+	
+	
+	<!-- 获取全面签约合作但是未推送街坊消息的小区 -->
+	<!-- <select id="select_signGroupBuildingList_forMQ" parameterType="java.util.Map" resultMap="groupBuildingBase.groupBuildingBaseMap_AppendTable">
+		SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>
+		FROM t_group_building GB INNER JOIN t_property_company PC ON GB.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+		AND GB.f_sys0_del_state=0 AND PC.f_is_all_cooperation=1 AND PC.f_is_audited =1
+		AND NOT EXISTS(
+			SELECT 1 FROM t_microblog_queue MQ WHERE MQ.f_sys0_del_state=0
+			AND MQ.f_source_type = #{mqSourceType}
+			AND MQ.f_level_code = #{mqLevelCode} 
+			AND GB.f_id = MQ.f_group_building_id
+		)
+	</select> -->
+	
+	<resultMap type="com.cnfantasia.server.commbusi.microblogQueue.entity.GbIdAndPayDistance" id="gbIdAndPayDistance_Map">
+		<id column="f_gbId" javaType="java.math.BigInteger" property="gbId"/>
+		<result column="f_dayCountForPayEnd2Now" javaType="java.lang.Integer" property="dayCountForPayEnd2Now"/>
+	</resultMap>
+	<!-- 物业缴费提前三天提醒但是未推送街坊消息的小区 -->
+	<select id="select_payBillGroupBuildingList_forMQ" parameterType="java.util.Map" resultMap="gbIdAndPayDistance_Map">
+		SELECT
+			f_id as f_gbId,
+		TO_DAYS(
+			ADDDATE(
+				f_month_property_end,
+				INTERVAL - 0 MONTH
+			)
+		) - TO_DAYS(NOW()) AS f_dayCountForPayEnd2Now
+		FROM
+			(
+			<include refid="select_CanPay_GbList_comm_base"/>
+			AND gb.f_propfee_canpay = 1
+			) t
+		WHERE 1=1
+		AND NOT EXISTS(<!-- 当天没有存在对应小区对应code的队列消息 -->
+			SELECT 1 FROM t_microblog_queue MQ 
+			WHERE 1=1
+			AND MQ.f_sys0_del_state=0
+			AND MQ.f_group_building_id = t.f_id AND MQ.f_sa_id =0 
+			AND MQ.f_level_code =#{mqLevelCode}
+			AND MQ.f_create_time >= CURDATE() <!-- TODO 按日期分区 -->
+		)
+		<!-- [1,3]天 -->
+		AND TO_DAYS(
+			ADDDATE(
+				f_month_property_end,
+				INTERVAL - 0 MONTH
+			)
+		) &lt;= TO_DAYS(NOW()) + #{dayEnd}
+		AND TO_DAYS(
+			ADDDATE(
+				f_month_property_end,
+				INTERVAL - 0 MONTH
+			)
+		) &gt;= TO_DAYS(NOW()) + #{dayStart}
+	</select>
+	<!-- <select id="select_payBillGroupBuildingList_forMQ" parameterType="java.util.Map" resultMap="groupBuildingBase.groupBuildingBaseMap_AppendTable">
+		SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>
+		FROM t_group_building GB 
+		INNER JOIN t_property_company PC ON GB.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+			AND PC.f_is_all_cooperation=1 AND PC.f_is_audited =1
+		WHERE 1=1
+		AND GB.f_sys0_del_state=0
+		AND (GB.f_pay_period_end-#{payDay})&lt;=3
+		AND NOT EXISTS(
+			SELECT 1 FROM t_microblog_queue MQ 
+			WHERE MQ.f_sys0_del_state=0
+			AND MQ.f_source_type = #{mqSourceType}
+			AND MQ.f_level_code = #{mqLevelCode} 
+			AND GB.f_id = MQ.f_group_building_id
+			AND date_format(sysdate(),'%Y-%m-%d')>date_format(MQ.f_valid_time,'%Y-%m-%d')
+			AND timestampdiff(day,date_format(MQ.f_valid_time,'%Y-%m-%d'),date_format(sysdate(),'%Y-%m-%d'))&gt;=0
+		)
+	</select> -->
+	
+	<!-- 查询小区Id当前月份物业信息 -->
+	<select id="select_GbProperty_CurrMonthInfo_ByGbId" parameterType="java.util.Map"  resultMap="gbWithPropMonthYear_Map">
+		SELECT
+			f_id as f_gbId,
+			f_name as f_gbName,
+			YEAR (
+				ADDDATE(
+					f_month_property_end,
+					INTERVAL - 0 + f_property_month_change MONTH
+				)
+			) f_propYear,
+			MONTH (
+				ADDDATE(
+					f_month_property_end,
+					INTERVAL - 0 + f_property_month_change MONTH
+				)
+			) f_propMonth,
+			ADDDATE(
+				f_month_property_start,
+				INTERVAL - 0 MONTH
+			) f_propPayDateBegin,
+			ADDDATE(
+				f_month_property_end,
+				INTERVAL - 0 MONTH
+			) f_propPayDateEnd
+		FROM
+			(
+			<include refid="select_CanPay_GbList_comm_base"/>
+			AND gb.f_id = #{gbId}
+			) t
+		WHERE 1=1
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.commbusi.microblogQueue.entity.GBLeastDiscount" id="gbLeastDiscount_Map">
+		<id column="f_gbId" javaType="java.math.BigInteger" property="gbId"/>
+		<id column="f_gbName" javaType="java.lang.String" property="gbName"/>
+		<id column="f_discountId" javaType="java.math.BigInteger" property="discountId"/>
+		<id column="f_discount" javaType="java.lang.Double" property="discount"/>
+		<id column="f_userId" javaType="java.math.BigInteger" property="userId"/>
+	</resultMap>
+	<!-- 查询小区的最低折扣信息 -->
+	<select id="select_LeastDiscount_ByGbId" parameterType="java.util.Map" resultMap="gbLeastDiscount_Map">
+		SELECT GB.f_id AS f_gbId,GB.f_name AS f_gbName,UHTR.t_user_f_id AS userId,PR.f_discount AS discount,PR.f_id AS f_discountId
+		FROM t_group_building GB
+			INNER JOIN t_building B ON B.t_group_building_f_id = GB.f_id AND B.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON RR.t_building_f_id = B.f_id AND RR.f_sys0_del_state = 0
+			INNER JOIN t_room R ON R.t_real_room_f_id = RR.f_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_user_has_t_room UHTR ON UHTR.t_room_f_id = R.f_id AND UHTR.f_sys0_del_state = 0
+			INNER JOIN t_prize_record PR ON PR.t_user_has_t_room_f_id = UHTR.f_id AND PR.f_sys0_del_state = 0
+				AND PR.f_prize_time >= #{propPayDateBegin}
+				AND PR.f_prize_time &lt;= #{propPayDateEnd}
+		WHERE 1=1
+		AND GB.f_sys0_del_state = 0
+		AND GB.f_id = #{gbId}
+		ORDER BY PR.f_discount ASC,PR.f_id ASC
+		LIMIT 1
+	</select>
+	
+	<select id="select_CanPushForGb_Today" resultType="java.math.BigInteger">
+		SELECT DISTINCT MQ.f_group_building_id
+		FROM t_microblog_queue MQ
+		WHERE 1=1
+   	 	AND MQ.f_sys0_del_state = 0
+		AND MQ.f_sa_id = 0 <!-- 只属于小区级别的 -->
+   	 	AND MQ.f_push_able = 1 <!-- 是否可被推送到微博表=={"0":"否","1":"是"} -->
+   	 	AND MQ.f_create_time >= CURDATE()  <!-- TODO 按日期分区 -->
+   	 	AND NOT EXISTS(<!-- 不存在已推送的关系,即:小区Id+消息队列Id -->
+			SELECT f_id 
+			FROM t_microblog_gb_has_queue
+			WHERE 1=1
+			AND f_sys0_del_state = 0
+			AND f_gb_id = MQ.f_group_building_id
+			AND f_blog_queue_id = MQ.f_id
+		)
+	</select>
+	
+	<!-- 查询当天不存在指定条件的小区id -->
+	<select id="select_NotExist_MQGbId_ForUpdate" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT GB.f_id
+		FROM t_group_building GB
+		WHERE 1=1
+		AND GB.f_sys0_del_state = 0
+		AND GB.f_id = #{gbId}
+		AND NOT EXISTS(<!-- 当天没有存在对应小区对应code的队列消息 -->
+			SELECT 1 FROM t_microblog_queue MQ 
+			WHERE 1=1
+			AND MQ.f_sys0_del_state=0
+			AND MQ.f_group_building_id = #{gbId} AND MQ.f_sa_id =0 
+			AND MQ.f_level_code =#{mqLevelCode}
+			AND MQ.f_create_time >= CURDATE() <!-- TODO 按日期分区 -->
+		)
+		FOR UPDATE
+	</select>
+	
+	<select id="select_GbId_ForUpdate" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT GB.f_id
+		FROM t_group_building GB
+		WHERE 1=1
+		AND GB.f_sys0_del_state = 0
+		AND GB.f_id = #{gbId}
+		FOR UPDATE
+	</select>
+</mapper>

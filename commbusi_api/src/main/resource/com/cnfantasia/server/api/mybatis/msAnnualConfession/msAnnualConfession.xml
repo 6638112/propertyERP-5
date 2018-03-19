@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 表白活动 -->
+<mapper namespace="msAnnualConfession">
+	
+	<resultMap type="com.cnfantasia.server.api.msAnnualConfession.entity.MsAnnualConfessionDto" id="msAnnualConfession_Map">
+		<result column="f_date_register" javaType="java.lang.String" property="dateRegister"/>
+		<result column="f_date_first_fee" javaType="java.lang.String" property="dateFirstFee"/>
+		<result column="f_date_first_market" javaType="java.lang.String" property="dateFirstMarket"/>
+		<result column="f_date_first_service" javaType="java.lang.String" property="dateFirstService"/>
+		<result column="f_amount_payment" javaType="java.lang.String" property="amountPayment"/>
+	</resultMap>
+	
+	<select id="get_AnnualConfession_with_userId" parameterType="java.math.BigInteger" resultMap="msAnnualConfession_Map">
+	    CALL sp_ms_annual_confession(#{userId})
+	</select>
+</mapper>

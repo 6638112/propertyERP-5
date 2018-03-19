@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://www.springframework.org/schema/tx  
+            http://www.springframework.org/schema/tx/spring-tx.xsd  
+            http://www.springframework.org/schema/aop  
+            http://www.springframework.org/schema/aop/spring-aop.xsd
+            http://www.springframework.org/schema/util
+			http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- 初始化容器对象 -->
+	<bean class="com.cnfantasia.server.common.context.FocContext" />
+
+	<!-- 国际化资源管理 -->
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:/com/cnfantasia/server/api/msg/dictionary</value>
+				<value>classpath:/com/cnfantasia/server/api/msg/exception</value>
+				<value>classpath:/com/cnfantasia/server/api/msg/message</value>
+			</list>
+		</property>
+		<property name="cacheSeconds" value="-1" />
+		<property name="fallbackToSystemLocale" value="false" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	<bean id="messageSourceUtil" class="com.cnfantasia.server.api.pub.messageSource.MessageSourceUtil">
+		<property name="messageSource" ref="messageSource" />
+	</bean>
+	
+	<!-- 系统参数管理 -->
+	<bean id="sysParamManager" class="com.cnfantasia.server.api.pub.sysParam.SysParamManager" init-method="init">
+		<property name="sysParamService" ref="commSysParaService"/><!-- 指向的配置在commSysPara的Service模块 -->
+	</bean>
+	
+	<!-- 对模型视图名称的解析，在请求时模型视图名称添加前后缀 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
+	
+	<!-- 请求头信息拦截处理 -->
+	<bean id="HeaderInterceptor" class="com.cnfantasia.server.api.pub.header.HeaderInterceptor"/>
+	
+	<!-- 请求的Json转换拦截器 -->
+	<!-- <bean id="jsonRequestInterceptor" class="com.cnfantasia.server.common.json.JsonRequestInterceptor" /> -->
+	
+	<!-- 规章对象解析器 -->
+	<bean id="RegulationResolver" class="com.cnfantasia.server.common.validation.resolver.IOCRegulationResolver"></bean>
+	<!-- 表达式执行器定义 -->
+	<bean id="StringExpressionExecutor" class="com.cnfantasia.server.common.validation.express.StringExpressionExecutor">
+		<property name="regulationResolver" ref="RegulationResolver" />
+	</bean>
+	
+	<!-- 校验拦截器 -->
+	<bean id="ValidationInterceptor" class="com.cnfantasia.server.api.pub.validation.ValidationInterceptor">
+		<property name="executor" ref="StringExpressionExecutor" />
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="HeaderInterceptor" />
+				<!-- <ref bean="jsonRequestInterceptor" /> -->
+				<ref bean="ValidationInterceptor" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 处理器-适配器 -->
+	<bean id="handlerAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+	    <property name="cacheSeconds" value="0" />
+	    <property name="messageConverters" ref="messageConverters" />
+	</bean>
+	<!-- Http messageConverters，用于将对象输出到客户端-->
+	<util:list id="messageConverters">
+	    <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+	        <property name="supportedMediaTypes">
+	            <list>
+	                <value>application/json</value>
+	                <value>application/javascript</value>
+	                <value>text/json</value>
+	                <value>text/javascript</value>
+	            </list>
+	        </property>
+	        <property name="objectMapper" ref="objectMapper"></property>
+	    </bean>
+	    <bean class = "org.springframework.http.converter.StringHttpMessageConverter">  
+	         <property name = "supportedMediaTypes">
+	         	<list>
+	         		<value>text/plain;charset=UTF-8</value>
+	         	</list>
+	         </property>  
+           </bean>
+	</util:list>
+
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name = "messageConverters">  
+          <list>  
+           <bean class = "org.springframework.http.converter.StringHttpMessageConverter">  
+                <property name = "supportedMediaTypes">
+                	<list>
+                		<value>text/plain;charset=UTF-8</value>
+                	</list>
+                </property>  
+           </bean>
+           <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+           		
+           </bean> 
+          </list>  
+         </property>
+		<!-- <property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<bean class="org.springframework.http.MediaType">
+								<constructor-arg index="0" value="text" />
+								<constructor-arg index="1" value="plain" />
+								<constructor-arg index="2" value="UTF-8" />
+							</bean>
+							<bean class="org.springframework.http.MediaType">
+								<constructor-arg index="0" value="*" />
+								<constructor-arg index="1" value="*" />
+								<constructor-arg index="2" value="UTF-8" />
+							</bean>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property> -->
+	</bean>
+
+    <!-- 异常处理 -->  
+    <bean class="com.cnfantasia.server.api.pub.exception.MyHandlerExceptionResolver">  
+	    <property name="defaultErrorView" value="error"></property>   <!-- 默认为500，系统错误(error.jsp)  -->  
+	    <property name="defaultStatusCode" value="500"></property>  
+	    <property name="statusCodes"><!-- 配置多个statusCode -->  
+	      <props>      
+	          <prop key="error">500</prop>  <!-- error.jsp -->  
+	          <prop key="error1">404</prop>    <!-- error1.jsp -->  
+	      </props>      
+	    </property>      
+	    <property name="exceptionMappings">  
+	        <props>  
+	            <!-- 这里你可以根据需要定义N多个错误异常转发 -->  
+	            <prop key="java.sql.SQLException">dbError</prop> <!-- 数据库错误(dbError.jsp) -->  
+	            <prop key="org.springframework.web.bind.ServletRequestBindingException">bizError</prop> <!-- 参数绑定错误(如：必须参数没传递)(bizError.jsp) -->  
+	            <prop key="java.lang.IllegalArgumentException">bizError</prop>  <!-- 参数错误(bizError.jsp) -->  
+	            <prop key="org.springframework.validation.BindException">bizError</prop>  <!-- 参数类型有误(bizError.jsp) -->  
+	            <prop key="java.lang.Exception">unknowError</prop>  <!-- 其他错误为'未定义错误'(unknowError.jsp)  -->  
+	        </props>  
+	    </property>  
+    </bean>  
+</beans>  

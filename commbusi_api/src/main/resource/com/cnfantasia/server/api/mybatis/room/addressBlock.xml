@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:小区 t_address_block -->
+<mapper namespace="addressBlock">
+	<resultMap type="com.cnfantasia.server.api.room.entity.AddressBlockEntity" id="addressBlockMap"  extends="addressBlockBase.addressBlockBaseMap">
+		<!-- 小区信息 -->
+        <association column="t_city_f_id" javaType="com.cnfantasia.server.api.room.entity.AddressCityEntity" 
+        	property="addressCityEntity" select="addressCity.select_addressCity_bySeqId"/>
+        	
+	</resultMap>
+	
+	<!-- 根据序列号查询某个(小区)信息。 -->
+	<select id="select_addressBlock_bySeqId" parameterType="java.math.BigInteger" resultMap="addressBlockMap">
+		<include refid="addressBlockBase.select_addressBlock_bySeqId"/>
+	</select>
+	
+    
+</mapper>

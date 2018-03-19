@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:运单备注 t_ebuy_delivery_order_comment -->
+<mapper namespace="ebuyDeliveryOrderCommentBase">
+	<resultMap type="EbuyDeliveryOrderComment" id="ebuyDeliveryOrderCommentBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_ebuy_order_f_id" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 运单Id -->        <result column="f_comment" javaType="java.lang.String" property="comment"/>  <!-- 备注 -->        <result column="f_add_time" javaType="java.lang.String" property="addTime"/>  <!-- 新增时间 -->
+	</resultMap>
+	<resultMap type="EbuyDeliveryOrderComment" id="ebuyDeliveryOrderCommentExtendMap" extends="ebuyDeliveryOrderCommentBaseMap">
+	</resultMap>
+	<resultMap type="EbuyDeliveryOrderComment" id="ebuyDeliveryOrderCommentBaseMap_AppendTable">
+        <id column="EDOCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EDOCtEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 运单Id -->        <result column="EDOCcomment" javaType="java.lang.String" property="comment"/>  <!-- 备注 -->        <result column="EDOCaddTime" javaType="java.lang.String" property="addTime"/>  <!-- 新增时间 -->
+	</resultMap>
+	<resultMap type="EbuyDeliveryOrderComment" id="ebuyDeliveryOrderCommentBaseMap_AppendTable1">
+        <id column="EDOC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EDOC1tEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 运单Id -->        <result column="EDOC1comment" javaType="java.lang.String" property="comment"/>  <!-- 备注 -->        <result column="EDOC1addTime" javaType="java.lang.String" property="addTime"/>  <!-- 新增时间 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EDOC.f_id,EDOC.t_ebuy_order_f_id,EDOC.f_comment,date_format(EDOC.f_add_time,'%Y-%m-%d %T') as f_add_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EDOC.f_id as EDOCid,EDOC.t_ebuy_order_f_id as EDOCtEbuyOrderFId,EDOC.f_comment as EDOCcomment,date_format(EDOC.f_add_time,'%Y-%m-%d %T') as EDOCaddTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EDOC1.f_id as EDOC1id,EDOC1.t_ebuy_order_f_id as EDOC1tEbuyOrderFId,EDOC1.f_comment as EDOC1comment,date_format(EDOC1.f_add_time,'%Y-%m-%d %T') as EDOC1addTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EDOC.f_id = #{id} ) </if>        <if test="tEbuyOrderFId != null">  and (EDOC.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="comment != null">  and (EDOC.f_comment = #{comment} ) </if>        <if test="addTime != null and !addTime.equals('')  ">  and (EDOC.f_add_time = str_to_date(#{addTime},'%Y-%m-%d %T') ) </if>        <if test="addTime_START != null and !addTime_START.equals('')  ">              <![CDATA[ and (EDOC.f_add_time >= str_to_date(#{addTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="addTime_END != null and !addTime_END.equals('')  ">            <![CDATA[ and (EDOC.f_add_time <= str_to_date(#{addTime_END},'%Y-%m-%d %T') ) ]]>        </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EDOC.f_id = #{id} ) </if>        <if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  ">  and (EDOC.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="comment != null and !comment.equals('')  ">  and (EDOC.f_comment like CONCAT('%',#{comment},'%') ) </if>        <if test="addTime != null and !addTime.equals('')  ">  and (EDOC.f_add_time = str_to_date(#{addTime},'%Y-%m-%d %T') ) </if>        <if test="addTime_START != null and !addTime_START.equals('')  ">              <![CDATA[ and (EDOC.f_add_time >= str_to_date(#{addTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="addTime_END != null and !addTime_END.equals('')  ">            <![CDATA[ and (EDOC.f_add_time <= str_to_date(#{addTime_END},'%Y-%m-%d %T') ) ]]>        </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyDeliveryOrderCommentBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyDeliveryOrderCommentBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyDeliveryOrderCommentBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyDeliveryOrderCommentBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_delivery_order_comment EDOC    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(运单备注)信息。 -->
+	<sql id="select_ebuyDeliveryOrderComment">
+		SELECT <include refid="ebuyDeliveryOrderCommentBase.queryHead"/>
+		<include refid="ebuyDeliveryOrderCommentBase.busiQueryCondition"/>
+		<include refid="ebuyDeliveryOrderCommentBase.dimCheckSql"/>
+		ORDER BY EDOC.f_id DESC
+	</sql>
+	<select id="select_ebuyDeliveryOrderComment" parameterType="java.util.Map" resultMap="ebuyDeliveryOrderCommentBase.ebuyDeliveryOrderCommentExtendMap">
+		<include refid="ebuyDeliveryOrderCommentBase.select_ebuyDeliveryOrderComment"/>
+	</select>
+	
+	<!-- 根据条件分页查询(运单备注)信息  -->
+	<sql id="select_ebuyDeliveryOrderComment_withPage">
+		SELECT <include refid="ebuyDeliveryOrderCommentBase.queryHead"/>
+		<include refid="ebuyDeliveryOrderCommentBase.busiQueryCondition"/>
+		<include refid="ebuyDeliveryOrderCommentBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyDeliveryOrderComment_withPage" resultMap="ebuyDeliveryOrderCommentBase.ebuyDeliveryOrderCommentExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyDeliveryOrderCommentBase.select_ebuyDeliveryOrderComment_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(运单备注)信息。 -->
+	<sql id="select_ebuyDeliveryOrderComment_bySeqId">
+		SELECT <include refid="ebuyDeliveryOrderCommentBase.queryHead"/>
+		<include refid="ebuyDeliveryOrderCommentBase.busiQueryCondition"/>
+		 and EDOC.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyDeliveryOrderComment_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyDeliveryOrderCommentBase.ebuyDeliveryOrderCommentBaseMap">
+		<include refid="ebuyDeliveryOrderCommentBase.select_ebuyDeliveryOrderComment_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(运单备注)记录数  -->
+	<sql id="select_ebuyDeliveryOrderComment_count">
+		SELECT COUNT(*)
+		<include refid="ebuyDeliveryOrderCommentBase.busiQueryCount"/>
+		<include refid="ebuyDeliveryOrderCommentBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyDeliveryOrderComment_count" resultType="java.lang.Integer">
+		<include refid="ebuyDeliveryOrderCommentBase.select_ebuyDeliveryOrderComment_count"/>
+	</select>
+	
+	 <!-- 往(运单备注)新增一条记录。 -->
+	 <sql id="insert_ebuyDeliveryOrderComment">
+		INSERT INTO t_ebuy_delivery_order_comment 
+		(f_id,t_ebuy_order_f_id,f_comment,f_add_time) VALUES 
+		(#{id},#{tEbuyOrderFId},#{comment,jdbcType=VARCHAR},str_to_date(#{addTime,jdbcType=DATE},'%Y-%m-%d %T'))
+	 </sql>
+    <insert id="insert_ebuyDeliveryOrderComment" parameterType="EbuyDeliveryOrderComment">
+		<include refid="ebuyDeliveryOrderCommentBase.insert_ebuyDeliveryOrderComment"/>
+    </insert>
+    
+	<!-- 批量新增(运单备注)信息 -->
+    <insert id="insert_ebuyDeliveryOrderComment_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_delivery_order_comment 
+		(f_id,t_ebuy_order_f_id,f_comment,f_add_time) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tEbuyOrderFId},#{item.comment,jdbcType=VARCHAR},str_to_date(#{item.addTime,jdbcType=DATE},'%Y-%m-%d %T'))
+		</foreach>
+    </insert>
+    
+    <!-- 更新(运单备注)信息。 -->
+    <sql id="update_ebuyDeliveryOrderComment">
+		UPDATE t_ebuy_delivery_order_comment		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('') "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="comment != null and !comment.equals('') "> ,f_comment=#{comment}</if> 		<if test="addTime != null and !addTime.equals('') "> ,f_add_time=str_to_date(#{addTime},'%Y-%m-%d %T')</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyDeliveryOrderComment" parameterType="EbuyDeliveryOrderComment">
+		<include refid="ebuyDeliveryOrderCommentBase.update_ebuyDeliveryOrderComment"/>
+    </update>
+    
+    <!-- 批量更新(运单备注)信息。 -->
+    <update id="update_ebuyDeliveryOrderComment_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_delivery_order_comment		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.comment != null and !item.comment.equals('')  "> ,f_comment=#{item.comment}</if> 		<if test="item.addTime != null and !item.addTime.equals('')  "> ,f_add_time=str_to_date(#{item.addTime},'%Y-%m-%d %T')</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(运单备注)信息_逻辑删除。 -->
+    <!-- <sql id="delete_ebuyDeliveryOrderComment_Logic">
+		UPDATE t_ebuy_delivery_order_comment		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="comment != null and !comment.equals('')  "> ,f_comment=#{comment}</if> 		<if test="addTime != null and !addTime.equals('')  "> ,f_add_time=str_to_date(#{addTime},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyDeliveryOrderComment_Logic" parameterType="EbuyDeliveryOrderComment">
+		<include refid="ebuyDeliveryOrderCommentBase.delete_ebuyDeliveryOrderComment_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(运单备注)信息_逻辑删除 -->
+    <!-- <update id="delete_ebuyDeliveryOrderComment_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_delivery_order_comment		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.comment != null and !item.comment.equals('')  "> ,f_comment=#{item.comment}</if> 		<if test="item.addTime != null and !item.addTime.equals('')  "> ,f_add_time=str_to_date(#{item.addTime},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(运单备注)信息。 -->
+    <sql id="delete_ebuyDeliveryOrderComment">
+		DELETE FROM t_ebuy_delivery_order_comment WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyDeliveryOrderComment" parameterType="java.lang.String">
+		<include refid="ebuyDeliveryOrderCommentBase.delete_ebuyDeliveryOrderComment"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(运单备注)信息。 -->
+    <delete id="delete_ebuyDeliveryOrderComment_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_delivery_order_comment WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

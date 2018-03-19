@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 抽奖活动配置 -->
+<mapper namespace="prizeActivity">
+	<resultMap type="com.cnfantasia.server.commbusi.prizeActivity.entity.MsPrizeActivityForList" id="msPrizeActivity_MapForList"
+		extends="msPrizeActivityBase.msPrizeActivityBaseMap_AppendTable">
+		<result column="ext_qryStatus" javaType="java.lang.Integer" property="qryStatus"/>
+	</resultMap>
+	<!-- 活动详情 -->
+	<resultMap type="com.cnfantasia.server.commbusi.prizeActivity.entity.MsPrizeActivityEntity" id="msPrizeActivity_MapForDetail"
+		extends="msPrizeActivityBase.msPrizeActivityBaseMap_AppendTable">
+		<collection property="msPrizeActHasOptList" resultMap="msPrizeActHasOptEntity_MapAppend"/><!-- 活动包含奖项 -->
+	</resultMap>
+	<!-- 活动包含奖项 -->
+	<resultMap type="com.cnfantasia.server.commbusi.prizeActivity.entity.MsPrizeActHasOptEntity" id="msPrizeActHasOptEntity_MapAppend"
+		extends="msPrizeActHasOptBase.msPrizeActHasOptBaseMap_AppendTable">
+		<association property="msPrizeOption" resultMap="msPrizeOptionBase.msPrizeOptionBaseMap_AppendTable"/><!-- 奖项信息 -->
+	</resultMap>
+	
+	<!-- 分页查询活动列表 -->
+	<sql id="select_MsPrizeActivity_List_comm">
+		AND MPA.f_sys0_del_state = 0
+		AND CASE 
+			WHEN #{activityStatus} = 0 THEN TRUE
+			WHEN #{activityStatus} = 2 THEN MPA.f_activity_status = 1
+			WHEN #{activityStatus} = 3 THEN (MPA.f_activity_status = 2 AND NOW()>=MPA.f_start_time AND MPA.f_end_time>=NOW() )
+			WHEN #{activityStatus} = 4 THEN (MPA.f_activity_status = 2 AND NOW()>MPA.f_end_time )
+			WHEN #{activityStatus} = 1 THEN (MPA.f_activity_status = 2 AND MPA.f_start_time>NOW() )
+		ELSE TRUE END <!-- 活动状态=={"1":"关闭","2":"开启"} -->
+    	<if test="name != null and !name.equals('')  ">  and (MPA.f_name like CONCAT('%',#{name},'%') ) </if>
+    	<if test="startTime != null and !startTime.equals('')  ">  
+            <![CDATA[ and (MPA.f_start_time <= str_to_date(#{startTime},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="endTime != null and !endTime.equals('')  ">
+            <![CDATA[ and (MPA.f_end_time >= str_to_date(#{endTime},'%Y-%m-%d %T') ) ]]>
+        </if>
+	</sql>
+	<sql id="select_MsPrizeActivity_QryStatus_check">
+		CASE
+			WHEN MPA.f_activity_status = 1 THEN 2
+			WHEN (MPA.f_activity_status = 2 AND NOW()>MPA.f_end_time) THEN 4
+			WHEN (MPA.f_activity_status = 2 AND NOW()>=MPA.f_start_time AND MPA.f_end_time>=NOW() ) THEN 3
+			WHEN MPA.f_activity_status = 2 THEN 1
+		ELSE NULL END <!-- 活动状态=={"1":"关闭","2":"开启"} -->
+	</sql>
+	<select id="select_MsPrizeActivity_List_page" parameterType="java.util.Map" resultMap="msPrizeActivity_MapForList">
+		SELECT <include refid="msPrizeActivityBase.queryHead_AppendTable"/>
+			,<include refid="select_MsPrizeActivity_QryStatus_check"/> AS ext_qryStatus
+		FROM t_ms_prize_activity MPA
+    	WHERE 1=1
+    	<include refid="select_MsPrizeActivity_List_comm"/>
+        ORDER BY MPA.f_last_upd_time DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	<select id="select_MsPrizeActivity_List_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		FROM t_ms_prize_activity MPA
+    	WHERE 1=1
+    	<include refid="select_MsPrizeActivity_List_comm"/>
+	</select>
+	
+	<!-- 查询活动详情 -->
+	<sql id="test">
+		#{hello} as test
+	</sql>
+	<select id="select_MsPrizeActivity_Detail" parameterType="java.util.Map" resultMap="msPrizeActivity_MapForDetail">
+		SELECT <!-- <include refid="test"><property name="hello" value="444"/></include>, -->
+			<include refid="msPrizeActivityBase.queryHead_AppendTable"/>
+			,<include refid="msPrizeActHasOptBase.queryHead_AppendTable"/>
+			,<include refid="msPrizeOptionBase.queryHead_AppendTable"/>
+		FROM t_ms_prize_activity MPA
+			LEFT JOIN t_ms_prize_act_has_opt MPAHO ON MPAHO.f_prize_act_id = MPA.f_id AND MPAHO.f_sys0_del_state = 0
+			LEFT JOIN t_ms_prize_option MPO ON MPO.f_id = MPAHO.f_prize_option_id AND MPO.f_sys0_del_state = 0
+		WHERE 1=1
+		AND MPA.f_id = #{actId}
+		AND MPA.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询活动的展示状态 -->
+	<select id="select_MsPrizeActivity_QryStatus" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT <include refid="select_MsPrizeActivity_QryStatus_check"/>
+		FROM t_ms_prize_activity MPA
+    	WHERE 1=1
+    	AND MPA.f_sys0_del_state = 0
+    	AND MPA.f_id = #{actId}
+	</select>
+	
+	<!-- 查询活动包含的奖项列表 -->
+	<select id="select_ActHasOpt_List" parameterType="java.util.Map" resultMap="msPrizeActHasOptEntity_MapAppend">
+		SELECT <include refid="msPrizeActHasOptBase.queryHead_AppendTable"/>
+			,<include refid="msPrizeOptionBase.queryHead_AppendTable"/>
+		FROM t_ms_prize_act_has_opt MPAHO
+			LEFT JOIN t_ms_prize_option MPO ON MPO.f_id = MPAHO.f_prize_option_id AND MPO.f_sys0_del_state = 0
+		WHERE 1=1
+		AND MPAHO.f_prize_act_id = #{actId}
+		AND MPAHO.f_sys0_del_state = 0
+	</select>
+	
+	<sql id="select_MsPrizeOption_List_comm">
+		AND MPO.f_sys0_del_state = 0
+		AND CASE 
+			WHEN #{qryStatus} = 0 THEN TRUE
+			WHEN #{qryStatus} = 2 THEN MPO.f_status = 1
+			WHEN #{qryStatus} = 1 THEN MPO.f_status = 2
+		ELSE TRUE END <!-- 奖项状态=={"1":"关闭","2":"开启"} -->
+		AND CASE 
+			WHEN #{useStatus} = 0 THEN TRUE
+			WHEN #{useStatus} = 1 THEN NOT EXISTS( SELECT 0 FROM t_ms_prize_act_has_opt MPAHO WHERE MPAHO.f_sys0_del_state = 0 AND MPO.f_id = MPAHO.f_prize_option_id )
+			WHEN #{useStatus} = 2 THEN EXISTS( SELECT 0 FROM t_ms_prize_act_has_opt MPAHO WHERE MPAHO.f_sys0_del_state = 0 AND MPO.f_id = MPAHO.f_prize_option_id )
+		ELSE TRUE END <!-- 使用状态=={"1":"未使用","2":"使用中"} -->
+		<if test="name != null and !name.equals('')  ">  and (MPO.f_name like CONCAT('%',#{name},'%') ) </if>
+	</sql>
+	<resultMap type="com.cnfantasia.server.commbusi.prizeActivity.entity.MsPrizeOptionForList" id="msPrizeOption_MapForList"
+		extends="msPrizeOptionBase.msPrizeOptionBaseMap_AppendTable">
+		<result column="ext_qryStatus" javaType="java.lang.Integer" property="qryStatus"/>
+		<result column="ext_useStatus" javaType="java.lang.Integer" property="useStatus"/>
+	</resultMap>
+	<!-- 查询奖项列表 -->
+	<select id="select_MsPrizeOption_List_page" parameterType="java.util.Map" resultMap="msPrizeOption_MapForList">
+		SELECT <include refid="msPrizeOptionBase.queryHead_AppendTable"/>
+			,CASE
+				WHEN MPO.f_status = 1 THEN 2
+				WHEN MPO.f_status = 2 THEN 1
+				ELSE NULL END  AS ext_qryStatus <!-- 奖项状态=={"1":"关闭","2":"开启"} -->
+			,CASE WHEN EXISTS( SELECT 0 FROM t_ms_prize_act_has_opt MPAHO WHERE MPAHO.f_sys0_del_state = 0 AND MPO.f_id = MPAHO.f_prize_option_id ) THEN 2 ELSE 1 END AS ext_useStatus
+		FROM t_ms_prize_option MPO
+		WHERE 1=1
+		<include refid="select_MsPrizeOption_List_comm"/>
+		ORDER BY MPO.f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	<select id="select_MsPrizeOption_List_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		FROM t_ms_prize_option MPO
+		WHERE 1=1
+		<include refid="select_MsPrizeOption_List_comm"/>
+	</select>
+	
+	<!-- 查询可用于参加活动的奖项列表 -->
+	<select id="select_MsPrizeOption_Aval_List" parameterType="java.util.Map" resultMap="msPrizeOptionBase.msPrizeOptionBaseMap_AppendTable">
+		SELECT <include refid="msPrizeOptionBase.queryHead_AppendTable"/>
+		FROM t_ms_prize_option MPO
+		WHERE 1=1
+		AND MPO.f_sys0_del_state = 0
+		<!-- 去除活动Id -->
+		<if test="ignoreActId != null and !ignoreActId.equals('')  ">
+		AND NOT EXISTS (SELECT 0 FROM t_ms_prize_act_has_opt MPAHO WHERE MPAHO.f_prize_act_id=#{ignoreActId} AND MPO.f_id = MPAHO.f_prize_option_id AND MPAHO.f_sys0_del_state = 0 )
+		</if>
+		AND MPO.f_status = 2
+		<!-- 有效期包含活动范围  -->
+		<if test="actStartTime != null and !actStartTime.equals('')  ">  AND #{actStartTime}>=MPO.f_vali_start_time </if>
+		<if test="actEndTime != null and !actEndTime.equals('')  ">  AND MPO.f_vali_end_time>=#{actEndTime} </if>
+		<!-- 有库存 -->
+		ORDER BY MPO.f_vali_end_time DESC
+	</select>
+	
+	<!-- 查询奖项被哪些活动使用 -->
+	<select id="select_MsPrizeOption_IsUsedPriAct_List" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT MPA.f_name
+		FROM t_ms_prize_act_has_opt MPAHO 
+			INNER JOIN t_ms_prize_activity MPA ON MPA.f_id = MPAHO.f_prize_act_id AND MPA.f_sys0_del_state = 0 
+		WHERE MPAHO.f_sys0_del_state = 0 
+		AND MPAHO.f_prize_option_id = #{priOptId}
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.commbusi.prizeActivity.entity.MsPrizeOptionEntity" id="msPrizeOptionEntity_Map_Append"
+		extends="msPrizeOptionBase.msPrizeOptionBaseMap_AppendTable">
+		<result column="ext_priGiftCount" javaType="java.lang.Integer" property="priGiftCount"/>
+		<association column="{optId=MPOid}" property="cityNameList"  select="select_MsPrizeOption_CityName_List"/>
+		<!-- <collection column="{optId=MPOid}" property="cityNameList"  select="select_MsPrizeOption_CityName_List"/> is ok -->
+	</resultMap>
+	<select id="select_MsPrizeOption_CityName_List" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT MPOC.f_city_name AS ext_cityName
+		FROM t_ms_prize_option_city MPOC
+		WHERE 1=1
+		AND MPOC.f_sys0_del_state = 0
+		AND MPOC.f_prize_option_id = #{optId}
+	</select>
+	<!-- 查询奖项详情 -->
+	<select id="select_MsPrizeOption_Detail" parameterType="java.util.Map" resultMap="msPrizeOptionEntity_Map_Append">
+		SELECT <include refid="msPrizeOptionBase.queryHead_AppendTable"/>
+			,(SELECT COUNT(0) FROM t_ms_prize_gift MPG WHERE MPG.f_prize_option_id = MPO.f_id AND MPG.f_sys0_del_state = 0) AS ext_priGiftCount
+		FROM t_ms_prize_option MPO
+		WHERE 1=1
+		AND MPO.f_sys0_del_state = 0
+		AND MPO.f_id = #{priOptId}
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.commbusi.prizeActivity.entity.TimeRange" id="TimeRange_Map">
+		<id column="f_id" javaType="java.math.BigInteger" property="id"/>
+		<result column="f_startTime" javaType="java.lang.String" property="startTime"/>
+		<result column="f_endTime" javaType="java.lang.String" property="endTime"/>
+	</resultMap>
+	<!-- 查询活动起止时间范围列表 -->
+	<select id="select_PrizeActivity_TimeRange_List" resultMap="TimeRange_Map">
+		SELECT MPA.f_id AS f_id,MPA.f_start_time AS f_startTime,MPA.f_end_time AS f_endTime
+		FROM t_ms_prize_activity MPA
+		WHERE 1=1
+		AND MPA.f_sys0_del_state = 0
+		ORDER BY MPA.f_id DESC
+	</select>
+	
+	<!-- 查询奖项总的奖品总数量 -->
+	<select id="select_MsPrizeGift_TotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		FROM t_ms_prize_gift MPG
+    	WHERE 1=1
+		AND MPG.f_sys0_del_state = 0
+		AND MPG.f_prize_option_id = #{priOptId}
+	</select>
+	<!-- 查询未结束活动占用的奖品总数量 -->
+	<select id="select_notFinished_MsPrizeActivity_TotalGiftCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT SUM(MPAHO.f_total_max_count) 
+		FROM t_ms_prize_act_has_opt MPAHO
+		INNER JOIN t_ms_prize_activity MPA ON MPA.f_sys0_del_state = 0
+			AND MPA.f_id = MPAHO.f_prize_act_id
+			AND MPA.f_end_time>=NOW() <!-- 活动未结束 -->
+		WHERE 1=1
+		AND MPAHO.f_sys0_del_state = 0
+		AND MPAHO.f_prize_option_id = #{priOptId}
+	</select>
+	<!-- 查询已结束活动使用的奖品总数量 -->
+	<select id="select_finished_MsPrizeActivity_UsedGiftCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0) 
+		FROM t_ms_prize_gift MPG
+			INNER JOIN t_ms_prize_activity MPA ON MPA.f_sys0_del_state=0 AND MPA.f_id = MPG.f_prize_act_id
+				AND NOW()>MPA.f_end_time <!-- 活动已结束 -->
+		WHERE 1=1
+		AND MPG.f_sys0_del_state = 0
+		AND MPG.f_convert_status !=0 
+		AND MPG.f_prize_option_id = #{priOptId}
+	</select>
+	
+	<!-- 查询有重复数据的记录 -->
+	<select id="select_RepeatCode_Set" parameterType="java.util.Map" resultType="com.cnfantasia.server.commbusi.prizeActivity.entity.GiftUqMarkCode">
+		SELECT A_tmp.uqMark as uqMark,A_tmp.valueCode as valueCode
+		FROM ( 
+			<foreach collection="codeList" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item.uqMark} uqMark
+				,#{item.valueCode} valueCode
+			</foreach>
+			) A_tmp
+		WHERE 1=1
+		AND EXISTS (
+			SELECT 0 FROM t_ms_prize_gift_code MPGC 
+			WHERE 1=1
+			AND MPGC.f_uq_mark = A_tmp.uqMark
+			AND MPGC.f_value_code = A_tmp.valueCode 
+			AND MPGC.f_sys0_del_state = 0
+			)
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.commbusi.prizeActivity.entity.MsPrizeGiftEntity" id="msPrizeGiftEntity_MapAppend"
+		extends="msPrizeGiftBase.msPrizeGiftBaseMap_AppendTable">
+		<collection property="msPrizeGiftCodeList" resultMap="msPrizeGiftCodeBase.msPrizeGiftCodeBaseMap_AppendTable"/>
+	</resultMap>
+	<sql id="select_MsPrizeGiftList_comm">
+		t_ms_prize_gift MPG
+			INNER JOIN t_ms_prize_gift_code MPGC ON MPGC.f_sys0_del_state = 0 AND MPGC.f_pri_gift_id = MPG.f_id
+			<if test="codeName != null and !codeName.equals('')  ">  AND (MPGC.f_code_name like CONCAT('%',#{codeName},'%') ) </if>
+			<if test="valueCode != null and !valueCode.equals('')  ">  AND (MPGC.f_value_code like CONCAT('%',#{valueCode},'%') ) </if>
+			<if test="uqMark != null and !uqMark.equals('')  ">  AND (MPGC.f_uq_mark like CONCAT('%',#{uqMark},'%') ) </if>
+		WHERE 1=1
+		AND MPG.f_sys0_del_state = 0
+		AND MPG.f_prize_option_id = #{priOptId}
+		AND CASE 
+			WHEN #{qryStatus} = 0 THEN TRUE
+			WHEN #{qryStatus} = 1 THEN MPG.f_convert_status = 0
+			WHEN #{qryStatus} = 2 THEN MPG.f_convert_status = 1
+			WHEN #{qryStatus} = 3 THEN MPG.f_convert_status = 2
+		ELSE TRUE END <!-- 兑换状态=={"0":"未使用","1":"已锁定","2":"已分配"} -->
+	</sql>
+	<!-- 按条件查询奖品列表 -->
+	<select id="select_MsPrizeGiftList_Page" parameterType="java.util.Map" resultMap="msPrizeGiftEntity_MapAppend">
+		SELECT <include refid="msPrizeGiftBase.queryHead_AppendTable"/>
+			,<include refid="msPrizeGiftCodeBase.queryHead_AppendTable"/>
+		FROM (
+			SELECT DISTINCT MPG.f_id AS id FROM <include refid="select_MsPrizeGiftList_comm"/> 
+			ORDER BY MPG.f_id DESC
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]> 
+			) AS tmp_IdList
+			INNER JOIN t_ms_prize_gift MPG ON MPG.f_id = tmp_IdList.id
+			INNER JOIN t_ms_prize_gift_code MPGC ON MPGC.f_sys0_del_state = 0 AND MPGC.f_pri_gift_id = MPG.f_id
+		WHERE 1=1
+	</select>
+	<select id="select_MsPrizeGiftList_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(DISTINCT MPG.f_id)
+		FROM <include refid="select_MsPrizeGiftList_comm"/>
+	</select>
+	
+	
+	<!-- 删除奖品及对应code信息 -->
+	<update id="delete_MsPrizeGiftAndCode_Logic" parameterType="java.util.Map">
+		UPDATE t_ms_prize_gift MPG
+			LEFT JOIN t_ms_prize_gift_code MPGC ON MPGC.f_sys0_del_state = 0 AND MPGC.f_pri_gift_id = #{giftId}
+		SET MPG.f_sys0_del_state = 1,MPG.f_sys0_del_time = NOW()
+			,MPGC.f_sys0_del_state = 1,MPGC.f_sys0_del_time = NOW()
+		WHERE 1=1
+		AND MPG.f_id = #{giftId}
+		AND MPG.f_sys0_del_state = 0
+		AND MPG.f_convert_status = 0 <!-- 兑换状态=={"0":"未使用","1":"已锁定","2":"已分配"} -->
+	</update>
+	
+	<!-- 删除奖项所属的城市 -->
+	<delete id="delete_PirzeOption_City" parameterType="java.util.Map">
+		DELETE FROM t_ms_prize_option_city WHERE f_prize_option_id = #{optId}
+	</delete>
+	
+	<!-- 删除活动,同时删除关联奖项关系 -->
+	<select id="delete_MsPrizeActivity_WithRela_Logic" parameterType="java.util.Map">
+		UPDATE t_ms_prize_activity MPA
+			LEFT JOIN t_ms_prize_act_has_opt MPAHO ON MPAHO.f_prize_act_id = #{actId} AND MPAHO.f_sys0_del_state = 0
+		SET MPA.f_sys0_del_state = 1,MPA.f_sys0_del_time = NOW()
+			,MPAHO.f_sys0_del_state = 1,MPAHO.f_sys0_del_time = NOW()
+		WHERE 1=1
+		AND MPA.f_sys0_del_state = 0 
+		AND MPA.f_id = #{actId}
+	</select>
+	
+	<!-- 查询当前在进行中的活动 -->
+	<select id="select_MsPrizeActivity_CurrDoing" resultMap="msPrizeActivityBase.msPrizeActivityBaseMap_AppendTable">
+		SELECT <include refid="msPrizeActivityBase.queryHead_AppendTable"/>
+		FROM t_ms_prize_activity MPA
+    	WHERE 1=1
+    	AND MPA.f_sys0_del_state = 0
+    	AND (MPA.f_activity_status = 2 AND NOW()>=MPA.f_start_time AND MPA.f_end_time>=NOW() ) <!-- 状态为已开启,且在进行中 -->
+        ORDER BY MPA.f_last_upd_time DESC
+        LIMIT 1
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.commbusi.prizeActivity.entity.MsPrizeGiftForPrize" id="msPrizeGiftForPrize_Map_Append"
+		extends="msPrizeGiftBase.msPrizeGiftBaseMap_AppendTable">
+		<association property="msPrizeOption" resultMap="msPrizeOptionBase.msPrizeOptionBaseMap_AppendTable"/> <!-- 奖项信息 -->
+	</resultMap>
+	<!-- 查询奖品详情 -->
+	<select id="select_MsPrizeGift_Detail" parameterType="java.util.Map" resultMap="msPrizeGiftForPrize_Map_Append">
+		SELECT <include refid="msPrizeGiftBase.queryHead_AppendTable"/>
+			,<include refid="msPrizeOptionBase.queryHead_AppendTable"/>
+		FROM t_ms_prize_gift MPG
+			INNER JOIN t_ms_prize_option MPO ON MPO.f_id = MPG.f_prize_option_id AND MPG.f_sys0_del_state = 0
+		WHERE 1=1
+		AND MPG.f_sys0_del_state = 0
+		AND MPG.f_id = #{giftId}
+	</select>
+	
+</mapper>

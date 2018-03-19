@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  秒杀活动 -->
+<mapper namespace="flashDealActivity">
+    <!--活动entity，buyRecord为自己参与记录，winRecords为中奖情况记录列表-->
+    <resultMap id="flashDealActivityDetailMap" type="com.cnfantasia.server.api.flashDealActivity.entity.FlashDealActivityDetailEntity">
+        <id column="activityId" javaType="java.math.BigInteger" property="activityId"/>
+        <result column="activityTitle" javaType="java.lang.String" property="activityTitle"/>
+        <result column="activityPic" javaType="java.lang.String" property="activityPic"/>
+        <result column="productPic" javaType="java.lang.String" property="productPic"/>
+        <result column="activityPrice" javaType="java.lang.Integer" property="activityPrice"/>
+        <result column="activityStatus" javaType="java.lang.Integer" property="activityStatus"/>
+        <result column="activityStartTime" javaType="java.lang.String" property="activityStartTime"/>
+        <result column="activityEndTime" javaType="java.lang.String" property="activityEndTime"/>
+        <result column="introduceContent" javaType="java.lang.String" property="introduceContent"/>
+        <result column="introduceRule" javaType="java.lang.String" property="introduceRule"/>
+        <result column="buyCount" javaType="java.lang.Integer" property="buyCount"/>
+        <result column="prizeCount" javaType="java.lang.Integer" property="prizeCount"/>
+        <result column="isSettle" javaType="java.lang.Integer" property="isSettle"/>
+        <result column="productName" javaType="java.lang.String" property="productName"/>
+        <result column="productId" javaType="java.math.BigInteger" property="productId"/>
+        <result column="productShelfId" javaType="java.math.BigInteger" property="productShelfId"/>
+        <result column="productPrice" javaType="java.lang.Long" property="productPrice"/>
+        <result column="merchantId" javaType="java.math.BigInteger" property="merchantId"/>
+        <result column="merchantName" javaType="java.lang.String" property="merchantName"/>
+        <result column="startTime" javaType="java.lang.String" property="startTime"/>
+        <result column="endTime" javaType="java.lang.String" property="endTime"/>
+        <association property="buyRecord" javaType="com.cnfantasia.server.domainbase.flashDealBuyRecord.entity.FlashDealBuyRecord">
+            <id column="BRid" javaType="java.math.BigInteger" property="id"/>
+            <result column="BRtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>
+            <result column="BRuserMobile" javaType="java.lang.String" property="userMobile"/>
+            <result column="BRrecordStatus" javaType="java.lang.Integer" property="recordStatus"/>
+        </association>
+        <collection property="winRecords" ofType="com.cnfantasia.server.domainbase.flashDealBuyRecord.entity.FlashDealBuyRecord">
+            <id column="WRid" javaType="java.math.BigInteger" property="id"/>
+            <result column="WRtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>
+            <result column="WRuserMobile" javaType="java.lang.String" property="userMobile"/>
+            <result column="WRrecordStatus" javaType="java.lang.Integer" property="recordStatus"/>
+        </collection>
+    </resultMap>
+
+    <sql id="flashDealActivityHead">
+        fda.f_id activityId, fda.f_title activityTitle, fda.f_activity_pic activityPic,fda.f_activity_price activityPrice
+        ,DATE_FORMAT(fda.f_activity_start_time,'%m/%d/%Y %T') activityStartTime
+        ,DATE_FORMAT(fda.f_activity_end_time,'%m/%d/%Y %T') activityEndTime
+        ,fda.f_introduce_content introduceContent
+        ,fda.f_introduce_rule introduceRule
+        ,fda.f_is_settle isSettle
+        ,fda.f_prize_count prizeCount
+        ,(select count(1) from t_flash_deal_buy_record r where r.t_flash_deal_activity_f_id = fda.f_id and r.f_sys0_del_state = 0 and r.f_record_status != 1) buyCount
+        ,case when fda.f_activity_start_time > now() then 2 when fda.f_activity_end_time &lt; now() then 3 else 1 end activityStatus
+    </sql>
+    <sql id="userBuyRecordHead">
+        br.f_id BRid, br.t_user_f_id BRtUserFId, br.f_user_mobile BRuserMobile, br.f_record_status BRrecordStatus
+    </sql>
+    <sql id="winBuyRecordHead">
+        wr.f_id WRid, wr.t_user_f_id WRtUserFId, wr.f_user_mobile WRuserMobile, wr.f_record_status WRrecordStatus
+    </sql>
+
+    <!--改版后的幸运购列表-->
+    <resultMap id="flashDealActivityDetailMap02" type="com.cnfantasia.server.api.flashDealActivity.entity.FlashDealActivityDetailNewEntity">
+        <id column="startDay01" javaType="java.lang.String"/>
+        <result column="startDay" javaType="java.lang.String" property="startDay"/>
+        <collection property="flashDealActivityDetailEntities" ofType="com.cnfantasia.server.api.flashDealActivity.entity.FlashDealActivityDetailEntity">
+            <id column="activityId" javaType="java.math.BigInteger" property="activityId"/>
+            <result column="activityTitle" javaType="java.lang.String" property="activityTitle"/>
+            <result column="activityPic" javaType="java.lang.String" property="activityPic"/>
+            <result column="productPic" javaType="java.lang.String" property="productPic"/>
+            <result column="activityPrice" javaType="java.lang.Integer" property="activityPrice"/>
+            <result column="activityStatus" javaType="java.lang.Integer" property="activityStatus"/>
+            <result column="activityStartTime" javaType="java.lang.String" property="activityStartTime"/>
+            <result column="activityEndTime" javaType="java.lang.String" property="activityEndTime"/>
+            <result column="introduceContent" javaType="java.lang.String" property="introduceContent"/>
+            <result column="introduceRule" javaType="java.lang.String" property="introduceRule"/>
+            <result column="buyCount" javaType="java.lang.Integer" property="buyCount"/>
+            <result column="prizeCount" javaType="java.lang.Integer" property="prizeCount"/>
+            <result column="isSettle" javaType="java.lang.Integer" property="isSettle"/>
+            <result column="startTime" javaType="java.lang.String" property="startTime"/>
+            <result column="endTime" javaType="java.lang.String" property="endTime"/>
+            <result column="remindStatus" javaType="java.lang.Integer" property="remindStatus"/>
+            <association property="buyRecord" javaType="com.cnfantasia.server.domainbase.flashDealBuyRecord.entity.FlashDealBuyRecord">
+                <id column="BRid" javaType="java.math.BigInteger" property="id"/>
+                <result column="BRtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>
+                <result column="BRuserMobile" javaType="java.lang.String" property="userMobile"/>
+                <result column="BRrecordStatus" javaType="java.lang.Integer" property="recordStatus"/>
+            </association>
+            <collection property="winRecords" ofType="com.cnfantasia.server.domainbase.flashDealBuyRecord.entity.FlashDealBuyRecord">
+                <id column="WRid" javaType="java.math.BigInteger" property="id"/>
+                <result column="WRtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>
+                <result column="WRuserMobile" javaType="java.lang.String" property="userMobile"/>
+                <result column="WRrecordStatus" javaType="java.lang.Integer" property="recordStatus"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="getActivityList" parameterType="map" resultMap="flashDealActivityDetailMap02">
+ 		<!-- 活动信息、个人购买信息、中奖情况 -->
+        SELECT * FROM (
+            select DATE_FORMAT(fda.f_activity_start_time,"%y-%m-%d") AS startDay01, fda.f_activity_start_time AS f_activity_start_time,
+            fda.f_activity_end_time AS f_activity_end_time, fda.f_sys0_del_state AS f_sys0_del_state,
+            DATE_FORMAT(fda.f_activity_start_time,"%m月%d日") AS startDay
+            from t_flash_deal_activity fda
+            INNER JOIN t_ebuy_product EP ON EP.f_id = fda.t_ebuy_product_f_id
+            INNER JOIN t_ebuy_product_shelf EPSH on EP.f_id = EPSH.t_ebuy_product_id AND EPSH.f_up_shelf_state = 0
+            INNER JOIN t_ebuy_product_type EPT ON EPT.f_id = EPSH.t_ebuy_product_type_id AND EPT.f_wlApp_type = 1
+            INNER JOIN t_ebuy_supply_merchant ESM ON EP.t_supply_merchant_f_id = ESM.f_id
+            <if test="supplyMerchantId != null">
+                and ESM.f_id = #{supplyMerchantId}
+            </if>
+            <if test="supplyMerchantId == null">
+                INNER JOIN t_ebuy_supply_merchant_has_group_building ESMHGB ON ESMHGB.t_ebuy_supply_merchant_id = ESM.f_id AND ESMHGB.t_group_building_id = #{gbId}
+            </if>
+            LEFT JOIN t_flash_deal_buy_record br on br.f_sys0_del_state = 0 and br.t_flash_deal_activity_f_id = fda.f_id and
+            br.f_record_status != 1 and br.t_user_f_id = #{userId}
+            LEFT JOIN t_flash_deal_buy_record wr on wr.f_sys0_del_state = 0 and wr.t_flash_deal_activity_f_id = fda.f_id and
+            wr.f_record_status = 4
+            where fda.f_sys0_del_state = 0
+            AND f_activity_end_time > curdate()
+            AND fda.f_activity_start_time > curdate()
+            AND f_activity_start_time &lt; date_add(curdate(), INTERVAL 1 WEEK)
+            GROUP BY startDay01
+        )tmp1
+        INNER JOIN (
+            select
+            <include refid="flashDealActivityHead"/>,<include refid="userBuyRecordHead"/>,<include refid="winBuyRecordHead"/>
+            , EP.f_pic_base AS productPic, DATE_FORMAT(fda.f_activity_start_time,"%y-%m-%d") AS startDay02, fda.f_activity_start_time,
+            DATE_FORMAT(fda.f_activity_start_time,"%H:%i") AS startTime,
+            DATE_FORMAT(fda.f_activity_end_time,"%H:%i") AS endTime, IF(fdar.f_id != '',1,0) AS remindStatus
+            from t_flash_deal_activity fda
+            INNER JOIN t_ebuy_product EP ON EP.f_id = fda.t_ebuy_product_f_id
+            INNER JOIN t_ebuy_product_shelf EPSH on EP.f_id = EPSH.t_ebuy_product_id AND EPSH.f_up_shelf_state = 0
+            INNER JOIN t_ebuy_product_type EPT ON EPT.f_id = EPSH.t_ebuy_product_type_id AND EPT.f_wlApp_type = 1
+            INNER JOIN t_ebuy_supply_merchant ESM ON EP.t_supply_merchant_f_id = ESM.f_id
+            <if test="supplyMerchantId != null">
+                and ESM.f_id = #{supplyMerchantId}
+            </if>
+            <if test="supplyMerchantId == null">
+                INNER JOIN t_ebuy_supply_merchant_has_group_building ESMHGB ON ESMHGB.t_ebuy_supply_merchant_id = ESM.f_id AND ESMHGB.t_group_building_id = #{gbId}
+            </if>
+            LEFT JOIN t_flash_deal_buy_record br on br.f_sys0_del_state = 0 and br.t_flash_deal_activity_f_id = fda.f_id and
+            br.f_record_status != 1 and br.t_user_f_id = #{userId}
+            LEFT JOIN t_flash_deal_buy_record wr on wr.f_sys0_del_state = 0 and wr.t_flash_deal_activity_f_id = fda.f_id and
+            wr.f_record_status = 4
+            LEFT JOIN t_flash_deal_remind fdar ON fdar.t_flash_deal_activity_f_id = fda.f_id AND  fdar.t_user_f_id = #{userId} AND fdar.f_sys0_del_state = 0
+            WHERE fda.f_sys0_del_state = 0
+            AND fda.f_activity_end_time > curdate()
+            AND fda.f_activity_start_time > curdate()
+            AND fda.f_activity_start_time &lt; date_add(curdate(), INTERVAL 1 WEEK)
+        )tmp2
+        ON tmp1.startDay01 = startDay02
+        order by tmp1.f_activity_start_time ASC,tmp2.activityStatus ASC, tmp2.f_activity_start_time ASC
+        <if test="_begin != null and _length != null">
+            limit #{_begin}, #{_length}
+        </if>
+    </select>
+
+    <!-- 我的抢购记录页面 + 数据 -->
+    <select id="select_my_records" parameterType="map" resultMap="flashDealActivityDetailMap">
+ 		<!-- 活动信息、个人购买信息、中奖情况 -->
+        select <include refid="flashDealActivityHead"/>,<include refid="userBuyRecordHead"/>,<include refid="winBuyRecordHead"/>, EP.f_pic_base AS productPic
+        from t_flash_deal_activity fda
+        INNER JOIN t_ebuy_product EP ON EP.f_id = fda.t_ebuy_product_f_id
+        INNER JOIN t_flash_deal_buy_record br on br.f_sys0_del_state = 0 and br.t_flash_deal_activity_f_id = fda.f_id and br.f_record_status != 1 and br.t_user_f_id = #{userId}
+        LEFT JOIN t_flash_deal_buy_record wr on wr.f_sys0_del_state = 0 and wr.t_flash_deal_activity_f_id = fda.f_id and wr.f_record_status = 4
+        where fda.f_sys0_del_state = 0
+        order by br.f_id desc
+    </select>
+
+    <select id="getActivityEntityDetail" parameterType="map" resultMap="flashDealActivityDetailMap">
+        select <include refid="flashDealActivityHead"/>,<include refid="winBuyRecordHead"/>
+        <if test="userId != null and userId != ''">
+            ,<include refid="userBuyRecordHead"/>,
+        </if>
+        EP.f_name AS productName, EPSH.f_price_discount AS productPrice,EP.f_id AS productId, EPSH.f_id AS productShelfId, ESM.f_name AS merchantName, ESM.f_id as merchantId,
+        DATE_FORMAT(fda.f_activity_start_time,"%H:%i") AS startTime,DATE_FORMAT(fda.f_activity_end_time,"%H:%i") AS endTime
+        from t_flash_deal_activity fda
+        INNER JOIN t_ebuy_product EP ON EP.f_id = fda.t_ebuy_product_f_id
+        INNER JOIN t_ebuy_product_shelf EPSH on EP.f_id = EPSH.t_ebuy_product_id AND EPSH.f_up_shelf_state = 0
+        INNER JOIN t_ebuy_product_type EPT ON EPT.f_id = EPSH.t_ebuy_product_type_id AND EPT.f_wlApp_type = 1
+        LEFT JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id AND ESM.f_sys0_del_state = 0
+        <if test="userId != null and userId != ''">
+            LEFT JOIN t_flash_deal_buy_record br on br.f_sys0_del_state = 0 and br.t_flash_deal_activity_f_id = fda.f_id and br.f_record_status != 1 and br.t_user_f_id = #{userId}
+        </if>
+        LEFT JOIN t_flash_deal_buy_record wr on wr.f_sys0_del_state = 0 and wr.t_flash_deal_activity_f_id = fda.f_id and wr.f_record_status = 4
+        where fda.f_sys0_del_state = 0 AND fda.f_id = #{activityId}
+    </select>
+
+    <!--一元夺宝 抽奖-->
+    <select id="luckDrawByActivityId" statementType="CALLABLE" parameterType="java.math.BigInteger" resultType="java.lang.Boolean">
+        <![CDATA[
+		    {call sp_flash_deal_activity(#{flashDealActivityId,mode=IN,jdbcType=BIGINT})}
+		]]>
+    </select>
+
+    <!--幸运购图片列表-->
+    <select id="getEbuyProductPicList" parameterType="java.math.BigInteger" resultType="java.lang.String">
+        SELECT
+            EPP.f_url_mini as urlMini
+        FROM
+            t_ebuy_product EP
+        INNER JOIN t_ebuy_product_pic EPP ON EP.f_id = EPP.t_ebuy_product_f_id AND EPP.f_sys0_del_state = 0
+        INNER JOIN t_flash_deal_activity FDA ON FDA.t_ebuy_product_f_id = EP.f_id
+        WHERE FDA.f_id = #{activityId}
+    </select>
+    <!--查询需要提醒的活动信息-->
+    <select id="getFlashDealRemindList" resultType="com.cnfantasia.server.api.flashDealActivity.entity.FlashDealRemindEntity">
+       SELECT fda.f_id AS activityId, fdr.t_user_f_id AS userId, fdr.f_id AS remindId,
+              fda.f_title AS title, fda.f_activity_start_time AS startTime, fda.f_activity_end_time AS endTime
+       FROM t_flash_deal_remind fdr INNER JOIN t_flash_deal_activity fda ON fdr.t_flash_deal_activity_f_id = fda.f_id
+       WHERE fdr.f_remind_status = 0 /*未提醒*/
+        AND (UNIX_TIMESTAMP(fda.f_activity_start_time) - UNIX_TIMESTAMP(NOW()))/60 > 0
+        AND (UNIX_TIMESTAMP(fda.f_activity_start_time) - UNIX_TIMESTAMP(NOW()))/60 &lt; 5
+       AND fdr.f_sys0_del_state = 0
+    </select>
+
+</mapper>

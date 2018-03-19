@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 门禁管理 -->
+<mapper namespace="cloudKeyAudit">
+	<resultMap type="com.cnfantasia.server.ms.cloudkey.entity.CloudKeyAudit" id="cloudKeyAuditMap" extends="cloudKeyUserAuditBase.cloudKeyUserAuditBaseMap_AppendTable">
+		<result column="gbName" javaType="java.lang.String" property="gbName"/>
+		<result column="buildingname" javaType="java.lang.String" property="buildingname"/>
+		<result column="unitName" javaType="java.lang.String" property="unitName"/>
+		<result column="roomNum" javaType="java.lang.String" property="roomNum"/>
+	</resultMap>
+	<resultMap type="com.cnfantasia.server.ms.cloudkey.entity.CarPayLogList" id="carPayLogListMap">
+		<result column="Pcid" javaType="java.math.BigInteger" property="pcId"/>
+		<result column="pcName" javaType="java.lang.String" property="pcName"/>
+		<result column="parking" javaType="java.lang.String" property="parking"/>
+		<result column="gbName" javaType="java.lang.String" property="gbName"/>
+		<result column="buildingname" javaType="java.lang.String" property="buildingname"/>
+		<result column="unitName" javaType="java.lang.String" property="unitName"/>
+		<result column="roomNum" javaType="java.lang.String" property="roomNum"/>
+		<result column="carNum" javaType="java.lang.String" property="carNum"/>
+		<result column="userName" javaType="java.lang.String" property="userName"/>
+		<result column="phoneNum" javaType="java.lang.String" property="phoneNum"/>
+		<result column="payTime" javaType="java.lang.String" property="payTime"/>
+		<result column="carType" javaType="java.lang.Integer" property="carType"/>
+		<result column="payNum" javaType="java.lang.Long" property="payNum"/>
+		<result column="payMoney" javaType="java.lang.Long" property="payMoney"/>
+		<result column="couponAmount" javaType="java.lang.Long" property="couponAmount"/>
+		<result column="wyCouponAmount" javaType="java.lang.Long" property="wyCouponAmount"/>
+		<result column="payType" javaType="java.lang.Integer" property="payType"/>
+		<result column="payFlown" javaType="java.lang.String" property="payFlown"/>
+		<result column="needBill" javaType="java.lang.Integer" property="needBill"/>
+		<result column="payMethod" javaType="java.lang.String" property="payMethod"/>
+	</resultMap>
+	<select id="select_user_audit_list" parameterType="java.util.Map" resultMap="cloudKeyAuditMap">
+		SELECT <include refid="cloudKeyUserAuditBase.queryHead_AppendTable" />,
+			TGB.f_name AS gbName,TB.f_name AS buildingname,TRR.f_num_tail AS roomNum,TRR.f_unit_name AS unitName,
+			date_format(CKUA.f_sys0_add_time,'%Y-%m-%d %T') AS CKUAsys0AddTime
+				FROM t_cloud_key_user_audit CKUA 
+				INNER JOIN t_group_building TGB ON CKUA.t_group_building_f_id=TGB.f_id
+				<if test="gbIdList !=null">
+			   		<if test="gbIdList.size() > 0">
+					and TGB.f_id in 
+					<foreach item="item" collection="gbIdList" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+			   		</if>
+			   		<if test="gbIdList.size() == 0"><!-- 无小区权限用户 -->
+			   			and TGB.f_id = -2
+			   		</if>
+				</if>
+				LEFT JOIN t_building TB ON CKUA.t_building_f_id=TB.f_id 
+				LEFT JOIN t_real_room TRR ON TRR.f_id = CKUA.t_real_room_f_id
+				WHERE 1=1
+				<if test="unitName !=null and !unitName.equals('')">AND TRR.f_unit_name=#{unitName}</if>
+				<if test="buildingname != null and !buildingname.equals('')">AND TB.f_name=#{buildingname}</if>
+				<if test="status !=null and !status.equals('') ">
+					AND (CKUA.f_status=#{status} )
+				</if>
+				<if test="huaId != null and !huaId.equals('') ">
+        			AND (CKUA.f_hua_id=#{huaId} )
+        		</if>
+        		<if test="propertyManagerId != null and !propertyManagerId.equals('')">
+        			AND (TGB.t_property_management_f_id=#{propertyManagerId})
+        		</if>
+        		<if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CKUA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        		<if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            		<![CDATA[ and (CKUA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        		</if>
+        		<if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            		<![CDATA[ and (CKUA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        		</if>
+        		ORDER BY CKUA.f_id DESC
+	</select>
+	<select id="select_user_audit_list_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(CKUA.f_id)
+				FROM t_cloud_key_user_audit CKUA 
+				INNER JOIN t_group_building TGB ON CKUA.t_group_building_f_id=TGB.f_id
+				<if test="gbIdList !=null">
+			   		<if test="gbIdList.size() > 0">
+					and TGB.f_id in 
+					<foreach item="item" collection="gbIdList" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+			   		</if>
+			   		<if test="gbIdList.size() == 0"><!-- 无小区权限用户 -->
+			   			and TGB.f_id = -2
+			   		</if>
+				</if>
+		
+				LEFT JOIN t_building TB ON CKUA.t_building_f_id=TB.f_id 
+				LEFT JOIN t_real_room TRR ON TRR.f_id = CKUA.t_real_room_f_id
+				WHERE 1=1
+				<if test="unitName !=null and !unitName.equals('')">AND TRR.f_unit_name=#{unitName}</if>
+				<if test="buildingname != null and !buildingname.equals('')">AND TB.f_name=#{buildingname}</if>
+				<if test="status !=null and !status.equals('')">
+					AND (CKUA.f_status=#{status})
+				</if>
+				<if test="huaId != null and !huaId.equals('')">
+        			AND (CKUA.f_hua_id=#{huaId})
+        		</if>
+        		<if test="propertyManagerId != null and !propertyManagerId.equals('')">
+        			AND (TGB.t_property_management_f_id=#{propertyManagerId})
+        		</if>
+        		<if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CKUA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        		<if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            		<![CDATA[ and (CKUA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        		</if>
+        		<if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            		<![CDATA[ and (CKUA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        		</if>
+	</select>
+	<select id="select_user_audit_detail" parameterType="java.math.BigInteger" resultMap="cloudKeyAuditMap">
+			SELECT <include refid="cloudKeyUserAuditBase.queryHead_AppendTable" />,
+			TGB.f_name AS gbName,TB.f_name AS buildingname,TRR.f_num_tail AS roomNum,TRR.f_unit_name AS unitName,
+			date_format(CKUA.f_sys0_add_time,'%Y-%m-%d %T') AS CKUAsys0AddTime
+				FROM t_cloud_key_user_audit CKUA 
+				LEFT JOIN t_group_building TGB ON CKUA.t_group_building_f_id=TGB.f_id
+				LEFT JOIN t_building TB ON CKUA.t_building_f_id=TB.f_id
+				LEFT JOIN t_real_room TRR ON TRR.f_id = CKUA.t_real_room_f_id
+				WHERE 1=1 AND CKUA.f_id=#{auditId}
+	</select>
+	<!-- 停车费 -->
+	<sql id="car_pay_log_from_and_where">
+		FROM t_car_num_pay_log TCNPL 
+			INNER JOIN t_car_num_list TCNL ON TCNPL.t_car_num_id = TCNL.f_id <!-- AND TCNL.f_sys0_del_state=0 -->
+			<!-- IF：“TCNPL.t_group_building_f_id IS NOT NULL”不为null，则为临停车缴费 -->
+			INNER JOIN t_group_building TGB ON TGB.f_id = IF(TCNPL.t_group_building_f_id IS NOT NULL, TCNPL.t_group_building_f_id, TCNL.t_group_building_f_id)
+			<if test="gbIdList !=null">
+			   		<if test="gbIdList.size() > 0">
+					and TGB.f_id in 
+					<foreach item="item" collection="gbIdList" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+			   		</if>
+			   		<if test="gbIdList.size() == 0"><!-- 无小区权限用户 -->
+			   			and TGB.f_id = -2
+			   		</if>
+			</if>
+			INNER JOIN t_property_company TPC ON TGB.t_property_company_f_id = TPC.f_id 
+			<if test="userId !=null and !userId.equals('')">AND TPC.f_admin_id=#{userId}</if>
+			LEFT JOIN t_ebuy_order TEO ON TEO.f_id = TCNPL.t_ebuy_order_id
+			LEFT JOIN t_ebuy_order_ext EOE ON EOE.t_ebuy_order_f_id=TEO.f_id AND EOE.f_sys0_del_state = 0
+			LEFT JOIN t_room_has_car_num TRHCN ON TRHCN.t_user_id = TEO.f_buyer_id AND TCNL.f_id=TRHCN.t_car_num_list_f_id AND TRHCN.f_sys0_del_state=0
+			<!-- 楼栋、单元、房间号 -->
+			LEFT JOIN t_real_room TRR on TRR.f_id=TCNL.f_real_room_id AND TRR.f_sys0_del_state = 0 AND TRR.t_building_f_id !=- 1
+			LEFT JOIN t_building TB ON TB.f_id = TRR.t_building_f_id AND TB.f_sys0_del_state = 0
+			LEFT JOIN t_group_building GB2 ON GB2.f_id=TB.t_group_building_f_id
+		WHERE 1=1  AND TCNPL.f_sys0_del_state=0 AND TCNPL.f_pay_time IS NOT NULL 
+		AND TCNPL.f_status!=2
+		<if test="payType !=null and payType.toString()!=''.toString() and payType!=3">AND TCNPL.f_status=#{payType}</if>
+		<if test="payType !=null and payType==3">AND TCNPL.f_status=0</if>
+		<if test="pcName !=null and !pcName.equals('')">AND LOCATE(#{pcName}, TPC.f_name)>0</if>
+		<if test="gbName !=null and !gbName.equals('')">AND LOCATE(#{gbName}, GB2.f_name)>0</if>
+		<if test="parking !=null and !parking.equals('')">AND LOCATE(#{parking}, TGB.f_name)>0</if>
+		<if test="carNum !=null and !carNum.equals('')">AND LOCATE(#{carNum}, TCNL.t_car_num)>0</if>
+		<if test="carType !=null">
+			<if test="carType == 1">
+				AND TCNPL.f_pay_num = 0
+			</if>
+			<if test="carType == 2">
+				AND TCNPL.f_pay_num > 0 AND 12 > TCNPL.f_pay_num
+			</if>
+			<if test="carType == 3">
+				AND TCNPL.f_pay_num >=12
+			</if>
+		</if>
+	    <if test="startTime != null and !startTime.equals('')  ">
+	         <![CDATA[ AND (TCNPL.f_pay_time >= str_to_date(#{startTime},'%Y-%m-%d %T') ) ]]>
+	    </if>
+	    <if test="endTime != null and !endTime.equals('')  ">  
+	        <![CDATA[ AND (TCNPL.f_pay_time <= str_to_date(#{endTime},'%Y-%m-%d %T') ) ]]>
+	   	</if>
+	</sql>
+	
+	<!-- 停车宝抵扣 -->
+	<sql id="finance_car_dedu_from_and_where">
+		FROM t_revenue_signal_amount RSA  
+			INNER JOIN t_finance_buy fb ON fb.f_order_no = RSA.f_order_no
+			INNER JOIN t_finance_req fr ON fb.t_finance_req_id = fr.f_id
+			<!-- 楼栋、单元、房间号 -->
+			LEFT JOIN t_car_num_list CNL ON CNL.t_car_num=fb.f_car_num
+			LEFT JOIN t_real_room RR on RR.f_id=CNL.f_real_room_id AND RR.f_sys0_del_state = 0 AND RR.t_building_f_id !=- 1
+			LEFT JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0
+			LEFT JOIN t_group_building GB2 ON GB2.f_id=B.t_group_building_f_id
+	   	WHERE RSA.f_sys0_del_state = 0 AND RSA.f_goal_type = 10
+	   	<if test="gbIdList !=null">
+	   		<if test="gbIdList.size() > 0">
+			and CNL.t_group_building_f_id in 
+			<foreach item="item" collection="gbIdList" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+	   		</if>
+	   		<if test="gbIdList.size() == 0"><!-- 无小区权限用户 -->
+	   			and CNL.t_group_building_f_id = -2
+	   		</if>
+		</if>
+	   	<![CDATA[ AND RSA.f_goal_rev_time <= now() ]]>
+	   	<if test="roleId != null and roleId != ''">
+			AND RSA.f_mini_role_id = #{roleId}
+		</if>
+		<if test="roleIdList != null">
+			AND RSA.f_mini_role_id in
+			<foreach item="tempRoleId" collection="roleIdList" open="(" separator="," close=")">
+				#{tempRoleId}
+			</foreach>
+		</if>
+		<if test="pcName !=null and !pcName.equals('')">
+		 AND LOCATE(#{pcName}, RSA.f_role_name)>0
+		</if>
+		<if test="startTime != null and !startTime.equals('')  ">
+	         <![CDATA[ AND (RSA.f_goal_rev_time >= str_to_date(#{startTime},'%Y-%m-%d %T') ) ]]>
+	    </if>
+	    <if test="endTime != null and !endTime.equals('')  ">  
+	        <![CDATA[ AND (RSA.f_goal_rev_time <= str_to_date(#{endTime},'%Y-%m-%d %T') ) ]]>
+	   	</if>
+		<if test="carType !=null and !carType.equals('')">
+			AND 2=#{carType}
+		</if>
+		<if test="payType !=null and !payType.equals('')">AND (2=#{payType} or 3=#{payType})</if>
+		<if test="gbName !=null and !gbName.equals('')">AND LOCATE(#{gbName}, GB2.f_name)>0</if>
+		<if test="parking !=null and !parking.equals('')">AND LOCATE(#{parking}, fr.f_residential)>0</if>
+		<if test="carNum !=null and !carNum.equals('')">AND LOCATE(#{carNum}, CNL.t_car_num)>0</if>
+	</sql>
+	<!-- 停车费一览表 -->
+	<select id="select_cars_pay_log_list" parameterType="java.util.Map" resultMap="carPayLogListMap">
+		SELECT _tmp.*
+		FROM (
+			<!-- 停车费 -->
+			SELECT 
+			TPC.f_id PcId,TPC.f_name pcName,TGB.f_name parking,TCNL.t_car_num carNum,
+			CASE WHEN TCNPL.f_status=1 THEN '' ELSE TRHCN.f_real_name END  userName,
+			CASE WHEN TCNPL.f_status=0 THEN TRHCN.f_cellphone ELSE '' END  phoneNum,
+			date_format(TCNPL.f_pay_time,'%Y-%m-%d %T') payTime,
+			CASE WHEN TCNPL.f_pay_num >=12 THEN 3 WHEN TCNPL.f_pay_num = 0 THEN 1 ELSE 2 END AS carType,TCNPL.f_pay_num payNum,
+			TCNPL.f_fee payMoney, IFNULL(TCNPL.f_coupon_amount, 0) couponAmount, TCNPL.f_status payType,
+			CASE WHEN TCNPL.f_status = 0 THEN TEO.f_order_no ELSE '' END payFlown,
+			TB.f_name AS buildingname,TRR.f_num_tail roomNum,TRR.f_unit_name AS unitName,
+			TCNPL.f_need_bill AS needBill, TEO.f_pay_method AS payMethod, GB2.f_name AS gbName, IFNULL(EOE.f_wy_coupon_amount, 0) wyCouponAmount
+			<include refid="car_pay_log_from_and_where" />
+			<!-- group by作用：表中数据有同步重复的，去重 -->
+			GROUP BY
+				TCNPL.f_status,
+				TCNPL.t_car_num_id,
+				TCNPL.f_pay_time
+		   	UNION ALL
+		   	<!-- 停车宝抵扣 -->
+		   	SELECT RSA.f_mini_role_id PcId, RSA.f_role_name pcName, fr.f_residential parking, fb.f_car_num carNum, fb.f_buy_person userName,
+		   	fb.f_buy_mobile phoneNum, date_format(RSA.f_goal_rev_time,'%Y-%m-%d %T') payTime,
+		   	2  AS carType,1 AS payNum, RSA.f_amount*100 payMoney, 0 couponAmount, 2 payType, '' payFlown,
+		   	B.f_name AS buildingname,RR.f_num_tail roomNum,RR.f_unit_name AS unitName,
+		   	0 AS needBill, '' AS payMethod, GB2.f_name AS gbName, 0 wyCouponAmount
+		   	<include refid="finance_car_dedu_from_and_where" />
+	   	) _tmp
+	   	ORDER BY _tmp.payTime DESC
+	   	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<!-- 停车费一览表总数据条数查询 -->
+	<select id="select_cars_pay_log_list_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT SUM(_tmp.num)
+		FROM (
+			<!-- 停车费 -->
+			SELECT 1 AS num
+			<include refid="car_pay_log_from_and_where" />
+			<!-- group by作用：表中数据有同步重复的，去重 -->
+			GROUP BY
+				TCNPL.f_status,
+				TCNPL.t_car_num_id,
+				TCNPL.f_pay_time
+		   	UNION ALL
+		   	<!-- 停车宝抵扣 -->
+		   	SELECT COUNT(*) AS num
+		   	<include refid="finance_car_dedu_from_and_where" />
+			)_tmp
+	</select>
+	
+	<!-- 停车费一览表总金额查询 -->
+	<select id="select_car_totalPay" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT SUM(_tmp.totalMoney)
+		FROM (
+			<!-- 停车费 -->
+			SELECT TCNPL.f_fee AS totalMoney
+			<include refid="car_pay_log_from_and_where" />
+			<!-- group by作用：表中数据有同步重复的，去重 -->
+			GROUP BY
+				TCNPL.f_status,
+				TCNPL.t_car_num_id,
+				TCNPL.f_pay_time
+		   	UNION ALL
+		   	<!-- 停车宝抵扣 -->
+		   	SELECT CAST(SUM(RSA.f_amount) * 100 AS signed) AS totalMoney
+		   	<include refid="finance_car_dedu_from_and_where" />
+			)_tmp
+	</select>
+	
+	<select id="select_user_max_endtime" parameterType="java.math.BigInteger" resultType="java.lang.String">
+		SELECT date_format(TCKUA.f_sys0_del_time,'%Y-%m-%d %T') FROM t_cloud_key_user_audit TCKUA WHERE 1=1 AND TCKUA.f_hua_id=#{userId} ORDER BY TCKUA.f_sys0_del_time DESC LIMIT 0,1
+	</select>
+</mapper>

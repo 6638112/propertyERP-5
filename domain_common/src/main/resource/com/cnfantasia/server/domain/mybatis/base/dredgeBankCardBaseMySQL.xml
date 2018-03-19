@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户绑定的银行卡信息 t_dredge_bank_card -->
+<mapper namespace="dredgeBankCardBase">
+	<resultMap type="DredgeBankCard" id="dredgeBankCardBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_bank_name" javaType="java.lang.String" property="bankName"/>  <!-- 银行名称 -->        <result column="f_bank_branch_name" javaType="java.lang.String" property="bankBranchName"/>  <!-- 银行支行名称 -->        <result column="f_owner_name" javaType="java.lang.String" property="ownerName"/>  <!-- 持卡人 -->        <result column="f_bank_no" javaType="java.lang.String" property="bankNo"/>  <!-- 银行账号 -->        <result column="t_user_f_id" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="f_is_default" javaType="java.lang.Integer" property="isDefault"/>  <!-- 是否默认收款银行账号 -->        <result column="f_bank_province" javaType="java.lang.String" property="bankProvince"/>  <!-- 支行所在省 -->        <result column="f_bank_city" javaType="java.lang.String" property="bankCity"/>  <!-- 支行所在市 -->
+	</resultMap>
+	<resultMap type="DredgeBankCard" id="dredgeBankCardExtendMap" extends="dredgeBankCardBaseMap">
+	</resultMap>
+	<resultMap type="DredgeBankCard" id="dredgeBankCardBaseMap_AppendTable">
+        <id column="DBCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="DBCbankName" javaType="java.lang.String" property="bankName"/>  <!-- 银行名称 -->        <result column="DBCbankBranchName" javaType="java.lang.String" property="bankBranchName"/>  <!-- 银行支行名称 -->        <result column="DBCownerName" javaType="java.lang.String" property="ownerName"/>  <!-- 持卡人 -->        <result column="DBCbankNo" javaType="java.lang.String" property="bankNo"/>  <!-- 银行账号 -->        <result column="DBCtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="DBCisDefault" javaType="java.lang.Integer" property="isDefault"/>  <!-- 是否默认收款银行账号 -->        <result column="DBCbankProvince" javaType="java.lang.String" property="bankProvince"/>  <!-- 支行所在省 -->        <result column="DBCbankCity" javaType="java.lang.String" property="bankCity"/>  <!-- 支行所在市 -->
+	</resultMap>
+	<resultMap type="DredgeBankCard" id="dredgeBankCardBaseMap_AppendTable1">
+        <id column="DBC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="DBC1bankName" javaType="java.lang.String" property="bankName"/>  <!-- 银行名称 -->        <result column="DBC1bankBranchName" javaType="java.lang.String" property="bankBranchName"/>  <!-- 银行支行名称 -->        <result column="DBC1ownerName" javaType="java.lang.String" property="ownerName"/>  <!-- 持卡人 -->        <result column="DBC1bankNo" javaType="java.lang.String" property="bankNo"/>  <!-- 银行账号 -->        <result column="DBC1tUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="DBC1isDefault" javaType="java.lang.Integer" property="isDefault"/>  <!-- 是否默认收款银行账号 -->        <result column="DBC1bankProvince" javaType="java.lang.String" property="bankProvince"/>  <!-- 支行所在省 -->        <result column="DBC1bankCity" javaType="java.lang.String" property="bankCity"/>  <!-- 支行所在市 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		DBC.f_id,DBC.f_bank_name,DBC.f_bank_branch_name,DBC.f_owner_name,DBC.f_bank_no,DBC.t_user_f_id,DBC.f_is_default,DBC.f_bank_province,DBC.f_bank_city
+	</sql>
+	<sql id="queryHead_AppendTable">
+		DBC.f_id as DBCid,DBC.f_bank_name as DBCbankName,DBC.f_bank_branch_name as DBCbankBranchName,DBC.f_owner_name as DBCownerName,DBC.f_bank_no as DBCbankNo,DBC.t_user_f_id as DBCtUserFId,DBC.f_is_default as DBCisDefault,DBC.f_bank_province as DBCbankProvince,DBC.f_bank_city as DBCbankCity
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		DBC1.f_id as DBC1id,DBC1.f_bank_name as DBC1bankName,DBC1.f_bank_branch_name as DBC1bankBranchName,DBC1.f_owner_name as DBC1ownerName,DBC1.f_bank_no as DBC1bankNo,DBC1.t_user_f_id as DBC1tUserFId,DBC1.f_is_default as DBC1isDefault,DBC1.f_bank_province as DBC1bankProvince,DBC1.f_bank_city as DBC1bankCity
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (DBC.f_id = #{id} ) </if>        <if test="bankName != null">  and (DBC.f_bank_name = #{bankName} ) </if>        <if test="bankBranchName != null">  and (DBC.f_bank_branch_name = #{bankBranchName} ) </if>        <if test="ownerName != null">  and (DBC.f_owner_name = #{ownerName} ) </if>        <if test="bankNo != null">  and (DBC.f_bank_no = #{bankNo} ) </if>        <if test="tUserFId != null">  and (DBC.t_user_f_id = #{tUserFId} ) </if>        <if test="isDefault != null">  and (DBC.f_is_default = #{isDefault} ) </if>        <if test="bankProvince != null">  and (DBC.f_bank_province = #{bankProvince} ) </if>        <if test="bankCity != null">  and (DBC.f_bank_city = #{bankCity} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (DBC.f_id = #{id} ) </if>        <if test="bankName != null and !bankName.equals('')  ">  and (DBC.f_bank_name like CONCAT('%',#{bankName},'%') ) </if>        <if test="bankBranchName != null and !bankBranchName.equals('')  ">  and (DBC.f_bank_branch_name like CONCAT('%',#{bankBranchName},'%') ) </if>        <if test="ownerName != null and !ownerName.equals('')  ">  and (DBC.f_owner_name like CONCAT('%',#{ownerName},'%') ) </if>        <if test="bankNo != null and !bankNo.equals('')  ">  and (DBC.f_bank_no like CONCAT('%',#{bankNo},'%') ) </if>        <if test="tUserFId != null and !tUserFId.equals('')  ">  and (DBC.t_user_f_id = #{tUserFId} ) </if>        <if test="isDefault != null and !isDefault.equals('')  ">  and (DBC.f_is_default = #{isDefault} ) </if>        <if test="bankProvince != null and !bankProvince.equals('')  ">  and (DBC.f_bank_province like CONCAT('%',#{bankProvince},'%') ) </if>        <if test="bankCity != null and !bankCity.equals('')  ">  and (DBC.f_bank_city like CONCAT('%',#{bankCity},'%') ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="dredgeBankCardBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="dredgeBankCardBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="dredgeBankCardBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="dredgeBankCardBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_dredge_bank_card DBC    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(用户绑定的银行卡信息)信息。 -->
+	<sql id="select_dredgeBankCard">
+		SELECT <include refid="dredgeBankCardBase.queryHead"/>
+		<include refid="dredgeBankCardBase.busiQueryCondition"/>
+		<include refid="dredgeBankCardBase.dimCheckSql"/>
+		ORDER BY DBC.f_id DESC
+	</sql>
+	<select id="select_dredgeBankCard" parameterType="java.util.Map" resultMap="dredgeBankCardBase.dredgeBankCardExtendMap">
+		<include refid="dredgeBankCardBase.select_dredgeBankCard"/>
+	</select>
+	
+	<!-- 根据条件分页查询(用户绑定的银行卡信息)信息  -->
+	<sql id="select_dredgeBankCard_withPage">
+		SELECT <include refid="dredgeBankCardBase.queryHead"/>
+		<include refid="dredgeBankCardBase.busiQueryCondition"/>
+		<include refid="dredgeBankCardBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_dredgeBankCard_withPage" resultMap="dredgeBankCardBase.dredgeBankCardExtendMap" parameterType="java.util.Map">
+		<include refid="dredgeBankCardBase.select_dredgeBankCard_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(用户绑定的银行卡信息)信息。 -->
+	<sql id="select_dredgeBankCard_bySeqId">
+		SELECT <include refid="dredgeBankCardBase.queryHead"/>
+		<include refid="dredgeBankCardBase.busiQueryCondition"/>
+		 and DBC.f_id = #{_parameter}
+	</sql>
+	<select id="select_dredgeBankCard_bySeqId" parameterType="java.math.BigInteger" resultMap="dredgeBankCardBase.dredgeBankCardBaseMap">
+		<include refid="dredgeBankCardBase.select_dredgeBankCard_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(用户绑定的银行卡信息)记录数  -->
+	<sql id="select_dredgeBankCard_count">
+		SELECT COUNT(*)
+		<include refid="dredgeBankCardBase.busiQueryCount"/>
+		<include refid="dredgeBankCardBase.dimCheckSql"/>
+	</sql>
+	<select id="select_dredgeBankCard_count" resultType="java.lang.Integer">
+		<include refid="dredgeBankCardBase.select_dredgeBankCard_count"/>
+	</select>
+	
+	 <!-- 往(用户绑定的银行卡信息)新增一条记录。 -->
+	 <sql id="insert_dredgeBankCard">
+		INSERT INTO t_dredge_bank_card 
+		(f_id,f_bank_name,f_bank_branch_name,f_owner_name,f_bank_no,t_user_f_id,f_is_default,f_bank_province,f_bank_city) VALUES 
+		(#{id},#{bankName,jdbcType=VARCHAR},#{bankBranchName,jdbcType=VARCHAR},#{ownerName,jdbcType=VARCHAR},#{bankNo,jdbcType=VARCHAR},#{tUserFId},#{isDefault},#{bankProvince,jdbcType=VARCHAR},#{bankCity,jdbcType=VARCHAR})
+	 </sql>
+    <insert id="insert_dredgeBankCard" parameterType="DredgeBankCard">
+		<include refid="dredgeBankCardBase.insert_dredgeBankCard"/>
+    </insert>
+    
+	<!-- 批量新增(用户绑定的银行卡信息)信息 -->
+    <insert id="insert_dredgeBankCard_Batch" parameterType="java.util.List">
+    	INSERT INTO t_dredge_bank_card 
+		(f_id,f_bank_name,f_bank_branch_name,f_owner_name,f_bank_no,t_user_f_id,f_is_default,f_bank_province,f_bank_city) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.bankName,jdbcType=VARCHAR},#{item.bankBranchName,jdbcType=VARCHAR},#{item.ownerName,jdbcType=VARCHAR},#{item.bankNo,jdbcType=VARCHAR},#{item.tUserFId},#{item.isDefault},#{item.bankProvince,jdbcType=VARCHAR},#{item.bankCity,jdbcType=VARCHAR})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(用户绑定的银行卡信息)信息。 -->
+    <sql id="update_dredgeBankCard">
+		UPDATE t_dredge_bank_card		<trim prefix="SET" prefixOverrides=","> 		<if test="bankName != null and !bankName.equals('') "> ,f_bank_name=#{bankName}</if> 		<if test="bankBranchName != null and !bankBranchName.equals('') "> ,f_bank_branch_name=#{bankBranchName}</if> 		<if test="ownerName != null and !ownerName.equals('') "> ,f_owner_name=#{ownerName}</if> 		<if test="bankNo != null and !bankNo.equals('') "> ,f_bank_no=#{bankNo}</if> 		<if test="tUserFId != null and !tUserFId.equals('') "> ,t_user_f_id=#{tUserFId}</if> 		<if test="isDefault != null and !isDefault.equals('') "> ,f_is_default=#{isDefault}</if> 		<if test="bankProvince != null and !bankProvince.equals('') "> ,f_bank_province=#{bankProvince}</if> 		<if test="bankCity != null and !bankCity.equals('') "> ,f_bank_city=#{bankCity}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_dredgeBankCard" parameterType="DredgeBankCard">
+		<include refid="dredgeBankCardBase.update_dredgeBankCard"/>
+    </update>
+    
+    <!-- 批量更新(用户绑定的银行卡信息)信息。 -->
+    <update id="update_dredgeBankCard_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_bank_card		<trim prefix="SET" prefixOverrides=","> 		<if test="item.bankName != null and !item.bankName.equals('')  "> ,f_bank_name=#{item.bankName}</if> 		<if test="item.bankBranchName != null and !item.bankBranchName.equals('')  "> ,f_bank_branch_name=#{item.bankBranchName}</if> 		<if test="item.ownerName != null and !item.ownerName.equals('')  "> ,f_owner_name=#{item.ownerName}</if> 		<if test="item.bankNo != null and !item.bankNo.equals('')  "> ,f_bank_no=#{item.bankNo}</if> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.isDefault != null and !item.isDefault.equals('')  "> ,f_is_default=#{item.isDefault}</if> 		<if test="item.bankProvince != null and !item.bankProvince.equals('')  "> ,f_bank_province=#{item.bankProvince}</if> 		<if test="item.bankCity != null and !item.bankCity.equals('')  "> ,f_bank_city=#{item.bankCity}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(用户绑定的银行卡信息)信息_逻辑删除。 -->
+    <!-- <sql id="delete_dredgeBankCard_Logic">
+		UPDATE t_dredge_bank_card		<trim prefix="SET" prefixOverrides=","> 		<if test="bankName != null and !bankName.equals('')  "> ,f_bank_name=#{bankName}</if> 		<if test="bankBranchName != null and !bankBranchName.equals('')  "> ,f_bank_branch_name=#{bankBranchName}</if> 		<if test="ownerName != null and !ownerName.equals('')  "> ,f_owner_name=#{ownerName}</if> 		<if test="bankNo != null and !bankNo.equals('')  "> ,f_bank_no=#{bankNo}</if> 		<if test="tUserFId != null and !tUserFId.equals('')  "> ,t_user_f_id=#{tUserFId}</if> 		<if test="isDefault != null and !isDefault.equals('')  "> ,f_is_default=#{isDefault}</if> 		<if test="bankProvince != null and !bankProvince.equals('')  "> ,f_bank_province=#{bankProvince}</if> 		<if test="bankCity != null and !bankCity.equals('')  "> ,f_bank_city=#{bankCity}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_dredgeBankCard_Logic" parameterType="DredgeBankCard">
+		<include refid="dredgeBankCardBase.delete_dredgeBankCard_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(用户绑定的银行卡信息)信息_逻辑删除 -->
+    <!-- <update id="delete_dredgeBankCard_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_bank_card		<trim prefix="SET" prefixOverrides=","> 		<if test="item.bankName != null and !item.bankName.equals('')  "> ,f_bank_name=#{item.bankName}</if> 		<if test="item.bankBranchName != null and !item.bankBranchName.equals('')  "> ,f_bank_branch_name=#{item.bankBranchName}</if> 		<if test="item.ownerName != null and !item.ownerName.equals('')  "> ,f_owner_name=#{item.ownerName}</if> 		<if test="item.bankNo != null and !item.bankNo.equals('')  "> ,f_bank_no=#{item.bankNo}</if> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.isDefault != null and !item.isDefault.equals('')  "> ,f_is_default=#{item.isDefault}</if> 		<if test="item.bankProvince != null and !item.bankProvince.equals('')  "> ,f_bank_province=#{item.bankProvince}</if> 		<if test="item.bankCity != null and !item.bankCity.equals('')  "> ,f_bank_city=#{item.bankCity}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(用户绑定的银行卡信息)信息。 -->
+    <sql id="delete_dredgeBankCard">
+		DELETE FROM t_dredge_bank_card WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_dredgeBankCard" parameterType="java.lang.String">
+		<include refid="dredgeBankCardBase.delete_dredgeBankCard"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(用户绑定的银行卡信息)信息。 -->
+    <delete id="delete_dredgeBankCard_Batch" parameterType="java.util.List">
+		DELETE FROM t_dredge_bank_card WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:房间最后一次抄表读数 t_real_room_has_mr_last_record -->
+<mapper namespace="realRoomHasMrLastRecordBase">
+	<resultMap type="RealRoomHasMrLastRecord" id="realRoomHasMrLastRecordBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_real_room_f_id" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->        <result column="t_mr_fee_item_f_id" javaType="java.math.BigInteger" property="tMrFeeItemFId"/>  <!--  -->        <result column="t_mr_standard_room_id" javaType="java.math.BigInteger" property="tMrStandardRoomId"/>  <!-- 间收费标准ID（抄表 -->        <result column="f_last_record" javaType="java.lang.Double" property="lastRecord"/>  <!-- 最后一次读数 -->        <result column="f_last_upd_time" javaType="java.lang.String" property="lastUpdTime"/>  <!-- 最近更新时间 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="RealRoomHasMrLastRecord" id="realRoomHasMrLastRecordExtendMap" extends="realRoomHasMrLastRecordBaseMap">
+	</resultMap>
+	<resultMap type="RealRoomHasMrLastRecord" id="realRoomHasMrLastRecordBaseMap_AppendTable">
+        <id column="RRHMLRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="RRHMLRtRealRoomFId" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->        <result column="RRHMLRtMrFeeItemFId" javaType="java.math.BigInteger" property="tMrFeeItemFId"/>  <!--  -->        <result column="RRHMLRtMrStandardRoomId" javaType="java.math.BigInteger" property="tMrStandardRoomId"/>  <!-- 间收费标准ID（抄表 -->        <result column="RRHMLRlastRecord" javaType="java.lang.Double" property="lastRecord"/>  <!-- 最后一次读数 -->        <result column="RRHMLRlastUpdTime" javaType="java.lang.String" property="lastUpdTime"/>  <!-- 最近更新时间 -->        <result column="RRHMLRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="RRHMLRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="RRHMLRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="RRHMLRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="RRHMLRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="RRHMLRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="RRHMLRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="RealRoomHasMrLastRecord" id="realRoomHasMrLastRecordBaseMap_AppendTable1">
+        <id column="RRHMLR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="RRHMLR1tRealRoomFId" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->        <result column="RRHMLR1tMrFeeItemFId" javaType="java.math.BigInteger" property="tMrFeeItemFId"/>  <!--  -->        <result column="RRHMLR1tMrStandardRoomId" javaType="java.math.BigInteger" property="tMrStandardRoomId"/>  <!-- 间收费标准ID（抄表 -->        <result column="RRHMLR1lastRecord" javaType="java.lang.Double" property="lastRecord"/>  <!-- 最后一次读数 -->        <result column="RRHMLR1lastUpdTime" javaType="java.lang.String" property="lastUpdTime"/>  <!-- 最近更新时间 -->        <result column="RRHMLR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="RRHMLR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="RRHMLR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="RRHMLR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="RRHMLR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="RRHMLR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="RRHMLR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		RRHMLR.f_id,RRHMLR.t_real_room_f_id,RRHMLR.t_mr_fee_item_f_id,RRHMLR.t_mr_standard_room_id,RRHMLR.f_last_record,date_format(RRHMLR.f_last_upd_time,'%Y-%m-%d %T') as f_last_upd_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		RRHMLR.f_id as RRHMLRid,RRHMLR.t_real_room_f_id as RRHMLRtRealRoomFId,RRHMLR.t_mr_fee_item_f_id as RRHMLRtMrFeeItemFId,RRHMLR.t_mr_standard_room_id as RRHMLRtMrStandardRoomId,RRHMLR.f_last_record as RRHMLRlastRecord,date_format(RRHMLR.f_last_upd_time,'%Y-%m-%d %T') as RRHMLRlastUpdTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		RRHMLR1.f_id as RRHMLR1id,RRHMLR1.t_real_room_f_id as RRHMLR1tRealRoomFId,RRHMLR1.t_mr_fee_item_f_id as RRHMLR1tMrFeeItemFId,RRHMLR1.t_mr_standard_room_id as RRHMLR1tMrStandardRoomId,RRHMLR1.f_last_record as RRHMLR1lastRecord,date_format(RRHMLR1.f_last_upd_time,'%Y-%m-%d %T') as RRHMLR1lastUpdTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (RRHMLR.f_id = #{id} ) </if>        <if test="tRealRoomFId != null">  and (RRHMLR.t_real_room_f_id = #{tRealRoomFId} ) </if>        <if test="tMrFeeItemFId != null">  and (RRHMLR.t_mr_fee_item_f_id = #{tMrFeeItemFId} ) </if>        <if test="tMrStandardRoomId != null">  and (RRHMLR.t_mr_standard_room_id = #{tMrStandardRoomId} ) </if>        <if test="lastRecord != null">  and (RRHMLR.f_last_record = #{lastRecord} ) </if>        <if test="lastUpdTime != null and !lastUpdTime.equals('')  ">  and (RRHMLR.f_last_upd_time = str_to_date(#{lastUpdTime},'%Y-%m-%d %T') ) </if>        <if test="lastUpdTime_START != null and !lastUpdTime_START.equals('')  ">              <![CDATA[ and (RRHMLR.f_last_upd_time >= str_to_date(#{lastUpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="lastUpdTime_END != null and !lastUpdTime_END.equals('')  ">            <![CDATA[ and (RRHMLR.f_last_upd_time <= str_to_date(#{lastUpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (RRHMLR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (RRHMLR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (RRHMLR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (RRHMLR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (RRHMLR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (RRHMLR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (RRHMLR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (RRHMLR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (RRHMLR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (RRHMLR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (RRHMLR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (RRHMLR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (RRHMLR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (RRHMLR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (RRHMLR.f_id = #{id} ) </if>        <if test="tRealRoomFId != null and !tRealRoomFId.equals('')  ">  and (RRHMLR.t_real_room_f_id = #{tRealRoomFId} ) </if>        <if test="tMrFeeItemFId != null and !tMrFeeItemFId.equals('')  ">  and (RRHMLR.t_mr_fee_item_f_id = #{tMrFeeItemFId} ) </if>        <if test="tMrStandardRoomId != null and !tMrStandardRoomId.equals('')  ">  and (RRHMLR.t_mr_standard_room_id = #{tMrStandardRoomId} ) </if>        <if test="lastRecord != null and !lastRecord.equals('')  ">  and (RRHMLR.f_last_record = #{lastRecord} ) </if>        <if test="lastUpdTime != null and !lastUpdTime.equals('')  ">  and (RRHMLR.f_last_upd_time = str_to_date(#{lastUpdTime},'%Y-%m-%d %T') ) </if>        <if test="lastUpdTime_START != null and !lastUpdTime_START.equals('')  ">              <![CDATA[ and (RRHMLR.f_last_upd_time >= str_to_date(#{lastUpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="lastUpdTime_END != null and !lastUpdTime_END.equals('')  ">            <![CDATA[ and (RRHMLR.f_last_upd_time <= str_to_date(#{lastUpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (RRHMLR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (RRHMLR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (RRHMLR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (RRHMLR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (RRHMLR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (RRHMLR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (RRHMLR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (RRHMLR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (RRHMLR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (RRHMLR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (RRHMLR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (RRHMLR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (RRHMLR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (RRHMLR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="realRoomHasMrLastRecordBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="realRoomHasMrLastRecordBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="realRoomHasMrLastRecordBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="realRoomHasMrLastRecordBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_real_room_has_mr_last_record RRHMLR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(房间最后一次抄表读数)信息。 -->
+	<sql id="select_realRoomHasMrLastRecord">
+		SELECT <include refid="realRoomHasMrLastRecordBase.queryHead"/>
+		<include refid="realRoomHasMrLastRecordBase.busiQueryCondition"/>
+		<include refid="realRoomHasMrLastRecordBase.dimCheckSql"/>
+		ORDER BY RRHMLR.f_id DESC
+	</sql>
+	<select id="select_realRoomHasMrLastRecord" parameterType="java.util.Map" resultMap="realRoomHasMrLastRecordBase.realRoomHasMrLastRecordExtendMap">
+		<include refid="realRoomHasMrLastRecordBase.select_realRoomHasMrLastRecord"/>
+	</select>
+	
+	<!-- 根据条件分页查询(房间最后一次抄表读数)信息  -->
+	<sql id="select_realRoomHasMrLastRecord_withPage">
+		SELECT <include refid="realRoomHasMrLastRecordBase.queryHead"/>
+		<include refid="realRoomHasMrLastRecordBase.busiQueryCondition"/>
+		<include refid="realRoomHasMrLastRecordBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_realRoomHasMrLastRecord_withPage" resultMap="realRoomHasMrLastRecordBase.realRoomHasMrLastRecordExtendMap" parameterType="java.util.Map">
+		<include refid="realRoomHasMrLastRecordBase.select_realRoomHasMrLastRecord_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(房间最后一次抄表读数)信息。 -->
+	<sql id="select_realRoomHasMrLastRecord_bySeqId">
+		SELECT <include refid="realRoomHasMrLastRecordBase.queryHead"/>
+		<include refid="realRoomHasMrLastRecordBase.busiQueryCondition"/>
+		 and RRHMLR.f_id = #{_parameter}
+	</sql>
+	<select id="select_realRoomHasMrLastRecord_bySeqId" parameterType="java.math.BigInteger" resultMap="realRoomHasMrLastRecordBase.realRoomHasMrLastRecordBaseMap">
+		<include refid="realRoomHasMrLastRecordBase.select_realRoomHasMrLastRecord_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(房间最后一次抄表读数)记录数  -->
+	<sql id="select_realRoomHasMrLastRecord_count">
+		SELECT COUNT(*)
+		<include refid="realRoomHasMrLastRecordBase.busiQueryCount"/>
+		<include refid="realRoomHasMrLastRecordBase.dimCheckSql"/>
+	</sql>
+	<select id="select_realRoomHasMrLastRecord_count" resultType="java.lang.Integer">
+		<include refid="realRoomHasMrLastRecordBase.select_realRoomHasMrLastRecord_count"/>
+	</select>
+	
+	 <!-- 往(房间最后一次抄表读数)新增一条记录。 -->
+	 <sql id="insert_realRoomHasMrLastRecord">
+		INSERT INTO t_real_room_has_mr_last_record 
+		(f_id,t_real_room_f_id,t_mr_fee_item_f_id,t_mr_standard_room_id,f_last_record,f_last_upd_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tRealRoomFId},#{tMrFeeItemFId},#{tMrStandardRoomId},#{lastRecord},str_to_date(#{lastUpdTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_realRoomHasMrLastRecord" parameterType="RealRoomHasMrLastRecord">
+		<include refid="realRoomHasMrLastRecordBase.insert_realRoomHasMrLastRecord"/>
+    </insert>
+    
+	<!-- 批量新增(房间最后一次抄表读数)信息 -->
+    <insert id="insert_realRoomHasMrLastRecord_Batch" parameterType="java.util.List">
+    	INSERT INTO t_real_room_has_mr_last_record 
+		(f_id,t_real_room_f_id,t_mr_fee_item_f_id,t_mr_standard_room_id,f_last_record,f_last_upd_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tRealRoomFId},#{item.tMrFeeItemFId},#{item.tMrStandardRoomId},#{item.lastRecord},str_to_date(#{item.lastUpdTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(房间最后一次抄表读数)信息。 -->
+    <sql id="update_realRoomHasMrLastRecord">
+		UPDATE t_real_room_has_mr_last_record		<trim prefix="SET" prefixOverrides=","> 		<if test="tRealRoomFId != null and !tRealRoomFId.equals('') "> ,t_real_room_f_id=#{tRealRoomFId}</if> 		<if test="tMrFeeItemFId != null and !tMrFeeItemFId.equals('') "> ,t_mr_fee_item_f_id=#{tMrFeeItemFId}</if> 		<if test="tMrStandardRoomId != null and !tMrStandardRoomId.equals('') "> ,t_mr_standard_room_id=#{tMrStandardRoomId}</if> 		<if test="lastRecord != null and !lastRecord.equals('') "> ,f_last_record=#{lastRecord}</if> 		<if test="lastUpdTime != null and !lastUpdTime.equals('') "> ,f_last_upd_time=str_to_date(#{lastUpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_realRoomHasMrLastRecord" parameterType="RealRoomHasMrLastRecord">
+		<include refid="realRoomHasMrLastRecordBase.update_realRoomHasMrLastRecord"/>
+    </update>
+    
+    <!-- 批量更新(房间最后一次抄表读数)信息。 -->
+    <update id="update_realRoomHasMrLastRecord_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_real_room_has_mr_last_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tRealRoomFId != null and !item.tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{item.tRealRoomFId}</if> 		<if test="item.tMrFeeItemFId != null and !item.tMrFeeItemFId.equals('')  "> ,t_mr_fee_item_f_id=#{item.tMrFeeItemFId}</if> 		<if test="item.tMrStandardRoomId != null and !item.tMrStandardRoomId.equals('')  "> ,t_mr_standard_room_id=#{item.tMrStandardRoomId}</if> 		<if test="item.lastRecord != null and !item.lastRecord.equals('')  "> ,f_last_record=#{item.lastRecord}</if> 		<if test="item.lastUpdTime != null and !item.lastUpdTime.equals('')  "> ,f_last_upd_time=str_to_date(#{item.lastUpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(房间最后一次抄表读数)信息_逻辑删除。 -->
+    <sql id="delete_realRoomHasMrLastRecord_Logic">
+		UPDATE t_real_room_has_mr_last_record		<trim prefix="SET" prefixOverrides=","> 		<if test="tRealRoomFId != null and !tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{tRealRoomFId}</if> 		<if test="tMrFeeItemFId != null and !tMrFeeItemFId.equals('')  "> ,t_mr_fee_item_f_id=#{tMrFeeItemFId}</if> 		<if test="tMrStandardRoomId != null and !tMrStandardRoomId.equals('')  "> ,t_mr_standard_room_id=#{tMrStandardRoomId}</if> 		<if test="lastRecord != null and !lastRecord.equals('')  "> ,f_last_record=#{lastRecord}</if> 		<if test="lastUpdTime != null and !lastUpdTime.equals('')  "> ,f_last_upd_time=str_to_date(#{lastUpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_realRoomHasMrLastRecord_Logic" parameterType="RealRoomHasMrLastRecord">
+		<include refid="realRoomHasMrLastRecordBase.delete_realRoomHasMrLastRecord_Logic"/>
+    </update>
+    
+    <!-- 批量删除(房间最后一次抄表读数)信息_逻辑删除 -->
+    <update id="delete_realRoomHasMrLastRecord_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_real_room_has_mr_last_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tRealRoomFId != null and !item.tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{item.tRealRoomFId}</if> 		<if test="item.tMrFeeItemFId != null and !item.tMrFeeItemFId.equals('')  "> ,t_mr_fee_item_f_id=#{item.tMrFeeItemFId}</if> 		<if test="item.tMrStandardRoomId != null and !item.tMrStandardRoomId.equals('')  "> ,t_mr_standard_room_id=#{item.tMrStandardRoomId}</if> 		<if test="item.lastRecord != null and !item.lastRecord.equals('')  "> ,f_last_record=#{item.lastRecord}</if> 		<if test="item.lastUpdTime != null and !item.lastUpdTime.equals('')  "> ,f_last_upd_time=str_to_date(#{item.lastUpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(房间最后一次抄表读数)信息。 -->
+    <sql id="delete_realRoomHasMrLastRecord">
+		DELETE FROM t_real_room_has_mr_last_record WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_realRoomHasMrLastRecord" parameterType="java.lang.String">
+		<include refid="realRoomHasMrLastRecordBase.delete_realRoomHasMrLastRecord"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(房间最后一次抄表读数)信息。 -->
+    <delete id="delete_realRoomHasMrLastRecord_Batch" parameterType="java.util.List">
+		DELETE FROM t_real_room_has_mr_last_record WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

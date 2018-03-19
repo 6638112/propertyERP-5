@@ -1,0 +1,70 @@
+
+ul,li{ margin:0; padding:0; list-style:none;}
+
+#container {
+    position: relative;
+    width: 640px;
+    height: 800px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+#fallingContainer 
+{
+    position: absolute;
+    width: 100%;
+    height: 100%; z-index:3;
+}
+
+#fallingContainer > div 
+{
+    position: absolute;
+
+    -webkit-animation-iteration-count: infinite, infinite;
+    -webkit-animation-direction: normal, normal;
+    -webkit-animation-timing-function: linear, ease-in;
+}
+.RedPacket{ width:60px;}
+.ColourBar{ width:20px;}
+.Yuanbao{ width:45px;}
+#fallingContainer > div > img {
+     position: absolute;
+     width: 100%;
+
+     -webkit-animation-iteration-count: infinite;
+     -webkit-animation-direction: alternate;
+     -webkit-animation-timing-function: ease-in-out;
+     -webkit-transform-origin: 50% -100%;
+}
+
+@-webkit-keyframes fade
+{
+    0%   { opacity: 1; }
+    95%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@-webkit-keyframes drop
+{
+    0%   { -webkit-transform: translate(0px, -50px); }
+    100% { -webkit-transform: translate(0px, 650px); }
+}
+@-webkit-keyframes clockwiseSpin
+{
+    0%   { -webkit-transform: rotate(-50deg); }
+    100% { -webkit-transform: rotate(50deg); }
+}
+@-webkit-keyframes counterclockwiseSpinAndFlip 
+{
+    0%   { -webkit-transform: scale(-1, 1) rotate(50deg); }
+    100% { -webkit-transform: scale(-1, 1) rotate(-50deg); }
+}
+
+
+
+@media only screen and (min-width:640px) {
+#container, #fallingContainer{ width:640px; height:1136px;}
+}
+
+@media only screen and (max-width:639px) {
+#container, #fallingContainer{ width:100%; height:100%;}
+}

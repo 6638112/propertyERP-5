@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:订单使用消费券表 t_ebuy_order_has_coupon -->
+<mapper namespace="ebuyOrderHasCouponBase">
+	<resultMap type="EbuyOrderHasCoupon" id="ebuyOrderHasCouponBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_ebuy_order_f_id" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 订单ID -->        <result column="t_user_coupon_f_id" javaType="java.math.BigInteger" property="tUserCouponFId"/>  <!-- 消费券ID -->        <result column="f_amount" javaType="java.lang.Long" property="amount"/>  <!-- 优惠金额(分) -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="f_sys0_del_time" javaType="java.math.BigInteger" property="sys0DelTime"/>  <!--  -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="EbuyOrderHasCoupon" id="ebuyOrderHasCouponExtendMap" extends="ebuyOrderHasCouponBaseMap">
+	</resultMap>
+	<resultMap type="EbuyOrderHasCoupon" id="ebuyOrderHasCouponBaseMap_AppendTable">
+        <id column="EOHCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EOHCtEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 订单ID -->        <result column="EOHCtUserCouponFId" javaType="java.math.BigInteger" property="tUserCouponFId"/>  <!-- 消费券ID -->        <result column="EOHCamount" javaType="java.lang.Long" property="amount"/>  <!-- 优惠金额(分) -->        <result column="EOHCsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EOHCsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EOHCsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="EOHCsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="EOHCsys0DelTime" javaType="java.math.BigInteger" property="sys0DelTime"/>  <!--  -->        <result column="EOHCsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="EOHCsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="EbuyOrderHasCoupon" id="ebuyOrderHasCouponBaseMap_AppendTable1">
+        <id column="EOHC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EOHC1tEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 订单ID -->        <result column="EOHC1tUserCouponFId" javaType="java.math.BigInteger" property="tUserCouponFId"/>  <!-- 消费券ID -->        <result column="EOHC1amount" javaType="java.lang.Long" property="amount"/>  <!-- 优惠金额(分) -->        <result column="EOHC1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EOHC1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EOHC1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="EOHC1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="EOHC1sys0DelTime" javaType="java.math.BigInteger" property="sys0DelTime"/>  <!--  -->        <result column="EOHC1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="EOHC1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EOHC.f_id,EOHC.t_ebuy_order_f_id,EOHC.t_user_coupon_f_id,EOHC.f_amount
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EOHC.f_id as EOHCid,EOHC.t_ebuy_order_f_id as EOHCtEbuyOrderFId,EOHC.t_user_coupon_f_id as EOHCtUserCouponFId,EOHC.f_amount as EOHCamount
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EOHC1.f_id as EOHC1id,EOHC1.t_ebuy_order_f_id as EOHC1tEbuyOrderFId,EOHC1.t_user_coupon_f_id as EOHC1tUserCouponFId,EOHC1.f_amount as EOHC1amount
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EOHC.f_id = #{id} ) </if>        <if test="tEbuyOrderFId != null">  and (EOHC.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="tUserCouponFId != null">  and (EOHC.t_user_coupon_f_id = #{tUserCouponFId} ) </if>        <if test="amount != null">  and (EOHC.f_amount = #{amount} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EOHC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EOHC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EOHC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EOHC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EOHC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EOHC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EOHC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdUser != null">  and (EOHC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelTime != null">  and (EOHC.f_sys0_del_time = #{sys0DelTime} ) </if>        <if test="sys0DelUser != null">  and (EOHC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EOHC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EOHC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EOHC.f_id = #{id} ) </if>        <if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  ">  and (EOHC.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="tUserCouponFId != null and !tUserCouponFId.equals('')  ">  and (EOHC.t_user_coupon_f_id = #{tUserCouponFId} ) </if>        <if test="amount != null and !amount.equals('')  ">  and (EOHC.f_amount = #{amount} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EOHC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EOHC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EOHC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EOHC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EOHC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EOHC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EOHC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EOHC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EOHC.f_sys0_del_time = #{sys0DelTime} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EOHC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EOHC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EOHC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyOrderHasCouponBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyOrderHasCouponBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyOrderHasCouponBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyOrderHasCouponBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_order_has_coupon EOHC    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(订单使用消费券表)信息。 -->
+	<sql id="select_ebuyOrderHasCoupon">
+		SELECT <include refid="ebuyOrderHasCouponBase.queryHead"/>
+		<include refid="ebuyOrderHasCouponBase.busiQueryCondition"/>
+		<include refid="ebuyOrderHasCouponBase.dimCheckSql"/>
+		ORDER BY EOHC.f_id DESC
+	</sql>
+	<select id="select_ebuyOrderHasCoupon" parameterType="java.util.Map" resultMap="ebuyOrderHasCouponBase.ebuyOrderHasCouponExtendMap">
+		<include refid="ebuyOrderHasCouponBase.select_ebuyOrderHasCoupon"/>
+	</select>
+	
+	<!-- 根据条件分页查询(订单使用消费券表)信息  -->
+	<sql id="select_ebuyOrderHasCoupon_withPage">
+		SELECT <include refid="ebuyOrderHasCouponBase.queryHead"/>
+		<include refid="ebuyOrderHasCouponBase.busiQueryCondition"/>
+		<include refid="ebuyOrderHasCouponBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyOrderHasCoupon_withPage" resultMap="ebuyOrderHasCouponBase.ebuyOrderHasCouponExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyOrderHasCouponBase.select_ebuyOrderHasCoupon_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(订单使用消费券表)信息。 -->
+	<sql id="select_ebuyOrderHasCoupon_bySeqId">
+		SELECT <include refid="ebuyOrderHasCouponBase.queryHead"/>
+		<include refid="ebuyOrderHasCouponBase.busiQueryCondition"/>
+		 and EOHC.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyOrderHasCoupon_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyOrderHasCouponBase.ebuyOrderHasCouponBaseMap">
+		<include refid="ebuyOrderHasCouponBase.select_ebuyOrderHasCoupon_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(订单使用消费券表)记录数  -->
+	<sql id="select_ebuyOrderHasCoupon_count">
+		SELECT COUNT(*)
+		<include refid="ebuyOrderHasCouponBase.busiQueryCount"/>
+		<include refid="ebuyOrderHasCouponBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyOrderHasCoupon_count" resultType="java.lang.Integer">
+		<include refid="ebuyOrderHasCouponBase.select_ebuyOrderHasCoupon_count"/>
+	</select>
+	
+	 <!-- 往(订单使用消费券表)新增一条记录。 -->
+	 <sql id="insert_ebuyOrderHasCoupon">
+		INSERT INTO t_ebuy_order_has_coupon 
+		(f_id,t_ebuy_order_f_id,t_user_coupon_f_id,f_amount,f_sys0_add_time,f_sys0_add_user,f_sys0_upd_time,f_sys0_upd_user,f_sys0_del_time,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tEbuyOrderFId},#{tUserCouponFId},#{amount},sysdate(),#{sys0AddUser},str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0UpdUser},#{sys0DelTime},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_ebuyOrderHasCoupon" parameterType="EbuyOrderHasCoupon">
+		<include refid="ebuyOrderHasCouponBase.insert_ebuyOrderHasCoupon"/>
+    </insert>
+    
+	<!-- 批量新增(订单使用消费券表)信息 -->
+    <insert id="insert_ebuyOrderHasCoupon_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_order_has_coupon 
+		(f_id,t_ebuy_order_f_id,t_user_coupon_f_id,f_amount,f_sys0_add_time,f_sys0_add_user,f_sys0_upd_time,f_sys0_upd_user,f_sys0_del_time,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tEbuyOrderFId},#{item.tUserCouponFId},#{item.amount},sysdate(),#{item.sys0AddUser},str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0UpdUser},#{item.sys0DelTime},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(订单使用消费券表)信息。 -->
+    <sql id="update_ebuyOrderHasCoupon">
+		UPDATE t_ebuy_order_has_coupon		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('') "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="tUserCouponFId != null and !tUserCouponFId.equals('') "> ,t_user_coupon_f_id=#{tUserCouponFId}</if> 		<if test="amount != null and !amount.equals('') "> ,f_amount=#{amount}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=#{sys0DelTime}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyOrderHasCoupon" parameterType="EbuyOrderHasCoupon">
+		<include refid="ebuyOrderHasCouponBase.update_ebuyOrderHasCoupon"/>
+    </update>
+    
+    <!-- 批量更新(订单使用消费券表)信息。 -->
+    <update id="update_ebuyOrderHasCoupon_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_order_has_coupon		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.tUserCouponFId != null and !item.tUserCouponFId.equals('')  "> ,t_user_coupon_f_id=#{item.tUserCouponFId}</if> 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=#{item.sys0DelTime}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(订单使用消费券表)信息_逻辑删除。 -->
+    <sql id="delete_ebuyOrderHasCoupon_Logic">
+		UPDATE t_ebuy_order_has_coupon		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="tUserCouponFId != null and !tUserCouponFId.equals('')  "> ,t_user_coupon_f_id=#{tUserCouponFId}</if> 		<if test="amount != null and !amount.equals('')  "> ,f_amount=#{amount}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=#{sys0DelTime}</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyOrderHasCoupon_Logic" parameterType="EbuyOrderHasCoupon">
+		<include refid="ebuyOrderHasCouponBase.delete_ebuyOrderHasCoupon_Logic"/>
+    </update>
+    
+    <!-- 批量删除(订单使用消费券表)信息_逻辑删除 -->
+    <update id="delete_ebuyOrderHasCoupon_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_order_has_coupon		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.tUserCouponFId != null and !item.tUserCouponFId.equals('')  "> ,t_user_coupon_f_id=#{item.tUserCouponFId}</if> 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=#{item.sys0DelTime}</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(订单使用消费券表)信息。 -->
+    <sql id="delete_ebuyOrderHasCoupon">
+		DELETE FROM t_ebuy_order_has_coupon WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyOrderHasCoupon" parameterType="java.lang.String">
+		<include refid="ebuyOrderHasCouponBase.delete_ebuyOrderHasCoupon"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(订单使用消费券表)信息。 -->
+    <delete id="delete_ebuyOrderHasCoupon_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_order_has_coupon WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

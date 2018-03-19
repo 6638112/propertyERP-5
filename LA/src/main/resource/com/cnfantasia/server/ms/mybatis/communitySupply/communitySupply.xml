@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户表 t_pay_bill -->
+<mapper namespace="communitySupply">
+	<resultMap type="com.cnfantasia.server.ms.communitySupply.entity.CommunitySupplyEntity" id="CommunitySupplyEntity_Map_Append"
+    	extends="communitySupplyBase.communitySupplyBaseMap_AppendTable">
+    </resultMap>
+    
+    <!-- 根据登录用户查找所属的商家，例如登录用户是物业公司后台账户，那么就获得该物业公司下的所管辖的商家 -->
+    <select id="select_csList_byOmsUser" resultMap="CommunitySupplyEntity_Map_Append">
+    	select 	<include refid="communitySupplyBase.queryHead_AppendTable"/>
+    	,GB.f_name gbName,GB.f_id gbId, PC.f_id pcId, CST.f_name supplyType, PSC.f_time as suggestTime, PSC.f_groupbulid_id pscGbId
+    	FROM t_community_supply CS
+    	inner join t_community_supply_type CST on CST.f_id = CS.t_community_supply_type_f_id
+    	inner join t_group_building_has_t_community_supply GBHTCS on GBHTCS.t_community_supply_f_id = CS.f_id
+    	inner join t_group_building GB on GBHTCS.t_group_building_f_id = GB.f_id
+    	inner join t_property_company PC on PC.f_id = GB.t_property_company_f_id
+    	inner join t_oms_user OU on OU.f_id = PC.f_admin_id 
+    	left join t_property_suggest_commsupply PSC on (PSC.t_community_supply_f_id = CS.f_id and PSC.f_groupbulid_id = GB.f_id
+        and PSC.f_sys0_del_state = 0)
+    	WHERE 1=1
+    	AND CS.f_sys0_del_state = 0 
+    	and CST.f_importance_level &gt;=1
+    	<if test="omsUserId != null and omsUserId != '' "> and OU.f_id = #{omsUserId}</if>
+    	<if test="supplyType != null and supplyType != '' "> and CST.f_name = #{supplyType} </if>
+    	<if test="csName != null and csName != '' "> and CS.f_name like CONCAT('%', #{csName}, '%') </if>
+    	<if test="gbName != null and gbName != '' "> and GB.f_name like CONCAT('%', #{gbName}, '%') </if>
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+    </select>
+    
+    <!-- 取消物业推荐 -->
+    <update id="deletePropertySuggestCommsupply_byCSId" parameterType="java.util.Map">
+		UPDATE t_property_suggest_commsupply SET f_sys0_del_state = 1,f_sys0_del_time= sysdate() 
+		WHERE t_community_supply_f_id=#{csId} and t_property_company_f_id = #{pcId} and f_groupbulid_id = #{gbId}
+		and f_sys0_del_state = 0
+    </update>
+    
+    <!-- 根据条件查询(社区商家类别)信息。 -->
+	<sql id="select_communitySupplyType">
+		SELECT <include refid="communitySupplyTypeBase.queryHead"/>
+		<include refid="communitySupplyTypeBase.busiQueryCondition"/>
+		and CST.f_sys0_del_state = 0 
+		and CST.f_importance_level &gt;=1
+		ORDER BY CST.f_id DESC
+	</sql>
+	
+	<select id="select_communitySupplyType" parameterType="java.util.Map" resultMap="communitySupplyTypeBase.communitySupplyTypeExtendMap">
+		<include refid="select_communitySupplyType"/>
+	</select>
+</mapper>

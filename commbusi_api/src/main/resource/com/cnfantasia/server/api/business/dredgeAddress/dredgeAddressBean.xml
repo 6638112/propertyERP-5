@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="dredgeAddressDao" class="com.cnfantasia.server.api.dredgeAddress.dao.DredgeAddressDao" parent="abstractBaseDao">
+
+    </bean>
+
+    <bean id="dredgeAddressService" class="com.cnfantasia.server.api.dredgeAddress.service.DredgeAddressService">
+        <property name="dredgeAddressDao" ref="dredgeAddressDao"/>
+        <property name="uuidManager" ref="uuidManager"/>
+        <property name="dredgeAddressBaseService" ref="dredgeAddressBaseService"/>
+        <property name="addressOperationService" ref="addressOperationService"/>
+        <property name="dredgeService" ref="dredgeService"/>
+    </bean>
+
+</beans>

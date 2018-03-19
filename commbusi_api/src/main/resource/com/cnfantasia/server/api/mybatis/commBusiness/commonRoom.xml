@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 门牌管理公共模块 -->
+<mapper namespace="commonRoom">
+	<!-- 门牌，包含校验的信息 -->
+	<resultMap type="com.cnfantasia.server.api.room.entity.RoomEntityWithValidate" id="roomEntityWithValidate_Append" extends="commonRoom.roomMap_Search">
+		<!-- 验证信息 -->
+		<association property="roomValidate" resultMap="roomValidateBase.roomValidateBaseMap_AppendTable"/>
+	</resultMap>
+    
+	<!-- 门牌 -->
+	<resultMap type="com.cnfantasia.server.api.room.entity.RoomEntity" id="roomMap_Search" extends="roomBase.roomBaseMap_AppendTable" >
+    	<association property="realRoomEntity" resultMap="realRoomMap_Search" javaType="com.cnfantasia.server.api.room.entity.RealRoomEntity"/>
+    </resultMap>
+	<!-- 真实门牌 -->
+	<resultMap type="com.cnfantasia.server.api.room.entity.RealRoomEntity" id="realRoomMap_Search" extends="realRoomBase.realRoomBaseMap_AppendTable" >
+    	<association property="buildingEntity" resultMap="buildingMap_Search" javaType="com.cnfantasia.server.api.room.entity.BuildingEntity"/>
+    	<association property="propertyProprietor" resultMap="propertyProprietorBase.propertyProprietorBaseMap_AppendTable" />
+    </resultMap>
+	<!-- 楼栋 -->
+	<resultMap type="com.cnfantasia.server.api.room.entity.BuildingEntity" id="buildingMap_Search" extends="buildingBase.buildingBaseMap_AppendTable" >
+    	<association property="groupBuildingEntity" resultMap="groupBuildingMap_Search" javaType="com.cnfantasia.server.api.room.entity.GroupBuildingEntity"/>
+    </resultMap>
+	<!-- 小区 -->
+    <resultMap type="com.cnfantasia.server.api.room.entity.GroupBuildingEntity" id="groupBuildingMap_Search" extends="groupBuildingBase.groupBuildingBaseMap_AppendTable" >
+    	<result column="ext_haveSupport" javaType="java.lang.Integer" property="haveSupport"/><!-- 当前用户是否已点支持 -->
+    	<result column="ext_haveSummon" javaType="java.lang.Integer" property="haveSummon"/><!-- 当前用户是否已点召唤 -->
+    	<result column="ext_totalSupportCount" javaType="java.lang.Integer" property="totalSupportCount"/><!-- 当前总支持人数 -->
+    	<association property="addressBlockEntity" resultMap="addressBlockMap_Search" javaType="com.cnfantasia.server.api.room.entity.AddressBlockEntity"/>
+    	<association property="propertyManagementEntity" resultMap="propertyManagementEntity_Map_Append"/>
+    </resultMap>
+    <!-- 小区,包含距离 -->
+    <resultMap type="com.cnfantasia.server.api.room.entity.GroupBuildingEntityWithDistance" id="groupBuildingMap_Search_WithDistance" extends="groupBuildingMap_Search">
+    	<result column="ext_distance" property="distance" javaType="java.lang.Double"/>
+    </resultMap>
+    <!-- 物业管理处 -->
+    <resultMap type="com.cnfantasia.server.api.room.entity.PropertyManagementEntity" id="propertyManagementEntity_Map_Append"
+    	extends="propertyManagementBase.propertyManagementBaseMap_AppendTable">
+    </resultMap>
+    <!-- 区 -->
+    <resultMap type="com.cnfantasia.server.api.room.entity.AddressBlockEntity" id="addressBlockMap_Search" extends ="addressBlockBase.addressBlockBaseMap_AppendTable">
+    	<!-- resultMap 此处只能引用addressCityMap_Search，不能直接写addressCityBase.addressCityBaseMap_AppendTable? -->
+    	<association property="addressCityEntity" resultMap="addressCityMap_Search"  javaType="com.cnfantasia.server.api.room.entity.AddressCityEntity"/>
+    </resultMap>
+    <!-- 市 -->
+    <resultMap type="com.cnfantasia.server.api.room.entity.AddressCityEntity" id="addressCityMap_Search" extends ="addressCityBase.addressCityBaseMap_AppendTable">
+    	<association property="addressProvinceEntity" resultMap="addressProvinceMap_Search" javaType="com.cnfantasia.server.api.room.entity.AddressProvinceEntity"/>
+    </resultMap>	
+    <!-- 省 -->
+    <resultMap type="com.cnfantasia.server.api.room.entity.AddressProvinceEntity" id="addressProvinceMap_Search" extends ="addressProvinceBase.addressProvinceBaseMap_AppendTable">
+    </resultMap>
+    
+    
+    <!-- 根据门牌Id查询对应的管理员Ids   TODO 。。待改造-->
+    <!-- <select id="select_admin_Ids_byRoomId" parameterType="java.math.BigInteger" resultType="java.math.BigInteger">
+    	SELECT UHTR.t_user_f_id 
+    	FROM t_user_has_t_room UHTR
+     	WHERE 1=1
+    	AND UHTR.f_sys0_del_state = 0
+     	AND UHTR.t_room_f_id = #{_parameter}
+     	AND UHTR.f_is_admin = 0
+     	AND UHTR.f_apply_status = 1 门牌申请加入状态=={"0":"未处理","1":"已通过","2":"已拒绝"}
+    </select> -->
+    
+    <!-- 根据条件查询(门牌信息)信息。 -->
+	<!-- <select id="select_room_bySeqId" parameterType="java.math.BigInteger" resultMap="commonRoom.roomMap_Search"> -->
+	<select id="select_room_bySeqId" parameterType="java.math.BigInteger" resultMap="commonRoom.roomEntityWithValidate_Append">
+		SELECT <include refid="roomBase.queryHead_AppendTable"/>
+			,<include refid="realRoomBase.queryHead_AppendTable"/>,<include refid="buildingBase.queryHead_AppendTable"/>
+			,<include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+   			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+   			,<include refid="roomValidateBase.queryHead_AppendTable"/><!-- 门牌校验信息 -->
+   			,<include refid="propertyProprietorBase.queryHead_AppendTable"/><!-- 真实门牌的业主信息 -->
+   			,<include refid="propertyManagementBase.queryHead_AppendTable"/><!-- 物业管理处信息 -->
+		FROM t_room R
+				LEFT JOIN (
+				t_real_room RR 
+				LEFT JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id AND PP.f_sys0_del_state = 0
+				INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+				INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+				LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+				
+				INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+				INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+				INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+				) ON R.t_real_room_f_id = RR.f_id  AND RR.f_sys0_del_state = 0
+				
+				LEFT JOIN t_room_validate RV ON RV.t_room_f_id = R.f_id AND RV.f_sys0_del_state = 0
+		WHERE 1 = 1
+		AND R.f_sys0_del_state = 0
+		AND R.f_id = #{_parameter}
+	</select>
+	<!-- 根据条件查询(门牌信息)信息,增加返回小区的支持信息。 -->
+	<select id="select_room_bySeqId_WithSupport" parameterType="java.util.Map" resultMap="commonRoom.roomEntityWithValidate_Append">
+		SELECT <include refid="roomBase.queryHead_AppendTable"/>
+			,<include refid="realRoomBase.queryHead_AppendTable"/>,<include refid="buildingBase.queryHead_AppendTable"/>
+			,<include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+   			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+   			,<include refid="roomValidateBase.queryHead_AppendTable"/><!-- 门牌校验信息 -->
+   			,<include refid="propertyProprietorBase.queryHead_AppendTable"/><!-- 真实门牌的业主信息 -->
+   			,<include refid="propertyManagementBase.queryHead_AppendTable"/><!-- 物业管理处信息 -->
+   			,(SELECT CASE WHEN COUNT(S.f_id)>0 THEN 1 ELSE 2 END
+   				FROM t_support S WHERE 
+				S.f_target_type = 41 <!-- "41":"小区支持" --> 
+				AND S.f_user_id = #{userId}
+				AND GB.f_id = S.f_target_id
+				AND S.f_sys0_del_state = 0
+			) AS ext_haveSupport <!-- 是否已经点支持，1是2否 -->
+   			<!-- ,CASE WHEN ISNULL(S.f_id) THEN 2 ELSE 1 END AS ext_haveSupport -->
+   			,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END 
+				FROM t_common_gather_data CGD WHERE 1=1
+				AND CGD.f_target_type = 41 <!-- "41":"小区支持" -->
+				AND CGD.f_target_id =GB.f_id 
+				AND CGD.f_sys0_del_state = 0
+   			) AS ext_totalSupportCount
+   			<!-- ,(SELECT COUNT(*) 
+   				FROM t_support S02 WHERE 1=1
+   				AND S02.f_target_type= 41
+   				AND S02.f_target_id=GB.f_id 
+   				AND S02.f_sys0_del_state=0 
+   			 ) AS ext_totalSupportCount -->
+		FROM t_room R
+				LEFT JOIN (
+				t_real_room RR 
+				LEFT JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id AND PP.f_sys0_del_state = 0
+				INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+				INNER JOIN (
+					t_group_building GB
+					LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+					<!-- LEFT JOIN t_support S ON 
+						S.f_target_type = 41
+						AND S.f_user_id = #{userId}
+						AND GB.f_id = S.f_target_id
+						AND S.f_sys0_del_state = 0 -->
+				)  ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+				INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+				INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+				INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+				) ON R.t_real_room_f_id = RR.f_id  AND RR.f_sys0_del_state = 0
+				
+				LEFT JOIN t_room_validate RV ON RV.t_room_f_id = R.f_id AND RV.f_sys0_del_state = 0
+		WHERE 1 = 1
+		AND R.f_sys0_del_state = 0
+		AND R.f_id = #{roomId}
+	</select>
+	
+	<!-- 根据虚拟门牌Id查询门牌信息 增加返回小区的点召唤的信息。 -->
+	<select id="select_room_bySeqId_WithSummon" parameterType="java.util.Map" resultMap="commonRoom.roomEntityWithValidate_Append">
+		SELECT <include refid="roomBase.queryHead_AppendTable"/>
+			,<include refid="realRoomBase.queryHead_AppendTable"/>,<include refid="buildingBase.queryHead_AppendTable"/>
+			,<include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+   			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+   			,<include refid="roomValidateBase.queryHead_AppendTable"/><!-- 门牌校验信息 -->
+   			,<include refid="propertyProprietorBase.queryHead_AppendTable"/><!-- 真实门牌的业主信息 -->
+   			,<include refid="propertyManagementBase.queryHead_AppendTable"/><!-- 物业管理处信息 -->
+   			
+   			,(SELECT CASE WHEN COUNT(S.f_id)>0 THEN 1 ELSE 2 END
+   				FROM t_support S WHERE 
+					S.f_target_type = 91 <!-- "91":"小区召唤" --> 
+					AND S.f_user_id = #{userId}
+					AND GB.f_id = S.f_target_id  
+					AND S.f_sys0_del_state = 0
+			) AS ext_haveSummon <!-- 是否已经点召唤，1是2否 -->
+   			<!-- ,CASE WHEN ISNULL(S.f_id) THEN 2 ELSE 1 END AS ext_haveSummon  -->
+		FROM t_room R
+				LEFT JOIN (
+				t_real_room RR 
+				LEFT JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id AND PP.f_sys0_del_state = 0
+				INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+				INNER JOIN (
+					t_group_building GB
+					LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+					<!-- LEFT JOIN t_support S ON 
+						S.f_target_type = 91
+						AND S.f_user_id = #{userId}
+						AND GB.f_id = S.f_target_id  
+						AND S.f_sys0_del_state = 0 -->
+				)  ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+				INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+				INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+				INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+				) ON R.t_real_room_f_id = RR.f_id  AND RR.f_sys0_del_state = 0
+				
+				LEFT JOIN t_room_validate RV ON RV.t_room_f_id = R.f_id AND RV.f_sys0_del_state = 0
+		WHERE 1 = 1
+		AND R.f_sys0_del_state = 0
+		AND R.f_id = #{roomId}
+	</select>
+	
+	<!-- 根据真实门牌Id查询所在小区信息 -->
+	<select id="select_groupbuilding_by_realroomId" parameterType="java.math.BigInteger" resultMap="groupBuildingBase.groupBuildingBaseMap_AppendTable">
+		SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>
+		FROM t_real_room RR 
+			INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+			INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+		WHERE 1 = 1
+		AND RR.f_sys0_del_state = 0
+		AND RR.f_id = #{_parameter}
+	</select>
+	
+	<select id="select_groupbuilding_status" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+		select gb.f_sign_status from t_group_building gb
+ 			where gb.f_id = #{_parameter}
+	</select>
+	
+	<!-- 查询用户创建的且被标识为first_hbconvert_state的门牌数量 -->
+	<!-- <select id="select_First_HbconvertState_Room_Count" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_room R
+		WHERE 1=1
+		AND R.f_sys0_del_state = 0
+		AND R.f_first_hbconvert_state = 1 注释 是否为首次兑换粮票使用的门牌=={"1":"是","2":"否"}
+		AND R.f_creater = #{_parameter}
+	</select> -->
+	
+	<!-- 将用户当前的门牌设置首次兑换粮票的标识 -->
+	<!-- <update id="update_Room_As_First_HbconvertState" parameterType="java.math.BigInteger">
+		UPDATE t_room R
+			INNER JOIN t_user U ON R.f_creater = U.f_id AND U.f_sys0_del_state = 0
+				AND U.f_id = #{_parameter} 
+				AND R.f_id = U.f_default_room_id
+		SET R.f_first_hbconvert_state = 1
+			,R.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND R.f_sys0_del_state = 0
+		注释 是否为首次兑换粮票使用的门牌=={"1":"是","2":"否"}
+		注释 AND ( R.f_first_hbconvert_state = 2 or ISNULL(R.f_first_hbconvert_state))
+		AND R.f_creater = #{_parameter}
+	</update> -->
+	
+	<!-- 根据用户Id查询其默认门牌所属的GroupBuilding信息 -->
+	<select id="select_GroupBuilding_By_UserId" resultMap="groupBuildingBase.groupBuildingBaseMap_AppendTable" parameterType="java.util.Map">
+		SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>
+		FROM t_group_building GB
+			INNER JOIN (
+				t_user U_comm01
+				INNER JOIN t_room R_comm01 ON R_comm01.f_id = U_comm01.f_default_room_id AND R_comm01.f_sys0_del_state = 0
+				INNER JOIN t_real_room RR_comm01 ON RR_comm01.f_id = R_comm01.t_real_room_f_id AND RR_comm01.f_sys0_del_state = 0
+				INNER JOIN t_building B_comm01 ON B_comm01.f_id = RR_comm01.t_building_f_id AND B_comm01.f_sys0_del_state = 0
+			) ON U_comm01.f_id = #{userId} AND U_comm01.f_sys0_del_state = 0
+			WHERE 1=1
+			AND GB.f_sys0_del_state = 0
+			AND B_comm01.t_group_building_f_id = GB.f_id
+	</select>
+	
+	<!-- 根据用户Id查询其默认门牌Id -->
+	<select id="select_Default_RoomId_By_UserId" parameterType="java.math.BigInteger" resultType="java.math.BigInteger">
+		SELECT U.f_default_room_id
+		FROM t_user U
+		WHERE 1=1
+		AND U.f_id = #{_parameter}
+		AND U.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询用户主门牌Id -->
+	<select id="select_Main_RoomId_By_UserId" parameterType="java.math.BigInteger" resultType="java.math.BigInteger">
+		SELECT U.f_main_room_id
+		FROM t_user U
+		WHERE 1=1
+		AND U.f_id = #{_parameter}
+		AND U.f_sys0_del_state = 0
+	</select>
+	<!-- 设定主门牌 -->
+	<update id="update_Main_RoomId_By_UserId" parameterType="java.util.Map">
+		UPDATE t_user U
+		SET U.f_main_room_id = #{mainRoomId}
+			,U.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND U.f_id = #{userId}
+		AND U.f_sys0_del_state = 0
+	</update>
+	
+	<!-- 根据小区Id列表查询其下的门牌用户列表 -->
+	<select id="select_User_List_By_GroupBuildIds"  parameterType="java.util.Map" resultMap="commonUser.userSimpleEntity_Map_Append">
+		SELECT <include refid="commonUser.userSimple_common_select"/>
+		FROM t_user U
+			INNER JOIN t_room R ON R.f_id = U.f_default_room_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id  AND RR.f_sys0_del_state = 0
+			INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+			INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+			<include refid="commonUser.userSimple_common_from"/>
+		WHERE 1=1
+		AND U.f_sys0_del_state = 0
+		AND GB.f_id IN 
+		<foreach item="item" collection="groupBuildIdList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 根据城市名称查询对应的城市列表 -->
+	<select id="select_AddressCity_List_By_CityName_Dim" parameterType="java.util.Map" resultMap="addressCityBase.addressCityBaseMap_AppendTable">
+		SELECT <include refid="addressCityBase.queryHead_AppendTable"/>
+		FROM t_address_city AC
+    	WHERE 1=1
+    	AND AC.f_sys0_del_state = 0
+		AND (AC.f_name like CONCAT('%',#{cityName},'%') )
+	</select>
+	
+	<!-- 根据Id查询真实门牌信息 -->
+	<select id="select_RealRoom_ById" parameterType="java.util.Map" resultMap="realRoomMap_Search">
+		SELECT <include refid="realRoomBase.queryHead_AppendTable"/>,<include refid="buildingBase.queryHead_AppendTable"/>
+			,<include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+   			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+   			,<include refid="propertyProprietorBase.queryHead_AppendTable"/><!-- 真实门牌的业主信息 -->
+   			,<include refid="propertyManagementBase.queryHead_AppendTable"/><!-- 物业管理处信息 -->
+		FROM t_real_room RR 
+			LEFT JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id AND PP.f_sys0_del_state = 0
+			INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+			INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+			LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+			
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+		WHERE 1=1
+		AND RR.f_sys0_del_state = 0
+		AND RR.f_id = #{realRoomId}
+	</select>
+	
+	<!-- 根据用户Id查询默认门牌信息 -->
+	<select id="select_DefaultRoom_ByUserId" parameterType="java.util.Map" resultMap="roomBase.roomBaseMap_AppendTable">
+		SELECT <include refid="roomBase.queryHead_AppendTable"/>
+		FROM t_room R
+			INNER JOIN t_user U ON U.f_id = #{userId} AND U.f_sys0_del_state = 0
+				AND R.f_id = U.f_default_room_id
+		WHERE 1=1
+		AND R.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询用户默认用户门牌关系信息 -->
+	<select id="select_DefaultUserHasTRoom_ByUserId" parameterType="java.util.Map" resultMap="userHasTRoomBase.userHasTRoomBaseMap_AppendTable">
+		SELECT <include refid="userHasTRoomBase.queryHead_AppendTable"/>
+		FROM t_user_has_t_room UHTR
+			INNER JOIN t_user U ON U.f_id = #{userId} AND U.f_sys0_del_state = 0
+    	WHERE 1=1
+    	AND UHTR.t_user_f_id = U.f_id
+    	AND UHTR.t_room_f_id = U.f_default_room_id
+    	AND UHTR.f_sys0_del_state = 0
+    	AND UHTR.f_apply_status = 1 <!-- 门牌申请加入状态=={"0":"未处理","1":"已通过","2":"已拒绝"} -->
+	</select>
+	
+	
+	<!-- 根据小区Id查询小区信息 -->
+	<select id="select_GroupBuilding_ById" parameterType="java.util.Map" resultMap="groupBuildingMap_Search">
+		SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+   			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+		FROM t_group_building GB
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+		WHERE 1=1
+		AND GB.f_sys0_del_state = 0
+		AND GB.f_id = #{groupBuildingId}
+	</select>
+	
+	<!-- 查询有用户注册过的小区列表 -->
+	<select id="select_GroupBuilding_IsRegisted" parameterType="java.util.Map" resultMap="groupBuildingMap_Search">
+		SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+   			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+		<![CDATA[ 
+		FROM
+		    t_group_building GB
+		        INNER JOIN
+		    t_address_block AB ON GB.t_block_f_id = AB.f_id
+		        AND AB.f_sys0_del_state = 0
+		        INNER JOIN
+		    t_address_city AC ON AB.t_city_f_id = AC.f_id
+		        AND AC.f_sys0_del_state = 0
+		        INNER JOIN
+		    t_address_province AP ON AC.t_province_f_id = AP.f_id
+		        AND AP.f_sys0_del_state = 0
+		        INNER JOIN
+		    (SELECT 
+		        GB.f_id as groupbuildingId
+		    FROM
+		        t_user U
+		    INNER JOIN t_room R ON R.f_id = U.f_default_room_id
+		        AND R.f_sys0_del_state = 0
+		    INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id
+		        AND RR.f_sys0_del_state = 0
+		    INNER JOIN t_building B ON RR.t_building_f_id = B.f_id
+		        AND B.f_sys0_del_state = 0
+		    INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id
+		        AND GB.f_sys0_del_state = 0
+		    LEFT JOIN t_group_building_has_t_community_supply GBHTCS ON GBHTCS.t_group_building_f_id = GB.f_id
+		        AND GBHTCS.f_sys0_del_state = 0
+		    WHERE
+		        GB.f_sys0_del_state = 0
+		            and (GB.f_check_status = 1
+		            or GB.f_check_status = 9)
+		    GROUP BY GB.f_id
+		    HAVING COUNT(GB.f_id) > 0
+		        AND COUNT(GBHTCS.f_id) <= 0) as gb_ids on gb_ids.groupbuildingId = GB.f_id
+		WHERE
+		    1 = 1 AND GB.f_sys0_del_state = 0
+		 ]]>
+	</select>
+	
+	<!-- 根据用户Id查询对应的用户基本信息列表 -->
+	<select id="select_User_List_By_UserIds" parameterType="java.util.Map" resultMap="commonUser.userSimpleEntity_Map_Append">
+		SELECT <include refid="commonUser.userSimple_common_select"/>
+		FROM t_user U
+			<include refid="commonUser.userSimple_common_from"/>
+		WHERE 1=1
+		AND U.f_sys0_del_state = 0
+		AND U.f_id IN 
+		<foreach item="item" collection="userIdList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 查询当前用户门牌下的住户列表 返回未处理和已通过的  -->
+	<resultMap type="com.cnfantasia.server.api.commonBusiness.entity.UserRoomApplyEntity" id="userRoomApplyEntity_Map_Append"
+		extends="userHasTRoomBase.userHasTRoomBaseMap_AppendTable">
+		<association property="applyUser" resultMap="commonUser.userSimpleEntity_Map_Append"/>
+		<association property="roomValidate" resultMap="roomValidateBase.roomValidateBaseMap_AppendTable"/>
+	</resultMap>
+    <sql id="select_UserList_OfSameRoom_ByUserId_comm">
+    	FROM t_user U
+    		INNER JOIN ( <include refid="commonSql.qry_roomIds_forFamilyAdmin_by_userInfo"/> ) AS Group_roomId
+    		INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+    		<!-- <include refid="commonUser.userSimple_common_from"/> -->
+    		<include refid="commonUser.userSimple_common_from_by_curr_room"/>
+    		INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id AND RR.f_sys0_del_state = 0
+    		LEFT JOIN t_room_validate RV ON RV.t_room_f_id = R.f_id AND RV.f_sys0_del_state = 0
+    		
+    		INNER JOIN t_user_has_t_room UHTR ON 1=1 AND R.f_id = UHTR.t_room_f_id
+    			<!-- AND U.f_default_room_id = UHTR.t_room_f_id --> 
+    			AND U.f_id = UHTR.t_user_f_id AND UHTR.f_sys0_del_state = 0
+    			AND (UHTR.f_apply_status = 0 OR UHTR.f_apply_status = 1 )<!-- 门牌申请加入状态=={"0":"未处理","1":"已通过","2":"已拒绝"} -->
+				AND (UHTR.t_user_f_id = UHTR.f_bind_user_id OR ISNULL(UHTR.f_bind_user_id)) <!-- 去除绑定账号的用户数据 -->
+    		
+    	WHERE 1=1
+    	AND U.f_sys0_del_state = 0
+    	<!-- AND ( (R.f_creater = #{userId}) OR (UHTR.f_inviter_id = #{userId}) )  --> <!-- 门牌创建者或者邀请者 -->
+    </sql>
+    <select id="select_UserList_OfSameRoom_ByUserId_page" parameterType="java.util.Map" resultMap="userRoomApplyEntity_Map_Append">
+    	SELECT <include refid="commonUser.userSimple_common_select"/>
+    		,<include refid="userHasTRoomBase.queryHead_AppendTable"/>
+    		,<include refid="roomValidateBase.queryHead_AppendTable"/>
+    	<include refid="select_UserList_OfSameRoom_ByUserId_comm"/>
+    	ORDER BY CASE WHEN UHTR.t_user_f_id = #{userId} THEN 1 ELSE 2 END ASC
+    		,CASE WHEN (NOT ISNULL(RR.f_validate_user_id) AND RR.f_validate_user_id = U.f_id ) THEN 1 ELSE 2 END ASC
+    		,CASE WHEN (NOT ISNULL(RV.f_verify_status) AND RV.f_verify_status = 4 ) THEN 1 ELSE 2 END ASC
+    		,UHTR.f_id ASC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+    </select>
+    <select id="select_UserList_OfSameRoom_ByUserId_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT COUNT(*)
+    	<include refid="select_UserList_OfSameRoom_ByUserId_comm"/>
+    </select>
+    
+    <!-- 逻辑删除当前用户下的住户列表 仅邀请人和管理员可以删除 -->
+    <update id="delete_User_OfSameRoom_Logic" parameterType="java.util.Map">
+    	UPDATE t_user U
+    		INNER JOIN ( <include refid="commonSql.qry_roomIds_forFamilyAdmin_by_userInfo"/> ) AS Group_roomId
+    		INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+    		
+    		INNER JOIN t_user_has_t_room UHTR ON 1=1 AND R.f_id = UHTR.t_room_f_id
+    			<!-- AND U.f_default_room_id = UHTR.t_room_f_id --> 
+    			AND U.f_id = UHTR.t_user_f_id AND UHTR.f_sys0_del_state = 0
+    			AND UHTR.f_apply_status = 1 <!-- 门牌申请加入状态=={"0":"未处理","1":"已通过","2":"已拒绝"} -->
+    			
+    	SET UHTR.f_sys0_del_state = 1 <!-- 删除住户 -->
+    	WHERE 1=1
+    	AND U.f_sys0_del_state = 0
+    	AND ( (R.f_creater = #{userId}) OR (UHTR.f_inviter_id = #{userId}) ) <!-- 门牌创建者或者邀请者 -->
+    	AND U.f_id != #{userId} <!-- 不是当前用户 -->
+    	AND U.f_id IN 
+    	<foreach item="item" collection="toDelUserList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </update>
+	
+	<!-- 根据真实门牌查询对应最早验证过的验证信息 -->
+	<select id="select_RealRoom_FirstValidate" parameterType="java.util.Map" resultMap="roomValidateBase.roomValidateBaseMap_AppendTable">
+		SELECT <include refid="roomValidateBase.queryHead_AppendTable"/>
+		FROM t_room_validate RV
+			INNER JOIN t_room R ON R.f_id = RV.t_room_f_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON R.t_real_room_f_id = RR.f_id AND RR.f_sys0_del_state = 0
+				AND RR.f_id = #{realRoomId}
+   	 	WHERE 1=1
+   	 	AND RV.f_sys0_del_state = 0
+   	 	AND RV.f_verify_status=4 <!-- 验证状态=={"1":"未验证","2":"验证中","3":"验证失败","4":"验证通过"} -->
+   	 	ORDER BY RV.f_verify_succ_time ASC <!-- 时间最早的 -->
+   	 	LIMIT 0,1
+	</select>
+	
+	<!-- 根据用户Id 查询默认门牌对应的真实门牌信息 -->
+	<select id="select_RealRoom_ByUserId" parameterType="java.util.Map" resultMap="realRoomBase.realRoomBaseMap_AppendTable">
+		SELECT <include refid="realRoomBase.queryHead_AppendTable"/>
+	 	FROM t_real_room RR
+	 		INNER JOIN t_user U ON U.f_id = #{userId} AND U.f_sys0_del_state = 0
+	 		INNER JOIN t_room R ON RR.f_id = R.t_real_room_f_id AND R.f_sys0_del_state = 0
+	 			AND U.f_default_room_id = R.f_id
+  		WHERE 1=1
+  		AND RR.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 根据百度经纬度查询最近的小区信息 -->
+	<resultMap type="com.cnfantasia.server.api.room.entity.GroupBuildingSimpleWithDistance" id="groupBuildingSimpleWithDistance_Map_Append"
+		extends="groupBuildingBase.groupBuildingBaseMap_AppendTable">
+		<result column="ext_distance" property="distance" javaType="java.lang.Double"/>
+	</resultMap>
+	<select id="select_Nearest_GroupBuilding_ByBaiduLocation" parameterType="java.util.Map" 
+		resultMap="groupBuildingSimpleWithDistance_Map_Append">
+		SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>
+			,fnGetdistance(#{lng},#{lat},GB.f_baidu_locat_lng,GB.f_baidu_locat_lat) AS ext_distance
+		FROM t_group_building AS GB
+		WHERE 1=1
+		AND NOT ISNULL(GB.f_baidu_locat_lng) AND NOT ISNULL(GB.f_baidu_locat_lat) 
+		AND NOT ISNULL( fnGetdistance(#{lng},#{lat},GB.f_baidu_locat_lng,GB.f_baidu_locat_lat) ) <!-- 返回distance不能为空 -->
+		ORDER BY ext_distance ASC 
+		LIMIT 0,1
+	</select>
+	
+	<!-- 根据百度经纬度查询附加的小区列表 返回小于指定距离的小区信息-->
+    <select id="select_Nearby_GroupBuilding_ByBaiduLocation" parameterType="java.util.Map" resultMap="commonRoom.groupBuildingMap_Search_WithDistance">
+    	SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>,
+    		<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+    		,fnGetdistance(#{lng},#{lat},GB.f_baidu_locat_lng,GB.f_baidu_locat_lat) AS ext_distance
+    	FROM t_group_building GB 
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id AND AP.f_sys0_del_state = 0
+		WHERE 1=1
+		AND GB.f_sys0_del_state = 0
+		<if test="searchKey != null and searchKey != '' ">  
+            <![CDATA[ AND ( GB.f_name like CONCAT('%',#{searchKey},'%') OR GB.f_pinyin_name like CONCAT('%',#{searchKey},'%') ) ]]>
+        </if>
+        AND ((GB.f_creater = #{userId}) or (GB.f_check_status = 1 or GB.f_check_status= 9 )) <!-- {"0":"待审核","1":"审核通过","2":"审核不通过","9":"无需审核"} -->
+		AND ( ISNULL(GB.f_source_type) OR (GB.f_source_type!=31) ) <!-- 数据来源类型=={"1":"运维平台录入","2":"手工搜集","11":"百度地图API","12":"深圳国土局一手房","13":"深圳国土局二手房","21":"美丽加","31":"彩之云"} -->
+		AND NOT ISNULL(GB.f_baidu_locat_lng) AND NOT ISNULL(GB.f_baidu_locat_lat) 
+		AND NOT ISNULL( fnGetdistance(#{lng},#{lat},GB.f_baidu_locat_lng,GB.f_baidu_locat_lat) ) <!-- 返回distance不能为空 -->
+		<![CDATA[ AND ( fnGetdistance(#{lng},#{lat},GB.f_baidu_locat_lng,GB.f_baidu_locat_lat) ) <= #{maxDistance} ]]>
+		ORDER BY ext_distance ASC
+    </select>
+    
+    <select id="select_Nearby_GroupBuilding_ByAddressCity" parameterType="java.util.Map" resultMap="commonRoom.groupBuildingMap_Search_WithDistance">
+    	SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>,
+    		<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+    		<!-- ,fnGetdistance(#{lng},#{lat},GB.f_baidu_locat_lng,GB.f_baidu_locat_lat) AS ext_distance -->
+    	FROM t_group_building GB 
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id AND AP.f_sys0_del_state = 0
+		WHERE 1=1
+		AND GB.f_sys0_del_state = 0
+		<if test="searchKey != null and searchKey != '' ">  
+            <![CDATA[ AND ( GB.f_name like CONCAT('%',#{searchKey},'%') OR GB.f_pinyin_name like CONCAT('%',#{searchKey},'%') ) ]]>
+        </if>
+        <if test="blockId != null and blockId != '' ">  and (AB.f_id = #{blockId} ) </if>
+		<if test="cityId != null and cityId != '' ">  and (AC.f_id = #{cityId} ) </if>
+		<if test="cityId == null or cityId == '' ">  
+			<if test="cityName != null and cityName != '' ">
+				and (AC.f_name like CONCAT('%',#{cityName},'%') )
+			</if>
+		</if>
+        AND ((GB.f_creater = #{userId}) or (GB.f_check_status = 1 or GB.f_check_status= 9 )) <!-- {"0":"待审核","1":"审核通过","2":"审核不通过","9":"无需审核"} -->
+		AND ( ISNULL(GB.f_source_type) OR (GB.f_source_type!=31) ) <!-- 数据来源类型=={"1":"运维平台录入","2":"手工搜集","11":"百度地图API","12":"深圳国土局一手房","13":"深圳国土局二手房","21":"美丽加","31":"彩之云"} -->
+		ORDER BY CASE WHEN GB.f_sign_status= 1 THEN GB.f_cooperation_type ELSE -1 END DESC
+		LIMIT 100
+    </select>
+    
+    <!-- 查询用户门牌列表 -->
+    <select id="select_UserRoom_List" parameterType="java.util.Map" resultMap="roomBase.roomBaseMap_AppendTable">
+    	SELECT <include refid="roomBase.queryHead_AppendTable"/>
+    	FROM (<include refid="commonSql.qry_roomIdList_by_curr_user_id_with_bind"/>) AS tab_roomId
+    	INNER JOIN t_room R ON tab_roomId.roomId = R.f_id AND R.f_sys0_del_state = 0
+    	WHERE 1 = 1
+    	AND R.f_sys0_del_state = 0
+    </select>
+    
+    <!-- 查询用户下的用户门牌关系信息列表，附加返回room基本信息 -->
+    <resultMap type="com.cnfantasia.server.api.commonBusiness.entity.UserHasTRoomWithRoomSimpleEntity" id="userHasTRoomWithRoomSimpleEntity_Map_Append"
+    	extends="userHasTRoomBase.userHasTRoomBaseMap_AppendTable">
+    	<result column="ext_roomIsValidate" javaType="java.lang.Boolean" property="ext_roomIsValidate"/>
+    	<result column="ext_adminUserId" javaType="java.math.BigInteger" property="ext_adminUserId"/>
+    	<association property="ext_room" resultMap="roomBase.roomBaseMap_AppendTable"/>
+    </resultMap>
+    <select id="select_UserHasTRoom_WithRoomSimple_List" parameterType="java.util.Map" resultMap="userHasTRoomWithRoomSimpleEntity_Map_Append">
+    	SELECT <include refid="userHasTRoomBase.queryHead_AppendTable"/>
+    		,<include refid="roomBase.queryHead_AppendTable"/>
+    		,CASE WHEN NOT EXISTS(
+    			SELECT RV.t_room_f_id t_room_f_id
+				FROM t_room_validate RV
+				WHERE 1=1
+				AND RV.t_room_f_id = R.f_id
+				AND RV.f_sys0_del_state = 0
+   	 			AND RV.f_verify_status=4 <!-- 验证状态=={"1":"未验证","2":"验证中","3":"验证失败","4":"验证通过"} -->
+   	 			AND RV.f_user_id = #{userId} <!-- 用户限制,必须是当前用户验证的,增加查询效率 -->
+   			) THEN FALSE ELSE TRUE END AS ext_roomIsValidate
+    		,RR.f_validate_user_id AS ext_adminUserId
+    	FROM 
+    		(SELECT * FROM t_user_has_t_room UHTR
+    			WHERE 1=1 
+    			AND UHTR.f_sys0_del_state = 0
+				AND UHTR.t_user_f_id = #{userId}
+				AND UHTR.f_apply_status = 1 <!-- 门牌申请加入状态=={"0":"未处理","1":"已通过","2":"已拒绝"} -->
+    		)AS UHTR
+			INNER JOIN t_room R ON UHTR.t_room_f_id = R.f_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id AND RR.f_sys0_del_state = 0
+    	WHERE 1 = 1
+    </select>
+    
+   	<!-- 更换当前用户指定门牌的真实门牌Id为信息的真实门牌 -->
+    <update id="update_2New_RealRoomId" parameterType="java.util.Map">
+		UPDATE t_room R
+			INNER JOIN t_user U ON U.f_id = #{userId} AND U.f_sys0_del_state = 0
+			INNER JOIN t_user_has_t_room UHTR ON UHTR.t_user_f_id = U.f_id AND UHTR.t_room_f_id = R.f_id
+				AND UHTR.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON RR.f_id = #{realRoomId} AND RR.f_sys0_del_state = 0
+			SET R.t_real_room_f_id = RR.f_id, R.f_sys0_upd_time = now()
+		WHERE 1=1
+		AND R.f_sys0_del_state = 0
+		AND R.f_id = #{roomId}
+    </update>
+    
+    <!-- 查询用户注册过的小区 -->
+	<select id="select_User_Registed_GroupBuilding" parameterType="java.util.Map" resultMap="groupBuildingMap_Search">
+		SELECT 
+			<include refid="groupBuildingBase.queryHead_AppendTable"/>
+		FROM
+		    t_group_building GB
+		        INNER JOIN
+		    t_address_block AB ON GB.t_block_f_id = AB.f_id
+		        AND AB.f_sys0_del_state = 0
+		        INNER JOIN
+		    t_address_city AC ON AB.t_city_f_id = AC.f_id
+		        AND AC.f_sys0_del_state = 0
+		        INNER JOIN
+		    t_address_province AP ON AC.t_province_f_id = AP.f_id
+		        AND AP.f_sys0_del_state = 0
+		    AND EXISTS
+		   (SELECT 
+		       1
+		   FROM
+		       t_user U
+		   INNER JOIN t_room R ON R.f_id = U.f_default_room_id
+		       AND R.f_sys0_del_state = 0
+		   INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id
+		       AND RR.f_sys0_del_state = 0
+		   INNER JOIN t_building B ON RR.t_building_f_id = B.f_id
+		       AND B.f_sys0_del_state = 0
+		   WHERE
+		       U.f_sys0_del_state = 0 
+		       AND U.f_id = #{userId}<!-- 用户  -->
+		       AND GB.f_id = B.t_group_building_f_id
+		   )
+		WHERE GB.f_sys0_del_state = 0
+			AND (GB.f_check_status = 1 OR GB.f_check_status = 9)
+			<if test="gbName != null and gbName != '' "> AND GB.f_name = #{gbName} </if><!-- 小区 -->
+		    <if test="blockId != null and blockId != '' "> AND GB.t_block_f_id = #{blockId} </if><!-- 所属地区 -->
+	</select>
+	<select id="select_User_Registed_GroupBuilding_count_multi" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		   COUNT(U.f_id)
+		FROM
+		    t_user U
+		INNER JOIN t_room R ON R.f_id = U.f_default_room_id AND R.f_sys0_del_state = 0
+		INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id AND RR.f_sys0_del_state = 0
+		INNER JOIN t_building B ON RR.t_building_f_id = B.f_id AND B.f_sys0_del_state = 0
+		INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id AND GB.f_sys0_del_state = 0
+		INNER JOIN( 
+			<foreach collection="paramList" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item.gbName} gbName
+				,#{item.blockId} blockId
+			</foreach>
+		) A_tmp ON 1=1
+			AND GB.t_block_f_id = A_tmp.blockId <!-- 小区 -->
+			AND GB.f_name = A_tmp.gbName  <!-- 所属地区 -->
+		WHERE 1=1
+		    AND U.f_sys0_del_state = 0 
+		    AND U.f_id = #{userId}<!-- 用户  -->
+	</select>
+	
+	<select id="select_RoomCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(R.f_id)
+    	FROM (<include refid="commonSql.qry_roomIdList_by_curr_user_id_with_bind"/>) AS tab_roomId
+	    	INNER JOIN t_room R ON tab_roomId.roomId = R.f_id AND R.f_sys0_del_state = 0 
+	    	INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id AND RR.f_sys0_del_state = 0
+		   	INNER JOIN t_building B ON RR.t_building_f_id = B.f_id AND B.f_sys0_del_state = 0
+		   	INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id AND GB.f_sys0_del_state = 0
+		   		AND GB.f_id = #{gbId}
+    	WHERE 1 = 1
+	</select>
+	
+	<!-- 根据用户Id查询对应绑定的门牌 -->
+    <select id="select_User_BindPhone" parameterType="java.util.Map" resultType="java.lang.String">
+    	SELECT f_mobile
+    	FROM t_user
+    	WHERE 1=1
+    	AND f_sys0_del_state = 0
+    	AND f_id = #{userId}
+    </select>
+    <!-- 根据虚拟门牌Id查询对应业主的手机号 -->
+    <select id="select_Room_MatchPhoneAndNotValidateCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT COUNT(0)
+    	FROM t_room R
+    		INNER JOIN t_real_room RR ON R.t_real_room_f_id = RR.f_id AND RR.f_sys0_del_state = 0
+    		INNER JOIN t_property_proprietor PP ON RR.t_property_proprietor_f_id = PP.f_id AND PP.f_sys0_del_state = 0
+    			AND PP.f_phone = #{bindPhone}
+    	WHERE 1=1
+    	AND R.f_id = #{roomId}
+    	AND R.f_sys0_del_state = 0
+    </select>
+    
+     <!-- 查询用户门牌列表，未验证且对应业主手机号为bindPhone -->
+    <select id="select_RoomList_MatchPhoneAndNotValidate" parameterType="java.util.Map" resultMap="roomBase.roomBaseMap_AppendTable">
+    	SELECT <include refid="roomBase.queryHead_AppendTable"/>
+    	FROM t_property_proprietor PP
+    		INNER JOIN t_real_room RR ON RR.t_property_proprietor_f_id = PP.f_id AND RR.f_sys0_del_state = 0
+    		INNER JOIN t_room R ON R.t_real_room_f_id = RR.f_id AND R.f_sys0_del_state = 0
+    		inner join t_building b on RR.t_building_f_id = b.f_id
+    		left join t_group_building_ext gbe on gbe.f_id = b.t_group_building_f_id
+    		AND NOT EXISTS ( <!-- 不包含已验证的 -->
+				SELECT RV.f_id 
+				FROM t_room_validate RV 
+				WHERE 1=1
+				AND R.f_id = RV.t_room_f_id 
+				AND RV.f_sys0_del_state = 0
+				AND RV.f_verify_status = 4 <!-- 验证通过的 -->
+			)
+    		INNER JOIN (<include refid="commonSql.qry_roomIdList_by_curr_user_id_with_bind"/>) AS tab_roomId 
+    			ON tab_roomId.roomId = R.f_id AND R.f_sys0_del_state = 0
+    	WHERE 1 = 1
+    	AND PP.f_sys0_del_state = 0
+    	AND PP.f_phone like CONCAT('%',#{bindPhone},'%')
+    	<!-- 
+    	and gbe.f_valid_by_mobile = 1
+    	 -->
+    </select>
+    
+    <!-- 查询用户门牌数量，已验证且对应业主手机号为bindPhone -->
+    <select id="select_Room_MatchPhoneAndValidateCount_ByUserId" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT COUNT(DISTINCT R.f_id)
+    	FROM t_property_proprietor PP
+    		INNER JOIN t_real_room RR ON RR.t_property_proprietor_f_id = PP.f_id AND RR.f_sys0_del_state = 0
+    		INNER JOIN t_room R ON R.t_real_room_f_id = RR.f_id AND R.f_sys0_del_state = 0
+    		AND EXISTS ( <!-- 必须包含已验证的 -->
+				SELECT RV.f_id 
+				FROM t_room_validate RV 
+				WHERE 1=1
+				AND R.f_id = RV.t_room_f_id 
+				AND RV.f_sys0_del_state = 0
+				AND RV.f_verify_status = 4 <!-- 验证通过的 -->
+			)
+    		INNER JOIN (<include refid="commonSql.qry_roomIdList_by_curr_user_id_with_bind"/>) AS tab_roomId 
+    			ON tab_roomId.roomId = R.f_id AND R.f_sys0_del_state = 0
+    	WHERE 1 = 1
+    	AND PP.f_sys0_del_state = 0
+    	AND PP.f_phone like CONCAT('%',#{bindPhone},'%')
+    </select>
+    
+    <!-- 根据手机号查询对应的真实门牌Id -->
+    <select id="select_RealRoomId_ByPhone" parameterType="java.util.Map" resultType="java.math.BigInteger">
+    	SELECT DISTINCT RR.f_id
+    	FROM t_property_proprietor PP
+    		INNER JOIN t_real_room RR ON RR.t_property_proprietor_f_id = PP.f_id AND RR.f_sys0_del_state = 0
+    	WHERE 1 = 1
+    	AND PP.f_sys0_del_state = 0
+    	AND PP.f_phone like CONCAT('%',#{bindPhone},'%')
+    	and not EXISTS (
+				select 1 from t_user u 
+					inner join t_user_has_t_room ur on ur.t_user_f_id = u.f_id
+					inner join t_room r on ur.t_room_f_id = r.f_id
+					where u.f_mobile = #{bindPhone} and r.t_real_room_f_id = RR.f_id
+				)
+    </select>
+    
+    <!-- 根据门牌Id查询真实门牌 -->
+    <select id="select_RealRoom_ByRoomId" parameterType="java.util.Map" resultMap="realRoomBase.realRoomBaseMap_AppendTable">
+    	SELECT <include refid="realRoomBase.queryHead_AppendTable"/>
+    	FROM t_room R
+    		INNER JOIN t_real_room RR ON RR.f_sys0_del_state = 0
+    			AND RR.f_id = R.t_real_room_f_id
+    	WHERE 1=1
+    	AND R.f_sys0_del_state = 0
+    	AND R.f_id = #{roomId}
+    	
+    </select>
+
+	<!--根据门牌获取各个上级的ID gbId, blockId, cityId, provinceId-->
+	<select id="getRoomAddressIdByRoom" parameterType="map" resultType="map">
+		SELECT gb.f_id as gbId, gb.t_property_management_f_id managementId, ab.f_id as blockId, ac.f_id as cityId, ap.f_id as provinceId
+		FROM t_room r
+		INNER JOIN t_real_room rr ON rr.f_id = r.t_real_room_f_id
+		INNER JOIN t_building b ON rr.t_building_f_id = b.f_id
+		INNER JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id
+		INNER JOIN t_address_block ab ON ab.f_id = gb.t_block_f_id
+		INNER JOIN t_address_city ac ON ac.f_id = ab.t_city_f_id
+		INNER JOIN t_address_province ap ON ap.f_id = ac.t_province_f_id
+		WHERE r.f_sys0_del_state = 0 AND r.f_id = #{roomId}
+	</select>
+
+	<select id="getRoomDetailAddress" parameterType="map" resultType="string">
+		select concat(ac.f_name, ab.f_name, gb.f_name, b.f_name, '-', rr.f_num) from t_room r
+		left join t_real_room rr on rr.f_id = r.t_real_room_f_id
+		left join t_building b on b.f_id = rr.t_building_f_id
+		left join t_group_building gb on gb.f_id = b.t_group_building_f_id
+		left join t_address_block ab on ab.f_id = gb.t_block_f_id
+		left join t_address_city ac on ac.f_id = ab.t_city_f_id
+		where r.f_id = #{_parameter}
+	</select>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 登录管理公共模块 -->
+<mapper namespace="commonLogin">
+	
+	<!-- 按条件查询用户的记录数 -->
+	<select id="select_UserCount_By_AccInfo" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_login_no LN
+		WHERE 1=1
+		AND LN.f_sys0_del_state = 0
+		AND f_no = #{accountNo}
+		AND f_password = #{password}
+		AND f_type = #{accountType}
+	</select>
+	
+	<!-- 根据用户id删除所有的登录session记录信息 -->
+	<!-- <update id="delete_UserSession_Logic_ByUserId" parameterType="java.util.Map">
+		UPDATE t_comm_user_session
+		SET f_sys0_del_time=SYSDATE()
+			,f_sys0_del_state = 1
+		WHERE 1=1
+		AND f_sys0_del_state = 0
+		AND f_user_id = #{userId}
+	</update> -->
+	<!-- 根据账号查询相同用户的session列表,syl-add-2015-5-29 16:38:08 -->
+	<select id="select_UserSessionList_ofSameUser_ByAccnoType" parameterType="java.util.Map"
+		resultMap="commUserSessionBase.commUserSessionBaseMap_AppendTable">
+		SELECT <include refid="commUserSessionBase.queryHead_AppendTable"/>
+		FROM (
+				<!-- SELECT f_user_id
+				FROM t_comm_user_session
+				WHERE 1=1
+				AND f_sys0_del_state = 0
+				AND f_acc_no = #{accountNo}
+				AND f_acc_type = #{accountType} -->
+				
+				SELECT t_user_f_id as f_user_id
+				FROM t_login_no
+				WHERE 1=1
+				AND f_sys0_del_state = 0
+				AND f_no = #{accountNo}
+				AND f_type =#{accountType}
+				
+			)AS accUser 
+		INNER JOIN t_comm_user_session CUS ON accUser.f_user_id = CUS.f_user_id
+    	WHERE 1=1
+    	AND CUS.f_sys0_del_state = 0
+    	
+	    <if test="subChannelId == 1 or subChannelId == 2">
+			and (CUS.f_sub_Channel = 1 or CUS.f_sub_Channel = 2)
+		</if>
+		<if test="subChannelId == 10 or subChannelId == 11">
+			and (CUS.f_sub_Channel = 10 or CUS.f_sub_Channel = 11)
+		</if>
+		<if test="subChannelId == 20">
+			and (CUS.f_sub_Channel = 20)
+		</if>
+    	
+	</select>
+	
+	<update id="update_LoginSession_ByUserId" parameterType="java.util.Map">
+		UPDATE t_comm_user_session 
+		SET  f_sys0_upd_time=SYSDATE()
+			,f_acc_no = #{accountNo}
+			,f_acc_type = #{accountType}
+		WHERE 1=1
+		AND f_sys0_del_state=0
+		AND f_user_id=#{userId}
+		AND f_acc_type = #{accountType} <!-- 只替换同类型的账号 -->
+	</update>
+	
+	<select id="selectValidSessionKeyCountBy" parameterType="map" resultType="int">
+		SELECT count(*) from t_comm_user_session 
+		where f_sys0_del_state =0 
+		and f_user_id = #{userId}
+		<if test="subChannelId == 1 or subChannelId == 2">
+			and (f_sub_Channel = 1 or f_sub_Channel = 2)
+		</if>
+		<if test="subChannelId == 10 or subChannelId == 11">
+			and (f_sub_Channel = 10 or f_sub_Channel = 11)
+		</if>
+		<if test="subChannelId == 20">
+			and (f_sub_Channel = 20)
+		</if>
+	</select>
+</mapper>

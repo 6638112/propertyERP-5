@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:收益中心 -->
+<mapper namespace="notification">
+	<!-- 往(微信公众号维修单消息队列)新增一条记录。 -->
+    <insert id="insert_wechatDredgebillMq" parameterType="WechatDredgebillMq">
+		INSERT INTO t_wechat_dredgebill_mq 
+		(t_dredge_bill_f_id,f_type,f_send_status,f_sys0_add_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{tDredgeBillFId},#{type},#{sendStatus},sysdate(),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+    </insert>
+    
+    <insert id="insert_smsMq" parameterType="SmsMq">
+		INSERT INTO t_sms_mq 
+		(f_src_id,f_src_type,f_mobile,f_content,f_send_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{srcId},#{srcType},#{mobile,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},#{sendStatus},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+    </insert>
+</mapper>

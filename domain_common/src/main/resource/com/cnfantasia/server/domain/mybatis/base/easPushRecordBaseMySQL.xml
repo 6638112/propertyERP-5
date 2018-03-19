@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:EAS接口推送记录 t_eas_push_record -->
+<mapper namespace="easPushRecordBase">
+	<resultMap type="EasPushRecord" id="easPushRecordBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_push_time" javaType="java.lang.String" property="pushTime"/>  <!-- 推送时间 -->        <result column="f_push_response" javaType="java.lang.String" property="pushResponse"/>  <!-- 推送返回结果 -->        <result column="f_is_success" javaType="java.lang.Integer" property="isSuccess"/>  <!-- 是否推送成功 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="t_revenue_apply_f_id" javaType="java.math.BigInteger" property="tRevenueApplyFId"/>  <!-- 提款单 -->
+	</resultMap>
+	<resultMap type="EasPushRecord" id="easPushRecordExtendMap" extends="easPushRecordBaseMap">
+	</resultMap>
+	<resultMap type="EasPushRecord" id="easPushRecordBaseMap_AppendTable">
+        <id column="EPRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EPRpushTime" javaType="java.lang.String" property="pushTime"/>  <!-- 推送时间 -->        <result column="EPRpushResponse" javaType="java.lang.String" property="pushResponse"/>  <!-- 推送返回结果 -->        <result column="EPRisSuccess" javaType="java.lang.Integer" property="isSuccess"/>  <!-- 是否推送成功 -->        <result column="EPRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EPRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EPRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EPRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EPRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EPRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EPRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="EPRtRevenueApplyFId" javaType="java.math.BigInteger" property="tRevenueApplyFId"/>  <!-- 提款单 -->
+	</resultMap>
+	<resultMap type="EasPushRecord" id="easPushRecordBaseMap_AppendTable1">
+        <id column="EPR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EPR1pushTime" javaType="java.lang.String" property="pushTime"/>  <!-- 推送时间 -->        <result column="EPR1pushResponse" javaType="java.lang.String" property="pushResponse"/>  <!-- 推送返回结果 -->        <result column="EPR1isSuccess" javaType="java.lang.Integer" property="isSuccess"/>  <!-- 是否推送成功 -->        <result column="EPR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EPR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EPR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EPR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EPR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EPR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EPR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="EPR1tRevenueApplyFId" javaType="java.math.BigInteger" property="tRevenueApplyFId"/>  <!-- 提款单 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EPR.f_id,date_format(EPR.f_push_time,'%Y-%m-%d %T') as f_push_time,EPR.f_push_response,EPR.f_is_success,EPR.t_revenue_apply_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EPR.f_id as EPRid,date_format(EPR.f_push_time,'%Y-%m-%d %T') as EPRpushTime,EPR.f_push_response as EPRpushResponse,EPR.f_is_success as EPRisSuccess,EPR.t_revenue_apply_f_id as EPRtRevenueApplyFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EPR1.f_id as EPR1id,date_format(EPR1.f_push_time,'%Y-%m-%d %T') as EPR1pushTime,EPR1.f_push_response as EPR1pushResponse,EPR1.f_is_success as EPR1isSuccess,EPR1.t_revenue_apply_f_id as EPR1tRevenueApplyFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EPR.f_id = #{id} ) </if>        <if test="pushTime != null and !pushTime.equals('')  ">  and (EPR.f_push_time = str_to_date(#{pushTime},'%Y-%m-%d %T') ) </if>        <if test="pushTime_START != null and !pushTime_START.equals('')  ">              <![CDATA[ and (EPR.f_push_time >= str_to_date(#{pushTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="pushTime_END != null and !pushTime_END.equals('')  ">            <![CDATA[ and (EPR.f_push_time <= str_to_date(#{pushTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="pushResponse != null">  and (EPR.f_push_response = #{pushResponse} ) </if>        <if test="isSuccess != null">  and (EPR.f_is_success = #{isSuccess} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EPR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EPR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EPR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EPR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EPR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EPR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EPR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EPR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EPR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EPR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EPR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EPR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EPR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EPR.f_sys0_del_state = 0 ) </if>        <if test="tRevenueApplyFId != null">  and (EPR.t_revenue_apply_f_id = #{tRevenueApplyFId} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EPR.f_id = #{id} ) </if>        <if test="pushTime != null and !pushTime.equals('')  ">  and (EPR.f_push_time = str_to_date(#{pushTime},'%Y-%m-%d %T') ) </if>        <if test="pushTime_START != null and !pushTime_START.equals('')  ">              <![CDATA[ and (EPR.f_push_time >= str_to_date(#{pushTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="pushTime_END != null and !pushTime_END.equals('')  ">            <![CDATA[ and (EPR.f_push_time <= str_to_date(#{pushTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="pushResponse != null and !pushResponse.equals('')  ">  and (EPR.f_push_response like CONCAT('%',#{pushResponse},'%') ) </if>        <if test="isSuccess != null and !isSuccess.equals('')  ">  and (EPR.f_is_success = #{isSuccess} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EPR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EPR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EPR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EPR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EPR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EPR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EPR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EPR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EPR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EPR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EPR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EPR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EPR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EPR.f_sys0_del_state = 0 ) </if>        <if test="tRevenueApplyFId != null and !tRevenueApplyFId.equals('')  ">  and (EPR.t_revenue_apply_f_id = #{tRevenueApplyFId} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="easPushRecordBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="easPushRecordBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="easPushRecordBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="easPushRecordBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_eas_push_record EPR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(EAS接口推送记录)信息。 -->
+	<sql id="select_easPushRecord">
+		SELECT <include refid="easPushRecordBase.queryHead"/>
+		<include refid="easPushRecordBase.busiQueryCondition"/>
+		<include refid="easPushRecordBase.dimCheckSql"/>
+		ORDER BY EPR.f_id DESC
+	</sql>
+	<select id="select_easPushRecord" parameterType="java.util.Map" resultMap="easPushRecordBase.easPushRecordExtendMap">
+		<include refid="easPushRecordBase.select_easPushRecord"/>
+	</select>
+	
+	<!-- 根据条件分页查询(EAS接口推送记录)信息  -->
+	<sql id="select_easPushRecord_withPage">
+		SELECT <include refid="easPushRecordBase.queryHead"/>
+		<include refid="easPushRecordBase.busiQueryCondition"/>
+		<include refid="easPushRecordBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_easPushRecord_withPage" resultMap="easPushRecordBase.easPushRecordExtendMap" parameterType="java.util.Map">
+		<include refid="easPushRecordBase.select_easPushRecord_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(EAS接口推送记录)信息。 -->
+	<sql id="select_easPushRecord_bySeqId">
+		SELECT <include refid="easPushRecordBase.queryHead"/>
+		<include refid="easPushRecordBase.busiQueryCondition"/>
+		 and EPR.f_id = #{_parameter}
+	</sql>
+	<select id="select_easPushRecord_bySeqId" parameterType="java.math.BigInteger" resultMap="easPushRecordBase.easPushRecordBaseMap">
+		<include refid="easPushRecordBase.select_easPushRecord_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(EAS接口推送记录)记录数  -->
+	<sql id="select_easPushRecord_count">
+		SELECT COUNT(*)
+		<include refid="easPushRecordBase.busiQueryCount"/>
+		<include refid="easPushRecordBase.dimCheckSql"/>
+	</sql>
+	<select id="select_easPushRecord_count" resultType="java.lang.Integer">
+		<include refid="easPushRecordBase.select_easPushRecord_count"/>
+	</select>
+	
+	 <!-- 往(EAS接口推送记录)新增一条记录。 -->
+	 <sql id="insert_easPushRecord">
+		INSERT INTO t_eas_push_record 
+		(f_id,f_push_time,f_push_response,f_is_success,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,t_revenue_apply_f_id) VALUES 
+		(#{id},str_to_date(#{pushTime,jdbcType=DATE},'%Y-%m-%d %T'),#{pushResponse,jdbcType=VARCHAR},#{isSuccess},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0,#{tRevenueApplyFId})
+	 </sql>
+    <insert id="insert_easPushRecord" parameterType="EasPushRecord">
+		<include refid="easPushRecordBase.insert_easPushRecord"/>
+    </insert>
+    
+	<!-- 批量新增(EAS接口推送记录)信息 -->
+    <insert id="insert_easPushRecord_Batch" parameterType="java.util.List">
+    	INSERT INTO t_eas_push_record 
+		(f_id,f_push_time,f_push_response,f_is_success,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,t_revenue_apply_f_id) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},str_to_date(#{item.pushTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.pushResponse,jdbcType=VARCHAR},#{item.isSuccess},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0,#{item.tRevenueApplyFId})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(EAS接口推送记录)信息。 -->
+    <sql id="update_easPushRecord">
+		UPDATE t_eas_push_record		<trim prefix="SET" prefixOverrides=","> 		<if test="pushTime != null and !pushTime.equals('') "> ,f_push_time=str_to_date(#{pushTime},'%Y-%m-%d %T')</if> 		<if test="pushResponse != null and !pushResponse.equals('') "> ,f_push_response=#{pushResponse}</if> 		<if test="isSuccess != null and !isSuccess.equals('') "> ,f_is_success=#{isSuccess}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if> 		<if test="tRevenueApplyFId != null and !tRevenueApplyFId.equals('') "> ,t_revenue_apply_f_id=#{tRevenueApplyFId}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_easPushRecord" parameterType="EasPushRecord">
+		<include refid="easPushRecordBase.update_easPushRecord"/>
+    </update>
+    
+    <!-- 批量更新(EAS接口推送记录)信息。 -->
+    <update id="update_easPushRecord_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_eas_push_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.pushTime != null and !item.pushTime.equals('')  "> ,f_push_time=str_to_date(#{item.pushTime},'%Y-%m-%d %T')</if> 		<if test="item.pushResponse != null and !item.pushResponse.equals('')  "> ,f_push_response=#{item.pushResponse}</if> 		<if test="item.isSuccess != null and !item.isSuccess.equals('')  "> ,f_is_success=#{item.isSuccess}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if> 		<if test="item.tRevenueApplyFId != null and !item.tRevenueApplyFId.equals('')  "> ,t_revenue_apply_f_id=#{item.tRevenueApplyFId}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(EAS接口推送记录)信息_逻辑删除。 -->
+    <sql id="delete_easPushRecord_Logic">
+		UPDATE t_eas_push_record		<trim prefix="SET" prefixOverrides=","> 		<if test="pushTime != null and !pushTime.equals('')  "> ,f_push_time=str_to_date(#{pushTime},'%Y-%m-%d %T')</if> 		<if test="pushResponse != null and !pushResponse.equals('')  "> ,f_push_response=#{pushResponse}</if> 		<if test="isSuccess != null and !isSuccess.equals('')  "> ,f_is_success=#{isSuccess}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="tRevenueApplyFId != null and !tRevenueApplyFId.equals('')  "> ,t_revenue_apply_f_id=#{tRevenueApplyFId}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_easPushRecord_Logic" parameterType="EasPushRecord">
+		<include refid="easPushRecordBase.delete_easPushRecord_Logic"/>
+    </update>
+    
+    <!-- 批量删除(EAS接口推送记录)信息_逻辑删除 -->
+    <update id="delete_easPushRecord_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_eas_push_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.pushTime != null and !item.pushTime.equals('')  "> ,f_push_time=str_to_date(#{item.pushTime},'%Y-%m-%d %T')</if> 		<if test="item.pushResponse != null and !item.pushResponse.equals('')  "> ,f_push_response=#{item.pushResponse}</if> 		<if test="item.isSuccess != null and !item.isSuccess.equals('')  "> ,f_is_success=#{item.isSuccess}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.tRevenueApplyFId != null and !item.tRevenueApplyFId.equals('')  "> ,t_revenue_apply_f_id=#{item.tRevenueApplyFId}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(EAS接口推送记录)信息。 -->
+    <sql id="delete_easPushRecord">
+		DELETE FROM t_eas_push_record WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_easPushRecord" parameterType="java.lang.String">
+		<include refid="easPushRecordBase.delete_easPushRecord"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(EAS接口推送记录)信息。 -->
+    <delete id="delete_easPushRecord_Batch" parameterType="java.util.List">
+		DELETE FROM t_eas_push_record WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

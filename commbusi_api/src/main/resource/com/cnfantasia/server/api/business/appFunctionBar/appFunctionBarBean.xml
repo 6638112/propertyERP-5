@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="appFunctionBarDao" class="com.cnfantasia.server.api.appFunctionBar.dao.AppFunctionBarDao" parent="abstractBaseDao">
+    </bean>
+
+    <bean id="appFunctionBarService" class="com.cnfantasia.server.api.appFunctionBar.service.AppFunctionBarService">
+        <property name="appFunctionBarDao" ref="appFunctionBarDao"/>
+        <property name="addressOperationService" ref="addressOperationService"/>
+        <property name="commonRoomService" ref="commonRoomService"/>
+    </bean>
+
+</beans>

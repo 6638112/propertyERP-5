@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:收藏模块 -->
+<mapper namespace="collections">
+	
+	<!-- 查询社区商家收藏列表 -->
+	<resultMap type="com.cnfantasia.server.api.user.entity.CollectionsEntity" id="collectionsEntity_communitySupply_Map_Append" 
+		extends="collectionsBase.collectionsBaseMap_AppendTable">
+		<association  property="singalDetail" javaType="com.cnfantasia.server.api.communitySupply.entity.CommunitySupplyEntity" 
+			resultMap="communitySupply.communitySupplyEntity_Map_Append_Detail">
+		</association>
+	</resultMap>
+	<select id="select_collectionList_communitySupply_byCondition_Page" parameterType="java.util.Map" resultMap="collectionsEntity_communitySupply_Map_Append">
+		SELECT _tmp.* 
+	   	 		,<include refid="communitySupplyContectBase.queryHead_AppendTable"/>
+	   	 	FROM (
+		   	 	SELECT <include refid="collectionsBase.queryHead_AppendTable"/>,<include refid="communitySupplyBase.queryHead_AppendTable"/>
+		   	 		,<include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+		   	 	FROM t_collections C
+		   	 		INNER JOIN t_community_supply CS ON C.f_target_id=CS.f_id AND CS.f_sys0_del_state = 0 
+		   	 		INNER JOIN t_community_supply_type CST ON CST.f_id = CS.t_community_supply_type_f_id AND CST.f_sys0_del_state = 0 
+		   	 	WHERE 1=1
+		   	 		AND C.f_sys0_del_state = 0
+					AND C.f_user_id = #{userId}
+					AND C.f_target_type = #{targetType}
+		   	 	ORDER BY C.f_id DESC 
+		   	 	<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	   	 	) _tmp
+	   	 	LEFT JOIN t_community_supply_contect CSC ON _tmp.CSid = CSC.t_community_supply_f_id AND CSC.f_sys0_del_state = 0 
+	</select>
+	<select id="select_collectionList_communitySupply_byCondition_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_collections C
+			INNER JOIN t_community_supply CS ON C.f_target_id=CS.f_id AND CS.f_sys0_del_state = 0 
+   	 		INNER JOIN t_community_supply_type CST ON CST.f_id = CS.t_community_supply_type_f_id AND CST.f_sys0_del_state = 0 
+   	 	WHERE 1=1
+   	 		AND C.f_sys0_del_state = 0
+			AND C.f_user_id = #{userId}
+			AND C.f_target_type = #{targetType}
+	</select>
+	
+</mapper>

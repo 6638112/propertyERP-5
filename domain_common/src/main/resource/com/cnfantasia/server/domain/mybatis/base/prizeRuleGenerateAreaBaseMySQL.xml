@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:折扣生成规则-折扣区间分配因素 t_prize_rule_generate_area -->
+<mapper namespace="prizeRuleGenerateAreaBase">
+	<resultMap type="PrizeRuleGenerateArea" id="prizeRuleGenerateAreaBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 区间名称 -->        <result column="f_start_discount" javaType="java.lang.Long" property="startDiscount"/>  <!-- 折扣开始区间,包含起始项,5600表示5.6折 -->        <result column="f_end_discount" javaType="java.lang.Long" property="endDiscount"/>  <!-- 折扣结束区间,不包含结束项 -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 区间描述 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PrizeRuleGenerateArea" id="prizeRuleGenerateAreaExtendMap" extends="prizeRuleGenerateAreaBaseMap">
+	</resultMap>
+	<resultMap type="PrizeRuleGenerateArea" id="prizeRuleGenerateAreaBaseMap_AppendTable">
+        <id column="PRGAid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PRGAname" javaType="java.lang.String" property="name"/>  <!-- 区间名称 -->        <result column="PRGAstartDiscount" javaType="java.lang.Long" property="startDiscount"/>  <!-- 折扣开始区间,包含起始项,5600表示5.6折 -->        <result column="PRGAendDiscount" javaType="java.lang.Long" property="endDiscount"/>  <!-- 折扣结束区间,不包含结束项 -->        <result column="PRGAdesc" javaType="java.lang.String" property="desc"/>  <!-- 区间描述 -->        <result column="PRGAsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PRGAsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PRGAsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PRGAsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PRGAsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PRGAsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PRGAsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PrizeRuleGenerateArea" id="prizeRuleGenerateAreaBaseMap_AppendTable1">
+        <id column="PRGA1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PRGA1name" javaType="java.lang.String" property="name"/>  <!-- 区间名称 -->        <result column="PRGA1startDiscount" javaType="java.lang.Long" property="startDiscount"/>  <!-- 折扣开始区间,包含起始项,5600表示5.6折 -->        <result column="PRGA1endDiscount" javaType="java.lang.Long" property="endDiscount"/>  <!-- 折扣结束区间,不包含结束项 -->        <result column="PRGA1desc" javaType="java.lang.String" property="desc"/>  <!-- 区间描述 -->        <result column="PRGA1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PRGA1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PRGA1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PRGA1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PRGA1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PRGA1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PRGA1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PRGA.f_id,PRGA.f_name,PRGA.f_start_discount,PRGA.f_end_discount,PRGA.f_desc
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PRGA.f_id as PRGAid,PRGA.f_name as PRGAname,PRGA.f_start_discount as PRGAstartDiscount,PRGA.f_end_discount as PRGAendDiscount,PRGA.f_desc as PRGAdesc
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PRGA1.f_id as PRGA1id,PRGA1.f_name as PRGA1name,PRGA1.f_start_discount as PRGA1startDiscount,PRGA1.f_end_discount as PRGA1endDiscount,PRGA1.f_desc as PRGA1desc
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PRGA.f_id = #{id} ) </if>        <if test="name != null">  and (PRGA.f_name = #{name} ) </if>        <if test="startDiscount != null">  and (PRGA.f_start_discount = #{startDiscount} ) </if>        <if test="endDiscount != null">  and (PRGA.f_end_discount = #{endDiscount} ) </if>        <if test="desc != null">  and (PRGA.f_desc = #{desc} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PRGA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PRGA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PRGA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PRGA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PRGA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PRGA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PRGA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PRGA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PRGA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (PRGA.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (PRGA.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (PRGA.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (PRGA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (PRGA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PRGA.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (PRGA.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="startDiscount != null and !startDiscount.equals('')  ">  and (PRGA.f_start_discount = #{startDiscount} ) </if>        <if test="endDiscount != null and !endDiscount.equals('')  ">  and (PRGA.f_end_discount = #{endDiscount} ) </if>        <if test="desc != null and !desc.equals('')  ">  and (PRGA.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PRGA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PRGA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PRGA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PRGA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PRGA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PRGA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PRGA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PRGA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PRGA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PRGA.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PRGA.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PRGA.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PRGA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (PRGA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="prizeRuleGenerateAreaBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="prizeRuleGenerateAreaBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="prizeRuleGenerateAreaBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="prizeRuleGenerateAreaBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_prize_rule_generate_area PRGA    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(折扣生成规则-折扣区间分配因素)信息。 -->
+	<sql id="select_prizeRuleGenerateArea">
+		SELECT <include refid="prizeRuleGenerateAreaBase.queryHead"/>
+		<include refid="prizeRuleGenerateAreaBase.busiQueryCondition"/>
+		<include refid="prizeRuleGenerateAreaBase.dimCheckSql"/>
+		ORDER BY PRGA.f_id DESC
+	</sql>
+	<select id="select_prizeRuleGenerateArea" parameterType="java.util.Map" resultMap="prizeRuleGenerateAreaBase.prizeRuleGenerateAreaExtendMap">
+		<include refid="prizeRuleGenerateAreaBase.select_prizeRuleGenerateArea"/>
+	</select>
+	
+	<!-- 根据条件分页查询(折扣生成规则-折扣区间分配因素)信息  -->
+	<sql id="select_prizeRuleGenerateArea_withPage">
+		SELECT <include refid="prizeRuleGenerateAreaBase.queryHead"/>
+		<include refid="prizeRuleGenerateAreaBase.busiQueryCondition"/>
+		<include refid="prizeRuleGenerateAreaBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_prizeRuleGenerateArea_withPage" resultMap="prizeRuleGenerateAreaBase.prizeRuleGenerateAreaExtendMap" parameterType="java.util.Map">
+		<include refid="prizeRuleGenerateAreaBase.select_prizeRuleGenerateArea_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(折扣生成规则-折扣区间分配因素)信息。 -->
+	<sql id="select_prizeRuleGenerateArea_bySeqId">
+		SELECT <include refid="prizeRuleGenerateAreaBase.queryHead"/>
+		<include refid="prizeRuleGenerateAreaBase.busiQueryCondition"/>
+		 and PRGA.f_id = #{_parameter}
+	</sql>
+	<select id="select_prizeRuleGenerateArea_bySeqId" parameterType="java.math.BigInteger" resultMap="prizeRuleGenerateAreaBase.prizeRuleGenerateAreaBaseMap">
+		<include refid="prizeRuleGenerateAreaBase.select_prizeRuleGenerateArea_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(折扣生成规则-折扣区间分配因素)记录数  -->
+	<sql id="select_prizeRuleGenerateArea_count">
+		SELECT COUNT(*)
+		<include refid="prizeRuleGenerateAreaBase.busiQueryCount"/>
+		<include refid="prizeRuleGenerateAreaBase.dimCheckSql"/>
+	</sql>
+	<select id="select_prizeRuleGenerateArea_count" resultType="java.lang.Integer">
+		<include refid="prizeRuleGenerateAreaBase.select_prizeRuleGenerateArea_count"/>
+	</select>
+	
+	 <!-- 往(折扣生成规则-折扣区间分配因素)新增一条记录。 -->
+	 <sql id="insert_prizeRuleGenerateArea">
+		INSERT INTO t_prize_rule_generate_area 
+		(f_id,f_name,f_start_discount,f_end_discount,f_desc,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{startDiscount},#{endDiscount},#{desc,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_prizeRuleGenerateArea" parameterType="PrizeRuleGenerateArea">
+		<include refid="prizeRuleGenerateAreaBase.insert_prizeRuleGenerateArea"/>
+    </insert>
+    
+	<!-- 批量新增(折扣生成规则-折扣区间分配因素)信息 -->
+    <insert id="insert_prizeRuleGenerateArea_Batch" parameterType="java.util.List">
+    	INSERT INTO t_prize_rule_generate_area 
+		(f_id,f_name,f_start_discount,f_end_discount,f_desc,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.startDiscount},#{item.endDiscount},#{item.desc,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(折扣生成规则-折扣区间分配因素)信息。 -->
+    <sql id="update_prizeRuleGenerateArea">
+		UPDATE t_prize_rule_generate_area		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="startDiscount != null and !startDiscount.equals('') "> ,f_start_discount=#{startDiscount}</if> 		<if test="endDiscount != null and !endDiscount.equals('') "> ,f_end_discount=#{endDiscount}</if> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_prizeRuleGenerateArea" parameterType="PrizeRuleGenerateArea">
+		<include refid="prizeRuleGenerateAreaBase.update_prizeRuleGenerateArea"/>
+    </update>
+    
+    <!-- 批量更新(折扣生成规则-折扣区间分配因素)信息。 -->
+    <update id="update_prizeRuleGenerateArea_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_prize_rule_generate_area		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.startDiscount != null and !item.startDiscount.equals('')  "> ,f_start_discount=#{item.startDiscount}</if> 		<if test="item.endDiscount != null and !item.endDiscount.equals('')  "> ,f_end_discount=#{item.endDiscount}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(折扣生成规则-折扣区间分配因素)信息_逻辑删除。 -->
+    <sql id="delete_prizeRuleGenerateArea_Logic">
+		UPDATE t_prize_rule_generate_area		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="startDiscount != null and !startDiscount.equals('')  "> ,f_start_discount=#{startDiscount}</if> 		<if test="endDiscount != null and !endDiscount.equals('')  "> ,f_end_discount=#{endDiscount}</if> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_prizeRuleGenerateArea_Logic" parameterType="PrizeRuleGenerateArea">
+		<include refid="prizeRuleGenerateAreaBase.delete_prizeRuleGenerateArea_Logic"/>
+    </update>
+    
+    <!-- 批量删除(折扣生成规则-折扣区间分配因素)信息_逻辑删除 -->
+    <update id="delete_prizeRuleGenerateArea_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_prize_rule_generate_area		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.startDiscount != null and !item.startDiscount.equals('')  "> ,f_start_discount=#{item.startDiscount}</if> 		<if test="item.endDiscount != null and !item.endDiscount.equals('')  "> ,f_end_discount=#{item.endDiscount}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(折扣生成规则-折扣区间分配因素)信息。 -->
+    <sql id="delete_prizeRuleGenerateArea">
+		DELETE FROM t_prize_rule_generate_area WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_prizeRuleGenerateArea" parameterType="java.lang.String">
+		<include refid="prizeRuleGenerateAreaBase.delete_prizeRuleGenerateArea"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(折扣生成规则-折扣区间分配因素)信息。 -->
+    <delete id="delete_prizeRuleGenerateArea_Batch" parameterType="java.util.List">
+		DELETE FROM t_prize_rule_generate_area WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 发送短信 -->
+<mapper namespace="commMsg">
+	
+	<insert id="insertCommMsg" parameterType="com.cnfantasia.server.api.common.entity.CommMsg">
+		insert into t_comm_msg(f_mobile, f_msg) values(#{mobile}, #{msg});
+	</insert>
+	
+	<insert id="insertCommMsgBatch" parameterType="java.util.List">
+		INSERT INTO t_comm_msg(f_mobile, f_msg) VALUES
+	    <foreach collection="list" item="item" index="index"    
+	        separator=",">    
+	        (#{item.mobile}, #{item.msg})
+	    </foreach>
+	</insert>
+	
+</mapper>

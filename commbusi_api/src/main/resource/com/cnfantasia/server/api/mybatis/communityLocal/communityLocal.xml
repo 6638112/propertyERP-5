@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:社区帖子模块 -->
+<mapper namespace="communityLocal">
+
+	<!-- 社区帖子详情Map -->
+	<resultMap type="com.cnfantasia.server.api.communityLocal.entity.CommunityForumContentEntity" id="communityForumContentEntityMap_Append" 
+		extends="communityForumContentBase.communityForumContentBaseMap_AppendTable">
+		<result column="ext_isFavour" javaType="java.lang.Integer" property="extIsFavour"/><!-- 是否被当前用户收藏 -->
+		<result column="ext_favour_count" javaType="java.lang.Integer" property="extFavourCount"/><!-- 点赞总数 -->
+		<result column="ext_comment_count" javaType="java.lang.Integer" property="extCommentCount"/><!-- 评论总数 -->
+		<association property="communityForumType" resultMap="communityForumTypeBase.communityForumTypeBaseMap_AppendTable"/><!-- 社区帖子所属类别 -->
+		<association property="userInfo" resultMap="commonUser.userSimpleEntity_Map_Append"/><!-- 用户信息 -->
+		<collection property="communityForumPicList" resultMap="communityForumPicBase.communityForumPicBaseMap_AppendTable"/><!-- 社区帖子图片列表 -->
+	</resultMap>
+	
+	<sql id="select_communityForumContent_base_comm">
+		SELECT <include refid="communityForumContentBase.queryHead_AppendTable"/>
+				,<include refid="communityForumTypeBase.queryHead_AppendTable"/>
+				,<include refid="commonUser.userSimple_common_select"/>
+				,(SELECT CASE WHEN COUNT(S.f_id)>0 THEN 1 ELSE 0 END
+   					FROM t_support S WHERE 
+						S.f_target_type = 31 <!-- 31表示社区帖子类别 --> 
+						AND S.f_user_id = #{userId}
+						AND CFC.f_id = S.f_target_id  
+						AND S.f_sys0_del_state = 0
+				) AS ext_isFavour  <!-- 0未赞，1已赞 -->
+				<!-- ,CASE WHEN ISNULL(S.f_id) THEN 0 ELSE 1 END AS ext_isFavour -->
+				,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END
+					FROM t_common_gather_data CGD WHERE 1=1
+					AND CGD.f_target_type = 31 <!-- 31表示社区帖子类别 --> 
+					AND CGD.f_target_id = CFC.f_id
+					AND CGD.f_sys0_del_state = 0
+				) AS ext_favour_count <!-- 点赞总数 -->
+				,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_comment_count)) THEN 0 ELSE sum(CGD.f_total_comment_count) END
+					FROM t_common_gather_data CGD WHERE 1=1
+					AND CGD.f_target_type = 31 <!-- 31表示社区帖子类别 --> 
+					AND CGD.f_target_id = CFC.f_id
+					AND CGD.f_sys0_del_state = 0
+				) AS ext_comment_count <!-- 评论总数 -->
+				<!-- ,S2.ext_favour_count AS ext_favour_count
+				,C.ext_comment_count AS ext_comment_count -->
+			FROM t_community_forum_content CFC
+				INNER JOIN t_community_forum_type CFT ON CFT.f_id = CFC.t_community_forum_type_f_id AND CFT.f_sys0_del_state = 0
+				INNER JOIN t_user U ON U.f_id = CFC.f_user_id AND U.f_sys0_del_state = 0
+				<include refid="commonUser.userSimple_common_from"/>
+				<!-- LEFT JOIN t_support S ON 
+					S.f_target_type = 31
+					AND S.f_user_id = #{userId}
+					AND CFC.f_id = S.f_target_id  
+					AND S.f_sys0_del_state = 0 -->
+				<!-- LEFT JOIN
+				(SELECT f_target_id,COUNT(0) ext_favour_count 
+					FROM t_support S2 
+					WHERE 1=1 
+					AND S2.f_target_type = 31 
+					AND S2.f_sys0_del_state = 0 GROUP BY S2.f_target_id ) S2  ON CFC.f_id = S2.f_target_id  -->
+		        <!-- LEFT JOIN
+				(SELECT f_target_id,COUNT(0) ext_comment_count 
+				FROM t_comments C 
+				WHERE 1=1 
+				AND C.f_target_type = 31 
+				AND C.f_sys0_del_state = 0 GROUP BY C.f_target_id ) C  ON CFC.f_id = C.f_target_id  -->
+			WHERE 1=1
+	   	 	AND CFC.f_sys0_del_state = 0
+	</sql>
+	
+	<sql id="select_communityForumContent_list_comm">
+		<include refid="communityLocal.select_communityForumContent_base_comm"/>
+		<if test="forumType != null and forumType != '' ">  AND (CFC.t_community_forum_type_f_id = #{forumType}) </if>
+   	 	AND CFC.t_group_building_f_id = #{groupBuildId}
+	</sql>
+	
+	<!-- 分页查询社区帖子列表 -->
+	<select id="select_forum_list_page" parameterType="java.util.Map" resultMap="communityForumContentEntityMap_Append">
+		SELECT _tmp.* 
+			,<include refid="communityForumPicBase.queryHead_AppendTable"/>
+		FROM (
+			<include refid="communityLocal.select_communityForumContent_list_comm"/>
+	   	 	ORDER BY CFC.f_create_time DESC
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		) _tmp
+		LEFT JOIN t_community_forum_pic CFP ON CFP.t_community_forum_content_f_id = _tmp.CFCid AND CFP.f_sys0_del_state = 0
+	</select>
+	<select id="select_forum_list_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) 
+		FROM ( 
+			<include refid="communityLocal.select_communityForumContent_list_comm"/> 
+		) AS tbl01
+	</select>
+	
+	<!-- 查询社区帖子详情 -->
+	<select id="select_forum_detail" parameterType="java.util.Map" resultMap="communityForumContentEntityMap_Append">
+		SELECT _tmp.* 
+			,<include refid="communityForumPicBase.queryHead_AppendTable"/>
+		FROM (
+			<include refid="communityLocal.select_communityForumContent_base_comm"/>
+	   	 	AND CFC.f_id = #{forumId}
+		) _tmp
+		LEFT JOIN t_community_forum_pic CFP ON CFP.t_community_forum_content_f_id = _tmp.CFCid AND CFP.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询最热门社区帖子 -->
+	<select id="select_mostHot_forum"  parameterType="java.util.Map" resultMap="communityForumContentBase.communityForumContentBaseMap_AppendTable">
+		SELECT <include refid="communityForumContentBase.queryHead_AppendTable"/>
+		FROM t_community_forum_content CFC
+		WHERE 1=1
+   	 	AND CFC.f_sys0_del_state = 0
+   	 	AND CFC.f_id = (
+			SELECT max(f_id) 
+			FROM t_community_forum_content 
+			WHERE 1=1 
+			AND f_sys0_del_state = 0
+			AND t_community_forum_type_f_id = #{forumType}
+   	 		AND t_group_building_f_id = #{groupBuildId}
+			)
+	</select>
+	
+	<!-- 根据类别查询帖子类别列表 分页 -->
+	<sql id="select_CommunityForum_TypeList_comm">
+		FROM t_community_forum_type CFT
+    	WHERE 1=1
+    	AND CFT.f_sys0_del_state = 0
+    	AND CFT.f_model_type = #{modelType}
+	</sql>
+	<select id="select_CommunityForum_TypeList_page" parameterType="java.util.Map" resultMap="communityForumTypeBase.communityForumTypeBaseMap_AppendTable">
+		SELECT <include refid="communityForumTypeBase.queryHead_AppendTable"/>
+		<include refid="select_CommunityForum_TypeList_comm"/>
+    	ORDER BY CFT.f_order ASC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	<select id="select_CommunityForum_TypeList_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="select_CommunityForum_TypeList_comm"/>
+	</select>
+	
+	
+	<!-- 查询帖子类别列表 不是八大业务模块的 -->
+	<sql id="select_CommunityForum_Type_Not8_List_comm">
+		FROM t_community_forum_type CFT
+    	WHERE 1=1
+    	AND CFT.f_sys0_del_state = 0
+    	AND CFT.f_model_type != 1 <!-- "1":"八大模块类别","2":"社区类别","3":"拼一拼","4":"换一换" -->
+	</sql>
+	<select id="select_CommunityForum_Type_Not8_List_page" parameterType="java.util.Map" resultMap="communityForumTypeBase.communityForumTypeBaseMap_AppendTable">
+		SELECT <include refid="communityForumTypeBase.queryHead_AppendTable"/>
+		<include refid="select_CommunityForum_Type_Not8_List_comm"/>
+    	ORDER BY CFT.f_order ASC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	<select id="select_CommunityForum_Type_Not8_List_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="select_CommunityForum_Type_Not8_List_comm"/>
+	</select>
+	
+	
+	
+	
+</mapper>

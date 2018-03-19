@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:维修服务商品规格表 t_dredge_product_specification -->
+<mapper namespace="dredgeProductSpecificationBase">
+	<resultMap type="DredgeProductSpecification" id="dredgeProductSpecificationBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_dredge_product_id" javaType="java.math.BigInteger" property="dredgeProductId"/>  <!-- 商品ID -->        <result column="f_specification" javaType="java.lang.String" property="specification"/>  <!-- 规格 -->        <result column="f_sell_price" javaType="java.lang.Long" property="sellPrice"/>  <!-- 销售价 -->        <result column="f_market_price" javaType="java.lang.Long" property="marketPrice"/>  <!-- 市场价 -->        <result column="f_price_unit" javaType="java.lang.String" property="priceUnit"/>  <!-- 计价单位 -->        <result column="f_is_visible" javaType="java.lang.Integer" property="isVisible"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="DredgeProductSpecification" id="dredgeProductSpecificationExtendMap" extends="dredgeProductSpecificationBaseMap">
+	</resultMap>
+	<resultMap type="DredgeProductSpecification" id="dredgeProductSpecificationBaseMap_AppendTable">
+        <id column="DPSid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="DPSdredgeProductId" javaType="java.math.BigInteger" property="dredgeProductId"/>  <!-- 商品ID -->        <result column="DPSspecification" javaType="java.lang.String" property="specification"/>  <!-- 规格 -->        <result column="DPSsellPrice" javaType="java.lang.Long" property="sellPrice"/>  <!-- 销售价 -->        <result column="DPSmarketPrice" javaType="java.lang.Long" property="marketPrice"/>  <!-- 市场价 -->        <result column="DPSpriceUnit" javaType="java.lang.String" property="priceUnit"/>  <!-- 计价单位 -->        <result column="DPSisVisible" javaType="java.lang.Integer" property="isVisible"/>  <!--  -->        <result column="DPSsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="DPSsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="DPSsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="DPSsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="DPSsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="DPSsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="DPSsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="DredgeProductSpecification" id="dredgeProductSpecificationBaseMap_AppendTable1">
+        <id column="DPS1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="DPS1dredgeProductId" javaType="java.math.BigInteger" property="dredgeProductId"/>  <!-- 商品ID -->        <result column="DPS1specification" javaType="java.lang.String" property="specification"/>  <!-- 规格 -->        <result column="DPS1sellPrice" javaType="java.lang.Long" property="sellPrice"/>  <!-- 销售价 -->        <result column="DPS1marketPrice" javaType="java.lang.Long" property="marketPrice"/>  <!-- 市场价 -->        <result column="DPS1priceUnit" javaType="java.lang.String" property="priceUnit"/>  <!-- 计价单位 -->        <result column="DPS1isVisible" javaType="java.lang.Integer" property="isVisible"/>  <!--  -->        <result column="DPS1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="DPS1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="DPS1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="DPS1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="DPS1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="DPS1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="DPS1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		DPS.f_id,DPS.f_dredge_product_id,DPS.f_specification,DPS.f_sell_price,DPS.f_market_price,DPS.f_price_unit,DPS.f_is_visible
+	</sql>
+	<sql id="queryHead_AppendTable">
+		DPS.f_id as DPSid,DPS.f_dredge_product_id as DPSdredgeProductId,DPS.f_specification as DPSspecification,DPS.f_sell_price as DPSsellPrice,DPS.f_market_price as DPSmarketPrice,DPS.f_price_unit as DPSpriceUnit,DPS.f_is_visible as DPSisVisible
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		DPS1.f_id as DPS1id,DPS1.f_dredge_product_id as DPS1dredgeProductId,DPS1.f_specification as DPS1specification,DPS1.f_sell_price as DPS1sellPrice,DPS1.f_market_price as DPS1marketPrice,DPS1.f_price_unit as DPS1priceUnit,DPS1.f_is_visible as DPS1isVisible
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (DPS.f_id = #{id} ) </if>        <if test="dredgeProductId != null">  and (DPS.f_dredge_product_id = #{dredgeProductId} ) </if>        <if test="specification != null">  and (DPS.f_specification = #{specification} ) </if>        <if test="sellPrice != null">  and (DPS.f_sell_price = #{sellPrice} ) </if>        <if test="marketPrice != null">  and (DPS.f_market_price = #{marketPrice} ) </if>        <if test="priceUnit != null">  and (DPS.f_price_unit = #{priceUnit} ) </if>        <if test="isVisible != null">  and (DPS.f_is_visible = #{isVisible} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (DPS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (DPS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (DPS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (DPS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (DPS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (DPS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (DPS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (DPS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (DPS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (DPS.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (DPS.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (DPS.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (DPS.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (DPS.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (DPS.f_id = #{id} ) </if>        <if test="dredgeProductId != null and !dredgeProductId.equals('')  ">  and (DPS.f_dredge_product_id = #{dredgeProductId} ) </if>        <if test="specification != null and !specification.equals('')  ">  and (DPS.f_specification like CONCAT('%',#{specification},'%') ) </if>        <if test="sellPrice != null and !sellPrice.equals('')  ">  and (DPS.f_sell_price = #{sellPrice} ) </if>        <if test="marketPrice != null and !marketPrice.equals('')  ">  and (DPS.f_market_price = #{marketPrice} ) </if>        <if test="priceUnit != null and !priceUnit.equals('')  ">  and (DPS.f_price_unit like CONCAT('%',#{priceUnit},'%') ) </if>        <if test="isVisible != null and !isVisible.equals('')  ">  and (DPS.f_is_visible = #{isVisible} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (DPS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (DPS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (DPS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (DPS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (DPS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (DPS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (DPS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (DPS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (DPS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (DPS.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (DPS.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (DPS.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (DPS.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (DPS.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="dredgeProductSpecificationBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="dredgeProductSpecificationBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="dredgeProductSpecificationBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="dredgeProductSpecificationBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_dredge_product_specification DPS    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(维修服务商品规格表)信息。 -->
+	<sql id="select_dredgeProductSpecification">
+		SELECT <include refid="dredgeProductSpecificationBase.queryHead"/>
+		<include refid="dredgeProductSpecificationBase.busiQueryCondition"/>
+		<include refid="dredgeProductSpecificationBase.dimCheckSql"/>
+		ORDER BY DPS.f_id DESC
+	</sql>
+	<select id="select_dredgeProductSpecification" parameterType="java.util.Map" resultMap="dredgeProductSpecificationBase.dredgeProductSpecificationExtendMap">
+		<include refid="dredgeProductSpecificationBase.select_dredgeProductSpecification"/>
+	</select>
+	
+	<!-- 根据条件分页查询(维修服务商品规格表)信息  -->
+	<sql id="select_dredgeProductSpecification_withPage">
+		SELECT <include refid="dredgeProductSpecificationBase.queryHead"/>
+		<include refid="dredgeProductSpecificationBase.busiQueryCondition"/>
+		<include refid="dredgeProductSpecificationBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_dredgeProductSpecification_withPage" resultMap="dredgeProductSpecificationBase.dredgeProductSpecificationExtendMap" parameterType="java.util.Map">
+		<include refid="dredgeProductSpecificationBase.select_dredgeProductSpecification_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(维修服务商品规格表)信息。 -->
+	<sql id="select_dredgeProductSpecification_bySeqId">
+		SELECT <include refid="dredgeProductSpecificationBase.queryHead"/>
+		<include refid="dredgeProductSpecificationBase.busiQueryCondition"/>
+		 and DPS.f_id = #{_parameter}
+	</sql>
+	<select id="select_dredgeProductSpecification_bySeqId" parameterType="java.math.BigInteger" resultMap="dredgeProductSpecificationBase.dredgeProductSpecificationBaseMap">
+		<include refid="dredgeProductSpecificationBase.select_dredgeProductSpecification_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(维修服务商品规格表)记录数  -->
+	<sql id="select_dredgeProductSpecification_count">
+		SELECT COUNT(*)
+		<include refid="dredgeProductSpecificationBase.busiQueryCount"/>
+		<include refid="dredgeProductSpecificationBase.dimCheckSql"/>
+	</sql>
+	<select id="select_dredgeProductSpecification_count" resultType="java.lang.Integer">
+		<include refid="dredgeProductSpecificationBase.select_dredgeProductSpecification_count"/>
+	</select>
+	
+	 <!-- 往(维修服务商品规格表)新增一条记录。 -->
+	 <sql id="insert_dredgeProductSpecification">
+		INSERT INTO t_dredge_product_specification 
+		(f_id,f_dredge_product_id,f_specification,f_sell_price,f_market_price,f_price_unit,f_is_visible,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{dredgeProductId},#{specification,jdbcType=VARCHAR},#{sellPrice},#{marketPrice},#{priceUnit,jdbcType=VARCHAR},#{isVisible},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_dredgeProductSpecification" parameterType="DredgeProductSpecification">
+		<include refid="dredgeProductSpecificationBase.insert_dredgeProductSpecification"/>
+    </insert>
+    
+	<!-- 批量新增(维修服务商品规格表)信息 -->
+    <insert id="insert_dredgeProductSpecification_Batch" parameterType="java.util.List">
+    	INSERT INTO t_dredge_product_specification 
+		(f_id,f_dredge_product_id,f_specification,f_sell_price,f_market_price,f_price_unit,f_is_visible,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.dredgeProductId},#{item.specification,jdbcType=VARCHAR},#{item.sellPrice},#{item.marketPrice},#{item.priceUnit,jdbcType=VARCHAR},#{item.isVisible},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(维修服务商品规格表)信息。 -->
+    <sql id="update_dredgeProductSpecification">
+		UPDATE t_dredge_product_specification		<trim prefix="SET" prefixOverrides=","> 		<if test="dredgeProductId != null and !dredgeProductId.equals('') "> ,f_dredge_product_id=#{dredgeProductId}</if> 		<if test="specification != null and !specification.equals('') "> ,f_specification=#{specification}</if> 		<if test="sellPrice != null and !sellPrice.equals('') "> ,f_sell_price=#{sellPrice}</if> 		<if test="marketPrice != null and !marketPrice.equals('') "> ,f_market_price=#{marketPrice}</if> 		<if test="priceUnit != null and !priceUnit.equals('') "> ,f_price_unit=#{priceUnit}</if> 		<if test="isVisible != null and !isVisible.equals('') "> ,f_is_visible=#{isVisible}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_dredgeProductSpecification" parameterType="DredgeProductSpecification">
+		<include refid="dredgeProductSpecificationBase.update_dredgeProductSpecification"/>
+    </update>
+    
+    <!-- 批量更新(维修服务商品规格表)信息。 -->
+    <update id="update_dredgeProductSpecification_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_product_specification		<trim prefix="SET" prefixOverrides=","> 		<if test="item.dredgeProductId != null and !item.dredgeProductId.equals('')  "> ,f_dredge_product_id=#{item.dredgeProductId}</if> 		<if test="item.specification != null and !item.specification.equals('')  "> ,f_specification=#{item.specification}</if> 		<if test="item.sellPrice != null and !item.sellPrice.equals('')  "> ,f_sell_price=#{item.sellPrice}</if> 		<if test="item.marketPrice != null and !item.marketPrice.equals('')  "> ,f_market_price=#{item.marketPrice}</if> 		<if test="item.priceUnit != null and !item.priceUnit.equals('')  "> ,f_price_unit=#{item.priceUnit}</if> 		<if test="item.isVisible != null and !item.isVisible.equals('')  "> ,f_is_visible=#{item.isVisible}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(维修服务商品规格表)信息_逻辑删除。 -->
+    <sql id="delete_dredgeProductSpecification_Logic">
+		UPDATE t_dredge_product_specification		<trim prefix="SET" prefixOverrides=","> 		<if test="dredgeProductId != null and !dredgeProductId.equals('')  "> ,f_dredge_product_id=#{dredgeProductId}</if> 		<if test="specification != null and !specification.equals('')  "> ,f_specification=#{specification}</if> 		<if test="sellPrice != null and !sellPrice.equals('')  "> ,f_sell_price=#{sellPrice}</if> 		<if test="marketPrice != null and !marketPrice.equals('')  "> ,f_market_price=#{marketPrice}</if> 		<if test="priceUnit != null and !priceUnit.equals('')  "> ,f_price_unit=#{priceUnit}</if> 		<if test="isVisible != null and !isVisible.equals('')  "> ,f_is_visible=#{isVisible}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_dredgeProductSpecification_Logic" parameterType="DredgeProductSpecification">
+		<include refid="dredgeProductSpecificationBase.delete_dredgeProductSpecification_Logic"/>
+    </update>
+    
+    <!-- 批量删除(维修服务商品规格表)信息_逻辑删除 -->
+    <update id="delete_dredgeProductSpecification_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_product_specification		<trim prefix="SET" prefixOverrides=","> 		<if test="item.dredgeProductId != null and !item.dredgeProductId.equals('')  "> ,f_dredge_product_id=#{item.dredgeProductId}</if> 		<if test="item.specification != null and !item.specification.equals('')  "> ,f_specification=#{item.specification}</if> 		<if test="item.sellPrice != null and !item.sellPrice.equals('')  "> ,f_sell_price=#{item.sellPrice}</if> 		<if test="item.marketPrice != null and !item.marketPrice.equals('')  "> ,f_market_price=#{item.marketPrice}</if> 		<if test="item.priceUnit != null and !item.priceUnit.equals('')  "> ,f_price_unit=#{item.priceUnit}</if> 		<if test="item.isVisible != null and !item.isVisible.equals('')  "> ,f_is_visible=#{item.isVisible}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(维修服务商品规格表)信息。 -->
+    <sql id="delete_dredgeProductSpecification">
+		DELETE FROM t_dredge_product_specification WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_dredgeProductSpecification" parameterType="java.lang.String">
+		<include refid="dredgeProductSpecificationBase.delete_dredgeProductSpecification"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(维修服务商品规格表)信息。 -->
+    <delete id="delete_dredgeProductSpecification_Batch" parameterType="java.util.List">
+		DELETE FROM t_dredge_product_specification WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

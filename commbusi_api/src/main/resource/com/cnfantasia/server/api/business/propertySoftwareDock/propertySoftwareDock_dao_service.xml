@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+	<bean id="propertySoftwareDockDao" class="com.propertySoftwareDock.base.dao.PropertySoftwareDockDao" parent="abstractBaseDao">
+		<property name="buildingBaseService" ref="buildingBaseService"/>
+		<property name="uuidManager" ref="uuidManager"/>
+		<property name="realRoomBaseService" ref="realRoomBaseService"/>
+		<property name="propertyProprietorBaseService" ref="propertyProprietorBaseService"/>
+	</bean>
+
+	<bean id="jeezService" class="com.propertySoftwareDock.jeez.service.JeezService">
+		<property name="propertySoftwareDockDao" ref="propertySoftwareDockDao"/>
+		<property name="realroomSoftwareFeeBaseService" ref="realroomSoftwareFeeBaseService"/>
+		<property name="payBillBaseService" ref="payBillBaseService"/>
+		<property name="uuidManager" ref="uuidManager"/>
+		<property name="commonRoomDao" ref="commonRoomDao"/>
+		<property name="sysParamManager" ref="sysParamManager"/>
+		<property name="gbSoftwareConfigBaseService" ref="gbSoftwareConfigBaseService"/>
+		<property name="realroomSoftwareMapperBaseService" ref="realroomSoftwareMapperBaseService"/>
+		<property name="buildingBaseService" ref="buildingBaseService"/>
+		<property name="realRoomBaseService" ref="realRoomBaseService"/>
+		<property name="propertyProprietorBaseService" ref="propertyProprietorBaseService"/>
+		<property name="propertyRepairBaseService" ref="propertyRepairBaseService"/>
+		<property name="dredgeBillBaseService" ref="dredgeBillBaseService"/>
+	</bean>
+</beans>  

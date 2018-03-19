@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:物业片区 t_property_district -->
+<mapper namespace="propertyDistrictBase">
+	<resultMap type="PropertyDistrict" id="propertyDistrictBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 片区名称 -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 片区描述 -->        <result column="f_director" javaType="java.lang.String" property="director"/>  <!-- 负责人 -->        <result column="f_director_phone" javaType="java.lang.String" property="directorPhone"/>  <!-- 负责人电话 -->        <result column="f_director_email" javaType="java.lang.String" property="directorEmail"/>  <!-- 负责人邮件 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PropertyDistrict" id="propertyDistrictExtendMap" extends="propertyDistrictBaseMap">
+	</resultMap>
+	<resultMap type="PropertyDistrict" id="propertyDistrictBaseMap_AppendTable">
+        <id column="PDid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PDname" javaType="java.lang.String" property="name"/>  <!-- 片区名称 -->        <result column="PDdesc" javaType="java.lang.String" property="desc"/>  <!-- 片区描述 -->        <result column="PDdirector" javaType="java.lang.String" property="director"/>  <!-- 负责人 -->        <result column="PDdirectorPhone" javaType="java.lang.String" property="directorPhone"/>  <!-- 负责人电话 -->        <result column="PDdirectorEmail" javaType="java.lang.String" property="directorEmail"/>  <!-- 负责人邮件 -->        <result column="PDsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PDsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PDsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PDsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PDsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PDsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PDsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PropertyDistrict" id="propertyDistrictBaseMap_AppendTable1">
+        <id column="PD1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PD1name" javaType="java.lang.String" property="name"/>  <!-- 片区名称 -->        <result column="PD1desc" javaType="java.lang.String" property="desc"/>  <!-- 片区描述 -->        <result column="PD1director" javaType="java.lang.String" property="director"/>  <!-- 负责人 -->        <result column="PD1directorPhone" javaType="java.lang.String" property="directorPhone"/>  <!-- 负责人电话 -->        <result column="PD1directorEmail" javaType="java.lang.String" property="directorEmail"/>  <!-- 负责人邮件 -->        <result column="PD1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PD1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PD1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PD1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PD1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PD1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PD1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PD.f_id,PD.f_name,PD.f_desc,PD.f_director,PD.f_director_phone,PD.f_director_email
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PD.f_id as PDid,PD.f_name as PDname,PD.f_desc as PDdesc,PD.f_director as PDdirector,PD.f_director_phone as PDdirectorPhone,PD.f_director_email as PDdirectorEmail
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PD1.f_id as PD1id,PD1.f_name as PD1name,PD1.f_desc as PD1desc,PD1.f_director as PD1director,PD1.f_director_phone as PD1directorPhone,PD1.f_director_email as PD1directorEmail
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PD.f_id = #{id} ) </if>        <if test="name != null">  and (PD.f_name = #{name} ) </if>        <if test="desc != null">  and (PD.f_desc = #{desc} ) </if>        <if test="director != null">  and (PD.f_director = #{director} ) </if>        <if test="directorPhone != null">  and (PD.f_director_phone = #{directorPhone} ) </if>        <if test="directorEmail != null">  and (PD.f_director_email = #{directorEmail} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PD.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PD.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PD.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PD.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PD.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PD.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PD.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PD.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PD.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (PD.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (PD.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (PD.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (PD.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (PD.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PD.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (PD.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="desc != null and !desc.equals('')  ">  and (PD.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="director != null and !director.equals('')  ">  and (PD.f_director like CONCAT('%',#{director},'%') ) </if>        <if test="directorPhone != null and !directorPhone.equals('')  ">  and (PD.f_director_phone like CONCAT('%',#{directorPhone},'%') ) </if>        <if test="directorEmail != null and !directorEmail.equals('')  ">  and (PD.f_director_email like CONCAT('%',#{directorEmail},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PD.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PD.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PD.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PD.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PD.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PD.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PD.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PD.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PD.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PD.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PD.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PD.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PD.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (PD.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="propertyDistrictBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="propertyDistrictBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="propertyDistrictBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="propertyDistrictBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_property_district PD    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(物业片区)信息。 -->
+	<sql id="select_propertyDistrict">
+		SELECT <include refid="propertyDistrictBase.queryHead"/>
+		<include refid="propertyDistrictBase.busiQueryCondition"/>
+		<include refid="propertyDistrictBase.dimCheckSql"/>
+		ORDER BY PD.f_id DESC
+	</sql>
+	<select id="select_propertyDistrict" parameterType="java.util.Map" resultMap="propertyDistrictBase.propertyDistrictExtendMap">
+		<include refid="propertyDistrictBase.select_propertyDistrict"/>
+	</select>
+	
+	<!-- 根据条件分页查询(物业片区)信息  -->
+	<sql id="select_propertyDistrict_withPage">
+		SELECT <include refid="propertyDistrictBase.queryHead"/>
+		<include refid="propertyDistrictBase.busiQueryCondition"/>
+		<include refid="propertyDistrictBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_propertyDistrict_withPage" resultMap="propertyDistrictBase.propertyDistrictExtendMap" parameterType="java.util.Map">
+		<include refid="propertyDistrictBase.select_propertyDistrict_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(物业片区)信息。 -->
+	<sql id="select_propertyDistrict_bySeqId">
+		SELECT <include refid="propertyDistrictBase.queryHead"/>
+		<include refid="propertyDistrictBase.busiQueryCondition"/>
+		 and PD.f_id = #{_parameter}
+	</sql>
+	<select id="select_propertyDistrict_bySeqId" parameterType="java.math.BigInteger" resultMap="propertyDistrictBase.propertyDistrictBaseMap">
+		<include refid="propertyDistrictBase.select_propertyDistrict_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(物业片区)记录数  -->
+	<sql id="select_propertyDistrict_count">
+		SELECT COUNT(*)
+		<include refid="propertyDistrictBase.busiQueryCount"/>
+		<include refid="propertyDistrictBase.dimCheckSql"/>
+	</sql>
+	<select id="select_propertyDistrict_count" resultType="java.lang.Integer">
+		<include refid="propertyDistrictBase.select_propertyDistrict_count"/>
+	</select>
+	
+	 <!-- 往(物业片区)新增一条记录。 -->
+	 <sql id="insert_propertyDistrict">
+		INSERT INTO t_property_district 
+		(f_id,f_name,f_desc,f_director,f_director_phone,f_director_email,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR},#{director,jdbcType=VARCHAR},#{directorPhone,jdbcType=VARCHAR},#{directorEmail,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_propertyDistrict" parameterType="PropertyDistrict">
+		<include refid="propertyDistrictBase.insert_propertyDistrict"/>
+    </insert>
+    
+	<!-- 批量新增(物业片区)信息 -->
+    <insert id="insert_propertyDistrict_Batch" parameterType="java.util.List">
+    	INSERT INTO t_property_district 
+		(f_id,f_name,f_desc,f_director,f_director_phone,f_director_email,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.desc,jdbcType=VARCHAR},#{item.director,jdbcType=VARCHAR},#{item.directorPhone,jdbcType=VARCHAR},#{item.directorEmail,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(物业片区)信息。 -->
+    <sql id="update_propertyDistrict">
+		UPDATE t_property_district		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="director != null and !director.equals('') "> ,f_director=#{director}</if> 		<if test="directorPhone != null and !directorPhone.equals('') "> ,f_director_phone=#{directorPhone}</if> 		<if test="directorEmail != null and !directorEmail.equals('') "> ,f_director_email=#{directorEmail}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_propertyDistrict" parameterType="PropertyDistrict">
+		<include refid="propertyDistrictBase.update_propertyDistrict"/>
+    </update>
+    
+    <!-- 批量更新(物业片区)信息。 -->
+    <update id="update_propertyDistrict_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_property_district		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.director != null and !item.director.equals('')  "> ,f_director=#{item.director}</if> 		<if test="item.directorPhone != null and !item.directorPhone.equals('')  "> ,f_director_phone=#{item.directorPhone}</if> 		<if test="item.directorEmail != null and !item.directorEmail.equals('')  "> ,f_director_email=#{item.directorEmail}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(物业片区)信息_逻辑删除。 -->
+    <sql id="delete_propertyDistrict_Logic">
+		UPDATE t_property_district		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="director != null and !director.equals('')  "> ,f_director=#{director}</if> 		<if test="directorPhone != null and !directorPhone.equals('')  "> ,f_director_phone=#{directorPhone}</if> 		<if test="directorEmail != null and !directorEmail.equals('')  "> ,f_director_email=#{directorEmail}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_propertyDistrict_Logic" parameterType="PropertyDistrict">
+		<include refid="propertyDistrictBase.delete_propertyDistrict_Logic"/>
+    </update>
+    
+    <!-- 批量删除(物业片区)信息_逻辑删除 -->
+    <update id="delete_propertyDistrict_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_property_district		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.director != null and !item.director.equals('')  "> ,f_director=#{item.director}</if> 		<if test="item.directorPhone != null and !item.directorPhone.equals('')  "> ,f_director_phone=#{item.directorPhone}</if> 		<if test="item.directorEmail != null and !item.directorEmail.equals('')  "> ,f_director_email=#{item.directorEmail}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(物业片区)信息。 -->
+    <sql id="delete_propertyDistrict">
+		DELETE FROM t_property_district WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_propertyDistrict" parameterType="java.lang.String">
+		<include refid="propertyDistrictBase.delete_propertyDistrict"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(物业片区)信息。 -->
+    <delete id="delete_propertyDistrict_Batch" parameterType="java.util.List">
+		DELETE FROM t_property_district WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

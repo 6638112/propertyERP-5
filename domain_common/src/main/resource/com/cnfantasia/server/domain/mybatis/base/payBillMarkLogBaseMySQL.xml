@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:物业缴费账单标记日志 t_pay_bill_mark_log -->
+<mapper namespace="payBillMarkLogBase">
+	<resultMap type="PayBillMarkLog" id="payBillMarkLogBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="t_pay_bill_f_id" javaType="java.math.BigInteger" property="tPayBillFId"/>  <!--  -->
+        <result column="t_real_room_f_id" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->
+        <result column="f_mobile" javaType="java.lang.String" property="mobile"/>  <!--  -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="PayBillMarkLog" id="payBillMarkLogExtendMap" extends="payBillMarkLogBaseMap">
+	</resultMap>
+	<resultMap type="PayBillMarkLog" id="payBillMarkLogBaseMap_AppendTable">
+        <id column="PBMLid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="PBMLtPayBillFId" javaType="java.math.BigInteger" property="tPayBillFId"/>  <!--  -->
+        <result column="PBMLtRealRoomFId" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->
+        <result column="PBMLmobile" javaType="java.lang.String" property="mobile"/>  <!--  -->
+        <result column="PBMLsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->
+        <result column="PBMLsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->
+        <result column="PBMLsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->
+        <result column="PBMLsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->
+        <result column="PBMLsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->
+        <result column="PBMLsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->
+        <result column="PBMLsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="PayBillMarkLog" id="payBillMarkLogBaseMap_AppendTable1">
+        <id column="PBML1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="PBML1tPayBillFId" javaType="java.math.BigInteger" property="tPayBillFId"/>  <!--  -->
+        <result column="PBML1tRealRoomFId" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->
+        <result column="PBML1mobile" javaType="java.lang.String" property="mobile"/>  <!--  -->
+        <result column="PBML1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->
+        <result column="PBML1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->
+        <result column="PBML1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->
+        <result column="PBML1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->
+        <result column="PBML1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->
+        <result column="PBML1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->
+        <result column="PBML1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PBML.f_id,PBML.t_pay_bill_f_id,PBML.t_real_room_f_id,PBML.f_mobile
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PBML.f_id as PBMLid,PBML.t_pay_bill_f_id as PBMLtPayBillFId,PBML.t_real_room_f_id as PBMLtRealRoomFId,PBML.f_mobile as PBMLmobile
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PBML1.f_id as PBML1id,PBML1.t_pay_bill_f_id as PBML1tPayBillFId,PBML1.t_real_room_f_id as PBML1tRealRoomFId,PBML1.f_mobile as PBML1mobile
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PBML.f_id = #{id} ) </if>
+        <if test="tPayBillFId != null">  and (PBML.t_pay_bill_f_id = #{tPayBillFId} ) </if>
+        <if test="tRealRoomFId != null">  and (PBML.t_real_room_f_id = #{tRealRoomFId} ) </if>
+        <if test="mobile != null">  and (PBML.f_mobile = #{mobile} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PBML.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (PBML.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (PBML.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PBML.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (PBML.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (PBML.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PBML.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (PBML.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (PBML.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (PBML.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (PBML.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (PBML.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (PBML.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (PBML.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PBML.f_id = #{id} ) </if>
+        <if test="tPayBillFId != null and !tPayBillFId.equals('')  ">  and (PBML.t_pay_bill_f_id = #{tPayBillFId} ) </if>
+        <if test="tRealRoomFId != null and !tRealRoomFId.equals('')  ">  and (PBML.t_real_room_f_id = #{tRealRoomFId} ) </if>
+        <if test="mobile != null and !mobile.equals('')  ">  and (PBML.f_mobile like CONCAT('%',#{mobile},'%') ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PBML.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (PBML.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (PBML.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PBML.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (PBML.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (PBML.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PBML.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (PBML.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (PBML.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PBML.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PBML.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PBML.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PBML.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (PBML.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="payBillMarkLogBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="payBillMarkLogBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="payBillMarkLogBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="payBillMarkLogBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_pay_bill_mark_log PBML
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(物业缴费账单标记日志)信息。 -->
+	<sql id="select_payBillMarkLog">
+		SELECT <include refid="payBillMarkLogBase.queryHead"/>
+		<include refid="payBillMarkLogBase.busiQueryCondition"/>
+		<include refid="payBillMarkLogBase.dimCheckSql"/>
+		ORDER BY PBML.f_id DESC
+	</sql>
+	<select id="select_payBillMarkLog" parameterType="java.util.Map" resultMap="payBillMarkLogBase.payBillMarkLogExtendMap">
+		<include refid="payBillMarkLogBase.select_payBillMarkLog"/>
+	</select>
+	
+	<!-- 根据条件分页查询(物业缴费账单标记日志)信息  -->
+	<sql id="select_payBillMarkLog_withPage">
+		SELECT <include refid="payBillMarkLogBase.queryHead"/>
+		<include refid="payBillMarkLogBase.busiQueryCondition"/>
+		<include refid="payBillMarkLogBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_payBillMarkLog_withPage" resultMap="payBillMarkLogBase.payBillMarkLogExtendMap" parameterType="java.util.Map">
+		<include refid="payBillMarkLogBase.select_payBillMarkLog_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(物业缴费账单标记日志)信息。 -->
+	<sql id="select_payBillMarkLog_bySeqId">
+		SELECT <include refid="payBillMarkLogBase.queryHead"/>
+		<include refid="payBillMarkLogBase.busiQueryCondition"/>
+		 and PBML.f_id = #{_parameter}
+	</sql>
+	<select id="select_payBillMarkLog_bySeqId" parameterType="java.math.BigInteger" resultMap="payBillMarkLogBase.payBillMarkLogBaseMap">
+		<include refid="payBillMarkLogBase.select_payBillMarkLog_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(物业缴费账单标记日志)记录数  -->
+	<sql id="select_payBillMarkLog_count">
+		SELECT COUNT(*)
+		<include refid="payBillMarkLogBase.busiQueryCount"/>
+		<include refid="payBillMarkLogBase.dimCheckSql"/>
+	</sql>
+	<select id="select_payBillMarkLog_count" resultType="java.lang.Integer">
+		<include refid="payBillMarkLogBase.select_payBillMarkLog_count"/>
+	</select>
+	
+	 <!-- 往(物业缴费账单标记日志)新增一条记录。 -->
+	 <sql id="insert_payBillMarkLog">
+		INSERT INTO t_pay_bill_mark_log 
+		(f_id,t_pay_bill_f_id,t_real_room_f_id,f_mobile,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tPayBillFId},#{tRealRoomFId},#{mobile,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_payBillMarkLog" parameterType="PayBillMarkLog">
+		<include refid="payBillMarkLogBase.insert_payBillMarkLog"/>
+    </insert>
+    
+	<!-- 批量新增(物业缴费账单标记日志)信息 -->
+    <insert id="insert_payBillMarkLog_Batch" parameterType="java.util.List">
+    	INSERT INTO t_pay_bill_mark_log 
+		(f_id,t_pay_bill_f_id,t_real_room_f_id,f_mobile,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tPayBillFId},#{item.tRealRoomFId},#{item.mobile,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(物业缴费账单标记日志)信息。 -->
+    <sql id="update_payBillMarkLog">
+		UPDATE t_pay_bill_mark_log
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tPayBillFId != null and !tPayBillFId.equals('') "> ,t_pay_bill_f_id=#{tPayBillFId}</if>
+ 		<if test="tRealRoomFId != null and !tRealRoomFId.equals('') "> ,t_real_room_f_id=#{tRealRoomFId}</if>
+ 		<if test="mobile != null and !mobile.equals('') "> ,f_mobile=#{mobile}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_payBillMarkLog" parameterType="PayBillMarkLog">
+		<include refid="payBillMarkLogBase.update_payBillMarkLog"/>
+    </update>
+    
+    <!-- 批量更新(物业缴费账单标记日志)信息。 -->
+    <update id="update_payBillMarkLog_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_bill_mark_log
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tPayBillFId != null and !item.tPayBillFId.equals('')  "> ,t_pay_bill_f_id=#{item.tPayBillFId}</if>
+ 		<if test="item.tRealRoomFId != null and !item.tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{item.tRealRoomFId}</if>
+ 		<if test="item.mobile != null and !item.mobile.equals('')  "> ,f_mobile=#{item.mobile}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(物业缴费账单标记日志)信息_逻辑删除。 -->
+    <sql id="delete_payBillMarkLog_Logic">
+		UPDATE t_pay_bill_mark_log
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tPayBillFId != null and !tPayBillFId.equals('')  "> ,t_pay_bill_f_id=#{tPayBillFId}</if>
+ 		<if test="tRealRoomFId != null and !tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{tRealRoomFId}</if>
+ 		<if test="mobile != null and !mobile.equals('')  "> ,f_mobile=#{mobile}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_payBillMarkLog_Logic" parameterType="PayBillMarkLog">
+		<include refid="payBillMarkLogBase.delete_payBillMarkLog_Logic"/>
+    </update>
+    
+    <!-- 批量删除(物业缴费账单标记日志)信息_逻辑删除 -->
+    <update id="delete_payBillMarkLog_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_bill_mark_log
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tPayBillFId != null and !item.tPayBillFId.equals('')  "> ,t_pay_bill_f_id=#{item.tPayBillFId}</if>
+ 		<if test="item.tRealRoomFId != null and !item.tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{item.tRealRoomFId}</if>
+ 		<if test="item.mobile != null and !item.mobile.equals('')  "> ,f_mobile=#{item.mobile}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(物业缴费账单标记日志)信息。 -->
+    <sql id="delete_payBillMarkLog">
+		DELETE FROM t_pay_bill_mark_log WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_payBillMarkLog" parameterType="java.lang.String">
+		<include refid="payBillMarkLogBase.delete_payBillMarkLog"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(物业缴费账单标记日志)信息。 -->
+    <delete id="delete_payBillMarkLog_Batch" parameterType="java.util.List">
+		DELETE FROM t_pay_bill_mark_log WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

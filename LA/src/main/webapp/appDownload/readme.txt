@@ -1,0 +1,2 @@
+appDownload目录为月卡续费顶部下载图片跳转页面：
+appDownload目录下所有文件已移动到API项目中，但是/payCarFee/newCarDown.jsp页面下载链接地址还未改过来

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  秒杀活动 -->
+<mapper namespace="limitBuy">
+
+    <resultMap id="limitBuyInfoMap" type="com.cnfantasia.server.api.limitBuy.entity.LimitBuyInfo">
+        <id column="f_id" property="limitBuyId" javaType="java.math.BigInteger"/>
+        <result column="f_title" property="limitBuyTitle" javaType="java.lang.String"/>
+        <result column="f_activity_price" property="limitBuyPrice" javaType="java.lang.Integer"/>
+        <result column="f_max_can_buy" property="maxCanBuy" javaType="int"/>
+        <result column="productId" property="productId" javaType="java.math.BigInteger"/>
+        <result column="productName" property="productName" javaType="java.lang.String"/>
+        <result column="f_left_count" property="leftCount" javaType="java.lang.Integer"/>
+        <result column="shelfId" property="shelfId" javaType="java.math.BigInteger"/>
+        <result column="shelfPrice" property="shelfPrice" javaType="java.lang.Integer"/>
+        <result column="shelfPriceDiscount" property="shelfPriceDiscount" javaType="java.lang.Integer"/>
+        <result column="merchantId" property="merchantId" javaType="java.math.BigInteger"/>
+        <result column="merchantName" property="merchantName" javaType="java.lang.String"/>
+        <result column="limitBuyPic" property="limitBuyPic" javaType="java.lang.String"/>
+        <result column="status" property="status" javaType="java.lang.Integer"/>
+        <result column="activityStartTime" property="activityStartTime" javaType="java.lang.String"/>
+        <result column="activityEndTime" property="activityEndTime" javaType="java.lang.String"/>
+        <result column="f_desc" javaType="java.lang.String" property="productDesc" />
+    </resultMap>
+
+    <resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyStore" id="limitBuyStoreMap">
+        <id column="merchantId" javaType="java.lang.Long" property="id"/>
+        <result column="merchantName" javaType="java.lang.String" property="storeName"/>
+        <result column="f_phone" javaType="java.lang.String" property="phone"/>
+        <result column="f_address" javaType="java.lang.String" property="address"/>
+        <result column="f_store_pic" javaType="java.lang.String" property="storePic"/>
+        <result column="f_pro_pic" javaType="java.lang.String" property="proPic"/>
+        <result column="f_start_time" javaType="java.lang.String" property="startTime"/>
+        <result column="f_end_time" javaType="java.lang.String" property="endTime"/>
+        <result column="f_distance" javaType="java.lang.Integer" property="distance"/>
+        <result column="f_deliveTime" javaType="java.lang.Integer" property="deliveTime"/>
+        <result column="f_sys0_upd_time" javaType="java.util.Date" property="updTime" />
+        <collection property="ebuyProdTypeList" column="f_id" select="ebuyNew.getStoreProdTypes2" />
+        <collection property="limitBuyList" ofType="com.cnfantasia.server.api.limitBuy.entity.LimitBuyInfo">
+            <id column="f_id" property="limitBuyId" javaType="java.math.BigInteger"/>
+            <result column="f_title" property="limitBuyTitle" javaType="java.lang.String"/>
+            <result column="f_activity_price" property="limitBuyPrice" javaType="java.lang.Integer"/>
+            <result column="productId" property="productId" javaType="java.math.BigInteger"/>
+            <result column="productName" property="productName" javaType="java.lang.String"/>
+            <result column="f_left_count" property="leftCount" javaType="java.lang.Integer"/>
+            <result column="shelfId" property="shelfId" javaType="java.math.BigInteger"/>
+            <result column="shelfPrice" property="shelfPrice" javaType="java.lang.Integer"/>
+            <result column="shelfPriceDiscount" property="shelfPriceDiscount" javaType="java.lang.Integer"/>
+            <result column="merchantId" property="merchantId" javaType="java.math.BigInteger"/>
+            <result column="merchantName" property="merchantName" javaType="java.lang.String"/>
+            <result column="limitBuyPic" property="limitBuyPic" javaType="java.lang.String"/>
+            <result column="status" property="status" javaType="java.lang.Integer"/>
+            <result column="activityStartTime" property="activityStartTime" javaType="java.lang.String"/>
+            <result column="activityEndTime" property="activityEndTime" javaType="java.lang.String"/>
+        </collection>
+    </resultMap>
+
+    <sql id="limitBuyInfoQryHead">
+        lba.f_id, lba.f_title, lba.f_activity_price, lba.f_max_can_buy,
+         p.f_id productId,p.f_name productName,lba.f_left_count,
+         ps.f_id shelfId, ps.f_price shelfPrice, ps.f_price_discount shelfPriceDiscount,
+         sm.f_id merchantId, sm.f_name merchantName,
+         p.f_pic_base limitBuyPic,
+         date_format(lba.f_activity_start_time,'%Y-%m-%d %T') activityStartTime,date_format(lba.f_activity_end_time,'%Y-%m-%d %T') activityEndTime,
+        CASE WHEN lba.f_activity_start_time > now() THEN 0 WHEN lba.f_activity_start_time &lt; now() AND lba.f_activity_end_time > now() THEN 1 ELSE 2 END status, 
+        p.f_desc
+    </sql>
+    <sql id="limitBuyInfoQryJoin">
+        INNER JOIN t_ebuy_product p ON lba.t_ebuy_product_f_id = p.f_id AND p.f_sys0_del_state = 0 and p.f_status_audit = 5 and p.f_status = 0
+        INNER JOIN t_ebuy_product_shelf ps ON ps.t_ebuy_product_id = p.f_id AND ps.f_sys0_del_state = 0 and ps.f_up_shelf_state = 0
+        INNER JOIN t_ebuy_product_type pt on pt.f_id = ps.t_ebuy_product_type_id and pt.f_sys0_del_state = 0 and pt.f_wlApp_type = 1
+        INNER JOIN t_ebuy_supply_merchant sm on p.t_supply_merchant_f_id = sm.f_id and sm.f_sys0_del_state = 0
+        left join t_ebuy_supply_merchant_has_group_building smgb on smgb.t_ebuy_supply_merchant_id = sm.f_id and smgb.f_sys0_del_state = 0
+    </sql>
+
+    <select id="getLimitBuyListByGbId" parameterType="map" resultMap="limitBuyInfoMap">
+        select <include refid="limitBuyInfoQryHead"/>
+        from t_limit_buy_activity lba
+        <include refid="limitBuyInfoQryJoin"/>
+        where lba.f_sys0_del_state = 0 and lba.f_left_count > 0
+         and pt.f_wlApp_type = #{appType}
+        and lba.f_activity_start_time &lt; now() AND lba.f_activity_end_time > now()
+        <if test="positionType != null">
+            AND lba.f_position_type = #{positionType}
+        </if>
+        and ((smgb.t_group_building_id is not null and smgb.t_group_building_id = #{gbId})
+              or (smgb.t_group_building_id is null and sm.f_type = 1)
+              or (smgb.t_group_building_id is null and smgb.t_address_city_id is not null and sm.f_type = 4
+                and EXISTS (SELECT 1 FROM t_address_city ac INNER JOIN t_address_block ab ON ac.f_id = ab.t_city_f_id AND ab.f_sys0_del_state = 0
+                                INNER JOIN t_group_building gb ON ab.f_id = gb.t_block_f_id AND gb.f_sys0_del_state = 0
+                                WHERE ac.f_sys0_del_state = 0 AND gb.f_id = #{gbId} AND ac.f_id = smgb.t_address_city_id)))
+        ORDER BY lba.f_activity_start_time
+        <if test="_begin != null and _length != null">
+            limit #{_begin}, #{_length}
+        </if>
+    </select>
+    
+    <select id="getLimitBuyInfo" parameterType="map" resultMap="limitBuyInfoMap">
+        SELECT <include refid="limitBuyInfoQryHead"/>
+        from t_limit_buy_activity lba
+        <include refid="limitBuyInfoQryJoin"/>
+        WHERE lba.f_id = #{limitBuyId} limit 1
+        -- pt.f_wlApp_type   added by wenfq 不限制哪个渠道过来抢购
+    </select>
+
+    <select id="getLimitBuyListByMerchant" parameterType="map" resultMap="limitBuyInfoMap">
+        SELECT DISTINCT <include refid="limitBuyInfoQryHead"/>
+        from t_limit_buy_activity lba
+        <include refid="limitBuyInfoQryJoin"/>
+        WHERE lba.f_left_count > 0 and pt.f_wlApp_type = #{appType} AND p.t_supply_merchant_f_id = #{merchantId}
+        <choose>
+            <when test="status != null and status == 1">
+                AND lba.f_activity_start_time &lt;= now() AND lba.f_activity_end_time >= now()
+            </when>
+            <when test="status != null and status == 0">
+                AND lba.f_activity_start_time >= now() AND lba.f_activity_end_time >= now()
+            </when>
+            <when test="status != null and status ==2">
+                AND lba.f_activity_start_time &lt;= now() AND lba.f_activity_end_time &lt;= now()
+            </when>
+            <otherwise>
+                AND lba.f_activity_end_time >= now() AND lba.f_activity_end_time > lba.f_activity_start_time
+            </otherwise>
+        </choose>
+        ORDER BY lba.f_activity_start_time
+        <if test="_begin != null and _length != null">
+            limit #{_begin}, #{_length}
+        </if>
+    </select>
+
+    <select id="getLimitBuyListWithMerchant" parameterType="map" resultMap="limitBuyStoreMap">
+        select <include refid="limitBuyInfoQryHead"/>, sm.*
+        from t_limit_buy_activity lba
+        <include refid="limitBuyInfoQryJoin"/>
+        where lba.f_sys0_del_state = 0 and lba.f_left_count > 0
+        and pt.f_wlApp_type = #{appType}
+        <choose>
+            <when test="status != null and status == 1">
+                AND lba.f_activity_start_time &lt;= now() AND lba.f_activity_end_time >= now()
+            </when>
+            <when test="status != null and status == 0">
+                AND lba.f_activity_start_time >= now() AND lba.f_activity_end_time >= now()
+            </when>
+            <when test="status != null and status ==2">
+                AND lba.f_activity_start_time &lt;= now() AND lba.f_activity_end_time &lt;= now()
+            </when>
+            <otherwise>
+                AND lba.f_activity_end_time >= now() AND lba.f_activity_end_time > lba.f_activity_start_time
+            </otherwise>
+        </choose>
+        <if test="positionType != null">
+            AND lba.f_position_type = #{positionType}
+        </if>
+        and ((smgb.t_group_building_id is not null and smgb.t_group_building_id = #{gbId})
+        or (smgb.t_group_building_id is null and sm.f_type = 1)
+        or (smgb.t_group_building_id is null and smgb.t_address_city_id is not null and sm.f_type = 4
+        and EXISTS (SELECT 1 FROM t_address_city ac INNER JOIN t_address_block ab ON ac.f_id = ab.t_city_f_id AND ab.f_sys0_del_state = 0
+        INNER JOIN t_group_building gb ON ab.f_id = gb.t_block_f_id AND gb.f_sys0_del_state = 0
+        WHERE ac.f_sys0_del_state = 0 AND gb.f_id = #{gbId} AND ac.f_id = smgb.t_address_city_id)))
+        ORDER BY sm.f_order DESC , lba.f_activity_start_time
+        <if test="_begin != null and _length != null">
+            limit #{_begin}, #{_length}
+        </if>
+    </select>
+
+	<!-- 查出用户在限购活动时中购买的数量 -->
+	<select id="selectBuyCountWithActivtyIdForUser" parameterType="map" resultType="int">
+		SELECT
+			IFNULL(sum(f_product_count),0) buyCount
+		FROM
+			t_user_has_t_limit_buy_activity ulbc
+		WHERE
+			f_sys0_del_state = 0
+		and t_user_f_id = #{userId}
+		AND t_limit_buy_activity_f_id = #{limitBuyId};
+	</select>
+	
+	<!-- 删除订单时，也要删参与的限时购,  -->
+	<update id="deleteLimitActivityByOrderId" parameterType="java.math.BigInteger">
+		UPDATE t_user_has_t_limit_buy_activity ulba
+		JOIN t_ebuy_order eo ON eo.f_id = ulba.t_ebuy_order_f_id
+		JOIN t_limit_buy_activity lba on lba.f_id =  ulba.t_limit_buy_activity_f_id 
+		SET ulba.f_sys0_del_state = 1, ulba.f_sys0_del_time = SYSDATE(),
+		lba.f_left_count = lba.f_left_count + ulba.f_product_count, lba.f_sys0_upd_time = SYSDATE()
+		WHERE ulba.t_ebuy_order_f_id = #{orderId};
+	</update>
+
+    <select id="getHotSaleProductByStoreId" parameterType="java.math.BigInteger" resultMap="ebuyProductBase.ebuyProductBaseMap">
+        SELECT DISTINCT
+            EPS.f_id,EP.f_src_id,EP.t_supply_merchant_f_id,EP.f_name,EP.f_name_mini,EPS.f_price,EPS.f_price_discount,
+            EP.f_purchase_price,EP.f_default_delivery_id,EP.f_left_count,date_format(EP.f_create_time,'%Y-%m-%d %T') as f_create_time,
+            EP.f_sel_num,EP.f_pic_base,EP.f_pic_base_mini,EP.t_ebuy_product_type_f_id,EP.t_ebuy_product_type_for_enter_f_id,EP.t_ebuy_delivery_desc_id,EP.f_price_unit,EP.f_specification,EP.f_desc,EP.f_status,EP.f_status_audit,date_format(EP.f_up_shelf_time,'%Y-%m-%d %T') as f_up_shelf_time,date_format(EP.f_down_shelf_time,'%Y-%m-%d %T') as f_down_shelf_time,EP.f_pic_special,EP.f_price_point,EP.f_price_discount_point,EP.f_point_type,EP.f_wlApp_type,EP.f_special_product_type,EP.f_application_rang,date_format(EP.f_end_time,'%Y-%m-%d %T') as f_end_time,EP.f_convert_process,EP.f_attention_info,EP.f_film_ticket_num,EP.t_source_of_supply_f_id,EP.f_is_hot_sale,date_format(EP.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time
+        FROM
+            t_ebuy_product EP
+        INNER JOIN t_ebuy_product_shelf EPS ON EPS.t_ebuy_product_id = EP.f_id AND EPS.f_up_shelf_state = 0
+        inner join t_ebuy_product_type pt on EPS.t_ebuy_product_type_id = pt.f_id and pt.f_wlApp_type = 1 and pt.f_sys0_del_state = 0
+        INNER JOIN t_ebuy_supply_merchant sm ON EP.t_supply_merchant_f_id = sm.f_id
+        WHERE
+            EP.f_sys0_del_state = 0
+        AND EP.f_is_hot_sale = 1
+        AND EP.f_status_audit = 5
+        AND EP.f_status = 0
+        AND EP.t_supply_merchant_f_id = #{storeId}
+        ORDER BY
+            EPS.f_sort DESC;
+    </select>
+
+	<select id="getEbuyProductByCondition" parameterType="java.util.Map" resultMap="ebuyProductBase.ebuyProductExtendMap">
+		SELECT <include refid="ebuyProductBase.queryHead"/>
+		FROM t_ebuy_product EP 
+		 inner join t_ebuy_product_shelf PS ON PS.t_ebuy_product_id = EP.F_ID AND PS.f_up_shelf_state = 0 and EP.f_status_audit = 5 and EP.f_status = 0
+		 inner join t_ebuy_product_type PT on PT.f_id = PS.t_ebuy_product_type_id and PT.f_wlApp_type = 1
+    	 WHERE 1=1
+		<include refid="ebuyProductBase.dimCheckSql"/>
+		ORDER BY EP.f_id DESC
+	</select>
+	
+    <!-- 配送方式实体类 -->
+    <resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuyDeliveryMethodEntity" id="ebuyDeliveryMethodEntity_Map_Append"
+               extends="ebuyDeliveryMethodBase.ebuyDeliveryMethodBaseMap">
+    </resultMap>
+    <!-- 根据供应商Id查询支持的配送方式 -->
+    <select id="select_EbuyDeliveryMethodList_ByMerId" parameterType="java.util.Map" resultMap="ebuyDeliveryMethodEntity_Map_Append">
+        SELECT <include refid="ebuyDeliveryMethodBase.queryHead"/>
+        FROM t_ebuy_delivery_method EDM
+        INNER JOIN t_ebuy_supply_merchant_has_t_ebuy_delivery_method ESMHTEDM ON EDM.f_id = ESMHTEDM.t_ebuy_delivery_method_f_id AND ESMHTEDM.f_sys0_del_state = 0
+        INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = ESMHTEDM.t_ebuy_supply_merchant_f_id AND ESM.f_sys0_del_state = 0
+        AND ESM.f_id = #{merchantId}
+        WHERE 1=1
+        AND EDM.f_sys0_del_state = 0
+        ORDER BY EDM.f_price_amount_start ASC
+    </select>
+    
+    <!--活动进行中，将商品售价改为限购价； 限时购活动结束或库存为0时，还原限时购价格 -->
+    <update id="synchronizeProductPrice1">
+    	
+	    UPDATE t_ebuy_product_shelf eps <!-- 售价同步为限购价 -->
+			JOIN t_limit_buy_activity lba ON lba.t_ebuy_product_f_id = eps.t_ebuy_product_id
+			SET eps.f_price_discount = lba.f_activity_price,eps.f_sys0_upd_time = SYSDATE()
+			where lba.f_sys0_del_state = 0
+			and eps.f_price_discount != lba.f_activity_price
+			and eps.f_sys0_del_state = 0
+			and lba.f_activity_price &gt; 0
+		and lba.f_activity_end_time &gt; SYSDATE() and lba.f_activity_start_time &lt; SYSDATE();
+    </update>
+
+    <update id="synchronizeProductPrice2">
+	    UPDATE t_ebuy_product_shelf eps  <!-- 过期3分钟后，还原为原来的售价 -->
+		JOIN t_limit_buy_activity lba ON lba.t_ebuy_product_f_id = eps.t_ebuy_product_id
+		SET eps.f_price_discount = lba.f_price_discount,eps.f_sys0_upd_time = SYSDATE()
+		where lba.f_sys0_del_state = 0
+		and eps.f_price_discount != lba.f_price_discount
+		and eps.f_sys0_del_state = 0
+		and lba.f_price_discount &gt; 0
+		and (
+              (TIMESTAMPDIFF(MINUTE, SYSDATE(), lba.f_activity_end_time) BETWEEN 0 and 3 ) -- 当天有活动过期的,且过期3分钟之内的
+			or
+				(lba.f_left_count &lt;= 0 and lba.f_activity_end_time &gt; SYSDATE()) -- 活动期内库存变为0
+			);
+    </update>
+</mapper>

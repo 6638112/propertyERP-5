@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:小区信息扩展表 t_group_building_ext -->
+<mapper namespace="groupBuildingExtBase">
+	<resultMap type="GroupBuildingExt" id="groupBuildingExtBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_valid_by_mobile" javaType="java.lang.Integer" property="validByMobile"/>  <!-- 是否根据手机号自动验证门牌 -->        <result column="f_fixed_fee_status" javaType="java.lang.Integer" property="fixedFeeStatus"/>  <!-- 是否开启定期收费配置={"0" -->        <result column="f_meter_fee_status" javaType="java.lang.Integer" property="meterFeeStatus"/>  <!-- 是否开启抄表收费配置={"0" -->        <result column="f_temp_fee_status" javaType="java.lang.Integer" property="tempFeeStatus"/>  <!-- 是否开启临时收费配置={"0" -->        <result column="f_cannot_ask_help" javaType="java.lang.Integer" property="cannotAskHelp"/>  <!-- 是否不开启寻求帮助={"0" -->        <result column="f_open_bank_collection" javaType="java.lang.Integer" property="openBankCollection"/>  <!-- 是否不开启银行托收={"0" -->        <result column="f_ask_help_placehole" javaType="java.lang.String" property="askHelpPlacehole"/>  <!-- 寻求帮助文字配置，分号隔开 -->        <result column="f_pay_to_pc" javaType="java.lang.Integer" property="payToPc"/>  <!-- 是否支付到物业公司={"0" -->
+	</resultMap>
+	<resultMap type="GroupBuildingExt" id="groupBuildingExtExtendMap" extends="groupBuildingExtBaseMap">
+	</resultMap>
+	<resultMap type="GroupBuildingExt" id="groupBuildingExtBaseMap_AppendTable">
+        <id column="GBEid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="GBEvalidByMobile" javaType="java.lang.Integer" property="validByMobile"/>  <!-- 是否根据手机号自动验证门牌 -->        <result column="GBEfixedFeeStatus" javaType="java.lang.Integer" property="fixedFeeStatus"/>  <!-- 是否开启定期收费配置={"0" -->        <result column="GBEmeterFeeStatus" javaType="java.lang.Integer" property="meterFeeStatus"/>  <!-- 是否开启抄表收费配置={"0" -->        <result column="GBEtempFeeStatus" javaType="java.lang.Integer" property="tempFeeStatus"/>  <!-- 是否开启临时收费配置={"0" -->        <result column="GBEcannotAskHelp" javaType="java.lang.Integer" property="cannotAskHelp"/>  <!-- 是否不开启寻求帮助={"0" -->        <result column="GBEopenBankCollection" javaType="java.lang.Integer" property="openBankCollection"/>  <!-- 是否不开启银行托收={"0" -->        <result column="GBEaskHelpPlacehole" javaType="java.lang.String" property="askHelpPlacehole"/>  <!-- 寻求帮助文字配置，分号隔开 -->        <result column="GBEpayToPc" javaType="java.lang.Integer" property="payToPc"/>  <!-- 是否支付到物业公司={"0" -->
+	</resultMap>
+	<resultMap type="GroupBuildingExt" id="groupBuildingExtBaseMap_AppendTable1">
+        <id column="GBE1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="GBE1validByMobile" javaType="java.lang.Integer" property="validByMobile"/>  <!-- 是否根据手机号自动验证门牌 -->        <result column="GBE1fixedFeeStatus" javaType="java.lang.Integer" property="fixedFeeStatus"/>  <!-- 是否开启定期收费配置={"0" -->        <result column="GBE1meterFeeStatus" javaType="java.lang.Integer" property="meterFeeStatus"/>  <!-- 是否开启抄表收费配置={"0" -->        <result column="GBE1tempFeeStatus" javaType="java.lang.Integer" property="tempFeeStatus"/>  <!-- 是否开启临时收费配置={"0" -->        <result column="GBE1cannotAskHelp" javaType="java.lang.Integer" property="cannotAskHelp"/>  <!-- 是否不开启寻求帮助={"0" -->        <result column="GBE1openBankCollection" javaType="java.lang.Integer" property="openBankCollection"/>  <!-- 是否不开启银行托收={"0" -->        <result column="GBE1askHelpPlacehole" javaType="java.lang.String" property="askHelpPlacehole"/>  <!-- 寻求帮助文字配置，分号隔开 -->        <result column="GBE1payToPc" javaType="java.lang.Integer" property="payToPc"/>  <!-- 是否支付到物业公司={"0" -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		GBE.f_id,GBE.f_valid_by_mobile,GBE.f_fixed_fee_status,GBE.f_meter_fee_status,GBE.f_temp_fee_status,GBE.f_cannot_ask_help,GBE.f_open_bank_collection,GBE.f_ask_help_placehole,GBE.f_pay_to_pc
+	</sql>
+	<sql id="queryHead_AppendTable">
+		GBE.f_id as GBEid,GBE.f_valid_by_mobile as GBEvalidByMobile,GBE.f_fixed_fee_status as GBEfixedFeeStatus,GBE.f_meter_fee_status as GBEmeterFeeStatus,GBE.f_temp_fee_status as GBEtempFeeStatus,GBE.f_cannot_ask_help as GBEcannotAskHelp,GBE.f_open_bank_collection as GBEopenBankCollection,GBE.f_ask_help_placehole as GBEaskHelpPlacehole,GBE.f_pay_to_pc as GBEpayToPc
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		GBE1.f_id as GBE1id,GBE1.f_valid_by_mobile as GBE1validByMobile,GBE1.f_fixed_fee_status as GBE1fixedFeeStatus,GBE1.f_meter_fee_status as GBE1meterFeeStatus,GBE1.f_temp_fee_status as GBE1tempFeeStatus,GBE1.f_cannot_ask_help as GBE1cannotAskHelp,GBE1.f_open_bank_collection as GBE1openBankCollection,GBE1.f_ask_help_placehole as GBE1askHelpPlacehole,GBE1.f_pay_to_pc as GBE1payToPc
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (GBE.f_id = #{id} ) </if>        <if test="validByMobile != null">  and (GBE.f_valid_by_mobile = #{validByMobile} ) </if>        <if test="fixedFeeStatus != null">  and (GBE.f_fixed_fee_status = #{fixedFeeStatus} ) </if>        <if test="meterFeeStatus != null">  and (GBE.f_meter_fee_status = #{meterFeeStatus} ) </if>        <if test="tempFeeStatus != null">  and (GBE.f_temp_fee_status = #{tempFeeStatus} ) </if>        <if test="cannotAskHelp != null">  and (GBE.f_cannot_ask_help = #{cannotAskHelp} ) </if>        <if test="openBankCollection != null">  and (GBE.f_open_bank_collection = #{openBankCollection} ) </if>        <if test="askHelpPlacehole != null">  and (GBE.f_ask_help_placehole = #{askHelpPlacehole} ) </if>        <if test="payToPc != null">  and (GBE.f_pay_to_pc = #{payToPc} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (GBE.f_id = #{id} ) </if>        <if test="validByMobile != null and !validByMobile.equals('')  ">  and (GBE.f_valid_by_mobile = #{validByMobile} ) </if>        <if test="fixedFeeStatus != null and !fixedFeeStatus.equals('')  ">  and (GBE.f_fixed_fee_status = #{fixedFeeStatus} ) </if>        <if test="meterFeeStatus != null and !meterFeeStatus.equals('')  ">  and (GBE.f_meter_fee_status = #{meterFeeStatus} ) </if>        <if test="tempFeeStatus != null and !tempFeeStatus.equals('')  ">  and (GBE.f_temp_fee_status = #{tempFeeStatus} ) </if>        <if test="cannotAskHelp != null and !cannotAskHelp.equals('')  ">  and (GBE.f_cannot_ask_help = #{cannotAskHelp} ) </if>        <if test="openBankCollection != null and !openBankCollection.equals('')  ">  and (GBE.f_open_bank_collection = #{openBankCollection} ) </if>        <if test="askHelpPlacehole != null and !askHelpPlacehole.equals('')  ">  and (GBE.f_ask_help_placehole like CONCAT('%',#{askHelpPlacehole},'%') ) </if>        <if test="payToPc != null and !payToPc.equals('')  ">  and (GBE.f_pay_to_pc = #{payToPc} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="groupBuildingExtBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="groupBuildingExtBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="groupBuildingExtBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="groupBuildingExtBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_group_building_ext GBE    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(小区信息扩展表)信息。 -->
+	<sql id="select_groupBuildingExt">
+		SELECT <include refid="groupBuildingExtBase.queryHead"/>
+		<include refid="groupBuildingExtBase.busiQueryCondition"/>
+		<include refid="groupBuildingExtBase.dimCheckSql"/>
+		ORDER BY GBE.f_id DESC
+	</sql>
+	<select id="select_groupBuildingExt" parameterType="java.util.Map" resultMap="groupBuildingExtBase.groupBuildingExtExtendMap">
+		<include refid="groupBuildingExtBase.select_groupBuildingExt"/>
+	</select>
+	
+	<!-- 根据条件分页查询(小区信息扩展表)信息  -->
+	<sql id="select_groupBuildingExt_withPage">
+		SELECT <include refid="groupBuildingExtBase.queryHead"/>
+		<include refid="groupBuildingExtBase.busiQueryCondition"/>
+		<include refid="groupBuildingExtBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_groupBuildingExt_withPage" resultMap="groupBuildingExtBase.groupBuildingExtExtendMap" parameterType="java.util.Map">
+		<include refid="groupBuildingExtBase.select_groupBuildingExt_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(小区信息扩展表)信息。 -->
+	<sql id="select_groupBuildingExt_bySeqId">
+		SELECT <include refid="groupBuildingExtBase.queryHead"/>
+		<include refid="groupBuildingExtBase.busiQueryCondition"/>
+		 and GBE.f_id = #{_parameter}
+	</sql>
+	<select id="select_groupBuildingExt_bySeqId" parameterType="java.math.BigInteger" resultMap="groupBuildingExtBase.groupBuildingExtBaseMap">
+		<include refid="groupBuildingExtBase.select_groupBuildingExt_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(小区信息扩展表)记录数  -->
+	<sql id="select_groupBuildingExt_count">
+		SELECT COUNT(*)
+		<include refid="groupBuildingExtBase.busiQueryCount"/>
+		<include refid="groupBuildingExtBase.dimCheckSql"/>
+	</sql>
+	<select id="select_groupBuildingExt_count" resultType="java.lang.Integer">
+		<include refid="groupBuildingExtBase.select_groupBuildingExt_count"/>
+	</select>
+	
+	 <!-- 往(小区信息扩展表)新增一条记录。 -->
+	 <sql id="insert_groupBuildingExt">
+		INSERT INTO t_group_building_ext 
+		(f_id,f_valid_by_mobile,f_fixed_fee_status,f_meter_fee_status,f_temp_fee_status,f_cannot_ask_help,f_open_bank_collection,f_ask_help_placehole,f_pay_to_pc) VALUES 
+		(#{id},#{validByMobile},#{fixedFeeStatus},#{meterFeeStatus},#{tempFeeStatus},#{cannotAskHelp},#{openBankCollection},#{askHelpPlacehole,jdbcType=VARCHAR},#{payToPc})
+	 </sql>
+    <insert id="insert_groupBuildingExt" parameterType="GroupBuildingExt">
+		<include refid="groupBuildingExtBase.insert_groupBuildingExt"/>
+    </insert>
+    
+	<!-- 批量新增(小区信息扩展表)信息 -->
+    <insert id="insert_groupBuildingExt_Batch" parameterType="java.util.List">
+    	INSERT INTO t_group_building_ext 
+		(f_id,f_valid_by_mobile,f_fixed_fee_status,f_meter_fee_status,f_temp_fee_status,f_cannot_ask_help,f_open_bank_collection,f_ask_help_placehole,f_pay_to_pc) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.validByMobile},#{item.fixedFeeStatus},#{item.meterFeeStatus},#{item.tempFeeStatus},#{item.cannotAskHelp},#{item.openBankCollection},#{item.askHelpPlacehole,jdbcType=VARCHAR},#{item.payToPc})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(小区信息扩展表)信息。 -->
+    <sql id="update_groupBuildingExt">
+		UPDATE t_group_building_ext		<trim prefix="SET" prefixOverrides=","> 		<if test="validByMobile != null and !validByMobile.equals('') "> ,f_valid_by_mobile=#{validByMobile}</if> 		<if test="fixedFeeStatus != null and !fixedFeeStatus.equals('') "> ,f_fixed_fee_status=#{fixedFeeStatus}</if> 		<if test="meterFeeStatus != null and !meterFeeStatus.equals('') "> ,f_meter_fee_status=#{meterFeeStatus}</if> 		<if test="tempFeeStatus != null and !tempFeeStatus.equals('') "> ,f_temp_fee_status=#{tempFeeStatus}</if> 		<if test="cannotAskHelp != null and !cannotAskHelp.equals('') "> ,f_cannot_ask_help=#{cannotAskHelp}</if> 		<if test="openBankCollection != null and !openBankCollection.equals('') "> ,f_open_bank_collection=#{openBankCollection}</if> 		<if test="askHelpPlacehole != null and !askHelpPlacehole.equals('') "> ,f_ask_help_placehole=#{askHelpPlacehole}</if> 		<if test="payToPc != null and !payToPc.equals('') "> ,f_pay_to_pc=#{payToPc}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_groupBuildingExt" parameterType="GroupBuildingExt">
+		<include refid="groupBuildingExtBase.update_groupBuildingExt"/>
+    </update>
+    
+    <!-- 批量更新(小区信息扩展表)信息。 -->
+    <update id="update_groupBuildingExt_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_group_building_ext		<trim prefix="SET" prefixOverrides=","> 		<if test="item.validByMobile != null and !item.validByMobile.equals('')  "> ,f_valid_by_mobile=#{item.validByMobile}</if> 		<if test="item.fixedFeeStatus != null and !item.fixedFeeStatus.equals('')  "> ,f_fixed_fee_status=#{item.fixedFeeStatus}</if> 		<if test="item.meterFeeStatus != null and !item.meterFeeStatus.equals('')  "> ,f_meter_fee_status=#{item.meterFeeStatus}</if> 		<if test="item.tempFeeStatus != null and !item.tempFeeStatus.equals('')  "> ,f_temp_fee_status=#{item.tempFeeStatus}</if> 		<if test="item.cannotAskHelp != null and !item.cannotAskHelp.equals('')  "> ,f_cannot_ask_help=#{item.cannotAskHelp}</if> 		<if test="item.openBankCollection != null and !item.openBankCollection.equals('')  "> ,f_open_bank_collection=#{item.openBankCollection}</if> 		<if test="item.askHelpPlacehole != null and !item.askHelpPlacehole.equals('')  "> ,f_ask_help_placehole=#{item.askHelpPlacehole}</if> 		<if test="item.payToPc != null and !item.payToPc.equals('')  "> ,f_pay_to_pc=#{item.payToPc}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(小区信息扩展表)信息_逻辑删除。 -->
+    <!-- <sql id="delete_groupBuildingExt_Logic">
+		UPDATE t_group_building_ext		<trim prefix="SET" prefixOverrides=","> 		<if test="validByMobile != null and !validByMobile.equals('')  "> ,f_valid_by_mobile=#{validByMobile}</if> 		<if test="fixedFeeStatus != null and !fixedFeeStatus.equals('')  "> ,f_fixed_fee_status=#{fixedFeeStatus}</if> 		<if test="meterFeeStatus != null and !meterFeeStatus.equals('')  "> ,f_meter_fee_status=#{meterFeeStatus}</if> 		<if test="tempFeeStatus != null and !tempFeeStatus.equals('')  "> ,f_temp_fee_status=#{tempFeeStatus}</if> 		<if test="cannotAskHelp != null and !cannotAskHelp.equals('')  "> ,f_cannot_ask_help=#{cannotAskHelp}</if> 		<if test="openBankCollection != null and !openBankCollection.equals('')  "> ,f_open_bank_collection=#{openBankCollection}</if> 		<if test="askHelpPlacehole != null and !askHelpPlacehole.equals('')  "> ,f_ask_help_placehole=#{askHelpPlacehole}</if> 		<if test="payToPc != null and !payToPc.equals('')  "> ,f_pay_to_pc=#{payToPc}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_groupBuildingExt_Logic" parameterType="GroupBuildingExt">
+		<include refid="groupBuildingExtBase.delete_groupBuildingExt_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(小区信息扩展表)信息_逻辑删除 -->
+    <!-- <update id="delete_groupBuildingExt_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_group_building_ext		<trim prefix="SET" prefixOverrides=","> 		<if test="item.validByMobile != null and !item.validByMobile.equals('')  "> ,f_valid_by_mobile=#{item.validByMobile}</if> 		<if test="item.fixedFeeStatus != null and !item.fixedFeeStatus.equals('')  "> ,f_fixed_fee_status=#{item.fixedFeeStatus}</if> 		<if test="item.meterFeeStatus != null and !item.meterFeeStatus.equals('')  "> ,f_meter_fee_status=#{item.meterFeeStatus}</if> 		<if test="item.tempFeeStatus != null and !item.tempFeeStatus.equals('')  "> ,f_temp_fee_status=#{item.tempFeeStatus}</if> 		<if test="item.cannotAskHelp != null and !item.cannotAskHelp.equals('')  "> ,f_cannot_ask_help=#{item.cannotAskHelp}</if> 		<if test="item.openBankCollection != null and !item.openBankCollection.equals('')  "> ,f_open_bank_collection=#{item.openBankCollection}</if> 		<if test="item.askHelpPlacehole != null and !item.askHelpPlacehole.equals('')  "> ,f_ask_help_placehole=#{item.askHelpPlacehole}</if> 		<if test="item.payToPc != null and !item.payToPc.equals('')  "> ,f_pay_to_pc=#{item.payToPc}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(小区信息扩展表)信息。 -->
+    <sql id="delete_groupBuildingExt">
+		DELETE FROM t_group_building_ext WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_groupBuildingExt" parameterType="java.lang.String">
+		<include refid="groupBuildingExtBase.delete_groupBuildingExt"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(小区信息扩展表)信息。 -->
+    <delete id="delete_groupBuildingExt_Batch" parameterType="java.util.List">
+		DELETE FROM t_group_building_ext WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

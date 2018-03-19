@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:生活缴费支持的项目类别 t_living_fee_item -->
+<mapper namespace="livingFeeItemBase">
+	<resultMap type="LivingFeeItem" id="livingFeeItemBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!-- 消息编号 -->        <result column="f_sort" javaType="java.lang.Integer" property="sort"/>  <!-- 排序字段 -->        <result column="f_type" javaType="java.lang.Long" property="type"/>  <!-- 消息类型 -->        <result column="f_pic_url" javaType="java.lang.String" property="picUrl"/>  <!-- 对应小图标图片 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->
+	</resultMap>
+	<resultMap type="LivingFeeItem" id="livingFeeItemExtendMap" extends="livingFeeItemBaseMap">
+	</resultMap>
+	<resultMap type="LivingFeeItem" id="livingFeeItemBaseMap_AppendTable">
+        <id column="LFIid" javaType="java.math.BigInteger" property="id"/>  <!-- 消息编号 -->        <result column="LFIsort" javaType="java.lang.Integer" property="sort"/>  <!-- 排序字段 -->        <result column="LFItype" javaType="java.lang.Long" property="type"/>  <!-- 消息类型 -->        <result column="LFIpicUrl" javaType="java.lang.String" property="picUrl"/>  <!-- 对应小图标图片 -->        <result column="LFIsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="LFIsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="LFIsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="LFIsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="LFIsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="LFIsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="LFIsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="LFIname" javaType="java.lang.String" property="name"/>  <!-- 名称 -->
+	</resultMap>
+	<resultMap type="LivingFeeItem" id="livingFeeItemBaseMap_AppendTable1">
+        <id column="LFI1id" javaType="java.math.BigInteger" property="id"/>  <!-- 消息编号 -->        <result column="LFI1sort" javaType="java.lang.Integer" property="sort"/>  <!-- 排序字段 -->        <result column="LFI1type" javaType="java.lang.Long" property="type"/>  <!-- 消息类型 -->        <result column="LFI1picUrl" javaType="java.lang.String" property="picUrl"/>  <!-- 对应小图标图片 -->        <result column="LFI1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="LFI1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="LFI1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="LFI1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="LFI1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="LFI1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="LFI1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="LFI1name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		LFI.f_id,LFI.f_sort,LFI.f_type,LFI.f_pic_url,LFI.f_name
+	</sql>
+	<sql id="queryHead_AppendTable">
+		LFI.f_id as LFIid,LFI.f_sort as LFIsort,LFI.f_type as LFItype,LFI.f_pic_url as LFIpicUrl,LFI.f_name as LFIname
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		LFI1.f_id as LFI1id,LFI1.f_sort as LFI1sort,LFI1.f_type as LFI1type,LFI1.f_pic_url as LFI1picUrl,LFI1.f_name as LFI1name
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (LFI.f_id = #{id} ) </if>        <if test="sort != null">  and (LFI.f_sort = #{sort} ) </if>        <if test="type != null">  and (LFI.f_type = #{type} ) </if>        <if test="picUrl != null">  and (LFI.f_pic_url = #{picUrl} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (LFI.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (LFI.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (LFI.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (LFI.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (LFI.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (LFI.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (LFI.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (LFI.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (LFI.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (LFI.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (LFI.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (LFI.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (LFI.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (LFI.f_sys0_del_state = 0 ) </if>        <if test="name != null">  and (LFI.f_name = #{name} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (LFI.f_id = #{id} ) </if>        <if test="sort != null and !sort.equals('')  ">  and (LFI.f_sort = #{sort} ) </if>        <if test="type != null and !type.equals('')  ">  and (LFI.f_type = #{type} ) </if>        <if test="picUrl != null and !picUrl.equals('')  ">  and (LFI.f_pic_url like CONCAT('%',#{picUrl},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (LFI.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (LFI.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (LFI.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (LFI.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (LFI.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (LFI.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (LFI.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (LFI.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (LFI.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (LFI.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (LFI.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (LFI.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (LFI.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (LFI.f_sys0_del_state = 0 ) </if>        <if test="name != null and !name.equals('')  ">  and (LFI.f_name like CONCAT('%',#{name},'%') ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="livingFeeItemBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="livingFeeItemBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="livingFeeItemBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="livingFeeItemBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_living_fee_item LFI    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(生活缴费支持的项目类别)信息。 -->
+	<sql id="select_livingFeeItem">
+		SELECT <include refid="livingFeeItemBase.queryHead"/>
+		<include refid="livingFeeItemBase.busiQueryCondition"/>
+		<include refid="livingFeeItemBase.dimCheckSql"/>
+		ORDER BY LFI.f_id DESC
+	</sql>
+	<select id="select_livingFeeItem" parameterType="java.util.Map" resultMap="livingFeeItemBase.livingFeeItemExtendMap">
+		<include refid="livingFeeItemBase.select_livingFeeItem"/>
+	</select>
+	
+	<!-- 根据条件分页查询(生活缴费支持的项目类别)信息  -->
+	<sql id="select_livingFeeItem_withPage">
+		SELECT <include refid="livingFeeItemBase.queryHead"/>
+		<include refid="livingFeeItemBase.busiQueryCondition"/>
+		<include refid="livingFeeItemBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_livingFeeItem_withPage" resultMap="livingFeeItemBase.livingFeeItemExtendMap" parameterType="java.util.Map">
+		<include refid="livingFeeItemBase.select_livingFeeItem_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(生活缴费支持的项目类别)信息。 -->
+	<sql id="select_livingFeeItem_bySeqId">
+		SELECT <include refid="livingFeeItemBase.queryHead"/>
+		<include refid="livingFeeItemBase.busiQueryCondition"/>
+		 and LFI.f_id = #{_parameter}
+	</sql>
+	<select id="select_livingFeeItem_bySeqId" parameterType="java.math.BigInteger" resultMap="livingFeeItemBase.livingFeeItemBaseMap">
+		<include refid="livingFeeItemBase.select_livingFeeItem_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(生活缴费支持的项目类别)记录数  -->
+	<sql id="select_livingFeeItem_count">
+		SELECT COUNT(*)
+		<include refid="livingFeeItemBase.busiQueryCount"/>
+		<include refid="livingFeeItemBase.dimCheckSql"/>
+	</sql>
+	<select id="select_livingFeeItem_count" resultType="java.lang.Integer">
+		<include refid="livingFeeItemBase.select_livingFeeItem_count"/>
+	</select>
+	
+	 <!-- 往(生活缴费支持的项目类别)新增一条记录。 -->
+	 <sql id="insert_livingFeeItem">
+		INSERT INTO t_living_fee_item 
+		(f_id,f_sort,f_type,f_pic_url,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_name) VALUES 
+		(#{id},#{sort},#{type},#{picUrl,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0,#{name,jdbcType=VARCHAR})
+	 </sql>
+    <insert id="insert_livingFeeItem" parameterType="LivingFeeItem">
+		<include refid="livingFeeItemBase.insert_livingFeeItem"/>
+    </insert>
+    
+	<!-- 批量新增(生活缴费支持的项目类别)信息 -->
+    <insert id="insert_livingFeeItem_Batch" parameterType="java.util.List">
+    	INSERT INTO t_living_fee_item 
+		(f_id,f_sort,f_type,f_pic_url,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_name) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.sort},#{item.type},#{item.picUrl,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0,#{item.name,jdbcType=VARCHAR})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(生活缴费支持的项目类别)信息。 -->
+    <sql id="update_livingFeeItem">
+		UPDATE t_living_fee_item		<trim prefix="SET" prefixOverrides=","> 		<if test="sort != null and !sort.equals('') "> ,f_sort=#{sort}</if> 		<if test="type != null and !type.equals('') "> ,f_type=#{type}</if> 		<if test="picUrl != null and !picUrl.equals('') "> ,f_pic_url=#{picUrl}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_livingFeeItem" parameterType="LivingFeeItem">
+		<include refid="livingFeeItemBase.update_livingFeeItem"/>
+    </update>
+    
+    <!-- 批量更新(生活缴费支持的项目类别)信息。 -->
+    <update id="update_livingFeeItem_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_living_fee_item		<trim prefix="SET" prefixOverrides=","> 		<if test="item.sort != null and !item.sort.equals('')  "> ,f_sort=#{item.sort}</if> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.picUrl != null and !item.picUrl.equals('')  "> ,f_pic_url=#{item.picUrl}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(生活缴费支持的项目类别)信息_逻辑删除。 -->
+    <sql id="delete_livingFeeItem_Logic">
+		UPDATE t_living_fee_item		<trim prefix="SET" prefixOverrides=","> 		<if test="sort != null and !sort.equals('')  "> ,f_sort=#{sort}</if> 		<if test="type != null and !type.equals('')  "> ,f_type=#{type}</if> 		<if test="picUrl != null and !picUrl.equals('')  "> ,f_pic_url=#{picUrl}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_livingFeeItem_Logic" parameterType="LivingFeeItem">
+		<include refid="livingFeeItemBase.delete_livingFeeItem_Logic"/>
+    </update>
+    
+    <!-- 批量删除(生活缴费支持的项目类别)信息_逻辑删除 -->
+    <update id="delete_livingFeeItem_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_living_fee_item		<trim prefix="SET" prefixOverrides=","> 		<if test="item.sort != null and !item.sort.equals('')  "> ,f_sort=#{item.sort}</if> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.picUrl != null and !item.picUrl.equals('')  "> ,f_pic_url=#{item.picUrl}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(生活缴费支持的项目类别)信息。 -->
+    <sql id="delete_livingFeeItem">
+		DELETE FROM t_living_fee_item WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_livingFeeItem" parameterType="java.lang.String">
+		<include refid="livingFeeItemBase.delete_livingFeeItem"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(生活缴费支持的项目类别)信息。 -->
+    <delete id="delete_livingFeeItem_Batch" parameterType="java.util.List">
+		DELETE FROM t_living_fee_item WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

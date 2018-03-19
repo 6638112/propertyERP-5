@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:annotation-config/>
+	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
+		<property name="maxInactiveIntervalInSeconds" value="3600"></property>
+	</bean>
+	
+	<!-- redis的连接池pool，不是必选项：timeout/password -->
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+		<constructor-arg index="0" ref="jedisPoolConfig" />
+		<constructor-arg index="1" value="${redis.host01}" />
+		<constructor-arg index="2" value="${redis.port01}" type="int" />
+		<constructor-arg index="3" value="${redis.timeout01}" type="int" />
+		<constructor-arg index="4" value="${redis.password01}"/>
+	</bean>
+	
+	<bean id="redisCacheHandler" class="com.cnfantasia.server.api.cache.handler.RedisCacheHandler" init-method="initAllData"
+		destroy-method="clearCache">
+		<constructor-arg name="pool" ref="jedisPool" />
+		<constructor-arg name="reloadList" >
+			<list>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+</beans>  

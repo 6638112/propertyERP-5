@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 拼一拼 -->
+<mapper namespace="pinyipin">
+	<resultMap type="com.cnfantasia.server.api.pinyipin.entity.PinyipinContentEntity" id="pinyipinContentEntity_Map_Append"
+		extends="communityPinyipinContentBase.communityPinyipinContentBaseMap_AppendTable">
+		<!-- 评论总数 -->
+		<result column="ext_commentTotalCount" javaType="java.lang.Integer" property="commentTotalCount"/>
+		<!-- 点赞总数 -->
+		<result column="ext_totalSupportCount" javaType="java.lang.Integer" property="totalSupportCount"/>
+		<!-- 是否已点赞 -->
+		<result column="ext_isSupported" javaType="java.lang.Boolean" property="isSupported"/>
+		<!-- 是否已收藏 -->
+		<result column="ext_isCollected" javaType="java.lang.Boolean" property="isCollected"/>
+		
+		<!-- 当前用户已拼数量之和 -->
+		<result column="ext_currUserReserveCount" javaType="java.lang.Long" property="currUserReserveCount"/>
+		<!-- 是否可以生成发货清单 -->
+		<result column="ext_deliverAble" javaType="java.lang.Boolean" property="deliverAble"/>
+		<!-- 拼单与用户所属关系 0:游客，1:发起者，2参与者 -->
+		<result column="ext_userBelong" javaType="java.lang.Integer" property="userBelong"/>
+		<!-- 已预订总量 -->
+		<result column="ext_reserveCount" javaType="java.lang.Long" property="reserveCount"/>
+		<!-- 当前预订总人数 -->
+		<result column="ext_currUserCount" javaType="java.lang.Integer" property="currUserCount"/>
+		
+		<!-- 拼单创建者 -->
+		<association property="createUser" resultMap="commonUser.userSimpleEntity_Map_Append"/>
+		<!-- 图片列表 -->
+		<collection property="pinyipinPicList" resultMap="communityPinyipinPicBase.communityPinyipinPicBaseMap_AppendTable"/>
+		<!-- 拼单列表 -->
+		<!-- <collection property="pinyipinReserveList" resultMap="communityPinyipinReserveBase.communityPinyipinReserveBaseMap_AppendTable"/> -->
+	</resultMap>
+	
+	<sql id="pinyipinContentEntity_select_comm"><!-- 收藏点赞的select头部公共部分 -->
+		(SELECT CASE WHEN ISNULL(sum(CGD.f_total_comment_count)) THEN 0 ELSE sum(CGD.f_total_comment_count) END 
+			FROM t_common_gather_data CGD WHERE 1=1
+			AND CGD.f_target_type = 61  <!-- 61,拼单信息 -->
+			AND CGD.f_target_id = CPC.f_id
+			AND CGD.f_sys0_del_state = 0
+		) AS ext_commentTotalCount
+		,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END 
+			FROM t_common_gather_data CGD WHERE 1=1
+			AND CGD.f_target_type = 61  <!-- 61,拼单信息 -->
+			AND CGD.f_target_id = CPC.f_id
+			AND CGD.f_sys0_del_state = 0
+		) AS ext_totalSupportCount
+		<!-- CASE WHEN ISNULL(C_group.totalCount) THEN 0 ELSE C_group.totalCount END AS ext_commentTotalCount 
+		,CASE WHEN ISNULL(S_group.totalCount) THEN 0 ELSE S_group.totalCount END AS ext_totalSupportCount -->
+		 
+		,CASE WHEN ISNULL(S.f_id) THEN false ELSE true END AS ext_isSupported 
+		,CASE WHEN ISNULL(COLL.f_id) THEN false ELSE true END AS ext_isCollected 
+		,CASE WHEN ((NOT ISNULL(CPR_group.sumTotalCount) AND CPR_group.sumTotalCount>=CPC.f_goal_count ) OR ( <![CDATA[ CPC.f_end_date <= NOW() ]]> ) ) 
+				AND CPC.f_user_id = #{userId}
+			THEN true ELSE false END AS ext_deliverAble
+		<!-- 0:游客，1:发起者，2参与者 -->
+		,CASE 
+			WHEN CPC.f_user_id = #{userId} THEN 1 
+			WHEN CPR_group.currUserStatus > 0 THEN 2
+			ELSE 0 END AS ext_userBelong
+		<!-- 参与拼单的总数量 -->
+		,CASE WHEN ISNULL(CPR_group.sumTotalCount) THEN 0 ELSE CPR_group.sumTotalCount END AS ext_reserveCount
+		<!-- 参与拼单的用户数 -->
+		,CASE WHEN ISNULL(CPR_group.totalCount) THEN 0 ELSE CPR_group.totalCount END AS ext_currUserCount
+		<!-- 当前用户已拼数量之和-->
+		,CASE WHEN ISNULL(CPR_group.currUserReserveCount) THEN 0 ELSE CPR_group.currUserReserveCount END AS ext_currUserReserveCount
+	</sql>
+	<sql id="pinyipinContentEntity_from_comm"><!-- 收藏点赞的from公共部分 -->
+		<!-- LEFT JOIN  (SELECT f_target_id ,COUNT(*) AS totalCount
+			FROM t_comments 
+			WHERE 1=1 AND f_sys0_del_state = 0 AND f_target_type = 61  
+			GROUP BY f_target_id
+		) C_group ON C_group.f_target_id = CPC.f_id -->
+		<!-- LEFT JOIN (SELECT f_target_id ,COUNT(*) AS totalCount
+			FROM t_support 
+			WHERE 1=1 
+			AND f_target_type = 61  
+			AND f_sys0_del_state = 0
+			GROUP BY f_target_id
+		) S_group ON S_group.f_target_id = CPC.f_id -->
+		<!-- 是否已点赞 -->
+		LEFT JOIN t_support S ON 
+			S.f_target_type = 61  <!-- 61,拼单信息 --> 
+			AND S.f_user_id = #{userId}
+			AND CPC.f_id = S.f_target_id  
+			AND S.f_sys0_del_state = 0
+		<!-- 是否已收藏 -->
+		LEFT JOIN t_collections COLL ON CPC.f_id = COLL.f_target_id AND COLL.f_target_type = 61  <!-- 61,拼单信息 -->
+			AND COLL.f_user_id = #{userId}
+			AND COLL.f_sys0_del_state = 0
+			
+		LEFT JOIN (SELECT t_community_pinyipin_content_f_id,COUNT(*) AS totalCount,SUM(f_count) sumTotalCount
+			,SUM(CASE WHEN f_user_id = #{userId} THEN 1 ELSE 0 END) AS currUserStatus
+			,SUM(CASE WHEN f_user_id = #{userId} THEN f_count ELSE 0 END) AS currUserReserveCount
+			FROM t_community_pinyipin_reserve 
+			WHERE 1=1 AND f_sys0_del_state = 0 AND f_cancle_staus = 1 
+			AND f_count>0
+			GROUP BY t_community_pinyipin_content_f_id
+		) CPR_group ON CPC.f_id = CPR_group.t_community_pinyipin_content_f_id
+	</sql>
+	
+	<!-- 查询最热的一个拼单-->
+	<select id="select_MostHot_Content" parameterType="java.util.Map" resultMap="pinyipinContentEntity_Map_Append">
+		SELECT _tmp.*
+			,<include refid="communityPinyipinPicBase.queryHead_AppendTable"/>
+			<!-- ,<include refid="communityPinyipinReserveBase.queryHead_AppendTable"/> -->
+		FROM (
+			SELECT <include refid="communityPinyipinContentBase.queryHead_AppendTable"/>
+				,<include refid="commonUser.userSimple_common_select"/>
+				,<include refid="pinyipinContentEntity_select_comm"/>
+			FROM t_community_pinyipin_content CPC
+				INNER JOIN t_user U ON U.f_id = CPC.f_user_id AND U.f_sys0_del_state = 0
+				<include refid="commonUser.userSimple_common_from"/>
+				<include refid="pinyipinContentEntity_from_comm"/>
+			WHERE 1=1
+			AND CPC.f_sys0_del_state = 0
+			AND CPC.t_group_building_f_id = #{groupBuildingId}
+			ORDER BY
+			CASE 
+				WHEN CPC.f_delivery_status= 0 <![CDATA[ AND CPC.f_end_date > NOW() AND ext_reserveCount<CPC.f_goal_count ]]>   THEN 1
+				WHEN  <![CDATA[ CPC.f_end_date <= NOW() OR ext_reserveCount>=CPC.f_goal_count ]]> THEN 3
+				WHEN CPC.f_delivery_status=1 THEN 4
+				WHEN CPC.f_delivery_status=2 THEN 5
+				END
+			,CPR_group.totalCount DESC, ext_commentTotalCount DESC, ext_totalSupportCount DESC,CPC.f_create_time DESC
+			<!-- ,CPR_group.totalCount DESC, C_group.totalCount DESC, S_group.totalCount DESC,CPC.f_create_time DESC -->
+			LIMIT 0,1
+		) _tmp
+		LEFT JOIN t_community_pinyipin_pic CPP ON CPP.t_community_pinyipin_content_f_id = _tmp.CPCid
+			AND CPP.f_sys0_del_state = 0
+		<!-- LEFT JOIN t_community_pinyipin_reserve CPR ON CPR.t_community_pinyipin_content_f_id = _tmp.communityPinyipinContent_f_id
+			AND CPR.f_sys0_del_state = 0 AND CPR.f_cancle_staus = 1 -->
+	</select>
+	
+	<!-- 分页查询热门拼单列表 -->
+	<sql id="select_HotContent_List_comm">
+		SELECT <include refid="communityPinyipinContentBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="pinyipinContentEntity_select_comm"/>
+		FROM t_community_pinyipin_content CPC
+			INNER JOIN t_user U ON U.f_id = CPC.f_user_id AND U.f_sys0_del_state = 0
+			<include refid="commonUser.userSimple_common_from"/>
+			<include refid="pinyipinContentEntity_from_comm"/>
+		WHERE 1=1
+		AND CPC.f_sys0_del_state = 0
+		AND CPC.t_group_building_f_id = #{groupBuildingId}
+	</sql>
+	<select id="select_HotContent_List_Page" parameterType="java.util.Map" resultMap="pinyipinContentEntity_Map_Append">
+		SELECT _tmp.*
+			,<include refid="communityPinyipinPicBase.queryHead_AppendTable"/>
+			<!-- ,<include refid="communityPinyipinReserveBase.queryHead_AppendTable"/> -->
+		FROM (
+			<include refid="select_HotContent_List_comm"/>
+			ORDER BY 
+			CASE 
+				WHEN CPC.f_delivery_status= 0 <![CDATA[ AND CPC.f_end_date > NOW() AND ext_reserveCount<CPC.f_goal_count ]]>   THEN 1
+				WHEN  <![CDATA[ CPC.f_end_date <= NOW() OR ext_reserveCount>=CPC.f_goal_count ]]> THEN 3
+				WHEN CPC.f_delivery_status=1 THEN 4
+				WHEN CPC.f_delivery_status=2 THEN 5
+				END
+			,CPC.f_create_time DESC,CPR_group.totalCount DESC, ext_commentTotalCount DESC, ext_totalSupportCount DESC
+			<!-- ,CPC.f_create_time DESC,CPR_group.totalCount DESC, C_group.totalCount DESC, S_group.totalCount DESC -->
+			
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		) _tmp
+		LEFT JOIN t_community_pinyipin_pic CPP ON CPP.t_community_pinyipin_content_f_id = _tmp.CPCid
+			AND CPP.f_sys0_del_state = 0
+		<!-- LEFT JOIN t_community_pinyipin_reserve CPR ON CPR.t_community_pinyipin_content_f_id = _tmp.communityPinyipinContent_f_id
+			AND CPR.f_sys0_del_state = 0 AND CPR.f_cancle_staus = 1 -->
+	</select>
+	<select id="select_HotContent_List_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (<include refid="select_HotContent_List_comm"/>) as table1 
+	</select>
+	
+	<!-- 查询我发起的拼单列表 -->
+	<sql id="select_LaunchContent_List_Comm">
+		SELECT <include refid="communityPinyipinContentBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="pinyipinContentEntity_select_comm"/>
+		FROM t_community_pinyipin_content CPC
+			INNER JOIN t_user U ON U.f_id = CPC.f_user_id AND U.f_sys0_del_state = 0
+			<include refid="commonUser.userSimple_common_from"/>
+			<include refid="pinyipinContentEntity_from_comm"/>
+		WHERE 1=1
+		AND CPC.f_sys0_del_state = 0
+		AND CPC.t_group_building_f_id = #{groupBuildingId}
+		AND CPC.f_user_id = #{userId}
+	</sql>
+	<select id="select_LaunchContent_List_Page" parameterType="java.util.Map" resultMap="pinyipinContentEntity_Map_Append">
+		SELECT _tmp.*
+			,<include refid="communityPinyipinPicBase.queryHead_AppendTable"/>
+			<!-- ,<include refid="communityPinyipinReserveBase.queryHead_AppendTable"/> -->
+		FROM (
+			<include refid="select_LaunchContent_List_Comm"/>
+			ORDER BY
+				CASE 
+					<!-- WHEN CPC.f_delivery_status= 0 <![CDATA[ AND CPC.f_end_date > NOW() ]]> THEN 1
+					WHEN <![CDATA[ CPC.f_end_date <= NOW() ]]> THEN 2 -->
+					WHEN CPC.f_delivery_status= 0 <![CDATA[ AND CPC.f_end_date > NOW() AND ext_reserveCount<CPC.f_goal_count ]]>   THEN 1
+					WHEN  <![CDATA[ CPC.f_end_date <= NOW() OR ext_reserveCount>=CPC.f_goal_count ]]> THEN 2
+					WHEN CPC.f_delivery_status=1 THEN 3
+					WHEN CPC.f_delivery_status=2 THEN 4
+				END
+				,CPC.f_create_time DESC
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		) _tmp
+		LEFT JOIN t_community_pinyipin_pic CPP ON CPP.t_community_pinyipin_content_f_id = _tmp.CPCid
+			AND CPP.f_sys0_del_state = 0
+		<!-- LEFT JOIN t_community_pinyipin_reserve CPR ON CPR.t_community_pinyipin_content_f_id = _tmp.communityPinyipinContent_f_id
+			AND CPR.f_sys0_del_state = 0 AND CPR.f_cancle_staus = 1 -->
+	</select>
+	<select id="select_LaunchContent_List_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (<include refid="select_LaunchContent_List_Comm"/>) as table1 
+	</select>
+	
+	
+	<!-- 查询拼单详情 -->
+	<select id="select_PinyipinContent_Detail" parameterType="java.util.Map" resultMap="pinyipinContentEntity_Map_Append">
+		SELECT <include refid="communityPinyipinContentBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="communityPinyipinPicBase.queryHead_AppendTable"/>
+			<!-- ,<include refid="communityPinyipinReserveBase.queryHead_AppendTable"/> -->
+			,<include refid="pinyipinContentEntity_select_comm"/>
+		FROM t_community_pinyipin_content CPC
+			INNER JOIN t_user U ON U.f_id = CPC.f_user_id AND U.f_sys0_del_state = 0
+			<include refid="commonUser.userSimple_common_from"/>
+			LEFT JOIN t_community_pinyipin_pic CPP ON CPP.t_community_pinyipin_content_f_id = CPC.f_id
+				AND CPP.f_sys0_del_state = 0
+			<!-- LEFT JOIN t_community_pinyipin_reserve CPR ON CPR.t_community_pinyipin_content_f_id = CPC.f_id
+				AND CPR.f_sys0_del_state = 0 AND CPR.f_cancle_staus = 1 -->
+			
+			<include refid="pinyipinContentEntity_from_comm"/>
+		WHERE 1=1
+		AND CPC.f_sys0_del_state = 0
+		AND CPC.f_id = #{contentId}
+	</select>
+	
+	<!-- 查询我参与的拼单列表 -->
+	<sql id="select_JoinContent_List_Comm">
+		SELECT <include refid="communityPinyipinContentBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="pinyipinContentEntity_select_comm"/>
+		FROM t_community_pinyipin_content CPC
+			INNER JOIN t_user U ON U.f_id = CPC.f_user_id AND U.f_sys0_del_state = 0
+			<include refid="commonUser.userSimple_common_from"/>
+			INNER JOIN(
+				SELECT t_community_pinyipin_content_f_id
+				FROM t_community_pinyipin_reserve
+				WHERE 1=1
+				AND f_sys0_del_state = 0
+		    	AND f_cancle_staus = 1
+		    	AND f_count>0
+		    	AND f_user_id = #{userId}
+		    	GROUP BY t_community_pinyipin_content_f_id
+			) CPR_group_owner ON CPR_group_owner.t_community_pinyipin_content_f_id = CPC.f_id
+			
+			<include refid="pinyipinContentEntity_from_comm"/>
+		WHERE 1=1
+		AND CPC.f_sys0_del_state = 0
+		AND CPC.t_group_building_f_id = #{groupBuildingId}
+		
+		<!-- FROM t_community_pinyipin_reserve CPR02
+			INNER JOIN t_community_pinyipin_content CPC ON CPC.f_id = CPR02.t_community_pinyipin_content_f_id
+				AND CPC.f_sys0_del_state = 0
+    	WHERE 1=1
+    	AND CPR02.f_sys0_del_state = 0
+    	AND CPR02.f_cancle_staus = 1
+    	AND CPR02.f_user_id = #{userId} -->
+	</sql>
+	<select id="select_JoinContent_List_Page" parameterType="java.util.Map" resultMap="pinyipinContentEntity_Map_Append">
+		SELECT _tmp.*
+			,<include refid="communityPinyipinPicBase.queryHead_AppendTable"/>
+			<!-- ,<include refid="communityPinyipinReserveBase.queryHead_AppendTable"/> -->
+		FROM (
+			<include refid="select_JoinContent_List_Comm"/>
+			ORDER BY
+			CASE 
+				<!-- WHEN CPC.f_delivery_status= 0 <![CDATA[ AND CPC.f_end_date > NOW() ]]> THEN 1
+				WHEN <![CDATA[ CPC.f_end_date <= NOW() ]]> THEN 2 -->
+				WHEN CPC.f_delivery_status= 0 <![CDATA[ AND CPC.f_end_date > NOW() AND ext_reserveCount<CPC.f_goal_count ]]>   THEN 1
+				WHEN  <![CDATA[ CPC.f_end_date <= NOW() OR ext_reserveCount>=CPC.f_goal_count ]]> THEN 2
+				WHEN CPC.f_delivery_status=1 THEN 3
+				WHEN CPC.f_delivery_status=2 THEN 4
+			END
+			,CPR_group_owner.t_community_pinyipin_content_f_id
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		) _tmp
+		LEFT JOIN t_community_pinyipin_pic CPP ON CPP.t_community_pinyipin_content_f_id = _tmp.CPCid
+			AND CPP.f_sys0_del_state = 0
+		<!-- LEFT JOIN t_community_pinyipin_reserve CPR ON CPR.t_community_pinyipin_content_f_id = _tmp.communityPinyipinContent_f_id
+			AND CPR.f_sys0_del_state = 0 AND CPR.f_cancle_staus = 1 -->
+	</select>
+	<select id="select_JoinContent_List_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (<include refid="select_JoinContent_List_Comm"/>) as table1 
+	</select>
+	
+	<!-- 查询我发起的和参与的拼单列表 -->
+	<sql id="select_LaunchAndJoin_Content_List_Comm">
+		SELECT <include refid="communityPinyipinContentBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="pinyipinContentEntity_select_comm"/>
+		FROM t_community_pinyipin_content CPC
+			INNER JOIN t_user U ON U.f_id = CPC.f_user_id AND U.f_sys0_del_state = 0
+			<include refid="commonUser.userSimple_common_from"/>
+			LEFT JOIN(
+				SELECT t_community_pinyipin_content_f_id
+				FROM t_community_pinyipin_reserve
+				WHERE 1=1
+				AND f_sys0_del_state = 0
+		    	AND f_cancle_staus = 1
+		    	AND f_count>0
+		    	AND f_user_id = #{userId}
+		    	GROUP BY t_community_pinyipin_content_f_id
+			) CPR_group_owner ON CPR_group_owner.t_community_pinyipin_content_f_id = CPC.f_id
+			
+			<include refid="pinyipinContentEntity_from_comm"/>
+		WHERE 1=1
+		AND CPC.f_sys0_del_state = 0
+		AND CPC.t_group_building_f_id = #{groupBuildingId}
+		AND ((
+			CPC.f_user_id = #{userId}
+		) OR (
+			NOT ISNULL(CPR_group_owner.t_community_pinyipin_content_f_id)
+		))
+	</sql>
+	<select id="select_LaunchAndJoin_Content_List_Page" parameterType="java.util.Map" resultMap="pinyipinContentEntity_Map_Append">
+		SELECT _tmp.*
+			,<include refid="communityPinyipinPicBase.queryHead_AppendTable"/>
+			<!-- ,<include refid="communityPinyipinReserveBase.queryHead_AppendTable"/> -->
+		FROM (
+			<include refid="select_LaunchAndJoin_Content_List_Comm"/>
+			ORDER BY  
+			CASE 
+				WHEN CPC.f_delivery_status= 0 <![CDATA[ AND CPC.f_end_date > NOW() AND ext_reserveCount<CPC.f_goal_count ]]> AND (CPC.f_user_id = #{userId}) THEN 1
+				WHEN CPC.f_delivery_status= 0 <![CDATA[ AND CPC.f_end_date > NOW() AND ext_reserveCount<CPC.f_goal_count ]]>  AND (NOT ISNULL(CPR_group_owner.t_community_pinyipin_content_f_id)) THEN 2
+				WHEN  <![CDATA[ CPC.f_end_date <= NOW() OR ext_reserveCount>=CPC.f_goal_count ]]> THEN 3
+				WHEN CPC.f_delivery_status=1 THEN 4
+				WHEN CPC.f_delivery_status=2 THEN 5
+				END
+			<!-- ,CASE WHEN CPC.f_delivery_status= 0  AND (NOT ISNULL(CPR_group_owner.t_community_pinyipin_content_f_id)) THEN CPR_group_owner.t_community_pinyipin_content_f_id END
+			,CASE WHEN CPC.f_delivery_status= 0  AND (NOT ISNULL(CPR_group_owner.t_community_pinyipin_content_f_id)) THEN  NULL ELSE CPC.f_sys0_upd_time END DESC -->
+			
+			,CASE WHEN CPC.f_delivery_status= 0 <![CDATA[ AND CPC.f_end_date > NOW() ]]> AND (CPC.f_user_id = #{userId}) THEN CPC.f_id END DESC
+			,CASE WHEN CPC.f_delivery_status= 0 <![CDATA[ AND CPC.f_end_date > NOW() ]]>  AND (NOT ISNULL(CPR_group_owner.t_community_pinyipin_content_f_id)) THEN CPR_group_owner.t_community_pinyipin_content_f_id END DESC
+			,CASE WHEN CPC.f_delivery_status != 0 OR <![CDATA[ CPC.f_end_date <= NOW() ]]> THEN  NULL ELSE CPC.f_sys0_upd_time END DESC
+		
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		) _tmp
+		LEFT JOIN t_community_pinyipin_pic CPP ON CPP.t_community_pinyipin_content_f_id = _tmp.CPCid
+			AND CPP.f_sys0_del_state = 0
+		<!-- LEFT JOIN t_community_pinyipin_reserve CPR ON CPR.t_community_pinyipin_content_f_id = _tmp.communityPinyipinContent_f_id
+			AND CPR.f_sys0_del_state = 0 AND CPR.f_cancle_staus = 1 -->
+	</select>
+	<select id="select_LaunchAndJoin_Content_List_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (<include refid="select_LaunchAndJoin_Content_List_Comm"/>) as table1 
+	</select>
+	
+	<!-- 根据拼单Id,查询拼单的当前预定记录数 -->
+	<select id="select_Join_TotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_community_pinyipin_reserve CPR
+			INNER JOIN t_community_pinyipin_content CPC ON CPC.f_id = CPR.t_community_pinyipin_content_f_id
+				AND CPC.f_sys0_del_state = 0
+    	WHERE 1=1
+    	AND CPR.f_sys0_del_state = 0
+    	AND CPR.f_cancle_staus = 1
+    	AND CPR.f_count>0
+    	AND CPC.f_id = #{contentId}
+	</select>
+	
+	<!-- 拼单发起者删除指定的拼单 -->
+	<update id="delete_LaunchContent" parameterType="java.util.Map">
+		UPDATE t_community_pinyipin_content CPC
+		SET CPC.f_sys0_del_state = 1,CPC.f_sys0_del_time= SYSDATE()
+		WHERE 1=1
+		AND CPC.f_sys0_del_state = 0 
+		AND CPC.f_id = #{contentId}
+		AND CPC.f_user_id = #{userId}
+	</update>
+	
+	<!-- 查询指定用户参与的拼单信息 -->
+	<select id="select_PinyipinReserve_ById" parameterType="java.util.Map" 
+		resultMap="communityPinyipinReserveBase.communityPinyipinReserveBaseMap_AppendTable">
+		SELECT <include refid="communityPinyipinReserveBase.queryHead_AppendTable"/>
+		FROM t_community_pinyipin_reserve CPR
+			INNER JOIN t_community_pinyipin_content CPC ON CPC.f_id = CPR.t_community_pinyipin_content_f_id
+				AND CPC.f_sys0_del_state = 0
+    	WHERE 1=1
+    	AND CPR.f_sys0_del_state = 0 
+    	AND CPR.f_cancle_staus = 1
+    	AND CPR.f_count>0
+    	AND CPR.f_user_id = #{userId}
+    	AND CPC.f_id = #{contentId}
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.pinyipin.entity.PinyipinReserveEntity" id="pinyipinReserveEntity_Map_Append"
+		extends="communityPinyipinReserveBase.communityPinyipinReserveBaseMap_AppendTable">
+		<association property="ebuyDeliveryAddressEntity" resultMap="commonEbuy.ebuyDeliveryAddressEntityMap"/>
+		<association property="user" resultMap="commonUser.userSimpleEntity_Map_Append"/>
+	</resultMap>
+	
+	<!-- 发起拼单用户查看预定列表 -->
+	<sql id="select_Launch_PinyipinReserve_List_Comm">
+		FROM t_community_pinyipin_reserve CPR
+			INNER JOIN t_community_pinyipin_content CPC ON CPC.f_id = CPR.t_community_pinyipin_content_f_id
+				AND CPC.f_sys0_del_state = 0
+			INNER JOIN t_user U ON U.f_id = CPR.f_user_id AND U.f_sys0_del_state = 0
+			<include refid="commonUser.userSimple_common_from"/>
+			INNER JOIN (
+				t_ebuy_delivery_address EDA
+				LEFT JOIN (
+					t_room R 
+						INNER JOIN t_real_room RR ON R.t_real_room_f_id = RR.f_id  AND RR.f_sys0_del_state = 0
+						INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+						INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+						INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+						INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+						INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+					) ON EDA.t_room_f_id=R.f_id AND EDA.f_target_type = 1 AND R.f_sys0_del_state = 0 
+				LEFT JOIN  (t_ebuy_handle_address EHA)
+					ON EDA.t_ebuy_handle_address_f_id=EHA.f_id AND EDA.f_target_type = 2 AND EHA.f_sys0_del_state = 0 
+			) ON EDA.f_id = CPR.t_ebuy_delivery_address_f_id AND EDA.f_sys0_del_state = 0
+				AND EDA.t_user_f_id = U.f_id <!-- 增加用户Id的筛选 -->
+    	WHERE 1=1
+    	AND CPR.f_sys0_del_state = 0 
+     	AND CPR.f_cancle_staus = 1
+    	<!-- AND CPC.f_user_id = #{userId} -->
+    	AND CPC.f_id = #{contentId} 
+    	AND CPR.f_count > 0 <!-- 只返回拼单数量大于0的记录 -->
+	</sql>
+	<!-- 不分页 -->
+	<select id="select_Launch_PinyipinReserve_List" parameterType="java.util.Map" resultMap="pinyipinReserveEntity_Map_Append">
+		SELECT <include refid="communityPinyipinReserveBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			
+			,<include refid="ebuyDeliveryAddressBase.queryHead_AppendTable"/>
+			,<include refid="roomBase.queryHead_AppendTable"/>,<include refid="realRoomBase.queryHead_AppendTable"/>,<include refid="buildingBase.queryHead_AppendTable"/>
+			,<include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+   			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+   			
+   			,<include refid="ebuyHandleAddressBase.queryHead_AppendTable"/>
+   			
+   		<include refid="select_Launch_PinyipinReserve_List_Comm"/>
+   		<!-- ORDER BY CPR.f_id DESC -->
+   		ORDER BY 
+   		<!-- CASE WHEN (CPC.f_delivery_status=0 OR CPC.f_delivery_status=2) THEN 1
+		WHEN CPC.f_delivery_status=1 AND EDA.f_target_type = 1 THEN 2
+		WHEN CPC.f_delivery_status=1 AND EDA.f_target_type = 2 THEN 3
+		END, -->
+		CASE WHEN CPC.f_delivery_status=1 AND EDA.f_target_type = 1 THEN  GB.f_id END
+		,CASE WHEN CPC.f_delivery_status=1 AND EDA.f_target_type = 1 THEN  B.f_id END
+		,CASE WHEN CPC.f_delivery_status=1 AND EDA.f_target_type = 1 THEN  RR.f_id END
+		,CASE WHEN CPC.f_delivery_status=1 THEN CPR.f_id END
+		
+		,CASE WHEN (CPC.f_delivery_status=0 OR CPC.f_delivery_status=2) AND CPR.f_user_id = #{userId} THEN 1
+			 WHEN (CPC.f_delivery_status=0 OR CPC.f_delivery_status=2) AND CPR.f_user_id != #{userId} THEN 2
+			 END
+		,CASE WHEN (CPC.f_delivery_status=0 OR CPC.f_delivery_status=2) THEN CPR.f_id END DESC
+	</select>
+	
+	<select id="select_Launch_PinyipinReserve_UserList_ByTime" parameterType="java.util.Map" resultMap="commonUser.userSimpleEntity_Map_Append">
+		SELECT <include refid="commonUser.userSimple_common_select"/>
+		FROM t_user U
+			<include refid="commonUser.userSimple_common_from"/>
+			INNER JOIN (
+				SELECT CPR.f_user_id AS f_user_id,CPR.f_id AS f_id
+				FROM t_community_pinyipin_reserve CPR
+				INNER JOIN t_community_pinyipin_content CPC ON CPC.f_id = CPR.t_community_pinyipin_content_f_id
+					AND CPC.f_sys0_del_state = 0
+				WHERE 1=1
+				AND CPR.f_sys0_del_state = 0 
+		     	AND CPR.f_cancle_staus = 1
+		    	AND CPC.f_id = #{contentId} 
+		    	AND CPR.f_count > 0 <!-- 只返回拼单数量大于0的记录 -->
+				GROUP BY CPR.f_user_id,CPR.f_id
+			)CPR_group ON CPR_group.f_user_id = U.f_id
+		ORDER BY CPR_group.f_id DESC
+	</select>
+	
+	<!-- 分页处理 -->
+	<!-- <select id="select_Launch_PinyipinReserve_List_Page" parameterType="java.util.Map" resultMap="pinyipinReserveEntity_Map_Append">
+		SELECT <include refid="communityPinyipinReserveBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			
+			,<include refid="ebuyDeliveryAddressBase.queryHead_AppendTable"/>
+			,<include refid="roomBase.queryHead_AppendTable"/>,<include refid="realRoomBase.queryHead_AppendTable"/>,<include refid="buildingBase.queryHead_AppendTable"/>
+			,<include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+   			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+   			
+   			,<include refid="ebuyHandleAddressBase.queryHead_AppendTable"/>
+   			
+   		<include refid="select_Launch_PinyipinReserve_List_Comm"/>
+   		ORDER BY CPR.f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select> -->
+	<!-- <select id="select_Launch_PinyipinReserve_List_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+   		<include refid="select_Launch_PinyipinReserve_List_Comm"/>
+	</select> -->
+	
+	<!-- 修改指定用户参与的拼单数量(总量) -->
+	<update id="upd_ReserveContent_ByTotalCount" parameterType="java.util.Map">
+		UPDATE t_community_pinyipin_reserve CPR 
+			INNER JOIN t_community_pinyipin_content CPC ON CPC.f_id = CPR.t_community_pinyipin_content_f_id
+				AND CPC.f_sys0_del_state = 0 
+		SET CPR.f_count = 
+			CASE WHEN #{totalCount} >= 0  
+			THEN #{totalCount} 
+			ELSE CPR.f_count END
+			,CPR.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND CPR.f_sys0_del_state = 0 
+		AND CPR.f_cancle_staus = 1
+		AND CPR.f_id = #{pinyipinReverseId}
+		AND CPC.f_user_id = #{userId} <!-- 拼单创建者 -->
+	</update>
+	
+	<!-- 修改指定用户参与的拼单数量(增量) -->
+	<update id="upd_ReserveContent_ByChangeCount" parameterType="java.util.Map">
+		UPDATE t_community_pinyipin_reserve CPR 
+			INNER JOIN t_community_pinyipin_content CPC ON CPC.f_id = CPR.t_community_pinyipin_content_f_id
+				AND CPC.f_sys0_del_state = 0 
+		SET CPR.f_count = 
+			CASE WHEN CPR.f_count+#{changeCount} >= 0  
+			THEN CPR.f_count+#{changeCount} 
+			ELSE 0 END
+			,CPR.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND CPR.f_sys0_del_state = 0 
+		AND CPR.f_cancle_staus = 1
+		AND CPR.f_id = #{pinyipinReverseId}
+		AND CPC.f_user_id = #{userId} <!-- 拼单创建者 -->
+	</update>
+	
+	<!-- 标记拼单的发货清单状态为"生成清单成功" -->
+	<update id="update_PinyipinContent2Delivery" parameterType="java.util.Map" >
+		UPDATE t_community_pinyipin_content CPC
+		SET CPC.f_delivery_status = 1 <!-- {"0":"预定中","1":"生成清单成功","2":"已结束未但生成清单"} -->
+			,CPC.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND CPC.f_sys0_del_state = 0 
+		AND CPC.f_user_id = #{userId} <!-- 拼单创建者 -->
+		AND CPC.f_id = #{contentId}
+		AND CPC.f_delivery_status != 1 <!-- {"0":"预定中","1":"生成清单成功","2":"已结束未但生成清单"} -->
+	</update>
+	
+	<!-- 发起拼单者标记已领和未领 -->
+	<update id="update_Claim_Status" parameterType="java.util.Map">
+		UPDATE t_community_pinyipin_reserve CPR
+			INNER JOIN t_community_pinyipin_content CPC ON CPC.f_id = CPR.t_community_pinyipin_content_f_id
+				AND CPC.f_sys0_del_state = 0 
+		SET CPR.f_claim_status = #{calimStatus}
+			,CPR.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND CPR.f_sys0_del_state = 0 
+		AND CPR.f_cancle_staus = 1
+		AND CPR.f_id = #{pinyipinReverseId}
+		AND CPC.f_user_id = #{userId} <!-- 拼单创建者 -->
+	</update>
+	
+	<!-- 查询拼单，若过时则更改拼单状态为"已结束未但生成清单" -->
+	<update id="update_PinyipinContent_TimeOut">
+		UPDATE t_community_pinyipin_content CPC
+			LEFT JOIN(
+				SELECT SUM(CPR.f_count) totalCount,CPR.t_community_pinyipin_content_f_id AS t_community_pinyipin_content_f_id
+				FROM t_community_pinyipin_reserve CPR
+				WHERE 1=1
+				AND CPR.f_sys0_del_state = 0 
+				GROUP BY CPR.t_community_pinyipin_content_f_id
+			) CPR_group ON CPR_group.t_community_pinyipin_content_f_id = CPC.f_id
+		SET CPC.f_delivery_status = 2 <!-- {"0":"预定中","1":"生成清单成功","2":"已结束未但生成清单"} -->
+			,CPC.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND CPC.f_sys0_del_state = 0 
+		AND CPC.f_delivery_status = 0 <!-- {"0":"预定中","1":"生成清单成功","2":"已结束未但生成清单"} -->
+		AND ((
+			<![CDATA[ CPC.f_end_date <= NOW() ]]> <!-- 已超过截止时间 -->
+		) OR (
+			<!-- 有拼单且拼单总数达到的 -->
+			(NOT ISNULL(CPR_group.t_community_pinyipin_content_f_id)) AND  (<![CDATA[ CPR_group.totalCount >= CPC.f_goal_count ]]>) 
+		))
+		
+		<!-- <![CDATA[ AND CPC.f_end_date < NOW() ]]> 已超过截止时间
+		AND ((
+			ISNULL(CPR_group.t_community_pinyipin_content_f_id) 没有拼单的
+		) OR (
+			<![CDATA[ CPR_group.totalCount < CPC.f_goal_count ]]> 拼单总数未达到的
+		)) -->
+	</update>
+	
+	<!-- 查询所有热门拼单列表最新更新时间 -->
+	<select id="select_All_HotContentList_LastUpdTime" parameterType="java.util.Map" resultType="java.lang.String">
+		select date_format(now(),'%Y-%m-%d %T')
+	</select>
+	<!-- 查询所有我发起的和我参与的拼单最新更新时间 -->
+	<select id="select_All_LaunchAndJoinContentList_LastUpdTime" parameterType="java.util.Map" resultType="java.lang.String">
+		select date_format(now(),'%Y-%m-%d %T')
+	</select>
+	
+</mapper>

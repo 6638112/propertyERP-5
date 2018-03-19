@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:运营消息推送配置表 t_operation_msg_push_config -->
+<mapper namespace="operationMsgPushConfigBase">
+	<resultMap type="OperationMsgPushConfig" id="operationMsgPushConfigBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_number" javaType="java.lang.String" property="number"/>  <!-- 唯一编号 -->        <result column="f_ios_param" javaType="java.lang.String" property="iosParam"/>  <!-- IOS所有参数 -->        <result column="f_android_param" javaType="java.lang.String" property="androidParam"/>  <!-- andoid所需参数 -->        <result column="f_huawei_param" javaType="java.lang.String" property="huaweiParam"/>  <!-- huawei所需参数 -->        <result column="f_jump_description" javaType="java.lang.String" property="jumpDescription"/>  <!-- 跳转描述 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="OperationMsgPushConfig" id="operationMsgPushConfigExtendMap" extends="operationMsgPushConfigBaseMap">
+	</resultMap>
+	<resultMap type="OperationMsgPushConfig" id="operationMsgPushConfigBaseMap_AppendTable">
+        <id column="OMPCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="OMPCnumber" javaType="java.lang.String" property="number"/>  <!-- 唯一编号 -->        <result column="OMPCiosParam" javaType="java.lang.String" property="iosParam"/>  <!-- IOS所有参数 -->        <result column="OMPCandroidParam" javaType="java.lang.String" property="androidParam"/>  <!-- andoid所需参数 -->        <result column="OMPChuaweiParam" javaType="java.lang.String" property="huaweiParam"/>  <!-- huawei所需参数 -->        <result column="OMPCjumpDescription" javaType="java.lang.String" property="jumpDescription"/>  <!-- 跳转描述 -->        <result column="OMPCsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="OMPCsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="OMPCsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="OMPCsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="OMPCsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="OMPCsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="OMPCsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="OperationMsgPushConfig" id="operationMsgPushConfigBaseMap_AppendTable1">
+        <id column="OMPC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="OMPC1number" javaType="java.lang.String" property="number"/>  <!-- 唯一编号 -->        <result column="OMPC1iosParam" javaType="java.lang.String" property="iosParam"/>  <!-- IOS所有参数 -->        <result column="OMPC1androidParam" javaType="java.lang.String" property="androidParam"/>  <!-- andoid所需参数 -->        <result column="OMPC1huaweiParam" javaType="java.lang.String" property="huaweiParam"/>  <!-- huawei所需参数 -->        <result column="OMPC1jumpDescription" javaType="java.lang.String" property="jumpDescription"/>  <!-- 跳转描述 -->        <result column="OMPC1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="OMPC1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="OMPC1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="OMPC1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="OMPC1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="OMPC1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="OMPC1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		OMPC.f_id,OMPC.f_number,OMPC.f_ios_param,OMPC.f_android_param,OMPC.f_huawei_param,OMPC.f_jump_description
+	</sql>
+	<sql id="queryHead_AppendTable">
+		OMPC.f_id as OMPCid,OMPC.f_number as OMPCnumber,OMPC.f_ios_param as OMPCiosParam,OMPC.f_android_param as OMPCandroidParam,OMPC.f_huawei_param as OMPChuaweiParam,OMPC.f_jump_description as OMPCjumpDescription
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		OMPC1.f_id as OMPC1id,OMPC1.f_number as OMPC1number,OMPC1.f_ios_param as OMPC1iosParam,OMPC1.f_android_param as OMPC1androidParam,OMPC1.f_huawei_param as OMPC1huaweiParam,OMPC1.f_jump_description as OMPC1jumpDescription
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (OMPC.f_id = #{id} ) </if>        <if test="number != null">  and (OMPC.f_number = #{number} ) </if>        <if test="iosParam != null">  and (OMPC.f_ios_param = #{iosParam} ) </if>        <if test="androidParam != null">  and (OMPC.f_android_param = #{androidParam} ) </if>        <if test="huaweiParam != null">  and (OMPC.f_huawei_param = #{huaweiParam} ) </if>        <if test="jumpDescription != null">  and (OMPC.f_jump_description = #{jumpDescription} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (OMPC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (OMPC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (OMPC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (OMPC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (OMPC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (OMPC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (OMPC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (OMPC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (OMPC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (OMPC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (OMPC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (OMPC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (OMPC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (OMPC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (OMPC.f_id = #{id} ) </if>        <if test="number != null and !number.equals('')  ">  and (OMPC.f_number like CONCAT('%',#{number},'%') ) </if>        <if test="iosParam != null and !iosParam.equals('')  ">  and (OMPC.f_ios_param like CONCAT('%',#{iosParam},'%') ) </if>        <if test="androidParam != null and !androidParam.equals('')  ">  and (OMPC.f_android_param like CONCAT('%',#{androidParam},'%') ) </if>        <if test="huaweiParam != null and !huaweiParam.equals('')  ">  and (OMPC.f_huawei_param like CONCAT('%',#{huaweiParam},'%') ) </if>        <if test="jumpDescription != null and !jumpDescription.equals('')  ">  and (OMPC.f_jump_description like CONCAT('%',#{jumpDescription},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (OMPC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (OMPC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (OMPC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (OMPC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (OMPC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (OMPC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (OMPC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (OMPC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (OMPC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (OMPC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (OMPC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (OMPC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (OMPC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (OMPC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="operationMsgPushConfigBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="operationMsgPushConfigBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="operationMsgPushConfigBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="operationMsgPushConfigBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_operation_msg_push_config OMPC    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(运营消息推送配置表)信息。 -->
+	<sql id="select_operationMsgPushConfig">
+		SELECT <include refid="operationMsgPushConfigBase.queryHead"/>
+		<include refid="operationMsgPushConfigBase.busiQueryCondition"/>
+		<include refid="operationMsgPushConfigBase.dimCheckSql"/>
+		ORDER BY OMPC.f_id DESC
+	</sql>
+	<select id="select_operationMsgPushConfig" parameterType="java.util.Map" resultMap="operationMsgPushConfigBase.operationMsgPushConfigExtendMap">
+		<include refid="operationMsgPushConfigBase.select_operationMsgPushConfig"/>
+	</select>
+	
+	<!-- 根据条件分页查询(运营消息推送配置表)信息  -->
+	<sql id="select_operationMsgPushConfig_withPage">
+		SELECT <include refid="operationMsgPushConfigBase.queryHead"/>
+		<include refid="operationMsgPushConfigBase.busiQueryCondition"/>
+		<include refid="operationMsgPushConfigBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_operationMsgPushConfig_withPage" resultMap="operationMsgPushConfigBase.operationMsgPushConfigExtendMap" parameterType="java.util.Map">
+		<include refid="operationMsgPushConfigBase.select_operationMsgPushConfig_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(运营消息推送配置表)信息。 -->
+	<sql id="select_operationMsgPushConfig_bySeqId">
+		SELECT <include refid="operationMsgPushConfigBase.queryHead"/>
+		<include refid="operationMsgPushConfigBase.busiQueryCondition"/>
+		 and OMPC.f_id = #{_parameter}
+	</sql>
+	<select id="select_operationMsgPushConfig_bySeqId" parameterType="java.math.BigInteger" resultMap="operationMsgPushConfigBase.operationMsgPushConfigBaseMap">
+		<include refid="operationMsgPushConfigBase.select_operationMsgPushConfig_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(运营消息推送配置表)记录数  -->
+	<sql id="select_operationMsgPushConfig_count">
+		SELECT COUNT(*)
+		<include refid="operationMsgPushConfigBase.busiQueryCount"/>
+		<include refid="operationMsgPushConfigBase.dimCheckSql"/>
+	</sql>
+	<select id="select_operationMsgPushConfig_count" resultType="java.lang.Integer">
+		<include refid="operationMsgPushConfigBase.select_operationMsgPushConfig_count"/>
+	</select>
+	
+	 <!-- 往(运营消息推送配置表)新增一条记录。 -->
+	 <sql id="insert_operationMsgPushConfig">
+		INSERT INTO t_operation_msg_push_config 
+		(f_id,f_number,f_ios_param,f_android_param,f_huawei_param,f_jump_description,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{number,jdbcType=VARCHAR},#{iosParam,jdbcType=VARCHAR},#{androidParam,jdbcType=VARCHAR},#{huaweiParam,jdbcType=VARCHAR},#{jumpDescription,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_operationMsgPushConfig" parameterType="OperationMsgPushConfig">
+		<include refid="operationMsgPushConfigBase.insert_operationMsgPushConfig"/>
+    </insert>
+    
+	<!-- 批量新增(运营消息推送配置表)信息 -->
+    <insert id="insert_operationMsgPushConfig_Batch" parameterType="java.util.List">
+    	INSERT INTO t_operation_msg_push_config 
+		(f_id,f_number,f_ios_param,f_android_param,f_huawei_param,f_jump_description,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.number,jdbcType=VARCHAR},#{item.iosParam,jdbcType=VARCHAR},#{item.androidParam,jdbcType=VARCHAR},#{item.huaweiParam,jdbcType=VARCHAR},#{item.jumpDescription,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(运营消息推送配置表)信息。 -->
+    <sql id="update_operationMsgPushConfig">
+		UPDATE t_operation_msg_push_config		<trim prefix="SET" prefixOverrides=","> 		<if test="number != null and !number.equals('') "> ,f_number=#{number}</if> 		<if test="iosParam != null and !iosParam.equals('') "> ,f_ios_param=#{iosParam}</if> 		<if test="androidParam != null and !androidParam.equals('') "> ,f_android_param=#{androidParam}</if> 		<if test="huaweiParam != null and !huaweiParam.equals('') "> ,f_huawei_param=#{huaweiParam}</if> 		<if test="jumpDescription != null and !jumpDescription.equals('') "> ,f_jump_description=#{jumpDescription}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_operationMsgPushConfig" parameterType="OperationMsgPushConfig">
+		<include refid="operationMsgPushConfigBase.update_operationMsgPushConfig"/>
+    </update>
+    
+    <!-- 批量更新(运营消息推送配置表)信息。 -->
+    <update id="update_operationMsgPushConfig_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_operation_msg_push_config		<trim prefix="SET" prefixOverrides=","> 		<if test="item.number != null and !item.number.equals('')  "> ,f_number=#{item.number}</if> 		<if test="item.iosParam != null and !item.iosParam.equals('')  "> ,f_ios_param=#{item.iosParam}</if> 		<if test="item.androidParam != null and !item.androidParam.equals('')  "> ,f_android_param=#{item.androidParam}</if> 		<if test="item.huaweiParam != null and !item.huaweiParam.equals('')  "> ,f_huawei_param=#{item.huaweiParam}</if> 		<if test="item.jumpDescription != null and !item.jumpDescription.equals('')  "> ,f_jump_description=#{item.jumpDescription}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(运营消息推送配置表)信息_逻辑删除。 -->
+    <sql id="delete_operationMsgPushConfig_Logic">
+		UPDATE t_operation_msg_push_config		<trim prefix="SET" prefixOverrides=","> 		<if test="number != null and !number.equals('')  "> ,f_number=#{number}</if> 		<if test="iosParam != null and !iosParam.equals('')  "> ,f_ios_param=#{iosParam}</if> 		<if test="androidParam != null and !androidParam.equals('')  "> ,f_android_param=#{androidParam}</if> 		<if test="huaweiParam != null and !huaweiParam.equals('')  "> ,f_huawei_param=#{huaweiParam}</if> 		<if test="jumpDescription != null and !jumpDescription.equals('')  "> ,f_jump_description=#{jumpDescription}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_operationMsgPushConfig_Logic" parameterType="OperationMsgPushConfig">
+		<include refid="operationMsgPushConfigBase.delete_operationMsgPushConfig_Logic"/>
+    </update>
+    
+    <!-- 批量删除(运营消息推送配置表)信息_逻辑删除 -->
+    <update id="delete_operationMsgPushConfig_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_operation_msg_push_config		<trim prefix="SET" prefixOverrides=","> 		<if test="item.number != null and !item.number.equals('')  "> ,f_number=#{item.number}</if> 		<if test="item.iosParam != null and !item.iosParam.equals('')  "> ,f_ios_param=#{item.iosParam}</if> 		<if test="item.androidParam != null and !item.androidParam.equals('')  "> ,f_android_param=#{item.androidParam}</if> 		<if test="item.huaweiParam != null and !item.huaweiParam.equals('')  "> ,f_huawei_param=#{item.huaweiParam}</if> 		<if test="item.jumpDescription != null and !item.jumpDescription.equals('')  "> ,f_jump_description=#{item.jumpDescription}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(运营消息推送配置表)信息。 -->
+    <sql id="delete_operationMsgPushConfig">
+		DELETE FROM t_operation_msg_push_config WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_operationMsgPushConfig" parameterType="java.lang.String">
+		<include refid="operationMsgPushConfigBase.delete_operationMsgPushConfig"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(运营消息推送配置表)信息。 -->
+    <delete id="delete_operationMsgPushConfig_Batch" parameterType="java.util.List">
+		DELETE FROM t_operation_msg_push_config WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

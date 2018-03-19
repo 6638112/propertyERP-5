@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 厨房模块 -->
+<mapper namespace="kitchen">
+    <!-- 菜谱信息Map -->
+    <resultMap type="com.cnfantasia.server.api.kitchen.entity.KitchenEntity" id="kitchenEntityMap_Append" 
+        extends="kitchenCookbookBase.kitchenCookbookBaseMap_AppendTable">
+        <result column="ext_isLikeEat" javaType="java.lang.Integer" property="isLikeEat"/><!-- 当前用是否喜欢吃 -->
+        <result column="ext_collectFlag" javaType="java.lang.Integer" property="collectFlag"/><!-- 当前用是否加入菜单 -->
+        <result column="ext_totalLikeEatCount" javaType="java.lang.Integer" property="totalLikeEatCount"/><!-- 喜欢吃的总人数 -->
+        <collection property="kitchenCookbookTypeList" resultMap="kitchenCookbookTypeEntityMap_Append"/><!-- 所属类别 -->
+        <collection property="kitchenDetailList" resultMap="kitchenDetailBase.kitchenDetailBaseMap_AppendTable"/><!-- 详细参数信息 -->
+        <collection property="kitchenCookbookStepList" resultMap="kitchenCookbookStepEntity_Map_Append"/><!-- henren步骤 -->
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.api.kitchen.entity.KitchenCookbookStepEntity" id="kitchenCookbookStepEntity_Map_Append" 
+        extends="kitchenCookbookStepBase.kitchenCookbookStepBaseMap_AppendTable">
+        <collection property="kitchenCookbookStepTipsList" resultMap="kitchenCookbookStepTipsBase.kitchenCookbookStepTipsBaseMap_AppendTable"/><!-- 步骤的tips -->
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.api.kitchen.entity.KitchenCookbookTypeEntity" id="kitchenCookbookTypeEntityMap_Append"
+        extends="kitchenCookbookTypeBase.kitchenCookbookTypeBaseMap_AppendTable">
+        <result column="ext_collectFlag" javaType="java.lang.Integer" property="collectFlag"/><!-- 用户是否已收藏标识,0否1是 -->
+        <association property="kitchenCookbookTopType" resultMap="kitchenCookbookTopTypeBase.kitchenCookbookTopTypeBaseMap_AppendTable"/>
+    </resultMap>
+    
+    <sql id="select_KitchenCookbook_signal_comm">
+        SELECT <include refid="kitchenCookbookBase.queryHead_AppendTable"/>
+            ,<include refid="kitchenCookbookTypeBase.queryHead_AppendTable"/>
+            ,<include refid="kitchenCookbookTopTypeBase.queryHead_AppendTable"/>
+            ,<include refid="kitchenDetailBase.queryHead_AppendTable"/>
+            ,<include refid="kitchenCookbookStepBase.queryHead_AppendTable"/>
+            ,<include refid="kitchenCookbookStepTipsBase.queryHead_AppendTable"/>
+            ,CASE WHEN ISNULL(S.f_id) THEN 0 ELSE 1 END AS ext_isLikeEat <!-- 0不喜欢吃，1喜欢吃 -->
+            ,(SELECT CASE WHEN COUNT(KCC.f_id) > 0 THEN 1 ELSE 0 END
+                FROM (<include refid="commonSql.qry_userIds_family_by_userInfo_select"/>) AS userIdTable
+                    INNER JOIN t_kitchen_cookbook_collect KCC ON KCC.f_sys0_del_state = 0
+                        AND KCC.f_user_id = userIdTable.t_user_f_id
+                        AND TO_DAYS(KCC.f_time) = TO_DAYS(NOW())
+                WHERE 1=1
+                AND KCC.t_kitchen_cookbook_f_id = KC.f_id
+            )AS ext_collectFlag <!-- 当天收藏 --> <!-- 0未收藏，1已收藏 -->
+            <!-- ,CASE WHEN KCC_group_collect.count > 0 THEN 1 ELSE 0 END AS ext_collectFlag -->
+            
+            ,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END 
+                FROM t_common_gather_data CGD WHERE 1=1
+                AND CGD.f_target_type = 21  <!-- 21表示厨房菜谱 --> 
+                AND CGD.f_target_id = KC.f_id
+                AND CGD.f_sys0_del_state = 0
+            ) AS ext_totalLikeEatCount <!-- 喜欢吃的总人数 -->
+            <!-- ,ext_favour_count AS ext_totalLikeEatCount -->
+        FROM t_kitchen_cookbook KC
+            INNER JOIN (
+                t_kitchen_cookbook_type_has_t_kitchen_cookbook KCTHTKC
+                INNER JOIN t_kitchen_cookbook_type KCT ON KCT.f_id = KCTHTKC.t_kitchen_cookbook_type_f_id AND KCT.f_sys0_del_state = 0
+                INNER JOIN t_kitchen_cookbook_top_type KCTT ON KCTT.f_id = KCT.t_kitchen_cookbook_top_type_f_id AND KCTT.f_sys0_del_state = 0
+            )ON KC.f_id = KCTHTKC.t_kitchen_cookbook_f_id AND KCTHTKC.f_sys0_del_state = 0
+            
+            LEFT JOIN t_kitchen_detail KD ON KC.f_id = KD.t_kitchen_cookbook_f_id AND KD.f_sys0_del_state = 0
+            LEFT JOIN (
+                t_kitchen_cookbook_step KCS
+                LEFT JOIN t_kitchen_cookbook_step_tips KCST ON KCST.t_kitchen_cookbook_step_f_id = KCS.f_id AND KCST.f_sys0_del_state = 0
+            ) ON KC.f_id = KCS.t_kitchen_cookbook_f_id AND KCS.f_sys0_del_state = 0
+            
+            LEFT JOIN t_support S ON 
+                S.f_target_type = 21  <!-- 21表示厨房菜谱 --> 
+                AND S.f_user_id = #{userId}
+                AND KC.f_id = S.f_target_id  
+                AND S.f_sys0_del_state = 0
+            <!-- LEFT JOIN (
+                SELECT KCC.t_kitchen_cookbook_f_id,COUNT(KCC.f_id) count
+                FROM (<include refid="commonSql.qry_userIds_family_by_userInfo_select"/>) AS userIdTable
+                    INNER JOIN t_kitchen_cookbook_collect KCC ON KCC.f_sys0_del_state = 0
+                        AND KCC.f_user_id = userIdTable.t_user_f_id
+                        AND TO_DAYS(KCC.f_time) = TO_DAYS(NOW())
+                WHERE 1=1 
+                GROUP BY KCC.t_kitchen_cookbook_f_id
+            ) KCC_group_collect ON KCC_group_collect.t_kitchen_cookbook_f_id = KC.f_id -->
+            <!-- LEFT JOIN
+                (SELECT f_target_id,COUNT(0) ext_favour_count 
+                    FROM t_support S2 
+                    WHERE 1=1 
+                    AND S2.f_target_type = 21 
+                    AND S2.f_sys0_del_state = 0 GROUP BY S2.f_target_id ) S2  
+                ON KC.f_id = S2.f_target_id --> 
+        WHERE 1=1
+        AND KC.f_sys0_del_state = 0
+    </sql>
+    <!-- 根据Id查询详情 -->
+    <select id="select_KitchenCookbook_Detail_ById" resultMap="kitchenEntityMap_Append" parameterType="java.util.Map">
+        <include refid="select_KitchenCookbook_signal_comm"/>
+        AND KC.f_id = #{cookbookId}
+    </select>
+    
+    <!-- 根据Ids查询详情 -->
+    <select id="select_KitchenCookbookCollect_List_ByIds" parameterType="java.util.Map" resultMap="kitchenCookbookCollectEntity_Map_Append">
+        <include refid="select_Collect_Cookbook_comm_base"/>
+        AND DATE_FORMAT(KCC.f_time,"%Y-%m-%d") = DATE_FORMAT(#{timeDay},"%Y-%m-%d")
+        AND KC.f_id IN 
+        <foreach item="item" collection="cookbookIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY KCCtime DESC
+    </select>
+    
+    <sql id="select_Cookbook_Type_List_comm">
+        SELECT <include refid="kitchenCookbookTypeBase.queryHead_AppendTable"/>
+        ,<include refid="kitchenCookbookTopTypeBase.queryHead_AppendTable"/>
+        ,1 AS ext_collectFlag <!-- 0否，1是 --> <!-- 向前兼容 -->
+        FROM t_kitchen_cookbook_type KCT
+            INNER JOIN t_kitchen_cookbook_top_type KCTT ON KCTT.f_id = KCT.t_kitchen_cookbook_top_type_f_id AND KCTT.f_sys0_del_state = 0
+        WHERE 1=1
+        AND KCT.f_sys0_del_state = 0
+        AND KCT.f_suit_city_id = #{cityId}
+    </sql>
+    <!-- 查询类别列表 -->
+    <select id="select_Cookbook_Type_List_page" resultMap="kitchenCookbookTypeEntityMap_Append"
+        parameterType="java.util.Map">
+        <include refid="select_Cookbook_Type_List_comm"/>
+        ORDER BY KCT.f_id ASC
+        <![CDATA[ LIMIT #{_begin},#{_length} ]]>
+    </select>
+    <select id="select_Cookbook_Type_List_count" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT COUNT(*)
+        FROM (<include refid="select_Cookbook_Type_List_comm"/>) as table01
+    </select>
+    
+    <!-- 查询推荐的菜谱类别列表 -->
+    <select id="select_CookbookType_Recommend_List" parameterType="java.util.Map" resultMap="kitchenCookbookTypeEntityMap_Append">
+        SELECT _tmp.*
+        FROM (
+            <include refid="select_Cookbook_Type_List_comm"/>
+        )_tmp
+        INNER JOIN t_kitchen_cookbook_type_recommend KCTR ON _tmp.KCTid = KCTR.t_kitchen_cookbook_type_f_id
+            AND KCTR.f_sys0_del_state = 0
+        ORDER BY KCTR.f_id DESC
+    </select>
+    
+    <!-- 不返回类别信息，参数详情，步骤 -->
+    <sql id="select_Cookbook_List_comm_base">
+        SELECT distinct <include refid="kitchenCookbookBase.queryHead_AppendTable"/>
+            ,CASE WHEN ISNULL(S.f_id) THEN 0 ELSE 1 END AS ext_isLikeEat <!-- 0不喜欢吃，1喜欢吃 -->
+            ,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END 
+                FROM t_common_gather_data CGD WHERE 1=1
+                AND CGD.f_target_type = 21 <!-- 21表示厨房菜谱 -->
+                AND CGD.f_target_id = KC.f_id
+                AND CGD.f_sys0_del_state = 0
+            ) AS ext_totalLikeEatCount <!-- 喜欢吃的总人数 -->
+            <!-- ,ext_favour_count AS ext_totalLikeEatCount -->
+        FROM t_kitchen_cookbook KC
+            INNER JOIN (
+                t_kitchen_cookbook_type_has_t_kitchen_cookbook KCTHTKC
+                INNER JOIN t_kitchen_cookbook_type KCT ON KCT.f_id = KCTHTKC.t_kitchen_cookbook_type_f_id AND KCT.f_sys0_del_state = 0
+                INNER JOIN t_kitchen_cookbook_top_type KCTT ON KCTT.f_id = KCT.t_kitchen_cookbook_top_type_f_id AND KCTT.f_sys0_del_state = 0
+            )ON KC.f_id = KCTHTKC.t_kitchen_cookbook_f_id AND KCTHTKC.f_sys0_del_state = 0
+            <!-- 地址关联关系 -->
+            <!-- LEFT JOIN (
+                SELECT KCAR.t_kitchen_cookbook_f_id,KCAR.f_city_id 
+                FROM t_kitchen_cookbook_address_relation KCAR
+                INNER JOIN (
+                    t_address_city AC
+                    INNER JOIN t_address_province AP ON AP.f_id = AC.t_province_f_id AND AP.f_sys0_del_state = 0 
+                    INNER JOIN t_address_country AddCout ON AddCout.f_id = AP.t_address_country_f_id AND AddCout.f_sys0_del_state = 0 
+                )ON AC.f_id=#{cityId} AND AC.f_sys0_del_state = 0 
+                WHERE 1=1
+                AND KCAR.f_sys0_del_state = 0
+                AND ( ( KCAR.f_city_id=AC.f_id ) OR (KCAR.f_province_id = AP.f_id) OR (KCAR.f_country_id = AP.f_id) )
+                GROUP BY KCAR.t_kitchen_cookbook_f_id,KCAR.f_city_id 
+            ) AS KCAR_group ON KCAR_group.t_kitchen_cookbook_f_id = KC.f_id -->
+            LEFT JOIN (
+                SELECT 
+                    kc.f_id AS t_kitchen_cookbook_f_id,
+                    kc.f_name,
+                    case
+                        when
+                            ar.f_country_id = tab.f_country_id
+                                and ar.f_province_id = tab.f_province_id
+                                and ar.f_city_id = tab.f_city_id
+                        then
+                            3
+                        when
+                            ar.f_country_id = tab.f_country_id
+                                and ar.f_province_id = tab.f_province_id
+                        then
+                            4
+                        when ar.f_country_id = tab.f_country_id then 5
+                        else 6
+                    end as mapLevel
+                FROM
+                    t_kitchen_cookbook kc
+                        left join
+                    t_kitchen_cookbook_address_relation ar ON kc.f_id = ar.t_kitchen_cookbook_f_id
+                        cross join
+                    (select 
+                        c.f_id f_country_id,
+                            ap.f_id f_province_id,
+                            ac.f_id f_city_id
+                    from
+                        t_address_city ac
+                        join t_address_province ap ON ac.t_province_f_id = ap.f_id
+                        join t_address_country c ON ap.t_address_country_f_id = c.f_id
+                        where ac.f_id = #{cityId}
+                     ) tab
+                GROUP BY kc.f_id 
+                ORDER BY mapLevel ASC
+            )AS KCAR_group ON KCAR_group.t_kitchen_cookbook_f_id = KC.f_id
+            
+            
+            LEFT JOIN t_support S ON
+                S.f_target_type = 21 <!-- 21表示厨房菜谱 -->
+                AND S.f_user_id = #{userId}
+                AND KC.f_id = S.f_target_id 
+                AND S.f_sys0_del_state = 0 
+            <!-- LEFT JOIN
+                (SELECT f_target_id,COUNT(0) ext_favour_count 
+                    FROM t_support S2 
+                    WHERE 1=1 
+                    AND S2.f_target_type = 21 
+                    AND S2.f_sys0_del_state = 0 GROUP BY S2.f_target_id ) S2  
+                ON KC.f_id = S2.f_target_id  -->
+        WHERE 1=1
+        AND KC.f_sys0_del_state = 0
+    </sql>
+    <sql id="select_Cookbook_List_comm">
+        <include refid="select_Cookbook_List_comm_base"/>
+        <if test="cookBookTypeIds != null and cookBookTypeIds != '' and cookBookTypeIds.size > 0">
+            AND KCT.f_id IN
+            <foreach item="item" collection="cookBookTypeIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="searchKey != null and searchKey != '' ">
+            AND ( KC.f_name like CONCAT('%',#{searchKey},'%') )
+            <!-- AND ( KC.f_name like CONCAT('%',#{searchKey},'%') OR KC.f_pinyin_name like CONCAT('%',#{searchKey},'%') ) -->
+        </if>
+    </sql>
+    <!-- 查询菜谱列表 -->
+    <select id="select_Cookbook_List_page" parameterType="java.util.Map" resultMap="kitchenEntityMap_Append">
+        SELECT _tmp.*,<include refid="kitchenDetailBase.queryHead_AppendTable"/>
+        FROM (
+            <include refid="select_Cookbook_List_comm"/>
+            ORDER BY KC.f_id DESC
+            <![CDATA[ LIMIT #{_begin},#{_length} ]]>
+        )_tmp
+        LEFT JOIN t_kitchen_detail KD ON _tmp.KCid = KD.t_kitchen_cookbook_f_id AND KD.f_sys0_del_state = 0
+    </select>
+    
+    <select id="select_Cookbook_List_random" parameterType="java.util.Map" resultMap="kitchenEntityMap_Append">
+        SELECT _tmp.*,<include refid="kitchenDetailBase.queryHead_AppendTable"/>
+        FROM (
+            <include refid="select_Cookbook_List_comm"/>
+            ORDER BY Rand() Limit #{count}
+        )_tmp
+        LEFT JOIN t_kitchen_detail KD ON _tmp.KCid = KD.t_kitchen_cookbook_f_id AND KD.f_sys0_del_state = 0
+    </select>
+    
+    <select id="select_Cookbook_List_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM (<include refid="select_Cookbook_List_comm"/>) AS table01
+    </select>
+    
+    <!-- 2014-9-15 11:12:47add -->
+    <!-- 查询今日推荐的n个菜 -->
+    <sql id="select_Cookbook_Recommend_comm">
+        <include refid="select_Cookbook_List_comm_base"/>
+        <!-- AND KCT.f_suit_city_id = #{cityId} -->
+        <!-- <if test="cityId != -1">
+            AND KCAR_group.f_city_id = #{cityId}
+        </if> -->
+        <if test="ignoreCoolbookIds != null and ignoreCoolbookIds != '' and ignoreCoolbookIds.size>0 ">
+            AND KC.f_id NOT IN 
+            <foreach item="item" collection="ignoreCoolbookIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <!-- 去掉用户今天收藏的 -->
+        AND KC.f_id NOT IN (
+            SELECT t_kitchen_cookbook_f_id 
+            FROM t_kitchen_cookbook_collect 
+            WHERE 1=1
+            AND f_sys0_del_state = 0
+            AND TO_DAYS(f_time) = TO_DAYS(NOW())
+            AND f_user_id = #{userId}
+        )
+    </sql>
+    <select id="select_Cookbook_Recommend_ByCount" parameterType="java.util.Map" resultMap="kitchenEntityMap_Append">
+        SELECT _tmp.*,<include refid="kitchenDetailBase.queryHead_AppendTable"/>
+        FROM (
+            <include refid="select_Cookbook_Recommend_comm"/>
+            ORDER BY KCAR_group.mapLevel ASC,RAND() 
+            <![CDATA[ LIMIT 0,#{count} ]]>
+        )_tmp
+        LEFT JOIN t_kitchen_detail KD ON _tmp.KCid = KD.t_kitchen_cookbook_f_id AND KD.f_sys0_del_state = 0
+    </select>
+    
+    <!-- 根据组合菜Id查询对应包含的组合菜 -->
+    <select id="select_Cookbook_List_ByMixId" parameterType="java.util.Map" resultMap="kitchenEntityMap_Append">
+        SELECT _tmp.*,<include refid="kitchenDetailBase.queryHead_AppendTable"/>
+        FROM (
+            <include refid="select_Cookbook_List_comm_base"/>
+            AND KC.f_id IN (
+                SELECT KCMHTKC.t_kitchen_cookbook_f_id
+                FROM t_kitchen_cookbook_mix_has_t_kitchen_cookbook KCMHTKC
+                 WHERE 1=1
+                 AND KCMHTKC.f_sys0_del_state = 0
+                 AND KCMHTKC.t_kitchen_cookbook_mix_f_id = #{cookbookMixId}
+            )
+            ORDER BY KCAR_group.mapLevel ASC,KC.f_id
+        )_tmp
+        LEFT JOIN t_kitchen_detail KD ON _tmp.KCid = KD.t_kitchen_cookbook_f_id AND KD.f_sys0_del_state = 0
+    </select>
+    
+    <!-- 查询用户收藏的菜谱类别列表 -->
+    <sql id="select_Collect_CookbookType_List_comm">
+        SELECT <!-- <include refid="kitchenCookbookTypeCollectBase.queryHead_AppendTable"/>,  -->
+            <include refid="kitchenCookbookTypeBase.queryHead_AppendTable"/>
+            ,<include refid="kitchenCookbookTopTypeBase.queryHead_AppendTable"/>
+        FROM t_kitchen_cookbook_type_collect KCTC
+            INNER JOIN (
+                t_kitchen_cookbook_type KCT 
+                INNER JOIN t_kitchen_cookbook_top_type KCTT ON KCTT.f_id = KCT.t_kitchen_cookbook_top_type_f_id AND KCTT.f_sys0_del_state = 0
+            )ON KCT.f_id = KCTC.t_kitchen_cookbook_type_f_id AND KCT.f_sys0_del_state = 0 
+            <!-- AND KCT.f_suit_city_id = #{cityId} -->
+        WHERE 1=1
+        AND KCTC.f_sys0_del_state = 0
+        AND KCTC.f_user_id = #{userId}
+    </sql>
+    <!-- 列表 -->
+    <select id="select_Collect_CookbookType_List_page" parameterType="java.util.Map" resultMap="kitchenCookbookTypeEntityMap_Append">
+        <include refid="select_Collect_CookbookType_List_comm"/>
+        ORDER BY KCTC.f_time DESC
+        <!-- <![CDATA[ LIMIT #{_begin},#{_length} ]]> -->
+    </select>
+    <!-- 数量 -->
+    <!-- <select id="select_Collect_CookbookType_List_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM (<include refid="select_Collect_CookbookType_List_comm"/>) AS table01
+    </select> -->
+    
+    <!-- 用户收藏菜谱信息Map -->
+    <resultMap type="com.cnfantasia.server.api.kitchen.entity.KitchenCookbookCollectEntity" id="kitchenCookbookCollectEntity_Map_Append"
+        extends="kitchenCookbookCollectBase.kitchenCookbookCollectBaseMap_AppendTable">
+        <result column="ext_fml_isLikeEat" javaType="java.lang.Boolean" property="fml_isLikeEat"/><!-- 当前用户是否想吃 -->
+        <result column="ext_fml_totalLikeEatCount" javaType="java.lang.Integer" property="fml_totalLikeEatCount"/><!-- 家庭总的想吃人数 -->
+        <association property="kitchenEntity" resultMap="kitchenEntityMap_Append"/>
+        <collection property="fml_isLikeEat_userList" resultMap="commonUser.userSimpleEntity_Map_Append" /><!-- 家庭总的想吃的用户列表 -->
+    </resultMap>
+    <!-- 查询收藏的菜谱_comm_base -->
+    <sql id="select_Collect_Cookbook_comm_base">
+        SELECT <include refid="kitchenCookbookBase.queryHead_AppendTable"/>
+        ,<include refid="kitchenCookbookCollectBase.queryHead_AppendTable"/>
+        ,CASE WHEN ISNULL(S.f_id) THEN 0 ELSE 1 END AS ext_isLikeEat <!-- 0不喜欢吃，1喜欢吃 -->
+        ,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END 
+            FROM t_common_gather_data CGD WHERE 1=1
+            AND CGD.f_target_type = 21 <!-- 21表示厨房菜谱 -->
+            AND CGD.f_target_id = KC.f_id
+            AND CGD.f_sys0_del_state = 0
+        ) AS ext_totalLikeEatCount <!-- 喜欢吃的总人数 -->
+        <!-- ,S2_group.ext_favour_count AS ext_totalLikeEatCount -->
+        
+        ,CASE WHEN ISNULL(KCCI.f_id) THEN FALSE ELSE TRUE END AS ext_fml_isLikeEat <!-- FALSE不喜欢吃，TRUE喜欢吃 -->
+        ,KCCI_group.ext_fml_totalLikeEatCount AS ext_fml_totalLikeEatCount
+        ,<include refid="commonUser.userSimple_common_select"/>
+        
+        FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+            INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+            INNER JOIN t_kitchen_cookbook_collect KCC ON R.f_id = KCC.f_room_id
+                 <if test="null == ignore_kcc_delete or false == ignore_kcc_delete  ">  AND KCC.f_sys0_del_state = 0 </if>
+            
+            INNER JOIN t_kitchen_cookbook KC ON KC.f_id =  KCC.t_kitchen_cookbook_f_id AND KC.f_sys0_del_state = 0
+            LEFT JOIN t_support S ON 
+                S.f_target_type = 21 <!-- 21表示厨房菜谱 -->
+                AND S.f_user_id = #{userId}
+                AND KC.f_id = S.f_target_id 
+                AND S.f_sys0_del_state = 0 
+            <!-- LEFT JOIN
+                (SELECT f_target_id,COUNT(0) ext_favour_count 
+                    FROM t_support 
+                    WHERE 1=1 
+                    AND f_target_type = 21 
+                    AND f_sys0_del_state = 0 GROUP BY f_target_id ) S2_group  
+                ON KC.f_id = S2_group.f_target_id  -->
+            LEFT JOIN t_kitchen_cookbook_collect_islike KCCI ON  KCCI.t_kitchen_cookbook_collect_f_id = KCC.f_id AND KCCI.f_sys0_del_state = 0
+                AND KCCI.f_user_id = #{userId}
+            LEFT JOIN 
+                (SELECT t_kitchen_cookbook_collect_f_id,<!-- f_user_id, -->COUNT(0) ext_fml_totalLikeEatCount
+                    FROM  t_kitchen_cookbook_collect_islike 
+                    WHERE 1=1 AND f_sys0_del_state = 0 
+                    GROUP BY t_kitchen_cookbook_collect_f_id<!-- ,f_user_id -->    ) KCCI_group
+                ON KCC.f_id = KCCI_group.t_kitchen_cookbook_collect_f_id <!-- 家庭总的想吃人数 -->
+            LEFT JOIN 
+                (SELECT t_kitchen_cookbook_collect_f_id,f_user_id
+                    FROM  t_kitchen_cookbook_collect_islike 
+                    WHERE 1=1 AND f_sys0_del_state = 0 
+                    GROUP BY t_kitchen_cookbook_collect_f_id,f_user_id) KCCI_group02
+                ON KCC.f_id = KCCI_group02.t_kitchen_cookbook_collect_f_id <!-- 家庭总的想吃的人 -->
+            LEFT JOIN t_user U ON U.f_id = KCCI_group02.f_user_id AND U.f_sys0_del_state = 0 
+            <include refid="commonUser.userSimple_common_from_leftJoin"/>
+        WHERE 1=1
+        <!-- AND KCC.f_user_id = #{userId} -->
+        <!-- AND KCC.f_user_id IN (<include refid="commonSql.qry_userIds_family_by_userInfo_select"/>) --><!-- 改为使用roomId -->
+    </sql>
+    <!-- 查询当天最近收藏的一个菜 -->
+    <sql id="select_LastCollect_Cookbook_CurrDay_comm">
+        <include refid="select_Collect_Cookbook_comm_base"/>
+        AND KCC.f_id = (
+            SELECT MAX(f_id) FROM t_kitchen_cookbook_collect WHERE 1=1 AND f_sys0_del_state = 0 
+            AND TO_DAYS(f_time) = TO_DAYS(NOW())
+            AND f_user_id = #{userId}
+        )
+    </sql>
+    <select id="select_LastCollect_Cookbook_CurrDay" parameterType="java.util.Map" resultMap="kitchenCookbookCollectEntity_Map_Append">
+        SELECT _tmp.*,<include refid="kitchenDetailBase.queryHead_AppendTable"/>
+        FROM (
+            <include refid="select_LastCollect_Cookbook_CurrDay_comm"/>
+        )_tmp
+        LEFT JOIN t_kitchen_detail KD ON _tmp.KCid = KD.t_kitchen_cookbook_f_id AND KD.f_sys0_del_state = 0
+    </select>
+    
+    <!-- 查询本周收藏的菜谱列表 -->
+    <select id="select_Collect_Cookbook_List_CurrWeek" parameterType="java.util.Map" resultMap="kitchenCookbookCollectEntity_Map_Append">
+        <include refid="select_Collect_Cookbook_comm_base"/>
+        AND DATE_FORMAT(KCC.f_time,"%U") = DATE_FORMAT(NOW(),"%U") <!-- 本周收藏的 -->
+        ORDER BY KCC.f_time DESC
+    </select>
+    
+    <!-- 根据收藏的菜谱Id查询详情 -->
+    <select id="select_KitchenCookbookCollect_Detail_ById" parameterType="java.util.Map" resultMap="kitchenCookbookCollectEntity_Map_Append">
+        <include refid="select_Collect_Cookbook_comm_base"/>
+        AND KCC.f_id =#{cookCollectId}
+    </select>
+    
+    <!-- 查询用户当天收藏的菜谱列表 -->
+    <select id="select_KitchenCookbookCollect_List_Today" parameterType="java.util.Map" resultMap="kitchenCookbookCollectEntity_Map_Append">
+        <include refid="select_Collect_Cookbook_comm_base"/>
+        AND TO_DAYS(KCC.f_time) = TO_DAYS(NOW()) <!-- 当天的 -->
+        ORDER BY KCC.f_time DESC
+    </select>
+    
+    <!-- 查询用户饮食分析 -->
+    <!-- "谷物类":"1","蔬菜类":"2","水果类":"3","水产类":"4","蛋类":"5","肉类":"6","豆类":"7","坚果类":"8","奶类":"9"-->
+    <select id="select_DietAnalysis" parameterType="java.util.Map" resultType="com.cnfantasia.server.api.kitchen.entity.DietAnalysisEntity">
+        SELECT SUM(CASE WHEN KD.f_category = 1 THEN 1 ELSE 0 END) AS grain, 
+               SUM(CASE WHEN KD.f_category = 2 THEN 1 ELSE 0 END) AS vegetable, 
+               SUM(CASE WHEN KD.f_category = 3 THEN 1 ELSE 0 END) AS fruit, 
+               SUM(CASE WHEN KD.f_category = 4 THEN 1 ELSE 0 END) AS aquatic, 
+               SUM(CASE WHEN KD.f_category = 5 THEN 1 ELSE 0 END) AS egg, 
+               SUM(CASE WHEN KD.f_category = 6 THEN 1 ELSE 0 END) AS meat, 
+               SUM(CASE WHEN KD.f_category = 7 THEN 1 ELSE 0 END) AS bean, 
+               SUM(CASE WHEN KD.f_category = 8 THEN 1 ELSE 0 END) AS nut, 
+               SUM(CASE WHEN KD.f_category = 9 THEN 1 ELSE 0 END) AS milk
+        FROM
+        (<include refid="select_Collect_Cookbook_comm_base"/>) fmly_all_valid_cbs
+        INNER JOIN t_kitchen_detail KD ON KD.t_kitchen_cookbook_f_id = KCid
+        and KD.f_sys0_del_state = 0
+    </select>
+    
+    <!-- 查询用户当天点喜欢吃的菜谱个数 -->
+    <select id="select_Count_KitchenCookbookCollect_IsLike_Today" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*) <include refid="kitchenCookbookCollectIslikeBase.busiQueryCount"/>
+        AND KCCI.t_kitchen_cookbook_collect_f_id IN 
+            <foreach item="item" collection="cookIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        AND KCCI.f_user_id = #{userId}
+        AND KCCI.f_sys0_del_state = 0
+    </select>
+    
+    <!-- 查询用户当天喜欢吃的菜谱收藏ID -->
+    <select id="select_KitchenCookbookCollectId_IsLike_Today" parameterType="java.util.Map" resultType="java.math.BigInteger">
+        SELECT tmp.KCCItKitchenCookbookCollectFId
+        FROM (
+        SELECT <include refid="kitchenCookbookCollectIslikeBase.queryHead_AppendTable"/>
+        FROM t_kitchen_cookbook_collect_islike KCCI
+        INNER JOIN t_kitchen_cookbook_collect KCC ON KCC.f_id = KCCI.t_kitchen_cookbook_collect_f_id AND KCC.f_sys0_del_state = 0
+        AND KCCI.f_user_id = #{userId}
+        AND KCCI.f_sys0_add_time >= str_to_date(current_date(),'%Y-%m-%d %T') 
+        AND KCCI.f_sys0_del_state = 0) tmp
+    </select>
+    
+    <!-- 查询用户历史的菜单列表，不包含本周 -->
+    <!-- step001 -->
+    <sql id="select_Exist_CollectCookbook_Day_List_History_comm">
+    SELECT date_format(KCCtime, '%Y-%m-%d')
+    FROM ( <include refid="select_Collect_Cookbook_comm_base"/> 
+        <![CDATA[ AND TO_DAYS(KCC.f_time) < TO_DAYS(NOW()) ]]>
+        GROUP BY date_format(KCC.f_time, "%Y-%m-%d") DESC) tmp_table
+    </sql>
+    <select id="select_Exist_CollectCookbook_Day_List_History_page" parameterType="java.util.Map" resultType="java.lang.String">
+        <include refid="select_Exist_CollectCookbook_Day_List_History_comm"/>
+        <![CDATA[ LIMIT #{_begin},#{_length} ]]> 
+    </select>
+    <select id="select_Exist_CollectCookbook_Day_List_History_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM (<include refid="select_Exist_CollectCookbook_Day_List_History_comm"/>) AS table01
+    </select>
+    <!-- step002 -->
+    <select id="select_Collect_Cookbook_List_History" parameterType="java.util.Map" resultMap="kitchenCookbookCollectEntity_Map_Append">
+        <include refid="select_Collect_Cookbook_comm_base"/>
+        <!-- <if test="dayTimeList != null and dayTimeList != '' and dayTimeList.size > 0 "> -->
+        <if test="dayTimeList != null and dayTimeList != '' "> <!-- 此处dayTimeList.size=0时会抛出异常 -->
+            AND DATE_FORMAT(KCC.f_time,"%Y-%m-%d") IN 
+            <foreach item="item" collection="dayTimeList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY KCC.f_time DESC
+    </select>
+    
+    <!-- 查询用户某天对某个菜谱收藏的次数 -->
+    <select id="select_Collect_Cookbook_Count_ByDay" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_kitchen_cookbook_collect KCC
+            <!-- INNER JOIN t_kitchen_cookbook KC ON KC.f_id =  KCC.t_kitchen_cookbook_f_id AND KC.f_sys0_del_state = 0 -->
+        WHERE 1=1 
+        AND KCC.f_sys0_del_state = 0
+        AND KCC.t_kitchen_cookbook_f_id = #{cookBookId}
+        AND DATE_FORMAT(KCC.f_time,"%Y-%m-%d") = DATE_FORMAT(#{timeDay},"%Y-%m-%d")
+        <!-- AND KCC.f_user_id = #{userId} -->
+        AND KCC.f_user_id IN (<include refid="commonSql.qry_userIds_family_by_userInfo_select"/>)
+    </select>
+    
+    <!-- 查询用户某天对某些菜谱收藏的次数 -->
+    <select id="select_Collect_Multi_Cookbook_Count_ByDay" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_kitchen_cookbook_collect KCC
+            <!-- INNER JOIN t_kitchen_cookbook KC ON KC.f_id =  KCC.t_kitchen_cookbook_f_id AND KC.f_sys0_del_state = 0 -->
+        WHERE 1=1 
+        AND KCC.f_sys0_del_state = 0
+        AND DATE_FORMAT(KCC.f_time,"%Y-%m-%d") = DATE_FORMAT(#{timeDay},"%Y-%m-%d")
+        AND KCC.t_kitchen_cookbook_f_id IN 
+            <foreach item="item" collection="cookBookIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        <!-- AND KCC.f_user_id = #{userId} -->
+        AND KCC.f_user_id IN (<include refid="commonSql.qry_userIds_family_by_userInfo_select"/>)
+    </select>
+    
+    <!-- 用户取消某天指定的菜谱收藏 -->
+    <update id="cancel_Collect_Cookbook_ByDay" parameterType="java.util.Map">
+        UPDATE t_kitchen_cookbook_collect KCC
+            <!-- INNER JOIN t_kitchen_cookbook KC ON KC.f_id =  KCC.t_kitchen_cookbook_f_id AND KC.f_sys0_del_state = 0 -->
+        SET KCC.f_sys0_del_state = 1
+            ,KCC.f_sys0_del_time= SYSDATE()
+        WHERE 1=1 
+        AND KCC.f_sys0_del_state = 0
+        AND KCC.t_kitchen_cookbook_f_id = #{cookBookId}
+        <!-- AND TO_DAYS(KCC.f_time) = TO_DAYS(#{timeDay}) -->
+        AND DATE_FORMAT(KCC.f_time,"%Y-%m-%d") = DATE_FORMAT(#{timeDay},"%Y-%m-%d")
+        AND KCC.f_user_id = #{userId}
+    </update>
+    
+    <!-- 用户批量取消某天指定的菜谱收藏 -->
+    <update id="cancel_Multi_Collect_Cookbook_ByDay" parameterType="java.util.Map">
+        UPDATE t_kitchen_cookbook_collect KCC
+            <!-- INNER JOIN t_kitchen_cookbook KC ON KC.f_id =  KCC.t_kitchen_cookbook_f_id AND KC.f_sys0_del_state = 0 -->
+        SET KCC.f_sys0_del_state = 1
+            ,KCC.f_sys0_del_time= SYSDATE()
+        WHERE 1=1 
+        AND KCC.f_sys0_del_state = 0
+        AND KCC.t_kitchen_cookbook_f_id  IN
+        <foreach item="item" collection="cookBookIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <!-- AND TO_DAYS(KCC.f_time) = TO_DAYS(#{timeDay}) -->
+        AND DATE_FORMAT(KCC.f_time,"%Y-%m-%d") = DATE_FORMAT(#{timeDay},"%Y-%m-%d")
+        AND KCC.f_user_id IN
+        <foreach item="item" collection="userIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+    
+    <!-- 批量取消收藏菜谱类别 -->
+    <update id="cancel_Collect_CookbookType_Batch" parameterType="java.util.Map">
+        UPDATE t_kitchen_cookbook_type_collect KCTC
+        SET KCTC.f_sys0_del_state = 1
+            ,KCTC.f_sys0_del_time= SYSDATE()
+        WHERE 1=1
+        AND KCTC.f_sys0_del_state = 0
+        AND KCTC.t_kitchen_cookbook_type_f_id IN
+        <foreach item="item" collection="cookBookTypeIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND KCTC.f_user_id = #{userId}
+    </update>
+    
+    <!-- 根据菜谱Id查询对应的组合列表 -->
+    <select id="select_Kitchen_CookbookMix_ByCookbookId" parameterType="java.util.Map" resultMap="kitchenCookbookMixBase.kitchenCookbookMixBaseMap_AppendTable">
+        SELECT <include refid="kitchenCookbookMixBase.queryHead_AppendTable"/>
+        FROM t_kitchen_cookbook_mix KCM
+            INNER JOIN t_kitchen_cookbook_mix_has_t_kitchen_cookbook KCMHTKC ON KCM.f_id = KCMHTKC.t_kitchen_cookbook_mix_f_id AND KCMHTKC.f_sys0_del_state = 0
+        WHERE 1=1
+        AND KCM.f_sys0_del_state = 0
+        AND KCMHTKC.t_kitchen_cookbook_f_id = #{cookbookId}
+    </select>
+    
+    <!-- 查询所有厨房菜谱最新更新时间 -->
+    <select id="select_All_Kitchen_LastUpdTime" resultType="java.lang.String">
+        <!-- select date_format(now(),'%Y-%m-%d %T')  -->
+        SELECT 
+            date_format(MAX(
+                greatest(
+                    CASE WHEN NOT ISNULL(_tmp.maxTimeInside) THEN _tmp.maxTimeInside ELSE 0 END
+                    ,CASE WHEN NOT ISNULL(KD.f_sys0_add_time) THEN KD.f_sys0_add_time ELSE 0 END
+                    ,CASE WHEN NOT ISNULL(KD.f_sys0_upd_time) THEN KD.f_sys0_upd_time ELSE 0 END
+                    ,CASE WHEN NOT ISNULL(KD.f_sys0_del_time) THEN KD.f_sys0_del_time ELSE 0 END
+                ) 
+            ) ,'%Y-%m-%d %T') AS maxTime
+        
+        FROM
+            (SELECT 
+                KC.f_id as kitchenCookbook_f_id,
+                    greatest(
+                        CASE WHEN NOT ISNULL(KC.f_sys0_add_time) THEN KC.f_sys0_add_time ELSE 0 END
+                        ,CASE WHEN NOT ISNULL(KC.f_sys0_upd_time) THEN KC.f_sys0_upd_time ELSE 0 END
+                        ,CASE WHEN NOT ISNULL(KC.f_sys0_del_time) THEN KC.f_sys0_del_time ELSE 0 END
+
+                        ,CASE WHEN NOT ISNULL(KCT.f_sys0_add_time) THEN KCT.f_sys0_add_time ELSE 0 END
+                        ,CASE WHEN NOT ISNULL(KCT.f_sys0_upd_time) THEN KCT.f_sys0_upd_time ELSE 0 END
+                        ,CASE WHEN NOT ISNULL(KCT.f_sys0_del_time) THEN KCT.f_sys0_del_time ELSE 0 END
+
+                        ,CASE WHEN NOT ISNULL(KCTHTKC.f_sys0_add_time) THEN KCTHTKC.f_sys0_add_time ELSE 0 END
+                        ,CASE WHEN NOT ISNULL(KCTHTKC.f_sys0_upd_time) THEN KCTHTKC.f_sys0_upd_time ELSE 0 END
+                        ,CASE WHEN NOT ISNULL(KCTHTKC.f_sys0_del_time) THEN KCTHTKC.f_sys0_del_time ELSE 0 END
+
+                        ,CASE WHEN NOT ISNULL(KCTT.f_sys0_add_time) THEN KCTT.f_sys0_add_time ELSE 0 END
+                        ,CASE WHEN NOT ISNULL(KCTT.f_sys0_upd_time) THEN KCTT.f_sys0_upd_time ELSE 0 END
+                        ,CASE WHEN NOT ISNULL(KCTT.f_sys0_del_time) THEN KCTT.f_sys0_del_time ELSE 0 END
+
+                        <!-- ,CASE WHEN NOT ISNULL(S.f_sys0_add_time) THEN S.f_sys0_add_time ELSE 0 END
+                        ,CASE WHEN NOT ISNULL(S.f_sys0_upd_time) THEN S.f_sys0_upd_time ELSE 0 END
+                        ,CASE WHEN NOT ISNULL(S.f_sys0_del_time) THEN S.f_sys0_del_time ELSE 0 END -->
+                        ,CASE WHEN NOT ISNULL(CGD.f_sys0_add_time) THEN CGD.f_sys0_add_time ELSE 0 END
+                        ,CASE WHEN NOT ISNULL(CGD.f_sys0_upd_time) THEN CGD.f_sys0_upd_time ELSE 0 END
+                        ,CASE WHEN NOT ISNULL(CGD.f_sys0_del_time) THEN CGD.f_sys0_del_time ELSE 0 END
+                        <!-- ,(SELECT
+                            MAX(greatest(CASE
+                                            WHEN NOT ISNULL(S.f_sys0_add_time) THEN S.f_sys0_add_time
+                                            ELSE 0
+                                        END, CASE
+                                            WHEN NOT ISNULL(S.f_sys0_upd_time) THEN S.f_sys0_upd_time
+                                            ELSE 0
+                                        END, CASE
+                                            WHEN NOT ISNULL(S.f_sys0_del_time) THEN S.f_sys0_del_time
+                                            ELSE 0
+                                        END)
+                            )
+                            FROM t_support S
+                            WHERE 1=1
+                            AND S.f_target_type = 21
+                            AND S.f_sys0_del_state = 0) -->
+                    ) AS maxTimeInside
+            FROM
+                t_kitchen_cookbook KC
+            INNER JOIN t_kitchen_cookbook_type_has_t_kitchen_cookbook KCTHTKC ON KC.f_id = KCTHTKC.t_kitchen_cookbook_f_id
+                AND KCTHTKC.f_sys0_del_state = 0
+             INNER JOIN t_kitchen_cookbook_type KCT ON KCT.f_id = KCTHTKC.t_kitchen_cookbook_type_f_id
+                AND KCT.f_sys0_del_state = 0
+            <if test="cookBookTypeIds != null and cookBookTypeIds != '' and cookBookTypeIds.size > 0">
+                AND KCT.f_id IN
+                <foreach item="item" collection="cookBookTypeIds" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+           </if>
+            INNER JOIN t_kitchen_cookbook_top_type KCTT ON KCTT.f_id = KCT.t_kitchen_cookbook_top_type_f_id
+                AND KCTT.f_sys0_del_state = 0    
+           <!--  LEFT JOIN t_support S ON 
+                S.f_target_type = 21
+                AND KC.f_id = S.f_target_id
+                AND S.f_sys0_del_state = 0 -->
+             LEFT JOIN t_common_gather_data CGD ON 1=1
+                AND CGD.f_target_type =  21
+                AND CGD.f_target_id = KC.f_id
+                AND CGD.f_sys0_del_state = 0
+            WHERE
+                1 = 1 AND KC.f_sys0_del_state = 0
+            GROUP BY kitchenCookbook_f_id
+            ) _tmp
+                LEFT JOIN
+            t_kitchen_detail KD ON _tmp.kitchenCookbook_f_id = KD.t_kitchen_cookbook_f_id
+                AND KD.f_sys0_del_state = 0
+    </select>
+    
+</mapper>

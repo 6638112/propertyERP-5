@@ -1,0 +1,299 @@
+/**   
+ * Filename:    FetchSupplyByGroupBuilding.java   
+ * @version:    1.0  
+ * Create at:   2014年11月26日 上午2:28:30   
+ * Description:  
+ *   
+ * Modification History:   
+ * Date        Author      Version     Description   
+ * ----------------------------------------------------------------- 
+ * 2014年11月26日    shiyl      1.0         1.0 Version   
+ */
+package test.baiduApi.communitySupply;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
+import com.alibaba.fastjson.JSON;
+import com.cnfantasia.server.api.commonBusiness.constant.CommonModuleDict;
+import com.cnfantasia.server.api.communitySupply.entity02.CoordinateJsonResponse.CoordinateResult;
+import com.cnfantasia.server.api.communitySupply.entity02.GroupBuildingAndCommunitySupply;
+import com.cnfantasia.server.api.communitySupply.entity02.MerchantResult;
+import com.cnfantasia.server.api.communitySupply.entity02.SuppluContectInfoEntity;
+import com.cnfantasia.server.api.communitySupply.util.BaseFetchUtil;
+import com.cnfantasia.server.api.communitySupply.util.TelPhoneParser;
+import com.cnfantasia.server.api.room.entity.GroupBuildingEntity;
+import com.cnfantasia.server.apibase.communitySupply.entity.CommunitySupply;
+import com.cnfantasia.server.apibase.communitySupplyContect.entity.CommunitySupplyContect;
+import com.cnfantasia.server.apibase.communitySupplyType.entity.CommunitySupplyType;
+import com.cnfantasia.server.apibase.groupBuildingHasTCommunitySupply.entity.GroupBuildingHasTCommunitySupply;
+import com.cnfantasia.server.common.utils.PinyinUtil;
+import com.cnfantasia.server.common.utils.StringUtils;
+
+/**
+ * Filename: FetchSupplyByGroupBuilding.java
+ * 
+ * @version: 1.0.0 Create at: 2014年11月26日 上午2:28:30 Description:
+ * 
+ *           Modification History: Date Author Version Description
+ *           ------------------------------------------------------------------
+ *           2014年11月26日 shiyl 1.0 1.0 Version
+ */
+public class FetchSupplyByGroupBuilding extends BaseCommunitySupplyDB {
+	public static void main(String[] args) throws Exception {
+		// FetchSupplyByGroupBuilding tmpFetchSupplyByGroupBuilding = new
+		// FetchSupplyByGroupBuilding();
+		// tmpFetchSupplyByGroupBuilding.main();
+	}
+
+//	@Test
+	public void fetchDataByGroupBuildingList() {
+		// 查询审核通过的所有小区数据 233 深圳市的数据
+		List<GroupBuildingEntity> checkedGroupBuildingList = groupBuildingService.getGroupBuildingDimBySearchKey("",
+				new BigInteger("233"), null, null);
+		// 逐个遍历小区数据
+		boolean start = false;
+		for (GroupBuildingEntity currGroupBuilding : checkedGroupBuildingList) {
+			System.out.println(JSON.toJSONString(currGroupBuilding));
+			// 遍历完一个小区，就存入数据库
+			String cityInfo = currGroupBuilding.getAddressBlockEntity().getAddressCityEntity().getName()
+					+ currGroupBuilding.getAddressBlockEntity().getName();
+			BigInteger groupBuildingId = currGroupBuilding.getId();
+			String groupBuildIngName = currGroupBuilding.getName();
+			if (!cityInfo.equals("深圳市福田区")) {
+				continue;
+			}
+			// 查询深圳市罗湖区~虹桥星座大厦~
+			// 查询深圳市福田区~廊桥花园~类别街道办(501):总数据为：13个。
+			// if(currGroupBuilding.getName().equals("虹桥星座大厦")){start = true;}
+			if ((cityInfo + "~" + groupBuildIngName).equals("深圳市福田区~廊桥花园")) {
+				start = true;
+			}
+			if (!start) {
+				continue;
+			}
+			try {
+				doByGroupBuilding(cityInfo, groupBuildingId, groupBuildIngName);
+				// showResultData();
+				if (insertBath) {
+					insertDataBatch();
+				}
+				// showResultDataCount();
+				showLastStartId();
+				resData2Restart();// 刷新数据重新开始
+			} catch (Exception e) {
+				e.printStackTrace();
+				// showResultData();
+				showResultDataCount();
+				showLastStartId();
+			} finally {
+				showResultDataCount();
+				showLastStartId();
+			}
+		}
+	}
+
+	// public void main() throws Exception {
+	// // String cityInfo = "深圳市福田区";
+	// // BigInteger groupBuildingId = new BigInteger("2011");// 上沙村
+	// // String groupBuildIngName ="上沙村";
+	// // doByGroupBuilding("深圳市福田区", new BigInteger("2011"), "上沙村");
+	// doByGroupBuilding("深圳市龙华新区", new BigInteger("1"), "碧水龙庭");
+	// // doByGroupBuilding("深圳市福田区", new BigInteger("38"), "深圳花好园");
+	// // doByGroupBuilding("深圳市福田区", new BigInteger("555"), "福年广场");
+	// doByGroupBuilding("深圳市南山区", new BigInteger("100038"), "美丽湾国际公寓");
+	//
+	// showResultData();
+	// showResultDataCount();
+	// if (insertBath) {
+	// insertDataBatch();
+	// }
+	// showLastStartId();
+	// }
+
+	public static List<String> getSearchNameList(String supplyTypeName, String searchKey) {
+		supplyTypeName = supplyTypeName.trim();
+		List<String> resList = new ArrayList<String>();
+		resList.add(supplyTypeName);
+		if (!StringUtils.isEmpty(searchKey)) {
+			searchKey = searchKey.trim();
+			String[] arr = searchKey.split(";");
+			for (String tmpStr : arr) {
+				if (!StringUtils.isEmpty(tmpStr) && !tmpStr.trim().equals(supplyTypeName)) {
+					resList.add(tmpStr);
+				}
+			}
+		}
+		return resList;
+	}
+
+	// public List<MerchantResult> fetchAbount20(CoordinateResult
+	// tmpCoordinateResult, List<String> searchNameList){
+	// List<MerchantResult> totalMerchantResultResults = new
+	// ArrayList<MerchantResult>();
+	// for(int i=100;i<=1000;i=i+100){
+	// List<MerchantResult> tmpList =
+	// BaseFetchUtil.getListByLocation(tmpCoordinateResult,searchNameList,i);
+	//
+	// }
+	// }
+
+	/**
+	 * TODO 查询商家详情 使用百度接口完善数据
+	 * 
+	 * @throws Exception
+	 */
+	public void doByGroupBuilding(String cityInfo, BigInteger groupBuildingId, String groupBuildIngName) throws Exception {
+		// 1.查询所有已经签约的小区列表[或只指定哪些小区]
+		CoordinateResult tmpCoordinateResult = BaseFetchUtil.getLocationByName(cityInfo, groupBuildIngName);
+		System.out.println(tmpCoordinateResult);
+		List<MerchantResult> toDealMerchantResultList = new ArrayList<MerchantResult>();
+		// 2.组装查询条件，查询对应的商家列表数据
+		for (CommunitySupplyType communitySupplyType : communitySupplyTypeList_db) {
+			if (communitySupplyType.getImportanceLevel() <= 0) {
+				continue;
+			}// 过滤顶级类别
+				// if(!communitySupplyType.getName().equals("街道办")){
+				// continue;
+				// }
+			BigInteger supplyTypeId = communitySupplyType.getId();// 美容
+			List<String> searchKeyList = getSearchNameList(communitySupplyType.getName(), communitySupplyType.getSearchKey());
+
+			// List<MerchantResult> totalMerchantResultResults =
+			// BaseFetchUtil.getListByLocation(tmpCoordinateResult,searchKeyList/*,new
+			// PageModel(0, 10)*/);
+			List<MerchantResult> totalMerchantResultResults = new ArrayList<MerchantResult>();
+			for (int radis = 100; radis <= 1000; radis += 100) {
+				if (totalMerchantResultResults.size() >= BaseFetchUtil.totalMaxCount) {
+					break;
+				}
+				List<MerchantResult> tmpList = BaseFetchUtil.getListByLocation(tmpCoordinateResult, searchKeyList, radis);
+				if (tmpList != null && tmpList.size() > 0) {
+					totalMerchantResultResults.addAll(tmpList);
+				}
+			}
+			System.out.println("查询" + cityInfo + "~" + groupBuildIngName + "~类别" + communitySupplyType.getName() + "("
+					+ supplyTypeId + "):总数据为：" + totalMerchantResultResults.size() + "个。");
+			// 3.分析数据，组装，存在则不处理，不存在则更新:商家数据，商家小区关系数据，区分数据录入方式，其它信息存储，更新小区的坐标
+			if (totalMerchantResultResults != null && totalMerchantResultResults.size() > 0) {
+				for (MerchantResult tmpAA : totalMerchantResultResults) {
+					tmpAA.setSupplyTypeId(supplyTypeId);
+					toDealMerchantResultList.add(tmpAA);
+				}
+			}
+		}
+
+		List<SuppluContectInfoEntity> suppluContectInfoEntityList = new ArrayList<SuppluContectInfoEntity>();
+		List<GroupBuildingAndCommunitySupply> groupBuildingAndCommunitySupplyList = new ArrayList<GroupBuildingAndCommunitySupply>();
+		if (toDealMerchantResultList.size() > 0) {// 商家信息批量入库
+			List<BigInteger> toAddIdList = getCommunitySupply_Id(toDealMerchantResultList.size());
+			for (int i = 0; i < toDealMerchantResultList.size(); i++) {
+				MerchantResult tmpMerchantResult = toDealMerchantResultList.get(i);
+				// 商家信息
+				String supplyName = tmpMerchantResult.getName();
+				String pinyinName = PinyinUtil.hanyuToPinyinSimple(supplyName);
+				String supplyAddress = tmpMerchantResult.getAddress();
+				BigInteger supplyTypeId = tmpMerchantResult.getSupplyTypeId();
+				// Long supplyAverageCost = null;
+				String supplyInfoDesc = null;
+				String supplyServerTime = null;
+				BigInteger communitySupplyId = getIdByCommunitySupplyName(supplyName, groupBuildingId);
+				if (communitySupplyId == null) {
+					// 查询所属类别
+					if (supplyTypeId == null && throwException) {
+						throw new RuntimeException("商家所属类别为空，商家名称：" + supplyName);
+					}
+					CommunitySupply tmpCommunitySupply = new CommunitySupply();
+					tmpCommunitySupply.setAddressDetail(supplyAddress);
+					// if (supplyAverageCost != null) {// TODO
+					// tmpCommunitySupply.setAvgConsume(supplyAverageCost * 100);//
+					// 人均消费乘以100
+					// }
+					tmpCommunitySupply.setDesc(supplyInfoDesc == null ? "" : supplyInfoDesc);
+					tmpCommunitySupply.setName(supplyName);
+					tmpCommunitySupply.setOpenHoursDesc(supplyServerTime);
+					tmpCommunitySupply.setPinyinName(pinyinName);
+					tmpCommunitySupply.setSys0DelState(0);
+					tmpCommunitySupply.settCommunitySupplyTypeFId(supplyTypeId);
+					{// baidu相关数据
+						tmpCommunitySupply.setSourceType(CommonModuleDict.Data_SourceType.BAIDU_MAP_API);
+						tmpCommunitySupply.setBaiduLocatLat(tmpMerchantResult.getLocation().getLat());
+						tmpCommunitySupply.setBaiduLocatLng(tmpMerchantResult.getLocation().getLng());
+						tmpCommunitySupply.setBaiduStreetId(tmpMerchantResult.getStreet_id());
+						tmpCommunitySupply.setBaiduUid(tmpMerchantResult.getUid());
+					}
+
+					communitySupplyId = toAddIdList.get(i);
+					tmpCommunitySupply.setId(communitySupplyId);
+					communitySupplyList.add(tmpCommunitySupply);
+				}
+				// 商家联系方式
+				if (!StringUtils.isEmpty(tmpMerchantResult.getTelephone())) {
+					List<String> phoList = TelPhoneParser.getPhoneList(tmpMerchantResult.getTelephone());
+					if (phoList != null && phoList.size() > 0) {
+						SuppluContectInfoEntity tmpSuppluContectInfoEntity = new SuppluContectInfoEntity();
+						tmpSuppluContectInfoEntity.setPhoList(phoList);
+						tmpSuppluContectInfoEntity.setSupplyId(communitySupplyId);
+						suppluContectInfoEntityList.add(tmpSuppluContectInfoEntity);
+					}
+					{// 商家小区关系
+						GroupBuildingAndCommunitySupply tmpGroupBuildingAndCommunitySupply = new GroupBuildingAndCommunitySupply();
+						tmpGroupBuildingAndCommunitySupply.setCommunitySupplyId(communitySupplyId);
+						tmpGroupBuildingAndCommunitySupply.setGroupBuildingId(groupBuildingId);
+						groupBuildingAndCommunitySupplyList.add(tmpGroupBuildingAndCommunitySupply);
+					}
+				}
+			}
+		}
+		if(suppluContectInfoEntityList.size()>0){// 商家联系方式批量入库
+			List<BigInteger> toAddIdList = getCommunitySupplyContect_Id(suppluContectInfoEntityList.size());
+			for(int i=0;i<suppluContectInfoEntityList.size();i++){
+				SuppluContectInfoEntity tmpSuppluContectInfoEntity = suppluContectInfoEntityList.get(i);
+				String contectUserName = "";
+				List<String> phoList = tmpSuppluContectInfoEntity.getPhoList();
+				BigInteger communitySupplyId = tmpSuppluContectInfoEntity.getSupplyId();
+				// 商家联系方式
+				for (String contectInfo : phoList) {
+					// 查询是否已存在
+					BigInteger existRelaId = getIdByCommunitySupplyAndCommunityContect(communitySupplyId, contectInfo);
+					if (existRelaId == null) {
+						CommunitySupplyContect tmpCommunitySupplyContect = new CommunitySupplyContect();
+						tmpCommunitySupplyContect.setClickCount(0L);
+						tmpCommunitySupplyContect.setContectInfo(contectInfo);
+						tmpCommunitySupplyContect.setEsqName(contectUserName);
+						tmpCommunitySupplyContect.setSys0DelState(0);
+						tmpCommunitySupplyContect.settCommunitySupplyFId(communitySupplyId);
+						tmpCommunitySupplyContect.setUserIdentity("商家");
+						existRelaId = toAddIdList.get(i);
+						tmpCommunitySupplyContect.setId(existRelaId);
+						tmpCommunitySupplyContect.setType(Integer.valueOf("1"));
+						communitySupplyContectList.add(tmpCommunitySupplyContect);
+					}
+				}
+			}
+		}
+		if(groupBuildingAndCommunitySupplyList.size()>0){// 商家小区关系批量入库
+			List<BigInteger> toAddIdList = getGroupBuildingHasTCommunitySupply_Id(groupBuildingAndCommunitySupplyList.size());
+			for(int i=0;i<groupBuildingAndCommunitySupplyList.size();i++){
+				GroupBuildingAndCommunitySupply tmpGroupBuildingAndCommunitySupply = groupBuildingAndCommunitySupplyList.get(i);
+				BigInteger tmpGroupBuildingId = tmpGroupBuildingAndCommunitySupply.getGroupBuildingId();
+				BigInteger communitySupplyId = tmpGroupBuildingAndCommunitySupply.getCommunitySupplyId();
+				// 校验关系信息是否存在
+				BigInteger existId = getIdByGroupBuildingAndCommunitySupply(tmpGroupBuildingId, communitySupplyId);
+				if (existId == null) {
+					existId = toAddIdList.get(i);
+					GroupBuildingHasTCommunitySupply groupBuildingHasTCommunitySupply = new GroupBuildingHasTCommunitySupply();
+					groupBuildingHasTCommunitySupply.setSys0DelState(0);
+					groupBuildingHasTCommunitySupply.settCommunitySupplyFId(communitySupplyId);
+					groupBuildingHasTCommunitySupply.settGroupBuildingFId(tmpGroupBuildingId);
+					groupBuildingHasTCommunitySupply.setId(existId);
+					groupBuildingHasTCommunitySupplyList.add(groupBuildingHasTCommunitySupply);
+				}
+			}
+		}
+	}
+
+}

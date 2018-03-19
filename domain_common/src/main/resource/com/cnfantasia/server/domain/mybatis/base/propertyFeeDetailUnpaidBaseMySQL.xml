@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:账单欠费信息表 t_property_fee_detail_unpaid -->
+<mapper namespace="propertyFeeDetailUnpaidBase">
+	<resultMap type="PropertyFeeDetailUnpaid" id="propertyFeeDetailUnpaidBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_gb_id" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->        <result column="t_real_room_id" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!-- 房间id -->        <result column="t_unpaid_pay_bill_id" javaType="java.math.BigInteger" property="tUnpaidPayBillId"/>  <!-- 账单id(上月欠费账单) -->        <result column="t_pay_bill_id" javaType="java.math.BigInteger" property="tPayBillId"/>  <!-- 最新账单id（没欠费的） -->
+	</resultMap>
+	<resultMap type="PropertyFeeDetailUnpaid" id="propertyFeeDetailUnpaidExtendMap" extends="propertyFeeDetailUnpaidBaseMap">
+	</resultMap>
+	<resultMap type="PropertyFeeDetailUnpaid" id="propertyFeeDetailUnpaidBaseMap_AppendTable">
+        <id column="PFDUid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PFDUtGbId" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->        <result column="PFDUtRealRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!-- 房间id -->        <result column="PFDUtUnpaidPayBillId" javaType="java.math.BigInteger" property="tUnpaidPayBillId"/>  <!-- 账单id(上月欠费账单) -->        <result column="PFDUtPayBillId" javaType="java.math.BigInteger" property="tPayBillId"/>  <!-- 最新账单id（没欠费的） -->
+	</resultMap>
+	<resultMap type="PropertyFeeDetailUnpaid" id="propertyFeeDetailUnpaidBaseMap_AppendTable1">
+        <id column="PFDU1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PFDU1tGbId" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->        <result column="PFDU1tRealRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!-- 房间id -->        <result column="PFDU1tUnpaidPayBillId" javaType="java.math.BigInteger" property="tUnpaidPayBillId"/>  <!-- 账单id(上月欠费账单) -->        <result column="PFDU1tPayBillId" javaType="java.math.BigInteger" property="tPayBillId"/>  <!-- 最新账单id（没欠费的） -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PFDU.f_id,PFDU.t_gb_id,PFDU.t_real_room_id,PFDU.t_unpaid_pay_bill_id,PFDU.t_pay_bill_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PFDU.f_id as PFDUid,PFDU.t_gb_id as PFDUtGbId,PFDU.t_real_room_id as PFDUtRealRoomId,PFDU.t_unpaid_pay_bill_id as PFDUtUnpaidPayBillId,PFDU.t_pay_bill_id as PFDUtPayBillId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PFDU1.f_id as PFDU1id,PFDU1.t_gb_id as PFDU1tGbId,PFDU1.t_real_room_id as PFDU1tRealRoomId,PFDU1.t_unpaid_pay_bill_id as PFDU1tUnpaidPayBillId,PFDU1.t_pay_bill_id as PFDU1tPayBillId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PFDU.f_id = #{id} ) </if>        <if test="tGbId != null">  and (PFDU.t_gb_id = #{tGbId} ) </if>        <if test="tRealRoomId != null">  and (PFDU.t_real_room_id = #{tRealRoomId} ) </if>        <if test="tUnpaidPayBillId != null">  and (PFDU.t_unpaid_pay_bill_id = #{tUnpaidPayBillId} ) </if>        <if test="tPayBillId != null">  and (PFDU.t_pay_bill_id = #{tPayBillId} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PFDU.f_id = #{id} ) </if>        <if test="tGbId != null and !tGbId.equals('')  ">  and (PFDU.t_gb_id = #{tGbId} ) </if>        <if test="tRealRoomId != null and !tRealRoomId.equals('')  ">  and (PFDU.t_real_room_id = #{tRealRoomId} ) </if>        <if test="tUnpaidPayBillId != null and !tUnpaidPayBillId.equals('')  ">  and (PFDU.t_unpaid_pay_bill_id = #{tUnpaidPayBillId} ) </if>        <if test="tPayBillId != null and !tPayBillId.equals('')  ">  and (PFDU.t_pay_bill_id = #{tPayBillId} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="propertyFeeDetailUnpaidBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="propertyFeeDetailUnpaidBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="propertyFeeDetailUnpaidBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="propertyFeeDetailUnpaidBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_property_fee_detail_unpaid PFDU    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(账单欠费信息表)信息。 -->
+	<sql id="select_propertyFeeDetailUnpaid">
+		SELECT <include refid="propertyFeeDetailUnpaidBase.queryHead"/>
+		<include refid="propertyFeeDetailUnpaidBase.busiQueryCondition"/>
+		<include refid="propertyFeeDetailUnpaidBase.dimCheckSql"/>
+		ORDER BY PFDU.f_id DESC
+	</sql>
+	<select id="select_propertyFeeDetailUnpaid" parameterType="java.util.Map" resultMap="propertyFeeDetailUnpaidBase.propertyFeeDetailUnpaidExtendMap">
+		<include refid="propertyFeeDetailUnpaidBase.select_propertyFeeDetailUnpaid"/>
+	</select>
+	
+	<!-- 根据条件分页查询(账单欠费信息表)信息  -->
+	<sql id="select_propertyFeeDetailUnpaid_withPage">
+		SELECT <include refid="propertyFeeDetailUnpaidBase.queryHead"/>
+		<include refid="propertyFeeDetailUnpaidBase.busiQueryCondition"/>
+		<include refid="propertyFeeDetailUnpaidBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_propertyFeeDetailUnpaid_withPage" resultMap="propertyFeeDetailUnpaidBase.propertyFeeDetailUnpaidExtendMap" parameterType="java.util.Map">
+		<include refid="propertyFeeDetailUnpaidBase.select_propertyFeeDetailUnpaid_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(账单欠费信息表)信息。 -->
+	<sql id="select_propertyFeeDetailUnpaid_bySeqId">
+		SELECT <include refid="propertyFeeDetailUnpaidBase.queryHead"/>
+		<include refid="propertyFeeDetailUnpaidBase.busiQueryCondition"/>
+		 and PFDU.f_id = #{_parameter}
+	</sql>
+	<select id="select_propertyFeeDetailUnpaid_bySeqId" parameterType="java.math.BigInteger" resultMap="propertyFeeDetailUnpaidBase.propertyFeeDetailUnpaidBaseMap">
+		<include refid="propertyFeeDetailUnpaidBase.select_propertyFeeDetailUnpaid_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(账单欠费信息表)记录数  -->
+	<sql id="select_propertyFeeDetailUnpaid_count">
+		SELECT COUNT(*)
+		<include refid="propertyFeeDetailUnpaidBase.busiQueryCount"/>
+		<include refid="propertyFeeDetailUnpaidBase.dimCheckSql"/>
+	</sql>
+	<select id="select_propertyFeeDetailUnpaid_count" resultType="java.lang.Integer">
+		<include refid="propertyFeeDetailUnpaidBase.select_propertyFeeDetailUnpaid_count"/>
+	</select>
+	
+	 <!-- 往(账单欠费信息表)新增一条记录。 -->
+	 <sql id="insert_propertyFeeDetailUnpaid">
+		INSERT INTO t_property_fee_detail_unpaid 
+		(f_id,t_gb_id,t_real_room_id,t_unpaid_pay_bill_id,t_pay_bill_id) VALUES 
+		(#{id},#{tGbId},#{tRealRoomId},#{tUnpaidPayBillId},#{tPayBillId})
+	 </sql>
+    <insert id="insert_propertyFeeDetailUnpaid" parameterType="PropertyFeeDetailUnpaid">
+		<include refid="propertyFeeDetailUnpaidBase.insert_propertyFeeDetailUnpaid"/>
+    </insert>
+    
+	<!-- 批量新增(账单欠费信息表)信息 -->
+    <insert id="insert_propertyFeeDetailUnpaid_Batch" parameterType="java.util.List">
+    	INSERT INTO t_property_fee_detail_unpaid 
+		(f_id,t_gb_id,t_real_room_id,t_unpaid_pay_bill_id,t_pay_bill_id) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tGbId},#{item.tRealRoomId},#{item.tUnpaidPayBillId},#{item.tPayBillId})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(账单欠费信息表)信息。 -->
+    <sql id="update_propertyFeeDetailUnpaid">
+		UPDATE t_property_fee_detail_unpaid		<trim prefix="SET" prefixOverrides=","> 		<if test="tGbId != null and !tGbId.equals('') "> ,t_gb_id=#{tGbId}</if> 		<if test="tRealRoomId != null and !tRealRoomId.equals('') "> ,t_real_room_id=#{tRealRoomId}</if> 		<if test="tUnpaidPayBillId != null and !tUnpaidPayBillId.equals('') "> ,t_unpaid_pay_bill_id=#{tUnpaidPayBillId}</if> 		<if test="tPayBillId != null and !tPayBillId.equals('') "> ,t_pay_bill_id=#{tPayBillId}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_propertyFeeDetailUnpaid" parameterType="PropertyFeeDetailUnpaid">
+		<include refid="propertyFeeDetailUnpaidBase.update_propertyFeeDetailUnpaid"/>
+    </update>
+    
+    <!-- 批量更新(账单欠费信息表)信息。 -->
+    <update id="update_propertyFeeDetailUnpaid_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_property_fee_detail_unpaid		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if> 		<if test="item.tRealRoomId != null and !item.tRealRoomId.equals('')  "> ,t_real_room_id=#{item.tRealRoomId}</if> 		<if test="item.tUnpaidPayBillId != null and !item.tUnpaidPayBillId.equals('')  "> ,t_unpaid_pay_bill_id=#{item.tUnpaidPayBillId}</if> 		<if test="item.tPayBillId != null and !item.tPayBillId.equals('')  "> ,t_pay_bill_id=#{item.tPayBillId}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(账单欠费信息表)信息_逻辑删除。 -->
+    <!-- <sql id="delete_propertyFeeDetailUnpaid_Logic">
+		UPDATE t_property_fee_detail_unpaid		<trim prefix="SET" prefixOverrides=","> 		<if test="tGbId != null and !tGbId.equals('')  "> ,t_gb_id=#{tGbId}</if> 		<if test="tRealRoomId != null and !tRealRoomId.equals('')  "> ,t_real_room_id=#{tRealRoomId}</if> 		<if test="tUnpaidPayBillId != null and !tUnpaidPayBillId.equals('')  "> ,t_unpaid_pay_bill_id=#{tUnpaidPayBillId}</if> 		<if test="tPayBillId != null and !tPayBillId.equals('')  "> ,t_pay_bill_id=#{tPayBillId}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_propertyFeeDetailUnpaid_Logic" parameterType="PropertyFeeDetailUnpaid">
+		<include refid="propertyFeeDetailUnpaidBase.delete_propertyFeeDetailUnpaid_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(账单欠费信息表)信息_逻辑删除 -->
+    <!-- <update id="delete_propertyFeeDetailUnpaid_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_property_fee_detail_unpaid		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if> 		<if test="item.tRealRoomId != null and !item.tRealRoomId.equals('')  "> ,t_real_room_id=#{item.tRealRoomId}</if> 		<if test="item.tUnpaidPayBillId != null and !item.tUnpaidPayBillId.equals('')  "> ,t_unpaid_pay_bill_id=#{item.tUnpaidPayBillId}</if> 		<if test="item.tPayBillId != null and !item.tPayBillId.equals('')  "> ,t_pay_bill_id=#{item.tPayBillId}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(账单欠费信息表)信息。 -->
+    <sql id="delete_propertyFeeDetailUnpaid">
+		DELETE FROM t_property_fee_detail_unpaid WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_propertyFeeDetailUnpaid" parameterType="java.lang.String">
+		<include refid="propertyFeeDetailUnpaidBase.delete_propertyFeeDetailUnpaid"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(账单欠费信息表)信息。 -->
+    <delete id="delete_propertyFeeDetailUnpaid_Batch" parameterType="java.util.List">
+		DELETE FROM t_property_fee_detail_unpaid WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

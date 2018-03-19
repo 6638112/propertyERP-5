@@ -1,0 +1,164 @@
+package com.cnfantasia.server.api.notice.service;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.FutureTask;
+
+import org.springframework.stereotype.Service;
+
+import com.cnfantasia.server.api.commonBusiness.entity.CommUserDataEntity;
+import com.cnfantasia.server.api.commonBusiness.service.ICommonRoomService;
+import com.cnfantasia.server.api.login.constant.LoginDict;
+import com.cnfantasia.server.api.notice.constant.NoticeDict;
+import com.cnfantasia.server.api.notice.dao.IMessageDao;
+import com.cnfantasia.server.api.pub.constant.SEQConstants;
+import com.cnfantasia.server.api.redpoint.callable.RedpointAddRunnableMulti;
+import com.cnfantasia.server.api.redpoint.constant.RedpointConstant;
+import com.cnfantasia.server.api.redpoint.constant.RedpointDict;
+import com.cnfantasia.server.api.redpoint.entity.BasicSourceEntity;
+import com.cnfantasia.server.api.redpoint.service.IRedpointService;
+import com.cnfantasia.server.api.user.entity.UserSimpleEntity;
+import com.cnfantasia.server.apibase.message.dao.IMessageBaseDao;
+import com.cnfantasia.server.apibase.message.entity.Message;
+import com.cnfantasia.server.apibase.messageGroup.entity.MessageGroup;
+import com.cnfantasia.server.apibase.userHasTMessage.dao.IUserHasTMessageBaseDao;
+import com.cnfantasia.server.apibase.userHasTMessage.entity.UserHasTMessage;
+import com.cnfantasia.server.business.pub.uuidMaker.IUuidManager;
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+//import com.cnfantasia.server.api.message.dao.IMessageDao;
+/**
+ * 描述:(消息表) 具体业务Service层实现
+ * 
+ * @version 1.00
+ * @author null
+ * 
+ */
+@Service
+public class MessageService implements IMessageService{
+//	private static Log logger = LogFactory.getLog(MessageService.class);
+	
+	private IMessageDao messageDao;
+	public void setMessageDao(IMessageDao messageDao) {
+		this.messageDao = messageDao;
+	}
+	
+	private IMessageBaseDao messageBaseDao;
+	public void setMessageBaseDao(IMessageBaseDao messageBaseDao) {
+		this.messageBaseDao = messageBaseDao;
+	}
+	
+//	private IMessageGroupBaseDao messageGroupBaseDao;
+//	public void setMessageGroupBaseDao(IMessageGroupBaseDao messageGroupBaseDao) {
+//		this.messageGroupBaseDao = messageGroupBaseDao;
+//	}
+	
+
+
+	private IUuidManager uuidManager;
+	public void setUuidManager(IUuidManager uuidManager) {
+		this.uuidManager = uuidManager;
+	}
+	
+	private ICommonRoomService commonRoomService;
+	public void setCommonRoomService(ICommonRoomService commonRoomService) {
+		this.commonRoomService = commonRoomService;
+	}
+	
+	private IUserHasTMessageBaseDao userHasTMessageBaseDao;
+	public void setUserHasTMessageBaseDao(IUserHasTMessageBaseDao userHasTMessageBaseDao) {
+		this.userHasTMessageBaseDao = userHasTMessageBaseDao;
+	}
+	
+	private IRedpointService redpointService;
+	public void setRedpointService(IRedpointService redpointService) {
+		this.redpointService = redpointService;
+	}
+	
+	
+//	@Override
+//	public int saveNoticeMessage(Message message,String[] messageGroups) throws BusinessRuntimeException{
+//		try{
+//			BigInteger messageId = uuidManager.getNextUuidBigInteger(SEQConstants.t_message);
+//			message.setId(messageId);
+//			int messageRow = messageDao.insertMessage(message);
+//			int groupRow = 0;
+//			for(String groupId:messageGroups){
+//				BigInteger messageGroupId = uuidManager.getNextUuidBigInteger(SEQConstants.t_message_group);
+//				MessageGroup mg = new MessageGroup();
+//				mg.setId(messageGroupId);
+//				mg.settMessageFId(messageId);
+//				mg.setGroupbuildingId(new BigInteger(groupId.trim()));
+//				groupRow += messageGroupBaseDao.insertMessageGroup(mg);
+//			}
+//			return messageRow !=0 && groupRow != 0 ?1:0;
+//		}catch(Exception e){
+//			logger.error(e);
+//			throw new BusinessRuntimeException(e);
+//		}
+//	}
+	
+	@Override
+	public int saveNoticeMessage(Message message,String[] messageGroups) throws BusinessRuntimeException{
+		int resCount = 0;
+		if(messageGroups!=null&&messageGroups.length>0){
+			List<BigInteger> groupBIds = new ArrayList<BigInteger>();
+			for(String idStr:messageGroups){
+				groupBIds.add(new BigInteger(idStr.trim()));
+			}
+			//查询小区下的用户列表
+			List<UserSimpleEntity> userList = commonRoomService.getUserListByGroupBuildIds(groupBIds);
+			//新增消息
+			BigInteger messageId = uuidManager.getNextUuidBigInteger(SEQConstants.t_message);
+			message.setId(messageId);
+			int messageRow = messageBaseDao.insertMessage(message);
+			if(messageRow<=0){
+				throw new BusinessRuntimeException("messageService.insertMessage.failed");
+			}
+			if(userList!=null&&userList.size()>0){//新增用户消息关系
+				List<UserHasTMessage> userHasTMessageAddList = new ArrayList<UserHasTMessage>();
+				List<BigInteger>  addIdsList = uuidManager.getNextUuidBigInteger(SEQConstants.t_user_has_t_message, userList.size());
+				List<CommUserDataEntity> commUserDataEntityList = new ArrayList<CommUserDataEntity>();
+				for(int i=0;i<userList.size();i++){
+					UserSimpleEntity tmpUserSimpleEntity = userList.get(i);
+					BigInteger userHasTMessageAddId = addIdsList.get(i);
+					BigInteger tmpUserId = tmpUserSimpleEntity.getId();
+					Integer tmpUserType = LoginDict.UserRegistOrTmp.REGIST_USER;//已注册的用户
+					BigInteger tmpDefaultRoomId = tmpUserSimpleEntity.getDefaultRoomId();
+					
+					UserHasTMessage tmpUserHasTMessage = new UserHasTMessage();
+					tmpUserHasTMessage.setId(userHasTMessageAddId);
+					tmpUserHasTMessage.setTryFailedCount(0L);
+					tmpUserHasTMessage.setSendStatus(NoticeDict.Message_SendStatus.UnDo);
+					tmpUserHasTMessage.setStatus(NoticeDict.Message_ReadStatus.NotRead);
+					tmpUserHasTMessage.settMessageFId(messageId);
+					tmpUserHasTMessage.settUserFId(tmpUserId);
+					tmpUserHasTMessage.setUserType(tmpUserType);
+					tmpUserHasTMessage.setUserRoomId(tmpDefaultRoomId);
+					userHasTMessageAddList.add(tmpUserHasTMessage);
+					
+					//红点信息准备
+					CommUserDataEntity tmpCommUserDataEntity = new CommUserDataEntity(tmpUserId, tmpUserType, tmpDefaultRoomId);
+					commUserDataEntityList.add(tmpCommUserDataEntity);
+				}
+				userHasTMessageBaseDao.insertUserHasTMessageBatch(userHasTMessageAddList);
+				
+				{//添加红点提醒
+					List<BasicSourceEntity> sourceList = new ArrayList<BasicSourceEntity>();
+					sourceList.add(new BasicSourceEntity(RedpointDict.Redpoint_Content_SourceType.SystemMessage, messageId, "INSERT"));
+					FutureTask<Boolean> task = new FutureTask<Boolean>(new RedpointAddRunnableMulti(redpointService, commUserDataEntityList, RedpointConstant.RedpointContent_ModelCode.SYS_NOTICE, sourceList));
+					new Thread(task).start();
+				}
+				
+			}
+			//根据消息类型设定消息的视图
+			resCount=1;
+		}
+		return resCount;
+	}
+
+	@Override
+	public List<MessageGroup> getGroupBuildingByMsgid(BigInteger msgId) {
+		return messageDao.selectGroupBuildingByMsgid(msgId);
+	}
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 抽奖规则 -->
+<mapper namespace="prizeRule">
+	<!-- 折扣区间 -->
+	<resultMap type="com.cnfantasia.server.api.prizeRule.entity.PrizeRuleGenerateAreaEntity" id="prizeRuleGenerateAreaEntity_Map_Append"
+		extends="prizeRuleGenerateAreaBase.prizeRuleGenerateAreaBaseMap_AppendTable">
+		
+	</resultMap>
+	
+	<select id="select_PrizeRule_GenerateArea_List" resultMap="prizeRuleGenerateAreaEntity_Map_Append">
+		SELECT <include refid="prizeRuleGenerateAreaBase.queryHead_AppendTable"/>
+		FROM t_prize_rule_generate_area PRGA
+    	WHERE 1=1
+    	AND PRGA.f_sys0_del_state = 0
+    	ORDER BY PRGA.f_id DESC
+	</select>
+	
+	
+	<!-- 抽奖执行规则 -->
+	<resultMap type="com.cnfantasia.server.api.prizeRule.entity.PrizeRuleDrawOnlinedaysEntity" id="prizeRuleDrawOnlinedaysEntity_Map_Append"
+		extends="prizeRuleDrawOnlinedaysBase.prizeRuleDrawOnlinedaysBaseMap_AppendTable">
+		
+	</resultMap>
+	<select id="select_PrizeRule_Draw_Onlinedays_List" resultMap="prizeRuleDrawOnlinedaysEntity_Map_Append">
+		SELECT <include refid="prizeRuleDrawOnlinedaysBase.queryHead_AppendTable"/>
+		FROM t_prize_rule_draw_onlinedays PRDO
+    	WHERE 1=1
+    	AND PRDO.f_sys0_del_state = 0
+    	ORDER BY PRDO.f_id DESC
+	</select>
+	
+	<!-- 不同用户数对应折扣规则 -->
+	<resultMap type="com.cnfantasia.server.api.prizeRule.entity.PrizeRuleGenerateConfigEntity" id="prizeRuleGenerateUsercountEntity_Map_Append"
+		extends="prizeRuleGenerateUsercountBase.prizeRuleGenerateUsercountBaseMap_AppendTable">
+		
+	</resultMap>
+	<select id="select_PrizeRule_Generate_Usercount_List" resultMap="prizeRuleGenerateUsercountEntity_Map_Append">
+		SELECT <include refid="prizeRuleGenerateUsercountBase.queryHead_AppendTable"/>
+		FROM t_prize_rule_generate_usercount PRGU
+    	WHERE 1=1
+    	AND PRGU.f_sys0_del_state = 0
+    	ORDER BY PRGU.f_id DESC
+	</select>
+	
+</mapper>

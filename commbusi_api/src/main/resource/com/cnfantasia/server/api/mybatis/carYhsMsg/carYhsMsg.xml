@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 临停车缴费消息发送 -->
+<mapper namespace="carYhsMsg">
+	<!-- 查询待发送的临停车缴费消息 -->
+	<select id="selectCarYhsMsgForSending" parameterType="java.util.Map" resultMap="carYhsMsgBase.carYhsMsgBaseMap">
+		SELECT <include refid="carYhsMsgBase.queryHead"/>
+		<include refid="carYhsMsgBase.busiQueryCondition"/>
+		AND CYM.f_send_status=0 AND CYM.f_sys0_del_state=0 
+		AND DATE_SUB(NOW(),INTERVAL 30 SECOND) > CYM.f_sys0_add_time<!-- 查询30秒钟后还未发送的数据 -->
+		AND CYM.t_group_building_f_id IN
+		<foreach item="item" collection="gbIds" open="(" separator="," close=")"><!-- 只查询当前结点连接的所有小区客户端 -->
+			#{item}
+		</foreach>
+	</select>
+    
+    <!-- 更新消息发送状态 -->
+    <update id="updateSendStatus" parameterType="com.cnfantasia.server.carYhsMsg.entity.CarYhsMsgSendParam">
+    	UPDATE t_car_yhs_msg SET f_send_status=1, f_sys0_upd_time=NOW() 
+    	WHERE f_send_status=0 AND t_group_building_f_id=#{gbId} AND t_car_num=#{carNum} AND f_pay_time=#{payTime}
+    </update>
+</mapper>

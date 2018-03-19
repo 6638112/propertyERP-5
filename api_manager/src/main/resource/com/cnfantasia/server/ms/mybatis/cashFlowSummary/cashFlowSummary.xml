@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 现金流量汇总 -->
+<mapper namespace="cashFlowSummary">
+	<cache
+		eviction="LRU"
+		flushInterval="300000"
+		size="10240"
+		readOnly="true"/>
+
+	<resultMap type="com.cnfantasia.server.ms.cashFlowSummary.entity.CashFlowSummaryDto" id="cashFlowSummaryList_AppendTable" extends="cashFlowSummaryBase.cashFlowSummaryBaseMap">
+        <result column="f_validate_status" javaType="java.lang.Integer" property="verifyState"/>
+        <result column="orderNum" javaType="java.lang.Integer" property="orderNum"/>
+        <result column="pcName" javaType="java.lang.String" property="pcName"/>
+        <result column="cpCompanyName" javaType="java.lang.String" property="cpCompanyName"/>
+    </resultMap>
+    
+    <!-- 现金流量汇总列表head -->
+    <sql id="cashFlowSummaryIndex_head">
+		CFS.f_province_name,
+		CFS.f_city_name,
+		PC.f_name AS pcName,
+		CP.f_company_name AS cpCompanyName,
+		CFS.f_gb_name,
+		CFS.f_building_name,
+		CFS.f_unit,
+		CFS.f_room_num,
+   		<choose>
+        	<when test="summaryType != null and !summaryType.equals('')">SUM(IFNULL(CFS.f_amount, 0)) AS f_amount</when>
+        	<otherwise>IFNULL(CFS.f_amount, 0) AS f_amount</otherwise>
+        </choose>,		
+		CFS.f_bill_type,
+		DATE_FORMAT(
+			CFS.f_bill_time,
+			'%Y-%m-%d %H:%i:%s'
+		) AS f_bill_time,
+		RR.f_validate_status,
+		<if test="summaryType != null and !summaryType.equals('')">
+			count(1) as orderNum
+		</if>
+		<if test="summaryType == null or summaryType.equals('')">
+			1 as orderNum
+		</if>
+    </sql>
+    
+    <!-- 现金流量汇总列表查询from -->
+	<sql id="cashFlowSummaryIndex_QueryFrom">
+	    FROM
+			t_cash_flow_summary CFS
+		LEFT JOIN t_real_room RR ON CFS.t_real_room_id = RR.f_id
+		LEFT JOIN t_group_building GB ON CFS.t_group_building_id = GB.f_id
+		LEFT JOIN t_property_company PC ON GB.t_property_company_f_id = PC.f_id
+		LEFT JOIN t_channel_partner_recommend CPR ON CPR.f_pc_name = PC.f_name
+		LEFT JOIN t_channel_partner CP ON CPR.t_channel_partner_f_id = CP.f_id
+	</sql>
+	
+	<sql id="cashFlowSummaryIndex_checkSql">
+		WHERE 
+			1=1
+			<if test="pcIds != null and pcIds.size()>0">
+				AND PC.f_id IN
+				<foreach item="item" collection="pcIds" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+			<if test="cpIds != null and cpIds.size()>0">
+				AND CP.f_id IN
+				<foreach item="item" collection="cpIds" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+			<if test="provinceName != null and !provinceName.equals('')">
+			AND locate(#{provinceName}, CFS.f_province_name) > 0
+			</if>
+			<if test="cityName != null and !cityName.equals('')">
+			AND locate(#{cityName}, CFS.f_city_name) > 0
+			</if>
+			<if test="pcName != null and !pcName.equals('')">
+			AND locate(#{pcName}, PC.f_name) > 0
+			</if>
+			<if test="cpCompanyName != null and !cpCompanyName.equals('')">
+			AND locate(#{cpCompanyName}, CP.f_company_name) > 0
+			</if>
+			<if test="gbName != null and !gbName.equals('')">
+			AND locate(#{gbName}, CFS.f_gb_name) > 0
+			</if>
+			<if test="buildingName != null and !buildingName.equals('')">
+			AND locate(#{buildingName}, CFS.f_building_name) > 0
+			</if>
+			<if test="unit != null and !unit.equals('')">
+			AND locate(#{unit}, CFS.f_unit) > 0
+			</if>
+			<if test="roomNum != null and !roomNum.equals('')">
+			AND locate(#{roomNum}, CFS.f_room_num) > 0
+			</if>
+			<if test="verifyState != null and verifyState=='1'.toString()">
+			AND RR.f_validate_status =5
+			</if>  
+			<if test="verifyState != null and verifyState=='0'.toString()">
+			AND (RR.f_validate_status =1 OR RR.f_validate_status IS NULL)
+			</if>  
+			<if test="billStartTime != null and !billStartTime.equals('')">
+			AND CFS.f_bill_time >=#{billStartTime}
+			</if>
+			<if test="billEndTime != null and !billEndTime.equals('')">
+			AND CFS.f_bill_time <![CDATA[<=]]>#{billEndTime}
+			</if>
+			<if test="billType != null and !billType.equals('')">
+			AND CFS.f_bill_type=#{billType}
+			</if>
+			<!-- 按小区汇总 -->
+			<if test="summaryType != null and summaryType == '1'.toString()">
+				group by PC.f_id, CP.f_id, CFS.t_group_building_id, CFS.f_bill_type
+			</if>
+			<!-- 按门牌汇总 -->
+			<if test="summaryType != null and summaryType == '2'.toString()">
+				group by CFS.t_group_building_id, CFS.f_unit, CFS.t_real_room_id, CFS.f_bill_type
+			</if>
+	</sql>
+	
+	<!-- 现金流量汇总页面列表 -->
+	<select id="select_cashFlowSummary_withPage" parameterType="java.util.Map" resultMap="cashFlowSummaryList_AppendTable">
+		SELECT
+		<include refid="cashFlowSummaryIndex_head"/>
+		<include refid="cashFlowSummaryIndex_QueryFrom"/>
+		<include refid="cashFlowSummaryIndex_checkSql"/>
+		<choose>
+			<when test="summaryType != null and summaryType == '1'.toString()"><!-- 按小区汇总 -->
+				order by CFS.f_bill_time DESC, PC.f_id, CP.f_id, CFS.t_group_building_id, CFS.f_bill_type
+			</when>
+			<when test="summaryType != null and summaryType == '2'.toString()"><!-- 按门牌汇总 -->
+				order by CFS.f_bill_time DESC, CFS.t_group_building_id, CFS.t_building_id, CFS.f_unit, CFS.f_room_num, CFS.f_bill_type
+			</when>
+			<otherwise><!-- 默认 -->
+				order by CFS.f_bill_time DESC
+			</otherwise>
+		</choose>
+		<if test="(_begin != null and !_begin.equals('')) or (_length != null and !_length.equals(''))">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+	
+	<!-- 现金流量汇总页面列表数据条数 -->
+	<select id="select_cashFlowSummary_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<choose>
+			<when test="summaryType != null and !summaryType.equals('')">
+				SELECT COUNT(*)
+				FROM (
+					SELECT COUNT(*)
+					<include refid="cashFlowSummaryIndex_QueryFrom"/>
+					<include refid="cashFlowSummaryIndex_checkSql"/>
+				) _tmp
+			</when>
+			<otherwise>
+				SELECT COUNT(*)
+				<include refid="cashFlowSummaryIndex_QueryFrom"/>
+				<include refid="cashFlowSummaryIndex_checkSql"/>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 现金流量汇总页面总金额 -->
+	<select id="select_cashFlowSummary_withTotalAmount" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+		<choose>
+			<when test="summaryType != null and !summaryType.equals('')">
+				SELECT
+					SUM(_tmp._amount)
+				FROM
+					(
+						SELECT SUM(IFNULL(CFS.f_amount, 0)) AS _amount
+						<include refid="cashFlowSummaryIndex_QueryFrom"/>
+						<include refid="cashFlowSummaryIndex_checkSql"/>
+					) AS _tmp
+			</when>
+			<otherwise>
+				SELECT SUM(IFNULL(CFS.f_amount, 0))
+				<include refid="cashFlowSummaryIndex_QueryFrom"/>
+				<include refid="cashFlowSummaryIndex_checkSql"/>
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:物业账单打印小区模板配置表 t_print_config -->
+<mapper namespace="printConfigBase">
+	<resultMap type="PrintConfig" id="printConfigBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="t_group_building_f_id" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!--  -->
+        <result column="f_template_content" javaType="java.lang.String" property="templateContent"/>  <!-- 用户编辑后的模板 -->
+        <result column="t_print_init_template_f_id" javaType="java.math.BigInteger" property="tPrintInitTemplateFId"/>  <!--  -->
+        <result column="f_service_state" javaType="java.lang.Integer" property="serviceState"/>  <!-- 启用状态 -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PrintConfig" id="printConfigExtendMap" extends="printConfigBaseMap">
+	</resultMap>
+	<resultMap type="PrintConfig" id="printConfigBaseMap_AppendTable">
+        <id column="PCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="PCtGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!--  -->
+        <result column="PCtemplateContent" javaType="java.lang.String" property="templateContent"/>  <!-- 用户编辑后的模板 -->
+        <result column="PCtPrintInitTemplateFId" javaType="java.math.BigInteger" property="tPrintInitTemplateFId"/>  <!--  -->
+        <result column="PCserviceState" javaType="java.lang.Integer" property="serviceState"/>  <!-- 启用状态 -->
+        <result column="PCsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="PCsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="PCsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="PCsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="PCsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="PCsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="PCsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PrintConfig" id="printConfigBaseMap_AppendTable1">
+        <id column="PC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="PC1tGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!--  -->
+        <result column="PC1templateContent" javaType="java.lang.String" property="templateContent"/>  <!-- 用户编辑后的模板 -->
+        <result column="PC1tPrintInitTemplateFId" javaType="java.math.BigInteger" property="tPrintInitTemplateFId"/>  <!--  -->
+        <result column="PC1serviceState" javaType="java.lang.Integer" property="serviceState"/>  <!-- 启用状态 -->
+        <result column="PC1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="PC1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="PC1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="PC1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="PC1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="PC1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="PC1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PC.f_id,PC.t_group_building_f_id,PC.f_template_content,PC.t_print_init_template_f_id,PC.f_service_state
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PC.f_id as PCid,PC.t_group_building_f_id as PCtGroupBuildingFId,PC.f_template_content as PCtemplateContent,PC.t_print_init_template_f_id as PCtPrintInitTemplateFId,PC.f_service_state as PCserviceState
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PC1.f_id as PC1id,PC1.t_group_building_f_id as PC1tGroupBuildingFId,PC1.f_template_content as PC1templateContent,PC1.t_print_init_template_f_id as PC1tPrintInitTemplateFId,PC1.f_service_state as PC1serviceState
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PC.f_id = #{id} ) </if>
+        <if test="tGroupBuildingFId != null">  and (PC.t_group_building_f_id = #{tGroupBuildingFId} ) </if>
+        <if test="templateContent != null">  and (PC.f_template_content = #{templateContent} ) </if>
+        <if test="tPrintInitTemplateFId != null">  and (PC.t_print_init_template_f_id = #{tPrintInitTemplateFId} ) </if>
+        <if test="serviceState != null">  and (PC.f_service_state = #{serviceState} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (PC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (PC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (PC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (PC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (PC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (PC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (PC.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (PC.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (PC.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (PC.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (PC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PC.f_id = #{id} ) </if>
+        <if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  ">  and (PC.t_group_building_f_id = #{tGroupBuildingFId} ) </if>
+        <if test="templateContent != null and !templateContent.equals('')  ">  and (PC.f_template_content like CONCAT('%',#{templateContent},'%') ) </if>
+        <if test="tPrintInitTemplateFId != null and !tPrintInitTemplateFId.equals('')  ">  and (PC.t_print_init_template_f_id = #{tPrintInitTemplateFId} ) </if>
+        <if test="serviceState != null and !serviceState.equals('')  ">  and (PC.f_service_state = #{serviceState} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (PC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (PC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (PC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (PC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (PC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (PC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PC.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PC.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PC.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PC.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (PC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="printConfigBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="printConfigBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="printConfigBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="printConfigBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_print_config PC
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(物业账单打印小区模板配置表)信息。 -->
+	<sql id="select_printConfig">
+		SELECT <include refid="printConfigBase.queryHead"/>
+		<include refid="printConfigBase.busiQueryCondition"/>
+		<include refid="printConfigBase.dimCheckSql"/>
+		ORDER BY PC.f_id DESC
+	</sql>
+	<select id="select_printConfig" parameterType="java.util.Map" resultMap="printConfigBase.printConfigExtendMap">
+		<include refid="printConfigBase.select_printConfig"/>
+	</select>
+	
+	<!-- 根据条件分页查询(物业账单打印小区模板配置表)信息  -->
+	<sql id="select_printConfig_withPage">
+		SELECT <include refid="printConfigBase.queryHead"/>
+		<include refid="printConfigBase.busiQueryCondition"/>
+		<include refid="printConfigBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_printConfig_withPage" resultMap="printConfigBase.printConfigExtendMap" parameterType="java.util.Map">
+		<include refid="printConfigBase.select_printConfig_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(物业账单打印小区模板配置表)信息。 -->
+	<sql id="select_printConfig_bySeqId">
+		SELECT <include refid="printConfigBase.queryHead"/>
+		<include refid="printConfigBase.busiQueryCondition"/>
+		 and PC.f_id = #{_parameter}
+	</sql>
+	<select id="select_printConfig_bySeqId" parameterType="java.math.BigInteger" resultMap="printConfigBase.printConfigBaseMap">
+		<include refid="printConfigBase.select_printConfig_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(物业账单打印小区模板配置表)记录数  -->
+	<sql id="select_printConfig_count">
+		SELECT COUNT(*)
+		<include refid="printConfigBase.busiQueryCount"/>
+		<include refid="printConfigBase.dimCheckSql"/>
+	</sql>
+	<select id="select_printConfig_count" resultType="java.lang.Integer">
+		<include refid="printConfigBase.select_printConfig_count"/>
+	</select>
+	
+	 <!-- 往(物业账单打印小区模板配置表)新增一条记录。 -->
+	 <sql id="insert_printConfig">
+		INSERT INTO t_print_config 
+		(f_id,t_group_building_f_id,f_template_content,t_print_init_template_f_id,f_service_state,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tGroupBuildingFId},#{templateContent,jdbcType=VARCHAR},#{tPrintInitTemplateFId},#{serviceState},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_printConfig" parameterType="PrintConfig">
+		<include refid="printConfigBase.insert_printConfig"/>
+    </insert>
+    
+	<!-- 批量新增(物业账单打印小区模板配置表)信息 -->
+    <insert id="insert_printConfig_Batch" parameterType="java.util.List">
+    	INSERT INTO t_print_config 
+		(f_id,t_group_building_f_id,f_template_content,t_print_init_template_f_id,f_service_state,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tGroupBuildingFId},#{item.templateContent,jdbcType=VARCHAR},#{item.tPrintInitTemplateFId},#{item.serviceState},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(物业账单打印小区模板配置表)信息。 -->
+    <sql id="update_printConfig">
+		UPDATE t_print_config
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('') "> ,t_group_building_f_id=#{tGroupBuildingFId}</if>
+ 		<if test="templateContent != null and !templateContent.equals('') "> ,f_template_content=#{templateContent}</if>
+ 		<if test="tPrintInitTemplateFId != null and !tPrintInitTemplateFId.equals('') "> ,t_print_init_template_f_id=#{tPrintInitTemplateFId}</if>
+ 		<if test="serviceState != null and !serviceState.equals('') "> ,f_service_state=#{serviceState}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_printConfig" parameterType="PrintConfig">
+		<include refid="printConfigBase.update_printConfig"/>
+    </update>
+    
+    <!-- 批量更新(物业账单打印小区模板配置表)信息。 -->
+    <update id="update_printConfig_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_print_config
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if>
+ 		<if test="item.templateContent != null and !item.templateContent.equals('')  "> ,f_template_content=#{item.templateContent}</if>
+ 		<if test="item.tPrintInitTemplateFId != null and !item.tPrintInitTemplateFId.equals('')  "> ,t_print_init_template_f_id=#{item.tPrintInitTemplateFId}</if>
+ 		<if test="item.serviceState != null and !item.serviceState.equals('')  "> ,f_service_state=#{item.serviceState}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(物业账单打印小区模板配置表)信息_逻辑删除。 -->
+    <sql id="delete_printConfig_Logic">
+		UPDATE t_print_config
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{tGroupBuildingFId}</if>
+ 		<if test="templateContent != null and !templateContent.equals('')  "> ,f_template_content=#{templateContent}</if>
+ 		<if test="tPrintInitTemplateFId != null and !tPrintInitTemplateFId.equals('')  "> ,t_print_init_template_f_id=#{tPrintInitTemplateFId}</if>
+ 		<if test="serviceState != null and !serviceState.equals('')  "> ,f_service_state=#{serviceState}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_printConfig_Logic" parameterType="PrintConfig">
+		<include refid="printConfigBase.delete_printConfig_Logic"/>
+    </update>
+    
+    <!-- 批量删除(物业账单打印小区模板配置表)信息_逻辑删除 -->
+    <update id="delete_printConfig_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_print_config
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if>
+ 		<if test="item.templateContent != null and !item.templateContent.equals('')  "> ,f_template_content=#{item.templateContent}</if>
+ 		<if test="item.tPrintInitTemplateFId != null and !item.tPrintInitTemplateFId.equals('')  "> ,t_print_init_template_f_id=#{item.tPrintInitTemplateFId}</if>
+ 		<if test="item.serviceState != null and !item.serviceState.equals('')  "> ,f_service_state=#{item.serviceState}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(物业账单打印小区模板配置表)信息。 -->
+    <sql id="delete_printConfig">
+		DELETE FROM t_print_config WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_printConfig" parameterType="java.lang.String">
+		<include refid="printConfigBase.delete_printConfig"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(物业账单打印小区模板配置表)信息。 -->
+    <delete id="delete_printConfig_Batch" parameterType="java.util.List">
+		DELETE FROM t_print_config WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

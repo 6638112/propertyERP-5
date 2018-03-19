@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:街坊消息推送类别表 t_microblog_push_type -->
+<mapper namespace="microblogPushTypeBase">
+	<resultMap type="MicroblogPushType" id="microblogPushTypeBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="f_code" javaType="java.lang.String" property="code"/>  <!-- 唯一编码 -->        <result column="f_priority" javaType="java.lang.Long" property="priority"/>  <!-- 初始优先级,数据越小优先级越高 -->        <result column="f_validity_hours" javaType="java.lang.Long" property="validityHours"/>  <!-- 有效时间长度,小时 -->        <result column="f_count" javaType="java.lang.Long" property="count"/>  <!-- 每天最多消息数 -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 描述信息 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MicroblogPushType" id="microblogPushTypeExtendMap" extends="microblogPushTypeBaseMap">
+	</resultMap>
+	<resultMap type="MicroblogPushType" id="microblogPushTypeBaseMap_AppendTable">
+        <id column="MPTid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MPTname" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="MPTcode" javaType="java.lang.String" property="code"/>  <!-- 唯一编码 -->        <result column="MPTpriority" javaType="java.lang.Long" property="priority"/>  <!-- 初始优先级,数据越小优先级越高 -->        <result column="MPTvalidityHours" javaType="java.lang.Long" property="validityHours"/>  <!-- 有效时间长度,小时 -->        <result column="MPTcount" javaType="java.lang.Long" property="count"/>  <!-- 每天最多消息数 -->        <result column="MPTdesc" javaType="java.lang.String" property="desc"/>  <!-- 描述信息 -->        <result column="MPTsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MPTsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MPTsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MPTsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MPTsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MPTsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MPTsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MicroblogPushType" id="microblogPushTypeBaseMap_AppendTable1">
+        <id column="MPT1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MPT1name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="MPT1code" javaType="java.lang.String" property="code"/>  <!-- 唯一编码 -->        <result column="MPT1priority" javaType="java.lang.Long" property="priority"/>  <!-- 初始优先级,数据越小优先级越高 -->        <result column="MPT1validityHours" javaType="java.lang.Long" property="validityHours"/>  <!-- 有效时间长度,小时 -->        <result column="MPT1count" javaType="java.lang.Long" property="count"/>  <!-- 每天最多消息数 -->        <result column="MPT1desc" javaType="java.lang.String" property="desc"/>  <!-- 描述信息 -->        <result column="MPT1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MPT1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MPT1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MPT1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MPT1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MPT1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MPT1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		MPT.f_id,MPT.f_name,MPT.f_code,MPT.f_priority,MPT.f_validity_hours,MPT.f_count,MPT.f_desc
+	</sql>
+	<sql id="queryHead_AppendTable">
+		MPT.f_id as MPTid,MPT.f_name as MPTname,MPT.f_code as MPTcode,MPT.f_priority as MPTpriority,MPT.f_validity_hours as MPTvalidityHours,MPT.f_count as MPTcount,MPT.f_desc as MPTdesc
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		MPT1.f_id as MPT1id,MPT1.f_name as MPT1name,MPT1.f_code as MPT1code,MPT1.f_priority as MPT1priority,MPT1.f_validity_hours as MPT1validityHours,MPT1.f_count as MPT1count,MPT1.f_desc as MPT1desc
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (MPT.f_id = #{id} ) </if>        <if test="name != null">  and (MPT.f_name = #{name} ) </if>        <if test="code != null">  and (MPT.f_code = #{code} ) </if>        <if test="priority != null">  and (MPT.f_priority = #{priority} ) </if>        <if test="validityHours != null">  and (MPT.f_validity_hours = #{validityHours} ) </if>        <if test="count != null">  and (MPT.f_count = #{count} ) </if>        <if test="desc != null">  and (MPT.f_desc = #{desc} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MPT.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MPT.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MPT.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MPT.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MPT.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MPT.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MPT.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MPT.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MPT.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (MPT.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (MPT.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (MPT.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (MPT.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (MPT.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (MPT.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (MPT.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="code != null and !code.equals('')  ">  and (MPT.f_code like CONCAT('%',#{code},'%') ) </if>        <if test="priority != null and !priority.equals('')  ">  and (MPT.f_priority = #{priority} ) </if>        <if test="validityHours != null and !validityHours.equals('')  ">  and (MPT.f_validity_hours = #{validityHours} ) </if>        <if test="count != null and !count.equals('')  ">  and (MPT.f_count = #{count} ) </if>        <if test="desc != null and !desc.equals('')  ">  and (MPT.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MPT.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MPT.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MPT.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MPT.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MPT.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MPT.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MPT.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MPT.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MPT.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (MPT.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (MPT.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (MPT.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (MPT.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (MPT.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="microblogPushTypeBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="microblogPushTypeBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="microblogPushTypeBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="microblogPushTypeBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_microblog_push_type MPT    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(街坊消息推送类别表)信息。 -->
+	<sql id="select_microblogPushType">
+		SELECT <include refid="microblogPushTypeBase.queryHead"/>
+		<include refid="microblogPushTypeBase.busiQueryCondition"/>
+		<include refid="microblogPushTypeBase.dimCheckSql"/>
+		ORDER BY MPT.f_id DESC
+	</sql>
+	<select id="select_microblogPushType" parameterType="java.util.Map" resultMap="microblogPushTypeBase.microblogPushTypeExtendMap">
+		<include refid="microblogPushTypeBase.select_microblogPushType"/>
+	</select>
+	
+	<!-- 根据条件分页查询(街坊消息推送类别表)信息  -->
+	<sql id="select_microblogPushType_withPage">
+		SELECT <include refid="microblogPushTypeBase.queryHead"/>
+		<include refid="microblogPushTypeBase.busiQueryCondition"/>
+		<include refid="microblogPushTypeBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_microblogPushType_withPage" resultMap="microblogPushTypeBase.microblogPushTypeExtendMap" parameterType="java.util.Map">
+		<include refid="microblogPushTypeBase.select_microblogPushType_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(街坊消息推送类别表)信息。 -->
+	<sql id="select_microblogPushType_bySeqId">
+		SELECT <include refid="microblogPushTypeBase.queryHead"/>
+		<include refid="microblogPushTypeBase.busiQueryCondition"/>
+		 and MPT.f_id = #{_parameter}
+	</sql>
+	<select id="select_microblogPushType_bySeqId" parameterType="java.math.BigInteger" resultMap="microblogPushTypeBase.microblogPushTypeBaseMap">
+		<include refid="microblogPushTypeBase.select_microblogPushType_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(街坊消息推送类别表)记录数  -->
+	<sql id="select_microblogPushType_count">
+		SELECT COUNT(*)
+		<include refid="microblogPushTypeBase.busiQueryCount"/>
+		<include refid="microblogPushTypeBase.dimCheckSql"/>
+	</sql>
+	<select id="select_microblogPushType_count" resultType="java.lang.Integer">
+		<include refid="microblogPushTypeBase.select_microblogPushType_count"/>
+	</select>
+	
+	 <!-- 往(街坊消息推送类别表)新增一条记录。 -->
+	 <sql id="insert_microblogPushType">
+		INSERT INTO t_microblog_push_type 
+		(f_id,f_name,f_code,f_priority,f_validity_hours,f_count,f_desc,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},#{priority},#{validityHours},#{count},#{desc,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_microblogPushType" parameterType="MicroblogPushType">
+		<include refid="microblogPushTypeBase.insert_microblogPushType"/>
+    </insert>
+    
+	<!-- 批量新增(街坊消息推送类别表)信息 -->
+    <insert id="insert_microblogPushType_Batch" parameterType="java.util.List">
+    	INSERT INTO t_microblog_push_type 
+		(f_id,f_name,f_code,f_priority,f_validity_hours,f_count,f_desc,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.code,jdbcType=VARCHAR},#{item.priority},#{item.validityHours},#{item.count},#{item.desc,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(街坊消息推送类别表)信息。 -->
+    <sql id="update_microblogPushType">
+		UPDATE t_microblog_push_type		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="code != null and !code.equals('') "> ,f_code=#{code}</if> 		<if test="priority != null and !priority.equals('') "> ,f_priority=#{priority}</if> 		<if test="validityHours != null and !validityHours.equals('') "> ,f_validity_hours=#{validityHours}</if> 		<if test="count != null and !count.equals('') "> ,f_count=#{count}</if> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_microblogPushType" parameterType="MicroblogPushType">
+		<include refid="microblogPushTypeBase.update_microblogPushType"/>
+    </update>
+    
+    <!-- 批量更新(街坊消息推送类别表)信息。 -->
+    <update id="update_microblogPushType_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_microblog_push_type		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.code != null and !item.code.equals('')  "> ,f_code=#{item.code}</if> 		<if test="item.priority != null and !item.priority.equals('')  "> ,f_priority=#{item.priority}</if> 		<if test="item.validityHours != null and !item.validityHours.equals('')  "> ,f_validity_hours=#{item.validityHours}</if> 		<if test="item.count != null and !item.count.equals('')  "> ,f_count=#{item.count}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(街坊消息推送类别表)信息_逻辑删除。 -->
+    <sql id="delete_microblogPushType_Logic">
+		UPDATE t_microblog_push_type		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="code != null and !code.equals('')  "> ,f_code=#{code}</if> 		<if test="priority != null and !priority.equals('')  "> ,f_priority=#{priority}</if> 		<if test="validityHours != null and !validityHours.equals('')  "> ,f_validity_hours=#{validityHours}</if> 		<if test="count != null and !count.equals('')  "> ,f_count=#{count}</if> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_microblogPushType_Logic" parameterType="MicroblogPushType">
+		<include refid="microblogPushTypeBase.delete_microblogPushType_Logic"/>
+    </update>
+    
+    <!-- 批量删除(街坊消息推送类别表)信息_逻辑删除 -->
+    <update id="delete_microblogPushType_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_microblog_push_type		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.code != null and !item.code.equals('')  "> ,f_code=#{item.code}</if> 		<if test="item.priority != null and !item.priority.equals('')  "> ,f_priority=#{item.priority}</if> 		<if test="item.validityHours != null and !item.validityHours.equals('')  "> ,f_validity_hours=#{item.validityHours}</if> 		<if test="item.count != null and !item.count.equals('')  "> ,f_count=#{item.count}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(街坊消息推送类别表)信息。 -->
+    <sql id="delete_microblogPushType">
+		DELETE FROM t_microblog_push_type WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_microblogPushType" parameterType="java.lang.String">
+		<include refid="microblogPushTypeBase.delete_microblogPushType"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(街坊消息推送类别表)信息。 -->
+    <delete id="delete_microblogPushType_Batch" parameterType="java.util.List">
+		DELETE FROM t_microblog_push_type WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

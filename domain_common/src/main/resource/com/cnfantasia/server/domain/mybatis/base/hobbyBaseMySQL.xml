@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:兴趣爱好表 t_hobby -->
+<mapper namespace="hobbyBase">
+	<resultMap type="Hobby" id="hobbyBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 爱好名称 -->        <result column="f_icon_url" javaType="java.lang.String" property="iconUrl"/>  <!-- 爱好图标url -->        <result column="f_icon_url_select" javaType="java.lang.String" property="iconUrlSelect"/>  <!-- 爱好图标选中后的url -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 兴趣描述 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="Hobby" id="hobbyExtendMap" extends="hobbyBaseMap">
+	</resultMap>
+	<resultMap type="Hobby" id="hobbyBaseMap_AppendTable">
+        <id column="Hid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="Hname" javaType="java.lang.String" property="name"/>  <!-- 爱好名称 -->        <result column="HiconUrl" javaType="java.lang.String" property="iconUrl"/>  <!-- 爱好图标url -->        <result column="HiconUrlSelect" javaType="java.lang.String" property="iconUrlSelect"/>  <!-- 爱好图标选中后的url -->        <result column="Hdesc" javaType="java.lang.String" property="desc"/>  <!-- 兴趣描述 -->        <result column="Hsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="Hsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="Hsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="Hsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="Hsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="Hsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="Hsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="Hobby" id="hobbyBaseMap_AppendTable1">
+        <id column="H1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="H1name" javaType="java.lang.String" property="name"/>  <!-- 爱好名称 -->        <result column="H1iconUrl" javaType="java.lang.String" property="iconUrl"/>  <!-- 爱好图标url -->        <result column="H1iconUrlSelect" javaType="java.lang.String" property="iconUrlSelect"/>  <!-- 爱好图标选中后的url -->        <result column="H1desc" javaType="java.lang.String" property="desc"/>  <!-- 兴趣描述 -->        <result column="H1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="H1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="H1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="H1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="H1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="H1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="H1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		H.f_id,H.f_name,H.f_icon_url,H.f_icon_url_select,H.f_desc,date_format(H.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		H.f_id as Hid,H.f_name as Hname,H.f_icon_url as HiconUrl,H.f_icon_url_select as HiconUrlSelect,H.f_desc as Hdesc,date_format(H.f_sys0_upd_time,'%Y-%m-%d %T') as Hsys0UpdTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		H1.f_id as H1id,H1.f_name as H1name,H1.f_icon_url as H1iconUrl,H1.f_icon_url_select as H1iconUrlSelect,H1.f_desc as H1desc,date_format(H1.f_sys0_upd_time,'%Y-%m-%d %T') as H1sys0UpdTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (H.f_id = #{id} ) </if>        <if test="name != null">  and (H.f_name = #{name} ) </if>        <if test="iconUrl != null">  and (H.f_icon_url = #{iconUrl} ) </if>        <if test="iconUrlSelect != null">  and (H.f_icon_url_select = #{iconUrlSelect} ) </if>        <if test="desc != null">  and (H.f_desc = #{desc} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (H.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (H.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (H.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (H.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (H.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (H.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (H.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (H.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (H.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (H.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (H.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (H.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (H.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (H.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (H.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (H.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="iconUrl != null and !iconUrl.equals('')  ">  and (H.f_icon_url like CONCAT('%',#{iconUrl},'%') ) </if>        <if test="iconUrlSelect != null and !iconUrlSelect.equals('')  ">  and (H.f_icon_url_select like CONCAT('%',#{iconUrlSelect},'%') ) </if>        <if test="desc != null and !desc.equals('')  ">  and (H.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (H.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (H.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (H.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (H.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (H.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (H.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (H.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (H.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (H.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (H.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (H.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (H.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (H.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (H.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="hobbyBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="hobbyBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="hobbyBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="hobbyBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_hobby H    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(兴趣爱好表)信息。 -->
+	<sql id="select_hobby">
+		SELECT <include refid="hobbyBase.queryHead"/>
+		<include refid="hobbyBase.busiQueryCondition"/>
+		<include refid="hobbyBase.dimCheckSql"/>
+		ORDER BY H.f_id DESC
+	</sql>
+	<select id="select_hobby" parameterType="java.util.Map" resultMap="hobbyBase.hobbyExtendMap">
+		<include refid="hobbyBase.select_hobby"/>
+	</select>
+	
+	<!-- 根据条件分页查询(兴趣爱好表)信息  -->
+	<sql id="select_hobby_withPage">
+		SELECT <include refid="hobbyBase.queryHead"/>
+		<include refid="hobbyBase.busiQueryCondition"/>
+		<include refid="hobbyBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_hobby_withPage" resultMap="hobbyBase.hobbyExtendMap" parameterType="java.util.Map">
+		<include refid="hobbyBase.select_hobby_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(兴趣爱好表)信息。 -->
+	<sql id="select_hobby_bySeqId">
+		SELECT <include refid="hobbyBase.queryHead"/>
+		<include refid="hobbyBase.busiQueryCondition"/>
+		 and H.f_id = #{_parameter}
+	</sql>
+	<select id="select_hobby_bySeqId" parameterType="java.math.BigInteger" resultMap="hobbyBase.hobbyBaseMap">
+		<include refid="hobbyBase.select_hobby_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(兴趣爱好表)记录数  -->
+	<sql id="select_hobby_count">
+		SELECT COUNT(*)
+		<include refid="hobbyBase.busiQueryCount"/>
+		<include refid="hobbyBase.dimCheckSql"/>
+	</sql>
+	<select id="select_hobby_count" resultType="java.lang.Integer">
+		<include refid="hobbyBase.select_hobby_count"/>
+	</select>
+	
+	 <!-- 往(兴趣爱好表)新增一条记录。 -->
+	 <sql id="insert_hobby">
+		INSERT INTO t_hobby 
+		(f_id,f_name,f_icon_url,f_icon_url_select,f_desc,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{iconUrl,jdbcType=VARCHAR},#{iconUrlSelect,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_hobby" parameterType="Hobby">
+		<include refid="hobbyBase.insert_hobby"/>
+    </insert>
+    
+	<!-- 批量新增(兴趣爱好表)信息 -->
+    <insert id="insert_hobby_Batch" parameterType="java.util.List">
+    	INSERT INTO t_hobby 
+		(f_id,f_name,f_icon_url,f_icon_url_select,f_desc,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.iconUrl,jdbcType=VARCHAR},#{item.iconUrlSelect,jdbcType=VARCHAR},#{item.desc,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(兴趣爱好表)信息。 -->
+    <sql id="update_hobby">
+		UPDATE t_hobby		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="iconUrl != null and !iconUrl.equals('') "> ,f_icon_url=#{iconUrl}</if> 		<if test="iconUrlSelect != null and !iconUrlSelect.equals('') "> ,f_icon_url_select=#{iconUrlSelect}</if> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_hobby" parameterType="Hobby">
+		<include refid="hobbyBase.update_hobby"/>
+    </update>
+    
+    <!-- 批量更新(兴趣爱好表)信息。 -->
+    <update id="update_hobby_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_hobby		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.iconUrl != null and !item.iconUrl.equals('')  "> ,f_icon_url=#{item.iconUrl}</if> 		<if test="item.iconUrlSelect != null and !item.iconUrlSelect.equals('')  "> ,f_icon_url_select=#{item.iconUrlSelect}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(兴趣爱好表)信息_逻辑删除。 -->
+    <sql id="delete_hobby_Logic">
+		UPDATE t_hobby		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="iconUrl != null and !iconUrl.equals('')  "> ,f_icon_url=#{iconUrl}</if> 		<if test="iconUrlSelect != null and !iconUrlSelect.equals('')  "> ,f_icon_url_select=#{iconUrlSelect}</if> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_hobby_Logic" parameterType="Hobby">
+		<include refid="hobbyBase.delete_hobby_Logic"/>
+    </update>
+    
+    <!-- 批量删除(兴趣爱好表)信息_逻辑删除 -->
+    <update id="delete_hobby_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_hobby		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.iconUrl != null and !item.iconUrl.equals('')  "> ,f_icon_url=#{item.iconUrl}</if> 		<if test="item.iconUrlSelect != null and !item.iconUrlSelect.equals('')  "> ,f_icon_url_select=#{item.iconUrlSelect}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(兴趣爱好表)信息。 -->
+    <sql id="delete_hobby">
+		DELETE FROM t_hobby WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_hobby" parameterType="java.lang.String">
+		<include refid="hobbyBase.delete_hobby"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(兴趣爱好表)信息。 -->
+    <delete id="delete_hobby_Batch" parameterType="java.util.List">
+		DELETE FROM t_hobby WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

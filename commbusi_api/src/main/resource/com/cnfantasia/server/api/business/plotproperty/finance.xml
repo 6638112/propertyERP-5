@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+	<bean id="financeDao" class="com.cnfantasia.server.api.plotproperty.dao.FinanceDao" parent="abstractBaseDao">
+	</bean>
+	
+	<bean id="financeService" class="com.cnfantasia.server.api.plotproperty.service.FinanceService" >
+		<property name="financeDao" ref="financeDao" />
+		<property name="commonLockService" ref="commonLockService" />
+		<property name="propertyFeeDetailBaseService" ref="propertyFeeDetailBaseService" />
+		<property name="carNumPayLogBaseDao" ref="carNumPayLogBaseDao" />
+		<property name="uuidManager" ref="uuidManager" />
+		<property name="carNumListBaseDao" ref="carNumListBaseDao" />
+		<property name="homeMessageService" ref="homeMessageService"/>
+	</bean>
+	
+	<bean id="financeDeductionTask" class="com.cnfantasia.server.api.plotproperty.util.FinanceDeductionTask">
+		<property name="financeService" ref="financeService" />
+	</bean>
+	
+</beans>  

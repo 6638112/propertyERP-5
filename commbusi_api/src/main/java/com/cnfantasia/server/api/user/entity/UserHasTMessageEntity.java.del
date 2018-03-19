@@ -1,0 +1,49 @@
+package com.cnfantasia.server.api.user.entity;
+
+import java.math.BigInteger;
+
+import com.cnfantasia.server.apibase.message.entity.Message;
+import com.cnfantasia.server.apibase.userHasTMessage.entity.UserHasTMessage;
+/**
+ * 描述:(用户消息关系) 具体业务实体类
+ * 
+ * @version 1.00
+ * @author null
+ * 
+ */
+public class UserHasTMessageEntity extends UserHasTMessage{
+	private static final long serialVersionUID = 1L;
+	
+	/**消息内容实体*/
+	private Message message;
+	
+	public Message getMessage() {
+		return message;
+	}
+	public void setMessage(Message message) {
+		this.message = message;
+	}
+	@Override
+	public BigInteger gettMessageFId() {
+		if(message==null){return null;}
+		return message.getId();
+	}
+	@Override
+	public void settMessageFId(BigInteger tMessageFId) {
+		if(message==null){message = new Message();}
+		message.setId(tMessageFId);
+	}
+	
+	/**
+	 * 消息状态=={"0":"未读","1":"已读"}
+	 * @return
+	 */
+	public Integer getReadStatus_Ext() {
+		return super.getStatus();
+	}
+	
+	public BigInteger getMessageId_Ext(){
+		return gettMessageFId();
+	}
+	
+}

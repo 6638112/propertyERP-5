@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 换一换 -->
+<mapper namespace="exchange">
+	<resultMap type="com.cnfantasia.server.api.exchange.entity.ExchangeBaseEntity" id="exchangeBaseEntity_Map_Append"
+		extends="communityExchangeContentBase.communityExchangeContentBaseMap_AppendTable">
+		<!-- 评论总数 -->
+		<result column="ext_commentTotalCount" javaType="java.lang.Integer" property="commentTotalCount"/>
+		<!-- 点赞总数 -->
+		<result column="ext_totalSupportCount" javaType="java.lang.Integer" property="totalSupportCount"/>
+		<!-- 是否已点赞 -->
+		<result column="ext_isSupported" javaType="java.lang.Boolean" property="isSupported"/>
+		<!-- 是否已收藏 -->
+		<result column="ext_isCollected" javaType="java.lang.Boolean" property="isCollected"/>
+		
+		<!-- 已经参与要换的换物数量 -->
+		<result column="ext_relationCount" javaType="java.lang.Integer" property="relationCount"/>
+		<!-- 换物与用户所属关系 0:游客，1:发起者，2参与者 -->
+		<result column="ext_userBelong" javaType="java.lang.Integer" property="userBelong"/>
+		
+		<!-- 拥有者 -->
+		<association property="owner" resultMap="commonUser.userSimpleEntity_Map_Append"/>
+		<!-- 图片列表 -->
+		<collection property="exchangePicList" resultMap="communityExchangePicBase.communityExchangePicBaseMap_AppendTable"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.exchange.entity.ExchangeEntity" id="exchangeEntity_Map_Append" extends="exchangeBaseEntity_Map_Append">
+		<!-- 参与交换的换物列表 -->
+		<!-- <collection property="exchangeRelationGoalEntityList" resultMap="exchangeRelationGoalEntity_Map_Append"/> -->
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.exchange.entity.ExchangeRelationGoalEntity" id="exchangeRelationGoalEntity_Map_Append" 
+		extends="communityExchangeRelationBase.communityExchangeRelationBaseMap_AppendTable">
+		<!-- 跪求换数量 -->
+		<result column="ext_relation_wantedCount" javaType="java.lang.Integer" property="wantedCount"/>
+		
+		<!-- 评论总数 -->
+		<result column="ext_relation_commentTotalCount" javaType="java.lang.Integer" property="commentTotalCount"/>
+		<!-- 点赞总数 -->
+		<result column="ext_relation_totalSupportCount" javaType="java.lang.Integer" property="totalSupportCount"/>
+		<!-- 是否已点赞 -->
+		<result column="ext_relation_isSupported" javaType="java.lang.Boolean" property="isSupported"/>
+		
+		<!-- 目标换物详情 -->
+		<association property="goalExchangeEntity" resultMap="exchangeBaseEntity_Map_Append" />
+	</resultMap>
+	
+	<sql id="exchangeEntity_select_comm">
+		(SELECT CASE WHEN ISNULL(sum(CGD.f_total_comment_count)) THEN 0 ELSE sum(CGD.f_total_comment_count) END 
+			FROM t_common_gather_data CGD WHERE 1=1
+			AND CGD.f_target_type = 71  <!-- 71换物信息 -->
+			AND CGD.f_target_id = CEC.f_id
+			AND CGD.f_sys0_del_state = 0
+		) AS ext_commentTotalCount 
+		,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END 
+			FROM t_common_gather_data CGD WHERE 1=1
+			AND CGD.f_target_type = 71  <!-- 71换物信息 -->
+			AND CGD.f_target_id = CEC.f_id
+			AND CGD.f_sys0_del_state = 0
+		) AS ext_totalSupportCount 
+		
+		<!-- CASE WHEN ISNULL(C_group.totalCount) THEN 0 ELSE C_group.totalCount END AS ext_commentTotalCount 
+		,CASE WHEN ISNULL(S_group.totalCount) THEN 0 ELSE S_group.totalCount END AS ext_totalSupportCount --> 
+		,CASE WHEN ISNULL(CER_group.totalCount) THEN 0 ELSE CER_group.totalCount END AS ext_relationCount 
+		,CASE WHEN ISNULL(S.f_id) THEN false ELSE true END AS ext_isSupported 
+		,CASE WHEN ISNULL(COLL.f_id) THEN false ELSE true END AS ext_isCollected 
+		
+		<!-- 0:游客，1:发起者，2参与者 -->
+		,CASE 
+			WHEN CEC.f_user_id = #{userId} THEN 1 
+			WHEN CER_group.currUserStatus > 0 THEN 2
+			ELSE 0 END AS ext_userBelong
+	</sql>
+	<sql id="exchangeEntity_from_comm">
+		LEFT JOIN(
+			SELECT CER02.f_launch_exchg_id AS f_launch_exchg_id,count(*) AS totalCount
+			,SUM(CASE WHEN CEC02.f_user_id = #{userId} THEN 1 ELSE 0 END) AS currUserStatus
+			FROM t_community_exchange_relation CER02
+				INNER JOIN t_community_exchange_content CEC02 ON CEC02.f_id = CER02.f_join_exchg_id	AND CEC02.f_sys0_del_state = 0
+			WHERE 1=1
+			AND CER02.f_sys0_del_state = 0
+			GROUP BY CER02.f_launch_exchg_id
+		) CER_group ON CER_group.f_launch_exchg_id = CEC.f_id
+		<!-- LEFT JOIN  (SELECT f_target_id ,COUNT(*) AS totalCount
+			FROM t_comments 
+			WHERE 1=1 AND f_sys0_del_state = 0 AND f_target_type = 71
+			GROUP BY f_target_id
+		) C_group ON C_group.f_target_id = CEC.f_id
+		LEFT JOIN (SELECT f_target_id ,COUNT(*) AS totalCount
+			FROM t_support 
+			WHERE 1=1 
+			AND f_target_type = 71
+			AND f_sys0_del_state = 0
+			GROUP BY f_target_id
+		) S_group ON S_group.f_target_id = CEC.f_id -->
+		<!-- 是否已点赞 -->
+		LEFT JOIN t_support S ON 
+			S.f_target_type = 71  <!-- 71换物信息 --> 
+			AND S.f_user_id = #{userId}
+			AND CEC.f_id = S.f_target_id  
+			AND S.f_sys0_del_state = 0
+		<!-- 是否已收藏 -->
+		LEFT JOIN t_collections COLL ON CEC.f_id = COLL.f_target_id AND COLL.f_target_type = 71  <!-- 71换物信息 -->
+			AND COLL.f_user_id = #{userId}
+			AND COLL.f_sys0_del_state = 0
+	</sql>
+	
+	<!-- 查询最热的一个换物 -->
+	<select id="select_MostHot_Content" parameterType="java.util.Map" resultMap="exchangeEntity_Map_Append">
+		SELECT _tmp.*
+			,<include refid="communityExchangePicBase.queryHead_AppendTable"/>
+		FROM (
+			SELECT <include refid="communityExchangeContentBase.queryHead_AppendTable"/>
+				,<include refid="commonUser.userSimple_common_select"/>
+				,<include refid="exchangeEntity_select_comm"/>
+			FROM t_community_exchange_content CEC
+				INNER JOIN t_user U ON U.f_id = CEC.f_user_id AND U.f_sys0_del_state = 0
+				<include refid="commonUser.userSimple_common_from"/>
+				<include refid="exchangeEntity_from_comm"/>
+    	 	WHERE 1=1
+			AND CEC.f_sys0_del_state = 0
+			AND CEC.t_group_building_f_id = #{groupBuildingId}
+			AND CEC.f_status != 1 <!-- 换物状态=={"1":"闲置中","2":"可交换","3":"已交换"} -->
+			AND CEC.f_create_type = 0 <!-- 创建方式=={"0":"发起方式创建","1":"参与方式创建"} -->
+			ORDER BY 
+			CASE <!-- f_status 换物状态=={"1":"闲置中","2":"可交换","3":"已交换"} -->
+				WHEN CEC.f_status= 2  <!-- AND (CEC.f_user_id = #{userId} AND CEC.f_status != 1) --> THEN 1
+				WHEN CEC.f_status= 3 THEN 3
+				WHEN CEC.f_status=1 THEN 4
+				END,
+			<!-- CER_group.totalCount DESC, C_group.totalCount DESC, S_group.totalCount DESC,CEC.f_create_time DESC -->
+			CER_group.totalCount DESC,ext_commentTotalCount DESC,ext_totalSupportCount DESC,CEC.f_create_time DESC
+			LIMIT 0,1
+		) _tmp
+		LEFT JOIN t_community_exchange_pic CEP ON CEP.t_community_exchange_content_f_id = _tmp.CECid
+			AND CEP.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 查询热门换物列表 -->
+	<sql id="select_HotContent_List_Comm">
+		SELECT <include refid="communityExchangeContentBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="exchangeEntity_select_comm"/>
+		FROM t_community_exchange_content CEC
+			INNER JOIN t_user U ON U.f_id = CEC.f_user_id AND U.f_sys0_del_state = 0
+			<include refid="commonUser.userSimple_common_from"/>
+			<include refid="exchangeEntity_from_comm"/>
+   	 	WHERE 1=1
+		AND CEC.f_sys0_del_state = 0
+		AND CEC.t_group_building_f_id = #{groupBuildingId}
+		AND CEC.f_status != 1 <!-- 换物状态=={"1":"闲置中","2":"可交换","3":"已交换"} -->
+		AND CEC.f_create_type = 0 <!-- 创建方式=={"0":"发起方式创建","1":"参与方式创建"} -->
+	</sql>
+	<select id="select_HotContent_List_Page" parameterType="java.util.Map" resultMap="exchangeBaseEntity_Map_Append">
+		SELECT _tmp.*
+			,<include refid="communityExchangePicBase.queryHead_AppendTable"/>
+		FROM (
+			<include refid="select_HotContent_List_Comm"/>
+			<!-- ORDER BY CEC.f_id DESC -->
+			ORDER BY <!-- f_status 换物状态=={"1":"闲置中","2":"可交换","3":"已交换"} -->
+			CASE 
+				WHEN CEC.f_status= 2  <!-- AND (CEC.f_user_id = #{userId} AND CEC.f_status != 1) --> THEN 1
+				WHEN CEC.f_status= 3 THEN 3
+				WHEN CEC.f_status=1 THEN 4
+				END
+			<!-- ,CEC.f_create_time DESC,CER_group.totalCount DESC, C_group.totalCount DESC, S_group.totalCount DESC -->
+			,CEC.f_create_time DESC,CER_group.totalCount DESC,ext_commentTotalCount DESC,ext_totalSupportCount DESC
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		) _tmp
+		LEFT JOIN t_community_exchange_pic CEP ON CEP.t_community_exchange_content_f_id = _tmp.CECid
+			AND CEP.f_sys0_del_state = 0
+	</select>
+	<select id="select_HotContent_List_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (<include refid="select_HotContent_List_Comm"/>) AS table01 
+	</select>
+	
+	<!-- 查询我发起的换物列表 -->
+	<sql id="select_LaunchContent_List_Comm">
+		SELECT <include refid="communityExchangeContentBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="exchangeEntity_select_comm"/>
+		FROM t_community_exchange_content CEC
+			INNER JOIN t_user U ON U.f_id = CEC.f_user_id AND U.f_sys0_del_state = 0
+			<include refid="commonUser.userSimple_common_from"/>
+			<include refid="exchangeEntity_from_comm"/>
+		WHERE 1=1
+		AND CEC.f_sys0_del_state = 0
+		AND CEC.t_group_building_f_id = #{groupBuildingId}
+		AND CEC.f_user_id = #{userId}
+		AND CEC.f_status != 1 <!-- 换物状态=={"1":"闲置中","2":"可交换","3":"已交换"} -->
+		AND CEC.f_create_type = 0 <!-- 创建方式=={"0":"发起方式创建","1":"参与方式创建"} -->
+	</sql>
+	<select id="select_LaunchContent_List_Page" parameterType="java.util.Map" resultMap="exchangeBaseEntity_Map_Append">
+		SELECT _tmp.*
+			,<include refid="communityExchangePicBase.queryHead_AppendTable"/>
+		FROM (
+			<include refid="select_LaunchContent_List_Comm"/>
+			<!-- ORDER BY CEC.f_id DESC -->
+			ORDER BY  CASE 
+				WHEN CEC.f_status= 2 THEN 1
+				WHEN CEC.f_status= 3 THEN 3
+				WHEN CEC.f_status=1 THEN 4
+				END
+				,CEC.f_create_time DESC
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		) _tmp
+		LEFT JOIN t_community_exchange_pic CEP ON CEP.t_community_exchange_content_f_id = _tmp.CECid
+			AND CEP.f_sys0_del_state = 0
+	</select>
+	<select id="select_LaunchContent_List_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (<include refid="select_LaunchContent_List_Comm"/>) AS table01 
+	</select>
+	
+	<!-- 查询我参与的换物列表 -->
+	<sql id="select_JoinContent_List_Comm">
+		SELECT <include refid="communityExchangeContentBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="exchangeEntity_select_comm"/>
+		FROM t_community_exchange_content CEC
+			INNER JOIN t_user U ON U.f_id = CEC.f_user_id AND U.f_sys0_del_state = 0
+			<include refid="commonUser.userSimple_common_from"/>
+			INNER JOIN(
+				SELECT CER02.f_launch_exchg_id AS f_launch_exchg_id
+				FROM t_community_exchange_relation CER02
+					INNER JOIN t_community_exchange_content CEC02 ON CEC02.f_id = CER02.f_join_exchg_id AND CEC02.f_user_id = #{userId}
+						AND CEC02.f_sys0_del_state = 0
+				WHERE 1=1
+				AND CER02.f_sys0_del_state = 0
+				GROUP BY CER02.f_launch_exchg_id
+			) CER_group_owner ON CER_group_owner.f_launch_exchg_id = CEC.f_id
+			<include refid="exchangeEntity_from_comm"/>
+		WHERE 1=1 
+		AND CEC.f_sys0_del_state = 0
+		AND CEC.t_group_building_f_id = #{groupBuildingId}	
+		AND CEC.f_status != 1 <!-- 换物状态=={"1":"闲置中","2":"可交换","3":"已交换"} -->
+		AND CEC.f_create_type = 0 <!-- 创建方式=={"0":"发起方式创建","1":"参与方式创建"} -->
+	</sql>
+	<select id="select_JoinContent_List_Page" parameterType="java.util.Map" resultMap="exchangeBaseEntity_Map_Append">
+		SELECT _tmp.*
+			,<include refid="communityExchangePicBase.queryHead_AppendTable"/>
+		FROM (
+			<include refid="select_JoinContent_List_Comm"/>
+			<!-- ORDER BY CEC.f_id DESC -->
+			ORDER BY  CASE <!-- f_status 换物状态=={"1":"闲置中","2":"可交换","3":"已交换"} -->
+				WHEN CEC.f_status= 2  THEN 2
+				WHEN CEC.f_status= 3 THEN 3
+				WHEN CEC.f_status=1 THEN 4
+				END,
+				CEC.f_create_time DESC
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		) _tmp
+		LEFT JOIN t_community_exchange_pic CEP ON CEP.t_community_exchange_content_f_id = _tmp.CECid
+			AND CEP.f_sys0_del_state = 0
+	</select>
+	<select id="select_JoinContent_List_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (<include refid="select_JoinContent_List_Comm"/>) AS table01 
+	</select>
+	
+	<!-- 查询我发起的和我参与的换物列表 -->
+	<sql id="select_LaunchAndJoin_Content_List_Comm">
+		SELECT <include refid="communityExchangeContentBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="exchangeEntity_select_comm"/>
+		FROM t_community_exchange_content CEC
+			INNER JOIN t_user U ON U.f_id = CEC.f_user_id AND U.f_sys0_del_state = 0
+			<include refid="commonUser.userSimple_common_from"/>
+			LEFT JOIN(
+				SELECT CER02.f_launch_exchg_id AS f_launch_exchg_id
+				FROM t_community_exchange_relation CER02
+					INNER JOIN t_community_exchange_content CEC02 ON CEC02.f_id = CER02.f_join_exchg_id AND CEC02.f_user_id = #{userId}
+						AND CEC02.f_sys0_del_state = 0
+				WHERE 1=1
+				AND CER02.f_sys0_del_state = 0
+				GROUP BY CER02.f_launch_exchg_id
+			) CER_group_owner ON CER_group_owner.f_launch_exchg_id = CEC.f_id
+			<include refid="exchangeEntity_from_comm"/>
+		WHERE 1=1
+		AND CEC.f_sys0_del_state = 0
+		AND CEC.t_group_building_f_id = #{groupBuildingId}
+		AND CEC.f_create_type = 0 <!-- 创建方式=={"0":"发起方式创建","1":"参与方式创建"} -->
+		AND CEC.f_status != 1 <!-- 换物状态=={"1":"闲置中","2":"可交换","3":"已交换"} -->
+		AND ((
+			CEC.f_user_id = #{userId}
+		) OR (
+			NOT ISNULL(CER_group_owner.f_launch_exchg_id)
+		))
+	</sql>
+	<select id="select_LaunchAndJoin_Content_List_Page" parameterType="java.util.Map" resultMap="exchangeBaseEntity_Map_Append">
+		SELECT _tmp.*
+			,<include refid="communityExchangePicBase.queryHead_AppendTable"/>
+		FROM (
+			<include refid="select_LaunchAndJoin_Content_List_Comm"/>
+			<!-- ORDER BY CEC.f_id DESC -->
+			ORDER BY  CASE <!-- f_status 换物状态=={"1":"闲置中","2":"可交换","3":"已交换"} -->
+				WHEN CEC.f_status= 2  AND (CEC.f_user_id = #{userId} <!-- AND CEC.f_status != 1 -->) THEN 1
+				WHEN CEC.f_status= 2  AND (NOT ISNULL(CER_group_owner.f_launch_exchg_id)) THEN 2
+				WHEN CEC.f_status= 3 THEN 3
+				WHEN CEC.f_status=1 THEN 4
+				END,
+				CEC.f_create_time DESC
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		) _tmp
+		LEFT JOIN t_community_exchange_pic CEP ON CEP.t_community_exchange_content_f_id = _tmp.CECid
+			AND CEP.f_sys0_del_state = 0
+	</select>
+	<select id="select_LaunchAndJoin_Content_List_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (<include refid="select_LaunchAndJoin_Content_List_Comm"/>) AS table01 
+	</select>
+	
+	
+	<!-- 查询换物详情 -->
+	<select id="select_ExchangeContent_Detail" parameterType="java.util.Map" resultMap="exchangeEntity_Map_Append">
+		SELECT <include refid="communityExchangeContentBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="communityExchangePicBase.queryHead_AppendTable"/>
+			,<include refid="exchangeEntity_select_comm"/>
+		FROM t_community_exchange_content CEC
+			INNER JOIN t_user U ON U.f_id = CEC.f_user_id AND U.f_sys0_del_state = 0
+			<include refid="commonUser.userSimple_common_from"/>
+			LEFT JOIN t_community_exchange_pic CEP ON CEP.t_community_exchange_content_f_id = CEC.f_id
+				AND CEP.f_sys0_del_state = 0
+			<include refid="exchangeEntity_from_comm"/>
+   	 	WHERE 1=1
+		AND CEC.f_sys0_del_state = 0
+		AND CEC.f_id = #{exchangeContentId}
+	</select>
+	
+	<!-- 查询参与换物的用户物品列表 -->
+	<select id="select_Sub_JoinContent_List" parameterType="java.util.Map" resultMap="exchangeBaseEntity_Map_Append">
+		SELECT <include refid="communityExchangeContentBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="communityExchangePicBase.queryHead_AppendTable"/>
+			,<include refid="exchangeEntity_select_comm"/>
+			
+			,(SELECT CASE WHEN ISNULL(COUNT(f_id)) THEN 0 ELSE COUNT(f_id) END AS totalCount
+				FROM t_community_exchange_wanted CEW
+				WHERE 1=1 AND CEW.f_sys0_del_state = 0
+				AND CEW.t_community_exchange_relation_f_id = CER.f_id 
+				AND CEW.f_user_id = CEC.f_user_id
+			)AS CEW_group_totalCount
+			,(
+				SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END AS totalCount
+				FROM t_common_gather_data CGD WHERE 1=1
+				AND CGD.f_target_type = 81 <!-- 81 发起的换物与参与的换物关系 --> 
+				AND CGD.f_target_id = CER.f_id
+				AND CGD.f_sys0_del_state = 0
+			)AS t01_S_group_totalCount
+			,(
+				SELECT CASE WHEN ISNULL(COUNT(f_id)) THEN 0 ELSE COUNT(f_id) END AS totalCount
+						FROM t_community_exchange_pic  
+						WHERE 1=1 AND f_sys0_del_state = 0
+					AND t_community_exchange_content_f_id = CEC.f_id
+			)AS t01_CEP_group_totalCount
+			
+		FROM t_community_exchange_relation CER
+			INNER JOIN (
+				t_community_exchange_content CEC
+				INNER JOIN t_user U ON U.f_id = CEC.f_user_id AND U.f_sys0_del_state = 0
+				<include refid="commonUser.userSimple_common_from"/>
+				LEFT JOIN t_community_exchange_pic CEP ON CEP.t_community_exchange_content_f_id = CEC.f_id
+					AND CEP.f_sys0_del_state = 0
+			)ON CEC.f_id = CER.f_join_exchg_id AND CEC.f_sys0_del_state = 0
+			<!-- LEFT JOIN (
+				SELECT CEW.t_community_exchange_relation_f_id,f_user_id,COUNT(*) AS totalCount
+				FROM t_community_exchange_wanted CEW
+				WHERE 1=1 AND CEW.f_sys0_del_state = 0
+				GROUP BY CEW.t_community_exchange_relation_f_id,CEW.f_user_id
+			)CEW_group ON CEW_group.t_community_exchange_relation_f_id = CER.f_id AND CEW_group.f_user_id = CEC.f_user_id
+			LEFT JOIN (
+				SELECT f_target_id, COUNT(*) AS totalCount
+				FROM t_support 
+				WHERE 1=1 
+				AND f_target_type = 81
+				AND f_sys0_del_state = 0
+				GROUP BY f_target_id
+			)t01_S_group ON t01_S_group.f_target_id = CER.f_id
+			LEFT JOIN (
+				SELECT t_community_exchange_content_f_id,COUNT(*) AS totalCount
+				FROM t_community_exchange_pic  
+				WHERE 1=1 AND f_sys0_del_state = 0
+				GROUP BY t_community_exchange_content_f_id
+			)t01_CEP_group ON t01_CEP_group.t_community_exchange_content_f_id = CEC.f_id -->
+			
+			<include refid="exchangeEntity_from_comm"/>
+    	WHERE 1=1
+    	AND CER.f_sys0_del_state = 0
+    	AND CER.f_launch_exchg_id = #{exchangeContentId}
+    	<!-- ORDER BY t01_S_group.totalCount DESC,CEW_group.totalCount DESC,t01_CEP_group.totalCount DESC,CER.f_create_time ASC -->
+    	ORDER BY t01_S_group_totalCount DESC,CEW_group_totalCount DESC,t01_CEP_group_totalCount DESC,CER.f_create_time ASC
+	</select>
+	<sql id="select_Sub_JoinContent_List_WithRelation_comm_select">
+		CASE WHEN ISNULL(t01_S.f_id) THEN false ELSE true END AS ext_relation_isSupported 
+		,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_comment_count)) THEN 0 ELSE sum(CGD.f_total_comment_count) END 
+			FROM t_common_gather_data CGD WHERE 1=1
+			AND CGD.f_target_type = 81  <!-- 81 发起的换物与参与的换物关系 -->
+			AND CGD.f_target_id = CER.f_id
+			AND CGD.f_sys0_del_state = 0
+		) AS ext_relation_commentTotalCount
+		,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END 
+			FROM t_common_gather_data CGD WHERE 1=1
+			AND CGD.f_target_type = 81  <!-- 81 发起的换物与参与的换物关系 -->
+			AND CGD.f_target_id = CER.f_id
+			AND CGD.f_sys0_del_state = 0
+		) AS ext_relation_totalSupportCount 
+		,(SELECT CASE WHEN ISNULL(COUNT(f_id)) THEN 0 ELSE COUNT(f_id) END AS totalCount
+			FROM t_community_exchange_pic  
+			WHERE 1=1 AND f_sys0_del_state = 0
+			AND t_community_exchange_content_f_id = CEC.f_id
+		) AS t01_CEP_group_totalCount
+		,(SELECT CASE WHEN ISNULL(COUNT(CEW.f_id)) THEN 0 ELSE COUNT(CEW.f_id) END AS totalCount
+			FROM t_community_exchange_wanted CEW
+			WHERE 1=1 AND CEW.f_sys0_del_state = 0
+			AND CEW.t_community_exchange_relation_f_id = CER.f_id 
+			AND CEW.f_user_id = CEC.f_user_id
+		) AS ext_relation_wantedCount <!-- 已跪求换的数量 -->
+		<!-- ,CASE WHEN ISNULL(t01_C_group.totalCount) THEN 0 ELSE t01_C_group.totalCount END AS ext_relation_commentTotalCount 
+		,CASE WHEN ISNULL(t01_S_group.totalCount) THEN 0 ELSE t01_S_group.totalCount END AS ext_relation_totalSupportCount 
+		,CASE WHEN ISNULL(CEW_group.totalCount) THEN 0 ELSE CEW_group.totalCount END AS ext_relation_wantedCount -->
+	</sql>
+	<sql id="select_Sub_JoinContent_List_WithRelation_comm_from">
+		FROM t_community_exchange_relation CER
+			INNER JOIN (
+				t_community_exchange_content CEC
+				INNER JOIN t_user U ON U.f_id = CEC.f_user_id AND U.f_sys0_del_state = 0
+				<include refid="commonUser.userSimple_common_from"/>
+				LEFT JOIN t_community_exchange_pic CEP ON CEP.t_community_exchange_content_f_id = CEC.f_id
+					AND CEP.f_sys0_del_state = 0
+			)ON CEC.f_id = CER.f_join_exchg_id AND CEC.f_sys0_del_state = 0
+			
+			<!-- 是否已点赞 -->
+			LEFT JOIN t_support t01_S ON 
+				t01_S.f_target_type = 81  <!-- 81 发起的换物与参与的换物关系 --> 
+				AND t01_S.f_user_id = #{userId}
+				AND CER.f_id = t01_S.f_target_id  
+				AND t01_S.f_sys0_del_state = 0
+			<!-- LEFT JOIN  (SELECT f_target_id ,COUNT(*) AS totalCount
+				FROM t_comments 
+				WHERE 1=1 AND f_sys0_del_state = 0 AND f_target_type = 81
+				GROUP BY f_target_id
+			) t01_C_group ON t01_C_group.f_target_id = CER.f_id -->
+			<!-- LEFT JOIN (
+				SELECT f_target_id, COUNT(*) AS totalCount
+				FROM t_support 
+				WHERE 1=1
+				AND f_target_type = 81
+				AND f_sys0_del_state = 0
+				GROUP BY f_target_id
+			)t01_S_group ON t01_S_group.f_target_id = CER.f_id -->
+			<!-- LEFT JOIN (
+				SELECT t_community_exchange_content_f_id,COUNT(*) AS totalCount
+				FROM t_community_exchange_pic  
+				WHERE 1=1 AND f_sys0_del_state = 0
+				GROUP BY t_community_exchange_content_f_id
+			)t01_CEP_group ON t01_CEP_group.t_community_exchange_content_f_id = CEC.f_id -->
+			<!-- LEFT JOIN (
+				SELECT CEW.t_community_exchange_relation_f_id,f_user_id,COUNT(*) AS totalCount
+				FROM t_community_exchange_wanted CEW
+				WHERE 1=1 AND CEW.f_sys0_del_state = 0
+				GROUP BY CEW.t_community_exchange_relation_f_id,CEW.f_user_id
+			)CEW_group ON CEW_group.t_community_exchange_relation_f_id = CER.f_id AND CEW_group.f_user_id = CEC.f_user_id -->
+			
+			<include refid="exchangeEntity_from_comm"/>
+    	WHERE 1=1
+    	AND CER.f_sys0_del_state = 0
+    	AND CER.f_launch_exchg_id = #{exchangeContentId}
+	</sql>
+	<!-- 查询参与换物的用户物品列表,包含对应关系的信息 -->
+	<select id="select_Sub_JoinContent_List_WithRelation" parameterType="java.util.Map" resultMap="exchangeRelationGoalEntity_Map_Append">
+		SELECT 
+			<include refid="communityExchangeRelationBase.queryHead_AppendTable"/>
+			,<include refid="communityExchangeContentBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="communityExchangePicBase.queryHead_AppendTable"/>
+			
+			,<include refid="exchangeEntity_select_comm"/>
+			,<include refid="select_Sub_JoinContent_List_WithRelation_comm_select"/>
+			
+		<!-- from sql -->
+		<include refid="select_Sub_JoinContent_List_WithRelation_comm_from"/>
+    	<!-- ORDER BY t01_S_group.totalCount DESC,CEW_group.totalCount DESC,t01_CEP_group.totalCount DESC,CER.f_create_time ASC -->
+    	<!-- ORDER BY ext_relation_totalSupportCount DESC,ext_relation_wantedCount DESC,ext_relation_wantedCount_totalCount DESC,CER.f_create_time ASC -->
+    	ORDER BY ext_relation_totalSupportCount DESC,ext_relation_wantedCount DESC,t01_CEP_group_totalCount DESC,CER.f_create_time ASC
+	</select>
+	
+	<!-- 查询参与换物的成功的用户物品 -->
+	<select id="select_Sub_JoinContent_WithRelation_Succ" parameterType="java.util.Map" resultMap="exchangeRelationGoalEntity_Map_Append">
+		SELECT 
+			<include refid="communityExchangeRelationBase.queryHead_AppendTable"/>
+			,<include refid="communityExchangeContentBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="communityExchangePicBase.queryHead_AppendTable"/>
+			
+			,<include refid="exchangeEntity_select_comm"/>
+			,<include refid="select_Sub_JoinContent_List_WithRelation_comm_select"/>
+		<!-- from sql -->
+		<include refid="select_Sub_JoinContent_List_WithRelation_comm_from"/>
+		AND CER.f_status = 2 <!-- 交换状态=={"1":"待交换","2":"已交换"} -->
+	</select>
+	
+	
+	<!-- 发起者确认交换换物 -->
+	<update id="update_ExchangeRelation_2Finished" parameterType="java.util.Map">
+		UPDATE t_community_exchange_relation CER
+			INNER JOIN t_community_exchange_content CEC_join ON CEC_join.f_id = CER.f_join_exchg_id AND CEC_join.f_sys0_del_state = 0
+			INNER JOIN t_community_exchange_content CEC_launch ON CEC_launch.f_id = CER.f_launch_exchg_id AND CEC_launch.f_sys0_del_state = 0
+		SET 
+			<!-- 换物关系 -->
+			CER.f_status = 2 <!-- 交换状态=={"1":"待交换","2":"已交换"} -->
+			,CER.f_confirm_time = SYSDATE() <!--确认换物时间 -->
+			,CER.f_sys0_upd_time = SYSDATE(),CER.f_sys0_upd_user = #{userId}
+			<!-- 发起的换物 -->
+			,CEC_launch.f_status = 3 <!-- 换物状态=={"1":"闲置中","2":"可交换","3":"已交换"} -->
+			,CEC_launch.f_sys0_upd_time = SYSDATE(),CEC_launch.f_sys0_upd_user = #{userId}
+			<!-- 参与的换物 -->
+			,CEC_join.f_status = 3 <!-- 换物状态=={"1":"闲置中","2":"可交换","3":"已交换"} -->
+			,CEC_join.f_sys0_upd_time = SYSDATE(),CEC_join.f_sys0_upd_user = #{userId}
+		WHERE 1=1
+		AND CER.f_sys0_del_state = 0
+		AND CER.f_status != 2 <!-- 交换状态=={"1":"待交换","2":"已交换"} -->
+		AND CEC_launch.f_status != 3 <!-- 换物状态=={"1":"闲置中","2":"可交换","3":"已交换"} -->
+		AND CEC_join.f_status != 3 <!-- 换物状态=={"1":"闲置中","2":"可交换","3":"已交换"} -->
+		AND CER.f_id = #{exchangeRelationId}
+		AND CEC_launch.f_user_id = #{userId} <!-- 发起者Id为当前用户 -->
+	</update>
+	
+	<!-- 删除换物 -->
+	<update id="delete_LaunchContent" parameterType="java.util.Map">
+		UPDATE t_community_exchange_content CEC
+		SET CEC.f_sys0_del_state = 1,CEC.f_sys0_del_time= SYSDATE()
+		WHERE 1=1
+		AND CEC.f_sys0_del_state = 0 
+		AND CEC.f_id = #{contentId}
+		AND CEC.f_user_id = #{userId}
+	</update>
+	
+	<!-- 根据换物Id,查询换物当前的参与记录数 -->
+	<select id="select_Join_TotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_community_exchange_relation CER
+			INNER JOIN t_community_exchange_content CEC_join ON CEC_join.f_id = CER.f_join_exchg_id AND CEC_join.f_sys0_del_state = 0
+			INNER JOIN t_community_exchange_content CEC_launch ON CEC_launch.f_id = CER.f_launch_exchg_id AND CEC_launch.f_sys0_del_state = 0
+		WHERE 1=1
+		AND CER.f_sys0_del_state = 0
+		AND ((<!-- 发起的若有待交换的则不可删除 -->
+			<!-- CER.f_status = 1 AND --> <!-- 交换状态=={"1":"待交换","2":"已交换"} -->
+			CER.f_launch_exchg_id = #{contentId} <!-- 发起的换物Id -->
+		) OR (<!-- 参与的若有已交换的则不可删除 -->
+			<!-- CER.f_status = 2 AND --> <!-- 交换状态=={"1":"待交换","2":"已交换"} -->
+			 CER.f_join_exchg_id = #{contentId} <!-- 参与的换物Id -->
+		))
+	</select>
+	
+	<!-- 查询是否可以跪求换 -->
+	<select id="select_Can_Wanted_Boolean" parameterType="java.util.Map" resultType="java.lang.Boolean">
+		SELECT CASE WHEN COUNT(*)>0 THEN false ELSE true END
+		FROM t_community_exchange_wanted
+		WHERE 1=1
+		AND f_sys0_del_state = 0
+		AND f_user_id = #{userId}
+		AND t_community_exchange_relation_f_id = #{exchangeRelationId}
+		<![CDATA[ AND f_create_time >= now() - interval 3 day_minute ]]>
+		
+	</select>
+	<!-- 查询跪求换的数量 -->
+	<select id="select_Can_Wanted_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_community_exchange_wanted
+		WHERE 1=1
+		AND f_sys0_del_state = 0
+		AND f_user_id = #{userId}
+		AND t_community_exchange_relation_f_id = #{exchangeRelationId}
+	</select>
+	
+	<!-- 查询所有热门换物列表最新更新时间 -->
+	<select id="select_All_HotContentList_LastUpdTime" parameterType="java.util.Map" resultType="java.lang.String">
+		select date_format(now(),'%Y-%m-%d %T')
+	</select>
+	<!-- 查询所有我发起的和我参与的换物最新更新时间 -->
+	<select id="select_All_LaunchAndJoinContentList_LastUpdTime" parameterType="java.util.Map" resultType="java.lang.String">
+		select date_format(now(),'%Y-%m-%d %T')
+	</select>
+	
+</mapper>

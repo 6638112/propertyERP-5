@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 粮票管理模块 -->
+<mapper namespace="redenvelope">
+	<!-- 已登录用户根据月份查询最低抽奖折扣 -->	
+    <!-- <select id="select_LastDiscount_ByMonth" parameterType="java.util.Map" resultType="java.lang.Double">
+    	SELECT MIN(PR.f_discount)
+		FROM t_prize_record PR 
+			INNER JOIN (
+				t_user_has_t_room UHTR 
+				INNER JOIN t_room R ON R.f_id = UHTR.t_room_f_id AND R.f_sys0_del_state = 0
+				INNER JOIN t_user U ON U.f_id = #{userId} AND U.f_sys0_del_state = 0
+					AND UHTR.t_room_f_id = U.f_default_room_id
+				) ON PR.t_user_has_t_room_f_id = UHTR.f_id AND UHTR.f_sys0_del_state = 0
+				AND UHTR.f_apply_status = 1 门牌申请加入状态=={"0":"未处理","1":"已通过","2":"已拒绝"} 
+		WHERE 1=1
+		AND PR.f_sys0_del_state = 0
+		AND date_format(PR.f_prize_time, '%Y%m')= #{month}
+    </select> -->
+    
+    <!-- 按月份查询已经兑换的粮票数量 -->
+    <!-- <select id="select_IsConvert_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT COUNT(*)
+		FROM t_pay_red_envelope PRE
+		LEFT JOIN (
+			t_prize_record PR
+			INNER JOIN (
+				t_user_has_t_room UHTR 
+				INNER JOIN t_room R ON R.f_id = UHTR.t_room_f_id AND R.f_sys0_del_state = 0
+				INNER JOIN t_user U ON U.f_id = #{userId} AND U.f_sys0_del_state = 0 
+					AND UHTR.t_room_f_id = U.f_default_room_id 只查询当前用户默认门牌下的
+				) ON PR.t_user_has_t_room_f_id = UHTR.f_id AND UHTR.f_sys0_del_state = 0
+				AND UHTR.f_apply_status = 1 门牌申请加入状态=={"0":"未处理","1":"已通过","2":"已拒绝"} 
+		) ON PRE.f_from_type = 1 AND PR.f_sys0_del_state = 0
+		WHERE 1= 1
+		AND PRE.f_sys0_del_state = 0
+		AND U.f_id = #{userId}
+		AND date_format(PR.f_prize_time, '%Y%m')= #{month}
+    </select> -->
+    
+    <!-- 查询最低折扣对应的基本信息 -->
+    <!-- <select id="select_LastDiscountInfo_ByMonth" parameterType="java.util.Map" resultMap="prizeRecordBase.prizeRecordBaseMap">
+    	SELECT <include refid="prizeRecordBase.queryHead"/> 
+    	FROM t_prize_record PR
+    	INNER JOIN (
+			t_user_has_t_room UHTR001 
+			INNER JOIN t_room R001 ON R001.f_id = UHTR001.t_room_f_id AND R001.f_sys0_del_state = 0
+			INNER JOIN t_user U001 ON U001.f_id = #{userId} AND U001.f_sys0_del_state = 0
+				AND UHTR001.t_room_f_id = U001.f_default_room_id
+			) ON PR.t_user_has_t_room_f_id = UHTR001.f_id AND UHTR001.f_sys0_del_state = 0
+			AND UHTR001.f_apply_status = 1  门牌申请加入状态=={"0":"未处理","1":"已通过","2":"已拒绝"} 
+		WHERE 1=1
+		AND PR.f_sys0_del_state = 0
+		AND PR.f_discount = (
+			SELECT MIN(PR.f_discount)
+			FROM t_prize_record PR 
+				INNER JOIN (
+					t_user_has_t_room UHTR 
+					INNER JOIN t_room R ON R.f_id = UHTR.t_room_f_id AND R.f_sys0_del_state = 0
+					INNER JOIN t_user U ON U.f_id = #{userId} AND U.f_sys0_del_state = 0
+						AND UHTR.t_room_f_id = U.f_default_room_id
+					) ON PR.t_user_has_t_room_f_id = UHTR.f_id AND UHTR.f_sys0_del_state = 0
+					AND UHTR.f_apply_status = 1 门牌申请加入状态=={"0":"未处理","1":"已通过","2":"已拒绝"} 
+			WHERE 1=1
+			AND PR.f_sys0_del_state = 0
+			AND date_format(PR.f_prize_time, '%Y%m')= #{month}
+		)
+		AND date_format(PR.f_prize_time, '%Y%m')= #{month}
+		ORDER BY PR.f_prize_time ASC
+		LIMIT 0,1
+    </select> -->
+    
+    <!-- 查询粮票已兑换总金额-->
+    <select id="select_Total_ConvertMoney" parameterType="java.math.BigInteger" resultType="java.lang.Long">
+    	SELECT sum(PRE.f_amount_total) 
+		FROM t_pay_red_envelope PRE
+		WHERE PRE.f_sys0_del_state = 0
+		<!-- AND PRE.f_converter_id = #{_parameter} -->
+		<include refid="commonRedenvelope.hb_area_limit_condition_where" />
+		AND PRE.f_from_type = 1 <!-- syl-add-2015-4-10 14:35:11 目前只获取折扣的记录 -->
+    </select>
+    
+    <!-- 查询粮票消费总金额 -->
+    <select id="select_Total_ConsumMoney" parameterType="java.math.BigInteger" resultType="java.lang.Long">
+    	SELECT sum(PRE.f_amount_total-f_amount_avaible) 
+		FROM t_pay_red_envelope PRE
+		WHERE 1=1
+		AND PRE.f_sys0_del_state = 0
+		<!-- AND PRE.f_user_id = #{_parameter} -->
+		<include refid="commonRedenvelope.hb_area_limit_condition_where" />
+    </select>
+    
+    <!-- 粮票兑换记录Map -->
+    <resultMap type="com.cnfantasia.server.api.redenvelope.entity.PayRedEnvelopeEntity" id="payRedEnvelopeEntityMap_Append" 
+    	extends="payRedEnvelopeBase.payRedEnvelopeBaseMap_AppendTable">
+    	<association property="converterUser" resultMap="commonUser.userSimpleEntity_Map_Append"></association>
+    	<association property="singalDetail" resultMap="redenvelope.HbFromEntityMap"></association>
+    </resultMap>
+    <resultMap type="com.cnfantasia.server.api.redenvelope.entity.HbFromEntity" id="HbFromEntityMap">
+    	<id column="singalDetail_id" javaType="java.math.BigInteger" property="id"/>  <!-- Id -->
+        <result column="singalDetail_discountInfo" javaType="java.lang.String" property="discountInfo"/>  <!-- 折扣信息 -->
+        <result column="singalDetail_shenMaRecordBonus" javaType="java.lang.Long" property="shenMaRecordBonus"/>  <!-- 神码粮票 -->
+        <result column="singalDetail_RefundBonus" javaType="java.lang.Long" property="refundRedBonus"/>  <!-- 退款粮票 -->
+    </resultMap>
+    <!-- 查询粮票兑换信息 -->
+    <sql id="select_Record2hb_Record_comm">
+    	SELECT <include refid="payRedEnvelopeBase.queryHead_AppendTable"/>
+    		,<include refid="commonUser.userSimple_common_select"/>
+    		,CASE 
+		        WHEN PRE.f_from_type = 1 THEN PR.f_id
+		        <!-- WHEN PRE.f_from_type = 2 THEN U2.f_id -->
+		        WHEN PRE.f_from_type = 3 THEN IRR.f_id
+		        <!-- 新增退款粮票 -->
+		        WHEN PRE.f_from_type = 4 THEN TRR.f_id
+			END AS singalDetail_id
+			,CASE 
+		        WHEN PRE.f_from_type = 1 THEN PR.f_discount
+		        <!-- WHEN PRE.f_from_type = 2 THEN U2.f_hua_id -->
+			END AS singalDetail_discountInfo
+			,CASE 
+		        WHEN PRE.f_from_type = 3 THEN IRR.f_record_bonus
+			END AS singalDetail_shenMaRecordBonus
+			,CASE 
+		        WHEN PRE.f_from_type = 4 THEN TRR.f_saved_money<!-- 退款粮票金额 -->
+			END AS singalDetail_RefundBonus
+		FROM t_pay_red_envelope PRE
+			<!-- 
+	       	<include refid="commonRedenvelope.hb_area_limit_condition_from" />
+	       	 -->
+	        INNER JOIN t_user U ON U.f_id = PRE.f_converter_id AND U.f_sys0_del_state = 0 <!-- 兑换人信息 -->
+			<include refid="commonUser.userSimple_common_from"/>
+	       	<!--  LEFT JOIN t_user U2 ON U2.f_id = PRE.f_from_id AND U2.f_sys0_del_state = 0
+	        	AND PRE.f_from_type = 2 -->
+	        LEFT JOIN t_prize_record PR ON PR.f_id = PRE.f_from_id AND PRE.f_from_type = 1
+	        LEFT JOIN t_invite_reward_record IRR ON IRR.f_id = PRE.f_from_id AND PRE.f_from_type = 3
+	        LEFT JOIN t_refund_record TRR ON TRR.f_id = PRE.f_from_id AND PRE.f_from_type = 4
+		WHERE 1 = 1
+		AND PRE.f_sys0_del_state = 0
+		<!-- AND PRE.f_converter_id = #{userId} --><!-- 兑换人 -->
+		<include refid="commonRedenvelope.hb_area_limit_condition_where" />
+		<!--   AND  PRE.f_from_type IN(1,4) --> <!--syl-add-2015-4-10 14:35:11 目前只获取折扣的记录 ，以及退款粮票 -->
+    </sql>
+    <select id="select_Record2hb_Record" parameterType="java.util.Map" resultMap="redenvelope.payRedEnvelopeEntityMap_Append">
+    	<include refid="select_Record2hb_Record_comm"/>
+    </select>
+    <select id="select_Record2hb_Record_withPage" parameterType="java.util.Map" resultMap="redenvelope.payRedEnvelopeEntityMap_Append">
+    	<include refid="select_Record2hb_Record_comm"/>
+		ORDER BY PRE.f_from_time DESC
+    	<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+    </select>
+    <select id="select_Record2hb_Record_withPage_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT COUNT(*) FROM ( <include refid="select_Record2hb_Record_comm"/> ) as table1
+    </select>
+    
+    <resultMap type="com.cnfantasia.server.api.redenvelope.entity.PayRedEnvelopeDetailEntity" id="payRedEnvelopeDetailEntityMap_Append" 
+    	extends="payRedEnvelopeDetailBase.payRedEnvelopeDetailBaseMap_AppendTable">
+    	<result column="appendData_orderType" javaType="java.lang.Integer" property="orderType"/>  <!-- 订单类型 -->
+    	<association property="consumerUser" resultMap="commonUser.userSimpleEntity_Map_Append"></association>
+    	
+    </resultMap>
+    <!-- 查询粮票的消费记录 -->
+    <sql id="select_HbConsum_Record_comm">
+    	SELECT <include refid="payRedEnvelopeDetailBase.queryHead_AppendTable"/>
+    		,<include refid="commonUser.userSimple_common_select"/>
+    		,EO.f_type AS appendData_orderType
+    	FROM t_pay_red_envelope_detail PRED
+    		<!-- INNER JOIN t_user U ON U.f_id = PRED.f_user_id AND U.f_sys0_del_state = 0 -->
+    		INNER JOIN (
+    			t_pay_red_envelope PRE
+    			<!-- 
+    			<include refid="commonRedenvelope.hb_area_limit_condition_from" />
+    			 -->
+    		) ON PRE.f_id = PRED.f_pay_red_envelope_id AND PRE.f_sys0_del_state = 0	<!--  AND PRE.f_from_type = 1 -->
+    		INNER JOIN t_user U ON U.f_id = PRED.f_user_id AND U.f_sys0_del_state = 0 <!-- 粮票消费者 -->
+				<include refid="commonUser.userSimple_common_from"/>
+    		LEFT JOIN t_pay_coupon PC ON PRED.t_pay_coupon_f_id = PC.f_id AND PC.f_sys0_del_state = 0
+    		LEFT JOIN t_ebuy_order EO ON PC.t_ebuy_order_f_id = EO.f_id AND EO.f_sys0_del_state = 0
+    	WHERE 1=1
+    	AND PRED.f_sys0_del_state = 0
+    	<!-- AND PRED.f_user_id = #{userId} -->
+    	<include refid="commonRedenvelope.hb_area_limit_condition_where" />
+		ORDER BY PRED.f_consum_time DESC
+    </sql>
+    <select id="select_HbConsum_Record" parameterType="java.util.Map" resultMap="redenvelope.payRedEnvelopeDetailEntityMap_Append">
+    	<include refid="select_HbConsum_Record_comm"/>
+    </select>
+    <select id="select_HbConsum_Record_withPage" parameterType="java.util.Map" resultMap="redenvelope.payRedEnvelopeDetailEntityMap_Append">
+    	<include refid="select_HbConsum_Record_comm"/>
+    	<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+    </select>
+    <select id="select_HbConsum_Record_withPage_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT COUNT(*) FROM (<include refid="select_HbConsum_Record_comm"/>) as table1
+    </select>
+    
+    <resultMap type="com.cnfantasia.server.api.redenvelope.entity.HbConvertConsumEntity" id="hbConvertConsumEntityMap">
+    	<result column="both_id" javaType="java.math.BigInteger" property="id"/>  <!-- id -->
+    	<result column="tableType" javaType="java.lang.Integer" property="tableType"/>  <!-- 记录表标识：0兑换，1消费-->
+    	<result column="both_time" javaType="java.lang.String" property="time"/>  <!-- 时间 -->
+    	<result column="both_userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户Id -->
+    	<result column="both_amount" javaType="java.lang.Long" property="amount"/>  <!-- 金额 -->
+    	<result column="both_desc" javaType="java.lang.String" property="desc"/>  <!-- 折扣/消费类型 -->
+    	<association property="user" resultMap="commonUser.userSimpleEntity_Map_Append"></association>
+    </resultMap>
+    <!-- 查询粮票兑换和消费记录，应该与上面的sql保持一致 -->
+    <sql id="select_HbConvert_Consum_BothRecord_comm">
+    	<!-- 查询消费记录 -->
+		SELECT PRED.f_id AS both_id,PRED.f_consum_time AS both_time,PRED.f_user_id AS both_user_id,PRED.f_anount AS both_amount
+			,EO.f_type AS both_desc
+			,1 AS tableType
+			,<include refid="commonUser.userSimple_common_select"/>
+		FROM t_pay_red_envelope_detail PRED 
+			<!-- INNER JOIN t_user U ON U.f_id = PRED.f_user_id AND U.f_sys0_del_state = 0 -->
+			INNER JOIN (
+    			t_pay_red_envelope PRE
+    			<!-- 
+    			<include refid="commonRedenvelope.hb_area_limit_condition_from" />
+    			 -->
+    		) ON PRE.f_id = PRED.f_pay_red_envelope_id AND PRE.f_sys0_del_state = 0
+    		INNER JOIN t_user U ON U.f_id = PRED.f_user_id AND U.f_sys0_del_state = 0 <!-- 粮票消费者 -->
+				<include refid="commonUser.userSimple_common_from"/>
+    		LEFT JOIN t_pay_coupon PC ON PRED.t_pay_coupon_f_id = PC.f_id AND PC.f_sys0_del_state = 0
+    		LEFT JOIN t_ebuy_order EO ON PC.t_ebuy_order_f_id = EO.f_id AND EO.f_sys0_del_state = 0
+    	WHERE 1=1
+    	AND PRED.f_sys0_del_state = 0
+    	<include refid="commonRedenvelope.hb_area_limit_condition_where" />
+    	<!-- AND PRED.f_user_id = #{userId} -->
+    	
+    	UNION ALL
+    	
+    	<!-- 查询兑换记录 -->
+		SELECT PRE.f_id ,PRE.f_from_time,PRE.f_converter_id ,PRE.f_amount_total 
+			,CASE 
+		        WHEN PRE.f_from_type = 1 THEN PR.f_discount
+		        <!-- WHEN PRE.f_from_type = 2 THEN U2.f_hua_id -->
+			END AS singalDetail_discountInfo
+			,0
+    		,<include refid="commonUser.userSimple_common_select"/>
+		FROM t_pay_red_envelope PRE
+			<!-- 
+	        <include refid="commonRedenvelope.hb_area_limit_condition_from" />
+	         -->
+	        INNER JOIN t_user U ON U.f_id = PRE.f_converter_id AND U.f_sys0_del_state = 0 <!-- 兑换人信息 -->
+				<include refid="commonUser.userSimple_common_from"/>
+	       <!--  LEFT JOIN t_user U2 ON U2.f_id = PRE.f_from_id AND U2.f_sys0_del_state = 0
+	        	AND PRE.f_from_type = 2 -->
+		WHERE 1 = 1
+		AND PRE.f_sys0_del_state = 0
+		<!-- AND PRE.f_converter_id = #{userId} --><!-- 兑换人 -->
+		<include refid="commonRedenvelope.hb_area_limit_condition_where" />
+			<!-- or (PRE.f_from_type = 2 AND U2.f_id is not null)  -->
+		ORDER BY both_time DESC
+    </sql>
+    <select id="select_HbConvert_Consum_BothRecord" parameterType="java.util.Map" resultMap="redenvelope.hbConvertConsumEntityMap">
+    	<include refid="redenvelope.select_HbConvert_Consum_BothRecord_comm"/>
+    </select>
+    <!-- 查询粮票兑换和消费记录 分页 -->
+    <select id="select_HbConvert_Consum_BothRecord_withPage" parameterType="java.util.Map" resultMap="redenvelope.hbConvertConsumEntityMap">
+    	<include refid="redenvelope.select_HbConvert_Consum_BothRecord_comm"/>
+    	<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+    </select>
+    <select id="select_HbConvert_Consum_BothRecord_withPage_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT COUNT(*) FROM ( <include refid="redenvelope.select_HbConvert_Consum_BothRecord_comm"/> ) AS table1
+    </select>
+    
+    
+    <!-- 查询所有可兑换粮票的用户Id --><!-- TODO 筛选掉已兑换的和上个月没有中奖记录的 -->
+    <!-- <select id="select_AllConvert_UserIds" resultType="java.math.BigInteger">
+    	SELECT U.f_id
+    	FROM t_user U
+    		INNER JOIN t_room R ON R.f_id = U.f_default_room_id  AND R.f_sys0_del_state = 0
+    			AND R.t_real_room_f_id !=-1
+    	WHERE 1=1
+    	AND U.f_sys0_del_state = 0
+    </select> -->
+    
+    <!-- 根据折扣查询可兑换的粮票 -->
+    <select id="select_Money_By_Discount" parameterType="java.util.Map" resultType="java.lang.Long">
+    	select fun_change_red_envelope(#{discount})
+    </select>
+    
+</mapper>

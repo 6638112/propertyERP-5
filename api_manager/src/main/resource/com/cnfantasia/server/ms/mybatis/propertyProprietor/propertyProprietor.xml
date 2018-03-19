@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:业主表 t_property_proprietor -->
+<mapper namespace="propertyProprietor">
+	<resultMap type="com.cnfantasia.server.ms.propertyProprietor.entity.PropertyProprietorEntity" id="propertyProprietorEntity" extends="propertyProprietorBase.propertyProprietorBaseMap_AppendTable">
+        <result column="groupBuildingName" javaType="java.lang.String" property="groupBuildingName"/> 
+        <result column="buildingId" javaType="java.math.BigInteger" property="buildingId"/>  
+        <result column="buildingName" javaType="java.lang.String" property="buildingName"/> 
+        <result column="realRoomId" javaType="java.math.BigInteger" property="realRoomId"/>  
+        <result column="realRoomUnitName" javaType="java.lang.String" property="realRoomUnitName"/>  
+        <result column="realRoomNum" javaType="java.lang.String" property="realRoomNum"/>  
+        <result column="roomSize" javaType="double" property="roomSize"/>
+        <result column="roomManagerPrice" javaType="double" property="roomManagerPrice"/>
+        <result column="manangeFee" javaType="double" property="manangeFee"/>
+		<result column="saleStatus" property="saleStatus" javaType="int" />
+		<result column="livingStatus" property="livingStatus" javaType="int" />
+		<result column="leaseStatus" property="leaseStatus" javaType="int" />
+	</resultMap>
+	
+	<sql id="select_pp_for_list">
+		select GB.f_name groupBuildingName, B.f_name buildingName, B.f_id buildingId,
+		RR.f_unit_name realRoomUnitName, RR.f_num_tail realRoomNum, RR.f_id realRoomId, 
+    	RR.f_contract_no contractNum, RR.f_room_size roomSize, RR.f_property_fee_per_m2 roomManagerPrice, RR.f_prop_money/100 manangeFee,
+		RR.f_sale_status saleStatus, RR.f_living_status livingStatus, RR.f_lease_status leaseStatus,
+    	<include refid="propertyProprietorBase.queryHead_AppendTable"/>
+	</sql>
+	
+	<select id="select_ppList_byOmsUserId_count" parameterType="java.util.Map" resultType="int">
+		select count(pp.f_id) FROM t_property_proprietor PP
+    	inner join t_real_room RR on RR.t_property_proprietor_f_id = PP.f_id and RR.f_sys0_del_state = 0
+    	inner join t_building B on B.F_id = RR.t_building_f_id and B.f_sys0_del_state = 0 and B.f_check_status in (1,9)
+    	inner join t_group_building GB on GB.f_id = B.t_group_building_f_id and GB.f_sys0_del_state = 0	and GB.f_check_status in (1,9)
+    	inner join t_property_company PC on PC.f_id = GB.t_property_company_f_id and PC.f_sys0_del_state = 0
+    	<choose>
+    		<when test="isPmUser!=0 and isPmUser==1">
+    			join t_property_management pm on pm.f_id = GB.t_property_management_f_id
+    			join t_property_management_has_oms_user  pmhou on pmhou.t_property_management_f_id = pm.f_id
+        		join t_oms_user OU on  pmhou.t_oms_user_f_id = OU.f_id
+    		</when>
+    		<otherwise>
+		    	inner join t_oms_user OU on OU.f_id = PC.f_admin_id
+    		</otherwise>
+    	</choose>
+    	WHERE RR.f_sys0_del_state = 0
+    	 <if test="isadmin !=null and isadmin == 0 "> <!-- 管理处 或 物业公司 -->
+	    	and OU.f_id = ${omsUserId}
+	     </if>  <!--isadmin=1 是 管理员-->
+    	 <if test="gbName != null and gbName != '' ">  and (GB.f_name like CONCAT('%',#{gbName},'%')) </if>
+		 <if test="gbId != null and gbId != '' ">  and (GB.f_id = #{gbId}) </if>
+    	 <if test="ppName != null and ppName != '' ">  and (PP.f_name like CONCAT('%',#{ppName},'%') ) </if>
+    	 <if test="bName != null and bName != '' ">  and B.f_name like CONCAT('%', #{bName},'%') </if>
+    	 <if test="rrUnitName != null and rrUnitName != '' ">  and RR.f_unit_name like CONCAT('%', #{rrUnitName},'%') </if>
+    	 <if test="rrRoomNum != null and rrRoomNum != '' ">  and RR.f_num_tail like CONCAT('%', #{rrRoomNum},'%') </if>
+    	 <if test="saleStatus != null and saleStatus != '' ">  and RR.f_sale_status = #{saleStatus} </if>
+    	 <if test="livingStatus != null and livingStatus != '' ">  and RR.f_living_status = #{livingStatus} </if>
+    	 <if test="leaseStatus != null and leaseStatus != '' ">  and RR.f_lease_status = #{leaseStatus} </if>
+	</select>
+	
+	
+	<!-- 根据物业公司用户Id，找 所管辖小区的业主信息  -->
+    <select id="select_ppList_byOmsUserId" parameterType="java.util.Map" resultMap="propertyProprietorEntity">
+    	<include refid="select_pp_for_list"/>
+    	FROM t_real_room RR
+    	LEFT join t_property_proprietor PP on RR.t_property_proprietor_f_id = PP.f_id and RR.f_sys0_del_state = 0
+    	inner join t_building B on B.F_id = RR.t_building_f_id and B.f_sys0_del_state = 0 and B.f_check_status in (1,9)
+    	inner join t_group_building GB on GB.f_id = B.t_group_building_f_id and GB.f_sys0_del_state = 0	and GB.f_check_status in (1,9)
+    	inner join t_property_company PC on PC.f_id = GB.t_property_company_f_id and PC.f_sys0_del_state = 0
+    	<choose>
+    		<when test="isPmUser!=0 and isPmUser==1">
+    			join t_property_management pm on pm.f_id = GB.t_property_management_f_id
+    			join t_property_management_has_oms_user  pmhou on pmhou.t_property_management_f_id = pm.f_id
+        		join t_oms_user OU on  pmhou.t_oms_user_f_id = OU.f_id
+    		</when>
+    		<otherwise>
+		    	inner join t_oms_user OU on OU.f_id = PC.f_admin_id
+    		</otherwise>
+    	</choose>
+    	WHERE RR.f_sys0_del_state = 0
+    	 <if test="isadmin !=null and isadmin == 0 "> <!-- 管理处 或 物业公司 -->
+	    	and OU.f_id = ${omsUserId}
+	     </if>  <!--isadmin=1 是 管理员-->
+    	 <if test="gbName != null and gbName != '' ">  and (GB.f_name like CONCAT('%',#{gbName},'%')) </if>
+    	 <if test="gbId != null and gbId != '' ">  and (GB.f_id = #{gbId}) </if>
+    	 <if test="ppName != null and ppName != '' ">  and (PP.f_name like CONCAT('%',#{ppName},'%') ) </if>
+    	 <if test="bName != null and bName != '' ">  and B.f_name like CONCAT('%', #{bName},'%') </if>
+    	 <if test="rrUnitName != null and rrUnitName != '' ">  and RR.f_unit_name like CONCAT('%', #{rrUnitName},'%') </if>
+    	 <if test="rrRoomNum != null and rrRoomNum != '' ">  and RR.f_num_tail like CONCAT('%', #{rrRoomNum},'%') </if>
+		<if test="saleStatus != null and saleStatus != '' ">  and RR.f_sale_status = #{saleStatus} </if>
+		<if test="livingStatus != null and livingStatus != '' ">  and RR.f_living_status = #{livingStatus} </if>
+		<if test="leaseStatus != null and leaseStatus != '' ">  and RR.f_lease_status = #{leaseStatus} </if>
+    	order by GB.f_sys0_add_time desc, B.f_name_char_order,B.f_name_digit_order+0, RR.f_unit_name, RR.f_num_tail_char_order, RR.f_num_tail_digit_order+0
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<!-- 根据业主的Id，找出业主信息  -->
+    <select id="select_ppInfo_ByRealRoomId" parameterType="java.math.BigInteger" resultMap="propertyProprietorEntity">
+    	<include refid="select_pp_for_list"/>
+    	FROM t_real_room RR
+    	LEFT join t_property_proprietor PP on RR.t_property_proprietor_f_id = PP.f_id and PP.f_sys0_del_state = 0
+    	inner join t_building B on B.F_id = RR.t_building_f_id
+    	inner join t_group_building GB on GB.f_id = B.t_group_building_f_id
+    	inner join t_property_company PC on PC.f_id = GB.t_property_company_f_id
+    	inner join t_oms_user OU on OU.f_id = PC.f_admin_id
+    	WHERE 1=1 
+    	and RR.f_id = #{_parameter}
+	</select>
+	
+	<!-- step1 校验导入的业主是否正确，传导入数据的《城市+小区》拼成一个大串《城市+小区》返回 -->
+    <select id="select_verifyInfo_for_ImportedPP_step1" parameterType="java.util.ArrayList" resultType="string">
+	    select concat(AC.f_name, GB.f_name) from t_group_building GB 
+		inner join t_address_block AB on AB.f_id = GB.t_block_f_id
+		inner join t_address_city AC on AC.f_id = AB.t_city_f_id 
+		where 1 = 1
+		and GB.f_check_status in (1, 9)
+		and concat(AC.f_name, GB.f_name) 
+		in (
+		<foreach item="guard" index="index" collection="list"  
+            separator=","> #{guard} </foreach>  
+        )
+	</select>
+	
+	<!-- step2 校验导入的业主是否已存在，传导出数据的《小区+楼栋+单元+房间号+合同号+业主名称》拼成一个大串《小区+楼栋+单元+房间号+合同号+业主名称》返回 -->
+    <select id="select_verifyInfo_for_ImportedPP_step2" parameterType="java.util.ArrayList" resultType="string">
+    	select concat(AC.f_name, GB.f_name, B.f_name, RR.f_unit_name, RR.f_num_tail, RR.f_contract_no, PP.f_name)
+		from t_property_proprietor PP
+		inner join t_real_room RR on RR.t_property_proprietor_f_id = PP.f_id
+		inner join t_building B on B.F_id = RR.t_building_f_id
+		inner join t_group_building GB on GB.f_id = B.t_group_building_f_id
+		inner join t_address_block AB on AB.f_id = GB.t_block_f_id
+		inner join t_address_city AC on AC.f_id = AB.t_city_f_id;
+    	WHERE 1=1 
+    	and concat(AC.f_name, GB.f_name, B.f_name, RR.f_unit_name, RR.f_num_tail, RR.f_contract_no, PP.f_name) 
+    	in (
+        <foreach item="guard" index="index" collection="list"  
+            separator=","> #{guard} </foreach>  
+        )
+	</select>
+	
+	<!--step3  对校验通过的业主，找到其对应的rrid和ppid，传导出数据的《小区+楼栋+单元+房间号+业主名称》拼成一个大串《小区+楼栋+单元+房间号+业主名称+“_”+房间ID+“_”+业主ID》返回 -->
+    <select id="select_verifyInfo_for_ImportedPP_step3" parameterType="java.util.ArrayList" resultType="string">
+    	select concat(GB.f_name,B.f_name,RR.f_unit_name,RR.f_num_tail,PP.f_name, "_", RR.f_id, "_", PP.f_id) 
+    	FROM t_property_proprietor PP
+    	inner join t_real_room RR on RR.t_property_proprietor_f_id = PP.f_id
+    	inner join t_building B on B.F_id = RR.t_building_f_id
+    	inner join t_group_building GB on GB.f_id = B.t_group_building_f_id
+    	WHERE 1=1 
+    	and concat(GB.f_name,B.f_name,RR.f_unit_name,RR.f_num_tail,PP.f_name) 
+    	in (  
+        <foreach item="guard" index="index" collection="list"  
+            separator=","> #{guard} </foreach>  
+        )  
+	</select>
+	
+	<!-- 更新(业主信息表)信息。 -->
+	<update id="update_propertyProprietor" parameterType="PropertyProprietor">
+		UPDATE t_property_proprietor SET <!-- f_id=#{id} --> f_sys0_upd_time= sysdate()
+ 		<if test="name != null and name != '' "> ,f_name=#{name}</if>
+ 		<if test="identifyNo != null "> ,f_identify_no=#{identifyNo}</if>
+ 		<if test="phone != null "> ,f_phone=#{phone}</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+		<if test="sys0UpdUser != null and sys0UpdUser != '' "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+		WHERE f_id=#{id}
+    </update>
+    
+    <!-- 更新房间信息前的校验：检查同一楼栋下是否有同名的单元和房间号 -->
+    <select id="selectCountBeforeUpdateRoom" parameterType="map" resultType="int" >
+	    select count(*) from t_real_room
+		where f_sys0_del_state = 0
+		and f_num_tail = #{numTail}
+		<choose>
+			<when test="unitName!=null">
+				and f_unit_name = #{unitName}
+			</when>
+			<otherwise>
+				and (f_unit_name = '' or f_unit_name is null)
+			</otherwise>
+		</choose>
+		and t_building_f_id = #{buildingId}
+		<![CDATA[ and f_id <> #{rrId}]]>
+    </select>
+
+	<select id="selectPropertyProprietorListByRoomId" parameterType="java.math.BigInteger" resultMap="propertyProprietorBase.propertyProprietorBaseMap">
+		SELECT
+			<include refid="propertyProprietorBase.queryHead" />
+		FROM
+			t_property_proprietor PP
+		JOIN t_real_room_has_t_property_proprietor rrpp ON rrpp.t_property_proprietor_f_id = PP.f_id
+		AND rrpp.f_sys0_del_state = 0
+		WHERE
+			PP.f_sys0_del_state = 0
+		AND rrpp.t_real_room_f_id = #{rrId};
+	</select>
+
+	<select id="selectPropertyLesseeListByRoomId" parameterType="java.math.BigInteger" resultMap="propertyLesseeBase.propertyLesseeBaseMap">
+		SELECT
+		<include refid="propertyLesseeBase.queryHead" />
+		FROM
+		t_property_lessee PL
+		JOIN t_real_room_has_t_property_lessee rrpl ON rrpl.t_property_lessee_f_id = PL.f_id
+		AND rrpl.f_sys0_del_state = 0
+		WHERE
+		PL.f_sys0_del_state = 0
+		AND rrpl.t_real_room_f_id = #{rrId};
+	</select>
+
+	<update id="deletePropertyProprietor" parameterType="map">
+		UPDATE t_property_proprietor pp
+		LEFT JOIN t_real_room_has_t_property_proprietor rrpp ON rrpp.t_property_proprietor_f_id = pp.f_id
+		SET pp.f_sys0_del_state = 1,
+		 pp.f_sys0_del_user = 1,
+		 rrpp.f_sys0_del_state = 1,
+		 rrpp.f_sys0_del_user = 1
+		WHERE
+			pp.f_id = #{ppId}
+		AND rrpp.t_real_room_f_id = #{rrId};
+	</update>
+
+	<update id="deletePropertyLessee" parameterType="map">
+		UPDATE t_property_lessee pl
+		LEFT JOIN t_real_room_has_t_property_lessee rrpl ON rrpl.t_property_lessee_f_id = pl.f_id
+		SET pl.f_sys0_del_state = 1,
+		 pl.f_sys0_del_user = 1,
+		 rrpl.f_sys0_del_state = 1,
+		 rrpl.f_sys0_del_user = 1
+		WHERE
+			pl.f_id = #{plId}
+		AND rrpl.t_real_room_f_id = #{rrId};
+	</update>
+
+	<update id="updateRealRoomPropertyPropietor" parameterType="RealRoom">
+		update t_real_room
+		set t_property_proprietor_f_id = #{tPropertyProprietorFId}, f_sys0_upd_time = sysDate(), f_sys0_add_user=#{sys0UpdUser}
+		where f_id = #{id};
+	</update>
+</mapper>

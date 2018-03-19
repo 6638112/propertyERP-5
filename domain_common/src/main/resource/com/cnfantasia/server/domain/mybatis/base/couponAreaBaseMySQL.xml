@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:消费券发放区域表 t_coupon_area -->
+<mapper namespace="couponAreaBase">
+	<resultMap type="CouponArea" id="couponAreaBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="t_coupon_f_id" javaType="java.math.BigInteger" property="tCouponFId"/>  <!-- 消费券ID -->
+        <result column="f_area_id" javaType="java.lang.String" property="areaId"/>  <!-- 消费券发放区域 -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+	</resultMap>
+	<resultMap type="CouponArea" id="couponAreaExtendMap" extends="couponAreaBaseMap">
+	</resultMap>
+	<resultMap type="CouponArea" id="couponAreaBaseMap_AppendTable">
+        <id column="CAid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="CAtCouponFId" javaType="java.math.BigInteger" property="tCouponFId"/>  <!-- 消费券ID -->
+        <result column="CAareaId" javaType="java.lang.String" property="areaId"/>  <!-- 消费券发放区域 -->
+        <result column="CAsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="CAsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="CAsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="CAsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+	</resultMap>
+	<resultMap type="CouponArea" id="couponAreaBaseMap_AppendTable1">
+        <id column="CA1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="CA1tCouponFId" javaType="java.math.BigInteger" property="tCouponFId"/>  <!-- 消费券ID -->
+        <result column="CA1areaId" javaType="java.lang.String" property="areaId"/>  <!-- 消费券发放区域 -->
+        <result column="CA1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="CA1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="CA1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="CA1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CA.f_id,CA.t_coupon_f_id,CA.f_area_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CA.f_id as CAid,CA.t_coupon_f_id as CAtCouponFId,CA.f_area_id as CAareaId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CA1.f_id as CA1id,CA1.t_coupon_f_id as CA1tCouponFId,CA1.f_area_id as CA1areaId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CA.f_id = #{id} ) </if>
+        <if test="tCouponFId != null">  and (CA.t_coupon_f_id = #{tCouponFId} ) </if>
+        <if test="areaId != null">  and (CA.f_area_id = #{areaId} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (CA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (CA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (CA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (CA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (CA.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (CA.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CA.f_id = #{id} ) </if>
+        <if test="tCouponFId != null and !tCouponFId.equals('')  ">  and (CA.t_coupon_f_id = #{tCouponFId} ) </if>
+        <if test="areaId != null and !areaId.equals('')  ">  and (CA.f_area_id like CONCAT('%',#{areaId},'%') ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (CA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (CA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (CA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (CA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CA.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CA.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="couponAreaBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="couponAreaBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="couponAreaBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="couponAreaBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_coupon_area CA
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(消费券发放区域表)信息。 -->
+	<sql id="select_couponArea">
+		SELECT <include refid="couponAreaBase.queryHead"/>
+		<include refid="couponAreaBase.busiQueryCondition"/>
+		<include refid="couponAreaBase.dimCheckSql"/>
+		ORDER BY CA.f_id DESC
+	</sql>
+	<select id="select_couponArea" parameterType="java.util.Map" resultMap="couponAreaBase.couponAreaExtendMap">
+		<include refid="couponAreaBase.select_couponArea"/>
+	</select>
+	
+	<!-- 根据条件分页查询(消费券发放区域表)信息  -->
+	<sql id="select_couponArea_withPage">
+		SELECT <include refid="couponAreaBase.queryHead"/>
+		<include refid="couponAreaBase.busiQueryCondition"/>
+		<include refid="couponAreaBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_couponArea_withPage" resultMap="couponAreaBase.couponAreaExtendMap" parameterType="java.util.Map">
+		<include refid="couponAreaBase.select_couponArea_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(消费券发放区域表)信息。 -->
+	<sql id="select_couponArea_bySeqId">
+		SELECT <include refid="couponAreaBase.queryHead"/>
+		<include refid="couponAreaBase.busiQueryCondition"/>
+		 and CA.f_id = #{_parameter}
+	</sql>
+	<select id="select_couponArea_bySeqId" parameterType="java.math.BigInteger" resultMap="couponAreaBase.couponAreaBaseMap">
+		<include refid="couponAreaBase.select_couponArea_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(消费券发放区域表)记录数  -->
+	<sql id="select_couponArea_count">
+		SELECT COUNT(*)
+		<include refid="couponAreaBase.busiQueryCount"/>
+		<include refid="couponAreaBase.dimCheckSql"/>
+	</sql>
+	<select id="select_couponArea_count" resultType="java.lang.Integer">
+		<include refid="couponAreaBase.select_couponArea_count"/>
+	</select>
+	
+	 <!-- 往(消费券发放区域表)新增一条记录。 -->
+	 <sql id="insert_couponArea">
+		INSERT INTO t_coupon_area 
+		(f_id,t_coupon_f_id,f_area_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_add_user,f_sys0_upd_user) VALUES 
+		(#{id},#{tCouponFId},#{areaId,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser})
+	 </sql>
+    <insert id="insert_couponArea" parameterType="CouponArea">
+		<include refid="couponAreaBase.insert_couponArea"/>
+    </insert>
+    
+	<!-- 批量新增(消费券发放区域表)信息 -->
+    <insert id="insert_couponArea_Batch" parameterType="java.util.List">
+    	INSERT INTO t_coupon_area 
+		(f_id,t_coupon_f_id,f_area_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_add_user,f_sys0_upd_user) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tCouponFId},#{item.areaId},sysdate(),sysdate(),#{item.sys0AddUser},NULL)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(消费券发放区域表)信息。 -->
+    <sql id="update_couponArea">
+		UPDATE t_coupon_area
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tCouponFId != null and !tCouponFId.equals('') "> ,t_coupon_f_id=#{tCouponFId}</if>
+ 		<if test="areaId != null and !areaId.equals('') "> ,f_area_id=#{areaId}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_couponArea" parameterType="CouponArea">
+		<include refid="couponAreaBase.update_couponArea"/>
+    </update>
+    
+    <!-- 批量更新(消费券发放区域表)信息。 -->
+    <update id="update_couponArea_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_coupon_area
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tCouponFId != null and !item.tCouponFId.equals('')  "> ,t_coupon_f_id=#{item.tCouponFId}</if>
+ 		<if test="item.areaId != null and !item.areaId.equals('')  "> ,f_area_id=#{item.areaId}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(消费券发放区域表)信息_逻辑删除。 -->
+    <!-- <sql id="delete_couponArea_Logic">
+		UPDATE t_coupon_area
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tCouponFId != null and !tCouponFId.equals('')  "> ,t_coupon_f_id=#{tCouponFId}</if>
+ 		<if test="areaId != null and !areaId.equals('')  "> ,f_area_id=#{areaId}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_couponArea_Logic" parameterType="CouponArea">
+		<include refid="couponAreaBase.delete_couponArea_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(消费券发放区域表)信息_逻辑删除 -->
+    <!-- <update id="delete_couponArea_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_coupon_area
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tCouponFId != null and !item.tCouponFId.equals('')  "> ,t_coupon_f_id=#{item.tCouponFId}</if>
+ 		<if test="item.areaId != null and !item.areaId.equals('')  "> ,f_area_id=#{item.areaId}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(消费券发放区域表)信息。 -->
+    <sql id="delete_couponArea">
+		DELETE FROM t_coupon_area WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_couponArea" parameterType="java.lang.String">
+		<include refid="couponAreaBase.delete_couponArea"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(消费券发放区域表)信息。 -->
+    <delete id="delete_couponArea_Batch" parameterType="java.util.List">
+		DELETE FROM t_coupon_area WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

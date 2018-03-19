@@ -1,0 +1,194 @@
+package com.cnfantasia.server.api.paybill.web;
+
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.cnfantasia.server.api.commonBusiness.service.ICommonRoomService;
+import com.cnfantasia.server.api.commonBusiness.util.CommonRoomUtil;
+import com.cnfantasia.server.api.paybill.service.IPayBillService;
+import com.cnfantasia.server.api.plotproperty.constant.PlotpropertyDict;
+import com.cnfantasia.server.api.plotproperty.entity.PayBillEntity;
+import com.cnfantasia.server.api.pub.BaseController;
+import com.cnfantasia.server.api.pub.session.UserContext;
+import com.cnfantasia.server.api.room.entity.RoomBaseInfo;
+import com.cnfantasia.server.api.room.entity.RoomEntity;
+import com.cnfantasia.server.apibase.payBill.entity.PayBill;
+import com.cnfantasia.server.business.pub.utils.DateUtil;
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+import com.cnfantasia.server.common.json.JsonResponse;
+import com.cnfantasia.server.common.utils.PriceUtil;
+
+@Controller
+@RequestMapping("/payBill")
+public class PayBillController extends BaseController{
+//	private Log logger = LogFactory.getLog(getClass());
+	private IPayBillService payBillService;
+	public void setPayBillService(IPayBillService payBillService) {
+		this.payBillService = payBillService;
+	}
+	
+	private ICommonRoomService commonRoomService;
+	public void setCommonRoomService(ICommonRoomService commonRoomService) {
+		this.commonRoomService = commonRoomService;
+	}
+	
+//	public static void main(String[] args) {
+//		String nowTime = "2014-08-02 11:22:31";
+//		System.out.println(DateUtil.getMonthFirstDay(nowTime));
+//		System.out.println(DateUtil.getMonthLastDay(nowTime));
+//		System.out.println(null+"aaa");
+//	}
+	
+	@RequestMapping("/qryPayBill.json")
+	@ResponseBody
+	public JsonResponse qryPayBill(HttpServletRequest request){
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		String year = request.getParameter("year");
+		String month = request.getParameter("month");
+		if(month!=null&&month.trim().length()==1){
+			month = "0"+month.trim();
+		}
+		BigInteger userId = UserContext.getOperIdMustExistBigInteger();
+		//2.交互
+		RoomEntity roomEntity = commonRoomService.getDefaultRoomInfo(userId);
+		//3.结果处理
+		RoomBaseInfo roomBaseInfo= null;
+		if(roomEntity==null||roomEntity.isEmptyRoom()){
+			throw new BusinessRuntimeException("payBillController.qryPayBill.defaultRoom.isEmpty");
+		}else{
+			roomBaseInfo=CommonRoomUtil.getRoomBaseInfo(roomEntity);
+		}
+		PayBillEntity payBillEntity=payBillService.getPayBillByMonth(year+month, userId);
+		boolean signStatus = roomEntity.getRealRoomEntity().getBuildingEntity().getGroupBuildingEntity().isSign();
+		Map<String,Object> resMap = payBill2Map(payBillEntity,roomBaseInfo,signStatus,month);
+		jsonResponse.setDataValue(resMap);
+		return jsonResponse;
+	}
+	
+//	@RequestMapping("/qryPayBillMulti.json")
+//	@ResponseBody
+//	public JsonResponse qryPayBillMulti(HttpServletRequest request){
+//		JsonResponse jsonResponse = new JsonResponse();
+//		//1.搜集参数
+//		String year = request.getParameter("year");
+//		String month = request.getParameter("month");
+//		if(month!=null&&month.trim().length()==1){
+//			month = "0"+month.trim();
+//		}
+//		String yearEnd = request.getParameter("yearEnd");
+//		String monthEnd = request.getParameter("monthEnd");
+//		if(monthEnd!=null&&monthEnd.trim().length()==1){
+//			monthEnd = "0"+monthEnd.trim();
+//		}
+//		BigInteger userId = UserContext.getOperIdMustExistBigInteger();
+//		//2.交互
+//		RoomEntity roomEntity = commonRoomService.getDefaultRoomInfo(userId);
+//		//3.结果处理
+//		RoomBaseInfo roomBaseInfo=null;
+//		if(roomEntity==null||roomEntity.isEmptyRoom()){
+//			throw new BusinessRuntimeException("payBillController.qryPayBill.defaultRoom.isEmpty");
+//		}else{
+//			roomBaseInfo=CommonRoomUtil.getRoomBaseInfo(roomEntity);
+//		}
+//		List<PayBillEntity> payBillList = payBillService.getPayBillByMonthMulti(year+month, yearEnd+monthEnd, userId);
+//		List<Map<String,Object>> resList = new ArrayList<Map<String,Object>>();//list组装
+//		for(PayBillEntity payBillEntity:payBillList){
+//			boolean signStatus = payBillEntity.getRoomEntity().getRealRoomEntity().getBuildingEntity().getGroupBuildingEntity().isSign();
+//			Map<String,Object> resMap = payBill2Map(payBillEntity,roomBaseInfo,signStatus,"");
+//			resList.add(resMap);
+//		}
+//		return ControllerUtils.addPageInfo(jsonResponse, resList, true);
+//	}
+	
+	@RequestMapping("/doPay.json")
+	@ResponseBody
+	public void doPay(HttpServletRequest request){/*
+		JsonResponse jsonResponse = new JsonResponse();
+		jsonResponse.putData("userId", "hua001");
+		jsonResponse.putData("roomDetail", "广东省深圳市南山区美年广场A1栋301");
+		jsonResponse.putData("paydate", "2014-02-13 19:50");
+		jsonResponse.putData("amount", 198.33);
+		jsonResponse.putData("amount", 8.0);
+		jsonResponse.putData("realAmount", 158.66);
+		return JSON.toJSONString(jsonResponse);
+	*/}
+	
+	@RequestMapping("/qryPayRecord.json")
+	@ResponseBody
+	public void qryPayRecord(HttpServletRequest request){/*
+		JsonResponse jsonResponse = new JsonResponse();
+		List<Map<String,Object>> payRecList = new ArrayList<Map<String,Object>>();
+		Map<String,Object> rec01 = new HashMap<String, Object>();
+		rec01.put("userId", "hua001");
+		rec01.put("roomDetail", "广东省深圳市南山区美年广场A1栋301");
+		rec01.put("paydate", "2014-02-13 19:50");
+		rec01.put("amount", 198.33);
+		rec01.put("discount", 8.0);
+		rec01.put("realAmount", 158.66);
+		rec01.put("payResult", 0);
+		jsonResponse.putData("list",payRecList);
+		return JSON.toJSONString(jsonResponse);
+	*/}
+	
+	/**
+	 * 
+	 * @param payBill
+	 * @param roomBaseInfo
+	 * @param signStatus 签约状态
+	 * @return
+	 */
+	private Map<String,Object> payBill2Map(PayBill payBill,RoomBaseInfo roomBaseInfo,boolean signStatus,String currMonth){
+		Map<String,Object> resMap = new HashMap<String, Object>();
+//		String payTime = payBill.getMonth();
+//		String month="0";
+//		try {
+//			month = DateUtil.formatOnlyMonth.format(DateUtil.formatSecond.parse(payTime));
+//		} catch (ParseException e) {
+//			logger.debug("DateUtil.formatOnlyMonth.format(DateUtil.formatSecond.par",e);
+//			e.printStackTrace();
+//		}
+		if(payBill!=null){
+			resMap.put("id", payBill.getId());
+			resMap.put("amount", PriceUtil.div100(payBill.getAmount()));
+			resMap.put("month", DateUtil.strFormate(payBill.getMonth(), DateUtil.formatOnlyMonth));
+			if(payBill.getIsPay()!=null&&PlotpropertyDict.PayBill_IsPay.TRUE.compareTo(payBill.getIsPay())==0){
+				resMap.put("isPay",true); 
+			}else{
+				resMap.put("isPay",false); 
+			}
+			resMap.put("payLimiteStart",DateUtil.strFormate(payBill.getPayTimeStart(), DateUtil.formatDay));
+			resMap.put("payLimiteEnd",DateUtil.strFormate(payBill.getPayTimeEnd(), DateUtil.formatDay));
+			resMap.put("miniDiscount",9.8);//TODO 查询对应月份最低折扣
+			resMap.put("realAmount",null);//TODO 查询是否已经缴费过
+		}else{
+			resMap.put("id", null);
+			resMap.put("amount", 0);
+			resMap.put("month", currMonth);
+			resMap.put("isPay",null); 
+			resMap.put("payLimiteStart","");
+			resMap.put("payLimiteEnd","");
+			resMap.put("miniDiscount",null);//TODO 查询对应月份最低折扣 
+			resMap.put("realAmount",0);
+		}
+		if(roomBaseInfo!=null){
+			resMap.put("roomDetail",new StringBuffer()
+			.append(roomBaseInfo.getProvince()).append(roomBaseInfo.getCity()).append(roomBaseInfo.getBlock())
+			.append(roomBaseInfo.getGroupBuilding()).append(roomBaseInfo.getBuilding()).append(roomBaseInfo.getRoomNum()).toString());
+		}else{
+			resMap.put("roomDetail",null);
+		}
+		{//签约状态
+			resMap.put("signStatus",signStatus);
+		}
+		return resMap;
+	}
+	
+}

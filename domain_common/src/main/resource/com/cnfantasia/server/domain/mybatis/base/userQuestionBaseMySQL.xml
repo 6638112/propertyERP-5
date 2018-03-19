@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户提问信息表 t_user_question -->
+<mapper namespace="userQuestionBase">
+	<resultMap type="UserQuestion" id="userQuestionBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_content" javaType="java.lang.String" property="content"/>  <!-- 疑问内容 -->        <result column="f_pic_url" javaType="java.lang.String" property="picUrl"/>  <!-- 图片地址，分号隔开 -->        <result column="f_type" javaType="java.lang.Integer" property="type"/>  <!-- 类型 -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户ID -->        <result column="t_room_f_id" javaType="java.math.BigInteger" property="tRoomFId"/>  <!-- 房间ID -->        <result column="f_status" javaType="java.lang.Integer" property="status"/>  <!-- 状态 -->        <result column="f_answer_content" javaType="java.lang.String" property="answerContent"/>  <!-- 回复内容 -->        <result column="f_service_id" javaType="java.math.BigInteger" property="serviceId"/>  <!-- 公共及普通维修单ID -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="UserQuestion" id="userQuestionExtendMap" extends="userQuestionBaseMap">
+	</resultMap>
+	<resultMap type="UserQuestion" id="userQuestionBaseMap_AppendTable">
+        <id column="UQid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="UQcontent" javaType="java.lang.String" property="content"/>  <!-- 疑问内容 -->        <result column="UQpicUrl" javaType="java.lang.String" property="picUrl"/>  <!-- 图片地址，分号隔开 -->        <result column="UQtype" javaType="java.lang.Integer" property="type"/>  <!-- 类型 -->        <result column="UQuserId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户ID -->        <result column="UQtRoomFId" javaType="java.math.BigInteger" property="tRoomFId"/>  <!-- 房间ID -->        <result column="UQstatus" javaType="java.lang.Integer" property="status"/>  <!-- 状态 -->        <result column="UQanswerContent" javaType="java.lang.String" property="answerContent"/>  <!-- 回复内容 -->        <result column="UQserviceId" javaType="java.math.BigInteger" property="serviceId"/>  <!-- 公共及普通维修单ID -->        <result column="UQsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="UQsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="UQsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="UQsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="UQsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="UQsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="UQsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="UserQuestion" id="userQuestionBaseMap_AppendTable1">
+        <id column="UQ1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="UQ1content" javaType="java.lang.String" property="content"/>  <!-- 疑问内容 -->        <result column="UQ1picUrl" javaType="java.lang.String" property="picUrl"/>  <!-- 图片地址，分号隔开 -->        <result column="UQ1type" javaType="java.lang.Integer" property="type"/>  <!-- 类型 -->        <result column="UQ1userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户ID -->        <result column="UQ1tRoomFId" javaType="java.math.BigInteger" property="tRoomFId"/>  <!-- 房间ID -->        <result column="UQ1status" javaType="java.lang.Integer" property="status"/>  <!-- 状态 -->        <result column="UQ1answerContent" javaType="java.lang.String" property="answerContent"/>  <!-- 回复内容 -->        <result column="UQ1serviceId" javaType="java.math.BigInteger" property="serviceId"/>  <!-- 公共及普通维修单ID -->        <result column="UQ1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="UQ1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="UQ1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="UQ1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="UQ1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="UQ1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="UQ1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		UQ.f_id,UQ.f_content,UQ.f_pic_url,UQ.f_type,UQ.f_user_id,UQ.t_room_f_id,UQ.f_status,UQ.f_answer_content,UQ.f_service_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		UQ.f_id as UQid,UQ.f_content as UQcontent,UQ.f_pic_url as UQpicUrl,UQ.f_type as UQtype,UQ.f_user_id as UQuserId,UQ.t_room_f_id as UQtRoomFId,UQ.f_status as UQstatus,UQ.f_answer_content as UQanswerContent,UQ.f_service_id as UQserviceId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		UQ1.f_id as UQ1id,UQ1.f_content as UQ1content,UQ1.f_pic_url as UQ1picUrl,UQ1.f_type as UQ1type,UQ1.f_user_id as UQ1userId,UQ1.t_room_f_id as UQ1tRoomFId,UQ1.f_status as UQ1status,UQ1.f_answer_content as UQ1answerContent,UQ1.f_service_id as UQ1serviceId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (UQ.f_id = #{id} ) </if>        <if test="content != null">  and (UQ.f_content = #{content} ) </if>        <if test="picUrl != null">  and (UQ.f_pic_url = #{picUrl} ) </if>        <if test="type != null">  and (UQ.f_type = #{type} ) </if>        <if test="userId != null">  and (UQ.f_user_id = #{userId} ) </if>        <if test="tRoomFId != null">  and (UQ.t_room_f_id = #{tRoomFId} ) </if>        <if test="status != null">  and (UQ.f_status = #{status} ) </if>        <if test="answerContent != null">  and (UQ.f_answer_content = #{answerContent} ) </if>        <if test="serviceId != null">  and (UQ.f_service_id = #{serviceId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (UQ.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (UQ.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (UQ.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (UQ.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (UQ.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (UQ.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (UQ.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (UQ.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (UQ.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (UQ.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (UQ.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (UQ.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (UQ.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (UQ.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (UQ.f_id = #{id} ) </if>        <if test="content != null and !content.equals('')  ">  and (UQ.f_content like CONCAT('%',#{content},'%') ) </if>        <if test="picUrl != null and !picUrl.equals('')  ">  and (UQ.f_pic_url like CONCAT('%',#{picUrl},'%') ) </if>        <if test="type != null and !type.equals('')  ">  and (UQ.f_type = #{type} ) </if>        <if test="userId != null and !userId.equals('')  ">  and (UQ.f_user_id = #{userId} ) </if>        <if test="tRoomFId != null and !tRoomFId.equals('')  ">  and (UQ.t_room_f_id = #{tRoomFId} ) </if>        <if test="status != null and !status.equals('')  ">  and (UQ.f_status = #{status} ) </if>        <if test="answerContent != null and !answerContent.equals('')  ">  and (UQ.f_answer_content like CONCAT('%',#{answerContent},'%') ) </if>        <if test="serviceId != null and !serviceId.equals('')  ">  and (UQ.f_service_id = #{serviceId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (UQ.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (UQ.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (UQ.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (UQ.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (UQ.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (UQ.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (UQ.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (UQ.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (UQ.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (UQ.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (UQ.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (UQ.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (UQ.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (UQ.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="userQuestionBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="userQuestionBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="userQuestionBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="userQuestionBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_user_question UQ    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(用户提问信息表)信息。 -->
+	<sql id="select_userQuestion">
+		SELECT <include refid="userQuestionBase.queryHead"/>
+		<include refid="userQuestionBase.busiQueryCondition"/>
+		<include refid="userQuestionBase.dimCheckSql"/>
+		ORDER BY UQ.f_id DESC
+	</sql>
+	<select id="select_userQuestion" parameterType="java.util.Map" resultMap="userQuestionBase.userQuestionExtendMap">
+		<include refid="userQuestionBase.select_userQuestion"/>
+	</select>
+	
+	<!-- 根据条件分页查询(用户提问信息表)信息  -->
+	<sql id="select_userQuestion_withPage">
+		SELECT <include refid="userQuestionBase.queryHead"/>
+		<include refid="userQuestionBase.busiQueryCondition"/>
+		<include refid="userQuestionBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_userQuestion_withPage" resultMap="userQuestionBase.userQuestionExtendMap" parameterType="java.util.Map">
+		<include refid="userQuestionBase.select_userQuestion_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(用户提问信息表)信息。 -->
+	<sql id="select_userQuestion_bySeqId">
+		SELECT <include refid="userQuestionBase.queryHead"/>
+		<include refid="userQuestionBase.busiQueryCondition"/>
+		 and UQ.f_id = #{_parameter}
+	</sql>
+	<select id="select_userQuestion_bySeqId" parameterType="java.math.BigInteger" resultMap="userQuestionBase.userQuestionBaseMap">
+		<include refid="userQuestionBase.select_userQuestion_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(用户提问信息表)记录数  -->
+	<sql id="select_userQuestion_count">
+		SELECT COUNT(*)
+		<include refid="userQuestionBase.busiQueryCount"/>
+		<include refid="userQuestionBase.dimCheckSql"/>
+	</sql>
+	<select id="select_userQuestion_count" resultType="java.lang.Integer">
+		<include refid="userQuestionBase.select_userQuestion_count"/>
+	</select>
+	
+	 <!-- 往(用户提问信息表)新增一条记录。 -->
+	 <sql id="insert_userQuestion">
+		INSERT INTO t_user_question 
+		(f_id,f_content,f_pic_url,f_type,f_user_id,t_room_f_id,f_status,f_answer_content,f_service_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{content,jdbcType=VARCHAR},#{picUrl,jdbcType=VARCHAR},#{type},#{userId},#{tRoomFId},#{status},#{answerContent,jdbcType=VARCHAR},#{serviceId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_userQuestion" parameterType="UserQuestion">
+		<include refid="userQuestionBase.insert_userQuestion"/>
+    </insert>
+    
+	<!-- 批量新增(用户提问信息表)信息 -->
+    <insert id="insert_userQuestion_Batch" parameterType="java.util.List">
+    	INSERT INTO t_user_question 
+		(f_id,f_content,f_pic_url,f_type,f_user_id,t_room_f_id,f_status,f_answer_content,f_service_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.content,jdbcType=VARCHAR},#{item.picUrl,jdbcType=VARCHAR},#{item.type},#{item.userId},#{item.tRoomFId},#{item.status},#{item.answerContent,jdbcType=VARCHAR},#{item.serviceId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(用户提问信息表)信息。 -->
+    <sql id="update_userQuestion">
+		UPDATE t_user_question		<trim prefix="SET" prefixOverrides=","> 		<if test="content != null and !content.equals('') "> ,f_content=#{content}</if> 		<if test="picUrl != null and !picUrl.equals('') "> ,f_pic_url=#{picUrl}</if> 		<if test="type != null and !type.equals('') "> ,f_type=#{type}</if> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="tRoomFId != null and !tRoomFId.equals('') "> ,t_room_f_id=#{tRoomFId}</if> 		<if test="status != null and !status.equals('') "> ,f_status=#{status}</if> 		<if test="answerContent != null and !answerContent.equals('') "> ,f_answer_content=#{answerContent}</if> 		<if test="serviceId != null and !serviceId.equals('') "> ,f_service_id=#{serviceId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_userQuestion" parameterType="UserQuestion">
+		<include refid="userQuestionBase.update_userQuestion"/>
+    </update>
+    
+    <!-- 批量更新(用户提问信息表)信息。 -->
+    <update id="update_userQuestion_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_user_question		<trim prefix="SET" prefixOverrides=","> 		<if test="item.content != null and !item.content.equals('')  "> ,f_content=#{item.content}</if> 		<if test="item.picUrl != null and !item.picUrl.equals('')  "> ,f_pic_url=#{item.picUrl}</if> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.tRoomFId != null and !item.tRoomFId.equals('')  "> ,t_room_f_id=#{item.tRoomFId}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.answerContent != null and !item.answerContent.equals('')  "> ,f_answer_content=#{item.answerContent}</if> 		<if test="item.serviceId != null and !item.serviceId.equals('')  "> ,f_service_id=#{item.serviceId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(用户提问信息表)信息_逻辑删除。 -->
+    <sql id="delete_userQuestion_Logic">
+		UPDATE t_user_question		<trim prefix="SET" prefixOverrides=","> 		<if test="content != null and !content.equals('')  "> ,f_content=#{content}</if> 		<if test="picUrl != null and !picUrl.equals('')  "> ,f_pic_url=#{picUrl}</if> 		<if test="type != null and !type.equals('')  "> ,f_type=#{type}</if> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="tRoomFId != null and !tRoomFId.equals('')  "> ,t_room_f_id=#{tRoomFId}</if> 		<if test="status != null and !status.equals('')  "> ,f_status=#{status}</if> 		<if test="answerContent != null and !answerContent.equals('')  "> ,f_answer_content=#{answerContent}</if> 		<if test="serviceId != null and !serviceId.equals('')  "> ,f_service_id=#{serviceId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_userQuestion_Logic" parameterType="UserQuestion">
+		<include refid="userQuestionBase.delete_userQuestion_Logic"/>
+    </update>
+    
+    <!-- 批量删除(用户提问信息表)信息_逻辑删除 -->
+    <update id="delete_userQuestion_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_user_question		<trim prefix="SET" prefixOverrides=","> 		<if test="item.content != null and !item.content.equals('')  "> ,f_content=#{item.content}</if> 		<if test="item.picUrl != null and !item.picUrl.equals('')  "> ,f_pic_url=#{item.picUrl}</if> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.tRoomFId != null and !item.tRoomFId.equals('')  "> ,t_room_f_id=#{item.tRoomFId}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.answerContent != null and !item.answerContent.equals('')  "> ,f_answer_content=#{item.answerContent}</if> 		<if test="item.serviceId != null and !item.serviceId.equals('')  "> ,f_service_id=#{item.serviceId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(用户提问信息表)信息。 -->
+    <sql id="delete_userQuestion">
+		DELETE FROM t_user_question WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_userQuestion" parameterType="java.lang.String">
+		<include refid="userQuestionBase.delete_userQuestion"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(用户提问信息表)信息。 -->
+    <delete id="delete_userQuestion_Batch" parameterType="java.util.List">
+		DELETE FROM t_user_question WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 抽奖 -->
+<mapper namespace="prize">
+	
+	<!-- 分页查询中奖记录(已绑定门牌) -->
+	<select id="select_prizeRecord_withPage" resultMap="prizeRecordBase.prizeRecordBaseMap" parameterType="java.util.Map">
+		SELECT <include refid="prizeRecordBase.queryHead"/>
+		<include refid="prizeRecordBase.busiQueryCondition"/>
+		<include refid="prizeRecordBase.dimCheckSql"/>
+		ORDER BY f_prize_time DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	<!-- 按条件查询抽奖记录数 -->
+	<select id="select_prizeRecord_count" resultType="java.lang.Integer">
+		<include refid="prizeRecordBase.select_prizeRecord_count"/>
+	</select>
+	
+	<!-- 根据用户Id查询当天已经抽奖的次数 -->
+	<select id="select_prizeDoneCount_currDay" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) 
+		FROM t_prize_record PR 
+			INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND PR.t_user_has_t_room_f_id=UHTR.f_id AND UHTR.f_apply_status = 1
+			INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+				AND UHTR.t_room_f_id = U.f_default_room_id <!-- 只查询当前用户默认门牌下的 -->
+		WHERE 1=1
+		AND PR.f_sys0_del_state = 0
+		AND U.f_id = #{userId}
+		AND TO_DAYS(PR.f_prize_time) = TO_DAYS(NOW())
+	</select>
+	
+	<!-- 根据用户Id查询当天已经抽奖的次数 (未登录用户)-->
+	<select id="select_prizeDoneCount_currDay_unLogin"  parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) 
+		FROM t_prize_record_tmp PRT INNER JOIN t_user_tmp UT ON PRT.t_user_tmp_f_id=UT.f_id AND UT.f_sys0_del_state = 0
+		WHERE 1=1
+		AND PRT.f_sys0_del_state = 0
+		AND UT.f_id = #{userTmpId}
+		AND TO_DAYS(PRT.f_prize_time) = TO_DAYS(NOW())
+	</select>
+	
+	<!-- 查询当天上次抽奖折扣 -->
+	<select id="select_lastDiscount_currDay" parameterType="java.util.Map" resultType="java.lang.Double">
+		SELECT PR.f_discount
+		FROM t_prize_record PR 
+			INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND PR.t_user_has_t_room_f_id=UHTR.f_id AND UHTR.f_apply_status = 1
+			INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+				AND UHTR.t_room_f_id = U.f_default_room_id <!-- 只查询当前用户默认门牌下的 -->
+		WHERE 1=1
+		AND PR.f_sys0_del_state = 0
+		AND U.f_id = #{userId}
+		AND TO_DAYS(PR.f_prize_time) = TO_DAYS(NOW())
+		ORDER BY PR.f_prize_time DESC
+		LIMIT 0,1
+	</select>
+	<!-- 查询用户上次折扣 -->
+	<select id="select_lastDiscount_currDay_unLogin" parameterType="java.util.Map" resultType="java.lang.Double">
+		SELECT PRT.f_discount
+		FROM t_prize_record_tmp PRT INNER JOIN t_user_tmp UT ON PRT.t_user_tmp_f_id=UT.f_id AND UT.f_sys0_del_state = 0
+		WHERE 1=1
+		AND PRT.f_sys0_del_state = 0
+		AND UT.f_id = #{userTmpId}
+		AND TO_DAYS(PRT.f_prize_time) = TO_DAYS(NOW())
+		ORDER BY PRT.f_prize_time DESC
+		LIMIT 0,1
+	</select>
+	
+	<!-- 查询当月产生的中奖纪录 不查询已经退回到奖池的 签约小区-->
+	<select id="select_PrizeRecord_Curr_Month_Sign" resultMap="prizeRecordBase.prizeRecordBaseMap_AppendTable">
+		SELECT <include refid="prizeRecordBase.queryHead_AppendTable"/>
+		FROM t_prize_record PR
+			INNER JOIN t_user_has_t_room UHTR ON PR.t_user_has_t_room_f_id=UHTR.f_id 
+				AND UHTR.f_sys0_del_state = 0
+			INNER JOIN t_room R ON R.f_id = UHTR.t_room_f_id 
+				AND R.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id
+		        AND RR.f_sys0_del_state = 0
+		    INNER JOIN t_building B ON RR.t_building_f_id = B.f_id
+		        AND B.f_sys0_del_state = 0
+		    INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id
+		        AND GB.f_sys0_del_state = 0
+    	WHERE 1=1
+    	AND PR.f_sys0_del_state = 0
+    	AND ( ISNULL(PR.f_back_pool_status) OR PR.f_back_pool_status != 1 ) <!-- 折扣退回奖池状态=={"1":"已退回"} -->
+    	AND date_format(PR.f_prize_time, '%Y%m')= date_format(NOW(), '%Y%m')
+    	AND GB.f_sign_status = 1 <!-- 是否签约标志=={"0":"否","1":"是"} -->
+	</select>
+	
+	<!-- 查询当月产生的中奖纪录 不查询已经退回到奖池的 非签约小区-->
+	<select id="select_PrizeRecord_Curr_Month_UnSign" resultMap="prizeRecordBase.prizeRecordBaseMap_AppendTable">
+		SELECT <include refid="prizeRecordBase.queryHead_AppendTable"/>
+		FROM t_prize_record PR
+			INNER JOIN t_user_has_t_room UHTR ON PR.t_user_has_t_room_f_id=UHTR.f_id 
+				AND UHTR.f_sys0_del_state = 0
+			INNER JOIN t_room R ON R.f_id = UHTR.t_room_f_id 
+				AND R.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id
+		        AND RR.f_sys0_del_state = 0
+		    INNER JOIN t_building B ON RR.t_building_f_id = B.f_id
+		        AND B.f_sys0_del_state = 0
+		    INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id
+		        AND GB.f_sys0_del_state = 0
+    	WHERE 1=1
+    	AND PR.f_sys0_del_state = 0
+    	AND ( ISNULL(PR.f_back_pool_status) OR PR.f_back_pool_status != 1 ) <!-- 折扣退回奖池状态=={"1":"已退回"} -->
+    	AND date_format(PR.f_prize_time, '%Y%m')= date_format(NOW(), '%Y%m')
+    	AND GB.f_sign_status = 0 <!-- 是否签约标志=={"0":"否","1":"是"} -->
+	</select>
+	
+	<!-- 查询当月产生的临时中奖纪录 -->
+	<select id="select_PrizeRecordTmp_Curr_Month" resultMap="prizeRecordTmpBase.prizeRecordTmpBaseMap_AppendTable">
+		SELECT <include refid="prizeRecordTmpBase.queryHead_AppendTable"/>
+		FROM t_prize_record_tmp PRT
+    	WHERE 1=1
+    	AND PRT.f_sys0_del_state = 0
+    	AND date_format(PRT.f_prize_time, '%Y%m')= date_format(NOW(), '%Y%m')
+	</select>
+	
+	<!-- 统一返回的格式数据 -->
+	<resultMap type="com.cnfantasia.server.api.commonBusiness.entityDB.DbCallBaseEntity" id="dbCallBaseEntity_Map">
+		<id column="f_id" javaType="java.lang.String" property="id"/>  <!-- 记录唯一标识 -->
+		 <result column="f_status" javaType="java.lang.String" property="status"/>  <!-- 结果状态 -->
+	</resultMap>
+	<!-- 抽奖返回的结果Map -->
+	<resultMap type="com.cnfantasia.server.api.prize.entityDB.PrizeResultForDB" id="prizeResultForDB_Map" 
+		extends="dbCallBaseEntity_Map">
+        <result column="f_discount" javaType="java.lang.Double" property="discount" typeHandler="com.cnfantasia.server.api.prize.typeHandler.PrizeDBDiscountTypeHandler" />  <!-- 折扣 -->
+        <result column="f_pooltype" javaType="java.lang.Integer" property="poolType"/>  <!-- 奖池类型 -->
+        <result column="f_prizetime" javaType="java.lang.String" property="prizeTime"/>  <!-- 抽奖时间 -->
+        <association property="supriseGiftForDB" resultMap="supriseGiftForDB_Map"/>
+	</resultMap>
+	<!-- 意外惊喜信息Map -->
+	<resultMap type="com.cnfantasia.server.api.prize.entityDB.SupriseGiftForDB" id="supriseGiftForDB_Map"
+		extends="dbCallBaseEntity_Map">
+		<result column="f_surprise_type" javaType="java.lang.Integer" property="surpriseType"/>  <!-- 意外惊喜类型 -->
+        <result column="f_surprise_name" javaType="java.lang.String" property="surpriseName"/>  <!-- 意外惊喜名称 -->
+        <result column="f_surprise_expiryTime" javaType="java.lang.String" property="expiryTime"/>  <!-- 意外惊喜有效期-->
+        <result column="f_surprise_hbAmount" javaType="java.lang.Double" property="hbAmount"/>  <!-- 粮票金额-->
+        <result column="f_surprise_exchange_code" javaType="java.lang.String" property="exchangeCode"/>  <!-- 兑换码-->
+        <result column="f_surprise_id" javaType="java.math.BigInteger" property="giftId"/>  <!-- 奖品Id-->
+	</resultMap>
+	
+	<!-- 从数据库抽奖获取折扣信息 -->
+	<select id="do_Prize_From_DB" parameterType="java.util.Map" resultMap="prizeResultForDB_Map">
+		CALL sp_get_prize(#{userId}, #{userType})
+	</select>
+	
+	<!-- 直接抽取意外惊喜礼品 -->
+	<select id="fetch_SupriseGift_FromDB_Share" parameterType="java.util.Map" resultMap="supriseGiftForDB_Map">
+		CALL sp_get_surprise_share(#{userId}, #{userType},#{fromType})
+	</select>
+	<select id="fetch_SupriseGift_FromDB_LightApp_TGLJ" parameterType="java.util.Map" resultMap="supriseGiftForDB_Map">
+		CALL sp_get_surprise_share_wechat(#{userId}, #{userType},#{fromType},#{fromId},#{cityName}) <!-- syl-add-2015-8-17 17:24:37CityName -->
+	</select>
+	<select id="fetch_SupriseGift_FromDB_LightApp_Prize" parameterType="java.util.Map" resultMap="supriseGiftForDB_Map">
+		CALL sp_get_surprise_prize_wechat(#{userId}, #{userType},#{fromType})
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.prize.entity.UserWithLeastDiscountEntity" id="userWithLeastDiscountEntity_Map_Append"
+		extends="commonUser.userSimpleEntity_Map_Append">
+		<result column="ext_leastDiscount" javaType="java.lang.Double" property="ext_leastDiscount"/>
+		<result column="ext_doneCount" javaType="java.lang.Integer" property="ext_doneCount"/>
+		
+	</resultMap>
+	<!-- 查询家里人对应月份的抽奖次数及最低折扣信息 -->
+	<select id="select_User_WithLeastDiscount_List" parameterType="java.util.Map" resultMap="userWithLeastDiscountEntity_Map_Append">
+		SELECT <include refid="commonUser.userSimple_common_select"/>
+			,CASE WHEN ISNULL(PR_group.ext_leastDiscount) THEN NULL ELSE PR_group.ext_leastDiscount END AS ext_leastDiscount 
+			,CASE WHEN ISNULL(PR_group.ext_doneCount) THEN 0 ELSE PR_group.ext_doneCount END AS ext_doneCount
+		FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+			INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_user_has_t_room UHTR ON 1 = 1 AND R.f_id = UHTR.t_room_f_id AND UHTR.f_apply_status = 1
+			INNER JOIN t_user U ON U.f_sys0_del_state = 0 AND <include refid="commonSql.user_and_userHasRoom_condition"/>
+			<include refid="commonUser.userSimple_common_from_by_curr_room"/>
+    		
+			INNER JOIN (
+				SELECT MIN(PR.f_discount) AS ext_leastDiscount,COUNT(*) AS ext_doneCount,UHTR.t_room_f_id AS roomId
+				FROM ( <include refid="commonSql.qry_roomIds_by_userInfo"/> ) AS Group_roomId
+					INNER JOIN t_room R ON Group_roomId.room_Id = R.f_id AND R.f_sys0_del_state = 0
+					INNER JOIN t_user_has_t_room UHTR ON 1=1 AND R.f_id = UHTR.t_room_f_id AND UHTR.f_sys0_del_state = 0 
+					INNER JOIN t_prize_record PR ON PR.t_user_has_t_room_f_id = UHTR.f_id 
+    					AND PR.f_sys0_del_state = 0
+						AND PR.f_prize_time >= #{startYearMonthDay}
+						<![CDATA[ AND PR.f_prize_time <= #{endYearMonthDay} ]]>
+    			WHERE 1=1
+				GROUP BY UHTR.t_room_f_id
+			) AS PR_group ON PR_group.roomId = R.f_id
+		WHERE 1=1
+	</select>
+	
+	<!-- <update id="testTrans">
+		update t_prize_record set f_sys0_upd_time = sysdate() where f_id = 106439	
+	</update> -->
+</mapper>

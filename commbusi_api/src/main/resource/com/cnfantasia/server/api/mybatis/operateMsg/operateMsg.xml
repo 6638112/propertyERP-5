@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 运营消息服务 -->
+<mapper namespace="operateMsg">
+	<select id="qryMessageToBeSendList" parameterType="java.math.BigInteger" resultMap="messageToBeSendBase.messageToBeSendBaseMap">
+		SELECT
+		MTBS.f_id,MTBS.f_msg_type,MTBS.f_title,MTBS.f_send_range,date_format(MTBS.f_send_time,'%Y-%m-%d %T') as f_send_time,
+		MTBS.f_send_status,MTBS.f_operator_user,MTBS.f_send_count,MTBS.f_short_url,MTBS.f_white_list,MTBS.f_black_list,
+		MTBS.f_jump_target,MTBS.f_ebuy_product_detail,date_format(MTBS.f_sys0_add_time,'%Y-%m-%d %T') as f_sys0_add_time 
+		FROM
+			t_message_to_be_send MTBS
+		where MTBS.f_sys0_del_state = 0
+		<if test="msgType != null and !msgType.equals('')"> and MTBS.f_msg_type = #{msgType} </if>
+		<if test="title != null and !title.equals('')"> and MTBS.f_title like CONCAT('%',#{title},'%')</if>
+		<if test="sendRange != null and !sendRange.equals('')"> and MTBS.f_send_range = #{sendRange} </if>
+		<if test="addTimeStart != null and !addTimeStart.equals('')"> and MTBS.f_sys0_add_time &gt;=  #{addTimeStart} </if>
+		<if test="addTimeEnd != null and !addTimeEnd.equals('')"> and MTBS.f_sys0_add_time &lt;=  #{addTimeEnd} </if>
+		<if test="sendTimeStart != null and !sendTimeStart.equals('')"> and MTBS.f_send_time &gt;=  #{sendTimeStart} </if>
+		<if test="sendTimeEnd != null and !sendTimeEnd.equals('')"> and MTBS.f_send_time &lt;=  #{sendTimeEnd} </if>
+		order by MTBS.f_id desc
+		<if test="_begin != null and _length != '' ">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+	
+	<!-- 根据运营消息id查询其发送范围 -->
+	<select id="qrySendRangeByMsgId" parameterType="java.math.BigInteger"  resultType="com.cnfantasia.server.api.commonBusiness.entity.OperateConfigRange">
+		-- 全国
+		SELECT
+			null as acId, '全国' acName, null as abId, '' abName,  null as gbId, '' gbName
+		FROM
+			t_message_to_be_send m
+		JOIN t_operation_sa_has_eb_supply ohs ON ohs.f_eb_supply_id = m.f_id AND ohs.f_type = 8 and ohs.f_sys0_del_state = 0
+		JOIN t_operation_service_area osa on osa.f_id = ohs.f_sa_id  and osa.f_level = 1 and osa.t_address_country_f_id = -1 and osa.f_sys0_del_state = 0
+		where m.f_id = #{msgId}
+				
+		union 
+		
+		-- 行政区
+		SELECT
+			ac.f_id acId, ac.f_name acName, ab.f_id abId, ab.f_name abName, null gbId, '' gbName
+		FROM
+			t_message_to_be_send m
+		JOIN t_operation_sa_has_eb_supply ohs ON ohs.f_eb_supply_id = m.f_id AND ohs.f_type = 11 and ohs.f_sys0_del_state = 0
+		JOIN t_operation_service_area osa on osa.f_id = ohs.f_sa_id and osa.f_sys0_del_state = 0 and osa.f_level = 4
+		JOIN t_address_block ab on ab.f_id = osa.t_address_block_f_id 
+		JOIN t_address_city ac on ac.f_id = osa.t_address_city_f_id 
+		where m.f_id = #{msgId}
+		
+		UNION
+		
+		-- 按小区
+		SELECT
+			ac.f_id acId, ac.f_name acName, ab.f_id abId, ab.f_name abName, gb.f_id gbId, gb.f_name gbName
+		FROM
+			t_message_to_be_send m
+		JOIN t_operation_sa_has_eb_supply ohs ON ohs.f_eb_supply_id = m.f_id AND ohs.f_type = 11 and ohs.f_sys0_del_state = 0
+		JOIN t_operation_service_area osa on osa.f_id = ohs.f_sa_id and osa.f_sys0_del_state = 0 and osa.f_level = 5
+		JOIN t_group_building gb on gb.f_id = osa.t_group_building_f_id 
+		JOIN t_address_block ab on ab.f_id = gb.t_block_f_id
+		JOIN t_address_city ac on ac.f_id = osa.t_address_city_f_id 
+		where m.f_id = #{msgId};
+	</select>
+	
+	<!-- 根据运营配置消息，查出所有用户的手机号 -->
+	<select id="qryUserMobileByMsgToBeSendId" parameterType="java.math.BigInteger"  resultType="string">
+		-- 按区县
+		SELECT DISTINCT
+			u.f_mobile
+		FROM
+			t_message_to_be_send m
+		JOIN t_operation_sa_has_eb_supply ohs ON ohs.f_eb_supply_id = m.f_id AND ohs.f_type = 11 and ohs.f_sys0_del_state = 0
+		JOIN t_operation_service_area osa on osa.f_id = ohs.f_sa_id and osa.f_sys0_del_state = 0 and osa.f_level = 4
+		JOIN t_address_block ab on ab.f_id = osa.t_address_block_f_id 
+		JOIN t_address_city ac on ac.f_id = osa.t_address_city_f_id 
+		JOIN t_group_building gb on gb.t_block_f_id = ab.f_id and gb.f_sys0_del_state = 0
+		JOIN t_building b on b.t_group_building_f_id = gb.f_id and b.f_sys0_del_state = 0
+		JOIN t_real_room rr on rr.t_building_f_id = b.f_id and rr.f_sys0_del_state = 0
+		JOIN t_room r on r.t_real_room_f_id = rr.f_id and r.f_sys0_del_state = 0
+		JOIN t_user u on u.f_id = r.f_creater and u.f_sys0_del_state = 0
+		where u.f_mobile is not null 
+		and m.f_send_range = 4
+		and m.f_id = #{msgId}
+		
+		UNION
+		
+		-- 按小区
+		SELECT DISTINCT
+			u.f_mobile
+		FROM
+			t_message_to_be_send m
+		JOIN t_operation_sa_has_eb_supply ohs ON ohs.f_eb_supply_id = m.f_id AND ohs.f_type = 11 and ohs.f_sys0_del_state = 0
+		JOIN t_operation_service_area osa on osa.f_id = ohs.f_sa_id and osa.f_sys0_del_state = 0 and osa.f_level = 5
+		JOIN t_group_building gb on gb.f_id = osa.t_group_building_f_id 
+		JOIN t_building b on b.t_group_building_f_id = gb.f_id and b.f_sys0_del_state = 0
+		JOIN t_real_room rr on rr.t_building_f_id = b.f_id and rr.f_sys0_del_state = 0
+		JOIN t_room r on r.t_real_room_f_id = rr.f_id and r.f_sys0_del_state = 0
+		JOIN t_user u on u.f_id = r.f_creater and u.f_sys0_del_state = 0
+		where u.f_mobile is not null 
+		and m.f_send_range = 3
+		and m.f_id = #{msgId};
+	</select>
+	
+	<!-- 根据运营配置消息，查出所有待推用户 -->
+	<select id="qryUserIdByMsgToBeSendId" parameterType="java.math.BigInteger"  resultType="com.cnfantasia.server.api.commonBusiness.entity.CommUserDataEntity">
+		-- 按区县
+		SELECT DISTINCT
+			 u.f_id userId, u.f_default_room_id defaultRoomId, 1 userType
+		FROM
+			t_message_to_be_send m
+		JOIN t_operation_sa_has_eb_supply ohs ON ohs.f_eb_supply_id = m.f_id AND ohs.f_type = 11 and ohs.f_sys0_del_state = 0
+		JOIN t_operation_service_area osa on osa.f_id = ohs.f_sa_id and osa.f_sys0_del_state = 0 and osa.f_level = 4
+		JOIN t_address_block ab on ab.f_id = osa.t_address_block_f_id 
+		JOIN t_address_city ac on ac.f_id = osa.t_address_city_f_id 
+		JOIN t_group_building gb on gb.t_block_f_id = ab.f_id and gb.f_sys0_del_state = 0
+		JOIN t_building b on b.t_group_building_f_id = gb.f_id and b.f_sys0_del_state = 0
+		JOIN t_real_room rr on rr.t_building_f_id = b.f_id and rr.f_sys0_del_state = 0
+		JOIN t_room r on r.t_real_room_f_id = rr.f_id and r.f_sys0_del_state = 0
+		JOIN t_user u on u.f_default_room_id = r.f_id and u.f_sys0_del_state = 0
+		where u.f_mobile is not null 
+		and m.f_send_range = 4
+		and m.f_id = #{msgId}
+		
+		UNION
+		
+		-- 按小区
+		SELECT DISTINCT
+			u.f_id userId, u.f_default_room_id defaultRoomId, 1 userType
+		FROM
+			t_message_to_be_send m
+		JOIN t_operation_sa_has_eb_supply ohs ON ohs.f_eb_supply_id = m.f_id AND ohs.f_type = 11 and ohs.f_sys0_del_state = 0
+		JOIN t_operation_service_area osa on osa.f_id = ohs.f_sa_id and osa.f_sys0_del_state = 0 and osa.f_level = 5
+		JOIN t_group_building gb on gb.f_id = osa.t_group_building_f_id 
+		JOIN t_building b on b.t_group_building_f_id = gb.f_id and b.f_sys0_del_state = 0
+		JOIN t_real_room rr on rr.t_building_f_id = b.f_id and rr.f_sys0_del_state = 0
+		JOIN t_room r on r.t_real_room_f_id = rr.f_id and r.f_sys0_del_state = 0
+		JOIN t_user u on u.f_default_room_id = r.f_id and u.f_sys0_del_state = 0
+		where u.f_mobile is not null 
+		and m.f_send_range = 3
+		and m.f_id = #{msgId};
+	</select>
+	
+	<select id="qryMessageToBeSendList4Task" resultMap="messageToBeSendBase.messageToBeSendBaseMap">
+		SELECT
+			<include refid="messageToBeSendBase.queryHead" />
+		FROM
+			t_message_to_be_send MTBS
+		WHERE
+			f_send_time &lt;= SYSDATE()
+		AND f_send_status = 0
+		AND f_sys0_del_state = 0
+	</select>
+</mapper>

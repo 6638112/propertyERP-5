@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:本地地址信息数据 t_lookup_local_map_data -->
+<mapper namespace="lookupLocalMapDataBase">
+	<resultMap type="LookupLocalMapData" id="lookupLocalMapDataBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+	</resultMap>
+	<resultMap type="LookupLocalMapData" id="lookupLocalMapDataExtendMap" extends="lookupLocalMapDataBaseMap">
+	</resultMap>
+	<resultMap type="LookupLocalMapData" id="lookupLocalMapDataBaseMap_AppendTable">
+        <id column="LLMDid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+	</resultMap>
+	<resultMap type="LookupLocalMapData" id="lookupLocalMapDataBaseMap_AppendTable1">
+        <id column="LLMD1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		LLMD.f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		LLMD.f_id as LLMDid
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		LLMD1.f_id as LLMD1id
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (LLMD.f_id = #{id} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (LLMD.f_id = #{id} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="lookupLocalMapDataBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="lookupLocalMapDataBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="lookupLocalMapDataBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="lookupLocalMapDataBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_lookup_local_map_data LLMD    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(本地地址信息数据)信息。 -->
+	<sql id="select_lookupLocalMapData">
+		SELECT <include refid="lookupLocalMapDataBase.queryHead"/>
+		<include refid="lookupLocalMapDataBase.busiQueryCondition"/>
+		<include refid="lookupLocalMapDataBase.dimCheckSql"/>
+		ORDER BY LLMD.f_id DESC
+	</sql>
+	<select id="select_lookupLocalMapData" parameterType="java.util.Map" resultMap="lookupLocalMapDataBase.lookupLocalMapDataExtendMap">
+		<include refid="lookupLocalMapDataBase.select_lookupLocalMapData"/>
+	</select>
+	
+	<!-- 根据条件分页查询(本地地址信息数据)信息  -->
+	<sql id="select_lookupLocalMapData_withPage">
+		SELECT <include refid="lookupLocalMapDataBase.queryHead"/>
+		<include refid="lookupLocalMapDataBase.busiQueryCondition"/>
+		<include refid="lookupLocalMapDataBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_lookupLocalMapData_withPage" resultMap="lookupLocalMapDataBase.lookupLocalMapDataExtendMap" parameterType="java.util.Map">
+		<include refid="lookupLocalMapDataBase.select_lookupLocalMapData_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(本地地址信息数据)信息。 -->
+	<sql id="select_lookupLocalMapData_bySeqId">
+		SELECT <include refid="lookupLocalMapDataBase.queryHead"/>
+		<include refid="lookupLocalMapDataBase.busiQueryCondition"/>
+		 and LLMD.f_id = #{_parameter}
+	</sql>
+	<select id="select_lookupLocalMapData_bySeqId" parameterType="java.math.BigInteger" resultMap="lookupLocalMapDataBase.lookupLocalMapDataBaseMap">
+		<include refid="lookupLocalMapDataBase.select_lookupLocalMapData_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(本地地址信息数据)记录数  -->
+	<sql id="select_lookupLocalMapData_count">
+		SELECT COUNT(*)
+		<include refid="lookupLocalMapDataBase.busiQueryCount"/>
+		<include refid="lookupLocalMapDataBase.dimCheckSql"/>
+	</sql>
+	<select id="select_lookupLocalMapData_count" resultType="java.lang.Integer">
+		<include refid="lookupLocalMapDataBase.select_lookupLocalMapData_count"/>
+	</select>
+	
+	 <!-- 往(本地地址信息数据)新增一条记录。 -->
+	 <sql id="insert_lookupLocalMapData">
+		INSERT INTO t_lookup_local_map_data 
+		(f_id) VALUES 
+		(#{id})
+	 </sql>
+    <insert id="insert_lookupLocalMapData" parameterType="LookupLocalMapData">
+		<include refid="lookupLocalMapDataBase.insert_lookupLocalMapData"/>
+    </insert>
+    
+	<!-- 批量新增(本地地址信息数据)信息 -->
+    <insert id="insert_lookupLocalMapData_Batch" parameterType="java.util.List">
+    	INSERT INTO t_lookup_local_map_data 
+		(f_id) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(本地地址信息数据)信息。 -->
+    <sql id="update_lookupLocalMapData">
+		UPDATE t_lookup_local_map_data		<trim prefix="SET" prefixOverrides=",">		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_lookupLocalMapData" parameterType="LookupLocalMapData">
+		<include refid="lookupLocalMapDataBase.update_lookupLocalMapData"/>
+    </update>
+    
+    <!-- 批量更新(本地地址信息数据)信息。 -->
+    <update id="update_lookupLocalMapData_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_lookup_local_map_data		<trim prefix="SET" prefixOverrides=",">		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(本地地址信息数据)信息_逻辑删除。 -->
+    <!-- <sql id="delete_lookupLocalMapData_Logic">
+		UPDATE t_lookup_local_map_data		<trim prefix="SET" prefixOverrides=","> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_lookupLocalMapData_Logic" parameterType="LookupLocalMapData">
+		<include refid="lookupLocalMapDataBase.delete_lookupLocalMapData_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(本地地址信息数据)信息_逻辑删除 -->
+    <!-- <update id="delete_lookupLocalMapData_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_lookup_local_map_data		<trim prefix="SET" prefixOverrides=","> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(本地地址信息数据)信息。 -->
+    <sql id="delete_lookupLocalMapData">
+		DELETE FROM t_lookup_local_map_data WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_lookupLocalMapData" parameterType="java.lang.String">
+		<include refid="lookupLocalMapDataBase.delete_lookupLocalMapData"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(本地地址信息数据)信息。 -->
+    <delete id="delete_lookupLocalMapData_Batch" parameterType="java.util.List">
+		DELETE FROM t_lookup_local_map_data WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

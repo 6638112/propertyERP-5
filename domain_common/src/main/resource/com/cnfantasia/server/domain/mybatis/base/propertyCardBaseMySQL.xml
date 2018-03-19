@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:物业代扣卡 t_property_card -->
+<mapper namespace="propertyCardBase">
+	<resultMap type="PropertyCard" id="propertyCardBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_card_amount" javaType="java.lang.Long" property="cardAmount"/>  <!-- 卡内金额 -->        <result column="f_discount_amt" javaType="java.lang.Long" property="discountAmt"/>  <!-- 优惠金额 -->        <result column="f_real_pay_amt" javaType="java.lang.Long" property="realPayAmt"/>  <!-- 用户实付金额 -->        <result column="f_sell_state" javaType="java.lang.Integer" property="sellState"/>  <!-- 出售状态 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="f_discount_type" javaType="java.lang.Integer" property="discountType"/>  <!-- 优惠方案（1,2,3） -->
+	</resultMap>
+	<resultMap type="PropertyCard" id="propertyCardExtendMap" extends="propertyCardBaseMap">
+	</resultMap>
+	<resultMap type="PropertyCard" id="propertyCardBaseMap_AppendTable">
+        <id column="PCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PCcardAmount" javaType="java.lang.Long" property="cardAmount"/>  <!-- 卡内金额 -->        <result column="PCdiscountAmt" javaType="java.lang.Long" property="discountAmt"/>  <!-- 优惠金额 -->        <result column="PCrealPayAmt" javaType="java.lang.Long" property="realPayAmt"/>  <!-- 用户实付金额 -->        <result column="PCsellState" javaType="java.lang.Integer" property="sellState"/>  <!-- 出售状态 -->        <result column="PCsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PCsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PCsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PCsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PCsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PCsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PCsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="PCdiscountType" javaType="java.lang.Integer" property="discountType"/>  <!-- 优惠方案（1,2,3） -->
+	</resultMap>
+	<resultMap type="PropertyCard" id="propertyCardBaseMap_AppendTable1">
+        <id column="PC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PC1cardAmount" javaType="java.lang.Long" property="cardAmount"/>  <!-- 卡内金额 -->        <result column="PC1discountAmt" javaType="java.lang.Long" property="discountAmt"/>  <!-- 优惠金额 -->        <result column="PC1realPayAmt" javaType="java.lang.Long" property="realPayAmt"/>  <!-- 用户实付金额 -->        <result column="PC1sellState" javaType="java.lang.Integer" property="sellState"/>  <!-- 出售状态 -->        <result column="PC1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="PC1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="PC1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="PC1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="PC1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="PC1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="PC1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="PC1discountType" javaType="java.lang.Integer" property="discountType"/>  <!-- 优惠方案（1,2,3） -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PC.f_id,PC.f_card_amount,PC.f_discount_amt,PC.f_real_pay_amt,PC.f_sell_state,PC.f_discount_type
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PC.f_id as PCid,PC.f_card_amount as PCcardAmount,PC.f_discount_amt as PCdiscountAmt,PC.f_real_pay_amt as PCrealPayAmt,PC.f_sell_state as PCsellState,PC.f_discount_type as PCdiscountType
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PC1.f_id as PC1id,PC1.f_card_amount as PC1cardAmount,PC1.f_discount_amt as PC1discountAmt,PC1.f_real_pay_amt as PC1realPayAmt,PC1.f_sell_state as PC1sellState,PC1.f_discount_type as PC1discountType
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PC.f_id = #{id} ) </if>        <if test="cardAmount != null">  and (PC.f_card_amount = #{cardAmount} ) </if>        <if test="discountAmt != null">  and (PC.f_discount_amt = #{discountAmt} ) </if>        <if test="realPayAmt != null">  and (PC.f_real_pay_amt = #{realPayAmt} ) </if>        <if test="sellState != null">  and (PC.f_sell_state = #{sellState} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (PC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (PC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (PC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (PC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (PC.f_sys0_del_state = 0 ) </if>        <if test="discountType != null">  and (PC.f_discount_type = #{discountType} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PC.f_id = #{id} ) </if>        <if test="cardAmount != null and !cardAmount.equals('')  ">  and (PC.f_card_amount = #{cardAmount} ) </if>        <if test="discountAmt != null and !discountAmt.equals('')  ">  and (PC.f_discount_amt = #{discountAmt} ) </if>        <if test="realPayAmt != null and !realPayAmt.equals('')  ">  and (PC.f_real_pay_amt = #{realPayAmt} ) </if>        <if test="sellState != null and !sellState.equals('')  ">  and (PC.f_sell_state = #{sellState} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (PC.f_sys0_del_state = 0 ) </if>        <if test="discountType != null and !discountType.equals('')  ">  and (PC.f_discount_type = #{discountType} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="propertyCardBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="propertyCardBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="propertyCardBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="propertyCardBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_property_card PC    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(物业代扣卡)信息。 -->
+	<sql id="select_propertyCard">
+		SELECT <include refid="propertyCardBase.queryHead"/>
+		<include refid="propertyCardBase.busiQueryCondition"/>
+		<include refid="propertyCardBase.dimCheckSql"/>
+		ORDER BY PC.f_id DESC
+	</sql>
+	<select id="select_propertyCard" parameterType="java.util.Map" resultMap="propertyCardBase.propertyCardExtendMap">
+		<include refid="propertyCardBase.select_propertyCard"/>
+	</select>
+	
+	<!-- 根据条件分页查询(物业代扣卡)信息  -->
+	<sql id="select_propertyCard_withPage">
+		SELECT <include refid="propertyCardBase.queryHead"/>
+		<include refid="propertyCardBase.busiQueryCondition"/>
+		<include refid="propertyCardBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_propertyCard_withPage" resultMap="propertyCardBase.propertyCardExtendMap" parameterType="java.util.Map">
+		<include refid="propertyCardBase.select_propertyCard_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(物业代扣卡)信息。 -->
+	<sql id="select_propertyCard_bySeqId">
+		SELECT <include refid="propertyCardBase.queryHead"/>
+		<include refid="propertyCardBase.busiQueryCondition"/>
+		 and PC.f_id = #{_parameter}
+	</sql>
+	<select id="select_propertyCard_bySeqId" parameterType="java.math.BigInteger" resultMap="propertyCardBase.propertyCardBaseMap">
+		<include refid="propertyCardBase.select_propertyCard_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(物业代扣卡)记录数  -->
+	<sql id="select_propertyCard_count">
+		SELECT COUNT(*)
+		<include refid="propertyCardBase.busiQueryCount"/>
+		<include refid="propertyCardBase.dimCheckSql"/>
+	</sql>
+	<select id="select_propertyCard_count" resultType="java.lang.Integer">
+		<include refid="propertyCardBase.select_propertyCard_count"/>
+	</select>
+	
+	 <!-- 往(物业代扣卡)新增一条记录。 -->
+	 <sql id="insert_propertyCard">
+		INSERT INTO t_property_card 
+		(f_id,f_card_amount,f_discount_amt,f_real_pay_amt,f_sell_state,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_discount_type) VALUES 
+		(#{id},#{cardAmount},#{discountAmt},#{realPayAmt},#{sellState},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0,#{discountType})
+	 </sql>
+    <insert id="insert_propertyCard" parameterType="PropertyCard">
+		<include refid="propertyCardBase.insert_propertyCard"/>
+    </insert>
+    
+	<!-- 批量新增(物业代扣卡)信息 -->
+    <insert id="insert_propertyCard_Batch" parameterType="java.util.List">
+    	INSERT INTO t_property_card 
+		(f_id,f_card_amount,f_discount_amt,f_real_pay_amt,f_sell_state,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_discount_type) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.cardAmount},#{item.discountAmt},#{item.realPayAmt},#{item.sellState},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0,#{item.discountType})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(物业代扣卡)信息。 -->
+    <sql id="update_propertyCard">
+		UPDATE t_property_card		<trim prefix="SET" prefixOverrides=","> 		<if test="cardAmount != null and !cardAmount.equals('') "> ,f_card_amount=#{cardAmount}</if> 		<if test="discountAmt != null and !discountAmt.equals('') "> ,f_discount_amt=#{discountAmt}</if> 		<if test="realPayAmt != null and !realPayAmt.equals('') "> ,f_real_pay_amt=#{realPayAmt}</if> 		<if test="sellState != null and !sellState.equals('') "> ,f_sell_state=#{sellState}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if> 		<if test="discountType != null and !discountType.equals('') "> ,f_discount_type=#{discountType}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_propertyCard" parameterType="PropertyCard">
+		<include refid="propertyCardBase.update_propertyCard"/>
+    </update>
+    
+    <!-- 批量更新(物业代扣卡)信息。 -->
+    <update id="update_propertyCard_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_property_card		<trim prefix="SET" prefixOverrides=","> 		<if test="item.cardAmount != null and !item.cardAmount.equals('')  "> ,f_card_amount=#{item.cardAmount}</if> 		<if test="item.discountAmt != null and !item.discountAmt.equals('')  "> ,f_discount_amt=#{item.discountAmt}</if> 		<if test="item.realPayAmt != null and !item.realPayAmt.equals('')  "> ,f_real_pay_amt=#{item.realPayAmt}</if> 		<if test="item.sellState != null and !item.sellState.equals('')  "> ,f_sell_state=#{item.sellState}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if> 		<if test="item.discountType != null and !item.discountType.equals('')  "> ,f_discount_type=#{item.discountType}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(物业代扣卡)信息_逻辑删除。 -->
+    <sql id="delete_propertyCard_Logic">
+		UPDATE t_property_card		<trim prefix="SET" prefixOverrides=","> 		<if test="cardAmount != null and !cardAmount.equals('')  "> ,f_card_amount=#{cardAmount}</if> 		<if test="discountAmt != null and !discountAmt.equals('')  "> ,f_discount_amt=#{discountAmt}</if> 		<if test="realPayAmt != null and !realPayAmt.equals('')  "> ,f_real_pay_amt=#{realPayAmt}</if> 		<if test="sellState != null and !sellState.equals('')  "> ,f_sell_state=#{sellState}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="discountType != null and !discountType.equals('')  "> ,f_discount_type=#{discountType}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_propertyCard_Logic" parameterType="PropertyCard">
+		<include refid="propertyCardBase.delete_propertyCard_Logic"/>
+    </update>
+    
+    <!-- 批量删除(物业代扣卡)信息_逻辑删除 -->
+    <update id="delete_propertyCard_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_property_card		<trim prefix="SET" prefixOverrides=","> 		<if test="item.cardAmount != null and !item.cardAmount.equals('')  "> ,f_card_amount=#{item.cardAmount}</if> 		<if test="item.discountAmt != null and !item.discountAmt.equals('')  "> ,f_discount_amt=#{item.discountAmt}</if> 		<if test="item.realPayAmt != null and !item.realPayAmt.equals('')  "> ,f_real_pay_amt=#{item.realPayAmt}</if> 		<if test="item.sellState != null and !item.sellState.equals('')  "> ,f_sell_state=#{item.sellState}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.discountType != null and !item.discountType.equals('')  "> ,f_discount_type=#{item.discountType}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(物业代扣卡)信息。 -->
+    <sql id="delete_propertyCard">
+		DELETE FROM t_property_card WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_propertyCard" parameterType="java.lang.String">
+		<include refid="propertyCardBase.delete_propertyCard"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(物业代扣卡)信息。 -->
+    <delete id="delete_propertyCard_Batch" parameterType="java.util.List">
+		DELETE FROM t_property_card WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

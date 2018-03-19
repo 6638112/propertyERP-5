@@ -1,0 +1,168 @@
+/**   
+* Filename:    AddressOperationDao.java   
+* @version:    1.0  
+* Create at:   2015年7月1日 下午1:16:32   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2015年7月1日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.operation.dao;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.cnfantasia.server.api.operation.constant.OperationConstant;
+import com.cnfantasia.server.api.pub.dao.AbstractBaseDao;
+import com.cnfantasia.server.business.pub.entity.PageModel;
+import com.cnfantasia.server.business.pub.page.PageQueryUtil;
+
+/**
+ * Filename:    AddressOperationDao.java
+ * @version:    1.0.0
+ * Create at:   2015年7月1日 下午1:16:32
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2015年7月1日       shiyl             1.0             1.0 Version
+ */
+public class AddressOperationDao extends AbstractBaseDao implements IAddressOperationDao{
+
+//	@Override
+//	public List<BigInteger> selectDataList(Integer targetType,BigInteger countryId,PageModel pageModel) {
+//		Map<String,Object> tmpMap = new HashMap<String, Object>();
+//		tmpMap.put("targetType", targetType);
+//		tmpMap.put("countryId", countryId);
+//		String pageSqlKey = "operation.selectDataList_level_1";
+//		String countSqlKey = "operation.selectDataList_level_1_count";
+//		return PageQueryUtil.selectPageList(sqlSession, tmpMap, pageModel, pageSqlKey, countSqlKey);
+//	}
+//
+//	@Override
+//	public List<BigInteger> selectDataList(Integer targetType,BigInteger countryId, BigInteger provinceId,PageModel pageModel) {
+//		Map<String,Object> tmpMap = new HashMap<String, Object>();
+//		tmpMap.put("targetType", targetType);
+//		tmpMap.put("countryId", countryId);
+//		tmpMap.put("provinceId", provinceId);
+//		String pageSqlKey = "operation.selectDataList_level_2";
+//		String countSqlKey = "operation.selectDataList_level_2_count";
+//		return PageQueryUtil.selectPageList(sqlSession, tmpMap, pageModel, pageSqlKey, countSqlKey);
+//	}
+//
+//	@Override
+//	public List<BigInteger> selectDataList(Integer targetType,BigInteger countryId, BigInteger provinceId, BigInteger cityId,PageModel pageModel) {
+//		Map<String,Object> tmpMap = new HashMap<String, Object>();
+//		tmpMap.put("targetType", targetType);
+//		tmpMap.put("countryId", countryId);
+//		tmpMap.put("provinceId", provinceId);
+//		tmpMap.put("cityId", cityId);
+//		String pageSqlKey = "operation.selectDataList_level_3";
+//		String countSqlKey = "operation.selectDataList_level_3_count";
+//		return PageQueryUtil.selectPageList(sqlSession, tmpMap, pageModel, pageSqlKey, countSqlKey);
+//	}
+//
+//	@Override
+//	public List<BigInteger> selectDataList(Integer targetType,BigInteger countryId, BigInteger provinceId, BigInteger cityId,
+//			BigInteger blockId,PageModel pageModel) {
+//		Map<String,Object> tmpMap = new HashMap<String, Object>();
+//		tmpMap.put("targetType", targetType);
+//		tmpMap.put("countryId", countryId);
+//		tmpMap.put("provinceId", provinceId);
+//		tmpMap.put("cityId", cityId);
+//		tmpMap.put("blockId", blockId);
+//		String pageSqlKey = "operation.selectDataList_level_4";
+//		String countSqlKey = "operation.selectDataList_level_4_count";
+//		return PageQueryUtil.selectPageList(sqlSession, tmpMap, pageModel, pageSqlKey, countSqlKey);
+//	}
+
+	@Override
+	public List<BigInteger> selectDataList(Integer targetType,BigInteger countryId, BigInteger provinceId, BigInteger cityId,
+			BigInteger blockId, BigInteger gbId,PageModel pageModel) {
+		List<Map<String,Object>> paramList = generateParamMapList(countryId, provinceId, cityId, blockId, gbId);
+		Map<String,Object> tmpMap = new HashMap<String, Object>();
+		tmpMap.put("targetType", targetType);
+		tmpMap.put("paramList", paramList);
+		String pageSqlKey = "operation.selectDataList_page";
+		String countSqlKey = "operation.selectDataList_count";
+		return PageQueryUtil.selectPageList(sqlSession, tmpMap, pageModel, pageSqlKey, countSqlKey);
+	}
+	
+	
+	private List<Map<String,Object>> generateParamMapList(BigInteger countryId, BigInteger provinceId, BigInteger cityId,
+			BigInteger blockId, BigInteger gbId){
+		List<Map<String,Object>> paramList = new ArrayList<Map<String,Object>>();
+		if(countryId!=null){
+			paramList.add(generateParamMap(countryId));
+			if(provinceId!=null){
+				paramList.add(generateParamMap(countryId, provinceId));
+				if(cityId!=null){
+					paramList.add(generateParamMap(countryId, provinceId, cityId));
+					if(blockId!=null){
+						paramList.add(generateParamMap(countryId, provinceId, cityId, blockId));
+						if(gbId!=null){
+							paramList.add(generateParamMap(countryId, provinceId, cityId, blockId, gbId));
+						}
+					}
+				}
+			}
+		}
+		return paramList;
+	}
+	
+	private Map<String,Object> generateParamMap(BigInteger countryId){
+		BigInteger provinceId = null;
+		BigInteger cityId = null;
+		BigInteger blockId = null;
+		BigInteger gbId = null;
+		return generateParamMap(countryId, provinceId, cityId, blockId, gbId);
+	}
+	private Map<String,Object> generateParamMap(BigInteger countryId, BigInteger provinceId){
+		BigInteger cityId = null;
+		BigInteger blockId = null;
+		BigInteger gbId = null;
+		return generateParamMap(countryId, provinceId, cityId, blockId, gbId);
+	}
+	private Map<String,Object> generateParamMap(BigInteger countryId, BigInteger provinceId, BigInteger cityId){
+		BigInteger blockId = null;
+		BigInteger gbId = null;
+		return generateParamMap(countryId, provinceId, cityId, blockId, gbId);
+	}
+	private Map<String,Object> generateParamMap(BigInteger countryId, BigInteger provinceId, BigInteger cityId,
+			BigInteger blockId){
+		BigInteger gbId = null;
+		return generateParamMap(countryId, provinceId, cityId, blockId, gbId);
+	}
+	private Map<String,Object> generateParamMap(BigInteger countryId, BigInteger provinceId, BigInteger cityId,
+			BigInteger blockId, BigInteger gbId){
+		countryId = countryId==null?OperationConstant.defaultAddressId:countryId;
+		provinceId = provinceId==null?OperationConstant.defaultAddressId:provinceId;
+		cityId = cityId==null?OperationConstant.defaultAddressId:cityId;
+		blockId = blockId==null?OperationConstant.defaultAddressId:blockId;
+		gbId = gbId==null?OperationConstant.defaultAddressId:gbId;
+		
+		Map<String,Object> tmpMap = new HashMap<String, Object>();
+//		tmpMap.put("countryId", countryId);
+//		tmpMap.put("provinceId", provinceId);
+//		tmpMap.put("cityId", cityId);
+//		tmpMap.put("blockId", blockId);
+//		tmpMap.put("gbId", gbId);
+		{
+			StringBuffer uniqueCodeSbf = new StringBuffer();
+			uniqueCodeSbf.append(countryId).append(".");
+			uniqueCodeSbf.append(provinceId).append(".");
+			uniqueCodeSbf.append(cityId).append(".");
+			uniqueCodeSbf.append(blockId).append(".");
+			uniqueCodeSbf.append(gbId).append("");
+			tmpMap.put("uniqueCode", uniqueCodeSbf.toString());
+		}
+		return tmpMap;
+	}
+	
+}

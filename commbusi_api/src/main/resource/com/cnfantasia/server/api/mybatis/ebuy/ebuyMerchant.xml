@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 电商模块 -->
+<mapper namespace="ebuyMerchant">
+	<!-- 供应商信息Map -->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuySupplyMerchantEntity" id="ebuySupplyMerchantEntityMap" extends="ebuySupplyMerchantBase.ebuySupplyMerchantBaseMap_AppendTable">
+		<collection property="merchantHasDeliveryMethodList" javaType="java.util.List" 
+			resultMap="ebuySupplyMerchantHasTEbuyDeliveryMethod_ForDeliveryMethod"
+			ofType="com.cnfantasia.server.api.ebuy.entity.EbuySupplyMerchantHasTEbuyDeliveryMethodEntity_DeliveryMethod">
+		</collection>
+	</resultMap>
+	<!-- 供应商包含的配送信息Map -->
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EbuySupplyMerchantHasTEbuyDeliveryMethodEntity_DeliveryMethod" id="ebuySupplyMerchantHasTEbuyDeliveryMethod_ForDeliveryMethod" extends="ebuySupplyMerchantHasTEbuyDeliveryMethodBase.ebuySupplyMerchantHasTEbuyDeliveryMethodBaseMap_AppendTable">
+		<association property="ebuyDeliveryMethod" resultMap="ebuyDeliveryMethod_Append"></association>
+	</resultMap>
+	<!-- 配送信息Map -->
+	<resultMap type="EbuyDeliveryMethod" id="ebuyDeliveryMethod_Append" extends="ebuyDeliveryMethodBase.ebuyDeliveryMethodBaseMap_AppendTable">
+		
+	</resultMap>
+	
+	<!-- 查询供应商信息（包含配送信息） -->
+	<select id="select_ebuySupplyMerchantDetail_bySeqId" resultMap="ebuySupplyMerchantEntityMap" parameterType="java.math.BigInteger">
+		SELECT <include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>
+			,<include refid="ebuySupplyMerchantHasTEbuyDeliveryMethodBase.queryHead_AppendTable"/>
+			,<include refid="ebuyDeliveryMethodBase.queryHead_AppendTable"/>
+		FROM t_ebuy_supply_merchant ESM 
+			INNER JOIN t_ebuy_supply_merchant_has_t_ebuy_delivery_method ESMHTEDM ON ESM.f_id = ESMHTEDM.t_ebuy_supply_merchant_f_id AND ESMHTEDM.f_sys0_del_state = 0
+			INNER JOIN t_ebuy_delivery_method EDM ON EDM.f_id = ESMHTEDM.t_ebuy_delivery_method_f_id AND EDM.f_sys0_del_state = 0
+		WHERE 1=1
+		AND ESM.f_sys0_del_state = 0
+		AND ESM.f_id = #{_parameter}
+	</select>
+	
+</mapper>

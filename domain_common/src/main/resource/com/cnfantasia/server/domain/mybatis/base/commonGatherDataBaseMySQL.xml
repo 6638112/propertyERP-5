@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:通用模块信息归集 t_common_gather_data -->
+<mapper namespace="commonGatherDataBase">
+	<resultMap type="CommonGatherData" id="commonGatherDataBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_target_type" javaType="java.lang.Integer" property="targetType"/>  <!-- 目标类别 -->        <result column="f_target_id" javaType="java.math.BigInteger" property="targetId"/>  <!-- 目标Id -->        <result column="f_total_support_count" javaType="java.lang.Long" property="totalSupportCount"/>  <!-- 总点赞数 -->        <result column="f_total_comment_count" javaType="java.lang.Long" property="totalCommentCount"/>  <!-- 总评论数 -->        <result column="f_total_collect_count" javaType="java.lang.Long" property="totalCollectCount"/>  <!-- 总收藏数 -->        <result column="f_last_update_time" javaType="java.lang.String" property="lastUpdateTime"/>  <!-- 最近更新时间 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommonGatherData" id="commonGatherDataExtendMap" extends="commonGatherDataBaseMap">
+	</resultMap>
+	<resultMap type="CommonGatherData" id="commonGatherDataBaseMap_AppendTable">
+        <id column="CGDid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CGDtargetType" javaType="java.lang.Integer" property="targetType"/>  <!-- 目标类别 -->        <result column="CGDtargetId" javaType="java.math.BigInteger" property="targetId"/>  <!-- 目标Id -->        <result column="CGDtotalSupportCount" javaType="java.lang.Long" property="totalSupportCount"/>  <!-- 总点赞数 -->        <result column="CGDtotalCommentCount" javaType="java.lang.Long" property="totalCommentCount"/>  <!-- 总评论数 -->        <result column="CGDtotalCollectCount" javaType="java.lang.Long" property="totalCollectCount"/>  <!-- 总收藏数 -->        <result column="CGDlastUpdateTime" javaType="java.lang.String" property="lastUpdateTime"/>  <!-- 最近更新时间 -->        <result column="CGDsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CGDsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CGDsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CGDsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CGDsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CGDsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CGDsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CommonGatherData" id="commonGatherDataBaseMap_AppendTable1">
+        <id column="CGD1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CGD1targetType" javaType="java.lang.Integer" property="targetType"/>  <!-- 目标类别 -->        <result column="CGD1targetId" javaType="java.math.BigInteger" property="targetId"/>  <!-- 目标Id -->        <result column="CGD1totalSupportCount" javaType="java.lang.Long" property="totalSupportCount"/>  <!-- 总点赞数 -->        <result column="CGD1totalCommentCount" javaType="java.lang.Long" property="totalCommentCount"/>  <!-- 总评论数 -->        <result column="CGD1totalCollectCount" javaType="java.lang.Long" property="totalCollectCount"/>  <!-- 总收藏数 -->        <result column="CGD1lastUpdateTime" javaType="java.lang.String" property="lastUpdateTime"/>  <!-- 最近更新时间 -->        <result column="CGD1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CGD1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CGD1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CGD1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CGD1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CGD1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CGD1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CGD.f_id,CGD.f_target_type,CGD.f_target_id,CGD.f_total_support_count,CGD.f_total_comment_count,CGD.f_total_collect_count,date_format(CGD.f_last_update_time,'%Y-%m-%d %T') as f_last_update_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CGD.f_id as CGDid,CGD.f_target_type as CGDtargetType,CGD.f_target_id as CGDtargetId,CGD.f_total_support_count as CGDtotalSupportCount,CGD.f_total_comment_count as CGDtotalCommentCount,CGD.f_total_collect_count as CGDtotalCollectCount,date_format(CGD.f_last_update_time,'%Y-%m-%d %T') as CGDlastUpdateTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CGD1.f_id as CGD1id,CGD1.f_target_type as CGD1targetType,CGD1.f_target_id as CGD1targetId,CGD1.f_total_support_count as CGD1totalSupportCount,CGD1.f_total_comment_count as CGD1totalCommentCount,CGD1.f_total_collect_count as CGD1totalCollectCount,date_format(CGD1.f_last_update_time,'%Y-%m-%d %T') as CGD1lastUpdateTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CGD.f_id = #{id} ) </if>        <if test="targetType != null">  and (CGD.f_target_type = #{targetType} ) </if>        <if test="targetId != null">  and (CGD.f_target_id = #{targetId} ) </if>        <if test="totalSupportCount != null">  and (CGD.f_total_support_count = #{totalSupportCount} ) </if>        <if test="totalCommentCount != null">  and (CGD.f_total_comment_count = #{totalCommentCount} ) </if>        <if test="totalCollectCount != null">  and (CGD.f_total_collect_count = #{totalCollectCount} ) </if>        <if test="lastUpdateTime != null and !lastUpdateTime.equals('')  ">  and (CGD.f_last_update_time = str_to_date(#{lastUpdateTime},'%Y-%m-%d %T') ) </if>        <if test="lastUpdateTime_START != null and !lastUpdateTime_START.equals('')  ">              <![CDATA[ and (CGD.f_last_update_time >= str_to_date(#{lastUpdateTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="lastUpdateTime_END != null and !lastUpdateTime_END.equals('')  ">            <![CDATA[ and (CGD.f_last_update_time <= str_to_date(#{lastUpdateTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CGD.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CGD.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CGD.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CGD.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CGD.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CGD.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CGD.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CGD.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CGD.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (CGD.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (CGD.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (CGD.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (CGD.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (CGD.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CGD.f_id = #{id} ) </if>        <if test="targetType != null and !targetType.equals('')  ">  and (CGD.f_target_type = #{targetType} ) </if>        <if test="targetId != null and !targetId.equals('')  ">  and (CGD.f_target_id = #{targetId} ) </if>        <if test="totalSupportCount != null and !totalSupportCount.equals('')  ">  and (CGD.f_total_support_count = #{totalSupportCount} ) </if>        <if test="totalCommentCount != null and !totalCommentCount.equals('')  ">  and (CGD.f_total_comment_count = #{totalCommentCount} ) </if>        <if test="totalCollectCount != null and !totalCollectCount.equals('')  ">  and (CGD.f_total_collect_count = #{totalCollectCount} ) </if>        <if test="lastUpdateTime != null and !lastUpdateTime.equals('')  ">  and (CGD.f_last_update_time = str_to_date(#{lastUpdateTime},'%Y-%m-%d %T') ) </if>        <if test="lastUpdateTime_START != null and !lastUpdateTime_START.equals('')  ">              <![CDATA[ and (CGD.f_last_update_time >= str_to_date(#{lastUpdateTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="lastUpdateTime_END != null and !lastUpdateTime_END.equals('')  ">            <![CDATA[ and (CGD.f_last_update_time <= str_to_date(#{lastUpdateTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CGD.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CGD.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CGD.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CGD.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CGD.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CGD.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CGD.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CGD.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CGD.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CGD.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CGD.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CGD.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CGD.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (CGD.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="commonGatherDataBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="commonGatherDataBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="commonGatherDataBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="commonGatherDataBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_common_gather_data CGD    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(通用模块信息归集)信息。 -->
+	<sql id="select_commonGatherData">
+		SELECT <include refid="commonGatherDataBase.queryHead"/>
+		<include refid="commonGatherDataBase.busiQueryCondition"/>
+		<include refid="commonGatherDataBase.dimCheckSql"/>
+		ORDER BY CGD.f_id DESC
+	</sql>
+	<select id="select_commonGatherData" parameterType="java.util.Map" resultMap="commonGatherDataBase.commonGatherDataExtendMap">
+		<include refid="commonGatherDataBase.select_commonGatherData"/>
+	</select>
+	
+	<!-- 根据条件分页查询(通用模块信息归集)信息  -->
+	<sql id="select_commonGatherData_withPage">
+		SELECT <include refid="commonGatherDataBase.queryHead"/>
+		<include refid="commonGatherDataBase.busiQueryCondition"/>
+		<include refid="commonGatherDataBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_commonGatherData_withPage" resultMap="commonGatherDataBase.commonGatherDataExtendMap" parameterType="java.util.Map">
+		<include refid="commonGatherDataBase.select_commonGatherData_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(通用模块信息归集)信息。 -->
+	<sql id="select_commonGatherData_bySeqId">
+		SELECT <include refid="commonGatherDataBase.queryHead"/>
+		<include refid="commonGatherDataBase.busiQueryCondition"/>
+		 and CGD.f_id = #{_parameter}
+	</sql>
+	<select id="select_commonGatherData_bySeqId" parameterType="java.math.BigInteger" resultMap="commonGatherDataBase.commonGatherDataBaseMap">
+		<include refid="commonGatherDataBase.select_commonGatherData_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(通用模块信息归集)记录数  -->
+	<sql id="select_commonGatherData_count">
+		SELECT COUNT(*)
+		<include refid="commonGatherDataBase.busiQueryCount"/>
+		<include refid="commonGatherDataBase.dimCheckSql"/>
+	</sql>
+	<select id="select_commonGatherData_count" resultType="java.lang.Integer">
+		<include refid="commonGatherDataBase.select_commonGatherData_count"/>
+	</select>
+	
+	 <!-- 往(通用模块信息归集)新增一条记录。 -->
+	 <sql id="insert_commonGatherData">
+		INSERT INTO t_common_gather_data 
+		(f_id,f_target_type,f_target_id,f_total_support_count,f_total_comment_count,f_total_collect_count,f_last_update_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{targetType},#{targetId},#{totalSupportCount},#{totalCommentCount},#{totalCollectCount},str_to_date(#{lastUpdateTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_commonGatherData" parameterType="CommonGatherData">
+		<include refid="commonGatherDataBase.insert_commonGatherData"/>
+    </insert>
+    
+	<!-- 批量新增(通用模块信息归集)信息 -->
+    <insert id="insert_commonGatherData_Batch" parameterType="java.util.List">
+    	INSERT INTO t_common_gather_data 
+		(f_id,f_target_type,f_target_id,f_total_support_count,f_total_comment_count,f_total_collect_count,f_last_update_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.targetType},#{item.targetId},#{item.totalSupportCount},#{item.totalCommentCount},#{item.totalCollectCount},str_to_date(#{item.lastUpdateTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(通用模块信息归集)信息。 -->
+    <sql id="update_commonGatherData">
+		UPDATE t_common_gather_data		<trim prefix="SET" prefixOverrides=","> 		<if test="targetType != null and !targetType.equals('') "> ,f_target_type=#{targetType}</if> 		<if test="targetId != null and !targetId.equals('') "> ,f_target_id=#{targetId}</if> 		<if test="totalSupportCount != null and !totalSupportCount.equals('') "> ,f_total_support_count=#{totalSupportCount}</if> 		<if test="totalCommentCount != null and !totalCommentCount.equals('') "> ,f_total_comment_count=#{totalCommentCount}</if> 		<if test="totalCollectCount != null and !totalCollectCount.equals('') "> ,f_total_collect_count=#{totalCollectCount}</if> 		<if test="lastUpdateTime != null and !lastUpdateTime.equals('') "> ,f_last_update_time=str_to_date(#{lastUpdateTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_commonGatherData" parameterType="CommonGatherData">
+		<include refid="commonGatherDataBase.update_commonGatherData"/>
+    </update>
+    
+    <!-- 批量更新(通用模块信息归集)信息。 -->
+    <update id="update_commonGatherData_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_common_gather_data		<trim prefix="SET" prefixOverrides=","> 		<if test="item.targetType != null and !item.targetType.equals('')  "> ,f_target_type=#{item.targetType}</if> 		<if test="item.targetId != null and !item.targetId.equals('')  "> ,f_target_id=#{item.targetId}</if> 		<if test="item.totalSupportCount != null and !item.totalSupportCount.equals('')  "> ,f_total_support_count=#{item.totalSupportCount}</if> 		<if test="item.totalCommentCount != null and !item.totalCommentCount.equals('')  "> ,f_total_comment_count=#{item.totalCommentCount}</if> 		<if test="item.totalCollectCount != null and !item.totalCollectCount.equals('')  "> ,f_total_collect_count=#{item.totalCollectCount}</if> 		<if test="item.lastUpdateTime != null and !item.lastUpdateTime.equals('')  "> ,f_last_update_time=str_to_date(#{item.lastUpdateTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(通用模块信息归集)信息_逻辑删除。 -->
+    <sql id="delete_commonGatherData_Logic">
+		UPDATE t_common_gather_data		<trim prefix="SET" prefixOverrides=","> 		<if test="targetType != null and !targetType.equals('')  "> ,f_target_type=#{targetType}</if> 		<if test="targetId != null and !targetId.equals('')  "> ,f_target_id=#{targetId}</if> 		<if test="totalSupportCount != null and !totalSupportCount.equals('')  "> ,f_total_support_count=#{totalSupportCount}</if> 		<if test="totalCommentCount != null and !totalCommentCount.equals('')  "> ,f_total_comment_count=#{totalCommentCount}</if> 		<if test="totalCollectCount != null and !totalCollectCount.equals('')  "> ,f_total_collect_count=#{totalCollectCount}</if> 		<if test="lastUpdateTime != null and !lastUpdateTime.equals('')  "> ,f_last_update_time=str_to_date(#{lastUpdateTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_commonGatherData_Logic" parameterType="CommonGatherData">
+		<include refid="commonGatherDataBase.delete_commonGatherData_Logic"/>
+    </update>
+    
+    <!-- 批量删除(通用模块信息归集)信息_逻辑删除 -->
+    <update id="delete_commonGatherData_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_common_gather_data		<trim prefix="SET" prefixOverrides=","> 		<if test="item.targetType != null and !item.targetType.equals('')  "> ,f_target_type=#{item.targetType}</if> 		<if test="item.targetId != null and !item.targetId.equals('')  "> ,f_target_id=#{item.targetId}</if> 		<if test="item.totalSupportCount != null and !item.totalSupportCount.equals('')  "> ,f_total_support_count=#{item.totalSupportCount}</if> 		<if test="item.totalCommentCount != null and !item.totalCommentCount.equals('')  "> ,f_total_comment_count=#{item.totalCommentCount}</if> 		<if test="item.totalCollectCount != null and !item.totalCollectCount.equals('')  "> ,f_total_collect_count=#{item.totalCollectCount}</if> 		<if test="item.lastUpdateTime != null and !item.lastUpdateTime.equals('')  "> ,f_last_update_time=str_to_date(#{item.lastUpdateTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(通用模块信息归集)信息。 -->
+    <sql id="delete_commonGatherData">
+		DELETE FROM t_common_gather_data WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_commonGatherData" parameterType="java.lang.String">
+		<include refid="commonGatherDataBase.delete_commonGatherData"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(通用模块信息归集)信息。 -->
+    <delete id="delete_commonGatherData_Batch" parameterType="java.util.List">
+		DELETE FROM t_common_gather_data WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<context:component-scan base-package="com.cnfantasia.server.ms.*.web" />
+	<context:component-scan base-package="com.cnfantasia.wl.wechat" />
+	<context:component-scan base-package="com.cnfantasia.wl.golf" />
+	<context:component-scan base-package="com.cnfantasia.jfq.share" />
+	
+	<!-- A、公用配置 -->
+	<import resource="classpath:/com/cnfantasia/server/domain/domain_all.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/commbusi/commbusi_redis.xml" />
+	<!-- component-scan -->
+	<!-- <context:component-scan base-package="com.cnfantasia.server.ms.*.dao" />
+	<context:component-scan base-package="com.cnfantasia.server.ms.*.service" />
+	 -->
+	
+	<!-- <context:component-scan base-package="com.cnfantasia.server.msbase.*.dao" />
+	<context:component-scan base-package="com.cnfantasia.server.msbase.*.service" />
+	<context:component-scan base-package="com.cnfantasia.server.msbase.*.web" /> -->
+	
+	<import resource="classpath:/com/cnfantasia/server/ms/pub/ms_core.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/pub/ms_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/pub/ms_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/pub/api_redis.xml"/>
+	<!-- <import resource="classpath:/com/cnfantasia/server/ms/pub/ms_springSecurity.xml"/> -->
+	<import resource="classpath:/com/cnfantasia/server/ms/pub/ms_clentContext.xml"/>
+	
+	<!-- wl 文旅Bean配置文件 	start-->
+	<import resource="classpath:/com/cnfantasia/jfq/config/jfq_beans.xml"/>
+	<!-- wl 文旅Bean配置文件 	end-->
+	
+	<!-- validation -->
+	<import resource="classpath:/com/cnfantasia/server/ms/validation/regulation-core.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/validation/regulation.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/validation/validation_login.xml"/>
+	
+	<!-- pub 公共模块-->
+	<import resource="classpath:/com/cnfantasia/server/ms/business/pub/pub_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/pub/pub_service.xml"/>
+	
+	<!-- commUuid -->
+	<import resource="classpath:/com/cnfantasia/server/ms/business/commUuid/commUuid_controller.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/commUuid/commUuid_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/commUuid/commUuid_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/commUuid/commUuid_manager.xml"/>
+	
+	<!-- commSysPara -->
+	<import resource="classpath:/com/cnfantasia/server/ms/business/commSysPara/commSysPara_controller.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/commSysPara/commSysPara_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/commSysPara/commSysPara_service.xml"/>
+	
+	<!-- notice -->
+	<import resource="classpath:/com/cnfantasia/server/ms/business/notice/notice_controller.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/notice/notice_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/notice/notice_service.xml"/>
+	
+	<!-- develop -->
+	<!-- commonBusiness -->
+	<!-- <import resource="classpath:/com/cnfantasia/server/ms/business/commonBusiness/commonBusiness_service.xml"/> -->
+	<!-- login -->
+	<!-- <import resource="classpath:/com/cnfantasia/server/ms/business/login/login_controller.xml"/> -->
+	<!-- <import resource="classpath:/com/cnfantasia/server/ms/business/login/login_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/login/login_dao.xml"/> -->
+	<!-- 权限控制模块 -->
+	<import resource="classpath:/com/cnfantasia/server/ms/business/permi/permi_dao.xml"/>
+	<!-- user 用户管理-->
+	<import resource="classpath:/com/cnfantasia/server/ms/business/user/user_controller.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/user/user_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/user/user_service.xml"/>
+	
+	<!-- exist -->
+	<!-- omsCommSysPara  OMS系统参数表 -->
+			<!-- <import resource="classpath:/com/cnfantasia/server/ms/business/omsCommSysPara/omsCommSysPara_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsCommSysPara/omsCommSysPara_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsCommSysPara/omsCommSysPara_service.xml"/> -->
+			
+			<!-- omsCommUuid  OMS统一Uuid表 -->
+			<!-- <import resource="classpath:/com/cnfantasia/server/ms/business/base/omsCommUuid/base/omsCommUuidBase_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/base/omsCommUuid/base/omsCommUuidBase_service.xml"/> -->
+			<!-- <import resource="classpath:/com/cnfantasia/server/ms/business/omsCommUuid/omsCommUuid_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsCommUuid/omsCommUuid_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsCommUuid/omsCommUuid_service.xml"/> -->
+			
+			<!-- omsPermiFunction  OMS功能表 -->
+			<import resource="classpath:/com/cnfantasia/server/ms/business/base/omsPermiFunction/base/omsPermiFunctionBase_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/base/omsPermiFunction/base/omsPermiFunctionBase_service.xml"/>
+			<!-- <import resource="classpath:/com/cnfantasia/server/ms/business/omsPermiFunction/omsPermiFunction_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsPermiFunction/omsPermiFunction_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsPermiFunction/omsPermiFunction_service.xml"/> -->
+			<!-- omsPermiRole  OMS角色表 -->
+			<!--<import resource="classpath:/com/cnfantasia/server/ms/business/base/omsPermiRole/base/omsPermiRoleBase_dao.xml"/>-->
+			<!--<import resource="classpath:/com/cnfantasia/server/ms/business/base/omsPermiRole/base/omsPermiRoleBase_service.xml"/>-->
+			
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsPermiRole/omsPermiRole_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsPermiRole/omsPermiRole_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsPermiRole/omsPermiRole_service.xml"/>
+			
+			<!-- omsPermiRoleHasTOmsPermiFunction  OMS角色功能关系 -->
+			<import resource="classpath:/com/cnfantasia/server/ms/business/base/omsPermiRoleHasTOmsPermiFunction/base/omsPermiRoleHasTOmsPermiFunctionBase_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/base/omsPermiRoleHasTOmsPermiFunction/base/omsPermiRoleHasTOmsPermiFunctionBase_service.xml"/>
+			<!-- <import resource="classpath:/com/cnfantasia/server/ms/business/omsPermiRoleHasTOmsPermiFunction/omsPermiRoleHasTOmsPermiFunction_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsPermiRoleHasTOmsPermiFunction/omsPermiRoleHasTOmsPermiFunction_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsPermiRoleHasTOmsPermiFunction/omsPermiRoleHasTOmsPermiFunction_service.xml"/> -->
+			<!-- omsUser  OMS用户表 -->
+			<!--<import resource="classpath:/com/cnfantasia/server/ms/business/base/omsUser/base/omsUserBase_dao.xml"/>-->
+			<!--<import resource="classpath:/com/cnfantasia/server/ms/business/base/omsUser/base/omsUserBase_service.xml"/>-->
+			
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsUser/omsUser_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsUser/omsUser_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsUser/omsUser_service.xml"/> 
+			
+			<import resource="classpath:/com/cnfantasia/server/ms/business/payBill/payBill_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/payBill/payBill_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/payBill/payBill_service.xml"/>
+			
+			<import resource="classpath:/com/cnfantasia/server/ms/business/ebuyProductTemp/ebuyProductTemp_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/ebuyProductTemp/ebuyProductTemp_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/ebuyProductTemp/ebuyProductTemp_service.xml"/> 
+
+			<import resource="classpath:/com/cnfantasia/server/ms/business/revenue/revenue_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/revenue/revenue_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/revenue/revenue_service.xml"/>
+			
+			<import resource="classpath:/com/cnfantasia/server/ms/business/propertyProprietor/propertyProprietor_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/propertyProprietor/propertyProprietor_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/propertyProprietor/propertyProprietor_service.xml"/> 
+			
+			<import resource="classpath:/com/cnfantasia/server/ms/business/propertyCompany/propertyCompany_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/propertyCompany/propertyCompany_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/propertyCompany/propertyCompany_service.xml"/> 
+			
+			<import resource="classpath:/com/cnfantasia/server/ms/business/roomValidate/roomValidate_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/roomValidate/roomValidate_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/roomValidate/roomValidate_service.xml"/> 
+			
+			<import resource="classpath:/com/cnfantasia/server/ms/business/provinceCityBlock/provinceCityBlock_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/provinceCityBlock/provinceCityBlock_service.xml"/> 
+			
+			<import resource="classpath:/com/cnfantasia/server/ms/business/communitySupply/communitySupply_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/communitySupply/communitySupply_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/communitySupply/communitySupply_service.xml"/>
+			 
+			<import resource="classpath:/com/cnfantasia/server/ms/business/groupBuildingRegister/groupBuildingRegister_service.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/groupBuilding/groupBuilding_service.xml"/>
+			
+			<!-- omsUserHasTOmsPermiRole  OMS用户角色关系 -->
+			<import resource="classpath:/com/cnfantasia/server/ms/business/base/omsUserHasTOmsPermiRole/base/omsUserHasTOmsPermiRoleBase_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/base/omsUserHasTOmsPermiRole/base/omsUserHasTOmsPermiRoleBase_service.xml"/>
+			<!-- <import resource="classpath:/com/cnfantasia/server/ms/business/omsUserHasTOmsPermiRole/omsUserHasTOmsPermiRole_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsUserHasTOmsPermiRole/omsUserHasTOmsPermiRole_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/omsUserHasTOmsPermiRole/omsUserHasTOmsPermiRole_service.xml"/> -->
+			
+			<!-- golfGroup  高尔夫组团表 -->
+			<import resource="classpath:/com/cnfantasia/server/domain/business/base/golfGroup/base/golfGroupBase_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/domain/business/base/golfGroup/base/golfGroupBase_service.xml"/>
+			<!-- <import resource="classpath:/com/cnfantasia/server/ms/business/golfGroup/golfGroup_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/golfGroup/golfGroup_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/golfGroup/golfGroup_service.xml"/> -->
+			
+			<!-- golfGroupDetail  高尔夫组团详细表 -->
+			<import resource="classpath:/com/cnfantasia/server/domain/business/base/golfGroupDetail/base/golfGroupDetailBase_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/domain/business/base/golfGroupDetail/base/golfGroupDetailBase_service.xml"/>
+			<!-- <import resource="classpath:/com/cnfantasia/server/ms/business/golfGroupDetail/golfGroupDetail_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/golfGroupDetail/golfGroupDetail_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/ms/business/golfGroupDetail/golfGroupDetail_service.xml"/>-->
+			
+			<!-- shareActive  分享活动 -->
+			<import resource="classpath:/com/cnfantasia/server/domain/business/base/shareActive/base/shareActiveBase_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/domain/business/base/shareActive/base/shareActiveBase_service.xml"/>
+			<!-- <import resource="classpath:/com/cnfantasia/server/domain/business/shareActive/shareActive_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/domain/business/shareActive/shareActive_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/domain/business/shareActive/shareActive_service.xml"/> -->
+			<!-- shareActiveDetail  分享活动详情表 -->
+			<import resource="classpath:/com/cnfantasia/server/domain/business/base/shareActiveDetail/base/shareActiveDetailBase_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/domain/business/base/shareActiveDetail/base/shareActiveDetailBase_service.xml"/>
+			<!-- <import resource="classpath:/com/cnfantasia/server/domain/business/shareActiveDetail/shareActiveDetail_controller.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/domain/business/shareActiveDetail/shareActiveDetail_dao.xml"/>
+			<import resource="classpath:/com/cnfantasia/server/domain/business/shareActiveDetail/shareActiveDetail_service.xml"/> -->
+			
+			
+			<import resource="classpath:/com/cnfantasia/server/api/business/microblogQueue/microblogQueue_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/microblogQueue/microblogQueue_dao.xml"/>
+
+	<import resource="classpath:/com/cnfantasia/server/api/business/common/common.xml"/>
+	
+	<!-- 电商移动版HTML5商户端 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/ebuyorder/ebuyMerchant.xml"/>
+	
+	
+	<!-- fileServer文件服务器 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/fileServer/fileServer_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/fileServer/fileServer_service.xml"/>
+	
+	<!-- commSysPara -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/commSysPara/commSysPara_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/commSysPara/commSysPara_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/commSysPara/commSysPara_parser.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/commSysPara/commSysPara_manager.xml"/>
+
+	<bean id="dredgeService" class="com.cnfantasia.server.api.dredge.service.DredgeService" />
+	<bean id="dredgeDao" class="com.cnfantasia.server.api.dredge.dao.DredgeDao" parent="abstractBaseDao"/>
+	
+	<!-- 运维文案信息-2015-8-25 18:07:36迁移到commbusi_both -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/operation/operation_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/operation/operation_dao.xml"/>
+	
+	<!-- 抽奖配置 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/prizeActivity/prizeActivity_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/prizeActivity/prizeActivity_dao.xml"/>
+	
+	<!-- 物业宝 -->
+	<!--  
+	<import resource="classpath:/com/cnfantasia/server/api/business/plotproperty/finance.xml"/>
+	-->
+	
+	<!-- 收益中心 -->
+	<import resource="classpath:/com/cnfantasia/server/ms/business/revenue/revenue_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/revenue/revenue_service.xml"/> 
+	
+	<!-- 缴费配置 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/plotpropertyCfg/plotpropertyCfg_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/plotpropertyCfg/plotpropertyCfg_dao.xml"/>
+	<bean class="com.cnfantasia.server.api.pub.utils.ApplicationContextBothUtil"/>
+	<bean class="com.cnfantasia.server.api.pub.utils.CnfantasiaCommbusiUtil"></bean>
+	
+	<!-- payCarFee -->
+	<import resource="classpath:/com/cnfantasia/server/ms/business/payCarFee/payCarFee_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/ms/business/payCarFee/payCarFee_service.xml"/>
+
+	<import resource="classpath:/com/cnfantasia/server/api/business/homeMessage/homeMessageBean.xml"/>
+
+	<!-- 消息推送模块 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/msgpush/msgpush_service.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/msgpush/msgpush_dao.xml"/>
+
+	<bean id="commonRoomDao" class="com.cnfantasia.server.api.commonBusiness.dao.CommonRoomDao" parent="abstractBaseDao" />
+	<import resource="classpath:/com/cnfantasia/server/api/business/propertySoftwareDock/propertySoftwareDock_dao_service.xml"/>
+
+	<bean id="commonDeviceService" class="com.cnfantasia.server.api.commonBusiness.service.CommonDeviceService">
+		<property name="userTmpBaseDao" ref="userTmpBaseDao"></property>
+		<property name="uuidManager" ref="uuidManager"></property>
+		<property name="commonUserDao" ref="commonUserDao"></property>
+	</bean>
+	<bean id="commonUserDao" class="com.cnfantasia.server.api.commonBusiness.dao.CommonUserDao" parent="abstractBaseDao">
+	</bean>
+	
+	<import resource="classpath:/com/cnfantasia/server/api/business/coupon/coupon_dao.xml"/>
+	<!--限时抢购活动-->
+	<import resource="classpath:/com/cnfantasia/server/api/business/limitBuy/limitBuy_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/limitBuy/limitBuy_service.xml"/>
+
+	<!--限时抢购活动-->
+	<import resource="classpath:/com/cnfantasia/server/api/business/limitBuy/limitBuy_dao.xml"/>
+	<import resource="classpath:/com/cnfantasia/server/api/business/limitBuy/limitBuy_service.xml"/>
+	<!-- 公司信息 -->
+	<import resource="classpath:/com/cnfantasia/server/api/business/company/company_service.xml"/>
+
+	<bean id="scanService" class="com.cnfantasia.jfq.scan.service.ScanService">
+	</bean>
+
+	<bean id="selfActivityService" class="com.cnfantasia.server.api.selfActivity.service.SelfActivityService" />
+	<bean id="selfActivityDao" class="com.cnfantasia.server.api.selfActivity.dao.SelfActivityDao" parent="abstractBaseDao"/>
+	<bean id="dredgePushService" class="com.cnfantasia.server.api.dredge.service.DredgePushService" />
+
+	<!--生活缴费-->
+	<bean id="livingPayDao" class="com.cnfantasia.server.api.livingPay.dao.LivingPayDao"  parent="abstractBaseDao" />
+	<bean id="livingPayService" class="com.cnfantasia.server.api.livingPay.service.LivingPayService"/>
+</beans>

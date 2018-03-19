@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:意外惊喜模块 -->
+<mapper namespace="surpriseGift">
+	
+	<resultMap type="com.cnfantasia.server.api.surpriseGift.entity.PrizeSurpriseGiftEntity" id="prizeSurpriseGiftEntity_Map_Append"
+		extends="prizeSurpriseGiftBase.prizeSurpriseGiftBaseMap_AppendTable">
+		<result column="ext_isExpired" property="expiredStatus" javaType="java.lang.Integer"/><!-- 是否已过期 0未过期 1已过期  -->
+	</resultMap>
+	
+	<!-- 用户类别=={"1":"注册用户","2":"临时用户"},默认当做注册用户 -->
+	<!-- <sql id="qry_all_userId_list_with_self_and_tmp_or_regist">
+		<if test=" (userType == null or userType == '') 
+			or userType.equals('1') 
+			or (userType != null and !( userType.equals('')) and !userType.equals('1') and !userType.equals('2'))">
+			INNER JOIN (
+				<include refid="commonSql.qry_roomIdList_by_curr_user_id_with_bind"/>
+			)AS table_roomId
+			INNER JOIN t_user currU ON currU.f_id = #{userId} AND table_roomId.roomId = currU.f_default_room_id
+				AND currU.f_sys0_del_state = 0
+		</if>
+		<if test="userType.equals('2')">
+			INNER (
+				SELECT f_id
+				FROM t_user_tmp
+				WHERE 1=1
+				AND f_sys0_del_state = 0
+				GROUP BY f_id 
+			) UT_group ON UT_group.f_id = #{userId}
+		</if>
+	</sql> -->
+	<!-- <sql id="qry_all_userId_list_with_self_and_tmp_or_regist">
+		<if test=" (userType == null or userType == '') 
+			or userType.equals('1') 
+			or (userType != null and !( userType.equals('')) and !userType.equals('1') and !userType.equals('2'))">
+			INNER JOIN (
+				SELECT f_apply_user_id  
+				FROM t_login_no_bind_relation 
+				WHERE 1=1
+				AND f_sys0_del_state = 0
+				AND f_main_user_id = #{userId}
+				GROUP BY f_apply_user_id 
+				UNION ALL (SELECT #{userId})
+			) LNBR_group ON LNBR_group.f_apply_user_id = U.f_id
+		</if>
+		<if test="userType.equals('2')">
+			INNER (
+				SELECT f_id
+				FROM t_user_tmp
+				WHERE 1=1
+				AND f_sys0_del_state = 0
+				GROUP BY f_id 
+			) UT_group ON UT_group.f_id = #{userId}
+		</if>
+	</sql> -->
+	
+	<!-- 根据类别获取对应的图标配置 -->
+	<select id="select_SurpriseGiftConfigPic_ByType" parameterType="java.util.Map" 
+		resultMap="surpriseGiftConfigPicBase.surpriseGiftConfigPicBaseMap_AppendTable">
+		SELECT <include refid="surpriseGiftConfigPicBase.queryHead_AppendTable"/>
+		FROM t_surprise_gift_config_pic SGCP
+	   	WHERE 1=1
+	   	AND SGCP.f_sys0_del_state = 0
+	   	AND SGCP.f_type = #{type}
+	   	ORDER BY SGCP.f_last_modify_time DESC
+	   	LIMIT 0,1
+	</select>
+	
+	<!-- 返回已注册用户的 且状态为已领取的 -->
+	<sql id="select_PrizeSurpriseGift_List_comm">
+    	SELECT <include refid="prizeSurpriseGiftBase.queryHead_AppendTable"/>
+			<![CDATA[ ,CASE WHEN (NOT ISNULL(PSG.f_expiry_time) AND PSG.f_expiry_time < NOW()) THEN 1 ELSE 0 END AS ext_isExpired ]]>
+		 	<!-- 是否已过期 0未过期 1已过期  -->
+		FROM t_prize_surprise_gift PSG
+			<!-- 账号合并的支持 -->
+			INNER JOIN (<!-- 用户条件已经包含在include -->
+				<include refid="commonSql.qry_roomIdList_by_curr_user_id_with_bind"/>
+			)AS table_roomId ON PSG.f_room_id = table_roomId.roomId
+			INNER JOIN t_user currU ON currU.f_id = #{userId} AND currU.f_sys0_del_state = 0
+			<if test="checkIsLightApp == true"> <!-- 轻应用都是查询主账号下的数据 -->
+				AND table_roomId.roomId = currU.f_main_room_id
+			</if>
+			<if test="checkIsLightApp != true"> <!-- 否则查询当前默认门牌的数据 -->
+				AND table_roomId.roomId = currU.f_default_room_id
+			</if>
+    	WHERE 1=1
+    	AND PSG.f_sys0_del_state = 0
+    	AND PSG.f_user_type = 1 <!-- 目前只有已注册用户 -->
+    	<if test="fetchStatus !=null">
+    		AND PSG.f_fetch_status = #{fetchStatus} <!-- '领取状态=={"1":"未领取","2":"已领取"}' -->
+    	</if>
+	</sql>
+	
+	<!-- 根据用户信息查询意外惊喜列表 -->
+	<select id="select_PrizeSurpriseGift_List_page" parameterType="java.util.Map" 
+		resultMap="prizeSurpriseGiftEntity_Map_Append">
+		<include refid="select_PrizeSurpriseGift_List_comm"/>
+    	ORDER BY
+    		PSG.f_use_status ASC <!-- 使用状态=={"1":"未使用","2":"已使用","3":"已过期"} -->
+    		,PSG.f_create_time DESC
+    	<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	
+	<select id="select_PrizeSurpriseGift_List_count" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM (<include refid="select_PrizeSurpriseGift_List_comm"/>) AS tbl01
+	</select>
+	
+	<!-- 查询所有可用的优惠列表 -->
+	<select id="select_Coupon_Available_List" parameterType="java.util.Map" 
+		resultMap="prizeSurpriseGiftEntity_Map_Append">
+		<include refid="select_PrizeSurpriseGift_List_comm"/>
+		AND PSG.f_data_type = 1 <!-- 惊喜数据类型=={"1":"粮票","2":"商品"} -->
+		AND PSG.f_use_status = 1 <!-- 使用状态=={"1":"未使用","2":"已使用","3":"已过期"} -->
+		AND CASE WHEN NOT ISNULL(PSG.f_expiry_time) THEN PSG.f_expiry_time > NOW() ELSE ISNULL(PSG.f_expiry_time) END <!-- 未失效的 -->
+		ORDER BY 
+		<!-- 有效的排在前 --> 
+		<!-- 失效的按创建时间倒叙 -->
+		<!-- 未失效的按失效时间正序 -->
+		<![CDATA[ CASE WHEN ISNULL(PSG.f_expiry_time) THEN 2 WHEN PSG.f_expiry_time > NOW() THEN 1 ELSE 3 END ASC
+		,CASE WHEN (ISNULL(PSG.f_expiry_time) OR PSG.f_expiry_time > NOW()) THEN PSG.f_expiry_time END ASC
+		,CASE WHEN (NOT ISNULL(PSG.f_expiry_time) AND PSG.f_expiry_time <= NOW()) THEN PSG.f_create_time END DESC ]]> 
+		
+		<!-- <![CDATA[ CASE WHEN ISNULL(PSG.f_expiry_time) THEN 2 WHEN PSG.f_expiry_time > NOW() THEN 1 ELSE 3 END ASC
+		,PSG.f_create_time DESC ]]>  -->
+	</select>
+	
+	<!-- 查询所有可用的优惠数量 -->
+	<select id="select_Coupon_Available_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) 
+    	FROM (
+    		<include refid="select_PrizeSurpriseGift_List_comm"/>
+			<!-- AND PSG.f_data_type = 1 --> <!-- 惊喜数据类型=={"1":"粮票","2":"商品"} -->
+			AND PSG.f_use_status = 1 <!-- 使用状态=={"1":"未使用","2":"已使用","3":"已过期"} -->
+			AND CASE WHEN NOT ISNULL(PSG.f_expiry_time) THEN PSG.f_expiry_time > NOW() ELSE ISNULL(PSG.f_expiry_time) END <!-- 未失效的 -->
+    	) _tmp
+	</select>
+	
+	<!-- 标记意外惊喜为已领取 -->
+	<update id="update_PrizeSurpriseGift_AsFetched" parameterType="java.util.Map">
+		UPDATE t_prize_surprise_gift
+		SET f_fetch_status = 2 <!-- 领取状态=={"1":"未领取","2":"已领取"} -->
+			,f_sys0_upd_time = SYSDATE()
+			,f_fetch_time = SYSDATE()
+		WHERE 1=1
+		AND f_sys0_del_state = 0
+		AND f_fetch_status = 1 <!-- 领取状态=={"1":"未领取","2":"已领取"} -->
+		<!-- AND f_user_id = #{userId}
+    	AND f_user_type = #{userType} -->
+    	AND f_id = #{prizeSurpriseGiftId}
+	</update>
+	
+	<resultMap type="com.cnfantasia.server.api.surpriseGift.entity.PrizeSurpriseGiftEntityDetail" id="prizeSurpriseGiftEntityDetail_Map"
+		extends="prizeSurpriseGiftEntity_Map_Append">
+		<association property="msPrizeOption" resultMap="msPrizeOptionBase.msPrizeOptionBaseMap_AppendTable"/>
+		<association property="msPrizeGift" resultMap="msPrizeGiftBase.msPrizeGiftBaseMap_AppendTable"/>
+		<collection property="msPrizeGiftCodeList" resultMap="msPrizeGiftCodeBase.msPrizeGiftCodeBaseMap_AppendTable"/>
+	</resultMap>
+	<!-- 查询意外惊喜详情 -->
+	<select id="select_PrizeSurpriseGift_Detail" parameterType="java.util.Map" resultMap="prizeSurpriseGiftEntityDetail_Map">
+		SELECT <include refid="prizeSurpriseGiftBase.queryHead_AppendTable"/>
+			,<include refid="msPrizeGiftBase.queryHead_AppendTable"/>
+			,<include refid="msPrizeGiftCodeBase.queryHead_AppendTable"/>
+			,<include refid="msPrizeOptionBase.queryHead_AppendTable"/>
+			<![CDATA[ ,CASE WHEN (NOT ISNULL(PSG.f_expiry_time) AND PSG.f_expiry_time < NOW()) THEN 1 ELSE 0 END AS ext_isExpired ]]>
+		 	<!-- 是否已过期 0未过期 1已过期  -->
+		FROM t_prize_surprise_gift PSG
+			INNER JOIN t_user U ON U.f_id = PSG.f_user_id AND U.f_sys0_del_state = 0 <!-- 目前只有已注册用户 -->
+			LEFT JOIN t_ms_prize_gift MPG ON MPG.f_id = PSG.f_data_id AND MPG.f_sys0_del_state = 0
+			LEFT JOIN t_ms_prize_gift_code MPGC ON MPGC.f_pri_gift_id = MPG.f_id AND MPGC.f_sys0_del_state = 0
+			LEFT JOIN t_ms_prize_option MPO ON MPO.f_id = MPG.f_prize_option_id AND MPO.f_sys0_del_state = 0
+    	WHERE 1=1
+    	AND PSG.f_sys0_del_state = 0
+    	AND PSG.f_user_type = 1 <!-- 目前只有已注册用户 -->
+    	<if test="fetchStatus !=null">
+    		AND PSG.f_fetch_status = #{fetchStatus} <!-- '领取状态=={"1":"未领取","2":"已领取"}' -->
+    	</if>
+		AND PSG.f_id = #{prizeSurpriseGiftId}
+	</select>
+	
+	<!-- 查询最新一个意外惊喜 -->
+	<select id="select_Last_PrizeSurpriseGift" parameterType="java.util.Map" resultMap="prizeSurpriseGiftEntity_Map_Append">
+		<include refid="select_PrizeSurpriseGift_List_comm"/>
+    	ORDER BY PSG.f_create_time DESC
+    	<![CDATA[ LIMIT 0,1 ]]>
+	</select>
+	
+	<!-- 标记优惠券为已使用 -->
+	<update id="update_CouponList_As_Used" parameterType="java.util.Map">
+		UPDATE t_prize_surprise_gift PSG
+			INNER JOIN( 
+			<foreach collection="couponIdList" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item} f_id
+			</foreach>
+			) PSG_tmp ON PSG.f_id = PSG_tmp.f_id
+			<!-- 账号合并的支持 -->
+			INNER JOIN (<!-- 用户条件已经包含在include -->
+				<include refid="commonSql.qry_roomIdList_by_curr_user_id_with_bind"/>
+			)AS table_roomId ON PSG.f_room_id = table_roomId.roomId
+			INNER JOIN t_user currU ON currU.f_id = #{userId} AND currU.f_sys0_del_state = 0
+			<if test="checkIsLightApp == true"> <!-- 轻应用都是查询主账号下的数据 -->
+				AND table_roomId.roomId = currU.f_main_room_id
+			</if>
+			<if test="checkIsLightApp != true"> <!-- 否则查询当前默认门牌的数据 -->
+				AND table_roomId.roomId = currU.f_default_room_id
+			</if>
+			
+		SET PSG.f_id=PSG_tmp.f_id
+			,PSG.f_use_status = 2 <!-- 使用状态=={"1":"未使用","2":"已使用","3":"已过期"} -->
+			,PSG.f_sys0_upd_time = SYSDATE()
+			,PSG.f_sys0_upd_user = #{userId}
+		WHERE 1=1 
+		AND PSG.f_sys0_del_state = 0
+		<!-- AND PSG.f_user_id = #{userId}
+    	AND PSG.f_user_type = #{userType}  --> <!-- 用户类别=={"1":"注册用户","2":"临时用户"} -->
+    	AND PSG.f_user_type = 1 <!-- 目前只有已注册用户 -->
+    	AND PSG.f_fetch_status = 2 <!-- '领取状态=={"1":"未领取","2":"已领取"}' -->
+		AND PSG.f_data_type = 1 <!-- 惊喜数据类型=={"1":"粮票","2":"商品"} -->
+		AND PSG.f_use_status = 1 <!-- 使用状态=={"1":"未使用","2":"已使用","3":"已过期"} -->
+		AND CASE WHEN NOT ISNULL(PSG.f_expiry_time) THEN PSG.f_expiry_time > NOW() ELSE ISNULL(PSG.f_expiry_time) END <!-- 未失效的 -->
+	</update>
+	
+	<!-- 退回优惠券信息 -->
+	<update id="update_SurpriseGift_Batch_2NotUse" parameterType="java.util.Map">
+		UPDATE t_prize_surprise_gift PSG
+			INNER JOIN(
+			<foreach collection="surpriseGiftIdList" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item} f_id
+			</foreach>
+			) PSG_tmp ON PSG.f_id = PSG_tmp.f_id
+		SET PSG.f_id=PSG_tmp.f_id
+			,PSG.f_use_status = 1 <!-- 使用状态=={"1":"未使用","2":"已使用","3":"已过期"} -->
+			,PSG.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1 
+		AND PSG.f_sys0_del_state = 0
+		AND PSG.f_use_status = 2
+	</update>
+	
+</mapper>

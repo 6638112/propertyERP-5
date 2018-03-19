@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+
+	<bean id="communitySupplyService" class="com.cnfantasia.server.api.communitySupply.service.CommunitySupplyService">
+		<property name="communitySupplyDao" ref="communitySupplyDao"></property>
+		<property name="commentsService" ref="commentsService"></property>
+		<property name="commonRoomService" ref="commonRoomService"></property>
+		
+		<property name="autoFetchSupllyDataService" ref="autoFetchSupllyDataService"></property>
+		<property name="userPositionInfoBaseDao" ref="userPositionInfoBaseDao"></property>
+		<property name="commonDeviceService" ref="commonDeviceService"></property>
+		<property name="uuidManager" ref="uuidManager"></property>
+		<property name="merchantClaimDao" ref="merchantClaimDao"></property>
+		
+		<property name="communitySupplyBaseDao" ref="communitySupplyBaseDao"></property>
+	</bean>
+	
+	<bean id="autoFetchSupllyDataService" class="com.cnfantasia.server.api.communitySupply.service.AutoFetchSupllyDataService">
+		<property name="commonRoomService" ref="commonRoomService"></property>
+		<property name="communitySupplyTypeBaseDao" ref="communitySupplyTypeBaseDao"></property>
+		<property name="communitySupplyBaseDao" ref="communitySupplyBaseDao"></property>
+		<property name="communitySupplyContectBaseDao" ref="communitySupplyContectBaseDao"></property>
+		<property name="groupBuildingHasTCommunitySupplyBaseDao" ref="groupBuildingHasTCommunitySupplyBaseDao"></property>
+		<property name="uuidManager" ref="uuidManager"></property>
+		<property name="groupBuildingBaseDao" ref="groupBuildingBaseDao"></property>
+		<property name="communitySupplyDao" ref="communitySupplyDao"></property>
+		<property name="sysParamManager" ref="sysParamManager"></property>
+		
+		<property name="fileServerService" ref="fileServerService"></property>
+		<property name="smallPicUploadService" ref="smallPicUploadService"></property>
+	</bean>
+	
+	<bean id="homeSupplyTypeService" class="com.cnfantasia.server.api.communitySupply.service.HomeSupplyTypeService">
+		<property name="commEntityConvertService" ref="commEntityConvertService"/>
+		<property name="sysParamManager" ref="sysParamManager"/>
+		<property name="communitySupplyDao" ref="communitySupplyDao"/>
+		<property name="addressOperationService" ref="addressOperationService"/>
+		<property name="commonRoomService" ref="commonRoomService"/>
+		<property name="plotpropertyService" ref="plotpropertyService" />
+		<property name="groupBuildingHasTPropertyServiceBaseService" ref="groupBuildingHasTPropertyServiceBaseService"/>
+
+	</bean>
+	
+</beans>  

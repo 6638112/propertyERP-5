@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 金额格式校验 -->
+	<bean id="amount" parent="AbstractRegulation">
+		<property name="setting">
+			<map>
+				<!-- 必输 -->
+				<entry key="option" value="false" />
+				<!-- 两位小数 -->
+				<entry key="pattern" value="\d+(\.\d{1,2})?\d+" />
+				<!-- 长度11位 -->
+				<entry key="type" value="decimal" />
+			</map>
+		</property>
+	</bean>
+	
+	<!-- 14位日期格式校验 -->
+	<bean id="datetime14" parent="AbstractRegulation">
+		<property name="setting">
+			<map>
+				<!-- 必输 -->
+				<entry key="option" value="false" />
+				<!-- 类型转换-->
+				<entry key="type" value="date:yyyyMMddHHmmss" />
+			</map>
+		</property>
+	</bean>
+	
+	<!-- 8位日期格式校验 -->
+	<bean id="date8" parent="AbstractRegulation">
+		<property name="setting">
+			<map>
+				<!-- 必输 -->
+				<entry key="option" value="false" />
+				<!-- 日期格式检查 -->
+				<entry key="pattern" value="^((((2\d)\d{2})(0[13578]|1[02])(0[1-9]|[12]\d|3[01]))|(((2\d)\d{2})(0[13456789]|1[012])(0[1-9]|[12]\d|30))|(((2\d)\d{2})02(0[1-9]|1\d|2[0-8]))|(((2\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))0229))$" />
+				<!-- 类型转换-->
+				<entry key="type" value="date" />
+			</map>
+		</property>
+	</bean>
+	
+	<!-- 纯数字格式校验 -->
+	<bean id="integer" parent="AbstractRegulation">
+		<property name="setting">
+			<map>
+				<!-- 必输 -->
+				<entry key="option" value="false" />
+				<!-- 纯数字 -->
+				<entry key="pattern" value="\d+" />
+				<!-- 长度(不限制长度)-->
+				<entry key="blength" value="-1,-1" />
+				<!-- 类型转换-->
+				<entry key="type" value="integer" />
+			</map>
+		</property>
+	</bean>
+	
+	<!-- 纯数字格式校验 -->
+	<bean id="number" parent="AbstractRegulation">
+		<property name="setting">
+			<map>
+				<!-- 必输 -->
+				<entry key="option" value="false" />
+				<!-- 纯数字 -->
+				<entry key="pattern" value="\d+" />
+				<!-- 长度11位 -->
+				<entry key="blength" value="11,11" />
+			</map>
+		</property>
+	</bean>
+	
+	<!-- 必输校验 -->
+	<bean id="mustInput" parent="AbstractRegulation">
+		<property name="setting">
+			<map>
+				<entry key="option" value="false" />
+			</map>
+		</property>
+	</bean>
+</beans>

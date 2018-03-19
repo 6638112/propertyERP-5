@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+	<bean id="microblogQueueService" class="com.cnfantasia.server.commbusi.microblogQueue.serviceUn.MicroblogQueueService">
+		<property name="microblogQueueDao" ref="microblogQueueDao"></property>
+		<property name="userBaseDao" ref="userBaseDao"></property>
+	</bean>
+	
+	<bean id="microblogQueueTask" class="com.cnfantasia.server.commbusi.microblogQueue.task.MicroblogQueueTask">
+		<property name="microblogQueueDao" ref="microblogQueueDao"></property>
+		<property name="microblogGbHasQueueBaseDao" ref="microblogGbHasQueueBaseDao"></property>
+		<property name="microblogContentBaseDao" ref="microblogContentBaseDao"></property>
+		<property name="addressOperationService" ref="addressOperationService"></property>
+	</bean>
+	
+	<bean id="microblogQueueFactory" class="com.cnfantasia.server.commbusi.microblogQueue.task.MicroblogQueueFactory">
+		<property name="addressOperationService" ref="addressOperationService"/>
+	</bean>
+	
+	<bean id="gbLeastDiscountService" class="com.cnfantasia.server.commbusi.microblogQueue.serviceUn.GbLeastDiscountService">
+		<property name="microblogQueueDao" ref="microblogQueueDao"></property>
+	</bean>
+</beans>  

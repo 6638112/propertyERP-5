@@ -1,0 +1,113 @@
+package com.cnfantasia.server.ms.pub.uuidMaker;
+
+
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.cnfantasia.server.ms.pub.utils.MapConverter;
+import com.cnfantasia.server.msbase.omsCommUuid.entity.OmsCommUuid;
+import com.cnfantasia.server.msbase.omsCommUuid.service.OmsCommUuidBaseService;
+
+//生成形如：tbl_User  0000000069（10位） 067（3位）的UUID。
+public class UuidManager {
+	private static OmsCommUuidBaseService omsCommUuidBaseService;
+	public static void setOmsCommUuidBaseService(OmsCommUuidBaseService omsCommUuidBaseService) {
+		UuidManager.omsCommUuidBaseService = omsCommUuidBaseService;
+	}
+
+	private static Map<String,String> reflectMap=null;
+	private static int subNumLen=0;//如果设置为0，则每次都会去数据库取值。3 如果考虑集成，则应设置为0
+	private static int totalLen=12;//12跟下面的字符数字是绑定的。
+	private static String[] zeros={"","0","00","000","0000","00000","000000","0000000","00000000","000000000","0000000000","00000000000","000000000000"};
+	private static Map<String,BigInteger> uuidSubMap = new HashMap<String,BigInteger>();
+	public static void main(String[] args) {
+		/*initReflactMap();
+		Connection conn = JDBCConnect.getConn();
+		UuidModel um = new UuidModel();
+		UuidDao ud = new UuidJDBCImpl();
+		for(String s:reflectMap.keySet()){
+			um.setNum(0L);
+			um.setTableName(reflectMap.get(s));
+			ud.add(um, conn);
+		}*/
+		System.out.println(System.currentTimeMillis());
+	}
+	private static void initReflactMap(){
+		reflectMap = new HashMap<String,String>();
+		/*reflectMap.put("tbl_Adjust", "Adjust");
+		reflectMap.put("tbl_CostDetail", "CostDet");
+		reflectMap.put("tbl_Worker", "Worker");*/
+	}
+	public static final BigInteger getNextUuidBigInteger(String tableName){
+		return new BigInteger(getNextUuidString(tableName));
+	}
+	/**
+	 * TODO synchronized 同步问题
+	 * @param tableName
+	 * @return
+	 */
+	public static final String getNextUuidString(String tableName){
+		//初始化配置
+		if(reflectMap==null){initReflactMap();}
+		//System.out.print("start:"+uuidSubMap);
+		//获取tableName对应的uuid主值numMain和分值numSub
+		//1、根据表名获取当前对应的num值
+		BigInteger numMain = getNumMain(tableName);
+		//2、获取numSub
+		BigInteger numSub = uuidSubMap.get(tableName+"Sub");
+		//3、把这个numSub+1修改回填到Map中。即先获取，再加1
+		uuidSubMap.put(tableName+"Sub", numSub.add(new BigInteger("1")));
+		//4、对这个numMain、numSub进行格式化并返回
+		//根据配置，获取格式化的Uuid前缀。
+		String perFix=reflectMap.get(tableName);
+		if(perFix==null){perFix="";}
+		String uuid = format(perFix, numMain,numSub);
+		//System.out.print("end:"+uuidSubMap);
+		return uuid;
+	}
+	
+	private static BigInteger getNumMain(String tblName) {
+		if(uuidSubMap.containsKey(tblName)){
+			//判断当前分值是否大于10的subNumLen次方，如果大于，重新获取，同时将分值置为0。
+			if(uuidSubMap.get(tblName+"Sub").compareTo(new BigInteger(  (int)(Math.pow(10, subNumLen))+""  ))>=0){
+				OmsCommUuid um=UuidManager.omsCommUuidBaseService.getOmsCommUuidBySeqId(tblName);
+				uuidSubMap.put(tblName,um.getNumber().add(new BigInteger("1")));
+				uuidSubMap.put(tblName+"Sub", new BigInteger("0"));
+				//更新数据库
+				OmsCommUuid tmpModel = new OmsCommUuid();
+				tmpModel.setTableName(tblName);
+				tmpModel.setNumber(um.getNumber().add(new BigInteger("1")));
+				UuidManager.omsCommUuidBaseService.updateOmsCommUuid(MapConverter.toMap(tmpModel));
+			}
+			return uuidSubMap.get(tblName);
+		}else{
+			OmsCommUuid um =UuidManager.omsCommUuidBaseService.getOmsCommUuidBySeqId(tblName);
+			if(um==null||um.getNumber()==null){}//TODO ..如果获取失败如何处理
+			uuidSubMap.put(tblName,um.getNumber());
+			uuidSubMap.put(tblName+"Sub", new BigInteger("0"));//这里最好设置为从0开始。
+			um.setNumber(um.getNumber().add(new BigInteger("1")));
+			UuidManager.omsCommUuidBaseService.updateOmsCommUuid(MapConverter.toMap(um));
+			return um.getNumber();
+		}
+		
+	}
+
+	private static String format(String tableName,BigInteger num,BigInteger numSub) {
+		String uuid = tableName;
+		String numStr = num.toString();
+		String numSubStr = numSub.compareTo(new BigInteger("0"))>0 ?numSub.toString():"";
+		int befLen = numStr.length();
+		int endLen = numSubStr.length();
+		int zeroBef=totalLen-subNumLen-befLen;
+		zeroBef = zeroBef<0 ? 0 : zeroBef;//当subNumLen>totalLen时候需要这个判断保证程序稳定运行。
+		int zefoEnd = subNumLen-endLen;
+		zefoEnd = zefoEnd<0 ? 0 : zefoEnd;//当subNumLen==0时候需要这个判断保证程序稳定运行。
+		uuid+=zeros[zeroBef];
+		uuid+=numStr;
+		uuid+=zeros[zefoEnd];//使用之前保证不要越界。保证合法性。
+		uuid+=numSubStr;
+		return uuid;
+	}
+	
+}

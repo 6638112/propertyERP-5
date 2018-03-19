@@ -1,0 +1,163 @@
+/**   
+ * Filename:    SimpleHttpClient.java   
+ * @version:    1.0  
+ * Create at:   2014年6月5日 上午8:50:18   
+ * Description:  
+ *   
+ * Modification History:   
+ * Date        Author      Version     Description   
+ * ----------------------------------------------------------------- 
+ * 2014年6月5日    shiyl      1.0         1.0 Version   
+ */
+package com.cnfantasia.server.ms.pub.httpcllient;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.URI;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.alibaba.fastjson.JSON;
+import com.cnfantasia.server.common.exception.SystemException;
+import com.cnfantasia.server.common.httpcllient.AbstractHttpClient;
+import com.cnfantasia.server.common.json.JsonRequest;
+import com.cnfantasia.server.common.json.JsonRequest.Request;
+import com.cnfantasia.server.common.json.JsonResponse;
+import com.cnfantasia.server.common.utils.StringUtils;
+import com.cnfantasia.server.ms.pub.constant.FocConstants;
+
+/**
+ * Filename: SimpleHttpClient.java
+ * 
+ * @version: 1.0.0 Create at: 2014年6月5日 上午8:50:18 Description:
+ * 
+ *           Modification History: Date Author Version Description
+ *           ------------------------------------------------------------------
+ *           2014年6月5日 shiyl 1.0 1.0 Version
+ */
+public class SimpleHttpClient extends AbstractHttpClient<JsonRequest, JsonResponse> implements IHttpClient{
+	private Log logger = LogFactory.getLog(getClass());
+	private static final String DEFAULT_CONTENT_TYPE="application/json";
+	private String contentType;
+	@Override
+	public JsonResponse submitSimple(String uri,Map<String,Object> params){
+		JsonRequest jsonRequest = new JsonRequest();
+		Request request = new Request();
+		for(String paramName:params.keySet()){
+			request.addParameter(paramName, params.get(paramName));
+		}
+		request.setTransaction(uri);
+		jsonRequest.setRequest(request);
+		JsonResponse response=null;
+		try {
+			response = this.submit(jsonRequest);
+		} catch (Exception e) {
+			logger.info("The client request:"+uri+",params "+params+",cause exception,msg is :"+e.getMessage(),e);
+			response = new JsonResponse();
+			response.setStatus(FocConstants.ResponseStatus.COMMUNICATE_ERR);
+		}
+		return response;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public byte[] submitPostMethod(String url,HttpMethod method) throws Exception{
+		method.setURI(new URI(getBaseURL()+url));
+		HttpClient client = new HttpClient();
+		client.executeMethod(method);
+		byte[] datas = method.getResponseBody();
+		return datas;
+	}
+	
+	@Override
+	protected void preMethod(JsonRequest args, HttpMethod httpMethod) throws Exception {
+		if (!(httpMethod instanceof PostMethod)) {
+			throw new SystemException("system.error.jsonhttpclient.not.support.method", new Object[] { httpMethod.getClass()
+					.getName() });
+		}
+		super.preMethod(args, httpMethod);
+
+		// syl--del
+		// setRequestEntity(args, httpMethod);
+	}
+
+	/**
+	 * 2014-6-5 16:15:59 syl-add
+	 */
+	@Override
+	protected Map<String, String> getParameters(JsonRequest args) {
+		Map<String, Object> params = args.getRequest().getParams();
+		Map<String, String> resMap = new HashMap<String, String>();
+		for (String key : params.keySet()) {
+			if(StringUtils.isEmpty(params.get(key))){
+				resMap.put(key,null);
+			}else{
+				resMap.put(key, params.get(key).toString());
+			}
+		}
+		return resMap;
+	}
+
+	// syl--del
+	// /**
+	// *
+	// * 功能： <br/>
+	// *
+	// * @author xtwin <br/>
+	// * @version 2013-11-27 下午04:09:02 <br/>
+	// */
+	// protected void setRequestEntity(JsonRequest args, HttpMethod httpMethod)
+	// throws Exception {
+	// // 将数据转换为json体
+	// ((PostMethod) httpMethod).setRequestEntity(new
+	// StringRequestEntity(JSON.toJSONString(args), getContentType(),
+	// httpMethod.getParams().getContentCharset()));
+	// //((PostMethod) httpMethod).setRequestEntity(new
+	// ByteArrayRequestEntity(JSON.toJSONString(args).getBytes()));
+	// }
+
+	@Override
+	protected JsonResponse postMethod(JsonRequest args, HttpMethod httpMethod) throws Exception {
+		int statusCode = httpMethod.getStatusCode();
+		JsonResponse response = null;
+		if (statusCode == HttpStatus.SC_OK) {
+			byte[] datas = httpMethod.getResponseBody();
+			// 读取服务端返回数据
+			response = JSON.parseObject(new String(datas, httpMethod.getParams().getContentCharset()), JsonResponse.class);
+		} else {
+			response = new JsonResponse();
+			response.setStatus(FocConstants.ResponseStatus.COMMUNICATE_ERR);
+			// response.getStatus().setCode("9" + statusCode);
+			// response.getStatus().setMsg("http.request.is.error");
+		}
+		return response;
+	}
+
+	@Override
+	protected String getUrl(JsonRequest args) {
+		return super.getUrl(args) + args.getRequest().getTransaction();
+	}
+
+	public String getContentType() {
+		if (null == contentType) {
+			Map<String, String> headers = getHeaders();
+			if (null != headers) {
+				contentType = headers.get("content-type");
+			}
+			if (null == contentType) {
+				contentType = DEFAULT_CONTENT_TYPE;
+			}
+		}
+		return contentType;
+	}
+
+	/**
+	 */
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+}

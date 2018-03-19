@@ -1,0 +1,107 @@
+/**   
+* Filename:    EbuyProductInfoForRecommend.java   
+* @version:    1.0  
+* Create at:   2014年5月24日 上午6:42:56   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年5月24日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.ebuy.entity;
+
+import java.math.BigInteger;
+import java.util.List;
+
+import com.cnfantasia.server.apibase.ebuyDeliveryMethod.entity.EbuyDeliveryMethod;
+import com.cnfantasia.server.apibase.ebuyProduct.entity.EbuyProduct;
+
+/**
+ * Filename:    EbuyProductInfoForRecommend.java
+ * @version:    1.0.0
+ * Create at:   2014年5月24日 上午6:42:56
+ * Description: 推荐的产品信息
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年5月24日       shiyl             1.0             1.0 Version
+ */
+public class EbuyProductInfoForRecommend extends EbuyProduct{
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 供应商信息
+	 */
+	private EbuySupplyMerchantEntity ebuySupplyMerchantEntity;
+	
+	public EbuySupplyMerchantEntity getEbuySupplyMerchantEntity() {
+		return ebuySupplyMerchantEntity;
+	}
+	public void setEbuySupplyMerchantEntity(EbuySupplyMerchantEntity ebuySupplyMerchantEntity) {
+		this.ebuySupplyMerchantEntity = ebuySupplyMerchantEntity;
+	}
+	@Override
+	public BigInteger gettSupplyMerchantFId() {
+		if(ebuySupplyMerchantEntity==null){return null;}
+		return ebuySupplyMerchantEntity.getId();
+	}
+	@Override
+	public void settSupplyMerchantFId(BigInteger tSupplyMerchantFId) {
+		if(ebuySupplyMerchantEntity==null){
+			ebuySupplyMerchantEntity = new EbuySupplyMerchantEntity();
+		}
+		ebuySupplyMerchantEntity.setId(tSupplyMerchantFId);
+	}
+	
+	/**默认配送信息*/
+	private EbuyDeliveryMethod defaultEbuyDeliveryMethod;
+	public EbuyDeliveryMethod getDefaultEbuyDeliveryMethod() {
+		return defaultEbuyDeliveryMethod;
+	}
+	public void setDefaultEbuyDeliveryMethod(EbuyDeliveryMethod defaultEbuyDeliveryMethod) {
+		this.defaultEbuyDeliveryMethod = defaultEbuyDeliveryMethod;
+	}
+	@Override
+	public BigInteger getDefaultDeliveryId() {
+		if(defaultEbuyDeliveryMethod==null){return null;}
+		return defaultEbuyDeliveryMethod.getId();
+	}
+	@Override
+	public void setDefaultDeliveryId(BigInteger defaultDeliveryId) {
+		if(defaultEbuyDeliveryMethod==null){
+			defaultEbuyDeliveryMethod = new EbuyDeliveryMethod();
+		}
+		defaultEbuyDeliveryMethod.setId(defaultDeliveryId);
+	}
+	
+	/**
+	 * 获取商品默认的配送描述信息
+	 * @return
+	 */
+	public String getDefaultDeliveryName(){
+		if(defaultEbuyDeliveryMethod!=null){
+			return defaultEbuyDeliveryMethod.getName();
+		}else{
+			//从供应商处 获取配送信息
+			List<EbuySupplyMerchantHasTEbuyDeliveryMethodEntity_DeliveryMethod> merchantHasDeliveryMethodList=ebuySupplyMerchantEntity.getMerchantHasDeliveryMethodList();
+			if(merchantHasDeliveryMethodList!=null&&merchantHasDeliveryMethodList.size()>0){
+				return merchantHasDeliveryMethodList.get(0).getEbuyDeliveryMethod().getDesc();
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 认证信息
+	 */
+	private List<EbuyProductHasTEbuyAuthEntity_EbuyAuth> ebuyProductHasTEbuyAuthEntityList;
+	
+	public List<EbuyProductHasTEbuyAuthEntity_EbuyAuth> getEbuyProductHasTEbuyAuthEntityList() {
+		return ebuyProductHasTEbuyAuthEntityList;
+	}
+	public void setEbuyProductHasTEbuyAuthEntityList(
+			List<EbuyProductHasTEbuyAuthEntity_EbuyAuth> ebuyProductHasTEbuyAuthEntityList) {
+		this.ebuyProductHasTEbuyAuthEntityList = ebuyProductHasTEbuyAuthEntityList;
+	}
+}

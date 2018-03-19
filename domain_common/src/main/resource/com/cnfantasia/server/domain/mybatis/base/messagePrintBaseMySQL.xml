@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:消息打印 t_message_print -->
+<mapper namespace="messagePrintBase">
+	<resultMap type="MessagePrint" id="messagePrintBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_message_f_id" javaType="java.math.BigInteger" property="tMessageFId"/>  <!--  -->        <result column="f_page_header" javaType="java.lang.String" property="pageHeader"/>  <!-- 页眉 -->        <result column="f_signature" javaType="java.lang.String" property="signature"/>  <!-- 落款 -->        <result column="f_rq_code" javaType="java.lang.Integer" property="rqCode"/>  <!-- 是否有解放区二维码 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MessagePrint" id="messagePrintExtendMap" extends="messagePrintBaseMap">
+	</resultMap>
+	<resultMap type="MessagePrint" id="messagePrintBaseMap_AppendTable">
+        <id column="MPid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MPtMessageFId" javaType="java.math.BigInteger" property="tMessageFId"/>  <!--  -->        <result column="MPpageHeader" javaType="java.lang.String" property="pageHeader"/>  <!-- 页眉 -->        <result column="MPsignature" javaType="java.lang.String" property="signature"/>  <!-- 落款 -->        <result column="MPrqCode" javaType="java.lang.Integer" property="rqCode"/>  <!-- 是否有解放区二维码 -->        <result column="MPsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="MPsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="MPsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="MPsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="MPsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="MPsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="MPsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MessagePrint" id="messagePrintBaseMap_AppendTable1">
+        <id column="MP1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MP1tMessageFId" javaType="java.math.BigInteger" property="tMessageFId"/>  <!--  -->        <result column="MP1pageHeader" javaType="java.lang.String" property="pageHeader"/>  <!-- 页眉 -->        <result column="MP1signature" javaType="java.lang.String" property="signature"/>  <!-- 落款 -->        <result column="MP1rqCode" javaType="java.lang.Integer" property="rqCode"/>  <!-- 是否有解放区二维码 -->        <result column="MP1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="MP1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="MP1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="MP1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="MP1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="MP1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="MP1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		MP.f_id,MP.t_message_f_id,MP.f_page_header,MP.f_signature,MP.f_rq_code
+	</sql>
+	<sql id="queryHead_AppendTable">
+		MP.f_id as MPid,MP.t_message_f_id as MPtMessageFId,MP.f_page_header as MPpageHeader,MP.f_signature as MPsignature,MP.f_rq_code as MPrqCode
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		MP1.f_id as MP1id,MP1.t_message_f_id as MP1tMessageFId,MP1.f_page_header as MP1pageHeader,MP1.f_signature as MP1signature,MP1.f_rq_code as MP1rqCode
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (MP.f_id = #{id} ) </if>        <if test="tMessageFId != null">  and (MP.t_message_f_id = #{tMessageFId} ) </if>        <if test="pageHeader != null">  and (MP.f_page_header = #{pageHeader} ) </if>        <if test="signature != null">  and (MP.f_signature = #{signature} ) </if>        <if test="rqCode != null">  and (MP.f_rq_code = #{rqCode} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (MP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (MP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (MP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (MP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (MP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (MP.f_id = #{id} ) </if>        <if test="tMessageFId != null and !tMessageFId.equals('')  ">  and (MP.t_message_f_id = #{tMessageFId} ) </if>        <if test="pageHeader != null and !pageHeader.equals('')  ">  and (MP.f_page_header like CONCAT('%',#{pageHeader},'%') ) </if>        <if test="signature != null and !signature.equals('')  ">  and (MP.f_signature like CONCAT('%',#{signature},'%') ) </if>        <if test="rqCode != null and !rqCode.equals('')  ">  and (MP.f_rq_code = #{rqCode} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (MP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (MP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (MP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (MP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (MP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="messagePrintBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="messagePrintBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="messagePrintBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="messagePrintBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_message_print MP    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(消息打印)信息。 -->
+	<sql id="select_messagePrint">
+		SELECT <include refid="messagePrintBase.queryHead"/>
+		<include refid="messagePrintBase.busiQueryCondition"/>
+		<include refid="messagePrintBase.dimCheckSql"/>
+		ORDER BY MP.f_id DESC
+	</sql>
+	<select id="select_messagePrint" parameterType="java.util.Map" resultMap="messagePrintBase.messagePrintExtendMap">
+		<include refid="messagePrintBase.select_messagePrint"/>
+	</select>
+	
+	<!-- 根据条件分页查询(消息打印)信息  -->
+	<sql id="select_messagePrint_withPage">
+		SELECT <include refid="messagePrintBase.queryHead"/>
+		<include refid="messagePrintBase.busiQueryCondition"/>
+		<include refid="messagePrintBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_messagePrint_withPage" resultMap="messagePrintBase.messagePrintExtendMap" parameterType="java.util.Map">
+		<include refid="messagePrintBase.select_messagePrint_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(消息打印)信息。 -->
+	<sql id="select_messagePrint_bySeqId">
+		SELECT <include refid="messagePrintBase.queryHead"/>
+		<include refid="messagePrintBase.busiQueryCondition"/>
+		 and MP.f_id = #{_parameter}
+	</sql>
+	<select id="select_messagePrint_bySeqId" parameterType="java.math.BigInteger" resultMap="messagePrintBase.messagePrintBaseMap">
+		<include refid="messagePrintBase.select_messagePrint_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(消息打印)记录数  -->
+	<sql id="select_messagePrint_count">
+		SELECT COUNT(*)
+		<include refid="messagePrintBase.busiQueryCount"/>
+		<include refid="messagePrintBase.dimCheckSql"/>
+	</sql>
+	<select id="select_messagePrint_count" resultType="java.lang.Integer">
+		<include refid="messagePrintBase.select_messagePrint_count"/>
+	</select>
+	
+	 <!-- 往(消息打印)新增一条记录。 -->
+	 <sql id="insert_messagePrint">
+		INSERT INTO t_message_print 
+		(f_id,t_message_f_id,f_page_header,f_signature,f_rq_code,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tMessageFId},#{pageHeader,jdbcType=VARCHAR},#{signature,jdbcType=VARCHAR},#{rqCode},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_messagePrint" parameterType="MessagePrint">
+		<include refid="messagePrintBase.insert_messagePrint"/>
+    </insert>
+    
+	<!-- 批量新增(消息打印)信息 -->
+    <insert id="insert_messagePrint_Batch" parameterType="java.util.List">
+    	INSERT INTO t_message_print 
+		(f_id,t_message_f_id,f_page_header,f_signature,f_rq_code,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tMessageFId},#{item.pageHeader,jdbcType=VARCHAR},#{item.signature,jdbcType=VARCHAR},#{item.rqCode},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(消息打印)信息。 -->
+    <sql id="update_messagePrint">
+		UPDATE t_message_print		<trim prefix="SET" prefixOverrides=","> 		<if test="tMessageFId != null and !tMessageFId.equals('') "> ,t_message_f_id=#{tMessageFId}</if> 		<if test="pageHeader != null and !pageHeader.equals('') "> ,f_page_header=#{pageHeader}</if> 		<if test="signature != null and !signature.equals('') "> ,f_signature=#{signature}</if> 		<if test="rqCode != null and !rqCode.equals('') "> ,f_rq_code=#{rqCode}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_messagePrint" parameterType="MessagePrint">
+		<include refid="messagePrintBase.update_messagePrint"/>
+    </update>
+    
+    <!-- 批量更新(消息打印)信息。 -->
+    <update id="update_messagePrint_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_message_print		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tMessageFId != null and !item.tMessageFId.equals('')  "> ,t_message_f_id=#{item.tMessageFId}</if> 		<if test="item.pageHeader != null and !item.pageHeader.equals('')  "> ,f_page_header=#{item.pageHeader}</if> 		<if test="item.signature != null and !item.signature.equals('')  "> ,f_signature=#{item.signature}</if> 		<if test="item.rqCode != null and !item.rqCode.equals('')  "> ,f_rq_code=#{item.rqCode}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(消息打印)信息_逻辑删除。 -->
+    <sql id="delete_messagePrint_Logic">
+		UPDATE t_message_print		<trim prefix="SET" prefixOverrides=","> 		<if test="tMessageFId != null and !tMessageFId.equals('')  "> ,t_message_f_id=#{tMessageFId}</if> 		<if test="pageHeader != null and !pageHeader.equals('')  "> ,f_page_header=#{pageHeader}</if> 		<if test="signature != null and !signature.equals('')  "> ,f_signature=#{signature}</if> 		<if test="rqCode != null and !rqCode.equals('')  "> ,f_rq_code=#{rqCode}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_messagePrint_Logic" parameterType="MessagePrint">
+		<include refid="messagePrintBase.delete_messagePrint_Logic"/>
+    </update>
+    
+    <!-- 批量删除(消息打印)信息_逻辑删除 -->
+    <update id="delete_messagePrint_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_message_print		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tMessageFId != null and !item.tMessageFId.equals('')  "> ,t_message_f_id=#{item.tMessageFId}</if> 		<if test="item.pageHeader != null and !item.pageHeader.equals('')  "> ,f_page_header=#{item.pageHeader}</if> 		<if test="item.signature != null and !item.signature.equals('')  "> ,f_signature=#{item.signature}</if> 		<if test="item.rqCode != null and !item.rqCode.equals('')  "> ,f_rq_code=#{item.rqCode}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(消息打印)信息。 -->
+    <sql id="delete_messagePrint">
+		DELETE FROM t_message_print WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_messagePrint" parameterType="java.lang.String">
+		<include refid="messagePrintBase.delete_messagePrint"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(消息打印)信息。 -->
+    <delete id="delete_messagePrint_Batch" parameterType="java.util.List">
+		DELETE FROM t_message_print WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

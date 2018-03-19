@@ -1,0 +1,41 @@
+/**   
+* Filename:    TestCollections.java   
+* @version:    1.0  
+* Create at:   2014年5月23日 上午9:35:32   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年5月23日    shiyl      1.0         1.0 Version   
+*/
+package test.com.cnfantasia.server.api;
+
+import java.math.BigInteger;
+
+import org.junit.Test;
+
+import com.cnfantasia.server.api.user.dao.IUserDao;
+
+/**
+ * Filename:    TestCollections.java
+ * @version:    1.0.0
+ * Create at:   2014年5月23日 上午9:35:32
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年5月23日       shiyl             1.0             1.0 Version
+ */
+public class TestCollections extends BaseTest{
+//	@Test
+	public void getMessageListByCondition(){
+//		IUserService userService = ctx.getBean("userService", IUserService.class);
+//		List<CollectionsEntity> list = userService.getCollectionsList(new BigInteger("34"), 1, new PageModel(0, 3));
+//		System.out.println(JSON.toJSONString(list));
+		IUserDao userDao = ctx.getBean("userDao", IUserDao.class);
+		int res = userDao.selectOnLineDays(new BigInteger("34"), "2011-11-11", "2015-11-11");
+		System.out.println(res);
+	}
+}

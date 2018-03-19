@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:车禁月卡付款列表 t_pay_car_card_list -->
+<mapper namespace="payCarCardListBase">
+	<resultMap type="PayCarCardList" id="payCarCardListBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键 -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 付费详情描述 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="f_pay_price" javaType="java.lang.Long" property="payPrice"/>  <!-- 支付价格 -->        <result column="f_pay_time" javaType="java.math.BigInteger" property="payTime"/>  <!-- 对应月数 -->
+	</resultMap>
+	<resultMap type="PayCarCardList" id="payCarCardListExtendMap" extends="payCarCardListBaseMap">
+	</resultMap>
+	<resultMap type="PayCarCardList" id="payCarCardListBaseMap_AppendTable">
+        <id column="PCCLid" javaType="java.math.BigInteger" property="id"/>  <!-- 主键 -->        <result column="PCCLdesc" javaType="java.lang.String" property="desc"/>  <!-- 付费详情描述 -->        <result column="PCCLsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="PCCLpayPrice" javaType="java.lang.Long" property="payPrice"/>  <!-- 支付价格 -->        <result column="PCCLpayTime" javaType="java.math.BigInteger" property="payTime"/>  <!-- 对应月数 -->
+	</resultMap>
+	<resultMap type="PayCarCardList" id="payCarCardListBaseMap_AppendTable1">
+        <id column="PCCL1id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键 -->        <result column="PCCL1desc" javaType="java.lang.String" property="desc"/>  <!-- 付费详情描述 -->        <result column="PCCL1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="PCCL1payPrice" javaType="java.lang.Long" property="payPrice"/>  <!-- 支付价格 -->        <result column="PCCL1payTime" javaType="java.math.BigInteger" property="payTime"/>  <!-- 对应月数 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PCCL.f_id,PCCL.f_desc,PCCL.f_pay_price,PCCL.f_pay_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PCCL.f_id as PCCLid,PCCL.f_desc as PCCLdesc,PCCL.f_pay_price as PCCLpayPrice,PCCL.f_pay_time as PCCLpayTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PCCL1.f_id as PCCL1id,PCCL1.f_desc as PCCL1desc,PCCL1.f_pay_price as PCCL1payPrice,PCCL1.f_pay_time as PCCL1payTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PCCL.f_id = #{id} ) </if>        <if test="desc != null">  and (PCCL.f_desc = #{desc} ) </if>        <if test="sys0DelState != null">  and (PCCL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (PCCL.f_sys0_del_state = 0 ) </if>        <if test="payPrice != null">  and (PCCL.f_pay_price = #{payPrice} ) </if>        <if test="payTime != null">  and (PCCL.f_pay_time = #{payTime} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PCCL.f_id = #{id} ) </if>        <if test="desc != null and !desc.equals('')  ">  and (PCCL.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PCCL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (PCCL.f_sys0_del_state = 0 ) </if>        <if test="payPrice != null and !payPrice.equals('')  ">  and (PCCL.f_pay_price = #{payPrice} ) </if>        <if test="payTime != null and !payTime.equals('')  ">  and (PCCL.f_pay_time = #{payTime} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="payCarCardListBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="payCarCardListBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="payCarCardListBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="payCarCardListBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_pay_car_card_list PCCL    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(车禁月卡付款列表)信息。 -->
+	<sql id="select_payCarCardList">
+		SELECT <include refid="payCarCardListBase.queryHead"/>
+		<include refid="payCarCardListBase.busiQueryCondition"/>
+		<include refid="payCarCardListBase.dimCheckSql"/>
+		ORDER BY PCCL.f_id DESC
+	</sql>
+	<select id="select_payCarCardList" parameterType="java.util.Map" resultMap="payCarCardListBase.payCarCardListExtendMap">
+		<include refid="payCarCardListBase.select_payCarCardList"/>
+	</select>
+	
+	<!-- 根据条件分页查询(车禁月卡付款列表)信息  -->
+	<sql id="select_payCarCardList_withPage">
+		SELECT <include refid="payCarCardListBase.queryHead"/>
+		<include refid="payCarCardListBase.busiQueryCondition"/>
+		<include refid="payCarCardListBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_payCarCardList_withPage" resultMap="payCarCardListBase.payCarCardListExtendMap" parameterType="java.util.Map">
+		<include refid="payCarCardListBase.select_payCarCardList_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(车禁月卡付款列表)信息。 -->
+	<sql id="select_payCarCardList_bySeqId">
+		SELECT <include refid="payCarCardListBase.queryHead"/>
+		<include refid="payCarCardListBase.busiQueryCondition"/>
+		 and PCCL.f_id = #{_parameter}
+	</sql>
+	<select id="select_payCarCardList_bySeqId" parameterType="java.math.BigInteger" resultMap="payCarCardListBase.payCarCardListBaseMap">
+		<include refid="payCarCardListBase.select_payCarCardList_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(车禁月卡付款列表)记录数  -->
+	<sql id="select_payCarCardList_count">
+		SELECT COUNT(*)
+		<include refid="payCarCardListBase.busiQueryCount"/>
+		<include refid="payCarCardListBase.dimCheckSql"/>
+	</sql>
+	<select id="select_payCarCardList_count" resultType="java.lang.Integer">
+		<include refid="payCarCardListBase.select_payCarCardList_count"/>
+	</select>
+	
+	 <!-- 往(车禁月卡付款列表)新增一条记录。 -->
+	 <sql id="insert_payCarCardList">
+		INSERT INTO t_pay_car_card_list 
+		(f_id,f_desc,f_sys0_del_state,f_pay_price,f_pay_time) VALUES 
+		(#{id},#{desc,jdbcType=VARCHAR},0,#{payPrice},#{payTime})
+	 </sql>
+    <insert id="insert_payCarCardList" parameterType="PayCarCardList">
+		<include refid="payCarCardListBase.insert_payCarCardList"/>
+    </insert>
+    
+	<!-- 批量新增(车禁月卡付款列表)信息 -->
+    <insert id="insert_payCarCardList_Batch" parameterType="java.util.List">
+    	INSERT INTO t_pay_car_card_list 
+		(f_id,f_desc,f_sys0_del_state,f_pay_price,f_pay_time) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.desc,jdbcType=VARCHAR},0,#{item.payPrice},#{item.payTime})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(车禁月卡付款列表)信息。 -->
+    <sql id="update_payCarCardList">
+		UPDATE t_pay_car_card_list		<trim prefix="SET" prefixOverrides=","> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if> 		<if test="payPrice != null and !payPrice.equals('') "> ,f_pay_price=#{payPrice}</if> 		<if test="payTime != null and !payTime.equals('') "> ,f_pay_time=#{payTime}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_payCarCardList" parameterType="PayCarCardList">
+		<include refid="payCarCardListBase.update_payCarCardList"/>
+    </update>
+    
+    <!-- 批量更新(车禁月卡付款列表)信息。 -->
+    <update id="update_payCarCardList_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_car_card_list		<trim prefix="SET" prefixOverrides=","> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if> 		<if test="item.payPrice != null and !item.payPrice.equals('')  "> ,f_pay_price=#{item.payPrice}</if> 		<if test="item.payTime != null and !item.payTime.equals('')  "> ,f_pay_time=#{item.payTime}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(车禁月卡付款列表)信息_逻辑删除。 -->
+    <sql id="delete_payCarCardList_Logic">
+		UPDATE t_pay_car_card_list		<trim prefix="SET" prefixOverrides=","> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="payPrice != null and !payPrice.equals('')  "> ,f_pay_price=#{payPrice}</if> 		<if test="payTime != null and !payTime.equals('')  "> ,f_pay_time=#{payTime}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_payCarCardList_Logic" parameterType="PayCarCardList">
+		<include refid="payCarCardListBase.delete_payCarCardList_Logic"/>
+    </update>
+    
+    <!-- 批量删除(车禁月卡付款列表)信息_逻辑删除 -->
+    <update id="delete_payCarCardList_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_car_card_list		<trim prefix="SET" prefixOverrides=","> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.payPrice != null and !item.payPrice.equals('')  "> ,f_pay_price=#{item.payPrice}</if> 		<if test="item.payTime != null and !item.payTime.equals('')  "> ,f_pay_time=#{item.payTime}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(车禁月卡付款列表)信息。 -->
+    <sql id="delete_payCarCardList">
+		DELETE FROM t_pay_car_card_list WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_payCarCardList" parameterType="java.lang.String">
+		<include refid="payCarCardListBase.delete_payCarCardList"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(车禁月卡付款列表)信息。 -->
+    <delete id="delete_payCarCardList_Batch" parameterType="java.util.List">
+		DELETE FROM t_pay_car_card_list WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

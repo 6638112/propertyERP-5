@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:淘宝预支付日志表 t_ebuy_prepay_alipay_log -->
+<mapper namespace="ebuyPrepayAlipayLogBase">
+	<resultMap type="EbuyPrepayAlipayLog" id="ebuyPrepayAlipayLogBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_order_id" javaType="java.math.BigInteger" property="orderId"/>  <!--  -->        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!--  -->        <result column="f_notify_url" javaType="java.lang.String" property="notifyUrl"/>  <!--  -->        <result column="f_is_express_gateway" javaType="java.lang.Integer" property="isExpressGateway"/>  <!-- 是否为调用银行卡支付 -->        <result column="f_out_trade_no" javaType="java.lang.String" property="outTradeNo"/>  <!-- 商家对外唯一订单号 -->        <result column="f_amount" javaType="java.lang.String" property="amount"/>  <!-- 待支付金额 -->        <result column="f_product_info" javaType="java.lang.String" property="productInfo"/>  <!-- 产品信息 -->        <result column="f_product_detail" javaType="java.lang.String" property="productDetail"/>  <!-- 产品详细息 -->        <result column="f_pay_link_map" javaType="java.lang.String" property="payLinkMap"/>  <!-- 预支付的参数信息 -->        <result column="f_pay_link_str" javaType="java.lang.String" property="payLinkStr"/>  <!-- 预支付的参数信息转String后 -->        <result column="f_error_info" javaType="java.lang.String" property="errorInfo"/>  <!-- 错误信息 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyPrepayAlipayLog" id="ebuyPrepayAlipayLogExtendMap" extends="ebuyPrepayAlipayLogBaseMap">
+	</resultMap>
+	<resultMap type="EbuyPrepayAlipayLog" id="ebuyPrepayAlipayLogBaseMap_AppendTable">
+        <id column="ebuyPrepayAlipayLog_f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ebuyPrepayAlipayLog_f_order_id" javaType="java.math.BigInteger" property="orderId"/>  <!--  -->        <result column="ebuyPrepayAlipayLog_f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!--  -->        <result column="ebuyPrepayAlipayLog_f_notify_url" javaType="java.lang.String" property="notifyUrl"/>  <!--  -->        <result column="ebuyPrepayAlipayLog_f_is_express_gateway" javaType="java.lang.Integer" property="isExpressGateway"/>  <!-- 是否为调用银行卡支付 -->        <result column="ebuyPrepayAlipayLog_f_out_trade_no" javaType="java.lang.String" property="outTradeNo"/>  <!-- 商家对外唯一订单号 -->        <result column="ebuyPrepayAlipayLog_f_amount" javaType="java.lang.String" property="amount"/>  <!-- 待支付金额 -->        <result column="ebuyPrepayAlipayLog_f_product_info" javaType="java.lang.String" property="productInfo"/>  <!-- 产品信息 -->        <result column="ebuyPrepayAlipayLog_f_product_detail" javaType="java.lang.String" property="productDetail"/>  <!-- 产品详细息 -->        <result column="ebuyPrepayAlipayLog_f_pay_link_map" javaType="java.lang.String" property="payLinkMap"/>  <!-- 预支付的参数信息 -->        <result column="ebuyPrepayAlipayLog_f_pay_link_str" javaType="java.lang.String" property="payLinkStr"/>  <!-- 预支付的参数信息转String后 -->        <result column="ebuyPrepayAlipayLog_f_error_info" javaType="java.lang.String" property="errorInfo"/>  <!-- 错误信息 -->        <result column="ebuyPrepayAlipayLog_f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="ebuyPrepayAlipayLog_f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ebuyPrepayAlipayLog_f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ebuyPrepayAlipayLog_f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ebuyPrepayAlipayLog_f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ebuyPrepayAlipayLog_f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ebuyPrepayAlipayLog_f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EPAL.f_id,EPAL.f_order_id,EPAL.f_user_id,EPAL.f_notify_url,EPAL.f_is_express_gateway,EPAL.f_out_trade_no,EPAL.f_amount,EPAL.f_product_info,EPAL.f_product_detail,EPAL.f_pay_link_map,EPAL.f_pay_link_str,EPAL.f_error_info,date_format(EPAL.f_sys0_add_time,'%Y-%m-%d %T') as f_sys0_add_time,date_format(EPAL.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time,date_format(EPAL.f_sys0_del_time,'%Y-%m-%d %T') as f_sys0_del_time,EPAL.f_sys0_add_user,EPAL.f_sys0_upd_user,EPAL.f_sys0_del_user,EPAL.f_sys0_del_state
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EPAL.f_id as ebuyPrepayAlipayLog_f_id,EPAL.f_order_id as ebuyPrepayAlipayLog_f_order_id,EPAL.f_user_id as ebuyPrepayAlipayLog_f_user_id,EPAL.f_notify_url as ebuyPrepayAlipayLog_f_notify_url,EPAL.f_is_express_gateway as ebuyPrepayAlipayLog_f_is_express_gateway,EPAL.f_out_trade_no as ebuyPrepayAlipayLog_f_out_trade_no,EPAL.f_amount as ebuyPrepayAlipayLog_f_amount,EPAL.f_product_info as ebuyPrepayAlipayLog_f_product_info,EPAL.f_product_detail as ebuyPrepayAlipayLog_f_product_detail,EPAL.f_pay_link_map as ebuyPrepayAlipayLog_f_pay_link_map,EPAL.f_pay_link_str as ebuyPrepayAlipayLog_f_pay_link_str,EPAL.f_error_info as ebuyPrepayAlipayLog_f_error_info,date_format(EPAL.f_sys0_add_time,'%Y-%m-%d %T') as ebuyPrepayAlipayLog_f_sys0_add_time,date_format(EPAL.f_sys0_upd_time,'%Y-%m-%d %T') as ebuyPrepayAlipayLog_f_sys0_upd_time,date_format(EPAL.f_sys0_del_time,'%Y-%m-%d %T') as ebuyPrepayAlipayLog_f_sys0_del_time,EPAL.f_sys0_add_user as ebuyPrepayAlipayLog_f_sys0_add_user,EPAL.f_sys0_upd_user as ebuyPrepayAlipayLog_f_sys0_upd_user,EPAL.f_sys0_del_user as ebuyPrepayAlipayLog_f_sys0_del_user,EPAL.f_sys0_del_state as ebuyPrepayAlipayLog_f_sys0_del_state
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EPAL.f_id = #{id} ) </if>        <if test="orderId != null">  and (EPAL.f_order_id = #{orderId} ) </if>        <if test="userId != null">  and (EPAL.f_user_id = #{userId} ) </if>        <if test="notifyUrl != null">  and (EPAL.f_notify_url = #{notifyUrl} ) </if>        <if test="isExpressGateway != null">  and (EPAL.f_is_express_gateway = #{isExpressGateway} ) </if>        <if test="outTradeNo != null">  and (EPAL.f_out_trade_no = #{outTradeNo} ) </if>        <if test="amount != null">  and (EPAL.f_amount = #{amount} ) </if>        <if test="productInfo != null">  and (EPAL.f_product_info = #{productInfo} ) </if>        <if test="productDetail != null">  and (EPAL.f_product_detail = #{productDetail} ) </if>        <if test="payLinkMap != null">  and (EPAL.f_pay_link_map = #{payLinkMap} ) </if>        <if test="payLinkStr != null">  and (EPAL.f_pay_link_str = #{payLinkStr} ) </if>        <if test="errorInfo != null">  and (EPAL.f_error_info = #{errorInfo} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EPAL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EPAL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EPAL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EPAL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EPAL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EPAL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EPAL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EPAL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EPAL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EPAL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EPAL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EPAL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EPAL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EPAL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EPAL.f_id = #{id} ) </if>        <if test="orderId != null and !orderId.equals('')  ">  and (EPAL.f_order_id = #{orderId} ) </if>        <if test="userId != null and !userId.equals('')  ">  and (EPAL.f_user_id = #{userId} ) </if>        <if test="notifyUrl != null and !notifyUrl.equals('')  ">  and (EPAL.f_notify_url like CONCAT('%',#{notifyUrl},'%') ) </if>        <if test="isExpressGateway != null and !isExpressGateway.equals('')  ">  and (EPAL.f_is_express_gateway = #{isExpressGateway} ) </if>        <if test="outTradeNo != null and !outTradeNo.equals('')  ">  and (EPAL.f_out_trade_no like CONCAT('%',#{outTradeNo},'%') ) </if>        <if test="amount != null and !amount.equals('')  ">  and (EPAL.f_amount like CONCAT('%',#{amount},'%') ) </if>        <if test="productInfo != null and !productInfo.equals('')  ">  and (EPAL.f_product_info like CONCAT('%',#{productInfo},'%') ) </if>        <if test="productDetail != null and !productDetail.equals('')  ">  and (EPAL.f_product_detail like CONCAT('%',#{productDetail},'%') ) </if>        <if test="payLinkMap != null and !payLinkMap.equals('')  ">  and (EPAL.f_pay_link_map like CONCAT('%',#{payLinkMap},'%') ) </if>        <if test="payLinkStr != null and !payLinkStr.equals('')  ">  and (EPAL.f_pay_link_str like CONCAT('%',#{payLinkStr},'%') ) </if>        <if test="errorInfo != null and !errorInfo.equals('')  ">  and (EPAL.f_error_info like CONCAT('%',#{errorInfo},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EPAL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EPAL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EPAL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EPAL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EPAL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EPAL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EPAL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EPAL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EPAL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EPAL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EPAL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EPAL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EPAL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EPAL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyPrepayAlipayLogBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyPrepayAlipayLogBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyPrepayAlipayLogBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyPrepayAlipayLogBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_prepay_alipay_log EPAL    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(淘宝预支付日志表)信息。 -->
+	<sql id="select_ebuyPrepayAlipayLog">
+		SELECT <include refid="ebuyPrepayAlipayLogBase.queryHead"/>
+		<include refid="ebuyPrepayAlipayLogBase.busiQueryCondition"/>
+		<include refid="ebuyPrepayAlipayLogBase.dimCheckSql"/>
+		ORDER BY EPAL.f_id DESC
+	</sql>
+	<select id="select_ebuyPrepayAlipayLog" parameterType="java.util.Map" resultMap="ebuyPrepayAlipayLogBase.ebuyPrepayAlipayLogExtendMap">
+		<include refid="ebuyPrepayAlipayLogBase.select_ebuyPrepayAlipayLog"/>
+	</select>
+	
+	<!-- 根据条件分页查询(淘宝预支付日志表)信息  -->
+	<sql id="select_ebuyPrepayAlipayLog_withPage">
+		SELECT <include refid="ebuyPrepayAlipayLogBase.queryHead"/>
+		<include refid="ebuyPrepayAlipayLogBase.busiQueryCondition"/>
+		<include refid="ebuyPrepayAlipayLogBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyPrepayAlipayLog_withPage" resultMap="ebuyPrepayAlipayLogBase.ebuyPrepayAlipayLogExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyPrepayAlipayLogBase.select_ebuyPrepayAlipayLog_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(淘宝预支付日志表)信息。 -->
+	<sql id="select_ebuyPrepayAlipayLog_bySeqId">
+		SELECT <include refid="ebuyPrepayAlipayLogBase.queryHead"/>
+		<include refid="ebuyPrepayAlipayLogBase.busiQueryCondition"/>
+		 and EPAL.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyPrepayAlipayLog_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyPrepayAlipayLogBase.ebuyPrepayAlipayLogBaseMap">
+		<include refid="ebuyPrepayAlipayLogBase.select_ebuyPrepayAlipayLog_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(淘宝预支付日志表)记录数  -->
+	<sql id="select_ebuyPrepayAlipayLog_count">
+		SELECT COUNT(*)
+		<include refid="ebuyPrepayAlipayLogBase.busiQueryCount"/>
+		<include refid="ebuyPrepayAlipayLogBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyPrepayAlipayLog_count" resultType="java.lang.Integer">
+		<include refid="ebuyPrepayAlipayLogBase.select_ebuyPrepayAlipayLog_count"/>
+	</select>
+	
+	 <!-- 往(淘宝预支付日志表)新增一条记录。 -->
+	 <sql id="insert_ebuyPrepayAlipayLog">
+		INSERT INTO t_ebuy_prepay_alipay_log 
+		(f_id,f_order_id,f_user_id,f_notify_url,f_is_express_gateway,f_out_trade_no,f_amount,f_product_info,f_product_detail,f_pay_link_map,f_pay_link_str,f_error_info,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{orderId},#{userId},#{notifyUrl,jdbcType=VARCHAR},#{isExpressGateway},#{outTradeNo,jdbcType=VARCHAR},#{amount,jdbcType=VARCHAR},#{productInfo,jdbcType=VARCHAR},#{productDetail,jdbcType=VARCHAR},#{payLinkMap,jdbcType=VARCHAR},#{payLinkStr,jdbcType=VARCHAR},#{errorInfo,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_ebuyPrepayAlipayLog" parameterType="EbuyPrepayAlipayLog">
+		<include refid="ebuyPrepayAlipayLogBase.insert_ebuyPrepayAlipayLog"/>
+    </insert>
+    
+	<!-- 批量新增(淘宝预支付日志表)信息 -->
+    <insert id="insert_ebuyPrepayAlipayLog_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_prepay_alipay_log 
+		(f_id,f_order_id,f_user_id,f_notify_url,f_is_express_gateway,f_out_trade_no,f_amount,f_product_info,f_product_detail,f_pay_link_map,f_pay_link_str,f_error_info,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.orderId},#{item.userId},#{item.notifyUrl,jdbcType=VARCHAR},#{item.isExpressGateway},#{item.outTradeNo,jdbcType=VARCHAR},#{item.amount,jdbcType=VARCHAR},#{item.productInfo,jdbcType=VARCHAR},#{item.productDetail,jdbcType=VARCHAR},#{item.payLinkMap,jdbcType=VARCHAR},#{item.payLinkStr,jdbcType=VARCHAR},#{item.errorInfo,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(淘宝预支付日志表)信息。 -->
+    <sql id="update_ebuyPrepayAlipayLog">
+		UPDATE t_ebuy_prepay_alipay_log SET f_id=#{id} 		<if test="orderId != null and !orderId.equals('') "> ,f_order_id=#{orderId}</if> 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if> 		<if test="notifyUrl != null and !notifyUrl.equals('') "> ,f_notify_url=#{notifyUrl}</if> 		<if test="isExpressGateway != null and !isExpressGateway.equals('') "> ,f_is_express_gateway=#{isExpressGateway}</if> 		<if test="outTradeNo != null and !outTradeNo.equals('') "> ,f_out_trade_no=#{outTradeNo}</if> 		<if test="amount != null and !amount.equals('') "> ,f_amount=#{amount}</if> 		<if test="productInfo != null and !productInfo.equals('') "> ,f_product_info=#{productInfo}</if> 		<if test="productDetail != null and !productDetail.equals('') "> ,f_product_detail=#{productDetail}</if> 		<if test="payLinkMap != null and !payLinkMap.equals('') "> ,f_pay_link_map=#{payLinkMap}</if> 		<if test="payLinkStr != null and !payLinkStr.equals('') "> ,f_pay_link_str=#{payLinkStr}</if> 		<if test="errorInfo != null and !errorInfo.equals('') "> ,f_error_info=#{errorInfo}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyPrepayAlipayLog" parameterType="EbuyPrepayAlipayLog">
+		<include refid="ebuyPrepayAlipayLogBase.update_ebuyPrepayAlipayLog"/>
+    </update>
+    
+    <!-- 批量更新(淘宝预支付日志表)信息。 -->
+    <update id="update_ebuyPrepayAlipayLog_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_prepay_alipay_log SET f_id=#{item.id} 		<if test="item.orderId != null and !item.orderId.equals('')  "> ,f_order_id=#{item.orderId}</if> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.notifyUrl != null and !item.notifyUrl.equals('')  "> ,f_notify_url=#{item.notifyUrl}</if> 		<if test="item.isExpressGateway != null and !item.isExpressGateway.equals('')  "> ,f_is_express_gateway=#{item.isExpressGateway}</if> 		<if test="item.outTradeNo != null and !item.outTradeNo.equals('')  "> ,f_out_trade_no=#{item.outTradeNo}</if> 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if> 		<if test="item.productInfo != null and !item.productInfo.equals('')  "> ,f_product_info=#{item.productInfo}</if> 		<if test="item.productDetail != null and !item.productDetail.equals('')  "> ,f_product_detail=#{item.productDetail}</if> 		<if test="item.payLinkMap != null and !item.payLinkMap.equals('')  "> ,f_pay_link_map=#{item.payLinkMap}</if> 		<if test="item.payLinkStr != null and !item.payLinkStr.equals('')  "> ,f_pay_link_str=#{item.payLinkStr}</if> 		<if test="item.errorInfo != null and !item.errorInfo.equals('')  "> ,f_error_info=#{item.errorInfo}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(淘宝预支付日志表)信息_逻辑删除。 -->
+    <sql id="delete_ebuyPrepayAlipayLog_Logic">
+		UPDATE t_ebuy_prepay_alipay_log SET f_id=#{id} 		<if test="id != null and !id.equals('')  "> ,f_id=#{id}</if> 		<if test="orderId != null and !orderId.equals('')  "> ,f_order_id=#{orderId}</if> 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if> 		<if test="notifyUrl != null and !notifyUrl.equals('')  "> ,f_notify_url=#{notifyUrl}</if> 		<if test="isExpressGateway != null and !isExpressGateway.equals('')  "> ,f_is_express_gateway=#{isExpressGateway}</if> 		<if test="outTradeNo != null and !outTradeNo.equals('')  "> ,f_out_trade_no=#{outTradeNo}</if> 		<if test="amount != null and !amount.equals('')  "> ,f_amount=#{amount}</if> 		<if test="productInfo != null and !productInfo.equals('')  "> ,f_product_info=#{productInfo}</if> 		<if test="productDetail != null and !productDetail.equals('')  "> ,f_product_detail=#{productDetail}</if> 		<if test="payLinkMap != null and !payLinkMap.equals('')  "> ,f_pay_link_map=#{payLinkMap}</if> 		<if test="payLinkStr != null and !payLinkStr.equals('')  "> ,f_pay_link_str=#{payLinkStr}</if> 		<if test="errorInfo != null and !errorInfo.equals('')  "> ,f_error_info=#{errorInfo}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyPrepayAlipayLog_Logic" parameterType="EbuyPrepayAlipayLog">
+		<include refid="ebuyPrepayAlipayLogBase.delete_ebuyPrepayAlipayLog_Logic"/>
+    </update>
+    
+    <!-- 批量删除(淘宝预支付日志表)信息_逻辑删除 -->
+    <update id="delete_ebuyPrepayAlipayLog_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_prepay_alipay_log SET f_id=#{item.id} 		<if test="item.id != null and !item.id.equals('')  "> ,f_id=#{item.id}</if> 		<if test="item.orderId != null and !item.orderId.equals('')  "> ,f_order_id=#{item.orderId}</if> 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if> 		<if test="item.notifyUrl != null and !item.notifyUrl.equals('')  "> ,f_notify_url=#{item.notifyUrl}</if> 		<if test="item.isExpressGateway != null and !item.isExpressGateway.equals('')  "> ,f_is_express_gateway=#{item.isExpressGateway}</if> 		<if test="item.outTradeNo != null and !item.outTradeNo.equals('')  "> ,f_out_trade_no=#{item.outTradeNo}</if> 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if> 		<if test="item.productInfo != null and !item.productInfo.equals('')  "> ,f_product_info=#{item.productInfo}</if> 		<if test="item.productDetail != null and !item.productDetail.equals('')  "> ,f_product_detail=#{item.productDetail}</if> 		<if test="item.payLinkMap != null and !item.payLinkMap.equals('')  "> ,f_pay_link_map=#{item.payLinkMap}</if> 		<if test="item.payLinkStr != null and !item.payLinkStr.equals('')  "> ,f_pay_link_str=#{item.payLinkStr}</if> 		<if test="item.errorInfo != null and !item.errorInfo.equals('')  "> ,f_error_info=#{item.errorInfo}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(淘宝预支付日志表)信息。 -->
+    <sql id="delete_ebuyPrepayAlipayLog">
+		DELETE FROM t_ebuy_prepay_alipay_log WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyPrepayAlipayLog" parameterType="java.lang.String">
+		<include refid="ebuyPrepayAlipayLogBase.delete_ebuyPrepayAlipayLog"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(淘宝预支付日志表)信息。 -->
+    <delete id="delete_ebuyPrepayAlipayLog_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_prepay_alipay_log WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

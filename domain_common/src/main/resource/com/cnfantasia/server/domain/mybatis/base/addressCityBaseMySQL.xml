@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:市 t_address_city -->
+<mapper namespace="addressCityBase">
+	<resultMap type="AddressCity" id="addressCityBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="t_province_f_id" javaType="java.math.BigInteger" property="tProvinceFId"/>  <!--  -->        <result column="f_alpha" javaType="java.lang.String" property="alpha"/>  <!-- 拼音首字母 -->        <result column="f_country_code" javaType="java.lang.String" property="countryCode"/>  <!-- 国家标准代码 -->        <result column="f_country_code_all" javaType="java.lang.String" property="countryCodeAll"/>  <!-- 国家标准代码,包含后面的0 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AddressCity" id="addressCityExtendMap" extends="addressCityBaseMap">
+	</resultMap>
+	<resultMap type="AddressCity" id="addressCityBaseMap_AppendTable">
+        <id column="ACid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ACname" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="ACtProvinceFId" javaType="java.math.BigInteger" property="tProvinceFId"/>  <!--  -->        <result column="ACalpha" javaType="java.lang.String" property="alpha"/>  <!-- 拼音首字母 -->        <result column="ACcountryCode" javaType="java.lang.String" property="countryCode"/>  <!-- 国家标准代码 -->        <result column="ACcountryCodeAll" javaType="java.lang.String" property="countryCodeAll"/>  <!-- 国家标准代码,包含后面的0 -->        <result column="ACsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="ACsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ACsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ACsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ACsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ACsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ACsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AddressCity" id="addressCityBaseMap_AppendTable1">
+        <id column="AC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="AC1name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="AC1tProvinceFId" javaType="java.math.BigInteger" property="tProvinceFId"/>  <!--  -->        <result column="AC1alpha" javaType="java.lang.String" property="alpha"/>  <!-- 拼音首字母 -->        <result column="AC1countryCode" javaType="java.lang.String" property="countryCode"/>  <!-- 国家标准代码 -->        <result column="AC1countryCodeAll" javaType="java.lang.String" property="countryCodeAll"/>  <!-- 国家标准代码,包含后面的0 -->        <result column="AC1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="AC1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="AC1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="AC1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="AC1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="AC1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="AC1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		AC.f_id,AC.f_name,AC.t_province_f_id,AC.f_alpha,AC.f_country_code,AC.f_country_code_all
+	</sql>
+	<sql id="queryHead_AppendTable">
+		AC.f_id as ACid,AC.f_name as ACname,AC.t_province_f_id as ACtProvinceFId,AC.f_alpha as ACalpha,AC.f_country_code as ACcountryCode,AC.f_country_code_all as ACcountryCodeAll
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		AC1.f_id as AC1id,AC1.f_name as AC1name,AC1.t_province_f_id as AC1tProvinceFId,AC1.f_alpha as AC1alpha,AC1.f_country_code as AC1countryCode,AC1.f_country_code_all as AC1countryCodeAll
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (AC.f_id = #{id} ) </if>        <if test="name != null">  and (AC.f_name = #{name} ) </if>        <if test="tProvinceFId != null">  and (AC.t_province_f_id = #{tProvinceFId} ) </if>        <if test="alpha != null">  and (AC.f_alpha = #{alpha} ) </if>        <if test="countryCode != null">  and (AC.f_country_code = #{countryCode} ) </if>        <if test="countryCodeAll != null">  and (AC.f_country_code_all = #{countryCodeAll} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (AC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (AC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (AC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (AC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (AC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (AC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (AC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (AC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (AC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (AC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (AC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (AC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (AC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (AC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (AC.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (AC.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="tProvinceFId != null and !tProvinceFId.equals('')  ">  and (AC.t_province_f_id = #{tProvinceFId} ) </if>        <if test="alpha != null and !alpha.equals('')  ">  and (AC.f_alpha like CONCAT('%',#{alpha},'%') ) </if>        <if test="countryCode != null and !countryCode.equals('')  ">  and (AC.f_country_code like CONCAT('%',#{countryCode},'%') ) </if>        <if test="countryCodeAll != null and !countryCodeAll.equals('')  ">  and (AC.f_country_code_all like CONCAT('%',#{countryCodeAll},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (AC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (AC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (AC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (AC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (AC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (AC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (AC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (AC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (AC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (AC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (AC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (AC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (AC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (AC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="addressCityBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="addressCityBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="addressCityBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="addressCityBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_address_city AC    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(市)信息。 -->
+	<sql id="select_addressCity">
+		SELECT <include refid="addressCityBase.queryHead"/>
+		<include refid="addressCityBase.busiQueryCondition"/>
+		<include refid="addressCityBase.dimCheckSql"/>
+		ORDER BY AC.f_id DESC
+	</sql>
+	<select id="select_addressCity" parameterType="java.util.Map" resultMap="addressCityBase.addressCityExtendMap">
+		<include refid="addressCityBase.select_addressCity"/>
+	</select>
+	
+	<!-- 根据条件分页查询(市)信息  -->
+	<sql id="select_addressCity_withPage">
+		SELECT <include refid="addressCityBase.queryHead"/>
+		<include refid="addressCityBase.busiQueryCondition"/>
+		<include refid="addressCityBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_addressCity_withPage" resultMap="addressCityBase.addressCityExtendMap" parameterType="java.util.Map">
+		<include refid="addressCityBase.select_addressCity_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(市)信息。 -->
+	<sql id="select_addressCity_bySeqId">
+		SELECT <include refid="addressCityBase.queryHead"/>
+		<include refid="addressCityBase.busiQueryCondition"/>
+		 and AC.f_id = #{_parameter}
+	</sql>
+	<select id="select_addressCity_bySeqId" parameterType="java.math.BigInteger" resultMap="addressCityBase.addressCityBaseMap">
+		<include refid="addressCityBase.select_addressCity_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(市)记录数  -->
+	<sql id="select_addressCity_count">
+		SELECT COUNT(*)
+		<include refid="addressCityBase.busiQueryCount"/>
+		<include refid="addressCityBase.dimCheckSql"/>
+	</sql>
+	<select id="select_addressCity_count" resultType="java.lang.Integer">
+		<include refid="addressCityBase.select_addressCity_count"/>
+	</select>
+	
+	 <!-- 往(市)新增一条记录。 -->
+	 <sql id="insert_addressCity">
+		INSERT INTO t_address_city 
+		(f_id,f_name,t_province_f_id,f_alpha,f_country_code,f_country_code_all,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{tProvinceFId},#{alpha,jdbcType=VARCHAR},#{countryCode,jdbcType=VARCHAR},#{countryCodeAll,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_addressCity" parameterType="AddressCity">
+		<include refid="addressCityBase.insert_addressCity"/>
+    </insert>
+    
+	<!-- 批量新增(市)信息 -->
+    <insert id="insert_addressCity_Batch" parameterType="java.util.List">
+    	INSERT INTO t_address_city 
+		(f_id,f_name,t_province_f_id,f_alpha,f_country_code,f_country_code_all,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.tProvinceFId},#{item.alpha,jdbcType=VARCHAR},#{item.countryCode,jdbcType=VARCHAR},#{item.countryCodeAll,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(市)信息。 -->
+    <sql id="update_addressCity">
+		UPDATE t_address_city		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="tProvinceFId != null and !tProvinceFId.equals('') "> ,t_province_f_id=#{tProvinceFId}</if> 		<if test="alpha != null and !alpha.equals('') "> ,f_alpha=#{alpha}</if> 		<if test="countryCode != null and !countryCode.equals('') "> ,f_country_code=#{countryCode}</if> 		<if test="countryCodeAll != null and !countryCodeAll.equals('') "> ,f_country_code_all=#{countryCodeAll}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_addressCity" parameterType="AddressCity">
+		<include refid="addressCityBase.update_addressCity"/>
+    </update>
+    
+    <!-- 批量更新(市)信息。 -->
+    <update id="update_addressCity_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_address_city		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.tProvinceFId != null and !item.tProvinceFId.equals('')  "> ,t_province_f_id=#{item.tProvinceFId}</if> 		<if test="item.alpha != null and !item.alpha.equals('')  "> ,f_alpha=#{item.alpha}</if> 		<if test="item.countryCode != null and !item.countryCode.equals('')  "> ,f_country_code=#{item.countryCode}</if> 		<if test="item.countryCodeAll != null and !item.countryCodeAll.equals('')  "> ,f_country_code_all=#{item.countryCodeAll}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(市)信息_逻辑删除。 -->
+    <sql id="delete_addressCity_Logic">
+		UPDATE t_address_city		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="tProvinceFId != null and !tProvinceFId.equals('')  "> ,t_province_f_id=#{tProvinceFId}</if> 		<if test="alpha != null and !alpha.equals('')  "> ,f_alpha=#{alpha}</if> 		<if test="countryCode != null and !countryCode.equals('')  "> ,f_country_code=#{countryCode}</if> 		<if test="countryCodeAll != null and !countryCodeAll.equals('')  "> ,f_country_code_all=#{countryCodeAll}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_addressCity_Logic" parameterType="AddressCity">
+		<include refid="addressCityBase.delete_addressCity_Logic"/>
+    </update>
+    
+    <!-- 批量删除(市)信息_逻辑删除 -->
+    <update id="delete_addressCity_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_address_city		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.tProvinceFId != null and !item.tProvinceFId.equals('')  "> ,t_province_f_id=#{item.tProvinceFId}</if> 		<if test="item.alpha != null and !item.alpha.equals('')  "> ,f_alpha=#{item.alpha}</if> 		<if test="item.countryCode != null and !item.countryCode.equals('')  "> ,f_country_code=#{item.countryCode}</if> 		<if test="item.countryCodeAll != null and !item.countryCodeAll.equals('')  "> ,f_country_code_all=#{item.countryCodeAll}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(市)信息。 -->
+    <sql id="delete_addressCity">
+		DELETE FROM t_address_city WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_addressCity" parameterType="java.lang.String">
+		<include refid="addressCityBase.delete_addressCity"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(市)信息。 -->
+    <delete id="delete_addressCity_Batch" parameterType="java.util.List">
+		DELETE FROM t_address_city WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

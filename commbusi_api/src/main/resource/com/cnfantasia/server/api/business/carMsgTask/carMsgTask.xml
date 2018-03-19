@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <bean id="carMsgDao" class="com.cnfantasia.server.api.carMsgTask.dao.CarMsgDao" parent="abstractBaseDao"></bean>
+	
+	<bean id="carMsgService" class="com.cnfantasia.server.api.carMsgTask.service.CarMsgService">
+		<property name="carMsgDao" ref="carMsgDao"/>
+		<property name="uuidManager" ref="uuidManager"/>
+		<property name="messageBaseService" ref="messageBaseService"/>
+		<property name="userHasTMessageBaseService" ref="userHasTMessageBaseService"/>
+		<property name="messageParameterBaseService" ref="messageParameterBaseService"/>
+		<property name="homeMessageService" ref="homeMessageService"/>
+	</bean>
+	
+	<bean id="carSendMsgRunnable" class="com.cnfantasia.server.api.carMsgTask.task.CarSendMsgRunnable">
+		<property name="carMsgService" ref="carMsgService"/>
+	</bean>
+	
+	<bean id="carSendPushRunnable" class="com.cnfantasia.server.api.carMsgTask.task.CarSendPushRunnable">
+		<property name="carMsgService" ref="carMsgService"/>
+	</bean>
+    
+    <bean id="carSendOfflineMsgRunnable" class="com.cnfantasia.server.api.carMsgTask.task.CarSendOfflineMsgRunnable">
+    </bean>
+	
+	<bean id="carMsgTask" class="com.cnfantasia.server.api.carMsgTask.task.CarMsgTask">
+		<property name="carSendMsgRunnable" ref="carSendMsgRunnable"/>
+		<property name="carSendPushRunnable" ref="carSendPushRunnable"/>
+        <property name="carSendOfflineMsgRunnable" ref="carSendOfflineMsgRunnable"/>
+	</bean>
+    
+</beans>  

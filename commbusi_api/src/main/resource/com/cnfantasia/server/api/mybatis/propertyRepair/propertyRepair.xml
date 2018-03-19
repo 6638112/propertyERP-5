@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 物业报修 -->
+<mapper namespace="propertyRepair">
+	
+	<!-- 查询小区下所有的保修类型 -->
+	<select id="select_PropertyRepairType_List_ByGbId" resultMap="propertyRepairTypeBase.propertyRepairTypeBaseMap_AppendTable">
+		select <include refid="propertyRepairTypeBase.queryHead_AppendTable" />
+		FROM t_property_repair_type PRT
+		LEFT JOIN t_property_management PM ON PM.f_id = PRT.t_property_management_f_id AND PM.f_sys0_del_state = 0
+		LEFT JOIN t_group_building GB ON GB.t_property_management_f_id = PM.f_id AND GB.f_sys0_del_state = 0
+    	WHERE 1=1 
+    	AND PRT.f_sys0_del_state = 0
+    	AND GB.f_id = #{gbId}
+	</select>
+	
+	<!-- 查询我的小区是否启用报修服务，若未启用，则返回支持人数，以及本用户是否支持过 -->
+	<select id="select_Is_Repair_Enable" resultType="map">
+		SELECT 
+			GB.f_id AS groupBuildingId
+			,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END 
+				FROM t_common_gather_data CGD WHERE 1=1
+				AND CGD.f_target_type = 111  <!-- 111小区报修支持 -->
+				AND CGD.f_target_id = GB.f_id
+				AND CGD.f_sys0_del_state = 0
+			) AS totalSupportCount <!-- 支持的总人数 -->
+			<!-- ,S2.ext_favour_count AS totalSupportCount  -->
+			,CASE WHEN ISNULL(S.f_id) THEN 0 ELSE 1 END AS isSupport<!--是否已经点支持-->
+			,CASE WHEN ISNULL(GBHTPS.f_id) THEN 0 ELSE 1 END AS isEnable
+		FROM t_user U
+		INNER JOIN t_room R ON R.f_id = U.f_default_room_id AND R.f_sys0_del_state = 0
+		INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id  AND RR.f_sys0_del_state = 0
+		INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+		INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+		LEFT JOIN t_group_building_has_t_property_service GBHTPS ON GBHTPS.t_group_building_f_id = GB.f_id 
+			and GBHTPS.f_status = 1 <!-- 1开户服务，2关闭服务 -->
+			and GBHTPS.f_sys0_del_state = 0
+		LEFT JOIN t_property_service PS ON PS.f_id = GBHTPS.t_property_service_f_id AND PS.f_id = 102 <!-- 102物业报修 -->
+		
+		LEFT JOIN t_support S ON 
+			S.f_target_type = 111  <!-- 111小区报修支持 -->
+			AND S.f_user_id = #{userId}
+			AND GB.f_id = S.f_target_id 
+			AND S.f_sys0_del_state = 0
+		<!-- LEFT JOIN
+				(SELECT f_target_id,COUNT(0) ext_favour_count 
+					FROM t_support S2 
+					WHERE 1=1 
+					AND S2.f_target_type = 111 AND S2.f_sys0_del_state = 0 GROUP BY S2.f_target_id ) S2  
+			ON GB.f_id = S2.f_target_id  -->
+			
+		WHERE 1=1
+		AND U.f_sys0_del_state = 0
+		AND U.f_id = #{userId}		
+	</select>
+	
+	
+	<resultMap type="com.cnfantasia.server.api.propertyRepair.entity.PropertyRepair4List" id="propertyRepair4List" extends="propertyRepairBase.propertyRepairBaseMap_AppendTable">
+		<result column="ext_repairTypeName" property="repairTypeName" javaType="string"/>
+		<result column="ext_processDesc" property="processDesc" javaType="string"/>
+	</resultMap>
+	
+	<!-- 查询我的报修列表-->
+	<sql id="select_my_repair_list_withPage_common" >
+		SELECT PRT.f_name as ext_repairTypeName, 
+			CASE WHEN PR.f_repaire_state = 0 THEN '正在为您安排师傅上门'
+			WHEN PR.f_repaire_state = 1 THEN '已取消'
+			WHEN PR.f_repaire_state = 2 THEN IF(PR.f_estimate_door_time_begin is null, '已为您分配维修师傅', CONCAT('预计师傅上门时间：', PR.f_estimate_door_time_begin))
+			WHEN PR.f_repaire_state = 3 THEN CONCAT('已结束  ', PR.f_finish_desc)
+			END ext_processDesc,
+		<include refid="propertyRepairBase.queryHead_AppendTable"/>
+		FROM t_property_repair PR
+		LEFT JOIN t_property_repair_type PRT ON PR.t_property_repair_type_f_id = PRT.f_id
+		LEFT JOIN t_group_building GB ON  GB.f_id = PR.t_group_building_f_id
+		WHERE PR.f_sys0_del_state = 0
+		AND PR.t_user_f_id = #{userId}
+		AND GB.f_id = #{gbId}
+		<if test="stateType!=null and stateType.equals(0) ">
+			AND (PR.f_repaire_state in (0,1,2) OR (PR.f_repaire_state = 3 and PR.f_is_transed = 0 and PR.t_property_repairer_f_id is null and PR.f_sys0_upd_time > DATE_SUB(now(),INTERVAL #{repairConverDay} DAY)))
+		</if> <!-- 待处理 -->
+		<if test="stateType!=null and stateType.equals(1) ">
+			AND (PR.f_repaire_state = 3 and PR.t_property_repairer_f_id is not null OR PR.f_is_transed = 1 OR
+				(PR.f_repaire_state = 3 and PR.t_property_repairer_f_id is null and PR.f_sys0_upd_time &lt; DATE_SUB(now(),INTERVAL #{repairConverDay} DAY))
+			)
+		</if> <!-- 已结束 -->
+	</sql>
+	
+	<select id="select_my_repair_list_withPage"  parameterType="java.util.Map" resultMap="propertyRepair4List">
+		<include refid="select_my_repair_list_withPage_common" />
+		ORDER BY PR.f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	
+	<select id="select_my_repair_list_count"  parameterType="java.util.Map" resultType="java.lang.Integer" >
+		SELECT COUNT(*) FROM 
+		(<include refid="select_my_repair_list_withPage_common" />) _tmp
+	</select>
+
+	<!-- 报修详情 -->
+	<resultMap type="com.cnfantasia.server.api.propertyRepair.entity.PropertyRepairEntity" id="propertyRepairEntity"
+		extends="propertyRepairBase.propertyRepairBaseMap_AppendTable">
+		<result column="ext_repairTypeName" property="repairTypeName" javaType="string"/>
+		<result column="ext_commentCount" property="commentCount" javaType="int"/>
+		<association property="propertyRepairer" resultMap="propertyRepairerBase.propertyRepairerBaseMap_AppendTable1" />
+		<association property="firstComment" resultMap="commentsBase.commentsBaseMap_AppendTable"/>
+	</resultMap>
+		
+	<select id="select_my_repair_detail"  parameterType="java.math.BigInteger" resultMap="propertyRepairEntity" >
+		SELECT 
+		PRT.f_name as ext_repairTypeName, 
+		<include refid="propertyRepairBase.queryHead_AppendTable"/>,
+		<include refid="propertyRepairerBase.queryHead_AppendTable1"/>
+		FROM t_property_repair PR
+		LEFT JOIN t_property_repair_type PRT ON PR.t_property_repair_type_f_id = PRT.f_id
+		LEFT JOIN t_property_repairer PR1 ON PR1.f_id = PR.t_property_repairer_f_id
+		WHERE PR.f_sys0_del_state = 0
+		AND PR.f_id = #{prId}
+	</select>
+</mapper>

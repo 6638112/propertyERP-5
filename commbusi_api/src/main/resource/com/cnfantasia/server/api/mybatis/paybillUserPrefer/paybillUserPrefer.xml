@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:账单优惠用户关系表 t_paybill_user_prefer -->
+<mapper namespace="paybillUserPrefer">
+
+	<resultMap type="com.cnfantasia.server.api.paybillUserPrefer.entity.PaybillUserPrefer" id="paybillUserPreferBase_Map_Append">
+		 <id column="id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="paybillId" javaType="java.math.BigInteger" property="paybillId"/>  <!-- 账单id -->
+        <result column="userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 用户id -->
+        <result column="prefer" javaType="java.lang.Long" property="prefer"/>  <!-- 优惠金额 -->
+        <result column="preferName" javaType="java.lang.String" property="preferName"/>  <!-- 优惠名称（冗余） -->
+        <result column="isGetPrefer" javaType="java.lang.Integer" property="isGetPrefer"/>  <!-- 是否获取优惠金额（1获取，0未获取） -->
+        <result column="sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+	</resultMap>
+
+	<select id="select_paybillUserPrefer_by_user_bill" parameterType="java.util.Map" resultMap="paybillUserPreferBase_Map_Append">
+		SELECT
+			 pup.f_id AS id,pup.f_paybill_id AS paybillId,pup.f_user_id AS userId,
+			 pup.f_prefer AS prefer,pup.f_prefer_name AS preferName,pup.f_is_get_prefer AS isGetPrefer,
+			 pup.f_sys0_add_time AS sys0AddTime
+		FROM t_paybill_user_prefer pup
+		INNER JOIN t_pay_bill pb ON pb.f_id = pup.f_paybill_id
+		WHERE 1=1
+		AND pup.f_paybill_id = #{payBillId}
+		AND pup.f_user_id = #{userId}/*账单的缴费时间在缴费窗口内的才获取随机立减金额*/
+	</select>
+	
+	<!-- 往(账单优惠用户关系表)新增一条记录。 -->
+	 <sql id="insert_paybillUserPrefer">
+		INSERT INTO t_paybill_user_prefer 
+		(f_id,f_paybill_id,f_user_id,f_prefer,f_prefer_name,f_is_get_prefer,f_sys0_add_time) VALUES 
+		(#{id},#{paybillId},#{userId},#{prefer},#{preferName,jdbcType=VARCHAR},#{isGetPrefer},sysdate())
+	 </sql>
+    <insert id="insert_paybillUserPrefer" parameterType="PaybillUserPrefer">
+		<include refid="insert_paybillUserPrefer"/>
+    </insert>
+	
+	<!-- 更新(账单优惠用户关系表)信息。 -->
+    <sql id="update_paybillUserPrefer">
+		UPDATE t_paybill_user_prefer
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="paybillId != null and !paybillId.equals('') "> ,f_paybill_id=#{paybillId}</if>
+ 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if>
+ 		<if test="prefer != null and !prefer.equals('') "> ,f_prefer=#{prefer}</if>
+ 		<if test="preferName != null and !preferName.equals('') "> ,f_prefer_name=#{preferName}</if>
+ 		<if test="isGetPrefer != null and !isGetPrefer.equals('') "> ,f_is_get_prefer=#{isGetPrefer}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_paybillUserPrefer" parameterType="PaybillUserPrefer">
+		<include refid="update_paybillUserPrefer"/>
+    </update>
+	
+</mapper>

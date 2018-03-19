@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:提款申请记录 t_revenue_apply -->
+<mapper namespace="revenueApplyBase">
+	<resultMap type="RevenueApply" id="revenueApplyBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="f_apply_no" javaType="java.lang.String" property="applyNo"/>  <!-- 提款单号 -->
+        <result column="f_rev_apply_finance_id" javaType="java.math.BigInteger" property="revApplyFinanceId"/>  <!-- 财务提款申请Id -->
+        <result column="f_visible_type" javaType="java.lang.Integer" property="visibleType"/>  <!-- 可见类型 -->
+        <result column="f_mini_role_type" javaType="java.lang.Integer" property="miniRoleType"/>  <!-- 所属最小粒度角色类型 -->
+        <result column="f_mini_role_id" javaType="java.math.BigInteger" property="miniRoleId"/>  <!-- 所属最小粒度角色Id -->
+        <result column="f_goal_type" javaType="java.lang.Integer" property="goalType"/>  <!-- 提款对象类型 -->
+        <result column="f_channel" javaType="java.lang.Integer" property="channel"/>  <!-- 添加记录的渠道，DictConstants.channelSub -->
+        <result column="f_apply_user_id" javaType="java.math.BigInteger" property="applyUserId"/>  <!-- 提款申请人omsUserId -->
+        <result column="f_apply_time" javaType="java.lang.String" property="applyTime"/>  <!-- 提款申请时间 -->
+        <result column="f_goal_start_time" javaType="java.lang.String" property="goalStartTime"/>  <!-- 提款开始时间 -->
+        <result column="f_goal_end_time" javaType="java.lang.String" property="goalEndTime"/>  <!-- 提款结束时间 -->
+        <result column="f_total_amount" javaType="java.lang.Double" property="totalAmount"/>  <!-- 提款总额 -->
+        <result column="f_tk_status" javaType="java.lang.Integer" property="tkStatus"/>  <!-- 提款状态 -->
+        <result column="f_opt_type" javaType="java.lang.Integer" property="optType"/>  <!-- 操作类型 -->
+        <result column="f_tk_succ_time" javaType="java.lang.String" property="tkSuccTime"/>  <!-- 提款成功时间 -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="f_role_name" javaType="java.lang.String" property="roleName"/>  <!-- 对象名称 -->
+        <result column="f_b_phone" javaType="java.lang.String" property="bPhone"/>  <!-- 手机号 -->
+        <result column="f_b_connect_name" javaType="java.lang.String" property="bConnectName"/>  <!-- 联系人姓名 -->
+        <result column="f_b_bank_no" javaType="java.lang.String" property="bBankNo"/>  <!-- 银行卡号 -->
+        <result column="f_b_bank_name" javaType="java.lang.String" property="bBankName"/>  <!-- 开户支行 -->
+        <result column="f_account_name" javaType="java.lang.String" property="accountName"/>  <!-- 开卡支行 -->
+        <result column="f_bank_branch" javaType="java.lang.String" property="bankBranch"/>  <!-- 开卡支行 -->
+        <result column="f_bank_province" javaType="java.lang.String" property="bankProvince"/>  <!-- 支行所在省 -->
+        <result column="f_bank_city" javaType="java.lang.String" property="bankCity"/>  <!-- 支行所在市 -->
+        <result column="f_amount_ptbt" javaType="java.lang.Double" property="amountPtbt"/>  <!-- 平台补贴额 -->
+        <result column="f_amount_usr_real" javaType="java.lang.Double" property="amountUsrReal"/>  <!-- 用户实际实缴 -->
+        <result column="f_eas_bill_numbers" javaType="java.lang.String" property="easBillNumbers"/>  <!-- EAS报销单（付款单）单号 -->
+        <result column="f_audit_time" javaType="java.lang.String" property="auditTime"/>  <!-- 审核时间 -->
+        <result column="f_audit_status" javaType="java.lang.Integer" property="auditStatus"/>  <!-- 审核状态 -->
+        <result column="f_apply_note" javaType="java.lang.String" property="applyNote"/>  <!-- 结算申请备注 -->
+        <result column="f_handler_note" javaType="java.lang.String" property="handlerNote"/>  <!-- 审核说明 -->
+        <result column="t_ebuy_supply_merchant_fk" javaType="java.math.BigInteger" property="tEbuySupplyMerchantFk"/>  <!-- 供应商ID -->
+        <result column="f_revenue_type" javaType="java.lang.Integer" property="revenueType"/>  <!-- 供应商合作模式 -->
+        <result column="f_revenue_rate" javaType="java.lang.Double" property="revenueRate"/>  <!-- 佣金比率 -->
+        <result column="f_eas_payed_amount" javaType="java.lang.Double" property="easPayedAmount"/>  <!-- EAS已付金额 -->
+        <result column="t_gb_id" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->
+        <result column="t_property_management_f_id" javaType="java.math.BigInteger" property="tPropertyManagementFId"/>  <!-- 物业管理处t_property_management表id -->
+	</resultMap>
+	<resultMap type="RevenueApply" id="revenueApplyExtendMap" extends="revenueApplyBaseMap">
+	</resultMap>
+	<resultMap type="RevenueApply" id="revenueApplyBaseMap_AppendTable">
+        <id column="RAid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="RAapplyNo" javaType="java.lang.String" property="applyNo"/>  <!-- 提款单号 -->
+        <result column="RArevApplyFinanceId" javaType="java.math.BigInteger" property="revApplyFinanceId"/>  <!-- 财务提款申请Id -->
+        <result column="RAvisibleType" javaType="java.lang.Integer" property="visibleType"/>  <!-- 可见类型 -->
+        <result column="RAminiRoleType" javaType="java.lang.Integer" property="miniRoleType"/>  <!-- 所属最小粒度角色类型 -->
+        <result column="RAminiRoleId" javaType="java.math.BigInteger" property="miniRoleId"/>  <!-- 所属最小粒度角色Id -->
+        <result column="RAgoalType" javaType="java.lang.Integer" property="goalType"/>  <!-- 提款对象类型 -->
+        <result column="RAchannel" javaType="java.lang.Integer" property="channel"/>  <!-- 添加记录的渠道，DictConstants.channelSub -->
+        <result column="RAapplyUserId" javaType="java.math.BigInteger" property="applyUserId"/>  <!-- 提款申请人omsUserId -->
+        <result column="RAapplyTime" javaType="java.lang.String" property="applyTime"/>  <!-- 提款申请时间 -->
+        <result column="RAgoalStartTime" javaType="java.lang.String" property="goalStartTime"/>  <!-- 提款开始时间 -->
+        <result column="RAgoalEndTime" javaType="java.lang.String" property="goalEndTime"/>  <!-- 提款结束时间 -->
+        <result column="RAtotalAmount" javaType="java.lang.Double" property="totalAmount"/>  <!-- 提款总额 -->
+        <result column="RAtkStatus" javaType="java.lang.Integer" property="tkStatus"/>  <!-- 提款状态 -->
+        <result column="RAoptType" javaType="java.lang.Integer" property="optType"/>  <!-- 操作类型 -->
+        <result column="RAtkSuccTime" javaType="java.lang.String" property="tkSuccTime"/>  <!-- 提款成功时间 -->
+        <result column="RAsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="RAsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="RAsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="RAsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="RAsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="RAsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="RAsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="RAroleName" javaType="java.lang.String" property="roleName"/>  <!-- 对象名称 -->
+        <result column="RAbPhone" javaType="java.lang.String" property="bPhone"/>  <!-- 手机号 -->
+        <result column="RAbConnectName" javaType="java.lang.String" property="bConnectName"/>  <!-- 联系人姓名 -->
+        <result column="RAbBankNo" javaType="java.lang.String" property="bBankNo"/>  <!-- 银行卡号 -->
+        <result column="RAbBankName" javaType="java.lang.String" property="bBankName"/>  <!-- 开户支行 -->
+        <result column="RAaccountName" javaType="java.lang.String" property="accountName"/>  <!-- 开卡支行 -->
+        <result column="RAbankBranch" javaType="java.lang.String" property="bankBranch"/>  <!-- 开卡支行 -->
+        <result column="RAbankProvince" javaType="java.lang.String" property="bankProvince"/>  <!-- 支行所在省 -->
+        <result column="RAbankCity" javaType="java.lang.String" property="bankCity"/>  <!-- 支行所在市 -->
+        <result column="RAamountPtbt" javaType="java.lang.Double" property="amountPtbt"/>  <!-- 平台补贴额 -->
+        <result column="RAamountUsrReal" javaType="java.lang.Double" property="amountUsrReal"/>  <!-- 用户实际实缴 -->
+        <result column="RAeasBillNumbers" javaType="java.lang.String" property="easBillNumbers"/>  <!-- EAS报销单（付款单）单号 -->
+        <result column="RAauditTime" javaType="java.lang.String" property="auditTime"/>  <!-- 审核时间 -->
+        <result column="RAauditStatus" javaType="java.lang.Integer" property="auditStatus"/>  <!-- 审核状态 -->
+        <result column="RAapplyNote" javaType="java.lang.String" property="applyNote"/>  <!-- 结算申请备注 -->
+        <result column="RAhandlerNote" javaType="java.lang.String" property="handlerNote"/>  <!-- 审核说明 -->
+        <result column="RAtEbuySupplyMerchantFk" javaType="java.math.BigInteger" property="tEbuySupplyMerchantFk"/>  <!-- 供应商ID -->
+        <result column="RArevenueType" javaType="java.lang.Integer" property="revenueType"/>  <!-- 供应商合作模式 -->
+        <result column="RArevenueRate" javaType="java.lang.Double" property="revenueRate"/>  <!-- 佣金比率 -->
+        <result column="RAeasPayedAmount" javaType="java.lang.Double" property="easPayedAmount"/>  <!-- EAS已付金额 -->
+        <result column="RAtGbId" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->
+        <result column="RAtPropertyManagementFId" javaType="java.math.BigInteger" property="tPropertyManagementFId"/>  <!-- 物业管理处t_property_management表id -->
+	</resultMap>
+	<resultMap type="RevenueApply" id="revenueApplyBaseMap_AppendTable1">
+        <id column="RA1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="RA1applyNo" javaType="java.lang.String" property="applyNo"/>  <!-- 提款单号 -->
+        <result column="RA1revApplyFinanceId" javaType="java.math.BigInteger" property="revApplyFinanceId"/>  <!-- 财务提款申请Id -->
+        <result column="RA1visibleType" javaType="java.lang.Integer" property="visibleType"/>  <!-- 可见类型 -->
+        <result column="RA1miniRoleType" javaType="java.lang.Integer" property="miniRoleType"/>  <!-- 所属最小粒度角色类型 -->
+        <result column="RA1miniRoleId" javaType="java.math.BigInteger" property="miniRoleId"/>  <!-- 所属最小粒度角色Id -->
+        <result column="RA1goalType" javaType="java.lang.Integer" property="goalType"/>  <!-- 提款对象类型 -->
+        <result column="RA1channel" javaType="java.lang.Integer" property="channel"/>  <!-- 添加记录的渠道，DictConstants.channelSub -->
+        <result column="RA1applyUserId" javaType="java.math.BigInteger" property="applyUserId"/>  <!-- 提款申请人omsUserId -->
+        <result column="RA1applyTime" javaType="java.lang.String" property="applyTime"/>  <!-- 提款申请时间 -->
+        <result column="RA1goalStartTime" javaType="java.lang.String" property="goalStartTime"/>  <!-- 提款开始时间 -->
+        <result column="RA1goalEndTime" javaType="java.lang.String" property="goalEndTime"/>  <!-- 提款结束时间 -->
+        <result column="RA1totalAmount" javaType="java.lang.Double" property="totalAmount"/>  <!-- 提款总额 -->
+        <result column="RA1tkStatus" javaType="java.lang.Integer" property="tkStatus"/>  <!-- 提款状态 -->
+        <result column="RA1optType" javaType="java.lang.Integer" property="optType"/>  <!-- 操作类型 -->
+        <result column="RA1tkSuccTime" javaType="java.lang.String" property="tkSuccTime"/>  <!-- 提款成功时间 -->
+        <result column="RA1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="RA1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="RA1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="RA1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="RA1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="RA1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="RA1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="RA1roleName" javaType="java.lang.String" property="roleName"/>  <!-- 对象名称 -->
+        <result column="RA1bPhone" javaType="java.lang.String" property="bPhone"/>  <!-- 手机号 -->
+        <result column="RA1bConnectName" javaType="java.lang.String" property="bConnectName"/>  <!-- 联系人姓名 -->
+        <result column="RA1bBankNo" javaType="java.lang.String" property="bBankNo"/>  <!-- 银行卡号 -->
+        <result column="RA1bBankName" javaType="java.lang.String" property="bBankName"/>  <!-- 开户支行 -->
+        <result column="RA1accountName" javaType="java.lang.String" property="accountName"/>  <!-- 开卡支行 -->
+        <result column="RA1bankBranch" javaType="java.lang.String" property="bankBranch"/>  <!-- 开卡支行 -->
+        <result column="RA1bankProvince" javaType="java.lang.String" property="bankProvince"/>  <!-- 支行所在省 -->
+        <result column="RA1bankCity" javaType="java.lang.String" property="bankCity"/>  <!-- 支行所在市 -->
+        <result column="RA1amountPtbt" javaType="java.lang.Double" property="amountPtbt"/>  <!-- 平台补贴额 -->
+        <result column="RA1amountUsrReal" javaType="java.lang.Double" property="amountUsrReal"/>  <!-- 用户实际实缴 -->
+        <result column="RA1easBillNumbers" javaType="java.lang.String" property="easBillNumbers"/>  <!-- EAS报销单（付款单）单号 -->
+        <result column="RA1auditTime" javaType="java.lang.String" property="auditTime"/>  <!-- 审核时间 -->
+        <result column="RA1auditStatus" javaType="java.lang.Integer" property="auditStatus"/>  <!-- 审核状态 -->
+        <result column="RA1applyNote" javaType="java.lang.String" property="applyNote"/>  <!-- 结算申请备注 -->
+        <result column="RA1handlerNote" javaType="java.lang.String" property="handlerNote"/>  <!-- 审核说明 -->
+        <result column="RA1tEbuySupplyMerchantFk" javaType="java.math.BigInteger" property="tEbuySupplyMerchantFk"/>  <!-- 供应商ID -->
+        <result column="RA1revenueType" javaType="java.lang.Integer" property="revenueType"/>  <!-- 供应商合作模式 -->
+        <result column="RA1revenueRate" javaType="java.lang.Double" property="revenueRate"/>  <!-- 佣金比率 -->
+        <result column="RA1easPayedAmount" javaType="java.lang.Double" property="easPayedAmount"/>  <!-- EAS已付金额 -->
+        <result column="RA1tGbId" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->
+        <result column="RA1tPropertyManagementFId" javaType="java.math.BigInteger" property="tPropertyManagementFId"/>  <!-- 物业管理处t_property_management表id -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		RA.f_id,RA.f_apply_no,RA.f_rev_apply_finance_id,RA.f_visible_type,RA.f_mini_role_type,RA.f_mini_role_id,RA.f_goal_type,RA.f_channel,RA.f_apply_user_id,date_format(RA.f_apply_time,'%Y-%m-%d %T') as f_apply_time,date_format(RA.f_goal_start_time,'%Y-%m-%d %T') as f_goal_start_time,date_format(RA.f_goal_end_time,'%Y-%m-%d %T') as f_goal_end_time,RA.f_total_amount,RA.f_tk_status,RA.f_opt_type,date_format(RA.f_tk_succ_time,'%Y-%m-%d %T') as f_tk_succ_time,RA.f_role_name,RA.f_b_phone,RA.f_b_connect_name,RA.f_b_bank_no,RA.f_b_bank_name,RA.f_account_name,RA.f_bank_branch,RA.f_bank_province,RA.f_bank_city,RA.f_amount_ptbt,RA.f_amount_usr_real,RA.f_eas_bill_numbers,date_format(RA.f_audit_time,'%Y-%m-%d %T') as f_audit_time,RA.f_audit_status,RA.f_apply_note,RA.f_handler_note,RA.t_ebuy_supply_merchant_fk,RA.f_revenue_type,RA.f_revenue_rate,RA.f_eas_payed_amount,RA.t_gb_id,RA.t_property_management_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		RA.f_id as RAid,RA.f_apply_no as RAapplyNo,RA.f_rev_apply_finance_id as RArevApplyFinanceId,RA.f_visible_type as RAvisibleType,RA.f_mini_role_type as RAminiRoleType,RA.f_mini_role_id as RAminiRoleId,RA.f_goal_type as RAgoalType,RA.f_channel as RAchannel,RA.f_apply_user_id as RAapplyUserId,date_format(RA.f_apply_time,'%Y-%m-%d %T') as RAapplyTime,date_format(RA.f_goal_start_time,'%Y-%m-%d %T') as RAgoalStartTime,date_format(RA.f_goal_end_time,'%Y-%m-%d %T') as RAgoalEndTime,RA.f_total_amount as RAtotalAmount,RA.f_tk_status as RAtkStatus,RA.f_opt_type as RAoptType,date_format(RA.f_tk_succ_time,'%Y-%m-%d %T') as RAtkSuccTime,RA.f_role_name as RAroleName,RA.f_b_phone as RAbPhone,RA.f_b_connect_name as RAbConnectName,RA.f_b_bank_no as RAbBankNo,RA.f_b_bank_name as RAbBankName,RA.f_account_name as RAaccountName,RA.f_bank_branch as RAbankBranch,RA.f_bank_province as RAbankProvince,RA.f_bank_city as RAbankCity,RA.f_amount_ptbt as RAamountPtbt,RA.f_amount_usr_real as RAamountUsrReal,RA.f_eas_bill_numbers as RAeasBillNumbers,date_format(RA.f_audit_time,'%Y-%m-%d %T') as RAauditTime,RA.f_audit_status as RAauditStatus,RA.f_apply_note as RAapplyNote,RA.f_handler_note as RAhandlerNote,RA.t_ebuy_supply_merchant_fk as RAtEbuySupplyMerchantFk,RA.f_revenue_type as RArevenueType,RA.f_revenue_rate as RArevenueRate,RA.f_eas_payed_amount as RAeasPayedAmount,RA.t_gb_id as RAtGbId,RA.t_property_management_f_id as RAtPropertyManagementFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		RA1.f_id as RA1id,RA1.f_apply_no as RA1applyNo,RA1.f_rev_apply_finance_id as RA1revApplyFinanceId,RA1.f_visible_type as RA1visibleType,RA1.f_mini_role_type as RA1miniRoleType,RA1.f_mini_role_id as RA1miniRoleId,RA1.f_goal_type as RA1goalType,RA1.f_channel as RA1channel,RA1.f_apply_user_id as RA1applyUserId,date_format(RA1.f_apply_time,'%Y-%m-%d %T') as RA1applyTime,date_format(RA1.f_goal_start_time,'%Y-%m-%d %T') as RA1goalStartTime,date_format(RA1.f_goal_end_time,'%Y-%m-%d %T') as RA1goalEndTime,RA1.f_total_amount as RA1totalAmount,RA1.f_tk_status as RA1tkStatus,RA1.f_opt_type as RA1optType,date_format(RA1.f_tk_succ_time,'%Y-%m-%d %T') as RA1tkSuccTime,RA1.f_role_name as RA1roleName,RA1.f_b_phone as RA1bPhone,RA1.f_b_connect_name as RA1bConnectName,RA1.f_b_bank_no as RA1bBankNo,RA1.f_b_bank_name as RA1bBankName,RA1.f_account_name as RA1accountName,RA1.f_bank_branch as RA1bankBranch,RA1.f_bank_province as RA1bankProvince,RA1.f_bank_city as RA1bankCity,RA1.f_amount_ptbt as RA1amountPtbt,RA1.f_amount_usr_real as RA1amountUsrReal,RA1.f_eas_bill_numbers as RA1easBillNumbers,date_format(RA1.f_audit_time,'%Y-%m-%d %T') as RA1auditTime,RA1.f_audit_status as RA1auditStatus,RA1.f_apply_note as RA1applyNote,RA1.f_handler_note as RA1handlerNote,RA1.t_ebuy_supply_merchant_fk as RA1tEbuySupplyMerchantFk,RA1.f_revenue_type as RA1revenueType,RA1.f_revenue_rate as RA1revenueRate,RA1.f_eas_payed_amount as RA1easPayedAmount,RA1.t_gb_id as RA1tGbId,RA1.t_property_management_f_id as RA1tPropertyManagementFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (RA.f_id = #{id} ) </if>
+        <if test="applyNo != null">  and (RA.f_apply_no = #{applyNo} ) </if>
+        <if test="revApplyFinanceId != null">  and (RA.f_rev_apply_finance_id = #{revApplyFinanceId} ) </if>
+        <if test="visibleType != null">  and (RA.f_visible_type = #{visibleType} ) </if>
+        <if test="miniRoleType != null">  and (RA.f_mini_role_type = #{miniRoleType} ) </if>
+        <if test="miniRoleId != null">  and (RA.f_mini_role_id = #{miniRoleId} ) </if>
+        <if test="goalType != null">  and (RA.f_goal_type = #{goalType} ) </if>
+        <if test="channel != null">  and (RA.f_channel = #{channel} ) </if>
+        <if test="applyUserId != null">  and (RA.f_apply_user_id = #{applyUserId} ) </if>
+        <if test="applyTime != null and !applyTime.equals('')  ">  and (RA.f_apply_time = str_to_date(#{applyTime},'%Y-%m-%d %T') ) </if>
+        <if test="applyTime_START != null and !applyTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_apply_time >= str_to_date(#{applyTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="applyTime_END != null and !applyTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_apply_time <= str_to_date(#{applyTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="goalStartTime != null and !goalStartTime.equals('')  ">  and (RA.f_goal_start_time = str_to_date(#{goalStartTime},'%Y-%m-%d %T') ) </if>
+        <if test="goalStartTime_START != null and !goalStartTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_goal_start_time >= str_to_date(#{goalStartTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="goalStartTime_END != null and !goalStartTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_goal_start_time <= str_to_date(#{goalStartTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="goalEndTime != null and !goalEndTime.equals('')  ">  and (RA.f_goal_end_time = str_to_date(#{goalEndTime},'%Y-%m-%d %T') ) </if>
+        <if test="goalEndTime_START != null and !goalEndTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_goal_end_time >= str_to_date(#{goalEndTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="goalEndTime_END != null and !goalEndTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_goal_end_time <= str_to_date(#{goalEndTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="totalAmount != null">  and (RA.f_total_amount = #{totalAmount} ) </if>
+        <if test="tkStatus != null">  and (RA.f_tk_status = #{tkStatus} ) </if>
+        <if test="optType != null">  and (RA.f_opt_type = #{optType} ) </if>
+        <if test="tkSuccTime != null and !tkSuccTime.equals('')  ">  and (RA.f_tk_succ_time = str_to_date(#{tkSuccTime},'%Y-%m-%d %T') ) </if>
+        <if test="tkSuccTime_START != null and !tkSuccTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_tk_succ_time >= str_to_date(#{tkSuccTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="tkSuccTime_END != null and !tkSuccTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_tk_succ_time <= str_to_date(#{tkSuccTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (RA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (RA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (RA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (RA.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (RA.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (RA.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (RA.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (RA.f_sys0_del_state = 0 ) </if>
+        <if test="roleName != null">  and (RA.f_role_name = #{roleName} ) </if>
+        <if test="bPhone != null">  and (RA.f_b_phone = #{bPhone} ) </if>
+        <if test="bConnectName != null">  and (RA.f_b_connect_name = #{bConnectName} ) </if>
+        <if test="bBankNo != null">  and (RA.f_b_bank_no = #{bBankNo} ) </if>
+        <if test="bBankName != null">  and (RA.f_b_bank_name = #{bBankName} ) </if>
+        <if test="accountName != null">  and (RA.f_account_name = #{accountName} ) </if>
+        <if test="bankBranch != null">  and (RA.f_bank_branch = #{bankBranch} ) </if>
+        <if test="bankProvince != null">  and (RA.f_bank_province = #{bankProvince} ) </if>
+        <if test="bankCity != null">  and (RA.f_bank_city = #{bankCity} ) </if>
+        <if test="amountPtbt != null">  and (RA.f_amount_ptbt = #{amountPtbt} ) </if>
+        <if test="amountUsrReal != null">  and (RA.f_amount_usr_real = #{amountUsrReal} ) </if>
+        <if test="easBillNumbers != null">  and (RA.f_eas_bill_numbers = #{easBillNumbers} ) </if>
+        <if test="auditTime != null and !auditTime.equals('')  ">  and (RA.f_audit_time = str_to_date(#{auditTime},'%Y-%m-%d %T') ) </if>
+        <if test="auditTime_START != null and !auditTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_audit_time >= str_to_date(#{auditTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="auditTime_END != null and !auditTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_audit_time <= str_to_date(#{auditTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="auditStatus != null">  and (RA.f_audit_status = #{auditStatus} ) </if>
+        <if test="applyNote != null">  and (RA.f_apply_note = #{applyNote} ) </if>
+        <if test="handlerNote != null">  and (RA.f_handler_note = #{handlerNote} ) </if>
+        <if test="tEbuySupplyMerchantFk != null">  and (RA.t_ebuy_supply_merchant_fk = #{tEbuySupplyMerchantFk} ) </if>
+        <if test="revenueType != null">  and (RA.f_revenue_type = #{revenueType} ) </if>
+        <if test="revenueRate != null">  and (RA.f_revenue_rate = #{revenueRate} ) </if>
+        <if test="easPayedAmount != null">  and (RA.f_eas_payed_amount = #{easPayedAmount} ) </if>
+        <if test="tGbId != null">  and (RA.t_gb_id = #{tGbId} ) </if>
+        <if test="tPropertyManagementFId != null">  and (RA.t_property_management_f_id = #{tPropertyManagementFId} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (RA.f_id = #{id} ) </if>
+        <if test="applyNo != null and !applyNo.equals('')  ">  and (RA.f_apply_no like CONCAT('%',#{applyNo},'%') ) </if>
+        <if test="revApplyFinanceId != null and !revApplyFinanceId.equals('')  ">  and (RA.f_rev_apply_finance_id = #{revApplyFinanceId} ) </if>
+        <if test="visibleType != null and !visibleType.equals('')  ">  and (RA.f_visible_type = #{visibleType} ) </if>
+        <if test="miniRoleType != null and !miniRoleType.equals('')  ">  and (RA.f_mini_role_type = #{miniRoleType} ) </if>
+        <if test="miniRoleId != null and !miniRoleId.equals('')  ">  and (RA.f_mini_role_id = #{miniRoleId} ) </if>
+        <if test="goalType != null and !goalType.equals('')  ">  and (RA.f_goal_type = #{goalType} ) </if>
+        <if test="channel != null and !channel.equals('')  ">  and (RA.f_channel = #{channel} ) </if>
+        <if test="applyUserId != null and !applyUserId.equals('')  ">  and (RA.f_apply_user_id = #{applyUserId} ) </if>
+        <if test="applyTime != null and !applyTime.equals('')  ">  and (RA.f_apply_time = str_to_date(#{applyTime},'%Y-%m-%d %T') ) </if>
+        <if test="applyTime_START != null and !applyTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_apply_time >= str_to_date(#{applyTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="applyTime_END != null and !applyTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_apply_time <= str_to_date(#{applyTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="goalStartTime != null and !goalStartTime.equals('')  ">  and (RA.f_goal_start_time = str_to_date(#{goalStartTime},'%Y-%m-%d %T') ) </if>
+        <if test="goalStartTime_START != null and !goalStartTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_goal_start_time >= str_to_date(#{goalStartTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="goalStartTime_END != null and !goalStartTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_goal_start_time <= str_to_date(#{goalStartTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="goalEndTime != null and !goalEndTime.equals('')  ">  and (RA.f_goal_end_time = str_to_date(#{goalEndTime},'%Y-%m-%d %T') ) </if>
+        <if test="goalEndTime_START != null and !goalEndTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_goal_end_time >= str_to_date(#{goalEndTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="goalEndTime_END != null and !goalEndTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_goal_end_time <= str_to_date(#{goalEndTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="totalAmount != null and !totalAmount.equals('')  ">  and (RA.f_total_amount = #{totalAmount} ) </if>
+        <if test="tkStatus != null and !tkStatus.equals('')  ">  and (RA.f_tk_status = #{tkStatus} ) </if>
+        <if test="optType != null and !optType.equals('')  ">  and (RA.f_opt_type = #{optType} ) </if>
+        <if test="tkSuccTime != null and !tkSuccTime.equals('')  ">  and (RA.f_tk_succ_time = str_to_date(#{tkSuccTime},'%Y-%m-%d %T') ) </if>
+        <if test="tkSuccTime_START != null and !tkSuccTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_tk_succ_time >= str_to_date(#{tkSuccTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="tkSuccTime_END != null and !tkSuccTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_tk_succ_time <= str_to_date(#{tkSuccTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (RA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (RA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (RA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (RA.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (RA.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (RA.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (RA.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (RA.f_sys0_del_state = 0 ) </if>
+        <if test="roleName != null and !roleName.equals('')  ">  and (RA.f_role_name like CONCAT('%',#{roleName},'%') ) </if>
+        <if test="bPhone != null and !bPhone.equals('')  ">  and (RA.f_b_phone like CONCAT('%',#{bPhone},'%') ) </if>
+        <if test="bConnectName != null and !bConnectName.equals('')  ">  and (RA.f_b_connect_name like CONCAT('%',#{bConnectName},'%') ) </if>
+        <if test="bBankNo != null and !bBankNo.equals('')  ">  and (RA.f_b_bank_no like CONCAT('%',#{bBankNo},'%') ) </if>
+        <if test="bBankName != null and !bBankName.equals('')  ">  and (RA.f_b_bank_name like CONCAT('%',#{bBankName},'%') ) </if>
+        <if test="accountName != null and !accountName.equals('')  ">  and (RA.f_account_name like CONCAT('%',#{accountName},'%') ) </if>
+        <if test="bankBranch != null and !bankBranch.equals('')  ">  and (RA.f_bank_branch like CONCAT('%',#{bankBranch},'%') ) </if>
+        <if test="bankProvince != null and !bankProvince.equals('')  ">  and (RA.f_bank_province like CONCAT('%',#{bankProvince},'%') ) </if>
+        <if test="bankCity != null and !bankCity.equals('')  ">  and (RA.f_bank_city like CONCAT('%',#{bankCity},'%') ) </if>
+        <if test="amountPtbt != null and !amountPtbt.equals('')  ">  and (RA.f_amount_ptbt = #{amountPtbt} ) </if>
+        <if test="amountUsrReal != null and !amountUsrReal.equals('')  ">  and (RA.f_amount_usr_real = #{amountUsrReal} ) </if>
+        <if test="easBillNumbers != null and !easBillNumbers.equals('')  ">  and (RA.f_eas_bill_numbers like CONCAT('%',#{easBillNumbers},'%') ) </if>
+        <if test="auditTime != null and !auditTime.equals('')  ">  and (RA.f_audit_time = str_to_date(#{auditTime},'%Y-%m-%d %T') ) </if>
+        <if test="auditTime_START != null and !auditTime_START.equals('')  ">  
+            <![CDATA[ and (RA.f_audit_time >= str_to_date(#{auditTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="auditTime_END != null and !auditTime_END.equals('')  ">
+            <![CDATA[ and (RA.f_audit_time <= str_to_date(#{auditTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="auditStatus != null and !auditStatus.equals('')  ">  and (RA.f_audit_status = #{auditStatus} ) </if>
+        <if test="applyNote != null and !applyNote.equals('')  ">  and (RA.f_apply_note like CONCAT('%',#{applyNote},'%') ) </if>
+        <if test="handlerNote != null and !handlerNote.equals('')  ">  and (RA.f_handler_note like CONCAT('%',#{handlerNote},'%') ) </if>
+        <if test="tEbuySupplyMerchantFk != null and !tEbuySupplyMerchantFk.equals('')  ">  and (RA.t_ebuy_supply_merchant_fk = #{tEbuySupplyMerchantFk} ) </if>
+        <if test="revenueType != null and !revenueType.equals('')  ">  and (RA.f_revenue_type = #{revenueType} ) </if>
+        <if test="revenueRate != null and !revenueRate.equals('')  ">  and (RA.f_revenue_rate = #{revenueRate} ) </if>
+        <if test="easPayedAmount != null and !easPayedAmount.equals('')  ">  and (RA.f_eas_payed_amount = #{easPayedAmount} ) </if>
+        <if test="tGbId != null and !tGbId.equals('')  ">  and (RA.t_gb_id = #{tGbId} ) </if>
+        <if test="tPropertyManagementFId != null and !tPropertyManagementFId.equals('')  ">  and (RA.t_property_management_f_id = #{tPropertyManagementFId} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="revenueApplyBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="revenueApplyBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="revenueApplyBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="revenueApplyBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_revenue_apply RA
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(提款申请记录)信息。 -->
+	<sql id="select_revenueApply">
+		SELECT <include refid="revenueApplyBase.queryHead"/>
+		<include refid="revenueApplyBase.busiQueryCondition"/>
+		<include refid="revenueApplyBase.dimCheckSql"/>
+		ORDER BY RA.f_id DESC
+	</sql>
+	<select id="select_revenueApply" parameterType="java.util.Map" resultMap="revenueApplyBase.revenueApplyExtendMap">
+		<include refid="revenueApplyBase.select_revenueApply"/>
+	</select>
+	
+	<!-- 根据条件分页查询(提款申请记录)信息  -->
+	<sql id="select_revenueApply_withPage">
+		SELECT <include refid="revenueApplyBase.queryHead"/>
+		<include refid="revenueApplyBase.busiQueryCondition"/>
+		<include refid="revenueApplyBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_revenueApply_withPage" resultMap="revenueApplyBase.revenueApplyExtendMap" parameterType="java.util.Map">
+		<include refid="revenueApplyBase.select_revenueApply_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(提款申请记录)信息。 -->
+	<sql id="select_revenueApply_bySeqId">
+		SELECT <include refid="revenueApplyBase.queryHead"/>
+		<include refid="revenueApplyBase.busiQueryCondition"/>
+		 and RA.f_id = #{_parameter}
+	</sql>
+	<select id="select_revenueApply_bySeqId" parameterType="java.math.BigInteger" resultMap="revenueApplyBase.revenueApplyBaseMap">
+		<include refid="revenueApplyBase.select_revenueApply_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(提款申请记录)记录数  -->
+	<sql id="select_revenueApply_count">
+		SELECT COUNT(*)
+		<include refid="revenueApplyBase.busiQueryCount"/>
+		<include refid="revenueApplyBase.dimCheckSql"/>
+	</sql>
+	<select id="select_revenueApply_count" resultType="java.lang.Integer">
+		<include refid="revenueApplyBase.select_revenueApply_count"/>
+	</select>
+	
+	 <!-- 往(提款申请记录)新增一条记录。 -->
+	 <sql id="insert_revenueApply">
+		INSERT INTO t_revenue_apply 
+		(f_id,f_apply_no,f_rev_apply_finance_id,f_visible_type,f_mini_role_type,f_mini_role_id,f_goal_type,f_channel,f_apply_user_id,f_apply_time,f_goal_start_time,f_goal_end_time,f_total_amount,f_tk_status,f_opt_type,f_tk_succ_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_role_name,f_b_phone,f_b_connect_name,f_b_bank_no,f_b_bank_name,f_account_name,f_bank_branch,f_bank_province,f_bank_city,f_amount_ptbt,f_amount_usr_real,f_eas_bill_numbers,f_audit_time,f_audit_status,f_apply_note,f_handler_note,t_ebuy_supply_merchant_fk,f_revenue_type,f_revenue_rate,f_eas_payed_amount,t_gb_id,t_property_management_f_id) VALUES 
+		(#{id},#{applyNo,jdbcType=VARCHAR},#{revApplyFinanceId},#{visibleType},#{miniRoleType},#{miniRoleId},#{goalType},#{channel},#{applyUserId},str_to_date(#{applyTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{goalStartTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{goalEndTime,jdbcType=DATE},'%Y-%m-%d %T'),#{totalAmount},#{tkStatus},#{optType},str_to_date(#{tkSuccTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0,#{roleName,jdbcType=VARCHAR},#{bPhone,jdbcType=VARCHAR},#{bConnectName,jdbcType=VARCHAR},#{bBankNo,jdbcType=VARCHAR},#{bBankName,jdbcType=VARCHAR},#{accountName,jdbcType=VARCHAR},#{bankBranch,jdbcType=VARCHAR},#{bankProvince,jdbcType=VARCHAR},#{bankCity,jdbcType=VARCHAR},#{amountPtbt},#{amountUsrReal},#{easBillNumbers,jdbcType=VARCHAR},str_to_date(#{auditTime,jdbcType=DATE},'%Y-%m-%d %T'),#{auditStatus},#{applyNote,jdbcType=VARCHAR},#{handlerNote,jdbcType=VARCHAR},#{tEbuySupplyMerchantFk},#{revenueType},#{revenueRate},#{easPayedAmount},#{tGbId},#{tPropertyManagementFId})
+	 </sql>
+    <insert id="insert_revenueApply" parameterType="RevenueApply">
+		<include refid="revenueApplyBase.insert_revenueApply"/>
+    </insert>
+    
+	<!-- 批量新增(提款申请记录)信息 -->
+    <insert id="insert_revenueApply_Batch" parameterType="java.util.List">
+    	INSERT INTO t_revenue_apply 
+		(f_id,f_apply_no,f_rev_apply_finance_id,f_visible_type,f_mini_role_type,f_mini_role_id,f_goal_type,f_channel,f_apply_user_id,f_apply_time,f_goal_start_time,f_goal_end_time,f_total_amount,f_tk_status,f_opt_type,f_tk_succ_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_role_name,f_b_phone,f_b_connect_name,f_b_bank_no,f_b_bank_name,f_account_name,f_bank_branch,f_bank_province,f_bank_city,f_amount_ptbt,f_amount_usr_real,f_eas_bill_numbers,f_audit_time,f_audit_status,f_apply_note,f_handler_note,t_ebuy_supply_merchant_fk,f_revenue_type,f_revenue_rate,f_eas_payed_amount,t_gb_id,t_property_management_f_id) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.applyNo,jdbcType=VARCHAR},#{item.revApplyFinanceId},#{item.visibleType},#{item.miniRoleType},#{item.miniRoleId},#{item.goalType},#{item.channel},#{item.applyUserId},str_to_date(#{item.applyTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.goalStartTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.goalEndTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.totalAmount},#{item.tkStatus},#{item.optType},str_to_date(#{item.tkSuccTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0,#{item.roleName,jdbcType=VARCHAR},#{item.bPhone,jdbcType=VARCHAR},#{item.bConnectName,jdbcType=VARCHAR},#{item.bBankNo,jdbcType=VARCHAR},#{item.bBankName,jdbcType=VARCHAR},#{item.accountName,jdbcType=VARCHAR},#{item.bankBranch,jdbcType=VARCHAR},#{item.bankProvince,jdbcType=VARCHAR},#{item.bankCity,jdbcType=VARCHAR},#{item.amountPtbt},#{item.amountUsrReal},#{item.easBillNumbers,jdbcType=VARCHAR},str_to_date(#{item.auditTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.auditStatus},#{item.applyNote,jdbcType=VARCHAR},#{item.handlerNote,jdbcType=VARCHAR},#{item.tEbuySupplyMerchantFk},#{item.revenueType},#{item.revenueRate},#{item.easPayedAmount},#{item.tGbId},#{item.tPropertyManagementFId})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(提款申请记录)信息。 -->
+    <sql id="update_revenueApply">
+		UPDATE t_revenue_apply
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="applyNo != null and !applyNo.equals('') "> ,f_apply_no=#{applyNo}</if>
+ 		<if test="revApplyFinanceId != null and !revApplyFinanceId.equals('') "> ,f_rev_apply_finance_id=#{revApplyFinanceId}</if>
+ 		<if test="visibleType != null and !visibleType.equals('') "> ,f_visible_type=#{visibleType}</if>
+ 		<if test="miniRoleType != null and !miniRoleType.equals('') "> ,f_mini_role_type=#{miniRoleType}</if>
+ 		<if test="miniRoleId != null and !miniRoleId.equals('') "> ,f_mini_role_id=#{miniRoleId}</if>
+ 		<if test="goalType != null and !goalType.equals('') "> ,f_goal_type=#{goalType}</if>
+ 		<if test="channel != null and !channel.equals('') "> ,f_channel=#{channel}</if>
+ 		<if test="applyUserId != null and !applyUserId.equals('') "> ,f_apply_user_id=#{applyUserId}</if>
+ 		<if test="applyTime != null and !applyTime.equals('') "> ,f_apply_time=str_to_date(#{applyTime},'%Y-%m-%d %T')</if>
+ 		<if test="goalStartTime != null and !goalStartTime.equals('') "> ,f_goal_start_time=str_to_date(#{goalStartTime},'%Y-%m-%d %T')</if>
+ 		<if test="goalEndTime != null and !goalEndTime.equals('') "> ,f_goal_end_time=str_to_date(#{goalEndTime},'%Y-%m-%d %T')</if>
+ 		<if test="totalAmount != null and !totalAmount.equals('') "> ,f_total_amount=#{totalAmount}</if>
+ 		<if test="tkStatus != null and !tkStatus.equals('') "> ,f_tk_status=#{tkStatus}</if>
+ 		<if test="optType != null and !optType.equals('') "> ,f_opt_type=#{optType}</if>
+ 		<if test="tkSuccTime != null and !tkSuccTime.equals('') "> ,f_tk_succ_time=str_to_date(#{tkSuccTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+ 		<if test="roleName != null and !roleName.equals('') "> ,f_role_name=#{roleName}</if>
+ 		<if test="bPhone != null and !bPhone.equals('') "> ,f_b_phone=#{bPhone}</if>
+ 		<if test="bConnectName != null and !bConnectName.equals('') "> ,f_b_connect_name=#{bConnectName}</if>
+ 		<if test="bBankNo != null and !bBankNo.equals('') "> ,f_b_bank_no=#{bBankNo}</if>
+ 		<if test="bBankName != null and !bBankName.equals('') "> ,f_b_bank_name=#{bBankName}</if>
+ 		<if test="accountName != null and !accountName.equals('') "> ,f_account_name=#{accountName}</if>
+ 		<if test="bankBranch != null and !bankBranch.equals('') "> ,f_bank_branch=#{bankBranch}</if>
+ 		<if test="bankProvince != null and !bankProvince.equals('') "> ,f_bank_province=#{bankProvince}</if>
+ 		<if test="bankCity != null and !bankCity.equals('') "> ,f_bank_city=#{bankCity}</if>
+ 		<if test="amountPtbt != null and !amountPtbt.equals('') "> ,f_amount_ptbt=#{amountPtbt}</if>
+ 		<if test="amountUsrReal != null and !amountUsrReal.equals('') "> ,f_amount_usr_real=#{amountUsrReal}</if>
+ 		<if test="easBillNumbers != null and !easBillNumbers.equals('') "> ,f_eas_bill_numbers=#{easBillNumbers}</if>
+ 		<if test="auditTime != null and !auditTime.equals('') "> ,f_audit_time=str_to_date(#{auditTime},'%Y-%m-%d %T')</if>
+ 		<if test="auditStatus != null and !auditStatus.equals('') "> ,f_audit_status=#{auditStatus}</if>
+ 		<if test="applyNote != null and !applyNote.equals('') "> ,f_apply_note=#{applyNote}</if>
+ 		<if test="handlerNote != null and !handlerNote.equals('') "> ,f_handler_note=#{handlerNote}</if>
+ 		<if test="tEbuySupplyMerchantFk != null and !tEbuySupplyMerchantFk.equals('') "> ,t_ebuy_supply_merchant_fk=#{tEbuySupplyMerchantFk}</if>
+ 		<if test="revenueType != null and !revenueType.equals('') "> ,f_revenue_type=#{revenueType}</if>
+ 		<if test="revenueRate != null and !revenueRate.equals('') "> ,f_revenue_rate=#{revenueRate}</if>
+ 		<if test="easPayedAmount != null and !easPayedAmount.equals('') "> ,f_eas_payed_amount=#{easPayedAmount}</if>
+ 		<if test="tGbId != null and !tGbId.equals('') "> ,t_gb_id=#{tGbId}</if>
+ 		<if test="tPropertyManagementFId != null and !tPropertyManagementFId.equals('') "> ,t_property_management_f_id=#{tPropertyManagementFId}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_revenueApply" parameterType="RevenueApply">
+		<include refid="revenueApplyBase.update_revenueApply"/>
+    </update>
+    
+    <!-- 批量更新(提款申请记录)信息。 -->
+    <update id="update_revenueApply_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_revenue_apply
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.applyNo != null and !item.applyNo.equals('')  "> ,f_apply_no=#{item.applyNo}</if>
+ 		<if test="item.revApplyFinanceId != null and !item.revApplyFinanceId.equals('')  "> ,f_rev_apply_finance_id=#{item.revApplyFinanceId}</if>
+ 		<if test="item.visibleType != null and !item.visibleType.equals('')  "> ,f_visible_type=#{item.visibleType}</if>
+ 		<if test="item.miniRoleType != null and !item.miniRoleType.equals('')  "> ,f_mini_role_type=#{item.miniRoleType}</if>
+ 		<if test="item.miniRoleId != null and !item.miniRoleId.equals('')  "> ,f_mini_role_id=#{item.miniRoleId}</if>
+ 		<if test="item.goalType != null and !item.goalType.equals('')  "> ,f_goal_type=#{item.goalType}</if>
+ 		<if test="item.channel != null and !item.channel.equals('')  "> ,f_channel=#{item.channel}</if>
+ 		<if test="item.applyUserId != null and !item.applyUserId.equals('')  "> ,f_apply_user_id=#{item.applyUserId}</if>
+ 		<if test="item.applyTime != null and !item.applyTime.equals('')  "> ,f_apply_time=str_to_date(#{item.applyTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.goalStartTime != null and !item.goalStartTime.equals('')  "> ,f_goal_start_time=str_to_date(#{item.goalStartTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.goalEndTime != null and !item.goalEndTime.equals('')  "> ,f_goal_end_time=str_to_date(#{item.goalEndTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.totalAmount != null and !item.totalAmount.equals('')  "> ,f_total_amount=#{item.totalAmount}</if>
+ 		<if test="item.tkStatus != null and !item.tkStatus.equals('')  "> ,f_tk_status=#{item.tkStatus}</if>
+ 		<if test="item.optType != null and !item.optType.equals('')  "> ,f_opt_type=#{item.optType}</if>
+ 		<if test="item.tkSuccTime != null and !item.tkSuccTime.equals('')  "> ,f_tk_succ_time=str_to_date(#{item.tkSuccTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+ 		<if test="item.roleName != null and !item.roleName.equals('')  "> ,f_role_name=#{item.roleName}</if>
+ 		<if test="item.bPhone != null and !item.bPhone.equals('')  "> ,f_b_phone=#{item.bPhone}</if>
+ 		<if test="item.bConnectName != null and !item.bConnectName.equals('')  "> ,f_b_connect_name=#{item.bConnectName}</if>
+ 		<if test="item.bBankNo != null and !item.bBankNo.equals('')  "> ,f_b_bank_no=#{item.bBankNo}</if>
+ 		<if test="item.bBankName != null and !item.bBankName.equals('')  "> ,f_b_bank_name=#{item.bBankName}</if>
+ 		<if test="item.accountName != null and !item.accountName.equals('')  "> ,f_account_name=#{item.accountName}</if>
+ 		<if test="item.bankBranch != null and !item.bankBranch.equals('')  "> ,f_bank_branch=#{item.bankBranch}</if>
+ 		<if test="item.bankProvince != null and !item.bankProvince.equals('')  "> ,f_bank_province=#{item.bankProvince}</if>
+ 		<if test="item.bankCity != null and !item.bankCity.equals('')  "> ,f_bank_city=#{item.bankCity}</if>
+ 		<if test="item.amountPtbt != null and !item.amountPtbt.equals('')  "> ,f_amount_ptbt=#{item.amountPtbt}</if>
+ 		<if test="item.amountUsrReal != null and !item.amountUsrReal.equals('')  "> ,f_amount_usr_real=#{item.amountUsrReal}</if>
+ 		<if test="item.easBillNumbers != null and !item.easBillNumbers.equals('')  "> ,f_eas_bill_numbers=#{item.easBillNumbers}</if>
+ 		<if test="item.auditTime != null and !item.auditTime.equals('')  "> ,f_audit_time=str_to_date(#{item.auditTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.auditStatus != null and !item.auditStatus.equals('')  "> ,f_audit_status=#{item.auditStatus}</if>
+ 		<if test="item.applyNote != null and !item.applyNote.equals('')  "> ,f_apply_note=#{item.applyNote}</if>
+ 		<if test="item.handlerNote != null and !item.handlerNote.equals('')  "> ,f_handler_note=#{item.handlerNote}</if>
+ 		<if test="item.tEbuySupplyMerchantFk != null and !item.tEbuySupplyMerchantFk.equals('')  "> ,t_ebuy_supply_merchant_fk=#{item.tEbuySupplyMerchantFk}</if>
+ 		<if test="item.revenueType != null and !item.revenueType.equals('')  "> ,f_revenue_type=#{item.revenueType}</if>
+ 		<if test="item.revenueRate != null and !item.revenueRate.equals('')  "> ,f_revenue_rate=#{item.revenueRate}</if>
+ 		<if test="item.easPayedAmount != null and !item.easPayedAmount.equals('')  "> ,f_eas_payed_amount=#{item.easPayedAmount}</if>
+ 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if>
+ 		<if test="item.tPropertyManagementFId != null and !item.tPropertyManagementFId.equals('')  "> ,t_property_management_f_id=#{item.tPropertyManagementFId}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(提款申请记录)信息_逻辑删除。 -->
+    <sql id="delete_revenueApply_Logic">
+		UPDATE t_revenue_apply
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="applyNo != null and !applyNo.equals('')  "> ,f_apply_no=#{applyNo}</if>
+ 		<if test="revApplyFinanceId != null and !revApplyFinanceId.equals('')  "> ,f_rev_apply_finance_id=#{revApplyFinanceId}</if>
+ 		<if test="visibleType != null and !visibleType.equals('')  "> ,f_visible_type=#{visibleType}</if>
+ 		<if test="miniRoleType != null and !miniRoleType.equals('')  "> ,f_mini_role_type=#{miniRoleType}</if>
+ 		<if test="miniRoleId != null and !miniRoleId.equals('')  "> ,f_mini_role_id=#{miniRoleId}</if>
+ 		<if test="goalType != null and !goalType.equals('')  "> ,f_goal_type=#{goalType}</if>
+ 		<if test="channel != null and !channel.equals('')  "> ,f_channel=#{channel}</if>
+ 		<if test="applyUserId != null and !applyUserId.equals('')  "> ,f_apply_user_id=#{applyUserId}</if>
+ 		<if test="applyTime != null and !applyTime.equals('')  "> ,f_apply_time=str_to_date(#{applyTime},'%Y-%m-%d %T')</if>
+ 		<if test="goalStartTime != null and !goalStartTime.equals('')  "> ,f_goal_start_time=str_to_date(#{goalStartTime},'%Y-%m-%d %T')</if>
+ 		<if test="goalEndTime != null and !goalEndTime.equals('')  "> ,f_goal_end_time=str_to_date(#{goalEndTime},'%Y-%m-%d %T')</if>
+ 		<if test="totalAmount != null and !totalAmount.equals('')  "> ,f_total_amount=#{totalAmount}</if>
+ 		<if test="tkStatus != null and !tkStatus.equals('')  "> ,f_tk_status=#{tkStatus}</if>
+ 		<if test="optType != null and !optType.equals('')  "> ,f_opt_type=#{optType}</if>
+ 		<if test="tkSuccTime != null and !tkSuccTime.equals('')  "> ,f_tk_succ_time=str_to_date(#{tkSuccTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="roleName != null and !roleName.equals('')  "> ,f_role_name=#{roleName}</if>
+ 		<if test="bPhone != null and !bPhone.equals('')  "> ,f_b_phone=#{bPhone}</if>
+ 		<if test="bConnectName != null and !bConnectName.equals('')  "> ,f_b_connect_name=#{bConnectName}</if>
+ 		<if test="bBankNo != null and !bBankNo.equals('')  "> ,f_b_bank_no=#{bBankNo}</if>
+ 		<if test="bBankName != null and !bBankName.equals('')  "> ,f_b_bank_name=#{bBankName}</if>
+ 		<if test="accountName != null and !accountName.equals('')  "> ,f_account_name=#{accountName}</if>
+ 		<if test="bankBranch != null and !bankBranch.equals('')  "> ,f_bank_branch=#{bankBranch}</if>
+ 		<if test="bankProvince != null and !bankProvince.equals('')  "> ,f_bank_province=#{bankProvince}</if>
+ 		<if test="bankCity != null and !bankCity.equals('')  "> ,f_bank_city=#{bankCity}</if>
+ 		<if test="amountPtbt != null and !amountPtbt.equals('')  "> ,f_amount_ptbt=#{amountPtbt}</if>
+ 		<if test="amountUsrReal != null and !amountUsrReal.equals('')  "> ,f_amount_usr_real=#{amountUsrReal}</if>
+ 		<if test="easBillNumbers != null and !easBillNumbers.equals('')  "> ,f_eas_bill_numbers=#{easBillNumbers}</if>
+ 		<if test="auditTime != null and !auditTime.equals('')  "> ,f_audit_time=str_to_date(#{auditTime},'%Y-%m-%d %T')</if>
+ 		<if test="auditStatus != null and !auditStatus.equals('')  "> ,f_audit_status=#{auditStatus}</if>
+ 		<if test="applyNote != null and !applyNote.equals('')  "> ,f_apply_note=#{applyNote}</if>
+ 		<if test="handlerNote != null and !handlerNote.equals('')  "> ,f_handler_note=#{handlerNote}</if>
+ 		<if test="tEbuySupplyMerchantFk != null and !tEbuySupplyMerchantFk.equals('')  "> ,t_ebuy_supply_merchant_fk=#{tEbuySupplyMerchantFk}</if>
+ 		<if test="revenueType != null and !revenueType.equals('')  "> ,f_revenue_type=#{revenueType}</if>
+ 		<if test="revenueRate != null and !revenueRate.equals('')  "> ,f_revenue_rate=#{revenueRate}</if>
+ 		<if test="easPayedAmount != null and !easPayedAmount.equals('')  "> ,f_eas_payed_amount=#{easPayedAmount}</if>
+ 		<if test="tGbId != null and !tGbId.equals('')  "> ,t_gb_id=#{tGbId}</if>
+ 		<if test="tPropertyManagementFId != null and !tPropertyManagementFId.equals('')  "> ,t_property_management_f_id=#{tPropertyManagementFId}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_revenueApply_Logic" parameterType="RevenueApply">
+		<include refid="revenueApplyBase.delete_revenueApply_Logic"/>
+    </update>
+    
+    <!-- 批量删除(提款申请记录)信息_逻辑删除 -->
+    <update id="delete_revenueApply_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_revenue_apply
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.applyNo != null and !item.applyNo.equals('')  "> ,f_apply_no=#{item.applyNo}</if>
+ 		<if test="item.revApplyFinanceId != null and !item.revApplyFinanceId.equals('')  "> ,f_rev_apply_finance_id=#{item.revApplyFinanceId}</if>
+ 		<if test="item.visibleType != null and !item.visibleType.equals('')  "> ,f_visible_type=#{item.visibleType}</if>
+ 		<if test="item.miniRoleType != null and !item.miniRoleType.equals('')  "> ,f_mini_role_type=#{item.miniRoleType}</if>
+ 		<if test="item.miniRoleId != null and !item.miniRoleId.equals('')  "> ,f_mini_role_id=#{item.miniRoleId}</if>
+ 		<if test="item.goalType != null and !item.goalType.equals('')  "> ,f_goal_type=#{item.goalType}</if>
+ 		<if test="item.channel != null and !item.channel.equals('')  "> ,f_channel=#{item.channel}</if>
+ 		<if test="item.applyUserId != null and !item.applyUserId.equals('')  "> ,f_apply_user_id=#{item.applyUserId}</if>
+ 		<if test="item.applyTime != null and !item.applyTime.equals('')  "> ,f_apply_time=str_to_date(#{item.applyTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.goalStartTime != null and !item.goalStartTime.equals('')  "> ,f_goal_start_time=str_to_date(#{item.goalStartTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.goalEndTime != null and !item.goalEndTime.equals('')  "> ,f_goal_end_time=str_to_date(#{item.goalEndTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.totalAmount != null and !item.totalAmount.equals('')  "> ,f_total_amount=#{item.totalAmount}</if>
+ 		<if test="item.tkStatus != null and !item.tkStatus.equals('')  "> ,f_tk_status=#{item.tkStatus}</if>
+ 		<if test="item.optType != null and !item.optType.equals('')  "> ,f_opt_type=#{item.optType}</if>
+ 		<if test="item.tkSuccTime != null and !item.tkSuccTime.equals('')  "> ,f_tk_succ_time=str_to_date(#{item.tkSuccTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.roleName != null and !item.roleName.equals('')  "> ,f_role_name=#{item.roleName}</if>
+ 		<if test="item.bPhone != null and !item.bPhone.equals('')  "> ,f_b_phone=#{item.bPhone}</if>
+ 		<if test="item.bConnectName != null and !item.bConnectName.equals('')  "> ,f_b_connect_name=#{item.bConnectName}</if>
+ 		<if test="item.bBankNo != null and !item.bBankNo.equals('')  "> ,f_b_bank_no=#{item.bBankNo}</if>
+ 		<if test="item.bBankName != null and !item.bBankName.equals('')  "> ,f_b_bank_name=#{item.bBankName}</if>
+ 		<if test="item.accountName != null and !item.accountName.equals('')  "> ,f_account_name=#{item.accountName}</if>
+ 		<if test="item.bankBranch != null and !item.bankBranch.equals('')  "> ,f_bank_branch=#{item.bankBranch}</if>
+ 		<if test="item.bankProvince != null and !item.bankProvince.equals('')  "> ,f_bank_province=#{item.bankProvince}</if>
+ 		<if test="item.bankCity != null and !item.bankCity.equals('')  "> ,f_bank_city=#{item.bankCity}</if>
+ 		<if test="item.amountPtbt != null and !item.amountPtbt.equals('')  "> ,f_amount_ptbt=#{item.amountPtbt}</if>
+ 		<if test="item.amountUsrReal != null and !item.amountUsrReal.equals('')  "> ,f_amount_usr_real=#{item.amountUsrReal}</if>
+ 		<if test="item.easBillNumbers != null and !item.easBillNumbers.equals('')  "> ,f_eas_bill_numbers=#{item.easBillNumbers}</if>
+ 		<if test="item.auditTime != null and !item.auditTime.equals('')  "> ,f_audit_time=str_to_date(#{item.auditTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.auditStatus != null and !item.auditStatus.equals('')  "> ,f_audit_status=#{item.auditStatus}</if>
+ 		<if test="item.applyNote != null and !item.applyNote.equals('')  "> ,f_apply_note=#{item.applyNote}</if>
+ 		<if test="item.handlerNote != null and !item.handlerNote.equals('')  "> ,f_handler_note=#{item.handlerNote}</if>
+ 		<if test="item.tEbuySupplyMerchantFk != null and !item.tEbuySupplyMerchantFk.equals('')  "> ,t_ebuy_supply_merchant_fk=#{item.tEbuySupplyMerchantFk}</if>
+ 		<if test="item.revenueType != null and !item.revenueType.equals('')  "> ,f_revenue_type=#{item.revenueType}</if>
+ 		<if test="item.revenueRate != null and !item.revenueRate.equals('')  "> ,f_revenue_rate=#{item.revenueRate}</if>
+ 		<if test="item.easPayedAmount != null and !item.easPayedAmount.equals('')  "> ,f_eas_payed_amount=#{item.easPayedAmount}</if>
+ 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if>
+ 		<if test="item.tPropertyManagementFId != null and !item.tPropertyManagementFId.equals('')  "> ,t_property_management_f_id=#{item.tPropertyManagementFId}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(提款申请记录)信息。 -->
+    <sql id="delete_revenueApply">
+		DELETE FROM t_revenue_apply WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_revenueApply" parameterType="java.lang.String">
+		<include refid="revenueApplyBase.delete_revenueApply"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(提款申请记录)信息。 -->
+    <delete id="delete_revenueApply_Batch" parameterType="java.util.List">
+		DELETE FROM t_revenue_apply WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

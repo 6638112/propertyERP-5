@@ -1,0 +1,83 @@
+/**   
+* Filename:    IPaymentService.java   
+* @version:    1.0  
+* Create at:   2014年11月20日 上午5:51:18   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年11月20日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.payment.service;
+
+import java.math.BigInteger;
+import java.util.Map;
+
+import com.cnfantasia.server.api.ebuy.entity.WeiXinNotifyEntity;
+import com.cnfantasia.server.apibase.ebuyPayRecord.entity.EbuyPayRecord;
+import com.cnfantasia.server.apibase.ebuyPrepayWeixinLog.entity.EbuyPrepayWeixinLog;
+import com.tenpay.ClientRequestHandler;
+import com.tenpay.PackageRequestHandler;
+import com.tenpay.PrepayIdRequestHandler;
+
+/**
+ * Filename:    IPaymentService.java
+ * @version:    1.0.0
+ * Create at:   2014年11月20日 上午5:51:18
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年11月20日       shiyl             1.0             1.0 Version
+ */
+public interface IPaymentService {
+	/**
+	 * 微信支付
+	 * @param userId 用户Id
+	 * @param orderId 订单Id
+	 * @param hbAmount 红包金额
+	 * @param notify_url 财付通支付通知url
+	 * @param remoteAddr 订单生成的机器IP，指用户浏览器端IP
+	 * @param packageReqHandler 生成package的请求类
+	 * @param prepayReqHandler 获取prepayid的请求类
+	 * @param clientHandler 返回客户端支付参数的请求类
+	 * @param productInfo 商品描述信息
+	 * @param tofalAmount 需要支付的总金额
+	 * @param out_trade_no 对外的订单编号
+	 * @return
+	 */
+	public Map<String, Object> weixinPrePay(BigInteger userId, BigInteger orderId, String notify_url, String remoteAddr,
+			PackageRequestHandler packageReqHandler, PrepayIdRequestHandler prepayReqHandler,ClientRequestHandler clientHandler
+			,String productInfo,Long tofalAmount,String out_trade_no);
+	
+	/**
+	 * 增加微信预支付日志
+	 * @param ebuyPrepayWeixinLog
+	 */
+	public void addPrepayWeixinLog(EbuyPrepayWeixinLog ebuyPrepayWeixinLog);
+
+	/**
+	 * 微信支付通知处理
+	 * @param userId
+	 * @param resultEntity
+	 */
+	public void payNotify(BigInteger userId, WeiXinNotifyEntity resultEntity);
+	
+	/**
+	 * 增加微信支付通知记录
+	 * @param currWeiXinNotifyEntity
+	 * @param payErrInfo
+	 * @param orderId
+	 */
+	public void addNotifyRecord(WeiXinNotifyEntity currWeiXinNotifyEntity,String payErrInfo,BigInteger orderId);
+
+	/**
+	 * 支付成功后的处理
+	 * @param orderId
+	 * @param ebuyPayRecord
+	 */
+	public void paySuccessOperateComm(BigInteger userId,BigInteger orderId,EbuyPayRecord ebuyPayRecord);
+	
+}

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+
+	<bean id="revenueService" class="com.cnfantasia.server.ms.revenue.service.RevenueService" >
+		<property name="revenueDao" ref="revenueDao"></property>
+		<property name="revenueConfigBaseDao" ref="revenueConfigBaseDao"></property>
+		<property name="revenueApplyBaseDao" ref="revenueApplyBaseDao"></property>
+		<property name="revenueSignalAmountBaseDao" ref="revenueSignalAmountBaseDao" />
+		<property name="revenueSignalAmountEbuyBaseDao" ref="revenueSignalAmountEbuyBaseDao" />
+		<property name="commonLockDao" ref="commonLockDao" />
+		<property name="propertyRealPayAmout2RevSignal4BillMonth" ref="propertyRealPayAmout2RevSignal4BillMonth" />
+	</bean>
+	
+	<bean id="revenueDredgeService" class="com.cnfantasia.server.ms.revenue.service.RevenueDredgeService" >
+		<property name="revenueSignalAmountBaseDao" ref="revenueSignalAmountBaseDao" />
+		<property name="revenueSignalAmountEbuyBaseDao" ref="revenueSignalAmountEbuyBaseDao" />
+		<property name="commonLockDao" ref="commonLockDao" />
+		<property name="revenueDredgeDao" ref="revenueDredgeDao"></property>
+		<property name="revenueDao" ref="revenueDao"></property>
+	</bean>
+	
+	<bean id="revenueFinanceService" class="com.cnfantasia.server.ms.revenue.service.RevenueFinanceService" >
+		<property name="revenueSignalAmountBaseDao" ref="revenueSignalAmountBaseDao" />
+		<property name="commonLockDao" ref="commonLockDao" />
+		<property name="revenueFinanceDao" ref="revenueFinanceDao" />
+		<property name="revenueDao" ref="revenueDao"/>
+	</bean>
+	
+	<bean id="revenueCarService" class="com.cnfantasia.server.ms.revenue.service.RevenueCarService" >
+		<property name="revenueSignalAmountBaseDao" ref="revenueSignalAmountBaseDao" />
+		<property name="commonLockDao" ref="commonLockDao" />
+		<property name="revenueCarDao" ref="revenueCarDao" />
+		<property name="revenueGenerationBaseService" ref="revenueGenerationBaseService" />
+	</bean>
+	
+	<bean id="revenueFinanceDeduService" class="com.cnfantasia.server.ms.revenue.service.RevenueFinanceDeduService" >
+		<property name="revenueSignalAmountBaseDao" ref="revenueSignalAmountBaseDao" />
+		<property name="commonLockDao" ref="commonLockDao" />
+		<property name="revenueFinanceDeduDao" ref="revenueFinanceDeduDao" />
+		<property name="revenueGenerationBaseService" ref="revenueGenerationBaseService" />
+	</bean>
+	
+	<bean id="revenueCarDeduService" class="com.cnfantasia.server.ms.revenue.service.RevenueCarDeduService" >
+		<property name="revenueSignalAmountBaseDao" ref="revenueSignalAmountBaseDao" />
+		<property name="commonLockDao" ref="commonLockDao" />
+		<property name="revenueCarDeduDao" ref="revenueCarDeduDao" />
+		<property name="revenueGenerationBaseService" ref="revenueGenerationBaseService" />
+	</bean>
+	
+	<bean id="roomValidateCalcRule" class="com.cnfantasia.server.ms.revenue.serviceUn.RoomValidateCalcRule">
+		<property name="revenueDao" ref="revenueDao"></property>
+	</bean>
+	<bean id="propertyRealPayAmoutCalcRule" class="com.cnfantasia.server.ms.revenue.serviceUn.PropertyRealPayAmoutCalcRule">
+		<property name="revenueDao" ref="revenueDao"></property>
+	</bean>
+	<bean id="propertySubsidyAmoutCalcRule" class="com.cnfantasia.server.ms.revenue.serviceUn.PropertySubsidyAmoutCalcRule">
+		<property name="revenueDao" ref="revenueDao"></property>
+	</bean>
+	<bean id="propertyOtherFeeCalcRule" class="com.cnfantasia.server.ms.revenue.serviceUn.PropertyOtherFeeCalcRule">
+		<property name="revenueDao" ref="revenueDao"></property>
+	</bean>
+	<!-- <bean id="simpleRevenueCalcRule" class="com.cnfantasia.server.ms.revenue.serviceUn.SimpleRevenueCalcRule">
+		<property name="revenueDao" ref="revenueDao"></property>
+		<constructor-arg name="calcRuleList" >
+			<list>
+				<ref bean="roomValidateCalcRule"/>
+				<ref bean="propertyRealPayAmoutCalcRule"/>
+				<ref bean="propertySubsidyAmoutCalcRule"/>
+			</list>
+		</constructor-arg>
+	</bean> -->
+	<bean id="dredgePayAmoutCalcRule" class="com.cnfantasia.server.ms.revenue.serviceUn.DredgePayAmoutCalcRule">
+		<property name="revenueDao" ref="revenueDao"></property>
+	</bean>
+	
+	<!-- 收益项2sig实现类 -->
+	<bean id="abstractSyn2RevSignal" class="com.cnfantasia.server.ms.revenue.task.AbstractSyn2RevSignal" abstract="true">
+		<property name="revenueSignalAmountBaseDao" ref="revenueSignalAmountBaseDao"></property>
+		<property name="revenueDao" ref="revenueDao"></property>
+	</bean>
+	<bean id="propertyRealPayAmout2RevSignal" class="com.cnfantasia.server.ms.revenue.task.PropertyRealPayAmout2RevSignal" parent="abstractSyn2RevSignal">
+		<property name="propertyRealPayAmoutCalcRule" ref="propertyRealPayAmoutCalcRule"></property>
+	</bean>
+	<!-- 根据账单月份获取账单数据 -->
+	<bean id="propertyRealPayAmout2RevSignal4BillMonth" class="com.cnfantasia.server.ms.revenue.task.PropertyRealPayAmout2RevSignal4BillMonth" parent="propertyRealPayAmout2RevSignal">
+	</bean>
+	
+	<bean id="propertySubsidyAmout2RevSignal" class="com.cnfantasia.server.ms.revenue.task.PropertySubsidyAmout2RevSignal" parent="abstractSyn2RevSignal">
+		<property name="propertySubsidyAmoutCalcRule" ref="propertySubsidyAmoutCalcRule"></property>
+	</bean>
+	<bean id="propertyOtherFee2RevSignal" class="com.cnfantasia.server.ms.revenue.task.PropertyOtherFee2RevSignal" parent="abstractSyn2RevSignal">
+		<property name="propertyOtherFeeCalcRule" ref="propertyOtherFeeCalcRule"></property>
+	</bean>
+	
+	<bean id="roomValidate2RevSignal" class="com.cnfantasia.server.ms.revenue.task.RoomValidate2RevSignal" parent="abstractSyn2RevSignal">
+		<property name="roomValidateCalcRule" ref="roomValidateCalcRule"></property>
+	</bean>
+	
+	<bean id="dredgeBill2RevSignal" class="com.cnfantasia.server.ms.revenue.task.DredgeBill2RevSignal" parent="abstractSyn2RevSignal">
+		<property name="dredgePayAmoutCalcRule" ref="dredgePayAmoutCalcRule"></property>
+	</bean>
+	
+	<!-- 定时任务 -->
+	<bean id="abstractSynTask" class="com.cnfantasia.server.ms.revenue.task.AbstractSynTask" abstract="true">
+		<property name="revenueTaskRecordBaseDao" ref="revenueTaskRecordBaseDao"></property>
+		<property name="commonLockDao" ref="commonLockDao"></property>
+	</bean>
+	<bean id="propertyRealPayAmoutSynTask" class="com.cnfantasia.server.ms.revenue.task.PropertyRealPayAmoutSynTask" parent="abstractSynTask">
+		<property name="revenueDao" ref="revenueDao"></property>
+		<property name="propertyRealPayAmout2RevSignal" ref="propertyRealPayAmout2RevSignal"></property>
+	</bean>
+	<bean id="propertySubsidyAmoutSynTask" class="com.cnfantasia.server.ms.revenue.task.PropertySubsidyAmoutSynTask" parent="abstractSynTask">
+		<property name="revenueDao" ref="revenueDao"></property>
+		<property name="propertySubsidyAmout2RevSignal" ref="propertySubsidyAmout2RevSignal"></property>
+	</bean>
+	<bean id="propertyOtherFeeSynTask" class="com.cnfantasia.server.ms.revenue.task.PropertyOtherFeeSynTask" parent="abstractSynTask">
+		<property name="revenueDao" ref="revenueDao"></property>
+		<property name="propertyOtherFee2RevSignal" ref="propertyOtherFee2RevSignal"></property>
+	</bean>
+	<bean id="roomValidateSynTaskCompany" class="com.cnfantasia.server.ms.revenue.task.RoomValidateSynTaskCompany" parent="abstractSynTask">
+		<property name="revenueDao" ref="revenueDao"></property>
+		<property name="roomValidate2RevSignal" ref="roomValidate2RevSignal"></property>
+	</bean>
+	<bean id="roomValidateSynTaskAgent" class="com.cnfantasia.server.ms.revenue.task.RoomValidateSynTaskAgent" parent="abstractSynTask">
+		<property name="revenueDao" ref="revenueDao"></property>
+		<property name="roomValidate2RevSignal" ref="roomValidate2RevSignal"></property>
+	</bean>
+	
+	<bean id="ebuySynTaskSupply" class="com.cnfantasia.server.ms.revenue.task.EbuySynTaskSupply">
+		<property name="revenueService" ref="revenueService"></property>
+		<property name="revenueDredgeService" ref="revenueDredgeService"></property>
+	</bean>
+	
+	<bean id="dredgeBillSynTask" class="com.cnfantasia.server.ms.revenue.task.DredgeBillSynTask">
+		<property name="revenueDredgeService" ref="revenueDredgeService"></property>
+		<property name="userBaseService" ref="userBaseService"></property>
+	</bean>
+	
+	<bean id="financeSynTask" class="com.cnfantasia.server.ms.revenue.task.FinanceSynTask">
+		<property name="revenueFinanceService" ref="revenueFinanceService"></property>
+	</bean>
+	
+	<bean id="carFinanceSynTask" class="com.cnfantasia.server.ms.revenue.task.CarFinanceSynTask">
+		<property name="revenueFinanceService" ref="revenueFinanceService"></property>
+	</bean>
+	
+	<bean id="carSynTask" class="com.cnfantasia.server.ms.revenue.task.CarSynTask">
+		<property name="revenueCarService" ref="revenueCarService"></property>
+	</bean>
+	
+	<bean id="financeDeduSynTask" class="com.cnfantasia.server.ms.revenue.task.FinanceDeduSynTask">
+		<property name="revenueFinanceDeduService" ref="revenueFinanceDeduService"></property>
+	</bean>
+	
+	<bean id="carDeduSynTask" class="com.cnfantasia.server.ms.revenue.task.CarDeduSynTask">
+		<property name="revenueCarDeduService" ref="revenueCarDeduService"></property>
+	</bean>
+	
+	<bean id="revenueTask" class="com.cnfantasia.server.ms.revenue.task.RevenueTask" >
+		<property name="propertyRealPayAmoutSynTask" ref="propertyRealPayAmoutSynTask"></property>
+		<!-- <property name="roomValidateSynTaskCompany" ref="roomValidateSynTaskCompany"></property>
+		<property name="roomValidateSynTaskAgent" ref="roomValidateSynTaskAgent"></property> -->
+		<property name="ebuySynTaskSupply" ref="ebuySynTaskSupply"></property>
+		<property name="propertySubsidyAmoutSynTask" ref="propertySubsidyAmoutSynTask"></property>
+		<property name="propertyOtherFeeSynTask" ref="propertyOtherFeeSynTask"></property>
+		<property name="dredgeBillSynTask" ref="dredgeBillSynTask"></property>
+		<property name="financeSynTask" ref="financeSynTask"></property>
+		<property name="carFinanceSynTask" ref="carFinanceSynTask"></property>
+		<property name="carSynTask" ref="carSynTask"></property>
+		<property name="financeDeduSynTask" ref="financeDeduSynTask"></property>
+		<property name="carDeduSynTask" ref="carDeduSynTask"></property>
+	</bean>
+	
+	<bean id="propertySubsidyAmoutAutoApplyCompany" class="com.cnfantasia.server.ms.revenue.task.PropertySubsidyAmoutAutoApplyCompany">
+		<property name="revenueService" ref="revenueService"></property>
+		<property name="revenueDao" ref="revenueDao"></property>
+		<property name="commonLockDao" ref="commonLockDao"></property>
+	</bean>
+
+	<bean id="couponTask" class="com.cnfantasia.server.ms.revenue.task.CouponTask">
+		<property name="couponService" ref="couponService"></property>
+	</bean>
+
+	<bean id="userCouponTask" class="com.cnfantasia.server.ms.revenue.task.UserCouponTask">
+		<property name="userCouponService" ref="userCouponService"></property>
+	</bean>
+	
+	<bean id="revenueApplyPush2EASTask" class="com.cnfantasia.server.ms.revenue.task.RevenueApplyPush2EASTask">
+	</bean>
+
+	<bean id="dredgeTask" class="com.cnfantasia.server.ms.revenue.task.DredgeTask">
+		<property name="dredgeService" ref="dredgeService"></property>
+		<property name="dredgeBillBaseService" ref="dredgeBillBaseService"></property>
+		<property name="sysParamManager" ref="sysParamManager"></property>
+		<property name="dredgeDao" ref="dredgeDao"/>
+	</bean>
+	
+	<bean id="propertyAccountDeduTask" class="com.cnfantasia.server.ms.revenue.task.PropertyAccountDeduTask">
+		<property name="propertyCardService" ref="propertyCardService"/>
+	</bean>
+
+	<bean id="payBillMsgAutoSendTask" class="com.cnfantasia.server.ms.revenue.task.PayBillMsgAutoSendTask">
+		<property name="payBillService" ref="payBillService"/>
+	</bean>
+
+	<!--  
+	<bean id="dredgeBillSynTask" class="com.cnfantasia.server.ms.revenue.task.DredgeBillSynTask" parent="abstractSynTask">
+		<property name="revenueDao" ref="revenueDao"></property>
+		<property name="dredgeBill2RevSignal" ref="dredgeBill2RevSignal"></property>
+	</bean>
+	-->
+</beans>  

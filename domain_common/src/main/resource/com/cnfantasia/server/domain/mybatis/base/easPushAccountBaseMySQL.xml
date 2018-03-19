@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:EAS推送账户信息配置表 t_eas_push_account -->
+<mapper namespace="easPushAccountBase">
+	<resultMap type="EasPushAccount" id="easPushAccountBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_mini_role_type" javaType="java.lang.Integer" property="miniRoleType"/>  <!-- 所属最小粒度角色类型 -->        <result column="f_goal_type" javaType="java.lang.Integer" property="goalType"/>  <!-- 提款对象类型 -->        <result column="f_eas_user_name" javaType="java.lang.String" property="easUserName"/>  <!-- eas用户名称 -->        <result column="f_eas_user_account" javaType="java.lang.String" property="easUserAccount"/>  <!-- EAS用户登录名 -->        <result column="f_eas_user_password" javaType="java.lang.String" property="easUserPassword"/>  <!-- EAS登录用户密码 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EasPushAccount" id="easPushAccountExtendMap" extends="easPushAccountBaseMap">
+	</resultMap>
+	<resultMap type="EasPushAccount" id="easPushAccountBaseMap_AppendTable">
+        <id column="EPAid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EPAminiRoleType" javaType="java.lang.Integer" property="miniRoleType"/>  <!-- 所属最小粒度角色类型 -->        <result column="EPAgoalType" javaType="java.lang.Integer" property="goalType"/>  <!-- 提款对象类型 -->        <result column="EPAeasUserName" javaType="java.lang.String" property="easUserName"/>  <!-- eas用户名称 -->        <result column="EPAeasUserAccount" javaType="java.lang.String" property="easUserAccount"/>  <!-- EAS用户登录名 -->        <result column="EPAeasUserPassword" javaType="java.lang.String" property="easUserPassword"/>  <!-- EAS登录用户密码 -->        <result column="EPAsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EPAsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EPAsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EPAsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EPAsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EPAsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EPAsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EasPushAccount" id="easPushAccountBaseMap_AppendTable1">
+        <id column="EPA1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EPA1miniRoleType" javaType="java.lang.Integer" property="miniRoleType"/>  <!-- 所属最小粒度角色类型 -->        <result column="EPA1goalType" javaType="java.lang.Integer" property="goalType"/>  <!-- 提款对象类型 -->        <result column="EPA1easUserName" javaType="java.lang.String" property="easUserName"/>  <!-- eas用户名称 -->        <result column="EPA1easUserAccount" javaType="java.lang.String" property="easUserAccount"/>  <!-- EAS用户登录名 -->        <result column="EPA1easUserPassword" javaType="java.lang.String" property="easUserPassword"/>  <!-- EAS登录用户密码 -->        <result column="EPA1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EPA1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EPA1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EPA1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EPA1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EPA1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EPA1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EPA.f_id,EPA.f_mini_role_type,EPA.f_goal_type,EPA.f_eas_user_name,EPA.f_eas_user_account,EPA.f_eas_user_password
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EPA.f_id as EPAid,EPA.f_mini_role_type as EPAminiRoleType,EPA.f_goal_type as EPAgoalType,EPA.f_eas_user_name as EPAeasUserName,EPA.f_eas_user_account as EPAeasUserAccount,EPA.f_eas_user_password as EPAeasUserPassword
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EPA1.f_id as EPA1id,EPA1.f_mini_role_type as EPA1miniRoleType,EPA1.f_goal_type as EPA1goalType,EPA1.f_eas_user_name as EPA1easUserName,EPA1.f_eas_user_account as EPA1easUserAccount,EPA1.f_eas_user_password as EPA1easUserPassword
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EPA.f_id = #{id} ) </if>        <if test="miniRoleType != null">  and (EPA.f_mini_role_type = #{miniRoleType} ) </if>        <if test="goalType != null">  and (EPA.f_goal_type = #{goalType} ) </if>        <if test="easUserName != null">  and (EPA.f_eas_user_name = #{easUserName} ) </if>        <if test="easUserAccount != null">  and (EPA.f_eas_user_account = #{easUserAccount} ) </if>        <if test="easUserPassword != null">  and (EPA.f_eas_user_password = #{easUserPassword} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EPA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EPA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EPA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EPA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EPA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EPA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EPA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EPA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EPA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EPA.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EPA.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EPA.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EPA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EPA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EPA.f_id = #{id} ) </if>        <if test="miniRoleType != null and !miniRoleType.equals('')  ">  and (EPA.f_mini_role_type = #{miniRoleType} ) </if>        <if test="goalType != null and !goalType.equals('')  ">  and (EPA.f_goal_type = #{goalType} ) </if>        <if test="easUserName != null and !easUserName.equals('')  ">  and (EPA.f_eas_user_name like CONCAT('%',#{easUserName},'%') ) </if>        <if test="easUserAccount != null and !easUserAccount.equals('')  ">  and (EPA.f_eas_user_account like CONCAT('%',#{easUserAccount},'%') ) </if>        <if test="easUserPassword != null and !easUserPassword.equals('')  ">  and (EPA.f_eas_user_password like CONCAT('%',#{easUserPassword},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EPA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EPA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EPA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EPA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EPA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EPA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EPA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EPA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EPA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EPA.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EPA.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EPA.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EPA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EPA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="easPushAccountBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="easPushAccountBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="easPushAccountBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="easPushAccountBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_eas_push_account EPA    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(EAS推送账户信息配置表)信息。 -->
+	<sql id="select_easPushAccount">
+		SELECT <include refid="easPushAccountBase.queryHead"/>
+		<include refid="easPushAccountBase.busiQueryCondition"/>
+		<include refid="easPushAccountBase.dimCheckSql"/>
+		ORDER BY EPA.f_id DESC
+	</sql>
+	<select id="select_easPushAccount" parameterType="java.util.Map" resultMap="easPushAccountBase.easPushAccountExtendMap">
+		<include refid="easPushAccountBase.select_easPushAccount"/>
+	</select>
+	
+	<!-- 根据条件分页查询(EAS推送账户信息配置表)信息  -->
+	<sql id="select_easPushAccount_withPage">
+		SELECT <include refid="easPushAccountBase.queryHead"/>
+		<include refid="easPushAccountBase.busiQueryCondition"/>
+		<include refid="easPushAccountBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_easPushAccount_withPage" resultMap="easPushAccountBase.easPushAccountExtendMap" parameterType="java.util.Map">
+		<include refid="easPushAccountBase.select_easPushAccount_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(EAS推送账户信息配置表)信息。 -->
+	<sql id="select_easPushAccount_bySeqId">
+		SELECT <include refid="easPushAccountBase.queryHead"/>
+		<include refid="easPushAccountBase.busiQueryCondition"/>
+		 and EPA.f_id = #{_parameter}
+	</sql>
+	<select id="select_easPushAccount_bySeqId" parameterType="java.math.BigInteger" resultMap="easPushAccountBase.easPushAccountBaseMap">
+		<include refid="easPushAccountBase.select_easPushAccount_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(EAS推送账户信息配置表)记录数  -->
+	<sql id="select_easPushAccount_count">
+		SELECT COUNT(*)
+		<include refid="easPushAccountBase.busiQueryCount"/>
+		<include refid="easPushAccountBase.dimCheckSql"/>
+	</sql>
+	<select id="select_easPushAccount_count" resultType="java.lang.Integer">
+		<include refid="easPushAccountBase.select_easPushAccount_count"/>
+	</select>
+	
+	 <!-- 往(EAS推送账户信息配置表)新增一条记录。 -->
+	 <sql id="insert_easPushAccount">
+		INSERT INTO t_eas_push_account 
+		(f_id,f_mini_role_type,f_goal_type,f_eas_user_name,f_eas_user_account,f_eas_user_password,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{miniRoleType},#{goalType},#{easUserName,jdbcType=VARCHAR},#{easUserAccount,jdbcType=VARCHAR},#{easUserPassword,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_easPushAccount" parameterType="EasPushAccount">
+		<include refid="easPushAccountBase.insert_easPushAccount"/>
+    </insert>
+    
+	<!-- 批量新增(EAS推送账户信息配置表)信息 -->
+    <insert id="insert_easPushAccount_Batch" parameterType="java.util.List">
+    	INSERT INTO t_eas_push_account 
+		(f_id,f_mini_role_type,f_goal_type,f_eas_user_name,f_eas_user_account,f_eas_user_password,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.miniRoleType},#{item.goalType},#{item.easUserName,jdbcType=VARCHAR},#{item.easUserAccount,jdbcType=VARCHAR},#{item.easUserPassword,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(EAS推送账户信息配置表)信息。 -->
+    <sql id="update_easPushAccount">
+		UPDATE t_eas_push_account		<trim prefix="SET" prefixOverrides=","> 		<if test="miniRoleType != null and !miniRoleType.equals('') "> ,f_mini_role_type=#{miniRoleType}</if> 		<if test="goalType != null and !goalType.equals('') "> ,f_goal_type=#{goalType}</if> 		<if test="easUserName != null and !easUserName.equals('') "> ,f_eas_user_name=#{easUserName}</if> 		<if test="easUserAccount != null and !easUserAccount.equals('') "> ,f_eas_user_account=#{easUserAccount}</if> 		<if test="easUserPassword != null and !easUserPassword.equals('') "> ,f_eas_user_password=#{easUserPassword}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_easPushAccount" parameterType="EasPushAccount">
+		<include refid="easPushAccountBase.update_easPushAccount"/>
+    </update>
+    
+    <!-- 批量更新(EAS推送账户信息配置表)信息。 -->
+    <update id="update_easPushAccount_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_eas_push_account		<trim prefix="SET" prefixOverrides=","> 		<if test="item.miniRoleType != null and !item.miniRoleType.equals('')  "> ,f_mini_role_type=#{item.miniRoleType}</if> 		<if test="item.goalType != null and !item.goalType.equals('')  "> ,f_goal_type=#{item.goalType}</if> 		<if test="item.easUserName != null and !item.easUserName.equals('')  "> ,f_eas_user_name=#{item.easUserName}</if> 		<if test="item.easUserAccount != null and !item.easUserAccount.equals('')  "> ,f_eas_user_account=#{item.easUserAccount}</if> 		<if test="item.easUserPassword != null and !item.easUserPassword.equals('')  "> ,f_eas_user_password=#{item.easUserPassword}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(EAS推送账户信息配置表)信息_逻辑删除。 -->
+    <sql id="delete_easPushAccount_Logic">
+		UPDATE t_eas_push_account		<trim prefix="SET" prefixOverrides=","> 		<if test="miniRoleType != null and !miniRoleType.equals('')  "> ,f_mini_role_type=#{miniRoleType}</if> 		<if test="goalType != null and !goalType.equals('')  "> ,f_goal_type=#{goalType}</if> 		<if test="easUserName != null and !easUserName.equals('')  "> ,f_eas_user_name=#{easUserName}</if> 		<if test="easUserAccount != null and !easUserAccount.equals('')  "> ,f_eas_user_account=#{easUserAccount}</if> 		<if test="easUserPassword != null and !easUserPassword.equals('')  "> ,f_eas_user_password=#{easUserPassword}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_easPushAccount_Logic" parameterType="EasPushAccount">
+		<include refid="easPushAccountBase.delete_easPushAccount_Logic"/>
+    </update>
+    
+    <!-- 批量删除(EAS推送账户信息配置表)信息_逻辑删除 -->
+    <update id="delete_easPushAccount_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_eas_push_account		<trim prefix="SET" prefixOverrides=","> 		<if test="item.miniRoleType != null and !item.miniRoleType.equals('')  "> ,f_mini_role_type=#{item.miniRoleType}</if> 		<if test="item.goalType != null and !item.goalType.equals('')  "> ,f_goal_type=#{item.goalType}</if> 		<if test="item.easUserName != null and !item.easUserName.equals('')  "> ,f_eas_user_name=#{item.easUserName}</if> 		<if test="item.easUserAccount != null and !item.easUserAccount.equals('')  "> ,f_eas_user_account=#{item.easUserAccount}</if> 		<if test="item.easUserPassword != null and !item.easUserPassword.equals('')  "> ,f_eas_user_password=#{item.easUserPassword}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(EAS推送账户信息配置表)信息。 -->
+    <sql id="delete_easPushAccount">
+		DELETE FROM t_eas_push_account WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_easPushAccount" parameterType="java.lang.String">
+		<include refid="easPushAccountBase.delete_easPushAccount"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(EAS推送账户信息配置表)信息。 -->
+    <delete id="delete_easPushAccount_Batch" parameterType="java.util.List">
+		DELETE FROM t_eas_push_account WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

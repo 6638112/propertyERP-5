@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:疏通师傅取消订单 t_dredge_worker_cancel -->
+<mapper namespace="dredgeWorkerCancelBase">
+	<resultMap type="DredgeWorkerCancel" id="dredgeWorkerCancelBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_cancel_reason" javaType="java.lang.String" property="tCancelReason"/>  <!-- 取消原因 -->        <result column="t_user_f_id" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="t_dredge_bill_f_id" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!--  -->
+	</resultMap>
+	<resultMap type="DredgeWorkerCancel" id="dredgeWorkerCancelExtendMap" extends="dredgeWorkerCancelBaseMap">
+	</resultMap>
+	<resultMap type="DredgeWorkerCancel" id="dredgeWorkerCancelBaseMap_AppendTable">
+        <id column="DWCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="DWCtCancelReason" javaType="java.lang.String" property="tCancelReason"/>  <!-- 取消原因 -->        <result column="DWCtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="DWCtDredgeBillFId" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!--  -->
+	</resultMap>
+	<resultMap type="DredgeWorkerCancel" id="dredgeWorkerCancelBaseMap_AppendTable1">
+        <id column="DWC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="DWC1tCancelReason" javaType="java.lang.String" property="tCancelReason"/>  <!-- 取消原因 -->        <result column="DWC1tUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="DWC1tDredgeBillFId" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!--  -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		DWC.f_id,DWC.t_cancel_reason,DWC.t_user_f_id,DWC.t_dredge_bill_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		DWC.f_id as DWCid,DWC.t_cancel_reason as DWCtCancelReason,DWC.t_user_f_id as DWCtUserFId,DWC.t_dredge_bill_f_id as DWCtDredgeBillFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		DWC1.f_id as DWC1id,DWC1.t_cancel_reason as DWC1tCancelReason,DWC1.t_user_f_id as DWC1tUserFId,DWC1.t_dredge_bill_f_id as DWC1tDredgeBillFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (DWC.f_id = #{id} ) </if>        <if test="tCancelReason != null">  and (DWC.t_cancel_reason = #{tCancelReason} ) </if>        <if test="tUserFId != null">  and (DWC.t_user_f_id = #{tUserFId} ) </if>        <if test="tDredgeBillFId != null">  and (DWC.t_dredge_bill_f_id = #{tDredgeBillFId} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (DWC.f_id = #{id} ) </if>        <if test="tCancelReason != null and !tCancelReason.equals('')  ">  and (DWC.t_cancel_reason like CONCAT('%',#{tCancelReason},'%') ) </if>        <if test="tUserFId != null and !tUserFId.equals('')  ">  and (DWC.t_user_f_id = #{tUserFId} ) </if>        <if test="tDredgeBillFId != null and !tDredgeBillFId.equals('')  ">  and (DWC.t_dredge_bill_f_id = #{tDredgeBillFId} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="dredgeWorkerCancelBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="dredgeWorkerCancelBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="dredgeWorkerCancelBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="dredgeWorkerCancelBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_dredge_worker_cancel DWC    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(疏通师傅取消订单)信息。 -->
+	<sql id="select_dredgeWorkerCancel">
+		SELECT <include refid="dredgeWorkerCancelBase.queryHead"/>
+		<include refid="dredgeWorkerCancelBase.busiQueryCondition"/>
+		<include refid="dredgeWorkerCancelBase.dimCheckSql"/>
+		ORDER BY DWC.f_id DESC
+	</sql>
+	<select id="select_dredgeWorkerCancel" parameterType="java.util.Map" resultMap="dredgeWorkerCancelBase.dredgeWorkerCancelExtendMap">
+		<include refid="dredgeWorkerCancelBase.select_dredgeWorkerCancel"/>
+	</select>
+	
+	<!-- 根据条件分页查询(疏通师傅取消订单)信息  -->
+	<sql id="select_dredgeWorkerCancel_withPage">
+		SELECT <include refid="dredgeWorkerCancelBase.queryHead"/>
+		<include refid="dredgeWorkerCancelBase.busiQueryCondition"/>
+		<include refid="dredgeWorkerCancelBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_dredgeWorkerCancel_withPage" resultMap="dredgeWorkerCancelBase.dredgeWorkerCancelExtendMap" parameterType="java.util.Map">
+		<include refid="dredgeWorkerCancelBase.select_dredgeWorkerCancel_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(疏通师傅取消订单)信息。 -->
+	<sql id="select_dredgeWorkerCancel_bySeqId">
+		SELECT <include refid="dredgeWorkerCancelBase.queryHead"/>
+		<include refid="dredgeWorkerCancelBase.busiQueryCondition"/>
+		 and DWC.f_id = #{_parameter}
+	</sql>
+	<select id="select_dredgeWorkerCancel_bySeqId" parameterType="java.math.BigInteger" resultMap="dredgeWorkerCancelBase.dredgeWorkerCancelBaseMap">
+		<include refid="dredgeWorkerCancelBase.select_dredgeWorkerCancel_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(疏通师傅取消订单)记录数  -->
+	<sql id="select_dredgeWorkerCancel_count">
+		SELECT COUNT(*)
+		<include refid="dredgeWorkerCancelBase.busiQueryCount"/>
+		<include refid="dredgeWorkerCancelBase.dimCheckSql"/>
+	</sql>
+	<select id="select_dredgeWorkerCancel_count" resultType="java.lang.Integer">
+		<include refid="dredgeWorkerCancelBase.select_dredgeWorkerCancel_count"/>
+	</select>
+	
+	 <!-- 往(疏通师傅取消订单)新增一条记录。 -->
+	 <sql id="insert_dredgeWorkerCancel">
+		INSERT INTO t_dredge_worker_cancel 
+		(f_id,t_cancel_reason,t_user_f_id,t_dredge_bill_f_id) VALUES 
+		(#{id},#{tCancelReason,jdbcType=VARCHAR},#{tUserFId},#{tDredgeBillFId})
+	 </sql>
+    <insert id="insert_dredgeWorkerCancel" parameterType="DredgeWorkerCancel">
+		<include refid="dredgeWorkerCancelBase.insert_dredgeWorkerCancel"/>
+    </insert>
+    
+	<!-- 批量新增(疏通师傅取消订单)信息 -->
+    <insert id="insert_dredgeWorkerCancel_Batch" parameterType="java.util.List">
+    	INSERT INTO t_dredge_worker_cancel 
+		(f_id,t_cancel_reason,t_user_f_id,t_dredge_bill_f_id) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tCancelReason,jdbcType=VARCHAR},#{item.tUserFId},#{item.tDredgeBillFId})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(疏通师傅取消订单)信息。 -->
+    <sql id="update_dredgeWorkerCancel">
+		UPDATE t_dredge_worker_cancel		<trim prefix="SET" prefixOverrides=","> 		<if test="tCancelReason != null and !tCancelReason.equals('') "> ,t_cancel_reason=#{tCancelReason}</if> 		<if test="tUserFId != null and !tUserFId.equals('') "> ,t_user_f_id=#{tUserFId}</if> 		<if test="tDredgeBillFId != null and !tDredgeBillFId.equals('') "> ,t_dredge_bill_f_id=#{tDredgeBillFId}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_dredgeWorkerCancel" parameterType="DredgeWorkerCancel">
+		<include refid="dredgeWorkerCancelBase.update_dredgeWorkerCancel"/>
+    </update>
+    
+    <!-- 批量更新(疏通师傅取消订单)信息。 -->
+    <update id="update_dredgeWorkerCancel_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_worker_cancel		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tCancelReason != null and !item.tCancelReason.equals('')  "> ,t_cancel_reason=#{item.tCancelReason}</if> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.tDredgeBillFId != null and !item.tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{item.tDredgeBillFId}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(疏通师傅取消订单)信息_逻辑删除。 -->
+    <!-- <sql id="delete_dredgeWorkerCancel_Logic">
+		UPDATE t_dredge_worker_cancel		<trim prefix="SET" prefixOverrides=","> 		<if test="tCancelReason != null and !tCancelReason.equals('')  "> ,t_cancel_reason=#{tCancelReason}</if> 		<if test="tUserFId != null and !tUserFId.equals('')  "> ,t_user_f_id=#{tUserFId}</if> 		<if test="tDredgeBillFId != null and !tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{tDredgeBillFId}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_dredgeWorkerCancel_Logic" parameterType="DredgeWorkerCancel">
+		<include refid="dredgeWorkerCancelBase.delete_dredgeWorkerCancel_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(疏通师傅取消订单)信息_逻辑删除 -->
+    <!-- <update id="delete_dredgeWorkerCancel_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_worker_cancel		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tCancelReason != null and !item.tCancelReason.equals('')  "> ,t_cancel_reason=#{item.tCancelReason}</if> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.tDredgeBillFId != null and !item.tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{item.tDredgeBillFId}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(疏通师傅取消订单)信息。 -->
+    <sql id="delete_dredgeWorkerCancel">
+		DELETE FROM t_dredge_worker_cancel WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_dredgeWorkerCancel" parameterType="java.lang.String">
+		<include refid="dredgeWorkerCancelBase.delete_dredgeWorkerCancel"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(疏通师傅取消订单)信息。 -->
+    <delete id="delete_dredgeWorkerCancel_Batch" parameterType="java.util.List">
+		DELETE FROM t_dredge_worker_cancel WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

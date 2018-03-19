@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 数据升级模块 -->
+<mapper namespace="commDataUpgrade">
+	
+	<sql id="select_LoginNo_By_WeiXinUnionId_comm">
+		SELECT <include refid="loginNoBase.queryHead_AppendTable"/>
+		FROM t_login_no LN
+   	 	WHERE 1=1
+   	 	AND LN.f_sys0_del_state = 0
+   	 	AND (LN.f_type = 7 OR LN.f_type = 8 ) <!-- "7":"微信","8":"微信轻应用" -->
+	</sql>
+	
+	<sql id="select_DefaultLoginNo_condition">
+		ORDER BY LN.f_id ASC <!-- 取最老的数据 --> 
+   	 	LIMIT 0,1
+	</sql>
+	
+	<!-- 查询微信的登录账号信息 -->
+	<select id="select_DefaultLoginNo_By_WeiXinUnionId" parameterType="java.util.Map" resultMap="loginNoBase.loginNoBaseMap_AppendTable">
+   	 	<include refid="select_LoginNo_By_WeiXinUnionId_comm"/>
+   	 	AND LN.f_union_id = #{unionId}
+   	 	<include refid="select_DefaultLoginNo_condition"/>
+	</select>
+	
+	<!-- 根据微信联合Id查询所有的登录账号 -->
+	<select id="select_LoginNoList_By_WeiXinUnionId" parameterType="java.util.Map" resultMap="loginNoBase.loginNoBaseMap_AppendTable">
+		<include refid="select_LoginNo_By_WeiXinUnionId_comm"/>
+   	 	AND LN.f_union_id = #{unionId}
+	</select>
+	
+	<!-- 转移意外惊喜数据 -->
+	<!-- <update id="update_SurpriseGift_From_Src2Goal" parameterType="java.util.Map">
+		UPDATE t_prize_surprise_gift PSG
+			INNER JOIN t_user U_goal ON U_goal.f_id = #{goalUserId} AND U_goal.f_sys0_del_state = 0
+			INNER JOIN t_user U_src ON U_src.f_id = #{srcUserId} AND U_src.f_sys0_del_state = 0
+		SET 
+			PSG.f_bak_user_id = PSG.f_user_id
+			,PSG.f_bak_user_type = PSG.f_user_type
+			,PSG.f_bak_room_id = PSG.f_room_id
+			,PSG.f_sys0_upd_time = SYSDATE()
+			
+			,PSG.f_user_id = U_goal.f_id
+			,PSG.f_user_type = 1 start删除 用户类别=={"1":"注册用户","2":"临时用户"}
+			,PSG.f_room_id = U_goal.f_default_room_id
+    	WHERE 1=1
+    	AND PSG.f_sys0_del_state = 0
+    	AND PSG.f_user_id = U_src.f_id
+    	AND PSG.f_user_type = 1 start删除 用户类别=={"1":"注册用户","2":"临时用户"}
+    	start删除 AND PSG.f_room_id = U_src.f_default_room_id 只转移默认门牌的数据
+	</update> -->
+	
+	<!-- 将用户老门牌下的意外惊喜转移到新门牌 -->
+	<update id="update_Old_SurpriseGift_2NewRoomId" parameterType="java.util.Map">
+		UPDATE t_prize_surprise_gift PSG
+			INNER JOIN t_user U ON U.f_id = #{oldUserId} AND U.f_sys0_del_state = 0
+		SET PSG.f_room_id = #{newRoomId}
+			,PSG.f_sys0_upd_time = SYSDATE()
+			,PSG.f_user_id = #{newUserId}
+		WHERE 1=1
+    	AND PSG.f_sys0_del_state = 0
+    	AND PSG.f_user_id = #{oldUserId}
+    	AND PSG.f_user_type = 1 <!-- 用户类别=={"1":"注册用户","2":"临时用户"} -->
+    	AND PSG.f_room_id = #{oldRoomId}
+	</update>
+	
+	<!-- 将抽奖记录由一个门牌转移到另一个门牌 -->
+	<update id="update_prizeRec_fromOne2Another" parameterType="java.util.Map" >
+		UPDATE t_prize_record PR 
+		SET PR.t_user_has_t_room_f_id = (
+				SELECT UHTR.f_id 
+				FROM t_user_has_t_room UHTR 
+				WHERE 1=1
+				AND UHTR.f_sys0_del_state = 0
+				AND UHTR.t_user_f_id= #{newUserId} AND UHTR.t_room_f_id=#{newRoomId} 
+				AND UHTR.f_apply_status = 1 <!-- 门牌申请加入状态=={"0":"未处理","1":"已通过","2":"已拒绝"} -->
+			)
+			,PR.f_sys0_upd_time= SYSDATE()
+		WHERE 1=1
+		AND PR.f_sys0_del_state = 0
+		AND PR.t_user_has_t_room_f_id = (
+				SELECT UHTR.f_id 
+				FROM t_user_has_t_room UHTR 
+				WHERE 1=1
+				AND UHTR.f_sys0_del_state = 0
+				AND UHTR.t_user_f_id=#{oldUserId} AND UHTR.t_room_f_id=#{oldRoomId} 
+				AND UHTR.f_apply_status = 1 <!-- 门牌申请加入状态=={"0":"未处理","1":"已通过","2":"已拒绝"} -->
+			)
+	</update>
+	<!-- 将用户old门牌下的神马粮票转移到新门牌下 -->
+	<update id="update_ShenMaHb_FromOne2Another" parameterType="java.util.Map" >
+		UPDATE t_invite_reward_record IRR
+			INNER JOIN t_pay_red_envelope PRE ON IRR.f_id = PRE.f_from_id AND PRE.f_sys0_del_state = 0 
+				AND PRE.f_user_id = #{oldUserId}
+				AND PRE.f_room_id = #{oldRoomId}
+		SET IRR.f_room_id = #{newRoomId}
+			,IRR.f_sys0_upd_time = SYSDATE()
+			,IRR.f_user_id = #{newUserId}
+			,IRR.f_room_id = #{newRoomId}
+			,PRE.f_user_id = #{newUserId}
+			,PRE.f_room_id = #{newRoomId}
+			,PRE.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+    	AND IRR.f_sys0_del_state = 0
+    	AND IRR.f_user_id = #{oldUserId}
+    	AND IRR.f_room_id = #{oldRoomId}
+	</update>
+	
+    <!-- 微信登录时查询账号的处理 -->
+    <select id="select_ExistLoginNo_For_WeiXin" parameterType="java.util.Map" resultMap="loginNoBase.loginNoBaseMap_AppendTable">
+    	<include refid="select_LoginNo_By_WeiXinUnionId_comm"/>
+    	
+    	<!-- syl-del 2015-5-29 10:51:36由于已经支持账号合并,所以更改账号获取方式 -->
+   	 	<!-- <if test="unionId != null and !( unionId.equals('')) ">
+	   	 	AND CASE WHEN ISNULL(LN.f_union_id) THEN TRUE ELSE LN.f_union_id = #{unionId} END
+			AND CASE WHEN ISNULL(LN.f_union_id) THEN LN.f_no = #{accountNo}  ELSE TRUE END
+			AND CASE WHEN ISNULL(LN.f_union_id) THEN LN.f_type = #{accType} ELSE TRUE END
+   	 	</if> -->
+   	 	
+   	 	<!-- syl-add 2015-5-29 10:52:09结合unionId及账号条件获取对应的账号,为了支持多渠道登录不挤掉的问题 -->
+   	 	<if test="unionId != null and !( unionId.equals('')) ">
+	   	 	AND CASE WHEN ISNULL(LN.f_union_id) THEN TRUE ELSE LN.f_union_id = #{unionId} END
+	   	 	AND LN.f_no = #{accountNo}
+	   	 	AND LN.f_type = #{accType}
+   	 	</if>
+   	 	
+   	 	<if test="unionId == null or unionId == '' ">
+   	 		AND LN.f_no = #{accountNo}
+   	 		AND LN.f_type = #{accType}
+   	 	</if>
+   	 	
+   	 	<include refid="select_DefaultLoginNo_condition"/>
+    </select>
+    
+    <!-- 如果unionId为空，则更新对应记录的unionId -->
+   <!--  <update id="update_WeiXinUnionId_IfNotExist" parameterType="java.util.Map">
+    	UPDATE t_login_no LN
+    	SET LN.f_union_id = #{unionId}
+    	WHERE 1=1
+    	AND LN.f_sys0_del_state = 0
+    	AND ISNULL(LN.f_union_id)
+    	AND LN.f_no = #{accountNo}
+ 		AND LN.f_type = #{accType}
+    </update> -->
+    <!-- 根据账号及类别查询单个详情 -->
+	<select id="select_LoginNo_ByAccountNoAndType" parameterType="java.util.Map" resultMap="loginNoBase.loginNoBaseMap_AppendTable">
+		SELECT <include refid="loginNoBase.queryHead_AppendTable"/>
+		FROM t_login_no LN
+    	WHERE 1=1
+    	AND LN.f_sys0_del_state = 0
+    	AND LN.f_no = #{accountNo}
+ 		AND LN.f_type = #{accType}
+	</select>
+	
+	<!-- 根据设备信息获取对应的账号 -->
+	<select id="select_login_no_old_upgrade_date_by_device" parameterType="java.util.Map" 
+		resultMap="loginNoOldUpgradeDateBase.loginNoOldUpgradeDateBaseMap_AppendTable">
+		SELECT <include refid="loginNoOldUpgradeDateBase.queryHead_AppendTable"/>
+		FROM t_login_no_old_upgrade_date LNOUD
+    	WHERE 1=1
+    	AND LNOUD.f_sys0_del_state = 0
+    	AND LNOUD.f_device_id = #{deviceId}
+		AND LNOUD.f_channel = #{subChannelId}
+		AND LNOUD.f_deal_status = 1 <!-- 处理状态=={"1":"未处理","2":"已处理"} -->
+	</select>
+	<select id="select_OldWeiXin_ByDeviceInfo" parameterType="java.util.Map" resultMap="loginNoBase.loginNoBaseMap_AppendTable">
+		SELECT <include refid="loginNoBase.queryHead_AppendTable"/>
+		FROM t_login_no LN
+			INNER JOIN (
+				SELECT f_user_acc_no,f_user_acc_type
+				FROM t_login_no_old_upgrade_date
+				WHERE 1=1
+				AND f_id = #{oldWeixinDataId}
+				AND f_deal_status = 1 <!-- 处理状态=={"1":"未处理","2":"已处理"} -->
+			)tbl_tmp ON LN.f_no = tbl_tmp.f_user_acc_no AND LN.f_type = tbl_tmp.f_user_acc_type
+		WHERE 1=1
+		AND LN.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 检查并判断是否更新门牌管理员的信息 -->
+	<update id="update_AndCheck_RealRoom_ValidateInfo" parameterType="java.util.Map">
+		UPDATE t_room R
+			INNER JOIN t_real_room RR ON R.t_real_room_f_id = RR.f_id AND RR.f_sys0_del_state = 0
+				AND RR.f_validate_user_id = #{srcAdminUserId}
+				AND RR.f_validate_status = 5 <!-- 用户对真实门牌的验证状态=={"1":"未验证","5":"已验证"} -->
+			INNER JOIN t_room_validate RV ON RV.t_room_f_id = R.f_id AND RV.f_sys0_del_state = 0
+				AND RV.f_user_id = #{srcAdminUserId}
+				AND RV.f_verify_status = 4 <!-- 验证状态=={"1":"未验证","2":"验证中","3":"验证失败","4":"验证通过"} -->
+		SET RR.f_old_validate_user_id = RR.f_validate_user_id
+			,RR.f_validate_user_id = #{goalAdminUserId}
+			,RR.f_sys0_upd_time = SYSDATE()
+			,RV.f_old_user_id = RV.f_user_id
+			,RV.f_user_id = #{goalAdminUserId}
+			,RV.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND R.f_sys0_del_state = 0
+		AND R.f_id = #{roomId}
+	</update>
+	
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:高尔夫组团表 t_golf_group -->
+<mapper namespace="golfGroupBase">
+	<resultMap type="GolfGroup" id="golfGroupBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_group_openid" javaType="java.lang.String" property="groupOpenid"/>  <!-- 团长的ID -->        <result column="f_group_date" javaType="java.lang.String" property="groupDate"/>  <!-- 组团日期 -->        <result column="f_group_time" javaType="java.lang.String" property="groupTime"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="GolfGroup" id="golfGroupExtendMap" extends="golfGroupBaseMap">
+	</resultMap>
+	<resultMap type="GolfGroup" id="golfGroupBaseMap_AppendTable">
+        <id column="GGid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="GGgroupOpenid" javaType="java.lang.String" property="groupOpenid"/>  <!-- 团长的ID -->        <result column="GGgroupDate" javaType="java.lang.String" property="groupDate"/>  <!-- 组团日期 -->        <result column="GGgroupTime" javaType="java.lang.String" property="groupTime"/>  <!--  -->        <result column="GGsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="GGsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="GGsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="GGsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="GGsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="GGsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="GGsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="GolfGroup" id="golfGroupBaseMap_AppendTable1">
+        <id column="GG1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="GG1groupOpenid" javaType="java.lang.String" property="groupOpenid"/>  <!-- 团长的ID -->        <result column="GG1groupDate" javaType="java.lang.String" property="groupDate"/>  <!-- 组团日期 -->        <result column="GG1groupTime" javaType="java.lang.String" property="groupTime"/>  <!--  -->        <result column="GG1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="GG1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="GG1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="GG1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="GG1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="GG1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="GG1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		GG.f_id,GG.f_group_openid,date_format(GG.f_group_date,'%Y-%m-%d %T') as f_group_date,GG.f_group_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		GG.f_id as GGid,GG.f_group_openid as GGgroupOpenid,date_format(GG.f_group_date,'%Y-%m-%d %T') as GGgroupDate,GG.f_group_time as GGgroupTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		GG1.f_id as GG1id,GG1.f_group_openid as GG1groupOpenid,date_format(GG1.f_group_date,'%Y-%m-%d %T') as GG1groupDate,GG1.f_group_time as GG1groupTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (GG.f_id = #{id} ) </if>        <if test="groupOpenid != null">  and (GG.f_group_openid = #{groupOpenid} ) </if>        <if test="groupDate != null and !groupDate.equals('')  ">  and (GG.f_group_date = str_to_date(#{groupDate},'%Y-%m-%d %T') ) </if>        <if test="groupDate_START != null and !groupDate_START.equals('')  ">              <![CDATA[ and (GG.f_group_date >= str_to_date(#{groupDate_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="groupDate_END != null and !groupDate_END.equals('')  ">            <![CDATA[ and (GG.f_group_date <= str_to_date(#{groupDate_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="groupTime != null">  and (GG.f_group_time = #{groupTime} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (GG.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (GG.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (GG.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (GG.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (GG.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (GG.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (GG.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (GG.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (GG.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (GG.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (GG.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (GG.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (GG.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (GG.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (GG.f_id = #{id} ) </if>        <if test="groupOpenid != null and !groupOpenid.equals('')  ">  and (GG.f_group_openid like CONCAT('%',#{groupOpenid},'%') ) </if>        <if test="groupDate != null and !groupDate.equals('')  ">  and (GG.f_group_date = str_to_date(#{groupDate},'%Y-%m-%d %T') ) </if>        <if test="groupDate_START != null and !groupDate_START.equals('')  ">              <![CDATA[ and (GG.f_group_date >= str_to_date(#{groupDate_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="groupDate_END != null and !groupDate_END.equals('')  ">            <![CDATA[ and (GG.f_group_date <= str_to_date(#{groupDate_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="groupTime != null and !groupTime.equals('')  ">  and (GG.f_group_time like CONCAT('%',#{groupTime},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (GG.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (GG.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (GG.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (GG.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (GG.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (GG.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (GG.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (GG.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (GG.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (GG.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (GG.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (GG.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (GG.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (GG.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="golfGroupBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="golfGroupBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="golfGroupBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="golfGroupBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_golf_group GG    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(高尔夫组团表)信息。 -->
+	<sql id="select_golfGroup">
+		SELECT <include refid="golfGroupBase.queryHead"/>
+		<include refid="golfGroupBase.busiQueryCondition"/>
+		<include refid="golfGroupBase.dimCheckSql"/>
+		ORDER BY GG.f_id DESC
+	</sql>
+	<select id="select_golfGroup" parameterType="java.util.Map" resultMap="golfGroupBase.golfGroupExtendMap">
+		<include refid="golfGroupBase.select_golfGroup"/>
+	</select>
+	
+	<!-- 根据条件分页查询(高尔夫组团表)信息  -->
+	<sql id="select_golfGroup_withPage">
+		SELECT <include refid="golfGroupBase.queryHead"/>
+		<include refid="golfGroupBase.busiQueryCondition"/>
+		<include refid="golfGroupBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_golfGroup_withPage" resultMap="golfGroupBase.golfGroupExtendMap" parameterType="java.util.Map">
+		<include refid="golfGroupBase.select_golfGroup_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(高尔夫组团表)信息。 -->
+	<sql id="select_golfGroup_bySeqId">
+		SELECT <include refid="golfGroupBase.queryHead"/>
+		<include refid="golfGroupBase.busiQueryCondition"/>
+		 and GG.f_id = #{_parameter}
+	</sql>
+	<select id="select_golfGroup_bySeqId" parameterType="java.math.BigInteger" resultMap="golfGroupBase.golfGroupBaseMap">
+		<include refid="golfGroupBase.select_golfGroup_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(高尔夫组团表)记录数  -->
+	<sql id="select_golfGroup_count">
+		SELECT COUNT(*)
+		<include refid="golfGroupBase.busiQueryCount"/>
+		<include refid="golfGroupBase.dimCheckSql"/>
+	</sql>
+	<select id="select_golfGroup_count" resultType="java.lang.Integer">
+		<include refid="golfGroupBase.select_golfGroup_count"/>
+	</select>
+	
+	 <!-- 往(高尔夫组团表)新增一条记录。 -->
+	 <sql id="insert_golfGroup">
+		INSERT INTO t_golf_group 
+		(f_id,f_group_openid,f_group_date,f_group_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{groupOpenid,jdbcType=VARCHAR},str_to_date(#{groupDate,jdbcType=DATE},'%Y-%m-%d %T'),#{groupTime,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_golfGroup" parameterType="GolfGroup">
+		<include refid="golfGroupBase.insert_golfGroup"/>
+    </insert>
+    
+	<!-- 批量新增(高尔夫组团表)信息 -->
+    <insert id="insert_golfGroup_Batch" parameterType="java.util.List">
+    	INSERT INTO t_golf_group 
+		(f_id,f_group_openid,f_group_date,f_group_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.groupOpenid,jdbcType=VARCHAR},str_to_date(#{item.groupDate,jdbcType=DATE},'%Y-%m-%d %T'),#{item.groupTime,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(高尔夫组团表)信息。 -->
+    <sql id="update_golfGroup">
+		UPDATE t_golf_group		<trim prefix="SET" prefixOverrides=","> 		<if test="groupOpenid != null and !groupOpenid.equals('') "> ,f_group_openid=#{groupOpenid}</if> 		<if test="groupDate != null and !groupDate.equals('') "> ,f_group_date=str_to_date(#{groupDate},'%Y-%m-%d %T')</if> 		<if test="groupTime != null and !groupTime.equals('') "> ,f_group_time=#{groupTime}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_golfGroup" parameterType="GolfGroup">
+		<include refid="golfGroupBase.update_golfGroup"/>
+    </update>
+    
+    <!-- 批量更新(高尔夫组团表)信息。 -->
+    <update id="update_golfGroup_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_golf_group		<trim prefix="SET" prefixOverrides=","> 		<if test="item.groupOpenid != null and !item.groupOpenid.equals('')  "> ,f_group_openid=#{item.groupOpenid}</if> 		<if test="item.groupDate != null and !item.groupDate.equals('')  "> ,f_group_date=str_to_date(#{item.groupDate},'%Y-%m-%d %T')</if> 		<if test="item.groupTime != null and !item.groupTime.equals('')  "> ,f_group_time=#{item.groupTime}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(高尔夫组团表)信息_逻辑删除。 -->
+    <sql id="delete_golfGroup_Logic">
+		UPDATE t_golf_group		<trim prefix="SET" prefixOverrides=","> 		<if test="groupOpenid != null and !groupOpenid.equals('')  "> ,f_group_openid=#{groupOpenid}</if> 		<if test="groupDate != null and !groupDate.equals('')  "> ,f_group_date=str_to_date(#{groupDate},'%Y-%m-%d %T')</if> 		<if test="groupTime != null and !groupTime.equals('')  "> ,f_group_time=#{groupTime}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_golfGroup_Logic" parameterType="GolfGroup">
+		<include refid="golfGroupBase.delete_golfGroup_Logic"/>
+    </update>
+    
+    <!-- 批量删除(高尔夫组团表)信息_逻辑删除 -->
+    <update id="delete_golfGroup_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_golf_group		<trim prefix="SET" prefixOverrides=","> 		<if test="item.groupOpenid != null and !item.groupOpenid.equals('')  "> ,f_group_openid=#{item.groupOpenid}</if> 		<if test="item.groupDate != null and !item.groupDate.equals('')  "> ,f_group_date=str_to_date(#{item.groupDate},'%Y-%m-%d %T')</if> 		<if test="item.groupTime != null and !item.groupTime.equals('')  "> ,f_group_time=#{item.groupTime}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(高尔夫组团表)信息。 -->
+    <sql id="delete_golfGroup">
+		DELETE FROM t_golf_group WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_golfGroup" parameterType="java.lang.String">
+		<include refid="golfGroupBase.delete_golfGroup"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(高尔夫组团表)信息。 -->
+    <delete id="delete_golfGroup_Batch" parameterType="java.util.List">
+		DELETE FROM t_golf_group WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

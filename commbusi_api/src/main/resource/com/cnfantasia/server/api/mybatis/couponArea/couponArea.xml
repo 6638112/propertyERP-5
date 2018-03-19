@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="couponArea">
+
+    <select id="getCityListByCouponId" parameterType="java.math.BigInteger" resultType="Map">
+        SELECT ac.f_id as id, ac.f_name name
+        FROM t_coupon_area ca
+        LEFT JOIN t_address_city ac ON ca.f_area_id = ac.f_id
+        WHERE ca.t_coupon_f_id = #{couponId}
+    </select>
+
+    <select id="getGroupBuildingListByCouponId" parameterType="java.math.BigInteger" resultType="Map">
+        SELECT gb.f_id as id, gb.f_name as name, gb.f_address_desc as addressDesc
+        FROM t_coupon_area ca
+        LEFT JOIN t_group_building gb ON ca.f_area_id = gb.f_id
+        WHERE ca.t_coupon_f_id = #{couponId};
+    </select>
+
+    <delete id="delCouponAreaByCouponId" parameterType="java.math.BigInteger">
+        DELETE FROM t_coupon_area WHERE t_coupon_f_id = #{couponId}
+    </delete>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户表 t_building -->
+<mapper namespace="building">
+    <resultMap type="com.cnfantasia.server.ms.buildingRoom.entity.BuildingEntity" id="buildingEntity" extends="buildingBase.buildingBaseMap_AppendTable">
+    	<result column="managementName" property="managementName"/>
+    	<result column="groupbuildingName" property="groupbuildingName"/>
+    </resultMap>
+    <!-- 分页查询 -->
+    <select id="select_building_forList" parameterType="java.util.Map" resultMap="buildingEntity">
+		SELECT 
+			<include refid="buildingBase.queryHead_AppendTable"/>,GB.f_name groupbuildingName
+			,PM.f_name managementName
+		FROM t_building B
+		INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id AND GB.f_sys0_del_state=0
+		<choose>
+			<when test="isPmUser !=null and isPmUser == 1">
+				INNER JOIN t_property_management PM ON GB.t_property_management_f_id = PM.f_id and PM.f_sys0_del_state=0
+				INNER JOIN t_property_management_has_oms_user PMHOU on PM.f_id = PMHOU.t_property_management_f_id and PMHOU.f_sys0_del_state=0
+			</when>
+			<otherwise>
+				left JOIN t_property_management PM ON GB.t_property_management_f_id = PM.f_id and PM.f_sys0_del_state=0
+			</otherwise>
+		</choose>
+   		INNER JOIN t_property_company PC on GB.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+		WHERE B.f_sys0_del_state=0 and B.f_check_status in (1,9) <!-- "1":"审核通过","9":"无需审核" -->
+		<if test="isAdmin ==null or isAdmin == 0">
+			<if test="isPmUser !=null and isPmUser == 0" >and PC.f_admin_id=#{adminId}</if>
+			<if test="isPmUser !=null and isPmUser == 1" >and PMHOU.t_oms_user_f_id=#{adminId}</if>
+		</if>
+		<if test="managementName != null and managementName != '' "> AND PM.f_name like CONCAT('%',#{managementName}, '%') </if><!-- 小区 -->
+		<if test="gbId !=null and gbId != ''" >and GB.f_id=#{gbId}</if>
+    	<if test="groupbuildingName != null and groupbuildingName != '' "> AND GB.f_name like CONCAT('%',#{groupbuildingName}, '%') </if><!-- 小区 -->
+    	<if test="buildingName != null and buildingName != '' "> and B.f_name like CONCAT('%',#{buildingName}, '%') </if><!-- 楼栋 -->
+    	<if test="buildingCode != null and buildingCode != '' "> and B.f_code like CONCAT('%',#{buildingCode}, '%') </if><!-- 楼栋编码 -->
+    	<if test="code != null and code != '' "> and B.f_code like CONCAT('%', #{code}, '%') </if><!-- 编号-->
+    	ORDER BY GB.f_sys0_add_time desc, B.f_name_char_order,B.f_name_digit_order+0
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+    <!-- 查询单个信息-->
+    <select id="select_building_byId" parameterType="java.util.Map" resultMap="buildingEntity">
+    	SELECT 
+			<include refid="buildingBase.queryHead_AppendTable"/>,GB.f_name groupbuildingName
+			,PM.f_name managementName
+		FROM t_building B
+		INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id AND GB.f_sys0_del_state=0
+		LEFT JOIN t_property_management PM ON GB.t_property_management_f_id = PM.f_id and PM.f_sys0_del_state=0
+		WHERE B.f_id = #{id}
+    </select>
+</mapper>

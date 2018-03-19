@@ -1,0 +1,92 @@
+package test.initCommunitySupplyData.bak;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+public class FileOperUtil {
+	public static String writeFile(String fileNewName) throws IOException{
+		File classFile=new File(fileNewName);
+		/*int pointStation=fileNewName.lastIndexOf('.');
+		int i=1;
+		while(classFile.exists()){
+			i++;
+			String newFileName="";
+			if(pointStation!=-1){
+				newFileName=fileNewName.substring(0,pointStation)+i+fileNewName.substring(pointStation);
+			}else{
+				newFileName=classFile.getName()+i;
+			}
+			classFile = new File(newFileName);
+		}*/
+		//System.out.println(classFile.getAbsolutePath());
+		classFile.createNewFile();
+		System.out.println(classFile.getAbsolutePath()+"文件写入成功");
+		return classFile.getAbsolutePath();
+	}
+	public static String writeFileNoReplace(String fileNewName) throws IOException{
+		File classFile=new File(fileNewName);
+		int pointStation=fileNewName.lastIndexOf('.');
+		int i=1;
+		while(classFile.exists()){
+			i++;
+			String newFileName="";
+			if(pointStation!=-1){
+				newFileName=fileNewName.substring(0,pointStation)+i+fileNewName.substring(pointStation);
+			}else{
+				newFileName=classFile.getName()+i;
+			}
+			classFile = new File(newFileName);
+		}
+		classFile.createNewFile();
+		//System.out.println(classFile.getAbsolutePath()+"文件写入成功");
+		return classFile.getAbsolutePath();
+	}
+	public static void writeToNewFile(List<String> content,String fileAllName,String fileEcode) throws IOException{
+		File classFile = new File(writeFile(fileAllName));//如果名称已存在，自动更换新名称，并返回新名称
+		//BufferedWriter bw = new BufferedWriter(new FileWriter(classFile));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(classFile),fileEcode));
+		for(String s:content){
+			bw.write(s);
+			bw.newLine();
+		}
+		bw.flush();
+		bw.close();
+	}
+	public static void writeToNewFile(List<String> content,String filePath,String fileName,String fileEcode) throws IOException{
+		/** 将读取到的内容content写入到新文件*/
+		String fileAllName=filePath+"/"+fileName;
+		writeToNewFile(content, fileAllName, fileEcode);
+	}
+	public static List<String> readFile(File srcFile,String ecodeType) throws Exception{
+		//System.out.println("开始读取"+srcFile+"文件。");
+		List<String> fileInfo=new ArrayList<String>();
+		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(srcFile),ecodeType));
+		String line=br.readLine();
+		while(line!=null){
+			fileInfo.add(line);
+			line=br.readLine();
+		}
+		br.close();
+		//System.out.println("共读取了"+fileInfo.size()+"行数据。");
+		return fileInfo;
+	}
+	
+	public static void checkDirExist(String dirPath, String subDirName) {
+		File dir=new File(dirPath);
+		if(!dir.exists()){dir.mkdir();}
+		File subDir=new File(dirPath+"/"+subDirName);
+		if(!subDir.exists()){subDir.mkdir();}
+	}
+	public static void checkDirAndMake(String dirPath) {
+		File dir=new File(dirPath);
+		if(!dir.exists()){dir.mkdirs();}
+	}
+}

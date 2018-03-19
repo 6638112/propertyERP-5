@@ -1,0 +1,103 @@
+package com.commom.commonUtils;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+public class GetMACAddress {
+	private static String mac_s1 = "MAC Address";
+	private static Log logger = LogFactory.getLog(GetMACAddress.class);
+
+	public static void main(String[] args) throws Exception{
+		/*GetMACAddress getMACAddress = new GetMACAddress();
+		System.out.println(getMACAddress.getMACAddress("192.168.43.142")); // 获得该ip地址的mac地址
+		 */		
+		
+	}
+	public static String getMACAddress2(String ipAddress) {
+		String resMac="error";
+		try {
+			Process pp = Runtime.getRuntime().exec("cmd /c chcp 65001 & getmac ");
+			InputStreamReader ir = new InputStreamReader(pp.getInputStream());
+			LineNumberReader input = new LineNumberReader(ir);
+			String str = input.readLine();
+			while(str!=null){
+				if(str.indexOf("Physical Address")!=-1){
+					input.readLine();
+					str = input.readLine();
+					resMac=str.trim().substring(0,17);
+					break;
+				}else{
+					str = input.readLine();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return resMac;
+		
+	}
+	public static String getMACAddress(String ipAddress) {
+		String str = "", strMAC = "", macAddress = "";
+		try {
+			Process pp = Runtime.getRuntime().exec("cmd /c chcp 65001 & nbtstat -a " + ipAddress);
+			InputStreamReader ir = new InputStreamReader(pp.getInputStream());
+			LineNumberReader input = new LineNumberReader(ir);
+			str = input.readLine();
+			while(str!=null){
+				logger.debug(str);
+				if (str != null) {
+					// str = new String(str.getBytes(),"UTF-8");
+					if (str.indexOf(mac_s1) > 1) {
+						strMAC = str.substring(str.indexOf(mac_s1) + 14, str.length());
+						break;
+					}
+				}
+				str = input.readLine();
+			}
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			return "error";
+		}
+		//
+		if (strMAC.trim().length() < 17) {
+			return "error";
+		}
+		strMAC = strMAC.trim();
+		macAddress = strMAC.substring(0, 2) + ":" + strMAC.substring(3, 5) + ":" + strMAC.substring(6, 8) + ":" + strMAC.substring(9, 11) + ":"
+				+ strMAC.substring(12, 14) + ":" + strMAC.substring(15, 17);
+		//
+		return macAddress;
+	}
+
+	public static String procAll(String str) {
+		return procStringEnd(procFirstMac(procAddress(str)));
+	}
+
+	public static String procAddress(String str) {
+		int indexof = str.indexOf("Physical Address");
+		if (indexof > 0) {
+			return str.substring(indexof, str.length());
+		}
+		return str;
+	}
+
+	public static String procFirstMac(String str) {
+		int indexof = str.indexOf(":");
+		if (indexof > 0) {
+			return str.substring(indexof + 1, str.length()).trim();
+		}
+		return str;
+	}
+
+	public static String procStringEnd(String str) {
+		int indexof = str.indexOf("\r");
+		if (indexof > 0) {
+			return str.substring(0, indexof).trim();
+		}
+		return str;
+	}
+}

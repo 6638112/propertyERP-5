@@ -1,0 +1,87 @@
+/**   
+ * Filename:    HttpClientTest02.java   
+ * @version:    1.0  
+ * Create at:   2014年5月13日 上午2:04:04   
+ * Description:  
+ *   
+ * Modification History:   
+ * Date        Author      Version     Description   
+ * ----------------------------------------------------------------- 
+ * 2014年5月13日    shiyl      1.0         1.0 Version   
+ */
+package test;
+
+/**
+ * Filename:    HttpClientTest02.java
+ * @version:    1.0.0
+ * Create at:   2014年5月13日 上午2:04:04
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年5月13日       shiyl             1.0             1.0 Version
+ */
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+
+public class HttpClientTest02 {
+
+//	@Test
+	public void testGetRequest() throws IllegalStateException, IOException {
+		HttpClient client = new HttpClient();
+		StringBuilder sb = new StringBuilder();
+		InputStream ins = null;
+		// Create a method instance.
+		GetMethod method = new GetMethod("http://cyz.colourlife.com/site/regions?region_id=0");
+		// Provide custom retry handler is necessary
+//		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
+		method.getParams().setIntParameter("region_id", 0);
+		try {
+			// Execute the method.
+			int statusCode = client.executeMethod(method);
+			System.out.println(statusCode);
+			if (statusCode == HttpStatus.SC_OK) {
+				ins = method.getResponseBodyAsStream();
+				byte[] b = new byte[1024];
+				int r_len = 0;
+				while ((r_len = ins.read(b)) > 0) {
+					sb.append(new String(b, 0, r_len, method.getResponseCharSet()));
+				}
+			} else {
+				System.err.println("Response Code: " + statusCode);
+			}
+		} catch (HttpException e) {
+			System.err.println("Fatal protocol violation: " + e.getMessage());
+		} catch (IOException e) {
+			System.err.println("Fatal transport error: " + e.getMessage());
+		} finally {
+			method.releaseConnection();
+			if (ins != null) {
+				ins.close();
+			}
+		}
+		System.out.println(sb.toString());
+	}
+
+//	@Test
+//	public void testPostRequest() throws HttpException, IOException {
+//		HttpClient client = new HttpClient();
+//		PostMethod method = new PostMethod("http://cyz.colourlife.com/site/regions?region_id=0");
+//		method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=gb2312");
+//		NameValuePair[] param = { new NameValuePair("region_id", "0"), };
+//		method.setRequestBody(param);
+//		int statusCode = client.executeMethod(method);
+//		System.out.println(statusCode);
+//		byte[] responseBody = method.getResponseBody();
+//		System.out.println("--------------------");
+//		System.out.println(new String(responseBody));
+//		method.releaseConnection();
+//	}
+
+}

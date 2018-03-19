@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="carReport">
+
+	<resultMap type="com.cnfantasia.server.ms.carReport.dto.CarReportDO" id="carReportDOMap">
+		<result column="pmName" javaType="java.lang.String" property="pmName" />
+		<result column="plotName" javaType="java.lang.String" property="plotName" />
+		<result column="monthCash" javaType="java.math.BigDecimal" property="monthCash" />
+		<result column="tempCash" javaType="java.math.BigDecimal" property="tempCash" />
+		<result column="monthJfqFee" javaType="java.math.BigDecimal" property="monthJfqFee" />
+		<result column="tempJfqFee" javaType="java.math.BigDecimal" property="tempJfqFee" />
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.carReport.dto.OptionDto" id="optionDtoMap">
+		<result column="id" javaType="java.math.BigInteger" property="id" />
+		<result column="name" javaType="java.lang.String" property="name" />
+	</resultMap>
+
+	<select id="selectCarReportDOList" parameterType="java.util.Map" resultMap="carReportDOMap">
+		SELECT
+			_tmp.pmName,
+			_tmp.plotName plotName,
+			SUM(
+		
+				IF (
+					_tmp.f_status = 1
+					AND _tmp.f_pay_num > 0,
+					_tmp.f_fee,
+					0
+				)
+			) / 100 monthCash,
+			SUM(
+		
+				IF (
+					_tmp.f_status = 1
+					AND _tmp.f_pay_num = 0,
+					_tmp.f_fee,
+					0
+				)
+			) / 100 tempCash,
+			SUM(
+		
+				IF (
+					_tmp.f_status IN (0, 2)
+					AND _tmp.f_pay_num > 0,
+					_tmp.f_fee,
+					0
+				)
+			) / 100 monthJfqFee,
+			SUM(
+		
+				IF (
+					_tmp.f_status IN (0, 2)
+					AND _tmp.f_pay_num = 0,
+					_tmp.f_fee,
+					0
+				)
+			) / 100 tempJfqFee
+		FROM
+			(
+				SELECT
+					PM.f_name pmName,
+					GB.f_name plotName,
+					CNPL.f_status,
+					CNPL.f_pay_num,
+					CNPL.f_fee,
+					GB.f_id gbId
+				FROM
+					t_car_num_pay_log CNPL
+				INNER JOIN t_car_num_list CNL ON CNPL.t_car_num_id = CNL.f_id
+				INNER JOIN t_group_building GB ON 1=1 
+				<if test="gbIdList !=null">
+			   		<if test="gbIdList.size() > 0">
+						AND GB.f_id IN
+						<foreach item="item" collection="gbIdList" open="(" separator="," close=")">
+							#{item}
+						</foreach>
+			   		</if>
+			   		<if test="gbIdList.size() == 0"><!-- 无小区权限用户 -->
+			   			AND GB.f_id = -2
+			   		</if>
+				</if>
+				AND GB.f_id = IFNULL(
+					CNPL.t_group_building_f_id,
+					CNL.t_group_building_f_id
+				)
+				LEFT JOIN t_property_management PM ON GB.t_property_management_f_id = PM.f_id
+				WHERE
+					1 = 1
+				AND CNPL.f_pay_time IS NOT NULL
+				AND CNPL.f_sys0_del_state = 0
+				<if test="month != null and !month.equals('')">
+					AND DATE_FORMAT(CNPL.f_pay_time, '%Y-%m')=#{month}
+				</if>
+				<if test="pmId != null and !pmId.equals('')">
+					AND PM.f_id=#{pmId}
+				</if>
+				<if test="plotId != null and !plotId.equals('')">
+					AND GB.f_id=#{plotId}
+				</if>
+				GROUP BY
+					CNPL.f_status,
+					CNPL.t_car_num_id,
+					CNPL.f_pay_time
+			) _tmp
+		GROUP BY
+			_tmp.gbId
+	</select>
+
+	<select id="selectGbList" parameterType="java.util.Map" resultMap="optionDtoMap">
+		SELECT
+			DISTINCT
+			GB.f_id `id`,
+			GB.f_name `name`
+		FROM
+			t_car_num_pay_log CNPL
+		INNER JOIN t_car_num_list CNL ON CNPL.t_car_num_id = CNL.f_id
+		INNER JOIN t_group_building GB ON 1=1 
+		<if test="gbIdList !=null">
+	   		<if test="gbIdList.size() > 0">
+				AND GB.f_id IN
+				<foreach item="item" collection="gbIdList" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+	   		</if>
+	   		<if test="gbIdList.size() == 0"><!-- 无小区权限用户 -->
+	   			AND GB.f_id = -2
+	   		</if>
+		</if>
+		AND GB.f_id = IFNULL(
+			CNPL.t_group_building_f_id,
+			CNL.t_group_building_f_id
+		)
+		WHERE
+			1 = 1
+		AND CNPL.f_pay_time IS NOT NULL
+		AND CNPL.f_sys0_del_state = 0
+	</select>
+	
+	<select id="selectPmList" parameterType="java.util.Map" resultMap="optionDtoMap">
+		SELECT
+			DISTINCT
+			PM.f_id `id`,
+			PM.f_name `name`
+		FROM
+			t_car_num_pay_log CNPL
+		INNER JOIN t_car_num_list CNL ON CNPL.t_car_num_id = CNL.f_id
+		INNER JOIN t_group_building GB ON 1=1 
+		<if test="gbIdList !=null">
+	   		<if test="gbIdList.size() > 0">
+				AND GB.f_id IN
+				<foreach item="item" collection="gbIdList" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+	   		</if>
+	   		<if test="gbIdList.size() == 0"><!-- 无小区权限用户 -->
+	   			AND GB.f_id = -2
+	   		</if>
+		</if>
+		AND GB.f_id = IFNULL(
+			CNPL.t_group_building_f_id,
+			CNL.t_group_building_f_id
+		)
+		INNER JOIN t_property_management PM ON GB.t_property_management_f_id = PM.f_id
+		WHERE
+			1 = 1
+		AND CNPL.f_pay_time IS NOT NULL
+		AND CNPL.f_sys0_del_state = 0
+	</select>
+
+</mapper>

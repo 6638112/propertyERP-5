@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 依谷网模块 -->
+<mapper namespace="egu">
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.PushEguOrderEntity" id="PushEguOrderEntityMap">
+		<result column="edo_id" javaType="java.math.BigInteger" property="edo_id"/><!-- 配送单id -->
+		<result column="EOorderNo" javaType="java.lang.String" property="order_id"/> <!-- 订单号-->
+		<result column="realName" javaType="java.lang.String" property="member_name"/><!-- 联系人姓名-->
+		<result column="realmobile" javaType="java.lang.String" property="member_mobile"/><!-- 联系人号码-->
+		<result column="area" javaType="java.lang.String" property="area"/><!-- 地域-->
+		<result column="address" javaType="java.lang.String" property="address"/><!-- 详细地址-->
+		<result column="remark" javaType="java.lang.String" property="remark"/><!-- 订单备注-->
+		<collection property="goods" resultMap="EguOrderProductMap"/>
+	</resultMap>
+	<resultMap type="com.cnfantasia.server.api.ebuy.entity.EguProduct" id="EguOrderProductMap">
+		<result column="goods_id" javaType="java.math.BigInteger" property="goods_id"/><!-- 依谷网商品对应id -->
+		<result column="goods_name" javaType="java.lang.String" property="goods_name"/>  <!-- 商品名称 -->
+		<result column="buy_num" javaType="java.lang.Long" property="buy_num"/><!-- 商品数量 -->
+	</resultMap>
+	<update id="updateExpress" parameterType="java.util.Map">
+		<![CDATA[
+			UPDATE t_ebuy_delivery_order EDO 
+					SET EDO.f_delivery_settlement_fee = #{expressFee},
+						EDO.f_express_no = #{expressNo},
+						EDO.f_status = 2,
+						EDO.t_ebuy_express_company_f_id = #{expressCompanyId}
+					WHERE EDO.f_id = #{orderNo}
+ 		]]>
+	</update>
+	<update id="updateDeliveryOrder" parameterType="java.util.Map">
+		<![CDATA[
+			UPDATE t_ebuy_delivery_order EDO 
+					SET EDO.f_status = 1 
+					WHERE EDO.f_id = #{orderNo}
+ 		]]>
+	</update>
+	<select id="pushEguOrderList" resultMap="PushEguOrderEntityMap">
+		SELECT TEO.f_order_no AS EOorderNo,TEO.f_deliv_address_area AS area,TEO.f_deliv_address_detail AS address,
+				TEO.f_deliv_people_name AS realName,TEO.f_deliv_phone AS realmobile ,TEPT.f_src_id AS goods_id,TEP.f_name AS goods_name,EOHTEP.f_product_qty AS buy_num,EDO.f_id AS edo_id 
+			FROM t_ebuy_order TEO 
+			INNER JOIN t_ebuy_delivery_order EDO ON EDO.t_ebuy_order_f_id = TEO.f_id AND EDO.f_status IN(0,1) 
+				AND EDO.f_sys0_del_state=0 AND TEO.f_sys0_del_state=0 AND EDO.t_supply_merchant_f_id IN(204,212)<!-- 依谷网 两个id-->
+			LEFT JOIN t_ebuy_delivery_order_product EDOP ON EDOP.t_ebuy_delivery_order_f_id = EDO.f_id AND EDOP.f_sys0_del_state=0
+			LEFT JOIN t_ebuy_order_has_t_ebuy_product EOHTEP ON EOHTEP.f_id = EDOP.t_ebuy_order_has_t_ebuy_product_f_id AND EOHTEP.f_sys0_del_state=0
+			LEFT JOIN t_ebuy_product_shelf EPS ON EPS.f_id = EOHTEP.t_ebuy_product_f_id
+			LEFT JOIN t_ebuy_product TEP ON TEP.f_id = EPS.t_ebuy_product_id AND TEP.f_sys0_del_state=0
+			LEFT JOIN t_ebuy_product_temp TEPT ON TEPT.f_id = TEP.f_src_id AND TEPT.f_sys0_del_state=0
+		WHERE TEO.f_type = 1 and TEO.f_pay_time >= date_sub(now(), interval 1 day) and EDO.f_id NOT IN
+				(SELECT TEDPR.t_ebuy_delivery_order_f_id FROM t_ebuy_delivery_push_recorder TEDPR 
+							WHERE TEDPR.f_sys0_add_time >= date_sub(now(), interval 1 day) and TEDPR.t_ebuy_supply_merchant_f_id = EDO.t_supply_merchant_f_id AND TEDPR.f_sys0_del_state = 0 AND TEDPR.f_isPush_success = 0 
+							GROUP BY TEDPR.t_ebuy_delivery_order_f_id 
+							HAVING(COUNT(TEDPR.t_ebuy_delivery_order_f_id)>5))<!-- 不推送依谷网订单推送失败五次的运单 -->
+				AND EDO.f_id NOT IN
+				(SELECT TEDPR.t_ebuy_delivery_order_f_id FROM t_ebuy_delivery_push_recorder TEDPR 
+							WHERE TEDPR.f_sys0_add_time >= date_sub(now(), interval 1 day) and TEDPR.t_ebuy_supply_merchant_f_id = EDO.t_supply_merchant_f_id AND TEDPR.f_sys0_del_state = 0 AND TEDPR.f_isPush_success = 1 
+							GROUP BY TEDPR.t_ebuy_delivery_order_f_id )<!-- 不推送依谷网订单推送成功的运单 -->
+							AND TEO.f_status=3 AND EDO.f_push_status=0 AND TEPT.f_src_id IS NOT NULL
+	</select>
+
+	<!-- 判断商品是否存在，已存在更新 -->
+	<select id="select_detail_byEguPrdtId"  parameterType="java.math.BigInteger" resultMap="ebuyProductTempBase.ebuyProductTempBaseMap_AppendTable">
+		SELECT <include refid="ebuyProductTempBase.queryHead_AppendTable"/> 
+		FROM t_ebuy_product_temp EPT
+    	WHERE EPT.f_sys0_del_state = 0  
+		AND EPT.t_supply_merchant_f_id IN(204,212) AND EPT.f_src_id =#{eguproId}
+	</select>
+	<!-- 找十分钟之内的推送记录 -->
+	<select id="select_push_tenfenzhong" parameterType="java.math.BigInteger" resultMap="ebuyDeliveryOrderBase.ebuyDeliveryOrderBaseMap_AppendTable">
+		SELECT <include refid="ebuyDeliveryOrderBase.queryHead_AppendTable"/> 
+				FROM t_ebuy_delivery_order EDO
+				 WHERE 1=1 AND EDO.f_sys0_del_state = 0 AND EDO.f_id = #{order_no} AND EDO.t_supply_merchant_f_id IN(204,212)
+				 <!--AND DATE_ADD(EDPR.f_sys0_add_time,INTERVAL 10 MINUTE)>=NOW() 十分钟之内的数据 -->
+	</select>
+
+	<select id="getEguDelivOrderNoExpress" resultType="ebuyDeliveryOrder">
+		SELECT edo.f_id as id, edo.f_express_no as expressNo, edo.f_status as status
+		FROM t_ebuy_delivery_order edo
+		WHERE edo.f_sys0_del_state = 0 AND t_supply_merchant_f_id IN (204, 212) AND edo.f_status IN (0, 1, 2) AND edo.f_express_no IS NOT NULL
+		AND edo.f_sys0_add_time > DATE_SUB(now(), INTERVAL 14 DAY)
+		AND NOT EXISTS ( SELECT 1 FROM t_delivery_order_express_trace et WHERE et.f_sys0_del_state = 0 AND et.f_delivery_order_id = edo.f_id AND et.f_state = '已签收')
+		UNION
+		SELECT edo.f_id as id, edo.f_express_no as expressNo, edo.f_status as status
+		FROM t_ebuy_delivery_order edo
+		WHERE edo.f_sys0_del_state = 0 AND t_supply_merchant_f_id IN (204, 212) AND edo.f_status = 3 AND edo.f_express_no IS NOT NULL AND edo.f_sys0_upd_time > DATE_SUB(now(),INTERVAL 3 day)
+		AND NOT EXISTS ( SELECT 1 FROM t_delivery_order_express_trace et WHERE et.f_sys0_del_state = 0 AND et.f_delivery_order_id = edo.f_id AND et.f_state = '已签收')
+	</select>
+
+	<delete id="delEguExpressByDeliverOrderId" parameterType="java.math.BigInteger">
+		DELETE FROM t_delivery_order_express_trace WHERE f_delivery_order_id = #{deliveryOrderId}
+	</delete>
+</mapper>

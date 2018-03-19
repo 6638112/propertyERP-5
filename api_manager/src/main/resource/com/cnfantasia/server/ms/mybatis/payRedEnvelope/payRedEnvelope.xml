@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="payRedEnvelope">
+
+	<sql id="querySqlFromWhere">
+		FROM t_pay_red_envelope PRE
+		WHERE PRE.f_from_type=5 
+		<if test="userId != null and !userId.equals('')"> and (PRE.f_user_id = #{userId})</if>
+		<if test="inTimeStart != null and !inTimeStart.equals('')">  
+            <![CDATA[ and (PRE.f_sys0_add_time >= #{inTimeStart})]]>
+		</if>
+		<if test="inIimeEnd != null and !inIimeEnd.equals('')">
+            <![CDATA[ and (PRE.f_sys0_add_time <= #{inIimeEnd})]]>
+		</if>
+		and (PRE.f_sys0_del_state = 0)
+	</sql>
+
+	<!-- 查询代扣卡转粮票记录 -->
+	<select id="selectPcToEnvelopeHistory" parameterType="java.util.Map" resultMap="payRedEnvelopeBase.payRedEnvelopeExtendMap">
+		SELECT
+			PRE.f_user_id,
+			PRE.f_amount_total,
+			date_format(PRE.f_sys0_add_time,'%Y-%m-%d %T') as f_sys0_add_time
+		<include refid="payRedEnvelope.querySqlFromWhere" />
+		ORDER BY PRE.f_sys0_add_time DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+
+	<!-- 查询代扣卡转粮票记录条数 -->
+	<select id="selectPcToEnvelopeHistoryCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="payRedEnvelope.querySqlFromWhere" />
+	</select>
+
+	<!-- 查询代扣卡转粮票总金额 -->
+	<select id="selectPcToEnvelopeTotalMoney" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT SUM(IFNULL(PRE.f_amount_total, 0))
+		<include refid="payRedEnvelope.querySqlFromWhere" />
+	</select>
+</mapper>

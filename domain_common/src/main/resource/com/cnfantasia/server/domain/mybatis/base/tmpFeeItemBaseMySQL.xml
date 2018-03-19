@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:临时收费项 t_tmp_fee_item -->
+<mapper namespace="tmpFeeItemBase">
+	<resultMap type="TmpFeeItem" id="tmpFeeItemBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 收费项名称 -->        <result column="f_calculate_type" javaType="java.lang.Integer" property="calculateType"/>  <!-- 计费方式（1：建筑面积*单价,2：指定金额,3 -->        <result column="t_gb_id" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->        <result column="f_is_calculate_latefee" javaType="java.lang.Integer" property="isCalculateLatefee"/>  <!-- 是否计算滞纳金（1计算，2不计算 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="TmpFeeItem" id="tmpFeeItemExtendMap" extends="tmpFeeItemBaseMap">
+	</resultMap>
+	<resultMap type="TmpFeeItem" id="tmpFeeItemBaseMap_AppendTable">
+        <id column="TFIid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="TFIname" javaType="java.lang.String" property="name"/>  <!-- 收费项名称 -->        <result column="TFIcalculateType" javaType="java.lang.Integer" property="calculateType"/>  <!-- 计费方式（1：建筑面积*单价,2：指定金额,3 -->        <result column="TFItGbId" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->        <result column="TFIisCalculateLatefee" javaType="java.lang.Integer" property="isCalculateLatefee"/>  <!-- 是否计算滞纳金（1计算，2不计算 -->        <result column="TFIsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="TFIsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="TFIsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="TFIsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="TFIsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="TFIsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="TFIsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="TmpFeeItem" id="tmpFeeItemBaseMap_AppendTable1">
+        <id column="TFI1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="TFI1name" javaType="java.lang.String" property="name"/>  <!-- 收费项名称 -->        <result column="TFI1calculateType" javaType="java.lang.Integer" property="calculateType"/>  <!-- 计费方式（1：建筑面积*单价,2：指定金额,3 -->        <result column="TFI1tGbId" javaType="java.math.BigInteger" property="tGbId"/>  <!-- 小区id -->        <result column="TFI1isCalculateLatefee" javaType="java.lang.Integer" property="isCalculateLatefee"/>  <!-- 是否计算滞纳金（1计算，2不计算 -->        <result column="TFI1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="TFI1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="TFI1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="TFI1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="TFI1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="TFI1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="TFI1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		TFI.f_id,TFI.f_name,TFI.f_calculate_type,TFI.t_gb_id,TFI.f_is_calculate_latefee
+	</sql>
+	<sql id="queryHead_AppendTable">
+		TFI.f_id as TFIid,TFI.f_name as TFIname,TFI.f_calculate_type as TFIcalculateType,TFI.t_gb_id as TFItGbId,TFI.f_is_calculate_latefee as TFIisCalculateLatefee
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		TFI1.f_id as TFI1id,TFI1.f_name as TFI1name,TFI1.f_calculate_type as TFI1calculateType,TFI1.t_gb_id as TFI1tGbId,TFI1.f_is_calculate_latefee as TFI1isCalculateLatefee
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (TFI.f_id = #{id} ) </if>        <if test="name != null">  and (TFI.f_name = #{name} ) </if>        <if test="calculateType != null">  and (TFI.f_calculate_type = #{calculateType} ) </if>        <if test="tGbId != null">  and (TFI.t_gb_id = #{tGbId} ) </if>        <if test="isCalculateLatefee != null">  and (TFI.f_is_calculate_latefee = #{isCalculateLatefee} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (TFI.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (TFI.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (TFI.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (TFI.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (TFI.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (TFI.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (TFI.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (TFI.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (TFI.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (TFI.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (TFI.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (TFI.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (TFI.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (TFI.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (TFI.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (TFI.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="calculateType != null and !calculateType.equals('')  ">  and (TFI.f_calculate_type = #{calculateType} ) </if>        <if test="tGbId != null and !tGbId.equals('')  ">  and (TFI.t_gb_id = #{tGbId} ) </if>        <if test="isCalculateLatefee != null and !isCalculateLatefee.equals('')  ">  and (TFI.f_is_calculate_latefee = #{isCalculateLatefee} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (TFI.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (TFI.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (TFI.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (TFI.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (TFI.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (TFI.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (TFI.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (TFI.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (TFI.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (TFI.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (TFI.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (TFI.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (TFI.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (TFI.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="tmpFeeItemBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="tmpFeeItemBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="tmpFeeItemBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="tmpFeeItemBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_tmp_fee_item TFI    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(临时收费项)信息。 -->
+	<sql id="select_tmpFeeItem">
+		SELECT <include refid="tmpFeeItemBase.queryHead"/>
+		<include refid="tmpFeeItemBase.busiQueryCondition"/>
+		<include refid="tmpFeeItemBase.dimCheckSql"/>
+		ORDER BY TFI.f_id DESC
+	</sql>
+	<select id="select_tmpFeeItem" parameterType="java.util.Map" resultMap="tmpFeeItemBase.tmpFeeItemExtendMap">
+		<include refid="tmpFeeItemBase.select_tmpFeeItem"/>
+	</select>
+	
+	<!-- 根据条件分页查询(临时收费项)信息  -->
+	<sql id="select_tmpFeeItem_withPage">
+		SELECT <include refid="tmpFeeItemBase.queryHead"/>
+		<include refid="tmpFeeItemBase.busiQueryCondition"/>
+		<include refid="tmpFeeItemBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_tmpFeeItem_withPage" resultMap="tmpFeeItemBase.tmpFeeItemExtendMap" parameterType="java.util.Map">
+		<include refid="tmpFeeItemBase.select_tmpFeeItem_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(临时收费项)信息。 -->
+	<sql id="select_tmpFeeItem_bySeqId">
+		SELECT <include refid="tmpFeeItemBase.queryHead"/>
+		<include refid="tmpFeeItemBase.busiQueryCondition"/>
+		 and TFI.f_id = #{_parameter}
+	</sql>
+	<select id="select_tmpFeeItem_bySeqId" parameterType="java.math.BigInteger" resultMap="tmpFeeItemBase.tmpFeeItemBaseMap">
+		<include refid="tmpFeeItemBase.select_tmpFeeItem_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(临时收费项)记录数  -->
+	<sql id="select_tmpFeeItem_count">
+		SELECT COUNT(*)
+		<include refid="tmpFeeItemBase.busiQueryCount"/>
+		<include refid="tmpFeeItemBase.dimCheckSql"/>
+	</sql>
+	<select id="select_tmpFeeItem_count" resultType="java.lang.Integer">
+		<include refid="tmpFeeItemBase.select_tmpFeeItem_count"/>
+	</select>
+	
+	 <!-- 往(临时收费项)新增一条记录。 -->
+	 <sql id="insert_tmpFeeItem">
+		INSERT INTO t_tmp_fee_item 
+		(f_id,f_name,f_calculate_type,t_gb_id,f_is_calculate_latefee,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{calculateType},#{tGbId},#{isCalculateLatefee},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_tmpFeeItem" parameterType="TmpFeeItem">
+		<include refid="tmpFeeItemBase.insert_tmpFeeItem"/>
+    </insert>
+    
+	<!-- 批量新增(临时收费项)信息 -->
+    <insert id="insert_tmpFeeItem_Batch" parameterType="java.util.List">
+    	INSERT INTO t_tmp_fee_item 
+		(f_id,f_name,f_calculate_type,t_gb_id,f_is_calculate_latefee,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.calculateType},#{item.tGbId},#{item.isCalculateLatefee},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(临时收费项)信息。 -->
+    <sql id="update_tmpFeeItem">
+		UPDATE t_tmp_fee_item		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="calculateType != null and !calculateType.equals('') "> ,f_calculate_type=#{calculateType}</if> 		<if test="tGbId != null and !tGbId.equals('') "> ,t_gb_id=#{tGbId}</if> 		<if test="isCalculateLatefee != null and !isCalculateLatefee.equals('') "> ,f_is_calculate_latefee=#{isCalculateLatefee}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_tmpFeeItem" parameterType="TmpFeeItem">
+		<include refid="tmpFeeItemBase.update_tmpFeeItem"/>
+    </update>
+    
+    <!-- 批量更新(临时收费项)信息。 -->
+    <update id="update_tmpFeeItem_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_tmp_fee_item		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.calculateType != null and !item.calculateType.equals('')  "> ,f_calculate_type=#{item.calculateType}</if> 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if> 		<if test="item.isCalculateLatefee != null and !item.isCalculateLatefee.equals('')  "> ,f_is_calculate_latefee=#{item.isCalculateLatefee}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(临时收费项)信息_逻辑删除。 -->
+    <sql id="delete_tmpFeeItem_Logic">
+		UPDATE t_tmp_fee_item		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="calculateType != null and !calculateType.equals('')  "> ,f_calculate_type=#{calculateType}</if> 		<if test="tGbId != null and !tGbId.equals('')  "> ,t_gb_id=#{tGbId}</if> 		<if test="isCalculateLatefee != null and !isCalculateLatefee.equals('')  "> ,f_is_calculate_latefee=#{isCalculateLatefee}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_tmpFeeItem_Logic" parameterType="TmpFeeItem">
+		<include refid="tmpFeeItemBase.delete_tmpFeeItem_Logic"/>
+    </update>
+    
+    <!-- 批量删除(临时收费项)信息_逻辑删除 -->
+    <update id="delete_tmpFeeItem_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_tmp_fee_item		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.calculateType != null and !item.calculateType.equals('')  "> ,f_calculate_type=#{item.calculateType}</if> 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if> 		<if test="item.isCalculateLatefee != null and !item.isCalculateLatefee.equals('')  "> ,f_is_calculate_latefee=#{item.isCalculateLatefee}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(临时收费项)信息。 -->
+    <sql id="delete_tmpFeeItem">
+		DELETE FROM t_tmp_fee_item WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_tmpFeeItem" parameterType="java.lang.String">
+		<include refid="tmpFeeItemBase.delete_tmpFeeItem"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(临时收费项)信息。 -->
+    <delete id="delete_tmpFeeItem_Batch" parameterType="java.util.List">
+		DELETE FROM t_tmp_fee_item WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

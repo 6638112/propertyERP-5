@@ -1,0 +1,251 @@
+package com.cnfantasia.server.api.prize.service;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.cnfantasia.server.api.commonBusiness.entity.RequestClientInfoEntity;
+import com.cnfantasia.server.api.commonBusiness.service.ICommonPrizeService;
+import com.cnfantasia.server.api.commonBusiness.service.ICommonRoomService;
+import com.cnfantasia.server.api.plotproperty.entity.BusinessMonthYearWithGB;
+import com.cnfantasia.server.api.prize.constant.PrizeDict;
+import com.cnfantasia.server.api.prize.entity.DiscountValueEntity;
+import com.cnfantasia.server.api.prize.entity.PrizeRecordEntity;
+import com.cnfantasia.server.api.prize.entity.PrizeRecordEntityWithBusinessMonthYear;
+import com.cnfantasia.server.api.prize.entity.PrizeRecordSimpleEntity;
+import com.cnfantasia.server.api.prize.entity.PrizeResultDiscountEntity;
+import com.cnfantasia.server.api.prizeRule.constant.PrizeRuleConstant;
+import com.cnfantasia.server.api.prizeRule.constant.PrizeRuleDict.ConfigType;
+import com.cnfantasia.server.api.prizeRule.entity.PrizeRuleGenerateConfigEntity;
+import com.cnfantasia.server.api.prizeRule.service.IPrizeRuleLoaderService;
+import com.cnfantasia.server.api.prizeRule.service.IPrizeRuleManager;
+import com.cnfantasia.server.api.room.constant.RoomDict;
+import com.cnfantasia.server.business.pub.dao.IDualDao;
+import com.cnfantasia.server.business.pub.utils.DateUtil;
+import com.cnfantasia.server.business.pub.uuidMaker.IUuidManager;
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+import com.cnfantasia.server.domain.pub.constant.SEQConstants;
+import com.cnfantasia.server.domainbase.groupBuilding.entity.GroupBuilding;
+import com.cnfantasia.server.domainbase.prizeRecord.dao.IPrizeRecordBaseDao;
+import com.cnfantasia.server.domainbase.prizeRecord.entity.PrizeRecord;
+import com.cnfantasia.server.domainbase.prizeRecordTmp.dao.IPrizeRecordTmpBaseDao;
+import com.cnfantasia.server.domainbase.prizeRecordTmp.entity.PrizeRecordTmp;
+import com.cnfantasia.server.domainbase.userHasTRoom.entity.UserHasTRoom;
+
+
+
+public class PrizePoolFactory implements IPrizePoolFactory{
+	private IPrizePoolGroup prizePoolGroup;
+	public void setPrizePoolGroup(IPrizePoolGroup prizePoolGroup) {
+		this.prizePoolGroup = prizePoolGroup;
+	}
+	
+//	private ICommonUserService commonUserService;
+//	public void setCommonUserService(ICommonUserService commonUserService) {
+//		this.commonUserService = commonUserService;
+//	}
+	
+	private IPrizeRuleManager prizeRuleManager;
+	public void setPrizeRuleManager(IPrizeRuleManager prizeRuleManager) {
+		this.prizeRuleManager = prizeRuleManager;
+	}
+	
+	private IPrizeRuleLoaderService prizeRuleLoaderService;
+	public void setPrizeRuleLoaderService(IPrizeRuleLoaderService prizeRuleLoaderService) {
+		this.prizeRuleLoaderService = prizeRuleLoaderService;
+	}
+	
+	private ICommonRoomService commonRoomService;
+	public void setCommonRoomService(ICommonRoomService commonRoomService) {
+		this.commonRoomService = commonRoomService;
+	}
+	
+	private IDualDao dualDao;
+	public void setDualDao(IDualDao dualDao) {
+		this.dualDao = dualDao;
+	}
+	
+	private ICommonPrizeService commonPrizeService;
+	public void setCommonPrizeService(ICommonPrizeService commonPrizeService) {
+		this.commonPrizeService = commonPrizeService;
+	}
+
+	private IUuidManager uuidManager;
+	public void setUuidManager(IUuidManager uuidManager) {
+		this.uuidManager = uuidManager;
+	}
+	
+	private IPrizeRecordTmpBaseDao prizeRecordTmpBaseDao;
+	public void setPrizeRecordTmpBaseDao(IPrizeRecordTmpBaseDao prizeRecordTmpBaseDao) {
+		this.prizeRecordTmpBaseDao = prizeRecordTmpBaseDao;
+	}
+	
+	private IPrizeRecordBaseDao prizeRecordBaseDao;
+	public void setPrizeRecordBaseDao(IPrizeRecordBaseDao prizeRecordBaseDao) {
+		this.prizeRecordBaseDao = prizeRecordBaseDao;
+	}
+	
+	/**
+	 * 所有抽奖统一入口
+	 */
+	@Override
+	public PrizeResultDiscountEntity doPrize(BigInteger userId,Integer onLineDays,Integer totalPrizeTimes,BigInteger userTmpId,RequestClientInfoEntity requestClientInfoEntity555){
+		Integer poolState = prizePoolGroup.getPoolState();
+		if(PrizeDict.PrizePool_State.NOT_START.compareTo(poolState)==0){
+			throw new BusinessRuntimeException("prizepool.doprize.notstart");
+		}
+		if(PrizeDict.PrizePool_State.STOPPED.compareTo(poolState)==0){
+			throw new BusinessRuntimeException("prizepool.doprize.stopped");
+		}
+		if(PrizeDict.PrizePool_State.FINISHED.compareTo(poolState)==0){
+			throw new BusinessRuntimeException("prizepool.doprize.finished");
+		}
+		
+//		{//检查用户数对应的规则是否改变
+//			Long userTotalCount = commonUserService.getUserTotalCount();//查询总的用户数
+//			PrizeRuleGenerateConfigEntity currUsercountConfig = prizeRuleManager.getPrizeRuleGenerateUsercountConfig(userTotalCount);
+//			if(!currUsercountConfig.equals(prizePool.getCurrUsercountConfig())){//有改变
+////				prizePool.reloadConfig();//刷新配置
+//				prizeRuleLoaderService.reloadPrizeRule();//刷新配置
+//			}
+//		}
+		
+		{//检查时间对应的规则是否改变
+			String nowTime = dualDao.getNowTime();
+			PrizeRuleGenerateConfigEntity currRuleGenerateConfig_Sign = prizeRuleManager.getPrizeRuleGenerateTimeConfig(nowTime, ConfigType.Time_Sign);
+			PrizeRuleGenerateConfigEntity currRuleGenerateConfig_UnSign = prizeRuleManager.getPrizeRuleGenerateTimeConfig(nowTime, ConfigType.Time_UnSign);
+			if(!currRuleGenerateConfig_Sign.equals(prizePoolGroup.getCurrPrizeRuleGenerateConfig(true))
+					||!currRuleGenerateConfig_UnSign.equals(prizePoolGroup.getCurrPrizeRuleGenerateConfig(false))
+					){//有改变
+	//			prizePool.reloadConfig();//刷新配置
+				prizeRuleLoaderService.reloadPrizeRule();//刷新配置
+			}
+		}
+		
+		boolean isSignGB = false;//查询用户当前所在小区是否已签约
+		{
+			GroupBuilding currGroupBuilding = commonRoomService.getGroupBuildingByUserId(userId);
+			if(currGroupBuilding!=null&&currGroupBuilding.getSignStatus()!=null&&currGroupBuilding.getSignStatus().compareTo(RoomDict.GroupBuilding_SignStatus.IS_SIGN)==0){
+				isSignGB = true;
+			}
+		}
+		boolean isFristPrize = false;
+		if(userId!=null){
+			int totalDoneCount = commonPrizeService.getPrizeDoneCountAllTime(userId);
+			if(totalDoneCount<=3){
+				isFristPrize = true;
+			}
+		}
+		synchronized(this) {
+			PrizeRecord currLeastPrizeRecord = null;
+			if(userId!=null){//查询用户当前月最低折扣(若已使用则包含已使用的)
+//				BusinessMonthYearWithGB monthYearWithGB = new BusinessMonthYearWithGB(nowTime, commonRoomService.getGroupBuildingByUserId(userId), MonthOrTime.time);
+//				currLeastPrizeRecord = commonPrizeService.getLeastDiscountFirstByMonthAndUsed(userId, monthYearWithGB);
+				PrizeRecordEntityWithBusinessMonthYear prizeRecordEntityExtend = commonPrizeService.getLeastDiscountFirstByMonthAndUsedNowTime(userId);
+				currLeastPrizeRecord = prizeRecordEntityExtend.getPrizeRecordEntity();
+			}
+			//进行抽奖
+			PrizeResultDiscountEntity resDVE = prizePoolGroup.doPrize(isFristPrize,onLineDays,totalPrizeTimes,isSignGB,currLeastPrizeRecord);
+			DiscountValueEntity discountValueRes = resDVE.getDiscountValueEntity();
+			//判断来源类型
+			if(discountValueRes.equals(DiscountValueEntity.unPrizedEntity)){
+				discountValueRes = prizeRuleManager.getUnPrizeDiscount();
+			}
+			//存入中奖纪录
+			{
+				String nowTime = dualDao.getNowTime();
+				DiscountValueEntity discount = discountValueRes;
+				Integer backPoolStatus = resDVE.getIsTmpGenerate()?PrizeDict.PrizeRecord_BackPoolStatus.Has_Back:null;//临时折扣标记为已退回
+				if(userId!=null){
+					UserHasTRoom userHasTRoom = commonRoomService.getDefaultUserHasTRoom(userId);
+					BigInteger tUserHasTRoomFId = userHasTRoom.getId();
+					
+					PrizeRecord prizeRecord = new PrizeRecord();
+					BigInteger prizeRecordAddId = uuidManager.getNextUuidBigInteger(SEQConstants.t_prize_record);
+					resDVE.setRecordId(prizeRecordAddId);
+					prizeRecord.setDiscount(discount.doubleValue());
+					prizeRecord.setPrizeTime(nowTime);
+					prizeRecord.setEndTime(getPrizeEndTime(nowTime));
+					prizeRecord.settUserHasTRoomFId(tUserHasTRoomFId);//用户门牌关系Id
+					prizeRecord.setId(prizeRecordAddId);
+					prizeRecord.setStatus(PrizeDict.PrizeRecord_Status.NOT_USE);
+					prizeRecord.setBackPoolStatus(backPoolStatus);
+					int resCount = prizeRecordBaseDao.insertPrizeRecord(prizeRecord);
+					if(resCount<=0){
+						throw new BusinessRuntimeException("prize.doPrizeIsLoginAndDefault.insertPrizeRecord.failed");
+					}
+				}else{
+					//保存抽奖结果
+					PrizeRecordTmp prizeRecordTmpAdd = new PrizeRecordTmp();
+					BigInteger prizeRecordTmpAddId = uuidManager.getNextUuidBigInteger(SEQConstants.t_prize_record_tmp);
+					resDVE.setRecordId(prizeRecordTmpAddId);
+					prizeRecordTmpAdd.setDiscount(discount.doubleValue());
+					prizeRecordTmpAdd.setPrizeTime(nowTime);
+					prizeRecordTmpAdd.setEndTime(getPrizeEndTime(nowTime));
+					prizeRecordTmpAdd.settUserTmpFId(userTmpId);
+					prizeRecordTmpAdd.setId(prizeRecordTmpAddId);
+//					prizeRecordTmpAdd.setBackPoolStatus(backPoolStatus);
+					int resCount = prizeRecordTmpBaseDao.insertPrizeRecordTmp(prizeRecordTmpAdd);
+					if(resCount<=0){
+						throw new BusinessRuntimeException("prize.doPrizeNotLogin.insertPrizeRecordTmp.failed");
+					}
+				}
+				
+			}
+			
+			if(userId!=null){//退回用户当月(自然月)其它折扣
+				//1.查询用户当前月最低折扣(若已使用则包含已使用的)
+//				String nowTime = dualDao.getNowTime();
+//				BusinessMonthYearWithGB monthYearWithGB = new BusinessMonthYearWithGB(nowTime, commonRoomService.getGroupBuildingByUserId(userId), MonthOrTime.time);
+//				PrizeRecordSimpleEntity prizeRecordSimpleEntity = commonPrizeService.getLeastDiscountFirstByMonthAndUsed(userId, monthYearWithGB);
+				PrizeRecordEntityWithBusinessMonthYear prizeRecordEntityExtend = commonPrizeService.getLeastDiscountFirstByMonthAndUsedNowTime(userId);
+				BusinessMonthYearWithGB monthYearWithGB = prizeRecordEntityExtend.getBusinessMonthYearWithGB();
+				PrizeRecordEntity prizeRecordSimpleEntity = prizeRecordEntityExtend.getPrizeRecordEntity();
+				
+				if(prizeRecordSimpleEntity!=null){
+					//2.查询用户当前月所有的折扣列表
+					List<PrizeRecordEntity> prizeRecordSimpleEntityList = commonPrizeService.getDiscountListByMonth(userId,monthYearWithGB);
+					if(prizeRecordSimpleEntityList!=null&&prizeRecordSimpleEntityList.size()>0){
+						//3.去掉最低折扣，计算余下折扣List<Double>
+						List<DiscountValueEntity> toDealList = new ArrayList<DiscountValueEntity>();
+						List<BigInteger> toBackIds = new ArrayList<BigInteger>();
+						for(PrizeRecordSimpleEntity tmpEntity:prizeRecordSimpleEntityList){
+							if(tmpEntity.getId().compareTo(prizeRecordSimpleEntity.getId())==0){
+								continue;
+							}
+							//PrizeRecord_BackPoolStatus 已退回的跳过
+							if(tmpEntity.getBackPoolStatus()!=null&&PrizeDict.PrizeRecord_BackPoolStatus.Has_Back.compareTo(tmpEntity.getBackPoolStatus())==0){
+								continue;
+							}
+							Double currDiscount = tmpEntity.getDiscount();
+							if(currDiscount!=null){
+								toDealList.add(new DiscountValueEntity((long)(currDiscount*PrizeRuleConstant.PRIZE_DISCOUNT_DIVNUM),PrizeRuleConstant.PRIZE_DISCOUNT_DIVNUM));//
+								toBackIds.add(tmpEntity.getId());
+							}
+						}
+						//4.将其放回奖池
+						if(toDealList!=null&&toDealList.size()>0){
+							int resBackCount = prizePoolGroup.insertPrizeData(toDealList,isSignGB);
+							if(resBackCount>0){
+								//标记为已退回
+								commonPrizeService.markPrizeRecordAsIsBack(toBackIds);
+							}
+						}
+					}
+				}
+			}
+			return resDVE;
+		}
+		
+	}
+	
+	/**
+	 * 根据当前时间得到抽奖结束有效时间
+	 * @param nowTime
+	 * @return
+	 */
+	private String getPrizeEndTime(String nowTime){
+		return DateUtil.getMonthLastDay(nowTime);
+	}
+	
+}

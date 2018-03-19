@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:社区商家模块 -->
+<mapper namespace="communitySupply">
+	<cache
+		eviction="LRU"
+		flushInterval="3600000"
+		size="2048"
+		readOnly="true"/>
+	
+	<!-- 手动调用清除缓存使用 -->
+	<select id="cleanCache" resultType="long" useCache="false" flushCache="true">
+    	select 1
+    </select>
+	
+	<!-- 商家类别信息 -->
+	<resultMap type="com.cnfantasia.server.api.communitySupply.entity.CommunitySupplyTypeEntity" id="communitySupplyTypeEntity_Map_Append"
+		extends="communitySupplyTypeBase.communitySupplyTypeBaseMap_AppendTable">
+		
+	</resultMap>
+	<resultMap type="com.cnfantasia.server.api.communitySupply.entity.CommunitySupplyTypeEntity" id="communitySupplyTypeEntity_Map_Append_WithTop"
+		extends="communitySupplyTypeEntity_Map_Append">
+		<association column="Cid" 
+			javaType="CommunitySupplyType" 
+			property="topCommunitySupplyType" select="communitySupply.select_top_CommunitySupplyType_By_SupplyTypeId"/>
+	</resultMap>
+	
+	<!-- 社区商户信息 -->
+	<resultMap type="com.cnfantasia.server.api.communitySupply.entity.CommunitySupplyEntity" id="communitySupplyEntity_Map_Append_List"
+		extends="communitySupplyBase.communitySupplyBaseMap_AppendTable">
+		<result column="ext_collectFlag" javaType="java.lang.Integer" property="collectFlag"/><!-- 当前用户是否已收藏 -->
+		<result column="ext_IsPropertySuggest" javaType="java.lang.Boolean" property="isPropertySuggest"/><!-- 物业推荐 -->
+		<!-- 注释 <association property="communitySupplyTypeEntity" resultMap="communitySupplyTypeEntity_Map_Append"/> --><!-- 商家所属类别信息,不包括顶级类别信息 -->
+		<association property="communitySupplyTypeEntity" resultMap="communitySupplyTypeEntity_Map_Append_WithTop"/><!-- 商家所属类别信息,包括顶级类别信息 -->
+		<!-- 商家的联系方式 -->
+		<collection property="communitySupplyContectList" resultMap="communitySupplyContectBase.communitySupplyContectBaseMap_AppendTable"></collection>
+		<!-- 商家图片列表 -->
+		<collection property="communitySupplyPicList" resultMap="communitySupplyPicBase.communitySupplyPicBaseMap_AppendTable"></collection>
+	</resultMap>
+	<!-- 小区商家关系信息forList  包含商家详细信息 -->
+	<resultMap type="com.cnfantasia.server.api.communitySupply.entity.GroupBuildingHasTCommunitySupply_Supply" id="groupBuildingHasTCommunitySupply_Supply_Map_Append_List"
+		extends="groupBuildingHasTCommunitySupplyBase.groupBuildingHasTCommunitySupplyBaseMap_AppendTable">
+		<association property="communitySupplyEntity" resultMap="communitySupplyEntity_Map_Append_List"/><!-- 商家详细信息 -->
+	</resultMap>
+	
+	<!-- 商家详细信息 -->
+	<resultMap type="com.cnfantasia.server.api.communitySupply.entity.CommunitySupplyEntity" id="communitySupplyEntity_Map_Append_Detail"
+		extends="communitySupplyBase.communitySupplyBaseMap_AppendTable">
+		<result column="ext_collectFlag" javaType="java.lang.Integer" property="collectFlag"/><!-- 当前用户是否已收藏 -->
+		<result column="ext_commentTotalCount" javaType="java.lang.Integer" property="commentTotalCount"/><!-- 总评论数 -->
+		<result column="ext_IsPropertySuggest" javaType="java.lang.Boolean" property="isPropertySuggest"/><!-- 物业推荐 -->
+		<!-- 商家所属类别信息 -->
+		<association property="communitySupplyTypeEntity" resultMap="communitySupplyTypeEntity_Map_Append_WithTop"/>
+		<!-- 商家的联系方式 -->
+		<collection property="communitySupplyContectList" resultMap="communitySupplyContectBase.communitySupplyContectBaseMap_AppendTable"></collection>
+		<!-- 商家图片列表 -->
+		<collection property="communitySupplyPicList" resultMap="communitySupplyPicBase.communitySupplyPicBaseMap_AppendTable"></collection>
+	</resultMap>
+	<!-- 小区商家关系信息forDetail  包含商家详细信息 -->
+	<resultMap type="com.cnfantasia.server.api.communitySupply.entity.GroupBuildingHasTCommunitySupply_Supply" id="groupBuildingHasTCommunitySupply_Supply_Map_Append_Detail"
+		extends="groupBuildingHasTCommunitySupplyBase.groupBuildingHasTCommunitySupplyBaseMap_AppendTable">
+		<association property="communitySupplyEntity" resultMap="communitySupplyEntity_Map_Append_Detail"/><!-- 商家详细信息 -->
+		<association property="currUserSupplyBelong" resultMap="communitySupplyBelongBase.communitySupplyBelongBaseMap_AppendTable"/><!-- 当前用户对应的认领信息 -->
+	</resultMap>
+	
+	
+	<!-- 查询商家详情 -->
+	<select id="select_CommunitySupply_Detail" parameterType="java.math.BigInteger" resultMap="groupBuildingHasTCommunitySupply_Supply_Map_Append_Detail">
+		SELECT <include refid="communitySupplyBase.queryHead_AppendTable"/>
+			,<include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+			,<include refid="communitySupplyContectBase.queryHead_AppendTable"/>
+			,<include refid="communitySupplyPicBase.queryHead_AppendTable"/>
+			,<include refid="groupBuildingHasTCommunitySupplyBase.queryHead_AppendTable"/> <!-- 小区商家关系信息 -->
+			,<include refid="communitySupplyBelongBase.queryHead_AppendTable"/> <!-- 当前用户对应的认领信息 -->
+			,CASE WHEN ISNULL(S.f_id) THEN 0 ELSE 1 END AS ext_collectFlag <!-- 0未收藏，1已收藏 -->
+			,CASE WHEN ISNULL(PSC_group.t_community_supply_f_id) THEN false ELSE true END AS ext_IsPropertySuggest <!-- 是否物业推荐 -->
+			,CASE WHEN ISNULL(C_group.totalCount) THEN 0 ELSE C_group.totalCount END AS ext_commentTotalCount 
+		FROM t_community_supply CS
+			INNER JOIN t_group_building GB ON GB.f_id = #{groupBuildingId} AND GB.f_sys0_del_state = 0 
+			<!-- INNER JOIN 更改为 LEFT JOIN syl-upd-2015-1-20 10:31:01 -->
+			LEFT JOIN t_group_building_has_t_community_supply GBHTCS ON GBHTCS.t_community_supply_f_id = CS.f_id
+				AND GBHTCS.t_group_building_f_id = GB.f_id AND GBHTCS.f_sys0_del_state = 0
+			<!-- syl-add-2015-1-30 15:11:21 增加当前用户对应的认领信息 先返回成功的,最新的 -->	
+			LEFT JOIN t_community_supply_belong CSB ON CSB.f_sys0_del_state = 0 AND CSB.f_id = 
+			(
+				SELECT f_id FROM t_community_supply_belong 
+				WHERE 1=1 
+				AND f_claim_user_id = #{userId}
+				<!-- AND t_group_building_has_t_community_supply_f_id = GBHTCS.f_id --> <!-- 细化到小区商家关系 -->
+				AND f_community_supply_id = GBHTCS.t_community_supply_f_id <!-- 细化到商家关系 -->
+				ORDER BY 
+				CASE WHEN f_audit_status = 2 THEN 1 ELSE 2 END ASC  <!-- 认领状态=={"1":"待审批","2":"审核通过","3":"审核不通过"} -->
+				,f_id DESC 
+				LIMIT 0,1
+			)
+			
+			INNER JOIN t_community_supply_type CST ON CST.f_id = CS.t_community_supply_type_f_id AND CST.f_sys0_del_state = 0 
+			LEFT JOIN t_community_supply_contect CSC ON CS.f_id = CSC.t_community_supply_f_id AND CSC.f_sys0_del_state = 0 
+			LEFT JOIN t_community_supply_pic CSP ON CS.f_id = CSP.t_community_supply_f_id AND CSP.f_sys0_del_state = 0 
+			<!-- 是否收藏 -->
+			LEFT JOIN t_collections S ON CS.f_id = S.f_target_id AND S.f_target_type = 51  <!-- 51表示社区商家 -->
+				AND S.f_user_id = #{userId}
+				AND S.f_sys0_del_state = 0
+			<!-- 是否物业推荐 -->
+			LEFT JOIN (
+				SELECT PSC.t_community_supply_f_id AS t_community_supply_f_id,COUNT(*) AS totalCount
+				FROM t_property_suggest_commsupply PSC
+				WHERE 1=1
+				AND PSC.f_sys0_del_state = 0 
+				AND PSC.f_audit_status = 2 <!-- 解放审核通过 -->
+				AND PSC.f_groupbulid_id = #{groupBuildingId}
+				GROUP BY PSC.t_community_supply_f_id
+			) PSC_group ON CS.f_id = PSC_group.t_community_supply_f_id
+			<!-- 总评论数 -->
+			LEFT JOIN  (SELECT f_target_id ,COUNT(*) AS totalCount
+				FROM t_comments 
+				WHERE 1=1 AND f_sys0_del_state = 0 AND f_target_type = 51  <!-- 51表示社区商家 -->
+				GROUP BY f_target_id
+			) C_group ON C_group.f_target_id = CS.f_id
+			
+   	 	WHERE 1=1
+   	 	AND CS.f_sys0_del_state = 0 
+   	 	AND CS.f_id = #{communitySupplyId}
+	</select>
+	<!-- 查询所有商家类别列表 -->
+	<!-- <select id="select_CommunitySupplyType_All" resultMap="communitySupplyTypeEntity_Map_Append_WithTop" useCache="true">
+		SELECT <include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+		FROM t_community_supply_type CST
+		WHERE 1=1
+		AND CST.f_sys0_del_state = 0 
+		AND (CST.f_importance_level = 1 OR CST.f_importance_level = 2) 找服务和找实惠的
+		ORDER BY CST.f_order ASC,CST.f_id ASC
+	</select> -->
+	<!-- 查询Level01商家类别列表 -->
+	<select id="select_CommunitySupplyType_Level01" resultMap="communitySupplyTypeEntity_Map_Append_WithTop" useCache="true">
+		SELECT <include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+		FROM t_community_supply_type CST
+		WHERE 1=1
+		AND CST.f_sys0_del_state = 0 
+		AND CST.f_importance_level = 1
+		ORDER BY CST.f_order ASC,CST.f_id ASC
+	</select>
+	<!-- 查询Level02商家类别列表 -->
+	<select id="select_CommunitySupplyType_Level02" resultMap="communitySupplyTypeEntity_Map_Append_WithTop" useCache="true">
+		SELECT <include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+		FROM t_community_supply_type CST
+		WHERE 1=1
+		AND CST.f_sys0_del_state = 0 
+		AND CST.f_importance_level = 2
+		ORDER BY CST.f_order ASC,CST.f_id ASC
+	</select>
+	
+	<!-- 分页 -查询商家类别列表 -->
+	<sql id="select_CommunitySupply_Type_List_Comm">
+		FROM t_community_supply_type CST
+		WHERE 1=1
+		AND CST.f_sys0_del_state = 0 
+		AND CST.f_parent_id = #{parentTypeId}
+		AND CST.f_importance_level = #{importanceLevel}
+	</sql>
+	<select id="select_CommunitySupply_Type_List_Page" parameterType="java.util.Map" resultMap="communitySupplyTypeEntity_Map_Append_WithTop">
+		SELECT <include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+		<include refid="select_CommunitySupply_Type_List_Comm"/>
+		ORDER BY CST.f_order ASC,CST.f_id ASC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	<!-- 分页 -查询商家类别列表-总记录数 -->
+	<select id="select_CommunitySupply_Type_List_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="select_CommunitySupply_Type_List_Comm"/>
+	</select>
+	
+	<!-- 分页-搜索商家列表 -->
+	<sql id="search_CommunitySupply_List_Comm">
+		FROM t_community_supply CS
+			INNER JOIN t_community_supply_type CST ON CST.f_id = CS.t_community_supply_type_f_id AND CST.f_sys0_del_state = 0 
+			
+			INNER JOIN t_group_building GB ON GB.f_id = #{groupBuildingId} AND GB.f_sys0_del_state = 0 
+			INNER JOIN t_group_building_has_t_community_supply GBHTCS ON GBHTCS.t_community_supply_f_id = CS.f_id
+				AND GBHTCS.t_group_building_f_id = GB.f_id AND GBHTCS.f_sys0_del_state = 0
+				<![CDATA[ AND ( ISNULL(GBHTCS.f_distance) OR GBHTCS.f_distance < 3000) ]]> <!-- syl-add约束小于3000m -->
+			<!-- INNER JOIN (
+				SELECT GBHTCS.t_community_supply_f_id AS testId
+				FROM t_group_building_has_t_community_supply GBHTCS
+					INNER JOIN t_group_building GB ON GBHTCS.t_group_building_f_id = GB.f_id AND GB.f_sys0_del_state = 0 
+				WHERE 1=1
+				AND GBHTCS.f_sys0_del_state = 0
+				AND GB.f_id = #{groupBuildingId}
+				GROUP BY GBHTCS.t_community_supply_f_id
+			) testGroup ON testGroup.testId = CS.f_id -->
+			<!-- INNER JOIN (
+				t_group_building GB
+				INNER JOIN t_group_building_has_t_community_supply GBHTCS ON GBHTCS.t_group_building_f_id = GB.f_id
+			) ON GB.f_id = #{groupBuildingId} AND GB.f_sys0_del_state = 0  -->
+			LEFT JOIN (
+				SELECT PSC.t_community_supply_f_id AS t_community_supply_f_id,COUNT(*) AS totalCount
+				FROM t_property_suggest_commsupply PSC
+				WHERE 1=1
+				AND PSC.f_sys0_del_state = 0 
+				AND PSC.f_audit_status = 2 <!-- 解放审核通过 -->
+				AND PSC.f_groupbulid_id = #{groupBuildingId}
+				GROUP BY PSC.t_community_supply_f_id
+			) PSC_group ON CS.f_id = PSC_group.t_community_supply_f_id
+			<!-- 电话拨打次数 -->
+			LEFT JOIN (
+				SELECT t_community_supply_f_id,SUM(f_click_count) sumTotalCount
+				FROM t_community_supply_contect
+				WHERE 1=1
+				AND f_sys0_del_state = 0
+				AND f_click_count>0
+				GROUP BY t_community_supply_f_id
+			) CSC_group ON CSC_group.t_community_supply_f_id = CS.f_id
+			
+			<!-- 是否已收藏 -->
+			LEFT JOIN (
+				SELECT f_target_id,COUNT(*) totalCount
+				FROM t_collections
+				WHERE 1=1
+				AND f_sys0_del_state = 0
+				AND f_user_id = #{userId} 
+				AND f_target_type = 51  <!-- 51表示社区商家 -->
+				GROUP BY f_target_id
+			) COLL_group ON CS.f_id = COLL_group.f_target_id
+			
+   	 	WHERE 1=1
+   	 	AND CS.f_sys0_del_state = 0 
+   	 	<if test="searchKey != null and searchKey != '' ">  
+            <![CDATA[ AND ( CS.f_name like CONCAT('%',#{searchKey},'%') OR CS.f_pinyin_name like CONCAT('%',#{searchKey},'%') ) ]]>
+        </if>
+   	 	AND ( CST.f_id = #{supplyTypeId} OR CST.f_parent_id = #{supplyTypeId} )
+   	 	<!-- AND CS.f_id = GBHTCS.t_community_supply_f_id --> 
+	</sql>
+	
+	<select id="search_CommunitySupply_List_Page" parameterType="java.util.Map" resultMap="groupBuildingHasTCommunitySupply_Supply_Map_Append_List">
+   	 	SELECT _tmp.* 
+   	 		,<include refid="communitySupplyContectBase.queryHead_AppendTable"/>
+			<!-- ,<include refid="communitySupplyPicBase.queryHead_AppendTable"/> -->
+			,CASE WHEN ISNULL(S.f_id) THEN 0 ELSE 1 END AS ext_collectFlag <!-- 0未收藏，1已收藏 -->
+   	 	FROM (
+	   	 	SELECT <include refid="communitySupplyBase.queryHead_AppendTable"/>
+	   	 		,<include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+	   	 		,<include refid="groupBuildingHasTCommunitySupplyBase.queryHead_AppendTable"/> <!-- 小区商家关系信息 -->
+				,CASE WHEN ISNULL(PSC_group.t_community_supply_f_id) THEN false ELSE true END AS ext_IsPropertySuggest <!-- 是否物业推荐 --> 
+	   	 	<include refid="search_CommunitySupply_List_Comm"/>
+	   	 	ORDER BY 
+	   	 		COLL_group.totalCount DESC
+	   	 		,CASE WHEN NOT ISNULL(PSC_group.t_community_supply_f_id) THEN 1 ELSE 2 END
+				,CSC_group.sumTotalCount DESC
+				,CASE WHEN ISNULL(GBHTCS.f_distance) THEN 1 ELSE 0 end ASC <!-- 距离为空的排后面 -->
+				,GBHTCS.f_distance ASC
+				,GBHTCS.f_order DESC
+				,CS.f_order ASC
+				,CS.f_id ASC 
+	   	 	<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+   	 	) _tmp
+   	 	LEFT JOIN t_community_supply_contect CSC ON _tmp.CSid = CSC.t_community_supply_f_id AND CSC.f_sys0_del_state = 0 
+		<!-- LEFT JOIN t_community_supply_pic CSP ON _tmp.communitySupply_f_id = CSP.t_community_supply_f_id AND CSP.f_sys0_del_state = 0  -->
+		LEFT JOIN t_collections S ON _tmp.CSid = S.f_target_id AND S.f_target_type = 51  <!-- 51表示社区商家 -->
+			AND S.f_user_id = #{userId}
+			AND S.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 分页-搜索商家列表,总记录数  -->
+	<select id="search_CommunitySupply_List_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="search_CommunitySupply_List_Comm"/>
+	</select>
+	
+	<!-- 查询商户类别关系的评论标签列表 -->
+	<select id="select_CommentsLabel_List_BySupplyType" parameterType="java.math.BigInteger" resultMap="commentsLabelBase.commentsLabelBaseMap_AppendTable">
+		<!-- SELECT <include refid="commentsLabelBase.queryHead_AppendTable"/>
+		FROM t_community_supply_type_has_t_comment_label CSTHTCL
+			LEFT JOIN t_comments_label CL ON CL.f_id = CSTHTCL.t_comments_label_f_id AND CL.f_sys0_del_state = 0 
+		WHERE 1=1
+		AND CSTHTCL.f_sys0_del_state = 0 
+		AND CSTHTCL.t_community_supply_type_f_id = #{_parameter} -->
+		
+		SELECT <include refid="commentsLabelBase.queryHead_AppendTable"/>
+		FROM t_comments_label CL
+			INNER JOIN t_community_supply_type_has_t_comment_label CSTHTCL 
+			ON CL.f_id = CSTHTCL.t_comments_label_f_id AND CSTHTCL.f_sys0_del_state = 0 AND CSTHTCL.t_community_supply_type_f_id = #{_parameter}
+		WHERE 1=1
+		AND CL.f_id = CSTHTCL.t_comments_label_f_id 
+		AND CL.f_sys0_del_state = 0 
+	</select>
+	
+	<!-- 查询商户类别关系的评分项列表 -->
+	<select id="select_CommentsPoints_List_BySupplyType" parameterType="java.math.BigInteger" 
+		resultMap="commentsPointsBase.commentsPointsBaseMap_AppendTable">
+		SELECT <include refid="commentsPointsBase.queryHead_AppendTable"/>
+		FROM t_comments_points CP
+			INNER JOIN t_community_supply_type_has_t_comments_points CSTHTCP
+			ON CP.f_id = CSTHTCP.t_comments_points_f_id AND CSTHTCP.f_sys0_del_state = 0 
+			AND CSTHTCP.t_community_supply_type_f_id = #{_parameter}
+		WHERE 1=1
+		AND CP.f_id = CSTHTCP.t_comments_points_f_id 
+		AND CP.f_sys0_del_state = 0 
+	</select>
+	
+	<!-- 联系方式呼叫次数加1 -->
+	<update id="update_Supply_Contect_CallCount" parameterType="java.math.BigInteger" flushCache="false">
+		UPDATE t_community_supply_contect CSC 
+		SET CSC.f_click_count = 
+			CASE WHEN ISNULL(CSC.f_click_count) THEN 1 ELSE CSC.f_click_count+1 END
+			,CSC.f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND CSC.f_sys0_del_state = 0 
+		AND CSC.f_id = #{_parameter}
+	</update>
+	
+	<!-- 查询对应联系方式的被呼叫次数 -->
+	<select id="select_Supply_Contect_CallCount" parameterType="java.math.BigInteger" resultType="java.lang.Long">
+		SELECT 
+			CASE WHEN ISNULL(CSC.f_click_count) THEN 0 ELSE CSC.f_click_count END AS f_click_count
+		FROM t_community_supply_contect CSC
+		WHERE 1=1
+		AND CSC.f_sys0_del_state = 0 
+		AND CSC.f_id = #{_parameter}
+	</select>
+	
+	<!-- 通过商家Id,查询其联系方式总的拨打次数 -->
+	<select id="select_SupplyContect_TotalCallCount_BySupplyId" parameterType="java.math.BigInteger" resultType="java.lang.Long">
+		SELECT 
+			SUM(CSC.f_click_count) 
+		FROM t_community_supply_contect CSC
+		WHERE 1=1
+		AND CSC.f_sys0_del_state = 0 
+		AND CSC.t_community_supply_f_id = #{_parameter}
+	</select>
+	
+	
+	<!-- 通过联系方式Id,查询其所属商家的联系方式总的拨打次数 -->
+	<select id="select_SupplyContect_TotalCallCount_ByContectId" parameterType="java.math.BigInteger" resultType="java.lang.Long">
+		SELECT 
+			SUM(CSC.f_click_count) 
+		FROM t_community_supply_contect CSC
+			INNER JOIN t_community_supply_contect CSC02 ON CSC.t_community_supply_f_id = CSC02.t_community_supply_f_id AND CSC02.f_sys0_del_state = 0 
+			AND CSC02.f_id = #{_parameter}
+		WHERE 1=1
+		AND CSC.f_sys0_del_state = 0 
+	</select>
+	
+	<!-- 查询推荐的商家类别列表 -->
+	<select id="select_CommunitySupply_Type_Recommend" resultMap="communitySupplyTypeEntity_Map_Append_WithTop">
+		SELECT <include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+		FROM t_community_supply_type_recommend CSTR
+			INNER JOIN t_community_supply_type CST ON CSTR.t_community_supply_type_f_id = CST.f_id AND CST.f_sys0_del_state = 0 
+    	WHERE 1=1
+    	AND CSTR.f_sys0_del_state = 0 
+    	ORDER BY CSTR.f_order ASC,CSTR.f_id ASC
+	</select>
+	
+	<!-- 根据类别Id查询类别信息 -->
+	<select id="select_CommunitySupply_Type_By_SupplyTypeId" parameterType="java.math.BigInteger" resultMap="communitySupplyTypeEntity_Map_Append_WithTop">
+		SELECT <include refid="communitySupplyTypeBase.queryHead_AppendTable"/>
+		FROM t_community_supply_type CST
+		WHERE 1=1
+    	AND CST.f_sys0_del_state = 0 
+    	AND CST.f_id = #{_parameter}
+	</select>
+	
+	<!-- 根据商家类别Id查询顶级类别信息 -->
+	<select id="select_top_CommunitySupplyType_By_SupplyTypeId" parameterType="java.math.BigInteger" resultMap="communitySupplyTypeBase.communitySupplyTypeBaseMap">
+		SELECT <include refid="communitySupplyTypeBase.queryHead"/>
+			<![CDATA[ FROM (
+			    SELECT 
+			        @r AS _id 
+			        ,(SELECT @r := f_parent_id FROM t_community_supply_type WHERE f_id = _id) AS parent_id
+			        ,@l := @l + 1 AS lvl 
+			    FROM 
+			        (SELECT @r := #{_parameter}, @l := 0) vars,t_community_supply_type h 
+			    WHERE @r <> -1
+			) T1 
+			INNER JOIN t_community_supply_type CST 
+			ON T1._id = CST.f_id 
+			ORDER BY T1.lvl DESC 
+			LIMIT 0,1 
+			]]>
+	</select>
+	
+	<select id="select_CommunitySupply_Contect_All" parameterType="java.util.Map" resultMap="communitySupplyContectBase.communitySupplyContectBaseMap_AppendTable">
+		SELECT <include refid="communitySupplyContectBase.queryHead_AppendTable"/>
+		FROM t_community_supply_contect CSC
+		INNER JOIN t_group_building_has_t_community_supply GBHTCS ON CSC.t_community_supply_f_id = GBHTCS.t_community_supply_f_id 
+			AND GBHTCS.f_sys0_del_state = 0 
+			AND GBHTCS.t_group_building_f_id = #{groupBuildingId}
+		WHERE 1=1
+		AND CSC.f_sys0_del_state = 0 
+	</select>
+	
+	<select id="select_CommunitySupply_All" parameterType="java.util.Map" resultMap="communitySupplyBase.communitySupplyBaseMap_AppendTable">
+		SELECT <include refid="communitySupplyBase.queryHead_AppendTable"/>
+		FROM t_community_supply CS
+			INNER JOIN t_group_building_has_t_community_supply GBHTCS ON CS.f_id = GBHTCS.t_community_supply_f_id 
+			AND GBHTCS.f_sys0_del_state = 0 
+			AND GBHTCS.t_group_building_f_id = #{groupBuildingId}
+		WHERE 1=1
+		AND CS.f_sys0_del_state = 0 
+	</select>
+
+	<select id="getCommunityPhoneTypeList" parameterType="map" resultType="com.cnfantasia.server.api.communitySupply.entity.CommunityPhoneTypeEntity">
+		SELECT  f_name `name`, f_icon iconUrl, f_deep_type deepType, t_community_supply_type_id supplyTypeId, f_code code
+		 FROM t_community_phone_type
+		WHERE f_sys0_del_state = 0 AND #{version} >= ifnull(f_start_version, 0) AND #{version} &lt;= ifnull(f_end_version, 99999)
+		ORDER BY f_order DESC
+	</select>
+	
+</mapper>

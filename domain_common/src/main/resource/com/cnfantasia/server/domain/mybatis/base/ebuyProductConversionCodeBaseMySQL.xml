@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:商品兑换码表 t_ebuy_product_conversion_code -->
+<mapper namespace="ebuyProductConversionCodeBase">
+	<resultMap type="EbuyProductConversionCode" id="ebuyProductConversionCodeBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_ebuy_product_id" javaType="java.math.BigInteger" property="ebuyProductId"/>  <!-- 商品Id -->        <result column="t_ebuy_product_spec_f_id" javaType="java.math.BigInteger" property="tEbuyProductSpecFId"/>  <!-- 产品规格Id -->        <result column="f_status" javaType="java.lang.Integer" property="status"/>  <!-- 兑换码状态 -->        <result column="f_out_time" javaType="java.lang.String" property="outTime"/>  <!-- 过期时间 -->        <result column="f_value" javaType="java.lang.String" property="value"/>  <!-- 兑换码值 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyProductConversionCode" id="ebuyProductConversionCodeExtendMap" extends="ebuyProductConversionCodeBaseMap">
+	</resultMap>
+	<resultMap type="EbuyProductConversionCode" id="ebuyProductConversionCodeBaseMap_AppendTable">
+        <id column="EPCCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EPCCebuyProductId" javaType="java.math.BigInteger" property="ebuyProductId"/>  <!-- 商品Id -->        <result column="EPCCtEbuyProductSpecFId" javaType="java.math.BigInteger" property="tEbuyProductSpecFId"/>  <!-- 产品规格Id -->        <result column="EPCCstatus" javaType="java.lang.Integer" property="status"/>  <!-- 兑换码状态 -->        <result column="EPCCoutTime" javaType="java.lang.String" property="outTime"/>  <!-- 过期时间 -->        <result column="EPCCvalue" javaType="java.lang.String" property="value"/>  <!-- 兑换码值 -->        <result column="EPCCsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EPCCsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EPCCsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EPCCsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EPCCsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EPCCsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EPCCsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyProductConversionCode" id="ebuyProductConversionCodeBaseMap_AppendTable1">
+        <id column="EPCC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EPCC1ebuyProductId" javaType="java.math.BigInteger" property="ebuyProductId"/>  <!-- 商品Id -->        <result column="EPCC1tEbuyProductSpecFId" javaType="java.math.BigInteger" property="tEbuyProductSpecFId"/>  <!-- 产品规格Id -->        <result column="EPCC1status" javaType="java.lang.Integer" property="status"/>  <!-- 兑换码状态 -->        <result column="EPCC1outTime" javaType="java.lang.String" property="outTime"/>  <!-- 过期时间 -->        <result column="EPCC1value" javaType="java.lang.String" property="value"/>  <!-- 兑换码值 -->        <result column="EPCC1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EPCC1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EPCC1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EPCC1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EPCC1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EPCC1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EPCC1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EPCC.f_id,EPCC.f_ebuy_product_id,EPCC.t_ebuy_product_spec_f_id,EPCC.f_status,date_format(EPCC.f_out_time,'%Y-%m-%d %T') as f_out_time,EPCC.f_value
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EPCC.f_id as EPCCid,EPCC.f_ebuy_product_id as EPCCebuyProductId,EPCC.t_ebuy_product_spec_f_id as EPCCtEbuyProductSpecFId,EPCC.f_status as EPCCstatus,date_format(EPCC.f_out_time,'%Y-%m-%d %T') as EPCCoutTime,EPCC.f_value as EPCCvalue
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EPCC1.f_id as EPCC1id,EPCC1.f_ebuy_product_id as EPCC1ebuyProductId,EPCC1.t_ebuy_product_spec_f_id as EPCC1tEbuyProductSpecFId,EPCC1.f_status as EPCC1status,date_format(EPCC1.f_out_time,'%Y-%m-%d %T') as EPCC1outTime,EPCC1.f_value as EPCC1value
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EPCC.f_id = #{id} ) </if>        <if test="ebuyProductId != null">  and (EPCC.f_ebuy_product_id = #{ebuyProductId} ) </if>        <if test="tEbuyProductSpecFId != null">  and (EPCC.t_ebuy_product_spec_f_id = #{tEbuyProductSpecFId} ) </if>        <if test="status != null">  and (EPCC.f_status = #{status} ) </if>        <if test="outTime != null and !outTime.equals('')  ">  and (EPCC.f_out_time = str_to_date(#{outTime},'%Y-%m-%d %T') ) </if>        <if test="outTime_START != null and !outTime_START.equals('')  ">              <![CDATA[ and (EPCC.f_out_time >= str_to_date(#{outTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="outTime_END != null and !outTime_END.equals('')  ">            <![CDATA[ and (EPCC.f_out_time <= str_to_date(#{outTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="value != null">  and (EPCC.f_value = #{value} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EPCC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EPCC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EPCC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EPCC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EPCC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EPCC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EPCC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EPCC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EPCC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EPCC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EPCC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EPCC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EPCC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EPCC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EPCC.f_id = #{id} ) </if>        <if test="ebuyProductId != null and !ebuyProductId.equals('')  ">  and (EPCC.f_ebuy_product_id = #{ebuyProductId} ) </if>        <if test="tEbuyProductSpecFId != null and !tEbuyProductSpecFId.equals('')  ">  and (EPCC.t_ebuy_product_spec_f_id = #{tEbuyProductSpecFId} ) </if>        <if test="status != null and !status.equals('')  ">  and (EPCC.f_status = #{status} ) </if>        <if test="outTime != null and !outTime.equals('')  ">  and (EPCC.f_out_time = str_to_date(#{outTime},'%Y-%m-%d %T') ) </if>        <if test="outTime_START != null and !outTime_START.equals('')  ">              <![CDATA[ and (EPCC.f_out_time >= str_to_date(#{outTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="outTime_END != null and !outTime_END.equals('')  ">            <![CDATA[ and (EPCC.f_out_time <= str_to_date(#{outTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="value != null and !value.equals('')  ">  and (EPCC.f_value like CONCAT('%',#{value},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EPCC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EPCC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EPCC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EPCC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EPCC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EPCC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EPCC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EPCC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EPCC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EPCC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EPCC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EPCC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EPCC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EPCC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyProductConversionCodeBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyProductConversionCodeBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyProductConversionCodeBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyProductConversionCodeBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_product_conversion_code EPCC    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(商品兑换码表)信息。 -->
+	<sql id="select_ebuyProductConversionCode">
+		SELECT <include refid="ebuyProductConversionCodeBase.queryHead"/>
+		<include refid="ebuyProductConversionCodeBase.busiQueryCondition"/>
+		<include refid="ebuyProductConversionCodeBase.dimCheckSql"/>
+		ORDER BY EPCC.f_id DESC
+	</sql>
+	<select id="select_ebuyProductConversionCode" parameterType="java.util.Map" resultMap="ebuyProductConversionCodeBase.ebuyProductConversionCodeExtendMap">
+		<include refid="ebuyProductConversionCodeBase.select_ebuyProductConversionCode"/>
+	</select>
+	
+	<!-- 根据条件分页查询(商品兑换码表)信息  -->
+	<sql id="select_ebuyProductConversionCode_withPage">
+		SELECT <include refid="ebuyProductConversionCodeBase.queryHead"/>
+		<include refid="ebuyProductConversionCodeBase.busiQueryCondition"/>
+		<include refid="ebuyProductConversionCodeBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyProductConversionCode_withPage" resultMap="ebuyProductConversionCodeBase.ebuyProductConversionCodeExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyProductConversionCodeBase.select_ebuyProductConversionCode_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(商品兑换码表)信息。 -->
+	<sql id="select_ebuyProductConversionCode_bySeqId">
+		SELECT <include refid="ebuyProductConversionCodeBase.queryHead"/>
+		<include refid="ebuyProductConversionCodeBase.busiQueryCondition"/>
+		 and EPCC.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyProductConversionCode_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyProductConversionCodeBase.ebuyProductConversionCodeBaseMap">
+		<include refid="ebuyProductConversionCodeBase.select_ebuyProductConversionCode_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(商品兑换码表)记录数  -->
+	<sql id="select_ebuyProductConversionCode_count">
+		SELECT COUNT(*)
+		<include refid="ebuyProductConversionCodeBase.busiQueryCount"/>
+		<include refid="ebuyProductConversionCodeBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyProductConversionCode_count" resultType="java.lang.Integer">
+		<include refid="ebuyProductConversionCodeBase.select_ebuyProductConversionCode_count"/>
+	</select>
+	
+	 <!-- 往(商品兑换码表)新增一条记录。 -->
+	 <sql id="insert_ebuyProductConversionCode">
+		INSERT INTO t_ebuy_product_conversion_code 
+		(f_id,f_ebuy_product_id,t_ebuy_product_spec_f_id,f_status,f_out_time,f_value,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{ebuyProductId},#{tEbuyProductSpecFId},#{status},str_to_date(#{outTime,jdbcType=DATE},'%Y-%m-%d %T'),#{value,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_ebuyProductConversionCode" parameterType="EbuyProductConversionCode">
+		<include refid="ebuyProductConversionCodeBase.insert_ebuyProductConversionCode"/>
+    </insert>
+    
+	<!-- 批量新增(商品兑换码表)信息 -->
+    <insert id="insert_ebuyProductConversionCode_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_product_conversion_code 
+		(f_id,f_ebuy_product_id,t_ebuy_product_spec_f_id,f_status,f_out_time,f_value,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.ebuyProductId},#{item.tEbuyProductSpecFId},#{item.status},str_to_date(#{item.outTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.value,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(商品兑换码表)信息。 -->
+    <sql id="update_ebuyProductConversionCode">
+		UPDATE t_ebuy_product_conversion_code		<trim prefix="SET" prefixOverrides=","> 		<if test="ebuyProductId != null and !ebuyProductId.equals('') "> ,f_ebuy_product_id=#{ebuyProductId}</if> 		<if test="tEbuyProductSpecFId != null and !tEbuyProductSpecFId.equals('') "> ,t_ebuy_product_spec_f_id=#{tEbuyProductSpecFId}</if> 		<if test="status != null and !status.equals('') "> ,f_status=#{status}</if> 		<if test="outTime != null and !outTime.equals('') "> ,f_out_time=str_to_date(#{outTime},'%Y-%m-%d %T')</if> 		<if test="value != null and !value.equals('') "> ,f_value=#{value}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyProductConversionCode" parameterType="EbuyProductConversionCode">
+		<include refid="ebuyProductConversionCodeBase.update_ebuyProductConversionCode"/>
+    </update>
+    
+    <!-- 批量更新(商品兑换码表)信息。 -->
+    <update id="update_ebuyProductConversionCode_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_product_conversion_code		<trim prefix="SET" prefixOverrides=","> 		<if test="item.ebuyProductId != null and !item.ebuyProductId.equals('')  "> ,f_ebuy_product_id=#{item.ebuyProductId}</if> 		<if test="item.tEbuyProductSpecFId != null and !item.tEbuyProductSpecFId.equals('')  "> ,t_ebuy_product_spec_f_id=#{item.tEbuyProductSpecFId}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.outTime != null and !item.outTime.equals('')  "> ,f_out_time=str_to_date(#{item.outTime},'%Y-%m-%d %T')</if> 		<if test="item.value != null and !item.value.equals('')  "> ,f_value=#{item.value}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(商品兑换码表)信息_逻辑删除。 -->
+    <sql id="delete_ebuyProductConversionCode_Logic">
+		UPDATE t_ebuy_product_conversion_code		<trim prefix="SET" prefixOverrides=","> 		<if test="ebuyProductId != null and !ebuyProductId.equals('')  "> ,f_ebuy_product_id=#{ebuyProductId}</if> 		<if test="tEbuyProductSpecFId != null and !tEbuyProductSpecFId.equals('')  "> ,t_ebuy_product_spec_f_id=#{tEbuyProductSpecFId}</if> 		<if test="status != null and !status.equals('')  "> ,f_status=#{status}</if> 		<if test="outTime != null and !outTime.equals('')  "> ,f_out_time=str_to_date(#{outTime},'%Y-%m-%d %T')</if> 		<if test="value != null and !value.equals('')  "> ,f_value=#{value}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyProductConversionCode_Logic" parameterType="EbuyProductConversionCode">
+		<include refid="ebuyProductConversionCodeBase.delete_ebuyProductConversionCode_Logic"/>
+    </update>
+    
+    <!-- 批量删除(商品兑换码表)信息_逻辑删除 -->
+    <update id="delete_ebuyProductConversionCode_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_product_conversion_code		<trim prefix="SET" prefixOverrides=","> 		<if test="item.ebuyProductId != null and !item.ebuyProductId.equals('')  "> ,f_ebuy_product_id=#{item.ebuyProductId}</if> 		<if test="item.tEbuyProductSpecFId != null and !item.tEbuyProductSpecFId.equals('')  "> ,t_ebuy_product_spec_f_id=#{item.tEbuyProductSpecFId}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.outTime != null and !item.outTime.equals('')  "> ,f_out_time=str_to_date(#{item.outTime},'%Y-%m-%d %T')</if> 		<if test="item.value != null and !item.value.equals('')  "> ,f_value=#{item.value}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(商品兑换码表)信息。 -->
+    <sql id="delete_ebuyProductConversionCode">
+		DELETE FROM t_ebuy_product_conversion_code WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyProductConversionCode" parameterType="java.lang.String">
+		<include refid="ebuyProductConversionCodeBase.delete_ebuyProductConversionCode"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(商品兑换码表)信息。 -->
+    <delete id="delete_ebuyProductConversionCode_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_product_conversion_code WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

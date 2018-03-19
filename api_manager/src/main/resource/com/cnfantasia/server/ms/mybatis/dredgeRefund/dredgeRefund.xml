@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 运营广告管理 -->
+<mapper namespace="dredgeRefundForOms">
+
+    <select id="getDredgeRefundList" parameterType="map" resultType="com.cnfantasia.server.ms.dredgeRefund.entity.DredgeRefundEntity">
+        select dr.f_id id, db.f_bill_no billNo, eo.f_pay_method payMethod, DATE_FORMAT(eo.f_pay_time, '%Y-%m-%d %T') payTime,
+        (select pr.f_flow_no from t_ebuy_pay_record pr where pr.t_ebuy_order_f_id = eo.f_id and pr.f_sys0_del_state = 0 ORDER BY pr.f_id desc limit 1) flowNo,
+        db.f_link_name linkName, db.f_tel linkPhone, db.f_pay_amount billTotalAmount, dr.f_refund_amount refundAmount, dr.f_refund_coupon_amount refundCouponAmount,
+        dr.f_refund_reason refundReason, dr.f_note note, DATE_FORMAT(dr.f_sys0_add_time, '%Y-%m-%d %T') applyTime,
+        if(dr.f_refund_status = 2, DATE_FORMAT(dr.f_sys0_upd_time, '%Y-%m-%d %T'), null) auditTime,dr.f_refund_type refundType, dr.f_refund_status refundStatus,
+        (select dp.f_name from t_dredge_bill_has_product_spec hps
+          inner join t_dredge_product_specification dps on dps.f_id = hps.f_specific_id
+          inner join t_dredge_product dp on dp.f_id = dps.f_dredge_product_id
+          where hps.f_sys0_del_state = 0 and hps.f_dredge_bill_id = db.f_id limit 1) dredgeProductName,
+        (select ifnull(f_amount,0) from t_ebuy_order_has_coupon where t_ebuy_order_f_id = db.t_ebuy_order_f_id and f_sys0_del_state = 0) couponDiscountMoney
+        from t_dredge_refund dr
+        inner join t_dredge_bill db on db.f_sys0_del_state = 0 and db.f_id = dr.t_dredge_bill_f_id
+        inner join t_ebuy_order eo on eo.f_sys0_del_state = 0 and eo.f_id = db.t_ebuy_order_f_id
+        where dr.f_sys0_del_state = 0
+        <if test="billNo != null and billNo != ''">
+            and db.f_bill_no like concat('%', #{billNo}, '%')
+        </if>
+        <if test="dredgeProductName != null and dredgeProductName != ''">
+            and exists (
+              select 1 from t_dredge_bill_has_product_spec hps
+              inner join t_dredge_product_specification dps on dps.f_id = hps.f_specific_id
+              inner join t_dredge_product dp on dp.f_id = dps.f_dredge_product_id
+              where hps.f_sys0_del_state = 0 and hps.f_dredge_bill_id = db.f_id and dp.f_name like concat('%', #{dredgeProductName}, '%')
+            )
+        </if>
+        <if test="linkName != null and linkName != ''">
+            and db.f_link_name like concat('%', #{linkName}, '%')
+        </if>
+        <if test="linkPhone != null and linkPhone != ''">
+            and db.f_tel like concat('%', #{linkPhone}, '%')
+        </if>
+        <if test="flowNo != null and flowNo != ''">
+            and exists (select 1 from t_ebuy_pay_record pr where pr.t_ebuy_order_f_id = eo.f_id and pr.f_sys0_del_state = 0 and pr.f_flow_no like concat('%', #{flowNo}, '%'))
+        </if>
+        <if test="payMethod != null">
+            and eo.f_pay_method = #{payMethod}
+        </if>
+        <if test="refundStatus != null">
+            and dr.f_refund_status = #{refundStatus}
+        </if>
+        <if test="applyTimeStart != null and applyTimeStart != ''">
+            and dr.f_sys0_add_time > str_to_date(#{applyTimeStart},'%Y-%m-%d %T')
+        </if>
+        <if test="applyTimeEnd != null and applyTimeEnd != ''">
+            and dr.f_sys0_add_time &lt; str_to_date(#{applyTimeEnd},'%Y-%m-%d %T')
+        </if>
+        order by dr.f_sys0_add_time desc
+    </select>
+
+    <select id="getDredgeRefundDetail" parameterType="map" resultType="com.cnfantasia.server.ms.dredgeRefund.entity.DredgeRefundEntity">
+        select dr.f_id id, db.f_bill_no billNo, eo.f_pay_method payMethod, DATE_FORMAT(eo.f_pay_time, '%Y-%m-%d %T') payTime,
+        (select pr.f_flow_no from t_ebuy_pay_record pr where pr.t_ebuy_order_f_id = eo.f_id and pr.f_sys0_del_state = 0 ORDER BY pr.f_id desc limit 1) flowNo,
+        db.f_link_name linkName, db.f_tel linkPhone, db.f_pay_amount billTotalAmount, dr.f_refund_amount refundAmount, dr.f_refund_coupon_amount refundCouponAmount,
+        dr.f_refund_reason refundReason, dr.f_note note, DATE_FORMAT(dr.f_sys0_add_time, '%Y-%m-%d %T') applyTime,u1.f_user_account applyUser,
+        if(dr.f_refund_status = 2, DATE_FORMAT(dr.f_sys0_upd_time, '%Y-%m-%d %T'), null) auditTime, dr.f_audit_reason auditReason,
+         u2.f_user_account auditUser,dr.f_refund_type refundType, dr.f_refund_status refundStatus,
+        (select dp.f_name from t_dredge_bill_has_product_spec hps
+          inner join t_dredge_product_specification dps on dps.f_id = hps.f_specific_id
+          inner join t_dredge_product dp on dp.f_id = dps.f_dredge_product_id
+          where hps.f_sys0_del_state = 0 and hps.f_dredge_bill_id = db.f_id limit 1) dredgeProductName,
+        (select ifnull(f_amount,0) from t_ebuy_order_has_coupon where t_ebuy_order_f_id = db.t_ebuy_order_f_id and f_sys0_del_state = 0) couponDiscountMoney,
+        eo.f_amount orderAmount, eo.f_total_coupon_amount orderCouponAmount
+        from t_dredge_refund dr
+        inner join t_dredge_bill db on db.f_sys0_del_state = 0 and db.f_id = dr.t_dredge_bill_f_id
+        inner join t_ebuy_order eo on eo.f_sys0_del_state = 0 and eo.f_id = db.t_ebuy_order_f_id
+        left join t_oms_user u1 on u1.f_id = dr.f_sys0_add_user
+        left join t_oms_user u2 on u2.f_id = dr.f_sys0_upd_user
+        where dr.f_sys0_del_state = 0 and dr.f_id = #{refundId}
+    </select>
+    <select id="getDredgeRefundCount" parameterType="map" resultType="int">
+        select count(0)
+         from t_dredge_refund dr
+        inner join t_dredge_bill db on db.f_sys0_del_state = 0 and db.f_id = dr.t_dredge_bill_f_id
+        inner join t_ebuy_order eo on eo.f_sys0_del_state = 0 and eo.f_id = db.t_ebuy_order_f_id
+        where dr.f_sys0_del_state = 0
+        <if test="billNo != null and billNo != ''">
+            and db.f_bill_no like concat('%', #{billNo}, '%')
+        </if>
+        <if test="dredgeProductName != null and dredgeProductName != ''">
+            and exists (
+            select 1 from t_dredge_bill_has_product_spec hps
+            inner join t_dredge_product_specification dps on dps.f_id = hps.f_specific_id
+            inner join t_dredge_product dp on dp.f_id = dps.f_dredge_product_id
+            where hps.f_sys0_del_state = 0 and hps.f_dredge_bill_id = db.f_id and dp.f_name like concat('%', #{dredgeProductName}, '%')
+            )
+        </if>
+        <if test="linkName != null and linkName != ''">
+            and db.f_link_name like concat('%', #{linkName}, '%')
+        </if>
+        <if test="linkPhone != null and linkPhone != ''">
+            and db.f_tel like concat('%', #{linkPhone}, '%')
+        </if>
+        <if test="flowNo != null and flowNo != ''">
+            and exists (select 1 from t_ebuy_pay_record pr where pr.t_ebuy_order_f_id = eo.f_id and pr.f_sys0_del_state = 0 and pr.f_flow_no like concat('%', #{flowNo}, '%'))
+        </if>
+        <if test="payMethod != null">
+            and eo.f_pay_method = #{payMethod}
+        </if>
+        <if test="refundStatus != null">
+            and dr.f_refund_status = #{refundStatus}
+        </if>
+        <if test="applyTimeStart != null and applyTimeStart != ''">
+            and dr.f_sys0_add_time > str_to_date(#{applyTimeStart},'%Y-%m-%d %T')
+        </if>
+        <if test="applyTimeEnd != null and applyTimeEnd != ''">
+            and dr.f_sys0_add_time &lt; str_to_date(#{applyTimeEnd},'%Y-%m-%d %T')
+        </if>
+    </select>
+
+</mapper>

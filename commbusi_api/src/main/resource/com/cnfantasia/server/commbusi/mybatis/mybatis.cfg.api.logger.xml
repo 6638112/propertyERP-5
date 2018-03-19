@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+  
+<!DOCTYPE configuration PUBLIC   
+    "-//mybatis.org//DTD Config 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">  
+  
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+  	</settings>
+  	<typeAliases>
+  		<!-- 电商模块 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.commLogger.entity.CommLogger" alias="CommLogger"/> <!--公共日志记录表 -->
+		<typeAlias type="com.cnfantasia.server.domainbase.taskLogger.entity.TaskLogger" alias="TaskLogger"/> <!--job日志记录表 -->
+
+		
+  	</typeAliases>
+  	<plugins>
+		<plugin interceptor="com.cnfantasia.server.api.pub.mybatis.MybatisInterceptor"></plugin>
+	</plugins>
+    <mappers> 
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/commLoggerBaseMySQL.xml"/> <!--公共日志记录表 -->
+        <mapper resource="com/cnfantasia/server/domain/mybatis/base/taskLoggerBaseMySQL.xml"/> <!--job日志记录表 -->
+    </mappers>
+</configuration> 

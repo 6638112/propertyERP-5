@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:真实房间 t_real_room -->
+<mapper namespace="realRoom">
+	<resultMap type="com.cnfantasia.server.api.room.entity.RealRoomEntity" id="realRoomMap" extends="realRoomBase.realRoomBaseMap">
+		<!-- 单元信息 -->
+        <association column="t_building_f_id" javaType="com.cnfantasia.server.api.room.entity.BuildingEntity" 
+        	property="buildingEntity" select="building.select_building_bySeqId"/>
+	</resultMap>
+	
+	<!-- 根据条件查询(门牌信息)信息。 -->
+	<select  id="select_realRoom_bySeqId" parameterType="java.util.HashMap" resultMap="realRoomMap">
+		<include refid="realRoomBase.select_realRoom_bySeqId"/>
+	</select>
+    
+</mapper>

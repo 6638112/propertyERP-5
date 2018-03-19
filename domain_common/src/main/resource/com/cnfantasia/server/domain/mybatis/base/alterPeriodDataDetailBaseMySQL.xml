@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:选择周期数据详情 t_alter_period_data_detail -->
+<mapper namespace="alterPeriodDataDetailBase">
+	<resultMap type="AlterPeriodDataDetail" id="alterPeriodDataDetailBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_real_room_id" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!-- 真实房间id -->        <result column="f_bill_month_start" javaType="java.lang.String" property="billMonthStart"/>  <!-- 物业费起始时间 -->        <result column="f_latefee_start" javaType="java.lang.String" property="latefeeStart"/>  <!-- 滞纳金起算时间 -->        <result column="f_latefee_amount" javaType="java.lang.Long" property="latefeeAmount"/>  <!-- 滞纳金金额（分） -->        <result column="t_alter_period_cfg_id" javaType="java.math.BigInteger" property="tAlterPeriodCfgId"/>  <!-- 选择周期配置id -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AlterPeriodDataDetail" id="alterPeriodDataDetailExtendMap" extends="alterPeriodDataDetailBaseMap">
+	</resultMap>
+	<resultMap type="AlterPeriodDataDetail" id="alterPeriodDataDetailBaseMap_AppendTable">
+        <id column="APDDid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="APDDtRealRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!-- 真实房间id -->        <result column="APDDbillMonthStart" javaType="java.lang.String" property="billMonthStart"/>  <!-- 物业费起始时间 -->        <result column="APDDlatefeeStart" javaType="java.lang.String" property="latefeeStart"/>  <!-- 滞纳金起算时间 -->        <result column="APDDlatefeeAmount" javaType="java.lang.Long" property="latefeeAmount"/>  <!-- 滞纳金金额（分） -->        <result column="APDDtAlterPeriodCfgId" javaType="java.math.BigInteger" property="tAlterPeriodCfgId"/>  <!-- 选择周期配置id -->        <result column="APDDsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="APDDsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="APDDsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="APDDsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="APDDsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="APDDsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="APDDsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AlterPeriodDataDetail" id="alterPeriodDataDetailBaseMap_AppendTable1">
+        <id column="APDD1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="APDD1tRealRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!-- 真实房间id -->        <result column="APDD1billMonthStart" javaType="java.lang.String" property="billMonthStart"/>  <!-- 物业费起始时间 -->        <result column="APDD1latefeeStart" javaType="java.lang.String" property="latefeeStart"/>  <!-- 滞纳金起算时间 -->        <result column="APDD1latefeeAmount" javaType="java.lang.Long" property="latefeeAmount"/>  <!-- 滞纳金金额（分） -->        <result column="APDD1tAlterPeriodCfgId" javaType="java.math.BigInteger" property="tAlterPeriodCfgId"/>  <!-- 选择周期配置id -->        <result column="APDD1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="APDD1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="APDD1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="APDD1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="APDD1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="APDD1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="APDD1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		APDD.f_id,APDD.t_real_room_id,date_format(APDD.f_bill_month_start,'%Y-%m-%d %T') as f_bill_month_start,date_format(APDD.f_latefee_start,'%Y-%m-%d %T') as f_latefee_start,APDD.f_latefee_amount,APDD.t_alter_period_cfg_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		APDD.f_id as APDDid,APDD.t_real_room_id as APDDtRealRoomId,date_format(APDD.f_bill_month_start,'%Y-%m-%d %T') as APDDbillMonthStart,date_format(APDD.f_latefee_start,'%Y-%m-%d %T') as APDDlatefeeStart,APDD.f_latefee_amount as APDDlatefeeAmount,APDD.t_alter_period_cfg_id as APDDtAlterPeriodCfgId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		APDD1.f_id as APDD1id,APDD1.t_real_room_id as APDD1tRealRoomId,date_format(APDD1.f_bill_month_start,'%Y-%m-%d %T') as APDD1billMonthStart,date_format(APDD1.f_latefee_start,'%Y-%m-%d %T') as APDD1latefeeStart,APDD1.f_latefee_amount as APDD1latefeeAmount,APDD1.t_alter_period_cfg_id as APDD1tAlterPeriodCfgId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (APDD.f_id = #{id} ) </if>        <if test="tRealRoomId != null">  and (APDD.t_real_room_id = #{tRealRoomId} ) </if>        <if test="billMonthStart != null and !billMonthStart.equals('')  ">  and (APDD.f_bill_month_start = str_to_date(#{billMonthStart},'%Y-%m-%d %T') ) </if>        <if test="billMonthStart_START != null and !billMonthStart_START.equals('')  ">              <![CDATA[ and (APDD.f_bill_month_start >= str_to_date(#{billMonthStart_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="billMonthStart_END != null and !billMonthStart_END.equals('')  ">            <![CDATA[ and (APDD.f_bill_month_start <= str_to_date(#{billMonthStart_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="latefeeStart != null and !latefeeStart.equals('')  ">  and (APDD.f_latefee_start = str_to_date(#{latefeeStart},'%Y-%m-%d %T') ) </if>        <if test="latefeeStart_START != null and !latefeeStart_START.equals('')  ">              <![CDATA[ and (APDD.f_latefee_start >= str_to_date(#{latefeeStart_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="latefeeStart_END != null and !latefeeStart_END.equals('')  ">            <![CDATA[ and (APDD.f_latefee_start <= str_to_date(#{latefeeStart_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="latefeeAmount != null">  and (APDD.f_latefee_amount = #{latefeeAmount} ) </if>        <if test="tAlterPeriodCfgId != null">  and (APDD.t_alter_period_cfg_id = #{tAlterPeriodCfgId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (APDD.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (APDD.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (APDD.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (APDD.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (APDD.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (APDD.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (APDD.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (APDD.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (APDD.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (APDD.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (APDD.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (APDD.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (APDD.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (APDD.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (APDD.f_id = #{id} ) </if>        <if test="tRealRoomId != null and !tRealRoomId.equals('')  ">  and (APDD.t_real_room_id = #{tRealRoomId} ) </if>        <if test="billMonthStart != null and !billMonthStart.equals('')  ">  and (APDD.f_bill_month_start = str_to_date(#{billMonthStart},'%Y-%m-%d %T') ) </if>        <if test="billMonthStart_START != null and !billMonthStart_START.equals('')  ">              <![CDATA[ and (APDD.f_bill_month_start >= str_to_date(#{billMonthStart_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="billMonthStart_END != null and !billMonthStart_END.equals('')  ">            <![CDATA[ and (APDD.f_bill_month_start <= str_to_date(#{billMonthStart_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="latefeeStart != null and !latefeeStart.equals('')  ">  and (APDD.f_latefee_start = str_to_date(#{latefeeStart},'%Y-%m-%d %T') ) </if>        <if test="latefeeStart_START != null and !latefeeStart_START.equals('')  ">              <![CDATA[ and (APDD.f_latefee_start >= str_to_date(#{latefeeStart_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="latefeeStart_END != null and !latefeeStart_END.equals('')  ">            <![CDATA[ and (APDD.f_latefee_start <= str_to_date(#{latefeeStart_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="latefeeAmount != null and !latefeeAmount.equals('')  ">  and (APDD.f_latefee_amount = #{latefeeAmount} ) </if>        <if test="tAlterPeriodCfgId != null and !tAlterPeriodCfgId.equals('')  ">  and (APDD.t_alter_period_cfg_id = #{tAlterPeriodCfgId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (APDD.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (APDD.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (APDD.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (APDD.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (APDD.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (APDD.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (APDD.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (APDD.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (APDD.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (APDD.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (APDD.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (APDD.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (APDD.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (APDD.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="alterPeriodDataDetailBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="alterPeriodDataDetailBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="alterPeriodDataDetailBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="alterPeriodDataDetailBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_alter_period_data_detail APDD    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(选择周期数据详情)信息。 -->
+	<sql id="select_alterPeriodDataDetail">
+		SELECT <include refid="alterPeriodDataDetailBase.queryHead"/>
+		<include refid="alterPeriodDataDetailBase.busiQueryCondition"/>
+		<include refid="alterPeriodDataDetailBase.dimCheckSql"/>
+		ORDER BY APDD.f_id DESC
+	</sql>
+	<select id="select_alterPeriodDataDetail" parameterType="java.util.Map" resultMap="alterPeriodDataDetailBase.alterPeriodDataDetailExtendMap">
+		<include refid="alterPeriodDataDetailBase.select_alterPeriodDataDetail"/>
+	</select>
+	
+	<!-- 根据条件分页查询(选择周期数据详情)信息  -->
+	<sql id="select_alterPeriodDataDetail_withPage">
+		SELECT <include refid="alterPeriodDataDetailBase.queryHead"/>
+		<include refid="alterPeriodDataDetailBase.busiQueryCondition"/>
+		<include refid="alterPeriodDataDetailBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_alterPeriodDataDetail_withPage" resultMap="alterPeriodDataDetailBase.alterPeriodDataDetailExtendMap" parameterType="java.util.Map">
+		<include refid="alterPeriodDataDetailBase.select_alterPeriodDataDetail_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(选择周期数据详情)信息。 -->
+	<sql id="select_alterPeriodDataDetail_bySeqId">
+		SELECT <include refid="alterPeriodDataDetailBase.queryHead"/>
+		<include refid="alterPeriodDataDetailBase.busiQueryCondition"/>
+		 and APDD.f_id = #{_parameter}
+	</sql>
+	<select id="select_alterPeriodDataDetail_bySeqId" parameterType="java.math.BigInteger" resultMap="alterPeriodDataDetailBase.alterPeriodDataDetailBaseMap">
+		<include refid="alterPeriodDataDetailBase.select_alterPeriodDataDetail_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(选择周期数据详情)记录数  -->
+	<sql id="select_alterPeriodDataDetail_count">
+		SELECT COUNT(*)
+		<include refid="alterPeriodDataDetailBase.busiQueryCount"/>
+		<include refid="alterPeriodDataDetailBase.dimCheckSql"/>
+	</sql>
+	<select id="select_alterPeriodDataDetail_count" resultType="java.lang.Integer">
+		<include refid="alterPeriodDataDetailBase.select_alterPeriodDataDetail_count"/>
+	</select>
+	
+	 <!-- 往(选择周期数据详情)新增一条记录。 -->
+	 <sql id="insert_alterPeriodDataDetail">
+		INSERT INTO t_alter_period_data_detail 
+		(f_id,t_real_room_id,f_bill_month_start,f_latefee_start,f_latefee_amount,t_alter_period_cfg_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tRealRoomId},str_to_date(#{billMonthStart,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{latefeeStart,jdbcType=DATE},'%Y-%m-%d %T'),#{latefeeAmount},#{tAlterPeriodCfgId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_alterPeriodDataDetail" parameterType="AlterPeriodDataDetail">
+		<include refid="alterPeriodDataDetailBase.insert_alterPeriodDataDetail"/>
+    </insert>
+    
+	<!-- 批量新增(选择周期数据详情)信息 -->
+    <insert id="insert_alterPeriodDataDetail_Batch" parameterType="java.util.List">
+    	INSERT INTO t_alter_period_data_detail 
+		(f_id,t_real_room_id,f_bill_month_start,f_latefee_start,f_latefee_amount,t_alter_period_cfg_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tRealRoomId},str_to_date(#{item.billMonthStart,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.latefeeStart,jdbcType=DATE},'%Y-%m-%d %T'),#{item.latefeeAmount},#{item.tAlterPeriodCfgId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(选择周期数据详情)信息。 -->
+    <sql id="update_alterPeriodDataDetail">
+		UPDATE t_alter_period_data_detail		<trim prefix="SET" prefixOverrides=","> 		<if test="tRealRoomId != null and !tRealRoomId.equals('') "> ,t_real_room_id=#{tRealRoomId}</if> 		<if test="billMonthStart != null and !billMonthStart.equals('') "> ,f_bill_month_start=str_to_date(#{billMonthStart},'%Y-%m-%d %T')</if> 		<if test="latefeeStart != null and !latefeeStart.equals('') "> ,f_latefee_start=str_to_date(#{latefeeStart},'%Y-%m-%d %T')</if> 		<if test="latefeeAmount != null and !latefeeAmount.equals('') "> ,f_latefee_amount=#{latefeeAmount}</if> 		<if test="tAlterPeriodCfgId != null and !tAlterPeriodCfgId.equals('') "> ,t_alter_period_cfg_id=#{tAlterPeriodCfgId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_alterPeriodDataDetail" parameterType="AlterPeriodDataDetail">
+		<include refid="alterPeriodDataDetailBase.update_alterPeriodDataDetail"/>
+    </update>
+    
+    <!-- 批量更新(选择周期数据详情)信息。 -->
+    <update id="update_alterPeriodDataDetail_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_alter_period_data_detail		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tRealRoomId != null and !item.tRealRoomId.equals('')  "> ,t_real_room_id=#{item.tRealRoomId}</if> 		<if test="item.billMonthStart != null and !item.billMonthStart.equals('')  "> ,f_bill_month_start=str_to_date(#{item.billMonthStart},'%Y-%m-%d %T')</if> 		<if test="item.latefeeStart != null and !item.latefeeStart.equals('')  "> ,f_latefee_start=str_to_date(#{item.latefeeStart},'%Y-%m-%d %T')</if> 		<if test="item.latefeeAmount != null and !item.latefeeAmount.equals('')  "> ,f_latefee_amount=#{item.latefeeAmount}</if> 		<if test="item.tAlterPeriodCfgId != null and !item.tAlterPeriodCfgId.equals('')  "> ,t_alter_period_cfg_id=#{item.tAlterPeriodCfgId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(选择周期数据详情)信息_逻辑删除。 -->
+    <sql id="delete_alterPeriodDataDetail_Logic">
+		UPDATE t_alter_period_data_detail		<trim prefix="SET" prefixOverrides=","> 		<if test="tRealRoomId != null and !tRealRoomId.equals('')  "> ,t_real_room_id=#{tRealRoomId}</if> 		<if test="billMonthStart != null and !billMonthStart.equals('')  "> ,f_bill_month_start=str_to_date(#{billMonthStart},'%Y-%m-%d %T')</if> 		<if test="latefeeStart != null and !latefeeStart.equals('')  "> ,f_latefee_start=str_to_date(#{latefeeStart},'%Y-%m-%d %T')</if> 		<if test="latefeeAmount != null and !latefeeAmount.equals('')  "> ,f_latefee_amount=#{latefeeAmount}</if> 		<if test="tAlterPeriodCfgId != null and !tAlterPeriodCfgId.equals('')  "> ,t_alter_period_cfg_id=#{tAlterPeriodCfgId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_alterPeriodDataDetail_Logic" parameterType="AlterPeriodDataDetail">
+		<include refid="alterPeriodDataDetailBase.delete_alterPeriodDataDetail_Logic"/>
+    </update>
+    
+    <!-- 批量删除(选择周期数据详情)信息_逻辑删除 -->
+    <update id="delete_alterPeriodDataDetail_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_alter_period_data_detail		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tRealRoomId != null and !item.tRealRoomId.equals('')  "> ,t_real_room_id=#{item.tRealRoomId}</if> 		<if test="item.billMonthStart != null and !item.billMonthStart.equals('')  "> ,f_bill_month_start=str_to_date(#{item.billMonthStart},'%Y-%m-%d %T')</if> 		<if test="item.latefeeStart != null and !item.latefeeStart.equals('')  "> ,f_latefee_start=str_to_date(#{item.latefeeStart},'%Y-%m-%d %T')</if> 		<if test="item.latefeeAmount != null and !item.latefeeAmount.equals('')  "> ,f_latefee_amount=#{item.latefeeAmount}</if> 		<if test="item.tAlterPeriodCfgId != null and !item.tAlterPeriodCfgId.equals('')  "> ,t_alter_period_cfg_id=#{item.tAlterPeriodCfgId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(选择周期数据详情)信息。 -->
+    <sql id="delete_alterPeriodDataDetail">
+		DELETE FROM t_alter_period_data_detail WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_alterPeriodDataDetail" parameterType="java.lang.String">
+		<include refid="alterPeriodDataDetailBase.delete_alterPeriodDataDetail"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(选择周期数据详情)信息。 -->
+    <delete id="delete_alterPeriodDataDetail_Batch" parameterType="java.util.List">
+		DELETE FROM t_alter_period_data_detail WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

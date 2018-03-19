@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="carHuaanMsg">
+	
+	<!-- 根据条件查询(华安临停车缴费通知记录)信息。 -->
+	<select id="select_carHuaanMsg" parameterType="java.util.Map" resultMap="carHuaanMsgBase.carHuaanMsgExtendMap">
+		SELECT <include refid="carHuaanMsgBase.queryHead"/>
+		FROM t_car_huaan_msg CHM
+    	WHERE 1=1
+    	AND CHM.f_car_type = #{carType} 
+    	AND CHM.f_pay_status=1
+    	AND CHM.f_push_status=0
+    	<![CDATA[AND (CHM.f_push_times<=10 OR CHM.f_push_times IS NULL) ]]>
+    	<![CDATA[AND IF((CHM.f_send_time IS NULL), TRUE, (CHM.f_send_time <= NOW())) ]]>
+    	AND CHM.f_sys0_del_state=0
+		ORDER BY CHM.f_id DESC
+	</select>
+
+</mapper>

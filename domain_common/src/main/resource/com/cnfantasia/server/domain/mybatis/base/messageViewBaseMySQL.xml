@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:消息推送的视图配置 t_message_view -->
+<mapper namespace="messageViewBase">
+	<resultMap type="MessageView" id="messageViewBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_type_id" javaType="java.lang.Integer" property="typeId"/>  <!-- 消息类别 -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!--  -->        <result column="f_android_view" javaType="java.lang.String" property="androidView"/>  <!-- 安卓跳转页面 -->        <result column="f_ios_view" javaType="java.lang.String" property="iosView"/>  <!-- IOS跳转页面,改为记录IOS消息类型 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MessageView" id="messageViewExtendMap" extends="messageViewBaseMap">
+	</resultMap>
+	<resultMap type="MessageView" id="messageViewBaseMap_AppendTable">
+        <id column="MVid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MVtypeId" javaType="java.lang.Integer" property="typeId"/>  <!-- 消息类别 -->        <result column="MVdesc" javaType="java.lang.String" property="desc"/>  <!--  -->        <result column="MVandroidView" javaType="java.lang.String" property="androidView"/>  <!-- 安卓跳转页面 -->        <result column="MViosView" javaType="java.lang.String" property="iosView"/>  <!-- IOS跳转页面,改为记录IOS消息类型 -->        <result column="MVsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MVsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MVsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MVsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MVsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MVsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MVsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MessageView" id="messageViewBaseMap_AppendTable1">
+        <id column="MV1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MV1typeId" javaType="java.lang.Integer" property="typeId"/>  <!-- 消息类别 -->        <result column="MV1desc" javaType="java.lang.String" property="desc"/>  <!--  -->        <result column="MV1androidView" javaType="java.lang.String" property="androidView"/>  <!-- 安卓跳转页面 -->        <result column="MV1iosView" javaType="java.lang.String" property="iosView"/>  <!-- IOS跳转页面,改为记录IOS消息类型 -->        <result column="MV1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MV1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MV1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MV1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MV1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MV1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MV1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		MV.f_id,MV.f_type_id,MV.f_desc,MV.f_android_view,MV.f_ios_view
+	</sql>
+	<sql id="queryHead_AppendTable">
+		MV.f_id as MVid,MV.f_type_id as MVtypeId,MV.f_desc as MVdesc,MV.f_android_view as MVandroidView,MV.f_ios_view as MViosView
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		MV1.f_id as MV1id,MV1.f_type_id as MV1typeId,MV1.f_desc as MV1desc,MV1.f_android_view as MV1androidView,MV1.f_ios_view as MV1iosView
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (MV.f_id = #{id} ) </if>        <if test="typeId != null">  and (MV.f_type_id = #{typeId} ) </if>        <if test="desc != null">  and (MV.f_desc = #{desc} ) </if>        <if test="androidView != null">  and (MV.f_android_view = #{androidView} ) </if>        <if test="iosView != null">  and (MV.f_ios_view = #{iosView} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MV.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MV.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MV.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MV.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MV.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MV.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MV.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MV.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MV.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (MV.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (MV.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (MV.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (MV.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (MV.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (MV.f_id = #{id} ) </if>        <if test="typeId != null and !typeId.equals('')  ">  and (MV.f_type_id = #{typeId} ) </if>        <if test="desc != null and !desc.equals('')  ">  and (MV.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="androidView != null and !androidView.equals('')  ">  and (MV.f_android_view like CONCAT('%',#{androidView},'%') ) </if>        <if test="iosView != null and !iosView.equals('')  ">  and (MV.f_ios_view like CONCAT('%',#{iosView},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MV.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MV.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MV.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MV.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MV.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MV.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MV.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MV.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MV.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (MV.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (MV.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (MV.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (MV.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (MV.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="messageViewBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="messageViewBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="messageViewBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="messageViewBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_message_view MV    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(消息推送的视图配置)信息。 -->
+	<sql id="select_messageView">
+		SELECT <include refid="messageViewBase.queryHead"/>
+		<include refid="messageViewBase.busiQueryCondition"/>
+		<include refid="messageViewBase.dimCheckSql"/>
+		ORDER BY MV.f_id DESC
+	</sql>
+	<select id="select_messageView" parameterType="java.util.Map" resultMap="messageViewBase.messageViewExtendMap">
+		<include refid="messageViewBase.select_messageView"/>
+	</select>
+	
+	<!-- 根据条件分页查询(消息推送的视图配置)信息  -->
+	<sql id="select_messageView_withPage">
+		SELECT <include refid="messageViewBase.queryHead"/>
+		<include refid="messageViewBase.busiQueryCondition"/>
+		<include refid="messageViewBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_messageView_withPage" resultMap="messageViewBase.messageViewExtendMap" parameterType="java.util.Map">
+		<include refid="messageViewBase.select_messageView_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(消息推送的视图配置)信息。 -->
+	<sql id="select_messageView_bySeqId">
+		SELECT <include refid="messageViewBase.queryHead"/>
+		<include refid="messageViewBase.busiQueryCondition"/>
+		 and MV.f_id = #{_parameter}
+	</sql>
+	<select id="select_messageView_bySeqId" parameterType="java.math.BigInteger" resultMap="messageViewBase.messageViewBaseMap">
+		<include refid="messageViewBase.select_messageView_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(消息推送的视图配置)记录数  -->
+	<sql id="select_messageView_count">
+		SELECT COUNT(*)
+		<include refid="messageViewBase.busiQueryCount"/>
+		<include refid="messageViewBase.dimCheckSql"/>
+	</sql>
+	<select id="select_messageView_count" resultType="java.lang.Integer">
+		<include refid="messageViewBase.select_messageView_count"/>
+	</select>
+	
+	 <!-- 往(消息推送的视图配置)新增一条记录。 -->
+	 <sql id="insert_messageView">
+		INSERT INTO t_message_view 
+		(f_id,f_type_id,f_desc,f_android_view,f_ios_view,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{typeId},#{desc,jdbcType=VARCHAR},#{androidView,jdbcType=VARCHAR},#{iosView,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_messageView" parameterType="MessageView">
+		<include refid="messageViewBase.insert_messageView"/>
+    </insert>
+    
+	<!-- 批量新增(消息推送的视图配置)信息 -->
+    <insert id="insert_messageView_Batch" parameterType="java.util.List">
+    	INSERT INTO t_message_view 
+		(f_id,f_type_id,f_desc,f_android_view,f_ios_view,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.typeId},#{item.desc,jdbcType=VARCHAR},#{item.androidView,jdbcType=VARCHAR},#{item.iosView,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(消息推送的视图配置)信息。 -->
+    <sql id="update_messageView">
+		UPDATE t_message_view		<trim prefix="SET" prefixOverrides=","> 		<if test="typeId != null and !typeId.equals('') "> ,f_type_id=#{typeId}</if> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="androidView != null and !androidView.equals('') "> ,f_android_view=#{androidView}</if> 		<if test="iosView != null and !iosView.equals('') "> ,f_ios_view=#{iosView}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_messageView" parameterType="MessageView">
+		<include refid="messageViewBase.update_messageView"/>
+    </update>
+    
+    <!-- 批量更新(消息推送的视图配置)信息。 -->
+    <update id="update_messageView_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_message_view		<trim prefix="SET" prefixOverrides=","> 		<if test="item.typeId != null and !item.typeId.equals('')  "> ,f_type_id=#{item.typeId}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.androidView != null and !item.androidView.equals('')  "> ,f_android_view=#{item.androidView}</if> 		<if test="item.iosView != null and !item.iosView.equals('')  "> ,f_ios_view=#{item.iosView}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(消息推送的视图配置)信息_逻辑删除。 -->
+    <sql id="delete_messageView_Logic">
+		UPDATE t_message_view		<trim prefix="SET" prefixOverrides=","> 		<if test="typeId != null and !typeId.equals('')  "> ,f_type_id=#{typeId}</if> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="androidView != null and !androidView.equals('')  "> ,f_android_view=#{androidView}</if> 		<if test="iosView != null and !iosView.equals('')  "> ,f_ios_view=#{iosView}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_messageView_Logic" parameterType="MessageView">
+		<include refid="messageViewBase.delete_messageView_Logic"/>
+    </update>
+    
+    <!-- 批量删除(消息推送的视图配置)信息_逻辑删除 -->
+    <update id="delete_messageView_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_message_view		<trim prefix="SET" prefixOverrides=","> 		<if test="item.typeId != null and !item.typeId.equals('')  "> ,f_type_id=#{item.typeId}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.androidView != null and !item.androidView.equals('')  "> ,f_android_view=#{item.androidView}</if> 		<if test="item.iosView != null and !item.iosView.equals('')  "> ,f_ios_view=#{item.iosView}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(消息推送的视图配置)信息。 -->
+    <sql id="delete_messageView">
+		DELETE FROM t_message_view WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_messageView" parameterType="java.lang.String">
+		<include refid="messageViewBase.delete_messageView"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(消息推送的视图配置)信息。 -->
+    <delete id="delete_messageView_Batch" parameterType="java.util.List">
+		DELETE FROM t_message_view WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

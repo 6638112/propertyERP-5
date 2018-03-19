@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 购销供应商结算 -->
+<mapper namespace="ebuyProductSettle">
+	<resultMap type="com.cnfantasia.server.ms.ebuyProductSettle.entity.EbuyProductSettleApplyListDto" id="ebuyProductSettleApplyList_AppendTable">
+        <id column="f_id" javaType="java.math.BigInteger" property="delieveOrderId"/>
+        <result column="f_order_no" javaType="java.lang.String" property="orderNo"/>
+        <result column="payTime" javaType="java.lang.String" property="payTime"/>
+        <result column="productAmount" javaType="java.math.BigDecimal" property="productAmount"/>
+        <result column="deliveryFee" javaType="java.math.BigDecimal" property="deliveryFee"/>
+        <result column="refundFee" javaType="java.math.BigDecimal" property="refundFee"/>
+        <result column="orderTotalAmount" javaType="java.math.BigDecimal" property="orderTotalAmount"/>
+        <result column="revenueAmount" javaType="java.math.BigDecimal" property="revenueAmount"/>
+        <result column="merchant" javaType="java.lang.String" property="merchant"/>
+        <result column="realPay" javaType="java.math.BigDecimal" property="realPay"/>
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.ms.ebuyProductSettle.entity.EbuyProductSettleApplyListExportDto" id="select_revenueApplyList_export_AppendTable">
+        <id column="delieveOrderId" javaType="java.math.BigInteger" property="delieveOrderId"/>
+        <result column="orderNo" javaType="java.lang.String" property="orderNo"/>
+        <result column="payTime" javaType="java.lang.String" property="payTime"/>
+        <result column="merchant" javaType="java.lang.String" property="merchant"/>
+        <result column="productName" javaType="java.lang.String" property="productName"/>
+        <result column="buyNum" javaType="java.lang.Integer" property="buyNum"/>
+        <result column="purchasePrice" javaType="java.math.BigDecimal" property="purchasePrice"/>
+        <result column="productAmount" javaType="java.math.BigDecimal" property="productAmount"/>
+        <result column="deliveryProductAmount" javaType="java.math.BigDecimal" property="deliveryProductAmount"/>
+        <result column="deliveryFee" javaType="java.math.BigDecimal" property="deliveryFee"/>
+        <result column="refundAmount" javaType="java.math.BigDecimal" property="refundAmount"/>
+        <result column="deliveryAmount" javaType="java.math.BigDecimal" property="deliveryAmount"/>
+        <result column="revenueAmount" javaType="java.math.BigDecimal" property="revenueAmount"/>
+        <result column="receiver" javaType="java.lang.String" property="receiver"/>
+        <result column="receiverMobile" javaType="java.lang.String" property="receiverMobile"/>
+        <result column="address" javaType="java.lang.String" property="address"/>
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.ms.ebuyProductSettle.entity.SettleApplyDialogInfoDto" id="select_revenueApplyList_dialog_info_AppendTable">
+    	<result column="merchantName" javaType="java.lang.String" property="merchantName"/>
+    	<result column="accountBank" javaType="java.lang.String" property="accountBank"/>
+    	<result column="accountName" javaType="java.lang.String" property="accountName"/>
+    	<result column="telphone" javaType="java.lang.String" property="telphone"/>
+    	<result column="linkName" javaType="java.lang.String" property="linkName"/>
+    	<result column="bankName" javaType="java.lang.String" property="bankName"/>
+    	<result column="bankBranch" javaType="java.lang.String" property="bankBranch"/>
+    	<result column="bankProvince" javaType="java.lang.String" property="bankProvince"/>
+    	<result column="bankCity" javaType="java.lang.String" property="bankCity"/>
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.ms.ebuyProductSettle.entity.RevenueApplyDto" id="revenueApplyDto" extends="revenueApplyBase.revenueApplyBaseMap">
+    	<result column="merchant" javaType="java.lang.String" property="merchant"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.ebuyProductSettle.entity.EbuyProductSettleAdminExportDto" id="select_revenueAdmin_export_AppendTable">
+    	<result column="merchant" javaType="java.lang.String" property="merchant"/>
+		<result column="revenueType" javaType="java.lang.Integer" property="revenueType"/>
+    	<result column="applyTime" javaType="java.lang.String" property="applyTime"/>
+    	<result column="handlerTime" javaType="java.lang.String" property="handlerTime"/>
+    	<result column="applyNo" javaType="java.lang.String" property="applyNo"/>
+    	<result column="billNo" javaType="java.lang.String" property="billNo"/>
+    	<result column="settleTime" javaType="java.lang.String" property="settleTime"/>
+    	<result column="totalAmount" javaType="java.math.BigDecimal" property="totalAmount"/>
+    	<result column="auditStatus" javaType="java.lang.Integer" property="auditStatus"/>
+    	<result column="tkStatus" javaType="java.lang.Integer" property="tkStatus"/>
+    </resultMap>
+    
+    <resultMap type="com.cnfantasia.server.ms.ebuyProductSettle.entity.EbuyProductSettleListDetailAdminDto" id="select_settleListDetailAdmin_export_AppendTable">
+    	<result column="delieveOrderId" javaType="java.math.BigInteger" property="delieveOrderId"/>
+    	<result column="f_order_no" javaType="java.lang.String" property="orderNo"/>
+    	<result column="f_buyer_id" javaType="java.lang.String" property="buyerId"/>
+    	<result column="f_pay_time" javaType="java.lang.String" property="payTime"/>
+    	<result column="merchant" javaType="java.lang.String" property="merchant"/>
+    	<result column="productName" javaType="java.lang.String" property="productName"/>
+    	<result column="buyNum" javaType="java.lang.String" property="buyNum"/>
+    	<result column="price" javaType="java.math.BigDecimal" property="price"/>
+    	<result column="purchasePrice" javaType="java.math.BigDecimal" property="purchasePrice"/>
+    	<result column="totalSellAmount" javaType="java.math.BigDecimal" property="totalSellAmount"/>
+    	<result column="deliveryProductAmount" javaType="java.math.BigDecimal" property="deliveryProductAmount"/>
+    	<result column="f_delivery_real_fee" javaType="java.math.BigDecimal" property="deliveryRealFee"/>
+    	<result column="refundAmount" javaType="java.math.BigDecimal" property="refundAmount"/>
+    	<result column="deliverySellAmount" javaType="java.math.BigDecimal" property="deliverySellAmount"/>
+    	<result column="purchaseAmount" javaType="java.math.BigDecimal" property="purchaseAmount"/>
+    	<result column="deliveryPurchaseAmount" javaType="java.math.BigDecimal" property="deliveryPurchaseAmount"/>
+    	<result column="f_delivery_settlement_fee" javaType="java.math.BigDecimal" property="deliverySettlementFee"/>
+    	<result column="purchaseRefund" javaType="java.math.BigDecimal" property="purchaseRefund"/>
+    	<result column="deliveryTotalPurchaseAmount" javaType="java.math.BigDecimal" property="deliveryTotalPurchaseAmount"/>
+    	<result column="revenueAmount" javaType="java.math.BigDecimal" property="revenueAmount"/>
+    	<result column="realPay" javaType="java.math.BigDecimal" property="realPay"/>
+    	<result column="f_pay_method" javaType="java.lang.String" property="payMethod"/>
+    	<result column="f_flow_no" javaType="java.lang.String" property="flowNo"/>
+    	<result column="receiver" javaType="java.lang.String" property="receiver"/>
+    	<result column="receiverMobile" javaType="java.lang.String" property="receiverMobile"/>
+    	<result column="address" javaType="java.lang.String" property="address"/>
+    </resultMap>
+    
+    <!-- 结算申请页面列表head -->
+    <sql id="revenueApplyListIndex_head">
+   		EDO.f_id,
+   		<!-- 订单号 -->
+		EO.f_order_no,
+		<!-- 支付时间 -->
+		DATE_FORMAT(EO.f_pay_time, '%Y-%m-%d %H:%i:%s') AS payTime,
+		<!-- 商品总额 -->
+		SUM(
+			IFNULL(EOHTEP.f_purchase_price, 0) * EOHTEP.f_product_qty
+		)/100 AS productAmount,
+		<!-- 运费 -->
+		IFNULL(EDO.f_delivery_settlement_fee, 0)/100 AS deliveryFee,
+		<!-- 退款金额 -->
+		IFNULL((SELECT sum(IFNULL(_EOHTEP.f_purchase_price, 0) * _EOHTEP.f_product_qty)
+		from
+		t_ebuy_refund_order _ERO
+		INNER JOIN t_ebuy_refund_order_product _EROP ON _ERO.f_id = _EROP.t_ebuy_refund_order_f_id
+		INNER JOIN t_ebuy_order_has_t_ebuy_product _EOHTEP ON _EOHTEP.f_id = _EROP.t_ebuy_order_has_t_ebuy_product_f_id
+		where _ERO.t_ebuy_delivery_order_f_id=EDO.f_id and _ERO.f_refund_status=2
+		)/100, 0) AS refundFee,
+		<!-- 订单总金额 -->
+		cast((
+			sum(
+				IFNULL(EOHTEP.f_purchase_price, 0) * EOHTEP.f_product_qty
+			)/100 + IFNULL(EDO.f_delivery_settlement_fee, 0)/100
+			-IFNULL((SELECT sum(IFNULL(_EOHTEP.f_purchase_price, 0) * _EOHTEP.f_product_qty)
+			from
+			t_ebuy_refund_order _ERO
+			INNER JOIN t_ebuy_refund_order_product _EROP ON _ERO.f_id = _EROP.t_ebuy_refund_order_f_id
+			INNER JOIN t_ebuy_order_has_t_ebuy_product _EOHTEP ON _EOHTEP.f_id = _EROP.t_ebuy_order_has_t_ebuy_product_f_id
+			where _ERO.t_ebuy_delivery_order_f_id=EDO.f_id and _ERO.f_refund_status=2
+			)/100, 0)
+		) AS DECIMAL(28,2)) AS orderTotalAmount,
+		<!-- 订单结算金额 -->
+		cast((
+			sum(
+				IFNULL(EOHTEP.f_purchase_price, 0) * EOHTEP.f_product_qty
+			)/100 + IFNULL(EDO.f_delivery_settlement_fee, 0)/100 
+			-IFNULL((SELECT sum(IFNULL(_EOHTEP.f_purchase_price, 0) * _EOHTEP.f_product_qty)
+			from
+			t_ebuy_refund_order _ERO
+			INNER JOIN t_ebuy_refund_order_product _EROP ON _ERO.f_id = _EROP.t_ebuy_refund_order_f_id
+			INNER JOIN t_ebuy_order_has_t_ebuy_product _EOHTEP ON _EOHTEP.f_id = _EROP.t_ebuy_order_has_t_ebuy_product_f_id
+			where _ERO.t_ebuy_delivery_order_f_id=EDO.f_id and _ERO.f_refund_status=2
+			)/100, 0)
+		) AS DECIMAL(28,2)) AS revenueAmount,
+		<!-- 供应商 -->
+		ESM.f_name AS merchant,
+		IFNULL(EDO.f_amount, 0)/100-IFNULL(ERO.f_refund_money, 0) as realPay
+		<!--========== 查询实际支付end ==========-->
+    </sql>
+    
+    <!-- 结算申请页面列表查询from -->
+	<sql id="revenueApplyListIndex_QueryFrom">
+	    FROM
+			t_ebuy_delivery_order EDO 
+		INNER JOIN t_ebuy_order EO ON EO.f_id = EDO.t_ebuy_order_f_id AND EO.f_type in (1,3) AND (EDO.f_settle_status=1 OR EDO.f_settle_status=3 OR EDO.f_settle_status IS NULL)
+		LEFT JOIN t_ebuy_refund_order ERO ON ERO.t_ebuy_delivery_order_f_id = EDO.f_id AND ERO.f_refund_status=2
+		INNER JOIN t_ebuy_supply_merchant ESM ON EDO.t_supply_merchant_f_id = ESM.f_id and ESM.f_revenue_type IN (1,2) <!-- 供应商模式=={"1":"购销","2":"代销"} -->
+		INNER JOIN t_ebuy_delivery_order_product EDOP ON EDOP.t_ebuy_delivery_order_f_id = EDO.f_id
+		INNER JOIN t_ebuy_order_has_t_ebuy_product EOHTEP ON EOHTEP.f_id = EDOP.t_ebuy_order_has_t_ebuy_product_f_id AND EOHTEP.f_supply_merchant_id = ESM.f_id		
+	</sql>
+	
+	<sql id="revenueApplyListIndex_checkSql">
+		WHERE 
+			<!-- f_status：配送状态=={"0":"未启动","1":"待发货","2":"待收货","3":"确认收货"} -->
+			<!-- f_refund_status：退款状态=={"0":"未退款","1":"退款中","2":"退款成功","3":"退款失败"} -->
+			(EDO.f_status=3 OR EDO.f_refund_status=2)
+			<if test="supplyMerchantId != null">
+			    AND EDO.t_supply_merchant_f_id = #{supplyMerchantId}
+    	 	</if>
+			<if test="orderNo != null and !orderNo.equals('')">AND EO.f_order_no=#{orderNo}</if>
+			<if test="payTimeStart != null and !payTimeStart.equals('')">AND EO.f_pay_time&gt;=#{payTimeStart}</if>
+			<if test="payTimeEnd != null and !payTimeEnd.equals('')">AND EO.f_pay_time&lt;=#{payTimeEnd}</if>
+			AND EO.f_sys0_del_state = 0
+	</sql>
+	
+	<!-- 结算详情页面列表查询from -->
+	<sql id="revenueListDetail_QueryFrom">
+	    FROM
+	    	t_ebuy_product_settle_apply_log EPSAL
+		INNER JOIN t_revenue_apply RA ON EPSAL.t_revenue_apply_f_id = RA.f_id
+		INNER JOIN t_ebuy_delivery_order EDO ON EPSAL.t_ebuy_delivery_order_f_id=EDO.f_id
+		    AND EPSAL.t_revenue_apply_f_id IN(
+		    	<choose>
+		    		<when test="visibleType != null and visibleType.equals('1'.toString())">select f_id from t_revenue_apply where f_rev_apply_finance_id=#{revenueApplyId} and f_sys0_del_state=0</when>
+		    		<otherwise>#{revenueApplyId}</otherwise>
+		    	</choose>
+		    )
+		INNER JOIN t_ebuy_order EO ON EO.f_id = EDO.t_ebuy_order_f_id AND EO.f_type in (1,3)
+		LEFT JOIN t_ebuy_refund_order ERO ON ERO.t_ebuy_delivery_order_f_id = EDO.f_id AND ERO.f_refund_status=2
+		INNER JOIN t_ebuy_supply_merchant ESM ON EDO.t_supply_merchant_f_id = ESM.f_id and ESM.f_revenue_type in (1,2) <!-- 供应商模式=={"1":"购销","2":"代销"} -->
+		INNER JOIN t_ebuy_delivery_order_product EDOP ON EDOP.t_ebuy_delivery_order_f_id = EDO.f_id
+		INNER JOIN t_ebuy_order_has_t_ebuy_product EOHTEP ON EOHTEP.f_id = EDOP.t_ebuy_order_has_t_ebuy_product_f_id AND EOHTEP.f_supply_merchant_id = ESM.f_id		
+	</sql>
+	
+	<!-- 结算申请页面列表 -->
+	<select id="select_revenueApplyListIndex_withPage" parameterType="java.util.Map" resultMap="ebuyProductSettle.ebuyProductSettleApplyList_AppendTable">
+		SELECT
+		<include refid="ebuyProductSettle.revenueApplyListIndex_head"/>
+		<if test="pageType==1">
+			<!-- 结算申请页面列表查询 -->
+			<include refid="ebuyProductSettle.revenueApplyListIndex_QueryFrom"/>
+		</if>
+		<if test="pageType==2">
+			<!-- 结算详情页面列表查询 -->
+			<include refid="revenueListDetail_QueryFrom"/>
+		</if>
+		<include refid="ebuyProductSettle.revenueApplyListIndex_checkSql"/>
+		GROUP BY
+			EDO.f_id
+		ORDER BY EO.f_pay_time DESC
+		<if test="(_begin != null and !_begin.equals('')) or (_length != null and !_length.equals(''))">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+
+	<!-- 结算申请页面列表 -->
+	<select id="select_revenueApplyListIndex_daixiao_withPage" parameterType="java.util.Map" resultMap="ebuyProductSettle.ebuyProductSettleApplyList_AppendTable">
+		select EDO.f_id,EO.f_order_no,EO.f_pay_time payTime,
+		CAST((IFNULL(EDO.f_amount,0) + IFNULL(EDO.f_total_coupon,0) - IFNULL(EDO.f_delivery_real_fee, 0))/100 AS DECIMAL(28,2)) productAmount,
+		CAST(IFNULL(EDO.f_delivery_real_fee, 0)/100 AS DECIMAL(28,2)) deliveryFee,
+		CAST(IFNULL(ERO.f_refund_fee, 0) AS DECIMAL(28,2)) refundFee,
+		CAST((IFNULL(EDO.f_amount,0) + IFNULL(EDO.f_total_coupon,0) - IFNULL(EDO.f_delivery_real_fee, 0) - IFNULL(ERO.f_refund_fee, 0) * 100)/100 AS DECIMAL(28,2)) orderTotalAmount,
+		<choose>
+			<when test="pageType==2">
+				CAST((IFNULL(EDO.f_amount,0) + IFNULL(EDO.f_total_coupon,0) - IFNULL(EDO.f_delivery_real_fee, 0) - IFNULL(ERO.f_refund_fee, 0) * 100)/100 * (1-ifnull(RA.f_revenue_rate,0)) AS DECIMAL(28,2)) revenueAmount,
+			</when>
+			<otherwise>
+				CAST((IFNULL(EDO.f_amount,0) + IFNULL(EDO.f_total_coupon,0) - IFNULL(EDO.f_delivery_real_fee, 0) - IFNULL(ERO.f_refund_fee, 0) * 100)/100 * (1-ifnull(ESM.f_revenue_rate,0)) AS DECIMAL(28,2)) revenueAmount,
+			</otherwise>
+		</choose>
+		CAST((IFNULL(EDO.f_amount,0) - IFNULL(ERO.f_refund_money, 0) * 100)/100 AS DECIMAL(28,2)) AS realPay,
+		ESM.f_name AS merchant
+		<if test="pageType==1">
+			<!-- 结算申请页面列表查询 -->
+			<include refid="ebuyProductSettle.revenueApplyListIndex_QueryFrom"/>
+		</if>
+		<if test="pageType==2">
+			<!-- 结算详情页面列表查询 -->
+			<include refid="revenueListDetail_QueryFrom"/>
+		</if>
+		<include refid="ebuyProductSettle.revenueApplyListIndex_checkSql"/>
+		GROUP BY
+		EDO.f_id
+		ORDER BY EO.f_pay_time DESC
+		<if test="(_begin != null and !_begin.equals('')) or (_length != null and !_length.equals(''))">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+	
+	<!-- 结算申请页面列表数据条数 -->
+	<select id="select_revenueApplyListIndex_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(DISTINCT EDO.f_id)
+		<if test="pageType==1">
+			<!-- 结算申请页面列表查询 -->
+			<include refid="ebuyProductSettle.revenueApplyListIndex_QueryFrom"/>
+		</if>
+		<if test="pageType==2">
+			<!-- 结算详情页面列表查询 -->
+			<include refid="revenueListDetail_QueryFrom"/>
+		</if>
+		<include refid="ebuyProductSettle.revenueApplyListIndex_checkSql"/>
+	</select>
+	
+	<!-- 查询申请页面购销可结算金额 -->
+	<select id="select_revenueApplyListIndex_totalAmount" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+		SELECT
+		IFNULL(SUM(sum_tmp.revenueAmount), 0)
+		FROM(
+		SELECT
+		(
+		sum(IFNULL(EOHTEP.f_purchase_price, 0) * EOHTEP.f_product_qty) / 100
+		+ IFNULL(EDO.f_delivery_settlement_fee,0) / 100
+		- IFNULL((SELECT sum(IFNULL(_EOHTEP.f_purchase_price, 0) * _EOHTEP.f_product_qty)
+		FROM t_ebuy_refund_order _ERO
+		INNER JOIN t_ebuy_refund_order_product _EROP ON _ERO.f_id = _EROP.t_ebuy_refund_order_f_id
+		INNER JOIN t_ebuy_order_has_t_ebuy_product _EOHTEP ON _EOHTEP.f_id = _EROP.t_ebuy_order_has_t_ebuy_product_f_id
+		WHERE
+		_ERO.t_ebuy_delivery_order_f_id = EDO.f_id
+		AND _ERO.f_refund_status = 2) / 100,0)
+		) AS revenueAmount
+		<if test="pageType==1">
+			<!-- 结算申请页面列表查询 -->
+			<include refid="ebuyProductSettle.revenueApplyListIndex_QueryFrom"/>
+		</if>
+		<if test="pageType==2">
+			<!-- 结算详情页面列表查询 -->
+			<include refid="revenueListDetail_QueryFrom"/>
+		</if>
+		<include refid="ebuyProductSettle.revenueApplyListIndex_checkSql"/>
+		GROUP BY EDO.f_id
+		) AS sum_tmp
+	</select>
+
+	<!-- 查询申请页面代销（抽佣）可结算金额, 运费不抽佣 -->
+	<select id="select_revenueApplyListIndex_daixiao_totalAmount" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+		SELECT IFNULL(sum(_tmp.total),0) FROM (SELECT CAST(
+		IFNULL((IFNULL(EDO.f_amount, 0) + IFNULL(EDO.f_total_coupon,0)
+		- IFNULL(EDO.f_delivery_real_fee,0) - IFNULL(ERO.f_refund_fee,0)*100), 0)/100 * (1-ifnull(ESM.f_revenue_rate,0)) + IFNULL(EDO.f_delivery_real_fee,0)/100
+		AS DECIMAL(28,2)) as total
+		<if test="pageType==1">
+			<!-- 结算申请页面列表查询 -->
+			<include refid="ebuyProductSettle.revenueApplyListIndex_QueryFrom"/>
+		</if>
+		<if test="pageType==2">
+			<!-- 结算详情页面列表查询 -->
+			<include refid="revenueListDetail_QueryFrom"/>
+		</if>
+		<include refid="ebuyProductSettle.revenueApplyListIndex_checkSql"/>
+		GROUP BY EDO.f_id) _tmp
+	</select>
+	
+	<!-- 查询申请页面用户实际支付的金额 -->
+	<select id="select_realPay_totalAmount" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+		SELECT
+			IFNULL(SUM(sum_tmp.realPay), 0)
+		FROM(
+			SELECT
+				IFNULL(EDO.f_amount, 0)/100-IFNULL(ERO.f_refund_money, 0) as realPay
+			<include refid="ebuyProductSettle.revenueApplyListIndex_QueryFrom"/>
+			<include refid="ebuyProductSettle.revenueApplyListIndex_checkSql"/>
+			GROUP BY EDO.f_id
+		) AS sum_tmp
+	</select>
+	
+	<!-- 结算申请各种金额查询 -->
+	<select id="select_all_totalAmount" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.ebuyProductSettle.entity.RevenueAllTotalAmount">
+		SELECT
+			EDO.f_id AS deliveryOrderId, 
+			(
+			sum(IFNULL(EOHTEP.f_purchase_price, 0) * EOHTEP.f_product_qty) / 100
+			+ IFNULL(EDO.f_delivery_settlement_fee,0) / 100
+			- IFNULL((SELECT sum(IFNULL(_EOHTEP.f_purchase_price, 0) * _EOHTEP.f_product_qty)
+			FROM t_ebuy_refund_order _ERO
+			INNER JOIN t_ebuy_refund_order_product _EROP ON _ERO.f_id = _EROP.t_ebuy_refund_order_f_id
+			INNER JOIN t_ebuy_order_has_t_ebuy_product _EOHTEP ON _EOHTEP.f_id = _EROP.t_ebuy_order_has_t_ebuy_product_f_id
+			WHERE
+			_ERO.t_ebuy_delivery_order_f_id = EDO.f_id
+			AND _ERO.f_refund_status = 2) / 100,0)
+			) AS totalMoney,
+			<!-- 实付 -->
+			IFNULL(EDO.f_amount, 0)/100 AS realPay,
+			<!-- 优惠金额 -->
+			IFNULL(EDO.f_total_coupon, 0)/100 AS preferAmount,
+			<!-- 退款 -->
+			IFNULL(ERO.f_refund_fee, 0) AS refund,
+			<if test="revenueType==1">
+				<!-- 解放区运费 -->
+				IFNULL(EDO.f_delivery_real_fee, 0)/100 AS jfqDeliveryFee,
+				<!-- 供应商运费 -->
+				IFNULL(EDO.f_delivery_settlement_fee, 0)/100 AS gysDeliveryFee,
+				<!-- 商品采购总额 -->		
+				IFNULL(SUM(IFNULL(EOHTEP.f_purchase_price/100, 0)*EOHTEP.f_product_qty), 0) AS purchaseAmount,
+				<!-- 退款商品的采购总额 -->
+				IFNULL((SELECT SUM(_EOHTEP.f_purchase_price * _EOHTEP.f_product_qty)
+					    FROM
+							t_ebuy_refund_order _ERO
+							INNER JOIN t_ebuy_refund_order_product _EROP ON _ERO.f_id = _EROP.t_ebuy_refund_order_f_id
+							INNER JOIN t_ebuy_order_has_t_ebuy_product _EOHTEP ON _EOHTEP.f_id = _EROP.t_ebuy_order_has_t_ebuy_product_f_id
+						where _ERO.t_ebuy_delivery_order_f_id=EDO.f_id and _ERO.f_refund_status=2
+						)/100, 0) AS refundPurchaseAmount,
+			</if>
+			<!-- 商品销售总额 -->
+			IFNULL(SUM((case when (EOHTEP.f_product_price=0 or EOHTEP.f_product_price is null) and (EOHTEP.f_product_price_point=0 or EOHTEP.f_product_price_point is null) then 0
+	     		  when (EOHTEP.f_product_price=0 or EOHTEP.f_product_price is null) then EOHTEP.f_product_price_point/100
+			      when (EOHTEP.f_product_price_point=0 or EOHTEP.f_product_price_point is null) then EOHTEP.f_product_price end)/100*EOHTEP.f_product_qty), 0) AS totalSellAmount,
+			<!-- 退款商品的销售总额 -->
+			IFNULL((SELECT SUM(_EOHTEP.f_product_price * _EOHTEP.f_product_qty)
+				    FROM
+						t_ebuy_refund_order _ERO
+						INNER JOIN t_ebuy_refund_order_product _EROP ON _ERO.f_id = _EROP.t_ebuy_refund_order_f_id
+						INNER JOIN t_ebuy_order_has_t_ebuy_product _EOHTEP ON _EOHTEP.f_id = _EROP.t_ebuy_order_has_t_ebuy_product_f_id
+					where _ERO.t_ebuy_delivery_order_f_id=EDO.f_id and _ERO.f_refund_status=2
+					)/100, 0) AS refundTotalSellAmount
+		<include refid="ebuyProductSettle.revenueApplyListIndex_QueryFrom"/>
+		<include refid="ebuyProductSettle.revenueApplyListIndex_checkSql"/>
+		GROUP BY EDO.f_id
+	</select>
+	
+	<!-- 供应商结算申请导出数据查询 -->
+	<select id="select_revenueApplyListIndex_export" parameterType="java.util.Map" resultMap="ebuyProductSettle.select_revenueApplyList_export_AppendTable">
+		SELECT
+			EDO.f_id AS delieveOrderId,
+			<!-- 订单号 -->
+			EO.f_order_no AS orderNo,
+			<!-- 支付时间 -->
+			DATE_FORMAT(EO.f_pay_time, '%Y-%m-%d %H:%i:%s') AS payTime,
+			<!-- 供应商名称 -->
+			ESM.f_name AS merchant,
+			<!-- 商品名称 -->
+		    ifnull(ofr.f_name, EP.f_name) AS productName,
+			<!-- 购买数量 -->
+			EOHTEP.f_product_qty AS buyNum,
+			<!-- 商品结算单价 -->
+			IFNULL(EOHTEP.f_purchase_price, 0)/100 AS purchasePrice,
+			<!-- 商品结算金额 -->
+			IFNULL(EOHTEP.f_purchase_price, 0) * EOHTEP.f_product_qty/100 AS productAmount,
+			<!-- 商品结算小计 -->
+			@_deliveryProductAmount:=CAST((SELECT SUM(IFNULL(TEOHTEP.f_purchase_price, 0) * TEOHTEP.f_product_qty)/100
+			 FROM t_ebuy_delivery_order TEDO 			      	 
+	     	 INNER JOIN t_ebuy_delivery_order_product TEDOP ON TEDOP.t_ebuy_delivery_order_f_id=TEDO.f_id
+		     INNER JOIN t_ebuy_order_has_t_ebuy_product TEOHTEP ON TEOHTEP.f_id = TEDOP.t_ebuy_order_has_t_ebuy_product_f_id
+		     where TEDO.f_id=EDO.f_id
+			) AS DECIMAL(28,2)) AS deliveryProductAmount,
+			<!-- 运费 -->
+			IFNULL(EDO.f_delivery_settlement_fee, 0)/100 AS deliveryFee,
+			<!-- 退款金额 -->
+			@_refundAmount:=cast(IFNULL((SELECT sum(IFNULL(_EOHTEP.f_purchase_price, 0) * _EOHTEP.f_product_qty)
+			from
+			t_ebuy_refund_order _ERO
+			INNER JOIN t_ebuy_refund_order_product _EROP ON _ERO.f_id = _EROP.t_ebuy_refund_order_f_id
+			INNER JOIN t_ebuy_order_has_t_ebuy_product _EOHTEP ON _EOHTEP.f_id = _EROP.t_ebuy_order_has_t_ebuy_product_f_id
+			where _ERO.t_ebuy_delivery_order_f_id=EDO.f_id and _ERO.f_refund_status=2
+			)/100, 0) AS DECIMAL(28,2)) AS refundAmount,
+			<!-- 订单总金额 -->
+			@_deliveryAmount:=CAST((@_deliveryProductAmount+IFNULL(EDO.f_delivery_settlement_fee, 0)/100-@_refundAmount)AS DECIMAL(28,2)) AS deliveryAmount,
+			<!-- 结算金额 -->
+			CAST(@_deliveryAmount AS DECIMAL(28,2)) AS revenueAmount,
+			<!-- 收货人 -->
+			EO.f_deliv_people_name AS receiver,
+			<!-- 收货人联系方式 -->
+			EO.f_deliv_phone AS receiverMobile,
+			<!-- 收货地址 -->
+			CONCAT(EO.f_deliv_address_area, EO.f_deliv_address_detail) AS address
+		<if test="pageType==1">
+			<!-- 结算申请页面列表查询 -->
+			<include refid="ebuyProductSettle.revenueApplyListIndex_QueryFrom"/>
+		</if>
+		<if test="pageType==2">
+			<!-- 结算详情页面列表查询 -->
+			<include refid="revenueListDetail_QueryFrom"/>
+		</if>
+		LEFT JOIN t_ebuy_product_shelf EPS ON EPS.f_id = EOHTEP.t_ebuy_product_f_id
+		LEFT JOIN t_ebuy_product EP ON EP.f_id = EPS.t_ebuy_product_id
+		LEFT JOIN t_ebuy_order_flow_recharge ofr ON ofr.t_order_id = EO.f_id
+		<include refid="ebuyProductSettle.revenueApplyListIndex_checkSql"/>
+		GROUP BY
+			EOHTEP.f_id
+		ORDER BY EO.f_pay_time DESC
+	</select>
+
+	<!-- 供应商结算申请导出数据查询 -->
+	<select id="select_revenueApplyListIndex_daixiao_export" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.ebuyProductSettle.entity.EbuyProductSettleApplyExportDto">
+		SELECT EDO.f_id deliveryOrderId,EO.f_order_no orderNo,DATE_FORMAT(EO.f_pay_time, '%Y-%m-%d %T') payTime,
+		ESM.f_name supplyMerchantName, ifnull(ofr.f_name, EP.f_name) AS productName,EOHTEP.f_product_qty productQty, EOHTEP.f_product_price productSellPrice,
+		EDO.f_amount deliveryOrderAmount, ifnull(EDO.f_total_coupon,0) deliveryOrderCoupon, ifnull(EDO.f_delivery_real_fee,0)/100 deliveryRealFee,
+		ifnull(EDO.f_delivery_settlement_fee,0)/100 deliverySettleFee,ifnull(ERO.f_refund_fee,0) deliveryRefundFee,
+		EO.f_deliv_people_name AS receiver,EO.f_deliv_phone AS receiverMobile,CONCAT(EO.f_deliv_address_area, EO.f_deliv_address_detail) AS delivAddress,
+		ESM.f_revenue_type revenueType
+		<if test="pageType==1">
+			, ifnull(ESM.f_revenue_rate,0) revenueRate
+			<!-- 结算申请页面列表查询 -->
+			<include refid="ebuyProductSettle.revenueApplyListIndex_QueryFrom"/>
+		</if>
+		<if test="pageType==2">
+			, ifnull(RA.f_revenue_rate,0) revenueRate
+			<!-- 结算详情页面列表查询 -->
+			<include refid="revenueListDetail_QueryFrom"/>
+		</if>
+		LEFT JOIN t_ebuy_product_shelf EPS ON EPS.f_id = EOHTEP.t_ebuy_product_f_id
+		LEFT JOIN t_ebuy_product EP ON EP.f_id = EPS.t_ebuy_product_id
+		LEFT JOIN t_ebuy_order_flow_recharge ofr ON ofr.t_order_id = EO.f_id
+		<include refid="ebuyProductSettle.revenueApplyListIndex_checkSql"/>
+		GROUP BY
+		EOHTEP.f_id
+		ORDER BY EO.f_pay_time DESC
+	</select>
+	
+	<!-- 供应商结算申请弹出框信息-->
+	<select id="select_revenueApplyInfoForDialog" parameterType="java.util.Map" resultMap="ebuyProductSettle.select_revenueApplyList_dialog_info_AppendTable">
+		SELECT
+			IFNULL(ESM.f_name, '') AS merchantName,
+			IFNULL(ESMBA.f_account_bank, '') AS accountBank,
+			IFNULL(ESMBA.f_account_name, '') AS accountName,
+			IFNULL(ESM.f_tel, '') AS telphone,
+			IFNULL(ESM.f_link_name, '') AS linkName,
+			IFNULL(ESMBA.f_bank_name, '') AS bankName,
+			IFNULL(ESMBA.f_bank_branch, '') AS bankBranch,
+			IFNULL(ESMBA.f_bank_province, '') AS bankProvince,
+			IFNULL(ESMBA.f_bank_city, '') AS bankCity
+		FROM
+			t_ebuy_supply_merchant ESM
+		LEFT JOIN t_ebuy_supply_merchant_bank_account ESMBA ON ESM.f_id = ESMBA.t_supply_merchant_id
+		WHERE
+			ESM.f_id = #{merchantId} ORDER BY ESMBA.f_id desc limit 1
+	</select>
+	
+	<!-- 查询t_revenue_apply要标f_sys0_del_state=1的记录 -->
+	<select id="select_revenueApply_delete" parameterType="java.util.Map" resultMap="revenueApplyBase.revenueApplyBaseMap_AppendTable">
+		SELECT
+			DISTINCT EPSAL.t_revenue_apply_f_id as RAid, 1 as RAsys0DelState
+		<include refid="ebuyProductSettle.revenueApplyListIndex_QueryFrom"/>
+		INNER JOIN t_ebuy_product_settle_apply_log EPSAL ON EPSAL.t_ebuy_delivery_order_f_id=EDO.f_id 
+		INNER JOIN t_revenue_apply RA ON RA.f_id=EPSAL.t_revenue_apply_f_id
+		<include refid="ebuyProductSettle.revenueApplyListIndex_checkSql"/>
+    	AND RA.f_goal_type=16 AND RA.f_visible_type = 2
+    	AND RA.f_audit_status=2 <!-- 审核状态==>{“1”：“新的申请”,"2"：“不通过”，“3”：“通过”} -->
+		AND RA.f_sys0_del_state = 0
+	</select>
+	
+	<!-- 供应商结算记录查询条件 -->
+	<sql id="revenueListIndex_checkSql">
+		AND RA.f_goal_type=16 AND RA.f_visible_type = 2
+		<choose>
+			<when test="isAdmin!=null and isAdmin.equals('yes')">
+				<!-- 管理员查询 -->
+				<if test="supplyMerchantId!=null and !supplyMerchantId.equals('')">
+					AND RA.t_ebuy_supply_merchant_fk=#{supplyMerchantId}
+				</if>
+			</when>
+			<otherwise>
+				<!-- 供应商查询 -->
+				AND RA.f_apply_user_id=#{applyManId}
+			</otherwise>
+		</choose>
+		<if test="applyTimeStart!=null and !applyTimeStart.equals('')">AND RA.f_apply_time&gt;=#{applyTimeStart}</if>
+		<if test="applyTimeEnd!=null and !applyTimeEnd.equals('')">AND RA.f_apply_time&lt;=#{applyTimeEnd}</if>
+		<if test="settleStatus!=null and !settleStatus.equals('')">
+			<choose>
+				<when test="settleStatus==1">
+					AND RA.f_audit_status=1
+				</when>
+				<when test="settleStatus==2">
+					AND RA.f_audit_status=2
+				</when>
+				<when test="settleStatus==3">
+					AND RA.f_audit_status=3 AND RA.f_tk_status=2
+				</when>
+				<when test="settleStatus==4">
+					AND RA.f_tk_status=3
+				</when>
+			</choose>
+		</if>
+
+	</sql>
+	
+	<!-- 查询结算记录列表 -->
+	<select id="select_revenueListIndex_withPage" parameterType="java.util.Map" resultMap="ebuyProductSettle.revenueApplyDto">
+		SELECT <include refid="revenueApplyBase.queryHead"/>, ESM.f_name AS merchant
+		FROM t_revenue_apply RA
+			LEFT JOIN t_ebuy_supply_merchant ESM ON RA.t_ebuy_supply_merchant_fk=ESM.f_id
+		WHERE 1=1
+		<include refid="revenueListIndex_checkSql"/>
+		<if test="revenueType != null and revenueType != ''">
+			AND ESM.f_revenue_type = #{revenueType}
+		</if>
+		ORDER BY RA.f_sys0_add_time DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	
+	<!-- 查询结算记录列表数量 -->
+	<select id="select_revenueListIndex_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_revenue_apply RA
+		LEFT JOIN t_ebuy_supply_merchant ESM ON RA.t_ebuy_supply_merchant_fk=ESM.f_id
+		WHERE 1=1
+		<include refid="revenueListIndex_checkSql"/>
+		<if test="revenueType != null and revenueType != ''">
+			AND ESM.f_revenue_type = #{revenueType}
+		</if>
+	</select>
+	
+	<!-- 根据当前登陆账号查询购销供应商id -->
+	<select id="select_merchants_with_purchase" parameterType="java.lang.String" resultType="ebuySupplyMerchant">
+		SELECT
+			ESM.f_id as id, ESM.f_name as name,ESM.f_revenue_type as revenueType,
+			CASE WHEN ESM.f_type = 2 THEN ESM.f_store_audit_time ELSE ESM.f_sys0_add_time END as sys0AddTime
+		FROM t_oms_user OU
+		INNER JOIN t_oms_user_has_t_ebuy_supply_merchant OUHTESM ON OU.f_id = OUHTESM.t_oms_user_id AND OUHTESM.f_sys0_del_state = 0
+		INNER JOIN t_ebuy_supply_merchant ESM ON OUHTESM.t_ebuy_supply_merchant_id = ESM.f_id AND ESM.f_sys0_del_state = 0
+		AND ESM.f_revenue_type in (1,2)
+		AND ESM.f_store_audit_status = 1
+		WHERE OU.f_sys0_del_state = 0 AND OU.f_user_account = #{account}
+		ORDER BY sys0AddTime, ESM.f_id
+	</select>
+	
+	<!-- 结算管理页面数据导出查询-->
+	<select id="select_revenueAdmin_export" parameterType="java.util.Map" resultMap="ebuyProductSettle.select_revenueAdmin_export_AppendTable">
+		SELECT
+			<!-- 供应商 -->
+			ESM.f_name AS merchant,
+			RA.f_revenue_type AS revenueType,
+			<!-- 提交时间 -->
+			DATE_FORMAT(RA.f_apply_time, '%Y-%m-%d %H:%i:%s') AS applyTime,
+			<!-- 审核时间 -->
+			DATE_FORMAT(RA.f_audit_time, '%Y-%m-%d %H:%i:%s') AS handlerTime,
+			<!-- 提款单号 -->
+			RA.f_apply_no AS applyNo,
+			<!-- 结算时间 -->
+			DATE_FORMAT(RA.f_tk_succ_time, '%Y-%m-%d %H:%i:%s') AS settleTime,
+			<!-- 结算金额 -->
+			RA.f_total_amount AS totalAmount,
+			<!-- 审核状态 -->
+			RA.f_audit_status AS auditStatus,
+			<!-- 提款状态 -->
+			RA.f_tk_status AS tkStatus
+		FROM t_revenue_apply RA 
+			LEFT JOIN t_ebuy_supply_merchant ESM ON RA.t_ebuy_supply_merchant_fk=ESM.f_id
+		WHERE RA.f_goal_type=16 AND RA.f_visible_type = 2
+			<if test="supplyMerchantId!=null and !supplyMerchantId.equals('')">
+				AND RA.t_ebuy_supply_merchant_fk=#{supplyMerchantId}
+			</if>
+			<if test="applyTimeStart!=null and !applyTimeStart.equals('')">AND RA.f_apply_time&gt;=#{applyTimeStart}</if>
+			<if test="applyTimeEnd!=null and !applyTimeEnd.equals('')">AND RA.f_apply_time&lt;=#{applyTimeEnd}</if>
+			<if test="settleStatus!=null and !settleStatus.equals('')">
+				<choose>
+					<when test="settleStatus==1">
+						AND RA.f_audit_status=1
+					</when>
+					<when test="settleStatus==2">
+						AND RA.f_audit_status=2
+					</when>
+					<when test="settleStatus==3">
+						AND RA.f_audit_status=3 AND RA.f_tk_status=2
+					</when>
+					<when test="settleStatus==4">
+						AND RA.f_tk_status=3
+					</when>
+				</choose>
+			</if>
+	</select>
+	
+	<!-- 管理员结算详情导出 -->
+	<select id="select_revenueDetailAdmin_export" parameterType="java.util.Map" resultMap="ebuyProductSettle.select_settleListDetailAdmin_export_AppendTable">
+		SELECT
+		EDO.f_id as delieveOrderId,
+		<!-- 订单号 -->
+		EO.f_order_no,
+		<!-- 解放号 -->
+		EDO.f_buyer_id,
+		<!-- 支付时间 -->
+		DATE_FORMAT(EO.f_pay_time, '%Y-%m-%d %H:%i:%s') AS f_pay_time,
+		<!-- 供应商名称 -->
+		ESM.f_name AS merchant,
+		<!-- 商品名称 -->
+		ifnull(ofr.f_name, EP.f_name) AS productName,
+		<!-- 购买数量 -->
+		EOHTEP.f_product_qty AS buyNum,
+		<!-- 商品销售单价 -->
+		(case when (EOHTEP.f_product_price=0 or EOHTEP.f_product_price is null) and (EOHTEP.f_product_price_point=0 or EOHTEP.f_product_price_point is null) then 0
+		     when (EOHTEP.f_product_price=0 or EOHTEP.f_product_price is null) then EOHTEP.f_product_price_point/100
+				 when (EOHTEP.f_product_price_point=0 or EOHTEP.f_product_price_point is null) then EOHTEP.f_product_price end)/100 as price,
+		<!-- 采购单价 -->
+		IFNULL(EOHTEP.f_purchase_price/100, 0) as purchasePrice,
+		<!-- 销售金额小计 -->
+		(case when (EOHTEP.f_product_price=0 or EOHTEP.f_product_price is null) and (EOHTEP.f_product_price_point=0 or EOHTEP.f_product_price_point is null) then 0
+		     when (EOHTEP.f_product_price=0 or EOHTEP.f_product_price is null) then EOHTEP.f_product_price_point/100
+				 when (EOHTEP.f_product_price_point=0 or EOHTEP.f_product_price_point is null) then EOHTEP.f_product_price end)/100 *EOHTEP.f_product_qty AS totalSellAmount,
+		<!-- 运单销售小计 -->
+		@_deliveryProductAmount:=CAST((
+		SELECT SUM((case when (TEOHTEP.f_product_price=0 or TEOHTEP.f_product_price is null) and (TEOHTEP.f_product_price_point=0 or TEOHTEP.f_product_price_point is null) then 0
+		     when (TEOHTEP.f_product_price=0 or TEOHTEP.f_product_price is null) then TEOHTEP.f_product_price_point/100
+				 when (TEOHTEP.f_product_price_point=0 or TEOHTEP.f_product_price_point is null) then TEOHTEP.f_product_price end) * TEOHTEP.f_product_qty)/100
+		   FROM t_ebuy_delivery_order TEDO 			      	 
+			 INNER JOIN t_ebuy_delivery_order_product TEDOP ON TEDOP.t_ebuy_delivery_order_f_id=TEDO.f_id
+			 INNER JOIN t_ebuy_order_has_t_ebuy_product TEOHTEP ON TEOHTEP.f_id = TEDOP.t_ebuy_order_has_t_ebuy_product_f_id
+			 where TEDO.f_id=EDO.f_id
+		) AS DECIMAL(28,2)) AS deliveryProductAmount,
+		<!-- 解放区运费 -->
+		IFNULL(EDO.f_delivery_real_fee, 0)/100 AS f_delivery_real_fee,
+		<!-- 销售退款金额 -->
+		IFNULL(ERO.f_refund_fee, 0) AS refundAmount,
+		<!-- 运单实际销售额 -->
+		cast((@_deliveryProductAmount+IFNULL(EDO.f_delivery_real_fee, 0)/100-IFNULL(ERO.f_refund_fee, 0)) AS DECIMAL(28,2)) AS deliverySellAmount,
+		<!-- 采购小计 -->
+		IFNULL(EOHTEP.f_purchase_price, 0)/100*EOHTEP.f_product_qty AS purchaseAmount,
+		<!-- 运单采购小计 -->
+		@_deliveryPurchaseAmount:=CAST((SELECT SUM(IFNULL(TEOHTEP.f_purchase_price, 0) * TEOHTEP.f_product_qty)/100
+		 FROM t_ebuy_delivery_order TEDO 			      	 
+			 INNER JOIN t_ebuy_delivery_order_product TEDOP ON TEDOP.t_ebuy_delivery_order_f_id=TEDO.f_id
+			 INNER JOIN t_ebuy_order_has_t_ebuy_product TEOHTEP ON TEOHTEP.f_id = TEDOP.t_ebuy_order_has_t_ebuy_product_f_id
+			 where TEDO.f_id=EDO.f_id
+		) AS DECIMAL(28,2)) AS deliveryPurchaseAmount,
+		<!-- 运费 -->
+		IFNULL(EDO.f_delivery_settlement_fee,0)/100 as f_delivery_settlement_fee,
+		<!-- 采购退款金额 -->		
+        @_purchaseRefund:=cast(IFNULL((SELECT sum(_EOHTEP.f_purchase_price * _EOHTEP.f_product_qty)
+		from
+		t_ebuy_refund_order _ERO
+		INNER JOIN t_ebuy_refund_order_product _EROP ON _ERO.f_id = _EROP.t_ebuy_refund_order_f_id
+		INNER JOIN t_ebuy_order_has_t_ebuy_product _EOHTEP ON _EOHTEP.f_id = _EROP.t_ebuy_order_has_t_ebuy_product_f_id
+		where _ERO.t_ebuy_delivery_order_f_id=EDO.f_id and _ERO.f_refund_status=2
+		)/100, 0) AS DECIMAL(28,2)) AS purchaseRefund,				
+		<!-- 运单采购金额 -->
+		@_deliveryTotalPurchaseAmount:=cast((@_deliveryPurchaseAmount+IFNULL(EDO.f_delivery_settlement_fee,0)/100-@_purchaseRefund) AS DECIMAL(28,2)) as deliveryTotalPurchaseAmount,
+		<!-- 运单结算金额 -->
+		cast(@_deliveryTotalPurchaseAmount AS DECIMAL(28,2)) as revenueAmount,
+		IFNULL(EDO.f_amount, 0)/100-IFNULL(ERO.f_refund_money, 0) as realPay,
+		<!--========== 最终实际支付end ==========-->
+		<!-- 交易平台 -->
+		EO.f_pay_method,
+		<!-- 交易流水号 -->
+		EPR.f_flow_no,
+		<!-- 收货人姓名 -->
+		EO.f_deliv_people_name AS receiver,
+		<!-- 收货人联系方式 -->
+		EO.f_deliv_phone AS receiverMobile,
+		<!-- 收货地址 -->
+		CONCAT(EO.f_deliv_address_area, EO.f_deliv_address_detail) AS address
+		FROM
+	    	t_ebuy_product_settle_apply_log EPSAL
+		INNER JOIN t_ebuy_delivery_order EDO ON EPSAL.t_ebuy_delivery_order_f_id=EDO.f_id 
+			AND EPSAL.t_revenue_apply_f_id IN(
+		    	<if test="visibleType != null and visibleType.equals('1'.toString())">select f_id from t_revenue_apply where f_rev_apply_finance_id=#{revenueApplyId} and f_sys0_del_state=0</if>
+		    	<if test="visibleType == null or visibleType.equals('2'.toString())">#{revenueApplyId}</if>
+		    )
+		INNER JOIN t_ebuy_order EO ON EO.f_id = EDO.t_ebuy_order_f_id 
+		LEFT JOIN t_ebuy_refund_order ERO ON ERO.t_ebuy_delivery_order_f_id = EDO.f_id AND ERO.f_refund_status=2
+		INNER JOIN t_ebuy_supply_merchant ESM ON EDO.t_supply_merchant_f_id = ESM.f_id and ESM.f_revenue_type=1 
+		INNER JOIN t_ebuy_delivery_order_product EDOP ON EDOP.t_ebuy_delivery_order_f_id = EDO.f_id
+		INNER JOIN t_ebuy_order_has_t_ebuy_product EOHTEP ON EOHTEP.f_id = EDOP.t_ebuy_order_has_t_ebuy_product_f_id AND EOHTEP.f_supply_merchant_id = ESM.f_id	
+		LEFT JOIN t_ebuy_product_shelf EPS ON EPS.f_id=EDOP.t_ebuy_product_f_id
+		LEFT JOIN t_ebuy_product EP ON EP.f_id=EPS.t_ebuy_product_id
+		LEFT JOIN t_ebuy_pay_record EPR ON EPR.t_ebuy_order_f_id=EO.f_id AND EPR.f_pay_status=2
+		LEFT JOIN t_ebuy_order_flow_recharge ofr ON ofr.t_order_id = EO.f_id
+	</select>
+
+	<!-- 管理员结算详情抽佣导出 -->
+	<select id="select_revenueDetailAdmin_daixiao_export" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.ebuyProductSettle.entity.EbuyProductSettleDetailAdminDto">
+		SELECT
+			EDO.f_id AS deliveryOrderId,
+			EO.f_order_no AS orderNo,
+			EDO.f_buyer_id AS buyerId,
+			DATE_FORMAT(EO.f_pay_time,'%Y-%m-%d %T') AS payTime,
+			ESM.f_name AS supplyMerchantName,
+			ifnull(ofr.f_name, EP.f_name) AS productName,
+			EOHTEP.f_product_qty AS productQty,
+			EOHTEP.f_product_price AS productSellPrice,
+			IFNULL(EOHTEP.f_product_qty * EOHTEP.f_product_price/100, 0) AS productTotalAmount,
+			IFNULL(ERO.f_refund_fee,0) AS refundFee,
+			IFNULL(ERO.f_refund_money,0) AS refundMoney,
+			IFNULL(ERO.f_refund_red_envelope,0) AS refundCoupon,
+			IFNULL(EDO.f_amount,0) AS deliveryOrderAmount,
+			IFNULL(EDO.f_total_coupon,0) AS deliveryOrderCoupon,
+			IFNULL(EDO.f_delivery_real_fee,0)/100 AS deliveryRealFee,
+			IFNULL(EDO.f_delivery_settlement_fee,0)/100 AS deliverySettleFee,
+			EO.f_pay_method AS payMethod,
+			EPR.f_flow_no AS payFlowNo,
+			EO.f_deliv_people_name AS receiver,
+			EO.f_deliv_phone AS receiverMobile,
+			CONCAT(EO.f_deliv_address_area,EO.f_deliv_address_detail) AS delivAddress,
+			IFNULL(RA.f_revenue_rate,0) AS revenueRate,
+			ESM.f_revenue_type AS revenueType
+		FROM t_ebuy_product_settle_apply_log EPSAL
+			INNER JOIN t_revenue_apply RA ON EPSAL.t_revenue_apply_f_id = RA.f_id
+			INNER JOIN t_ebuy_delivery_order EDO ON EPSAL.t_ebuy_delivery_order_f_id = EDO.f_id
+			INNER JOIN t_ebuy_order EO ON EO.f_id = EDO.t_ebuy_order_f_id
+			LEFT JOIN t_ebuy_refund_order ERO ON ERO.t_ebuy_delivery_order_f_id = EDO.f_id AND ERO.f_refund_status = 2
+			INNER JOIN t_ebuy_supply_merchant ESM ON EDO.t_supply_merchant_f_id = ESM.f_id AND ESM.f_revenue_type in (1,2)
+			INNER JOIN t_ebuy_delivery_order_product EDOP ON EDOP.t_ebuy_delivery_order_f_id = EDO.f_id
+			INNER JOIN t_ebuy_order_has_t_ebuy_product EOHTEP ON EOHTEP.f_id = EDOP.t_ebuy_order_has_t_ebuy_product_f_id AND EOHTEP.f_supply_merchant_id = ESM.f_id
+			LEFT JOIN t_ebuy_product_shelf EPS ON EPS.f_id = EDOP.t_ebuy_product_f_id
+			LEFT JOIN t_ebuy_product EP ON EP.f_id = EPS.t_ebuy_product_id
+			LEFT JOIN t_ebuy_pay_record EPR ON EPR.t_ebuy_order_f_id = EO.f_id AND EPR.f_pay_status = 2
+			LEFT JOIN t_ebuy_order_flow_recharge ofr ON ofr.t_order_id = EO.f_id
+		WHERE EPSAL.t_revenue_apply_f_id IN(
+		    	<if test="visibleType != null and visibleType.equals('1'.toString())">select f_id from t_revenue_apply where f_rev_apply_finance_id=#{revenueApplyId} and f_sys0_del_state=0</if>
+		    	<if test="visibleType == null or visibleType.equals('2'.toString())">#{revenueApplyId}</if>
+		    )
+	</select>
+</mapper>

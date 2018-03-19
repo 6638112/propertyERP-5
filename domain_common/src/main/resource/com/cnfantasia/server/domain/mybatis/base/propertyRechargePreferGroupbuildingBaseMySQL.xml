@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:物业预充值随机立减小区规则关联表 t_property_recharge_prefer_groupbuilding -->
+<mapper namespace="propertyRechargePreferGroupbuildingBase">
+	<resultMap type="PropertyRechargePreferGroupbuilding" id="propertyRechargePreferGroupbuildingBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_property_recharge_prefer_rule_f_id" javaType="java.math.BigInteger" property="tPropertyRechargePreferRuleFId"/>  <!--  -->        <result column="t_group_building_f_id" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!--  -->
+	</resultMap>
+	<resultMap type="PropertyRechargePreferGroupbuilding" id="propertyRechargePreferGroupbuildingExtendMap" extends="propertyRechargePreferGroupbuildingBaseMap">
+	</resultMap>
+	<resultMap type="PropertyRechargePreferGroupbuilding" id="propertyRechargePreferGroupbuildingBaseMap_AppendTable">
+        <id column="PRPGid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PRPGtPropertyRechargePreferRuleFId" javaType="java.math.BigInteger" property="tPropertyRechargePreferRuleFId"/>  <!--  -->        <result column="PRPGtGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!--  -->
+	</resultMap>
+	<resultMap type="PropertyRechargePreferGroupbuilding" id="propertyRechargePreferGroupbuildingBaseMap_AppendTable1">
+        <id column="PRPG1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PRPG1tPropertyRechargePreferRuleFId" javaType="java.math.BigInteger" property="tPropertyRechargePreferRuleFId"/>  <!--  -->        <result column="PRPG1tGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!--  -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PRPG.f_id,PRPG.t_property_recharge_prefer_rule_f_id,PRPG.t_group_building_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PRPG.f_id as PRPGid,PRPG.t_property_recharge_prefer_rule_f_id as PRPGtPropertyRechargePreferRuleFId,PRPG.t_group_building_f_id as PRPGtGroupBuildingFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PRPG1.f_id as PRPG1id,PRPG1.t_property_recharge_prefer_rule_f_id as PRPG1tPropertyRechargePreferRuleFId,PRPG1.t_group_building_f_id as PRPG1tGroupBuildingFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PRPG.f_id = #{id} ) </if>        <if test="tPropertyRechargePreferRuleFId != null">  and (PRPG.t_property_recharge_prefer_rule_f_id = #{tPropertyRechargePreferRuleFId} ) </if>        <if test="tGroupBuildingFId != null">  and (PRPG.t_group_building_f_id = #{tGroupBuildingFId} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PRPG.f_id = #{id} ) </if>        <if test="tPropertyRechargePreferRuleFId != null and !tPropertyRechargePreferRuleFId.equals('')  ">  and (PRPG.t_property_recharge_prefer_rule_f_id = #{tPropertyRechargePreferRuleFId} ) </if>        <if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  ">  and (PRPG.t_group_building_f_id = #{tGroupBuildingFId} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="propertyRechargePreferGroupbuildingBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="propertyRechargePreferGroupbuildingBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="propertyRechargePreferGroupbuildingBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="propertyRechargePreferGroupbuildingBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_property_recharge_prefer_groupbuilding PRPG    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(物业预充值随机立减小区规则关联表)信息。 -->
+	<sql id="select_propertyRechargePreferGroupbuilding">
+		SELECT <include refid="propertyRechargePreferGroupbuildingBase.queryHead"/>
+		<include refid="propertyRechargePreferGroupbuildingBase.busiQueryCondition"/>
+		<include refid="propertyRechargePreferGroupbuildingBase.dimCheckSql"/>
+		ORDER BY PRPG.f_id DESC
+	</sql>
+	<select id="select_propertyRechargePreferGroupbuilding" parameterType="java.util.Map" resultMap="propertyRechargePreferGroupbuildingBase.propertyRechargePreferGroupbuildingExtendMap">
+		<include refid="propertyRechargePreferGroupbuildingBase.select_propertyRechargePreferGroupbuilding"/>
+	</select>
+	
+	<!-- 根据条件分页查询(物业预充值随机立减小区规则关联表)信息  -->
+	<sql id="select_propertyRechargePreferGroupbuilding_withPage">
+		SELECT <include refid="propertyRechargePreferGroupbuildingBase.queryHead"/>
+		<include refid="propertyRechargePreferGroupbuildingBase.busiQueryCondition"/>
+		<include refid="propertyRechargePreferGroupbuildingBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_propertyRechargePreferGroupbuilding_withPage" resultMap="propertyRechargePreferGroupbuildingBase.propertyRechargePreferGroupbuildingExtendMap" parameterType="java.util.Map">
+		<include refid="propertyRechargePreferGroupbuildingBase.select_propertyRechargePreferGroupbuilding_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(物业预充值随机立减小区规则关联表)信息。 -->
+	<sql id="select_propertyRechargePreferGroupbuilding_bySeqId">
+		SELECT <include refid="propertyRechargePreferGroupbuildingBase.queryHead"/>
+		<include refid="propertyRechargePreferGroupbuildingBase.busiQueryCondition"/>
+		 and PRPG.f_id = #{_parameter}
+	</sql>
+	<select id="select_propertyRechargePreferGroupbuilding_bySeqId" parameterType="java.math.BigInteger" resultMap="propertyRechargePreferGroupbuildingBase.propertyRechargePreferGroupbuildingBaseMap">
+		<include refid="propertyRechargePreferGroupbuildingBase.select_propertyRechargePreferGroupbuilding_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(物业预充值随机立减小区规则关联表)记录数  -->
+	<sql id="select_propertyRechargePreferGroupbuilding_count">
+		SELECT COUNT(*)
+		<include refid="propertyRechargePreferGroupbuildingBase.busiQueryCount"/>
+		<include refid="propertyRechargePreferGroupbuildingBase.dimCheckSql"/>
+	</sql>
+	<select id="select_propertyRechargePreferGroupbuilding_count" resultType="java.lang.Integer">
+		<include refid="propertyRechargePreferGroupbuildingBase.select_propertyRechargePreferGroupbuilding_count"/>
+	</select>
+	
+	 <!-- 往(物业预充值随机立减小区规则关联表)新增一条记录。 -->
+	 <sql id="insert_propertyRechargePreferGroupbuilding">
+		INSERT INTO t_property_recharge_prefer_groupbuilding 
+		(f_id,t_property_recharge_prefer_rule_f_id,t_group_building_f_id) VALUES 
+		(#{id},#{tPropertyRechargePreferRuleFId},#{tGroupBuildingFId})
+	 </sql>
+    <insert id="insert_propertyRechargePreferGroupbuilding" parameterType="PropertyRechargePreferGroupbuilding">
+		<include refid="propertyRechargePreferGroupbuildingBase.insert_propertyRechargePreferGroupbuilding"/>
+    </insert>
+    
+	<!-- 批量新增(物业预充值随机立减小区规则关联表)信息 -->
+    <insert id="insert_propertyRechargePreferGroupbuilding_Batch" parameterType="java.util.List">
+    	INSERT INTO t_property_recharge_prefer_groupbuilding 
+		(f_id,t_property_recharge_prefer_rule_f_id,t_group_building_f_id) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tPropertyRechargePreferRuleFId},#{item.tGroupBuildingFId})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(物业预充值随机立减小区规则关联表)信息。 -->
+    <sql id="update_propertyRechargePreferGroupbuilding">
+		UPDATE t_property_recharge_prefer_groupbuilding		<trim prefix="SET" prefixOverrides=","> 		<if test="tPropertyRechargePreferRuleFId != null and !tPropertyRechargePreferRuleFId.equals('') "> ,t_property_recharge_prefer_rule_f_id=#{tPropertyRechargePreferRuleFId}</if> 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('') "> ,t_group_building_f_id=#{tGroupBuildingFId}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_propertyRechargePreferGroupbuilding" parameterType="PropertyRechargePreferGroupbuilding">
+		<include refid="propertyRechargePreferGroupbuildingBase.update_propertyRechargePreferGroupbuilding"/>
+    </update>
+    
+    <!-- 批量更新(物业预充值随机立减小区规则关联表)信息。 -->
+    <update id="update_propertyRechargePreferGroupbuilding_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_property_recharge_prefer_groupbuilding		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tPropertyRechargePreferRuleFId != null and !item.tPropertyRechargePreferRuleFId.equals('')  "> ,t_property_recharge_prefer_rule_f_id=#{item.tPropertyRechargePreferRuleFId}</if> 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(物业预充值随机立减小区规则关联表)信息_逻辑删除。 -->
+    <!-- <sql id="delete_propertyRechargePreferGroupbuilding_Logic">
+		UPDATE t_property_recharge_prefer_groupbuilding		<trim prefix="SET" prefixOverrides=","> 		<if test="tPropertyRechargePreferRuleFId != null and !tPropertyRechargePreferRuleFId.equals('')  "> ,t_property_recharge_prefer_rule_f_id=#{tPropertyRechargePreferRuleFId}</if> 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{tGroupBuildingFId}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_propertyRechargePreferGroupbuilding_Logic" parameterType="PropertyRechargePreferGroupbuilding">
+		<include refid="propertyRechargePreferGroupbuildingBase.delete_propertyRechargePreferGroupbuilding_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(物业预充值随机立减小区规则关联表)信息_逻辑删除 -->
+    <!-- <update id="delete_propertyRechargePreferGroupbuilding_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_property_recharge_prefer_groupbuilding		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tPropertyRechargePreferRuleFId != null and !item.tPropertyRechargePreferRuleFId.equals('')  "> ,t_property_recharge_prefer_rule_f_id=#{item.tPropertyRechargePreferRuleFId}</if> 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(物业预充值随机立减小区规则关联表)信息。 -->
+    <sql id="delete_propertyRechargePreferGroupbuilding">
+		DELETE FROM t_property_recharge_prefer_groupbuilding WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_propertyRechargePreferGroupbuilding" parameterType="java.lang.String">
+		<include refid="propertyRechargePreferGroupbuildingBase.delete_propertyRechargePreferGroupbuilding"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(物业预充值随机立减小区规则关联表)信息。 -->
+    <delete id="delete_propertyRechargePreferGroupbuilding_Batch" parameterType="java.util.List">
+		DELETE FROM t_property_recharge_prefer_groupbuilding WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

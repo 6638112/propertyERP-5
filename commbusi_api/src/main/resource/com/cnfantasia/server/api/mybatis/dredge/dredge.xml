@@ -1,0 +1,2179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 疏通服务 -->
+<mapper namespace="dredge">
+
+	<resultMap type="com.cnfantasia.server.api.dredge.entity.DredgeBillForDetail" id="dredgeBillForDetail">
+        <result column="id" property="id"/>
+        <result column="billNo" property="billNo"/>
+        <result column="type" property="type"/>
+        <result column="expectDate" property="expectDate"/>
+        <result column="submitDate" property="submitDate"/>
+        <result column="estimateDoorTime" property="estimateDoorTime"/>
+        <result column="acceptTime" property="acceptTime"/>
+        <result column="updTime" property="updTime"/>
+        <result column="content" property="content"/>
+        <result column="userId" property="userId"/>
+        <result column="userPhone" property="userPhone"/>
+        <result column="linkName" property="linkName"/>
+        <result column="billType" property="billType"/>
+        <result column="status" property="status"/>
+        <result column="statusDesc" property="statusDesc"/>
+        <result column="address" property="address"/>
+        <result column="payAmount" property="payAmount"/>
+        <result column="picUrl" property="picUrl"/>
+        
+        <result column="repairName" property="repairName"/>
+        <result column="repairUrl" property="repairUrl"/>
+        <result column="repairPhone" property="repairPhone"/>
+        <result column="repairIdNumber" property="repairIdNumber"/>
+        <result column="level" property="level"/>
+        <result column="masterId" property="masterId"/>
+        
+        <result column="orderId" property="orderId"/>
+        <result column="orderSaveAmount" property="orderSaveAmount"/>
+        <result column="subTypeId" property="subTypeId"/>
+        <result column="subTypeName" property="subTypeName"/>
+
+		<result column="communitySupplyType" property="communitySupplyType"/>
+		<result column="dredgeTypeId" property="dredgeTypeId"/>
+        <result column="selfBuyCount" property="selfBuyCount"/>
+        <result column="selfBuyAmount" property="selfBuyAmount"/>
+        <result column="dredgeTypeNum" property="dredgeTypeNum"/>
+
+		<collection property="amountList" ofType="com.cnfantasia.server.api.dredge.entity.AmountDetail">
+			<result column="adFid" property="id"/>
+			<result column="adFeeType" property="feeType"/>
+			<result column="adFeeName" property="feeName"/>
+			<result column="adFeeAmount" property="feeAmount"/>
+			<result column="adIsIncludePlatformFee" property="isIncludePlatformFee"/>
+		</collection>
+		<collection property="dredgeProductSpecList" resultMap="dredgeProductSpecEntityMap" />
+	</resultMap>
+
+	<resultMap id="dredgeProductSpecEntityMap" type="com.cnfantasia.server.api.ebuy.entity.DredgeProductSpecEntity">
+		<id column="specId" property="specId" javaType="java.math.BigInteger"/>
+		<result column="dredgeProductId" property="dredgeProductId" javaType="java.math.BigInteger"/>
+		<result column="specBuyNum" property="specNum" javaType="java.lang.Integer"/>
+		<result column="specName" property="specName" javaType="java.lang.String"/>
+		<result column="specPrice" property="specPrice" javaType="java.lang.Integer"/>
+		<result column="specUnit" property="specUnit" javaType="java.lang.String"/>
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.api.dredge.entity.DredgeBillForList" id="dredgeBillForListMap">
+		<id column="id" property="id" javaType="java.lang.Long"/>
+		<result column="billNo" property="billNo" javaType="java.lang.String"/>
+		<result column="expectDate" property="expectDate" javaType="java.lang.String"/>
+		<result column="estimateDoorTime" property="estimateDoorTime" javaType="java.lang.String"/>
+		<result column="submitDate" property="submitDate" javaType="java.lang.String"/>
+		<result column="parentTypeName" property="parentTypeName" javaType="java.lang.String"/>
+		<result column="type" property="type" javaType="java.lang.String"/>
+		<result column="isTransed" property="isTransed" javaType="java.lang.Integer"/>
+		<result column="billType" property="billType" javaType="java.lang.Integer"/>
+		<result column="status" property="status" javaType="java.lang.Integer"/>
+		<result column="statusDesc" property="statusDesc" javaType="java.lang.String"/>
+		<result column="address" property="address" javaType="java.lang.String"/>
+		<result column="payAmount" property="payAmount" javaType="java.math.BigDecimal"/>
+		<result column="selfBuyAmount" property="selfBuyAmount" javaType="java.math.BigDecimal"/>
+		<result column="repairName" property="repairName" javaType="java.lang.String"/>
+		<result column="repairPhone" property="repairPhone" javaType="java.lang.String"/>
+		<result column="repairUrl" property="repairUrl" javaType="java.lang.String"/>
+		<result column="updateTime" property="updateTime" javaType="java.util.Date"/>
+		<result column="addTime" property="addTime" javaType="java.util.Date"/>
+		<result column="dredgeTypePicURL" property="dredgeTypePicURL" javaType="java.lang.String"/>
+		<result column="discountPrice" property="discountPrice" javaType="java.math.BigDecimal"/>
+		<result column="priceRange" property="priceRange" javaType="java.lang.String"/>
+		<result column="dredgeProductName" property="dredgeProductName" javaType="java.lang.String"/>
+		<result column="level" property="level" javaType="java.lang.Double"/>
+
+		<association property="amountList" select="getDredgeBillAmountList" column="{dbId=dbId}"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.dredge.entity.DredgeBillForMaster" id="dredgeBillForMaster">
+       <result column="id" property="id"/>
+       <result column="billNo" property="billNo"/>
+       <result column="typeName" property="typeName"/>
+       <result column="subTypeName" property="subTypeName"/>
+       <result column="typeImgUrl" property="typeImgUrl"/>
+       <result column="isPropertyBill" property="isPropertyBill"/>
+       <result column="expectDate" property="expectDate"/>
+		<result column="estimateDoorTime" property="estimateDoorTime" javaType="java.lang.String"/>
+       <result column="submitDate" property="submitDate"/>
+       <result column="content" property="content"/>
+       <result column="billType" property="billType"/>
+       <result column="status" property="status"/>
+       <result column="statusDesc" property="statusDesc"/>
+       <result column="address" property="address"/>
+       <result column="payAmount" property="payAmount"/>
+       <result column="picUrls" property="picUrls"/>
+       <result column="userName" property="userName"/>
+       <result column="userHeadImgUrl" property="userHeadImgUrl"/>
+       <result column="userPhone" property="userPhone"/>
+       <result column="userUdpTime" property="userUdpTime"/>
+       <result column="masterId" property="masterId"/>
+       <result column="selfBuyCount" property="selfBuyCount"/>
+       <result column="selfBuyAmount" property="selfBuyAmount"/>
+       <result column="dredgeTypeNum" property="dredgeTypeNum"/>
+       
+       <collection property="amountList" ofType="com.cnfantasia.server.api.dredge.entity.AmountDetail">
+       	<result column="adFid" property="id"/>
+       	<result column="adFeeType" property="feeType"/>
+       	<result column="adFeeName" property="feeName"/>
+       	<result column="adFeeAmount" property="feeAmount"/>
+       	<result column="adIsIncludePlatformFee" property="isIncludePlatformFee"/>
+       </collection>
+		<collection property="dredgeProductSpecList" resultMap="dredgeProductSpecEntityMap" />
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.dredge.entity.CanWithdrawBill4Master" id="canWithdrawBill4Master">
+		<result column="dredgeBillId" property="dredgeBillId"/>
+		<result column="dredgeType" property="dredgeType"/>
+		<result column="billAmt" property="billAmt"/>
+		<result column="billAddress" property="billAddress"/>
+		<result column="submitDate" property="submitDate"/>
+		<result column="payTime" property="payTime"/>
+		<result column="userMobile" property="userMobile"/>
+		
+		<collection property="amountList" ofType="com.cnfantasia.server.api.dredge.entity.RSADetail">
+			<result column="id" property="id"/>
+			<result column="feeAmount" property="feeAmount"/>
+			<result column="subsidyAmt" property="subsidyAmt"/>
+			<result column="costAmt" property="costAmt"/>
+			<result column="feeType" property="feeType"/>
+			<result column="feeName" property="feeName"/>
+			<result column="isWithdrawed" property="isWithdrawed"/>
+			<result column="canWithdrawDays" property="canWithdrawDays"/>
+       </collection>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.dredge.entity.DredgeDetails" id="DredgeDetailsMap">
+        <id column="id" property="id" javaType="java.lang.Long"/>
+        <result column="provice" property="provice"/>
+        <result column="city" property="city"/>
+        <result column="district" property="district"/>
+        <result column="address" property="address"/>
+        <result column="linkName" property="linkName"/>
+        <result column="userLinkTel" property="userLinkTel"/>
+        <result column="userId" property="userId"/>
+        <result column="userPhone" property="userPhone"/>
+        <result column="addServiceTm" property="addServiceTm"/>
+        <result column="dredgeType1" property="dredgeType1"/>
+        <result column="dredgeType2" property="dredgeType2"/>
+        <result column="dredgeType3" property="dredgeType3"/>
+        <result column="expectTm" property="expectTm"/>
+        <result column="serviceDesc" property="serviceDesc"/>
+        <result column="picUrl" property="picUrl"/>
+        <result column="payType" property="payType"/>
+        <result column="orderAmount" property="orderAmount"/>
+        <result column="realPay" property="realPay"/>
+        <result column="couponAmount" property="couponAmount"/>
+        <result column="dredgeBillAmount" property="dredgeBillAmount"/>
+        <result column="payMethod" property="payMethod"/>
+        <result column="payTm" property="payTm"/>
+        <result column="payFlow" property="payFlow"/>
+        <result column="billNo" property="billNo"/>
+        <result column="status" property="status" />
+        <result column="billType" property="billType" />
+        <result column="serviceSupplier" property="serviceSupplier" />
+        <result column="dredgeProductName" property="dredgeProductName" javaType="java.lang.String" />
+        <collection property="productList" ofType="com.cnfantasia.server.api.dredge.entity.DredgeDetails$Product">
+        	<id column="productId" property="productId" javaType="java.lang.Long"/>
+			<result column="buyCount" property="buyCount"/>
+			<result column="buyPrice" property="buyPrice"/>
+			<result column="priceUnit" property="priceUnit"/>
+			<result column="productName" property="productName"/>
+			<result column="specName" property="specName"/>
+		</collection>
+        <collection property="process" ofType="com.cnfantasia.server.api.dredge.entity.DredgeDetails$ProcessMaster">
+        	<id column="masterUserId" property="masterUserId" javaType="java.lang.Long"/>
+			<result column="masterName" property="masterName"/>
+			<result column="masterTel" property="masterTel"/>
+			<result column="acceptTm" property="acceptTm"/>
+			<result column="expectWorkTm" property="expectWorkTm"/>
+		</collection>
+		<collection property="amountDetailList" ofType="com.cnfantasia.server.api.dredge.entity.DredgeDetails$AmountDetail">
+	       	<id column="adId" property="adId"/>
+	       	<result column="adName" property="adName"/>
+	       	<result column="adType" property="adType"/>
+	       	<result column="payAmount" property="payAmount"/>
+       </collection>
+       <collection property="processRecordingList" ofType="com.cnfantasia.server.api.dredge.entity.DredgeDetails$ProcessRecording">
+	       	<id column="prId" property="prId"/>
+	       	<result column="recordingTm" property="recordingTm"/>
+	       	<result column="processDesc" property="processDesc"/>
+       </collection>
+       <collection property="commentList" ofType="com.cnfantasia.server.api.dredge.entity.DredgeDetails$Comment">
+	       	<id column="commentId" property="commentId"/>
+	       	<result column="name" property="name"/>
+	       	<result column="value" property="value"/>
+       </collection>
+	</resultMap>
+	
+	<!-- 查询我的预约 select head -->
+	<sql id="selectBillList_head">
+	    select db.f_id as id, date_format(db.f_expectDate,'%Y-%m-%d %T') expectDate, date_format(db.f_sys0_add_time,'%Y-%m-%d %T') submitDate, 
+	    dt.f_name type,
+	    db.f_status status, 
+	    case db.f_status 
+	    	when 0 then '请完成支付'
+	    	when 1 then '正在安排师傅'
+	    	when 2 then '已安排师傅'
+	    	when 7 then '已完成维修'
+	    	when 8 then '已完成维修'
+	    	when 6 then '已被关闭'
+	    	when 3 then '已完成'
+	    	when 4 then '已取消'
+	    	when 5 then '已完成' end as statusDesc,
+	    db.f_address address,
+	    db.f_pay_Amount/100 payAmount,
+	    dw.f_real_name repairName, u.f_imgProfile repairUrl, u.f_mobile repairPhone,
+	    IF(dw.f_level is null or dw.f_level &lt;=0 ,5,dw.f_level) as level
+	</sql>
+	
+	<!-- 查询我的预约 from and where  -->
+	<sql id="selectBillList_from_and_where">
+	    from t_dredge_bill db
+	    left join t_dredge_type dt on dt.f_id = db.t_dredge_type_f_id
+	    left join t_user u on u.f_id = db.t_worker_f_id 
+	    left join t_dredge_worker dw on dw.t_user_f_id = u.f_id
+	    left join t_room r on db.f_roomId = r.f_id
+		left join t_real_room rr on r.t_real_room_f_id = rr.f_id
+		left join t_building b on rr.t_building_f_id = b.f_id
+		left join t_group_building GB on GB.f_id = b.t_group_building_f_id
+	    where db.f_sys0_del_state = 0
+	    and db.t_user_f_id = #{userId} and db.f_bill_type != 4
+	    <include refid="permiOos.dataPermissionCondition"/>
+		<if test="fromLA">
+			AND db.f_bill_type in (1,2,5)
+		</if>
+		<if test="type!=null and type==1">
+			AND db.f_status in (1,2,7,8,9) order by db.f_id desc
+		</if>
+		<if test="type!=null and type==2">
+			AND (db.f_status in (3,4,5,10) or (db.f_status = 6 and db.f_sys0_upd_time &lt; DATE_SUB(now(),INTERVAL #{repairConverDay} DAY))) order by db.f_sys0_upd_time desc
+		</if>
+	</sql>
+	
+	<select id="getDredgeBillList_forCount" resultType="int" parameterType="map">
+		select count(*) 
+		<include refid="selectBillList_from_and_where"/>
+	</select>
+	
+	<!-- 查询我的预约 -->
+	<select id="getDredgeBillList_forPage" parameterType="map" resultType="com.cnfantasia.server.api.dredge.entity.DredgeBillForList">
+		<include refid="selectBillList_head"/>
+		<include refid="selectBillList_from_and_where"/>
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	
+	<sql id="selectBillList_for_master_head">
+		 select db.f_id id, db.f_bill_no billNo, dt.f_name typeName, cst.f_icon_big_url typeImgUrl, 0 isPropertyBill, '' propertyTypeName,
+	     date_format(db.f_expectDate,'%Y-%m-%d %T') expectDate, date_format(db.f_expect_work_time,'%Y-%m-%d %T') estimateDoorTime, date_format(db.f_sys0_add_time,'%Y-%m-%d %T') submitDate, date_format(db.f_sys0_upd_time,'%Y-%m-%d %T') updDate,
+	     db.f_content content,
+		 db.f_bill_type billType,
+	     db.f_status status,
+	     case db.f_status 
+	    	when 1 then '可接单'
+	    	when 2 then '已接单'
+	    	when 3 then '户主已付款'
+	    	when 4 then '户主已取消'
+	    	when 5 then '户主已付款'
+			when 7 then '已完成'
+			when 8 then '已完成'
+		end as statusDesc,
+	     db.f_address address,
+	     db.t_worker_f_id masterId,
+	       db.f_pay_Amount/100 payAmount,
+	       db.f_pic_url picUrls,
+	       <!-- userName 默认取真实姓名，若为空取昵称，若昵称为空，则返回'解放区用户' -->
+	       ifnull(u.f_real_name, ifnull(u.f_nick_name, '解放区用户')) userName, u.f_imgProfile userHeadImgUrl, db.f_tel userPhone, u.f_sys0_upd_time userUdpTime, db.f_dredge_type_num dredgeTypeNum
+		 ,dt2.f_name subTypeName
+	</sql>
+	
+	<sql id="selectPropertyBillList_for_master_head">
+		SELECT pr.f_id id, pr.f_number billNo, (select f_name from t_community_supply_type where f_id = 119) typeName,
+		 (select f_icon_big_url from t_community_supply_type where f_id = 119)  typeImgUrl, 1 isPropertyBill, prt.f_name propertyTypeName,
+		CONCAT(DATE_FORMAT(pr.f_expect_date,'%Y-%m-%d'),' ',pr.f_expect_time_begin) expectDate,
+		date_format(pr.f_estimate_door_time_begin,'%Y-%m-%d %T') estimateDoorTime,
+		date_format(pr.f_sys0_add_time,'%Y-%m-%d %T') submitDate,date_format(pr.f_sys0_upd_time,'%Y-%m-%d %T') updDate,
+		     pr.f_repair_content content,
+		     3 as billType,
+		     pr.f_repaire_state status,
+		     case pr.f_repaire_state 
+		    	when 0 then '待处理'
+		    	when 1 then '已取消'
+				when 2 then '已分配'
+		    	when 3 then '已完成' end as statusDesc,
+		pr.f_address address,
+		prer.t_user_f_id masterId,
+		0 payAmount,
+		pr.f_pic_url picUrls,
+		ifnull(u.f_real_name, ifnull(u.f_nick_name, '解放区用户')) userName, u.f_imgProfile userHeadImgUrl, pr.f_tel userPhone, u.f_sys0_upd_time userUdpTime, 1 dredgeTypeNum
+		, '' subTypeName
+	</sql>
+	
+	<select id="getDredgeBillList_for_master_forCount" resultType="int" parameterType="map">
+		select count(1)
+		<include refid="selectBillList_for_master_from_and_where"/>
+	</select>
+	
+	<select id="getPropertyBillList_for_master_forCount" resultType="int" parameterType="map">
+		select count(1)
+		<include refid="selectPropertyBillList_for_master_from_and_where"/>
+	</select>
+	
+	<select id="qryNewDredgeBillCountForMaster" resultType="int" parameterType="map">
+		select count(1)
+		<include refid="selectBillList_for_master_from_and_where"/>
+	</select>
+	
+	<sql id="selectBillList_for_master_from_and_where">
+		from t_dredge_bill db 
+	    left join t_dredge_type dt on dt.f_id = db.t_dredge_type_f_id
+		LEFT JOIN t_community_supply_type cst on cst.f_id = dt.t_community_supply_type_f_id
+	    left join t_dredge_type_2nd dt2 on dt2.f_id = db.t_dredge_type_2nd_f_id
+	    left join t_user u on u.f_id = db.t_user_f_id
+		left join t_dredge_worker dw on dw.t_user_f_id = u.f_id <!-- 以前逻辑，用来查询下单人名称  -->
+	    left join t_dredge_worker dw1 on dw1.t_user_f_id = #{userId} <!-- 用来查询当前师傅信息  -->
+		left join t_dredge_bill_push_time dbpt on db.f_id = dbpt.t_dredge_bill_f_id and dw1.f_worker_level = dbpt.f_push_level
+	    where db.f_sys0_del_state = 0
+	     <if test="type==1">
+	     	and db.f_expectDate &gt; DATE_SUB(SYSDATE(),INTERVAL 1 DAY) <!--added by wenfq 20160107, YOYO说让师傅可以看到期望上门时间过期一天的订单  -->
+	     	and db.f_status = 1
+	     	and db.t_address_block_f_id in (select sab.t_address_block_f_id from t_dredge_worker_service_address_block sab where sab.t_user_f_id = #{userId})
+			and db.t_dredge_type_f_id in (select hdt.t_dredge_type_f_id  from t_dredge_worker_has_dredge_type hdt where hdt.t_user_f_id = #{userId})
+			and dw1.f_worker_level &lt;= db.f_push_level
+			 <!-- 服务商不能是非解放区，可以不存在，旧单没有商品  -->
+			and not EXISTS (
+			 	select 1 from t_dredge_bill_has_product_spec hps
+			 	inner join t_dredge_product_specification dps on dps.f_id = hps.f_specific_id
+			 	inner join t_dredge_product dp on dp.f_id = dps.f_dredge_product_id and dp.f_service_supplier_id != 1
+			 	where hps.f_sys0_del_state = 0 and hps.f_dredge_bill_id = db.f_id
+			 )
+	     </if>
+	    <if test="curTime!=null and curTime!=''"> <!-- 查询某段时间之后的订单  -->
+			and( (dbpt.f_push_time is null and db.f_sys0_add_time &gt; #{curTime}) or dbpt.f_push_time &gt; #{curTime})
+	    </if>
+	    <if test="type==2"> and db.t_worker_f_id = #{userId}
+			and (db.f_status = 2 OR (db.f_status = 8 and db.f_bill_type != 5))
+		</if>
+	    <if test="type==3">and db.t_worker_f_id = #{userId}
+			and (db.f_status in (3,4,5,7) OR (db.f_status = 8 and db.f_bill_type = 5))
+		</if>
+	    
+	    <if test="type==1"> order by db.f_id desc </if> <!-- 可抢订单按提交顺序排序 -->
+	    <if test="type==2 ">order by db.f_expectDate asc </if> <!-- 处理中预约时间升序排序 -->
+	    <if test="type==3">order by db.f_sys0_upd_time desc </if> <!-- 已结束的都按更新时间来排序 -->
+	</sql>
+	
+	<sql id="selectPropertyBillList_for_master_from_and_where">
+		from t_property_repair pr 
+		LEFT JOIN t_property_repair_type prt on prt.f_id = pr.t_property_repair_type_f_id
+		LEFT JOIN t_user u on u.f_id  = pr.t_user_f_id
+	    LEFT JOIN t_property_repairer prer on prer.f_id = pr.t_property_repairer_f_id
+	    where pr.f_sys0_del_state = 0
+	    and prer.t_user_f_id = #{userId}	
+	    and pr.f_repaire_state = #{type} <!-- type=2 已分配，type=3已完成 -->
+	    <if test="type==2 ">order by pr.f_expect_date asc </if> <!-- 处理中按预约时间升序 -->
+	    <if test="type==3">order by pr.f_sys0_upd_time desc </if> <!-- 已结束按更新时间倒序 -->
+	</sql>
+	
+	<!-- 师傅 查询 预约单 -->
+	<select id="getDredgeBillList_forMaster_forPage" parameterType="map" resultType="com.cnfantasia.server.api.dredge.entity.DredgeBillForMaster">
+		<include refid="selectBillList_for_master_head"/>
+		<include refid="selectBillList_for_master_from_and_where"/>
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	
+	<!-- 师傅 查询 物业维修单 -->
+	<select id="getPropertyBillList_forMaster_forPage" parameterType="map" resultType="com.cnfantasia.server.api.dredge.entity.DredgeBillForMaster">
+		<include refid="selectPropertyBillList_for_master_head"/>
+		<include refid="selectPropertyBillList_for_master_from_and_where"/>
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	
+	<!-- 师傅 查询 预约单和物业维修单 added by wenfq 2016-09-27 -->
+	<select id="getDredgeBillListAndPropertyBillList_forMaster_forPage" parameterType="map" resultType="com.cnfantasia.server.api.dredge.entity.DredgeBillForMaster">
+		select * from (
+			(<include refid="selectBillList_for_master_head"/>
+			<include refid="selectBillList_for_master_from_and_where"/>)
+			union 
+			(<include refid="selectPropertyBillList_for_master_head"/>
+			<include refid="selectPropertyBillList_for_master_from_and_where"/>)
+		) as t 		
+		ORDER BY t.updDate desc
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	
+	<!-- 查询预约单详情——师傅端 -->
+	<select id="qryDredgeBillDetailForMasterById" parameterType="string" resultMap="dredgeBillForMaster">
+		<include refid="selectBillList_for_master_head"/>
+		,DT2.f_name subTypeName, dbad.f_id adFid, dbad.f_fee_type adFeeType, 
+		CASE dbad.f_fee_type
+		        WHEN 0 THEN '人工费'
+		        WHEN 1 THEN '其它费'
+		        WHEN 2 THEN '耗材费'
+		END adFeeName,
+		 dbad.f_pay_amount/100 adFeeAmount, dbad.f_is_include_platform_fee adIsIncludePlatformFee,
+		(SELECT IFNULL(sum(f_quantity), 0) from t_dredge_bill_has_ebuy_product_shelf where t_dredge_bill_f_id = db.f_id and f_sys0_del_state = 0) as selfBuyCount, 
+		(SELECT IFNULL(sum(ps.f_price_discount*dbhs.f_quantity), 0) amount
+		FROM t_dredge_bill_has_ebuy_product_shelf dbhs
+		INNER JOIN t_ebuy_product_shelf ps ON dbhs.t_ebuy_product_shelf_f_id = ps.f_id
+		WHERE dbhs.f_sys0_del_state = 0 and dbhs.t_dredge_bill_f_id = db.f_id) as selfBuyAmount,
+		hps.f_id specId, hps.f_buy_count specBuyNum, dps.f_specification specName,dps.f_sell_price specPrice, dps.f_price_unit specUnit
+		from t_dredge_bill db 
+	    left join t_dredge_type dt on dt.f_id = db.t_dredge_type_f_id
+		LEFT JOIN t_community_supply_type cst on cst.f_id = dt.t_community_supply_type_f_id
+	    left join t_dredge_type_2nd DT2 on db.t_dredge_type_2nd_f_id = DT2.f_id
+	    left join t_user u on u.f_id = db.t_user_f_id
+	    left join t_dredge_worker dw on dw.t_user_f_id = u.f_id
+	    LEFT JOIN t_dredge_bill_amount_detail dbad on dbad.t_dredge_bill_f_id = db.f_id
+		LEFT JOIN t_dredge_bill_has_product_spec hps on hps.f_sys0_del_state = 0 and hps.f_dredge_bill_id = db.f_id
+		LEFT join t_dredge_product_specification dps on dps.f_id = hps.f_specific_id
+	    where db.f_id = #{id}
+	</select>
+	
+	<!-- 查询预约单详情——师傅端 -->
+	<select id="qryPropertyBillDetailForMasterById" parameterType="string" resultType="com.cnfantasia.server.api.dredge.entity.DredgeBillForMaster">
+		SELECT pr.f_id id, pr.f_number billNo, (select f_name from t_community_supply_type where f_id = 119) typeName,
+		 (select f_icon_big_url from t_community_supply_type where f_id = 119)  typeImgUrl, 1 isPropertyBill, prt.f_name propertyTypeName,
+		CONCAT(DATE_FORMAT(pr.f_expect_date,'%Y-%m-%d'),' ',pr.f_expect_time_begin) expectDate, 
+		date_format(pr.f_sys0_add_time,'%Y-%m-%d %T') submitDate,
+		date_format(pr.f_sys0_upd_time,'%Y-%m-%d %T') updDate,
+		DATE_FORMAT(pr.f_estimate_door_time_begin,'%Y-%m-%d %T') estimateDoorTime,
+		DATE_FORMAT(pr.f_finished_time,'%Y-%m-%d %T') finishTime,
+		     pr.f_repair_content content,
+		     3 as billType,
+		     pr.f_repaire_state status,
+		     case pr.f_repaire_state 
+		    	when 0 then '待处理'
+		    	when 1 then '已取消'
+					when 2 then '已分配'
+		    	when 3 then '已完成' end as statusDesc,
+		pr.f_address address,
+		prer.t_user_f_id masterId,
+		0 payAmount,
+		pr.f_pic_url picUrls,
+		ifnull(u.f_real_name, ifnull(u.f_nick_name, '解放区用户')) userName, u.f_imgProfile userHeadImgUrl, pr.f_tel userPhone, u.f_sys0_upd_time userUdpTime, 1 dredgeTypeNum
+		, '' subTypeName
+	    from t_property_repair pr 
+		LEFT JOIN t_property_repair_type prt on prt.f_id = pr.t_property_repair_type_f_id
+		LEFT JOIN t_user u on u.f_id  = pr.t_user_f_id
+	    LEFT JOIN t_property_repairer prer on prer.f_id = pr.t_property_repairer_f_id
+	    where pr.f_id = #{id}
+	</select>
+	
+	<!-- 查询行政区是否已经开通疏通服务 -->
+	<select id="qryIsOpenDredgeService4Block" resultType="int" parameterType="map" >
+		select count(dwsab.f_id) from t_address_block ab 
+		left join t_dredge_worker_service_address_block dwsab on dwsab.t_address_block_f_id = ab.f_id 
+		left join t_user u on u.f_id = dwsab.t_user_f_id
+		left join t_dredge_worker_has_dredge_type dwhdt on dwhdt.t_user_f_id = u.f_id
+		left join t_dredge_type dt on dt.f_id = dwhdt.t_dredge_type_f_id
+		left join t_dredge_worker dw on dw.t_user_f_id = dwhdt.t_user_f_id
+		where ab.f_sys0_del_state = 0 
+		and dw.f_audit_status = 2 <!-- "2":"认证成功" -->
+		and ab.f_id = #{blockId}
+		and dt.f_id = #{dredgeTypeId}
+	</select>
+	
+	<!--查询 行政区的疏通开通情况 -->
+	<select id="qryDredgeServiceListByCity" resultType="com.cnfantasia.server.api.dredge.entity.BlockWithDredgeService" parameterType="map">
+		SELECT 
+		    ab.f_id id,
+		    ab.f_name name,
+		    ac.f_id cityId,
+		    if(COUNT(dwsab.f_id) > 0, 1, 0) isOpenDredgeService
+		FROM
+		    t_address_city ac
+		        LEFT JOIN
+		    t_address_block ab ON ac.f_id = ab.t_city_f_id
+		        LEFT JOIN
+		    t_dredge_worker_service_address_block dwsab ON dwsab.t_address_block_f_id = ab.f_id
+		        LEFT JOIN
+		    t_dredge_worker_has_dredge_type dwhdt ON dwhdt.t_user_f_id = dwsab.t_user_f_id
+		        AND dwhdt.t_dredge_type_f_id = #{dredgeTypeId}
+		    left join t_dredge_worker dw on dw.t_user_f_id = dwhdt.t_user_f_id
+		WHERE
+		    ab.f_sys0_del_state = 0
+		    and dw.f_audit_status = 2 <!-- "2":"认证成功" --> 
+		   <if test="cityId!=null">and ac.f_id = #{cityId}</if>
+		   <if test="cityName!=null">and ac.f_name like CONCAT(#{cityName},'%')</if>
+		   
+		GROUP BY ab.f_id , ab.f_name , ac.f_id
+	</select>
+	
+	<select id="qryDredgeBillDetailById" parameterType="string" resultMap="dredgeBillForDetail">
+	 	select db.f_id as id, db.f_bill_no billNo, date_format(db.f_expectDate,'%Y.%m.%d %H:%i') expectDate, date_format(db.f_sys0_add_time,'%Y.%m.%d %H:%i') submitDate,
+	 	date_format(db.f_expect_work_time,'%Y.%m.%d %H:%i') estimateDoorTime,date_format(db.f_accept_time,'%Y.%m.%d %H:%i') acceptTime,date_format(db.f_sys0_upd_time,'%Y.%m.%d %H:%i') updTime,
+	    dt.f_name `type`,
+	    db.f_bill_type billType,
+	    db.f_status status, db.f_content content,
+	    case db.f_status 
+	    	when 0 then '请完成支付'
+	    	when 1 then '正在安排师傅'
+	    	when 2 then '已安排师傅'
+	    	when 7 then '已完成维修'
+	    	when 8 then '已完成维修'
+	    	when 6 then '已被关闭'
+	    	when 3 then '已完成'
+	    	when 4 then '已取消'
+	    	when 5 then '已完成' end as statusDesc,
+	    db.f_address address,
+	    db.f_pay_Amount/100 payAmount,
+	    db.f_pic_url picUrl,
+	    db.t_user_f_id userId,
+        db.f_tel userPhone,db.f_link_name linkName,
+        db.f_dredge_type_num dredgeTypeNum,
+        eo.f_id orderId, eo.f_total_coupon_amount/100 orderSaveAmount,
+        DT2.f_id subTypeId,
+        DT2.f_name subTypeName,
+        dt.f_id dredgeTypeId,
+        cst.f_id communitySupplyType,
+	    
+	    dw.f_real_name repairName, u.f_imgProfile repairUrl, u.f_mobile repairPhone, dw.f_id_no repairIdNumber,
+	    IF(dw.f_level is null or dw.f_level &lt;=0 ,5,dw.f_level) as level,
+	    dw.t_user_f_id masterId,
+	    dbad.f_id adFid, dbad.f_fee_type adFeeType, 
+	    CASE dbad.f_fee_type
+		        WHEN 0 THEN '人工费'
+		        WHEN 1 THEN '其它费'
+		        WHEN 2 THEN '耗材费'
+		END adFeeName,
+	     dbad.f_pay_amount/100 adFeeAmount, dbad.f_is_include_platform_fee adIsIncludePlatformFee,
+	    (SELECT IFNUll(sum(f_quantity),0) from t_dredge_bill_has_ebuy_product_shelf where t_dredge_bill_f_id = db.f_id and f_sys0_del_state = 0) as selfBuyCount, 
+		(SELECT IFNULL(sum(ps.f_price_discount*dbhs.f_quantity), 0) amount
+		FROM t_dredge_bill_has_ebuy_product_shelf dbhs
+		INNER JOIN t_ebuy_product_shelf ps ON dbhs.t_ebuy_product_shelf_f_id = ps.f_id
+		WHERE dbhs.f_sys0_del_state = 0 and dbhs.t_dredge_bill_f_id = db.f_id)/100 as selfBuyAmount,
+		hps.f_id specId, hps.f_buy_count specBuyNum, dps.f_specification specName,dps.f_sell_price specPrice, dps.f_price_unit specUnit, dps.f_dredge_product_id dredgeProductId
+		from t_dredge_bill db
+	    left join t_dredge_type dt on dt.f_id = db.t_dredge_type_f_id
+	    left join t_community_supply_type cst on cst.f_id = dt.t_community_supply_type_f_id and cst.f_sys0_del_state = 0
+	    left join t_dredge_type_2nd DT2 on db.t_dredge_type_2nd_f_id = DT2.f_id
+	    left join t_user u on u.f_id = db.t_worker_f_id 
+	    left join t_dredge_worker dw on dw.t_user_f_id = u.f_id
+        left join t_ebuy_order eo on eo.f_id = db.t_ebuy_order_f_id
+        LEFT JOIN t_dredge_bill_amount_detail dbad on dbad.t_dredge_bill_f_id = db.f_id
+        LEFT JOIN t_dredge_bill_has_product_spec hps on hps.f_sys0_del_state = 0 and hps.f_dredge_bill_id = db.f_id
+        LEFT join t_dredge_product_specification dps on dps.f_id = hps.f_specific_id
+	    where db.f_id = #{id};
+	 </select>
+	 
+	 <select id="getDredgeBillDetailById" parameterType="string" resultMap="DredgeDetailsMap">
+	    select distinct db.f_id id, ap.f_name provice, AC.f_name city, AB.f_name district, db.f_address address, db.f_bill_no billNo,
+			db.f_link_name linkName, db.f_tel userLinkTel, db.f_bill_type billType,
+		  	db.t_user_f_id userId, u.f_mobile userPhone, db.f_sys0_add_time addServiceTm,
+			cst.f_name dredgeType1, dt.f_name dredgeType2, DT2.f_name dredgeType3,
+			db.f_expectDate expectTm,
+			db.f_content serviceDesc, db.f_pic_url picUrl, dp.f_pay_type payType, dp.f_name dredgeProductName,
+			wu.f_id masterUserId, w.f_real_name masterName, wu.f_mobile masterTel,
+			db.f_accept_time acceptTm, ifnull(db.f_expect_work_time, db.f_expectDate) expectWorkTm,
+			dbd.f_id adId, dbd.f_fee_name adName, dbd.f_fee_type adType, dbd.f_pay_amount/100 payAmount,
+			(ifnull(eo.f_amount, 0) + ifnull(eo.f_total_coupon_amount, 0))/100 orderAmount, ifnull(eo.f_amount, 0)/100 realPay, eo.f_total_coupon_amount/100 couponAmount,
+			db.f_pay_amount/100 dredgeBillAmount, eo.f_pay_method payMethod, eo.f_pay_time payTm, pr.f_flow_no payFlow, db.f_status status,
+			ss.f_name serviceSupplier,
+			dbpr.f_id prId, dbpr.f_recording_time recordingTm, dbpr.f_process_desc processDesc,
+			ccp.f_id commentId, p.f_name name, ccp.f_value value,
+			dps.f_id productId, hps.f_buy_count buyCount, hps.f_buy_price/100 buyPrice, dps.f_price_unit priceUnit, dprod.f_name productName, dps.f_specification specName
+		 from t_dredge_bill db
+			inner join t_dredge_type dt ON dt.f_id = db.t_dredge_type_f_id and db.f_sys0_del_state = 0
+			left join t_dredge_bill_amount_detail dbd on dbd.t_dredge_bill_f_id = db.f_id
+			LEFT JOIN t_community_supply_type cst ON cst.f_id = dt.t_community_supply_type_f_id
+			LEFT JOIN t_dredge_type_2nd DT2 ON db.t_dredge_type_2nd_f_id = DT2.f_id
+			LEFT JOIN t_user u ON u.f_id = db.t_user_f_id
+			left join t_user wu on wu.f_id = db.t_worker_f_id 
+	    	left join t_dredge_worker w on w.t_user_f_id = wu.f_id
+			LEFT JOIN t_ebuy_order eo ON eo.f_id = db.t_ebuy_order_f_id
+			LEFT JOIN t_dredge_bill_amount_detail dbad ON dbad.t_dredge_bill_f_id = db.f_id
+			LEFT JOIN t_dredge_bill_has_product_spec hps ON hps.f_dredge_bill_id = db.f_id
+			LEFT JOIN t_dredge_product_specification dps ON dps.f_id = hps.f_specific_id
+			left join t_dredge_product dp on dps.f_dredge_product_id = dp.f_id
+			left join t_service_supplier ss on dp.f_service_supplier_id = ss.f_id
+			left join t_ebuy_pay_record pr on pr.t_ebuy_order_f_id = eo.f_id and pr.f_pay_status = 2
+			left join t_dredge_bill_has_process_recording dbpr on dbpr.t_dredge_bill_f_id = db.f_id
+			left join t_room r on db.f_roomId = r.f_id
+			left join t_real_room rr on r.t_real_room_f_id = rr.f_id
+			left join t_building b on rr.t_building_f_id = b.f_id
+			left join t_group_building GB on GB.f_id = b.t_group_building_f_id
+			left join t_address_block AB ON AB.f_id = GB.t_block_f_id
+			left join t_address_city AC ON AC.f_id = AB.t_city_f_id
+			left join t_address_province ap on AC.t_province_f_id = ap.f_id
+			left join t_comments c on db.f_id = c.f_target_id_2nd
+			left join t_comments_has_t_comments_points ccp on ccp.t_comments_f_id = c.f_id
+			left join t_comments_points p on ccp.t_comments_points_f_id = p.f_id
+			left join t_dredge_product dprod on dprod.f_id = dps.f_dredge_product_id
+		where db.f_id = #{id}
+		order by db.f_id desc, dbpr.f_id desc, p.f_order_num
+	 </select>
+
+	<select id="qryPropertyRepairDetailById" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.dredge.entity.DredgeBillForDetail">
+		SELECT pr.f_id AS id, CONCAT(DATE_FORMAT(pr.f_expect_date,'%Y.%m.%d'),' ',left(pr.f_expect_time_begin,5)) expectDate,
+			DATE_FORMAT(pr.f_estimate_door_time_begin,'%Y.%m.%d %H:%i') estimateDoorTime,
+			DATE_FORMAT(pr.f_finished_time,'%Y.%m.%d %H:%i') finishTime,
+			DATE_FORMAT(pr.f_sys0_add_time,'%Y.%m.%d %H:%i') submitDate,
+		 	prt.f_name type, 3 AS billType,pr.f_repair_content AS content,pr.f_tel AS userPhone,
+		 	CASE WHEN pr.f_repaire_state = 3 AND pr.t_property_repairer_f_id IS NULL THEN 6 ELSE pr.f_repaire_state END status,
+		 	CASE WHEN pr.f_repaire_state = 0 THEN '物业派单中' WHEN pr.f_repaire_state = 1 THEN '已取消' WHEN pr.f_repaire_state = 2 THEN '已分配师傅' WHEN pr.f_repaire_state = 3 AND pr.t_property_repairer_f_id IS NULL THEN '物业关闭' WHEN pr.f_repaire_state = 3 AND pr.t_property_repairer_f_id IS NOT NULL THEN '已完成' END statusDesc,
+			pr.f_address address, pr.f_pic_url picUrl, prer.f_name AS repairName, prer.f_headImgUrl AS repairUrl,
+			 prer.f_tel AS repairPhone, prer.f_id_no AS repairIdNumber,
+			 IF(dw.f_level is null or dw.f_level &lt;=0, 5, dw.f_level) level,
+			 dw.t_user_f_id masterId,
+			 pr.f_finish_desc closeDesc
+		FROM t_property_repair pr
+		LEFT JOIN t_property_repair_type prt ON prt.f_id = pr.t_property_repair_type_f_id
+		LEFT JOIN t_property_repairer prer ON pr.t_property_repairer_f_id = prer.f_id
+		LEFT JOIN t_dredge_worker dw on dw.t_user_f_id = prer.t_user_f_id 
+		WHERE pr.f_id = #{id}
+	</select>
+	 
+	 <resultMap type="com.cnfantasia.server.api.dredge.entity.DredgeParentType" id="dredgeParentType">
+	 	<result column="title" property="title"/>
+	 	<collection property="dtList" javaType="list" ofType="com.cnfantasia.server.api.dredge.entity.DredgeTypeForMaster" >
+	 		<result column="id" property="id"/>
+	 		<result column="name" property="name"/>
+	 		<result column="picUrl" property="picUrl"/>
+	 		<result column="isSelected" property="isSelected"/>
+	 	</collection>
+	 </resultMap>
+	 
+	 <!-- 查询师傅可配置接单类型 -->
+	 <select id="qryConfigServiceTypeByUserId" parameterType="map"  resultMap="dredgeParentType">
+		SELECT 
+	    cst.f_name title,
+	    dt.f_id id,
+	    dt.f_name name,
+	    dt.f_pic_url picUrl,
+	    IF(COUNT(dwhdt.f_id) > 0, 1, 0) isSelected
+		FROM
+		    t_dredge_type dt
+		        LEFT JOIN
+		    t_dredge_worker_has_dredge_type dwhdt ON dwhdt.t_dredge_type_f_id = dt.f_id
+		        AND dwhdt.t_user_f_id = #{userId}
+		        LEFT JOIN
+		    t_community_supply_type cst ON cst.f_id = dt.t_community_supply_type_f_id
+		WHERE
+		    dt.f_sys0_del_state = 0 AND dt.t_community_supply_type_f_id != 119 AND cst.f_importance_level = -4
+		GROUP BY cst.f_name , dt.f_id , dt.f_name , dt.f_pic_url
+		<if test="canQryAllDredgeType == 0"> HAVING COUNT(dwhdt.f_id) > 0</if>
+		ORDER BY cst.f_id , dt.f_id;
+	 </select>
+	 
+	 <!-- 查询师傅可配置接单区域 -->
+	 <select id="qryConfigServiceBlockByCity" parameterType="map"  resultType="com.cnfantasia.server.api.dredge.entity.BlockForMaster">
+	 	select ab.f_id id, ab.f_name name, if(count(dwsab.f_id)>0,1,0) isSelected
+		from  t_address_city ac 
+		left join t_address_block ab on ab.t_city_f_id = ac.f_id
+		left join t_dredge_worker_service_address_block dwsab on dwsab.t_address_block_f_id = ab.f_id AND dwsab.t_user_f_id = #{userId}
+		
+		where ab.f_sys0_del_state = 0 and ac.f_sys0_del_state = 0
+		<if test="cityId!=null">and ac.f_id = #{cityId}</if>
+		<if test="cityName!=null">and ac.f_name like CONCAT(#{cityName},'%')</if>
+		group by ab.f_id, ab.f_name;
+	 </select>
+	 
+	 <!-- 删除上次选中的接单区域，本次未选中的 -->
+	 <delete id="deleteConfigServiceBlockByIds" parameterType="list" >
+	 	delete from t_dredge_worker_service_address_block 
+	 	where f_id 
+	 	 in (  
+        <foreach item="guard" index="index" collection="list"  
+            separator=","> #{guard} </foreach>  
+        )  
+	 </delete>
+	 
+	 <!-- 删除上次选中的接单类型，本次未选中的 -->
+	 <delete id="deleteConfigServiceTypeByIds" parameterType="list" >
+	 	delete from t_dredge_worker_has_dredge_type
+	 	where f_id 
+	 	 in (  
+        <foreach item="guard" index="index" collection="list"  
+            separator=","> #{guard} </foreach>  
+        )  
+	 </delete>
+	 
+	 <!-- 确认接单  -->
+	 <update id="confirmReceivingDredgeBill" parameterType="map">
+	 	update t_dredge_bill  db 
+	 	set db.t_worker_f_id = #{userId}, db.f_accept_time = sysdate(), db.f_sys0_upd_time = sysdate(), db.f_sys0_upd_user = #{userId}, db.f_status = 2
+	 	where db.f_id = #{dredgeBillId} and db.f_status =1 and db.t_worker_f_id is null;
+	 </update>
+	 
+	 <!-- 师傅取消订单，更新疏通服务单，变回可接单状态 -->
+	 <update id="dredgeWorkerCancel_update_dredgeBill" parameterType="map">
+	 	update t_dredge_bill db 
+	 	set db.t_worker_f_id = null, db.f_pay_amount = null, db.f_accept_time = null, db.f_sys0_upd_time = sysdate(), db.f_sys0_upd_user = #{userId}, db.f_status = 1
+	 	where db.f_id = #{dredgeBillId};
+	 </update>
+	 
+	 <!-- 师傅详情 -->
+	 <resultMap type="com.cnfantasia.server.api.dredge.entity.MasterProfile" id="masterProfile">
+	 	<result column="id" property="id" javaType="long" />
+	 	<result column="f_real_name" property="name" javaType="java.lang.String" />
+	 	<result column="f_imgProfile" property="headImgUrl" javaType="java.lang.String" />
+	 	<result column="f_level" property="level" javaType="double" />
+	 	<result column="certificateStatus" property="certificateStatus" javaType="int"/>
+	 	<result column="auditDesc" property="auditDesc" javaType="string"/>
+	 	<result column="f_mobile" property="tel" javaType="java.lang.String"/>
+	 	<result column="personalDesc" property="personalDesc" javaType="java.lang.String"/>
+	 	<result column="isPropertyMaster" property="isPropertyMaster" javaType="int"/>
+	 	<collection property="blockNames" javaType="list" ofType="string" >
+	 		<result column="blockName" property="bolockNames"/>
+	 	</collection>
+	 	<collection property="dredgeTypeNames" javaType="list" ofType="string" >
+	 		<result column="dredgeTypeNames" property="dredgeTypeNames"/>
+	 	</collection>
+	 </resultMap>
+	 
+	 <!-- 查询师傅详情 -->
+	 <select id="qryMasterProfileById" parameterType="long" resultMap="masterProfile">
+		SELECT DISTINCT
+		    dw.f_real_name,
+		    u.f_imgProfile,
+		    IF(dw.f_level is null or dw.f_level &lt;=0 ,5,dw.f_level) as f_level, <!-- 默认给5分评价 -->
+		    IFNULL(dw.f_audit_status, 0) certificateStatus,
+		    CASE dw.f_audit_status
+		        WHEN 0 THEN '还未提交认证'
+		        WHEN 1 THEN '待认证'
+		        WHEN 2 THEN '认证成功'
+		        WHEN 3 THEN dw.f_audit_desc
+		        ELSE '还未提交认证' 
+		    END AS auditDesc,
+		    u.f_mobile,
+		    u.f_id id,
+		    ab.f_name blockName,
+		    dt.f_name dredgeTypeNames,
+		    dw.f_personal_desc personalDesc,
+		    IF(dw.f_create_type=2,1,0) isPropertyMaster <!-- 1物业师傅，0是自己注册的师傅 -->
+		FROM
+		    t_user u
+		        LEFT JOIN
+		    t_dredge_worker dw ON dw.t_user_f_id = u.f_id
+		        LEFT JOIN
+		    t_dredge_worker_service_address_block dwsab ON dwsab.t_user_f_id = u.f_id
+		    left join t_dredge_worker_has_dredge_type dwhdt on dwhdt.t_user_f_id = u.f_id
+		    left join t_dredge_type dt on dt.f_id = dwhdt.t_dredge_type_f_id and dt.f_sys0_del_state = 0
+		 	LEFT JOIN t_community_supply_type cst on cst.f_id = dt.t_community_supply_type_f_id
+		 LEFT JOIN t_address_block ab ON ab.f_id = dwsab.t_address_block_f_id
+		WHERE
+		    u.f_id = #{id} AND (cst.f_id is null OR cst.f_importance_level = -4);
+	 </select>
+	 
+	 <!-- 查询账户金额 -->
+	 <select id="qryAccountAmount" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.dredge.entity.AccountAmount">
+		 select ifnull(sum(f_pay_amount)/100,0) as allIncome, 0 allWithdraw, (ifnull(sum(f_pay_amount)/100,0)-0) as balance from t_dredge_bill 
+		 where t_worker_f_id = #{userId} 
+		 and f_status in (3, 5);
+	 </select>
+	 
+	 <!-- 查询收入与提现记录-header -->
+	 <sql id="qryIncomeOrWithdrawList_head">
+		SELECT 
+	    db.f_id dredgeBillId,
+	    db.f_address billDesc,
+	    date_format(db.f_sys0_add_time,'%Y-%m-%d %T') submitDate,
+	    db.f_pay_amount / 100 amount
+	 </sql>
+	 
+	 <!-- 查询收入与提现记录-from and where -->
+	 <sql id="qryIncomeOrWithdrawList_from_and_where">
+		FROM
+		    t_dredge_bill db
+		        JOIN
+		    t_dredge_type dt ON dt.f_id = db.t_dredge_type_f_id
+		WHERE
+		    db.t_worker_f_id = #{userId}
+			<if test="type!=null and type==1">and db.f_status IN (3 , 5)</if> <!-- 收入 -->
+			<if test="type!=null and type==2"></if> <!-- 提现 -->
+	 </sql>
+	 
+	  <!-- 查询收入与提现记录-forCount -->
+	 <select id="qryIncomeOrWithdrawList_forCount" parameterType="map" resultType="int">
+	 	select count(*) 
+	 	<include refid="qryIncomeOrWithdrawList_from_and_where" />
+	 </select>
+	 
+	 <!-- 查询收入与提现记录-forPage -->
+	 <select id="qryIncomeOrWithdrawList_forPage" parameterType="map" resultType="com.cnfantasia.server.api.dredge.entity.IncomeWithdrawRecorder">
+	 	<include refid="qryIncomeOrWithdrawList_head" />
+	 	<include refid="qryIncomeOrWithdrawList_from_and_where" />
+	 	ORDER BY db.f_id DESC
+	 	<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	 </select>
+	 
+	 <!-- 根据电商的订单ID，查询商品信息， {师傅名称}服务类型[维修费]-->
+	 <select id="qryProductInfoByOrderId" parameterType="java.math.BigInteger" resultType="string">
+		SELECT
+			CONCAT(
+				'{',
+				IFNULL(dw.f_real_name, ''),
+				'}',
+				dt.f_name,
+				'[维修费]'
+			) productInfo
+		FROM
+			t_dredge_bill db
+		LEFT JOIN t_dredge_type dt ON dt.f_id = db.t_dredge_type_f_id
+		LEFT JOIN t_user U ON U.f_id = db.t_worker_f_id
+		left join t_dredge_worker dw on dw.t_user_f_id = U.f_id
+		WHERE
+			db.f_sys0_del_state = 0
+		AND db.t_ebuy_order_f_id = #{orderId}
+		LIMIT 1
+	 </select>
+	 
+	 <!-- 师傅成功接单，准备短信信息通知业主 -->
+	 <select id="selectSMSInfoByDgId" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.dredge.entity.SMSInfo">
+		select dt.f_name dredgeTypeName, 
+		ifnull(dw.f_real_name, u.f_nick_name) masterName, 
+		u.f_mobile masterTel, 
+		db.f_tel dredgeTel 
+		from t_dredge_bill db
+		left join t_dredge_type dt on dt.f_id = db.t_dredge_type_f_id
+		left join t_user u on u.f_id = db.t_worker_f_id
+		left join t_dredge_worker dw on dw.t_user_f_id = u.f_id
+		where db.f_id = #{dredgeBillId};
+	 </select>
+	 
+	 <!--(师傅) 查看我的账户信息，有哪些可以提现 -->
+	 <select id="selectCanWithdrawList_master" parameterType="java.math.BigInteger" resultMap="canWithdrawBill4Master">
+		<!-- SELECT 
+		    db.f_id dredgeBillId,
+		    dt.f_name dredgeType,
+		    rsa.f_src_money billAmt,
+		    rsa.f_amount totalAmt,
+		    db.f_address billAddress,
+		    date_format(db.f_sys0_add_time,'%Y-%m-%d %T') submitDate,
+		    date_format(eo.f_pay_time,'%Y-%m-%d %T') payTime,
+		    rsa.f_amount_ptbt subsidyAmt,
+		    rsa.f_src_money - rsa.f_amount costAmt,
+		    db.f_tel userMobile
+		FROM
+		    t_dredge_bill db
+		        JOIN
+		    t_dredge_type dt ON dt.f_id = db.t_dredge_type_f_id
+		        JOIN
+		    t_revenue_signal_amount rsa ON (rsa.f_tk_status = 1
+		        AND rsa.f_mini_role_type = 6
+		        AND rsa.f_goal_type = 2 
+		        AND rsa.f_goal_id = db.f_id)
+		        LEFT JOIN
+		    t_ebuy_order eo ON eo.f_id = db.t_ebuy_order_f_id
+		WHERE
+		    db.f_status IN (3 , 5)
+			and db.t_worker_f_id = #{workerId}
+			 -->
+		SELECT 
+		    db.f_id dredgeBillId,
+		    dt.f_name dredgeType,
+		    db.f_pay_amount / 100 billAmt,
+		    db.f_address billAddress,
+		    DATE_FORMAT(db.f_sys0_add_time, '%Y-%m-%d %T') submitDate,
+		    DATE_FORMAT(eo.f_pay_time, '%Y-%m-%d %T') payTime,
+		    db.f_tel userMobile,
+		    
+		    rsa.f_id id,
+		    rsa.f_src_money feeAmount,
+		    rsa.f_amount_ptbt subsidyAmt,
+		    rsa.f_src_money - rsa.f_amount costAmt,
+		    rsa.f_goal_detail_type feeType,
+		    CASE rsa.f_goal_detail_type
+		        WHEN 0 THEN '人工费'
+		        WHEN 1 THEN '其它费'
+		    END feeName,
+		    CASE rsa.f_tk_status
+		        WHEN 1 THEN 0
+		        ELSE 1
+		    END AS isWithdrawed,
+		    CASE rsa.f_goal_detail_type
+		        WHEN 0 THEN DATEDIFF(rsa.f_goal_rev_time, NOW())
+		        ELSE 0
+		    END canWithdrawDays
+		FROM
+		    t_dredge_bill db
+		        JOIN
+		    t_dredge_type dt ON dt.f_id = db.t_dredge_type_f_id
+		        JOIN
+		    t_revenue_signal_amount rsa ON (rsa.f_mini_role_type = 6
+		        AND rsa.f_goal_type = 2
+		        AND rsa.f_goal_id = db.f_id)
+		        LEFT JOIN
+		    t_ebuy_order eo ON eo.f_id = db.t_ebuy_order_f_id
+		WHERE
+		    db.f_status IN (3 , 5)
+			and EXISTS (SELECT 1 from t_revenue_signal_amount where f_tk_status = 1 AND f_mini_role_type = 6 AND f_goal_type = 2 AND f_goal_id = db.f_id) <!-- 处理部分提现的也要显示出来 -->
+	        AND db.t_worker_f_id = #{workerId} 
+	        ORDER BY eo.f_pay_time desc;
+	 </select>
+	 
+	 <!--(推荐人) 查看我的账户信息，有哪些可以提现 -->
+	 <select id="selectCanWithdrawList_recommend" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.dredge.entity.CanWithdrawBill">
+		SELECT
+			db.f_id dredgeBillId,
+			dt.f_name dredgeType,
+			rsa.f_src_money billAmt,
+			rsa.f_amount totalAmt,
+			db.f_address billAddress,
+			date_format(
+				db.f_sys0_add_time,
+				'%Y-%m-%d %T'
+			) submitDate,
+			date_format(
+				eo.f_pay_time,
+				'%Y-%m-%d %T'
+			) payTime,
+			rsa.f_amount_ptbt subsidyAmt,
+			rsa.f_src_money + rsa.f_amount_ptbt - rsa.f_amount costAmt,
+			db.f_tel userMobile,
+			db.f_referrer_mobile referrerMobile
+		FROM
+			t_dredge_bill db
+		JOIN t_dredge_type dt ON dt.f_id = db.t_dredge_type_f_id
+		JOIN t_revenue_signal_amount rsa ON (
+			rsa.f_tk_status = 1
+			AND rsa.f_mini_role_type = 7 <!-- 维修推荐 -->
+			AND rsa.f_goal_type = 2
+			AND rsa.f_goal_id = db.f_id
+		)
+		LEFT JOIN t_ebuy_order eo ON eo.f_id = db.t_ebuy_order_f_id
+		LEFT JOIN t_user u ON u.f_mobile = db.f_referrer_mobile
+		WHERE
+			db.f_status IN (3, 5)
+		AND u.f_id = #{userId}
+	 </select>
+	 
+	 <!-- 根据提款申请ID，查询提款详情信息 -->
+	 <select id="selectApplyDetail_byApplyId" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.dredge.entity.ApplyWithdrawInfo">
+			SELECT
+			ra.f_total_amount billAmt,
+			date_format(ra.f_sys0_add_time,'%Y-%m-%d %T') submitTime,
+			ra.f_b_bank_name bankName,
+			ra.f_b_bank_no bankCardNumber,
+			CASE ra.f_tk_status
+			WHEN 1 THEN
+				'未提款'
+			WHEN 2 THEN
+				'提款中'
+			WHEN 3 THEN
+				'已结算'
+			END AS tkStatus,
+			 count(rsa.f_id) AS billCount
+			FROM
+				t_revenue_signal_amount rsa
+			JOIN t_revenue_apply ra ON ra.f_id = rsa.f_rev_apply_id
+			WHERE
+			<!-- 	ra.f_mini_role_type = 6 注释是因为ra.f_id可以唯一确定 -->
+			ra.f_goal_type = 2
+			AND ra.f_id = #{applyId}
+			having count(rsa.f_id)>0
+	 </select>
+	 
+	 <!-- 根据师傅的ID，查询提款列表 -->
+	 <select id="selectApplyList_byMasterId" parameterType="map" resultType="com.cnfantasia.server.api.dredge.entity.ApplyListForMaster">
+		SELECT
+			ra.f_id id,
+			'申请成功' applyStatus,
+			ra.f_total_amount applyAmount,
+			(SELECT count(*) from t_revenue_signal_amount rsa where rsa.f_rev_apply_id = ra.f_id)  billCount,
+			CASE ra.f_tk_status
+		WHEN 1 THEN
+			'未提款'
+		WHEN 2 THEN
+			'提款中'
+		WHEN 3 THEN
+			'已结算'
+		END AS tkStatus,
+		 date_format(
+			ra.f_sys0_add_time,
+			'%Y-%m-%d %T'
+		) tkTime
+		FROM
+			t_revenue_apply ra
+		WHERE
+		ra.f_visible_type = 2 <!-- 可见类型=={"1":"admin和财务可见","2":"其它角色可见"} -->
+		AND ra.f_mini_role_type = 6
+		AND ra.f_goal_type = 2
+		AND ra.f_mini_role_id = #{userId}
+		ORDER BY ra.f_id DESC
+		<if test="_begin != null and _length != '' ">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	 </select>
+	 
+	 <!-- 根据推荐人的ID，查询提款列表 -->
+	 <select id="selectApplyList_byRecommendId" parameterType="map" resultType="com.cnfantasia.server.api.dredge.entity.ApplyListForMaster">
+		SELECT
+			ra.f_id id,
+			'申请成功' applyStatus,
+			ra.f_total_amount applyAmount,
+			(SELECT count(*) from t_revenue_signal_amount rsa where rsa.f_rev_apply_id = ra.f_id)  billCount,
+			CASE ra.f_tk_status
+		WHEN 1 THEN
+			'未提款'
+		WHEN 2 THEN
+			'提款中'
+		WHEN 3 THEN
+			'已结算'
+		END AS tkStatus,
+		 date_format(
+			ra.f_sys0_add_time,
+			'%Y-%m-%d %T'
+		) tkTime
+		FROM
+			t_revenue_apply ra
+		WHERE
+		ra.f_visible_type = 2 <!-- 可见类型=={"1":"admin和财务可见","2":"其它角色可见"} -->
+		AND	ra.f_mini_role_type = 7
+		AND ra.f_goal_type = 2
+		AND ra.f_mini_role_id = #{userId}
+		ORDER BY ra.f_id DESC
+		<if test="_begin != null and _length != '' ">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	 </select>
+	 
+	 <!-- 查询师傅的最后一次提现时间, 作为下次提现的起点  -->
+	 <select id="selectLastEndTime_byMasterUserId" parameterType="java.math.BigInteger" resultType="string">
+		 SELECT DATE_FORMAT(max(f_goal_end_time),'%Y-%m-%d %T') as lastEndTime  from t_revenue_apply ra
+		 where ra.f_visible_type = 2 <!-- 可见类型=={"1":"admin和财务可见","2":"其它角色可见"} -->
+		 and f_mini_role_type = 6
+		 and f_goal_type = 2 
+		 and f_mini_role_id = #{userId}
+	 </select>
+	 
+	 <!-- 查询推荐人的最后一次提现时间, 作为下次提现的起点  -->
+	 <select id="selectLastEndTime_byRecommendUserId" parameterType="java.math.BigInteger" resultType="string">
+		 SELECT DATE_FORMAT(max(f_goal_end_time),'%Y-%m-%d %T') as lastEndTime  from t_revenue_apply ra
+		 where ra.f_visible_type = 2 <!-- 可见类型=={"1":"admin和财务可见","2":"其它角色可见"} -->
+		 and f_mini_role_type = 7
+		 and f_goal_type = 2 
+		 and f_mini_role_id = #{userId}
+	 </select>
+	 
+	 <!-- 师傅列表  查询条件 -->
+	 <sql id="select_masterList_for_admin_where">
+		 WHERE
+		    dw.f_sys0_del_state = 0
+ 		<if test="auditStatus !=null and auditStatus>= 0 ">
+	    	and dw.f_audit_status = #{auditStatus}
+	    </if>
+	    <if test="mobile !=null and mobile !='' ">
+	    	and u.f_mobile like concat('%', #{mobile}, '%')
+	    </if>
+	    <if test="realName !=null and realName !='' ">
+	    	and dw.f_real_name like concat('%', #{realName}, '%')
+	    </if>
+	    <if test="huaId !=null and huaId !='' ">
+	    	and dw.t_user_f_id = #{huaId}
+	    </if>
+	    <if test="idNumber !=null and idNumber !=''">
+	    	and dw.f_id_no like concat('%', #{idNumber}, '%')
+	    </if>
+	    <if test="registTimeBegin !=null and registTimeBegin !=''">
+	    	and u.f_sys0_add_time >= #{registTimeBegin}
+	    </if>
+	    <if test="registTimeEnd !=null and registTimeEnd !=''">
+	    	and #{registTimeEnd} >= u.f_sys0_add_time
+	    </if>
+	    <if test="dtId != null and dtId > 0 ">
+        	AND EXISTS( SELECT f_id FROM t_dredge_worker_has_dredge_type WHERE  t_user_f_id = u.f_id AND t_dredge_type_f_id = #{dtId})
+	    </if>
+	    <if test="abId != null and abId >0 ">
+	        AND EXISTS( SELECT f_id FROM t_dredge_worker_service_address_block WHERE t_user_f_id = u.f_id AND t_address_block_f_id = #{abId})
+	    </if>
+	 </sql>
+	 
+	 <!-- 师傅列表 count -->
+	 <select id="select_masterList_for_admin_count" parameterType="map" resultType="int">
+		SELECT 
+		    count(dw.f_id)
+		FROM
+		    t_dredge_worker dw
+		        JOIN
+		    t_user u ON (u.f_id = dw.t_user_f_id
+		        AND u.f_sys0_del_state = 0)
+		<include refid="select_masterList_for_admin_where"/>
+	 </select>
+	 
+	 <!-- 师傅列表  -->
+	 <select id="select_masterList_for_admin_page" parameterType="map" resultType="com.cnfantasia.server.api.dredge.entity.DredgeMasterList4admin">
+		SELECT 
+		    dw.f_id dwId,
+		    u.f_id huaId,
+		    dw.f_real_name realName,
+		    u.f_mobile mobile,
+		    dw.f_id_no idNumber,
+		    DATE_FORMAT(u.f_sys0_add_time,'%Y-%m-%d %T') registTime,
+		    IFNULL(dw.f_audit_status, 0) certificateStatus,
+		    CASE dw.f_audit_status
+		        WHEN 0 THEN '未提交认证'
+		        WHEN 1 THEN '待认证'
+		        WHEN 2 THEN '认证成功'
+		        WHEN 3 THEN '认证失败'
+		        ELSE '未提交认证'
+		    END AS auditDesc
+		FROM
+		    t_dredge_worker dw
+		        JOIN
+		    t_user u ON (u.f_id = dw.t_user_f_id
+		        AND u.f_sys0_del_state = 0)
+		<include refid="select_masterList_for_admin_where" />
+	    <if test="_begin != null and _length != null">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+		    order By u.f_sys0_add_time DESC
+	 </select>
+	 
+	 <resultMap type="com.cnfantasia.server.api.dredge.entity.MasterInfo4Audit" id="masterInfo4Audit_map">
+	 	<id property="dwId" column="dwId"/>
+	 	<result property="huaId" column="huaId"/>
+	 	<result property="registTime" column="registTime"/>
+	 	<result property="mobile" column="mobile"/>
+	 	<result property="realName" column="realName"/>
+	 	<result property="idNumber" column="idNumber"/>
+	 	<result property="idPic1" column="idPic1"/>
+	 	<result property="idPic2" column="idPic2"/>
+	 	<result property="personalDesc" column="personalDesc"/>
+	 	<result property="auditStatus" column="auditStatus"/>
+	 	<result property="auditDesc" column="auditDesc"/>
+	 	<result property="starLevel" column="starLevel"/>
+	 	<collection property="blockNames" ofType="string">
+	 		<constructor>
+	 			<arg column="blockNames"/>
+	 		</constructor>
+	 	</collection>
+	 	<collection property="dredgeTypeNames" ofType="string">
+	 		<constructor>
+	 			<arg column="dredgeTypeNames"/>
+	 		</constructor>
+	 	</collection>
+	 </resultMap>
+	 
+	 <!-- 查询师傅的详情，供解放区管理员审核使用 -->
+	 <select id="selectMasterDetail_forAudit" parameterType="java.math.BigInteger" resultMap="masterInfo4Audit_map" >
+		SELECT 
+			dw.f_id dwId,
+			u.f_id huaId,
+			u.f_sys0_add_time registTime,
+			u.f_mobile mobile,
+			dw.f_real_name realName,
+			dw.f_id_no idNumber,
+			dw.f_id_number_pic1 idPic1,
+			dw.f_id_number_pic2 idPic2,
+			dw.f_personal_desc personalDesc,
+			dw.f_audit_status auditStatus,
+			dw.f_audit_desc auditDesc,
+			concat(ac.f_name, ab.f_name) blockNames,
+			dt.f_name dredgeTypeNames,
+			(SELECT avg(f_level) from t_comments where f_target_type=122 and f_target_id = u.f_id and f_sys0_del_state =0 ) starLevel
+		FROM
+			t_dredge_worker dw
+		JOIN t_user u ON u.f_id = dw.t_user_f_id
+		LEFT JOIN t_dredge_worker_has_dredge_type dwhdt ON dwhdt.t_user_f_id = u.f_id
+		LEFT JOIN t_dredge_worker_service_address_block dwsab ON dwsab.t_user_f_id = u.f_id
+		LEFT JOIN t_dredge_type dt ON dt.f_id = dwhdt.t_dredge_type_f_id
+		LEFT JOIN t_address_block ab ON ab.f_id = dwsab.t_address_block_f_id
+		LEFT JOIN t_address_city ac ON ac.f_id = ab.t_city_f_id
+		where dw.f_id = #{dwId};
+	 </select>
+	 
+	 <select id="selectDredgeTypeNameList" parameterType="map" resultType="map">
+		SELECT
+			dt.f_id dtId,
+			cst.f_name cstName,
+			dt.f_name dtName,
+			CONCAT(cst.f_name, '-', dt.f_name) dtFullName
+		FROM
+			t_dredge_type dt
+		JOIN t_community_supply_type cst ON cst.f_id = dt.t_community_supply_type_f_id
+		WHERE
+			dt.f_sys0_del_state = 0
+		order by cst.f_id 
+	 </select>
+
+	 <select id="selectFullDredgeTypeName" parameterType="map" resultType="string">
+		select concat(cst.f_name, '-', dt.f_name, '-', dt2.f_name) from t_dredge_type_2nd dt2
+		left join t_dredge_type dt on dt.f_id = dt2.t_dredge_type_f_id
+		left join t_community_supply_type cst on cst.f_id = dt.t_community_supply_type_f_id
+		where dt2.f_id = #{_parameter}
+	 </select>
+
+	 <!--根据城市名和和社区供应商类型Id，查询是否开通维修服务 -->
+	 <select id="qryOpenDredgeService_by_cstId_and_cityName" parameterType="map" resultType="int">
+		SELECT
+			if(COUNT(dw.f_id) > 0, 1, 0) isOpenDredgeService
+		FROM
+			t_dredge_worker dw
+		JOIN t_dredge_worker_service_address_block dwsab ON dw.t_user_f_id = dwsab.t_user_f_id
+		JOIN t_dredge_worker_has_dredge_type dwhdt ON dw.t_user_f_id = dwhdt.t_user_f_id
+		WHERE
+			dw.f_sys0_del_state = 0
+		AND	dw.f_audit_status = 2 <!-- 已经认证通过的师傅 -->
+		AND dwhdt.t_dredge_type_f_id IN (
+			SELECT
+				f_id
+			FROM
+				t_dredge_type
+			WHERE
+				t_community_supply_type_f_id = #{cstId}
+		)
+		AND dwsab.t_address_block_f_id IN (
+			SELECT
+				f_id
+			FROM
+				t_address_block
+			WHERE
+				t_city_f_id IN (
+					SELECT
+						f_id
+					FROM
+						t_address_city
+					WHERE
+						f_name LIKE CONCAT(#{cityName}, '%')
+				)
+		);
+	 </select>
+	 
+	 <select id="qryBlockId_by_roomId" parameterType="java.math.BigInteger" resultType="java.math.BigInteger">
+		SELECT ab.f_id from t_address_block ab 
+		join t_group_building gb on gb.t_block_f_id = ab.f_id 
+		join t_building b on b.t_group_building_f_id = gb.f_id
+		join t_real_room rr on rr.t_building_f_id = b.f_id 
+		join t_room r on r.t_real_room_f_id = rr.f_id 
+		where r.f_id = #{roomId}
+	 </select>
+	 
+	 <!-- 根据parentId查询列表 -->
+	 <resultMap type="com.cnfantasia.server.api.dredge.entity.DredgeTypeEntity" id="dredgeTypeEntity_Map_Append">
+		 <id column="dredgeTypeId" property="id" javaType="java.math.BigInteger"/>
+		 <result column="dredgeTypeName" javaType="java.lang.String" property="name"/>
+		 <result column="dredgeTypePicUrl" javaType="java.lang.String" property="picUrl"/>
+	 </resultMap>
+	<resultMap id="dredgeType2ndMap" type="com.cnfantasia.server.domainbase.dredgeType2nd.entity.DredgeType2nd">
+		<id column="dredge2Id" property="id" javaType="java.math.BigInteger"/>
+		<result column="dredge2Name" property="name" javaType="java.lang.String"/>
+	</resultMap>
+	 <select id="select_DredgeType_ByParentTypeId" parameterType="java.util.Map" resultMap="dredgeTypeEntity_Map_Append">
+	 	SELECT dt.f_id dredgeTypeId, dt.f_name dredgeTypeName, dt.f_pic_url dredgeTypePicUrl
+	 	from t_dredge_type dt
+	 	where dt.f_sys0_del_state = 0 and dt.t_community_supply_type_f_id = #{parentTypeId}
+		 <if test="addrCodeIdList != null">
+			 and EXISTS (select 1 from t_operation_sa_has_eb_supply hes
+			 where hes.f_sys0_del_state = 0 and hes.f_type = 10 and hes.f_eb_supply_id = dt.f_id and hes.f_sa_id in
+			 <foreach collection="addrCodeIdList" open="(" separator="," close=")" item="codeId">
+				 #{codeId}
+			 </foreach>
+			 )
+		 </if>
+		 order by dt.f_order desc
+	 </select>
+	<select id="select_2nd_dredgeType_has_product" resultMap="dredgeType2ndMap" parameterType="map">
+		select DISTINCT dt2.f_id dredge2Id, dt2.f_name dredge2Name
+		from t_dredge_type_2nd dt2
+		<if test="!forceInclude2nd">
+			INNER JOIN t_dredge_product dp on dp.f_sys0_del_state = 0 and dp.f_dredge_type_2nd_id = dt2.f_id and dp.f_status = 1
+			INNER JOIN t_operation_sa_has_eb_supply es on es.f_sys0_del_state = 0 and es.f_type = 8 and es.f_eb_supply_id = dp.f_id
+		</if>
+		<if test="forceInclude2nd">
+			LEFT JOIN t_dredge_product dp on dp.f_sys0_del_state = 0 and dp.f_dredge_type_2nd_id = dt2.f_id and dp.f_status = 1
+			LEFT JOIN t_operation_sa_has_eb_supply es on es.f_sys0_del_state = 0 and es.f_type = 8 and es.f_eb_supply_id = dp.f_id
+		</if>
+		<if test="addrCodeIdList != null">
+			and es.f_sa_id in
+			<foreach collection="addrCodeIdList" open="(" close=")" separator="," item="codeId">
+				#{codeId}
+			</foreach>
+		</if>
+		where dt2.f_sys0_del_state = 0 and dt2.t_dredge_type_f_id = #{dredgeTypeId}
+		order by dt2.f_order desc
+	</select>
+
+	<resultMap id="dredgeProductEntityMap" type="com.cnfantasia.server.api.dredge.entity.DredgeProductEntity">
+		<id column="id" property="id" javaType="java.math.BigInteger"/>
+		<result column="name" property="name" javaType="java.lang.String"/>
+		<result column="desc" property="desc" javaType="java.lang.String"/>
+		<result column="payType" property="payType" javaType="java.lang.Integer"/>
+		<result column="productPic" property="productPic" javaType="java.lang.String"/>
+		<result column="introducePic" property="introducePic" javaType="java.lang.String"/>
+		<result column="supplierName" property="supplierName" javaType="java.lang.String"/>
+		<result column="sellPrice" property="sellPrice" javaType="java.lang.Integer"/>
+		<result column="marketPrice" property="marketPrice" javaType="java.lang.Integer"/>
+		<result column="priceUnit" property="priceUnit" javaType="java.lang.String"/>
+		<association property="productSpecList" resultMap="dredgeProductSpecMap"/>
+	</resultMap>
+	<resultMap id="dredgeProductSpecMap" type="com.cnfantasia.server.domainbase.dredgeProductSpecification.entity.DredgeProductSpecification">
+		<id column="dpsId" property="id" javaType="java.math.BigInteger"/>
+		<result column="dpsSellPrice" property="sellPrice" javaType="java.lang.Long"/>
+		<result column="dpsMarketPrice" property="marketPrice" javaType="java.lang.Long"/>
+		<result column="dpsPriceUnit" property="priceUnit" javaType="java.lang.String"/>
+		<result column="dpsSpecification" property="specification" javaType="java.lang.String"/>
+	</resultMap>
+	<select id="getDredgeProductListByDredgeType2ndId" parameterType="map" resultMap="dredgeProductEntityMap">
+		select dp.f_id id, dp.f_name `name`, dp.f_desc `desc`, dp.f_product_pic productPic, dp.f_introduce_pic introducePic, ss.f_name supplierName,
+			dps.f_id dpsId, dps.f_sell_price sellPrice, dps.f_market_price marketPrice, dps.f_price_unit priceUnit
+		from t_dredge_product dp
+		INNER JOIN t_service_supplier ss on ss.f_sys0_del_state = 0 AND ss.f_id = dp.f_service_supplier_id
+		INNER JOIN t_operation_sa_has_eb_supply es on es.f_sys0_del_state = 0 and es.f_eb_supply_id = dp.f_id and es.f_type = 8
+		INNER JOIN t_dredge_product_specification dps on dps.f_sys0_del_state = 0 and dps.f_dredge_product_id = dp.f_id
+		where dp.f_sys0_del_state = 0 and dp.f_status = 1
+			and dps.f_sell_price = (select min(dps2.f_sell_price) from t_dredge_product_specification dps2 where dps2.f_sys0_del_state = 0 and dps2.f_dredge_product_id = dp.f_id)
+			and dp.f_dredge_type_2nd_id = #{dredgeType2ndId} and es.f_sa_id in
+		<foreach collection="addrCodeIdList" item="codeId" open="(" separator="," close=")">
+			#{codeId}
+		</foreach>
+		group by id
+		order by dp.f_sort desc
+		<if test="_begin != null and _length != null">
+			limit #{_begin}, #{_length}
+		</if>
+	</select>
+
+	<select id="getDredgeProductDetail" parameterType="map" resultMap="dredgeProductEntityMap">
+		select dp.f_id id, dp.f_name `name`, dp.f_desc `desc`,dp.f_pay_type payType, dp.f_product_pic productPic, dp.f_introduce_pic introducePic, ss.f_name supplierName,
+			dps.f_id dpsId, dps.f_sell_price dpsSellPrice, dps.f_market_price dpsMarketPrice, dps.f_price_unit dpsPriceUnit, dps.f_specification dpsSpecification
+  		from t_dredge_product dp
+		INNER JOIN t_service_supplier ss on ss.f_sys0_del_state = 0 AND ss.f_id = dp.f_service_supplier_id
+		INNER JOIN t_dredge_product_specification dps on dps.f_sys0_del_state = 0 and dps.f_dredge_product_id = dp.f_id and dps.f_is_visible = 1
+		where dp.f_sys0_del_state = 0 and dp.f_id = #{dredgeProductId}
+		order by dps.f_sell_price asc
+	</select>
+
+	 <!-- 获取师傅的用户信息，用来推送消息 -->
+	 <select id="select_MasterList4Push" parameterType="map" resultType="com.cnfantasia.server.api.commonBusiness.entity.CommUserDataEntity">
+	 	SELECT  U.f_id userId, U.f_default_room_id defaultRoomId, 1 userType from t_dredge_worker dw 
+		INNER JOIN t_user U on U.f_id = dw.t_user_f_id 
+		where dw.f_sys0_del_state = 0 
+		and U.f_sys0_del_state = 0
+		and dw.f_worker_level = #{workerLevel}
+		and EXISTS (SELECT 1 from t_dredge_worker_service_address_block dwab where dwab.t_address_block_f_id = #{addressBlockFId} and U.f_id = dwab.t_user_f_id)
+		and EXISTS (SELECT 1 from t_dredge_worker_has_dredge_type dwhdt where dwhdt.t_dredge_type_f_id = #{dredgeTypeFId} and U.f_id = dwhdt.t_user_f_id)
+	 </select>
+
+	<!--获取上门服务大类-->
+	<select id="select_communitySupplyTypesInDredgeType" resultType="com.cnfantasia.server.domainbase.communitySupplyType.entity.CommunitySupplyType">
+		SELECT cst.f_id AS id, cst.f_icon_big_url AS iconBigUrl, cst.f_name AS name
+		FROM t_community_supply_type cst
+		WHERE cst.f_importance_level = -4 AND EXISTS (SELECT 1 FROM t_dredge_type dt WHERE dt.t_community_supply_type_f_id = cst.f_id AND cst.f_sys0_del_state = 0 AND dt.f_sys0_del_state = 0)
+		<if test="addrCodeIdList != null">
+			and EXISTS (select 1 from t_operation_sa_has_eb_supply hes
+					where hes.f_sys0_del_state = 0 and hes.f_type = 9 and hes.f_eb_supply_id = cst.f_id and hes.f_sa_id in
+					<foreach collection="addrCodeIdList" open="(" separator="," close=")" item="codeId">
+						#{codeId}
+					</foreach>
+			)
+		</if>
+		ORDER BY cst.f_order DESC
+	</select>
+
+	<resultMap id="amountDetailMap" type="com.cnfantasia.server.api.dredge.entity.AmountDetail">
+		<id column="adFid" property="id"/>
+		<result column="adFeeType" property="feeType"/>
+		<result column="adFeeName" property="feeName"/>
+		<result column="adFeeAmount" property="feeAmount"/>
+		<result column="adIsIncludePlatformFee" property="isIncludePlatformFee"/>
+	</resultMap>
+	<select id="getDredgeBillAmountList" parameterType="map" resultMap="amountDetailMap">
+		select dbad.f_id adFid, dbad.f_fee_type adFeeType,
+			CASE dbad.f_fee_type
+				WHEN 0 THEN '人工费'
+				WHEN 1 THEN '其它费'
+				WHEN 2 THEN '耗材费'
+			END adFeeName,
+			dbad.f_pay_amount/100 adFeeAmount, dbad.f_is_include_platform_fee adIsIncludePlatformFee
+		from t_dredge_bill_amount_detail dbad where dbad.t_dredge_bill_f_id = #{dbId} and dbad.f_sys0_del_state = 0
+	</select>
+	<select id="getDredgeBillAndPropertyRepairList_forPage" parameterType="map" resultMap="dredgeBillForListMap">
+		SELECT db.f_id AS id, DATE_FORMAT(db.f_expectDate,'%y.%m.%d %H:%i') expectDate,DATE_FORMAT(db.f_expect_work_time,'%y.%m.%d %H:%i') estimateDoorTime,
+			DATE_FORMAT(db.f_sys0_add_time,'%Y-%m-%d %T') submitDate,
+			dt.f_name parentTypeName,dt2.f_name `type`,
+			0 AS isTransed,
+	 		db.f_bill_type AS billType,
+	 		db.f_status status,
+			db.f_bill_no billNo,
+			CASE db.f_status
+				when 0 then '请完成支付'
+				when 1 then '正在安排师傅'
+				when 2 then '已安排师傅'
+				when 7 then '已完成维修'
+				when 8 then '已完成维修'
+				when 6 then '已被关闭'
+				when 3 then '已完成'
+				when 4 then '已取消'
+				when 5 then '已完成' END AS statusDesc,
+	 		db.f_address address,
+	 		db.f_pay_Amount/100 payAmount,
+			(SELECT IFNULL(sum(ps.f_price_discount*dbhs.f_quantity), 0)
+			FROM t_dredge_bill_has_ebuy_product_shelf dbhs
+			INNER JOIN t_ebuy_product_shelf ps ON dbhs.t_ebuy_product_shelf_f_id = ps.f_id
+			WHERE dbhs.f_sys0_del_state = 0 and dbhs.t_dredge_bill_f_id = db.f_id)/100 as selfBuyAmount,
+	 		dw.f_real_name repairName, u.f_imgProfile repairUrl, u.f_mobile repairPhone, IFNULL(db.f_sys0_upd_time, db.f_sys0_add_time) AS updateTime, db.f_sys0_add_time addTime
+	 		,cst.f_icon_big_url dredgeTypePicURL,
+			ifnull((select pc2.f_discount_price from t_dredge_type_price_config pc2 where dt.f_id = pc2.t_dredge_type_f_id and pc2.t_dredge_type_2nd_f_id is not null
+				and pc2.t_dredge_type_2nd_f_id = DT2.f_id and pc2.f_sys0_del_state = 0 and pc2.t_address_city_f_id = ab.t_city_f_id limit 1),dt2.f_discount_price)/100 discountPrice
+			,ifnull((select pc1. f_desc from t_dredge_type_price_config pc1 where dt.f_id = pc1.t_dredge_type_f_id and pc1.t_dredge_type_2nd_f_id is null
+				and pc1.f_sys0_del_state = 0 and pc1.t_address_city_f_id = ab.t_city_f_id limit 1),dt.f_desc) priceRange,
+	 		IF(dw.f_level is null or dw.f_level &lt;=0 ,5,dw.f_level) as `level`, db.f_id dbId,
+		(select dp.f_name from t_dredge_bill_has_product_spec hps
+		inner join t_dredge_product_specification dps on dps.f_id = hps.f_specific_id
+		inner join t_dredge_product dp on dp.f_id = dps.f_dredge_product_id
+		where hps.f_sys0_del_state = 0 and hps.f_dredge_bill_id = db.f_id limit 1) dredgeProductName
+		FROM t_dredge_bill db
+		LEFT JOIN t_dredge_type dt ON dt.f_id = db.t_dredge_type_f_id
+		LEFT JOIN t_community_supply_type cst on cst.f_id = dt.t_community_supply_type_f_id
+		LEFT JOIN t_user u ON u.f_id = db.t_worker_f_id
+		LEFT JOIN t_dredge_worker dw ON dw.t_user_f_id = u.f_id
+		LEFT JOIN t_dredge_type_2nd dt2 ON dt2.f_id = db.t_dredge_type_2nd_f_id
+		LEFT JOIN t_address_block ab on db.t_address_block_f_id = ab.f_id and ab.f_sys0_del_state = 0
+		WHERE db.f_sys0_del_state = 0 AND db.t_user_f_id = #{userId} and db.f_bill_type != 4
+		<if test="type!=null and type==1">
+			AND db.f_status in (0,1,2,7,8,9)
+		</if>
+		<if test="type!=null and type==2">
+			AND db.f_status in (3,4,5,10)
+		</if>
+
+		AND db.f_bill_type in (1,2,5)
+		ORDER BY addTime DESC
+		<if test="_begin != null and _length != null">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+
+	<select id="getDredgeRepairList_forPage" parameterType="map" resultMap="dredgeBillForListMap">
+		SELECT db.f_id AS id, DATE_FORMAT(db.f_expectDate,'%y.%m.%d %H:%i') expectDate,DATE_FORMAT(db.f_expect_work_time,'%y.%m.%d %H:%i') estimateDoorTime,
+		DATE_FORMAT(db.f_sys0_add_time,'%Y-%m-%d %T') submitDate,
+		dt.f_name parentTypeName,dt2.f_name `type`,
+		0 AS isTransed,
+		db.f_bill_type AS billType,
+		db.f_status status,
+		CASE db.f_status
+		when 0 then '请完成支付'
+		when 1 then '正在安排师傅'
+		when 2 then '已安排师傅'
+		when 7 then '已完成维修'
+		when 8 then '已完成维修'
+		when 6 then '已被关闭'
+		when 3 then '已完成'
+		when 4 then '已取消'
+		when 5 then '已完成' END AS statusDesc,
+		db.f_address address,
+		db.f_pay_Amount/100 payAmount,
+		(SELECT IFNULL(sum(ps.f_price_discount*dbhs.f_quantity), 0)
+		FROM t_dredge_bill_has_ebuy_product_shelf dbhs
+		INNER JOIN t_ebuy_product_shelf ps ON dbhs.t_ebuy_product_shelf_f_id = ps.f_id
+		WHERE dbhs.f_sys0_del_state = 0 and dbhs.t_dredge_bill_f_id = db.f_id)/100 as selfBuyAmount,
+		dw.f_real_name repairName, u.f_imgProfile repairUrl, u.f_mobile repairPhone, IFNULL(db.f_sys0_upd_time, db.f_sys0_add_time) AS updateTime, db.f_sys0_add_time addTime
+		,cst.f_icon_big_url dredgeTypePicURL,
+		ifnull((select pc2.f_discount_price from t_dredge_type_price_config pc2 where dt.f_id = pc2.t_dredge_type_f_id and pc2.t_dredge_type_2nd_f_id is not null
+		and pc2.t_dredge_type_2nd_f_id = DT2.f_id and pc2.f_sys0_del_state = 0 and pc2.t_address_city_f_id = ab.t_city_f_id limit 1),dt2.f_discount_price)/100 discountPrice
+		,ifnull((select pc1. f_desc from t_dredge_type_price_config pc1 where dt.f_id = pc1.t_dredge_type_f_id and pc1.t_dredge_type_2nd_f_id is null
+		and pc1.f_sys0_del_state = 0 and pc1.t_address_city_f_id = ab.t_city_f_id limit 1),dt.f_desc) priceRange,
+		IF(dw.f_level is null or dw.f_level &lt;=0 ,5,dw.f_level) as `level`, db.f_id dbId
+		FROM t_dredge_bill db
+		LEFT JOIN t_dredge_type dt ON dt.f_id = db.t_dredge_type_f_id
+		LEFT JOIN t_community_supply_type cst on cst.f_id = dt.t_community_supply_type_f_id
+		LEFT JOIN t_user u ON u.f_id = db.t_worker_f_id
+		LEFT JOIN t_dredge_worker dw ON dw.t_user_f_id = u.f_id
+		LEFT JOIN t_dredge_type_2nd dt2 ON dt2.f_id = db.t_dredge_type_2nd_f_id
+		LEFT JOIN t_address_block ab on db.t_address_block_f_id = ab.f_id and ab.f_sys0_del_state = 0
+		WHERE db.f_sys0_del_state = 0 AND db.t_user_f_id = #{userId} and db.f_bill_type = 4
+		<if test="type!=null and type==1">
+			AND (db.f_status in (0,1,2,7,8) or (db.f_status = 6 and db.f_sys0_upd_time > DATE_SUB(now(),INTERVAL #{repairConverDay} DAY)))
+		</if>
+		<if test="type!=null and type==2">
+			AND (db.f_status in (3,4,5) or (db.f_status = 6 and db.f_sys0_upd_time &lt; DATE_SUB(now(),INTERVAL #{repairConverDay} DAY)))
+		</if>
+
+		UNION
+		SELECT PR.f_id AS id, CONCAT(DATE_FORMAT(PR.f_expect_date,'%y.%m.%d'),' ',left(PR.f_expect_time_begin,5))
+		expectDate, DATE_FORMAT(PR.f_estimate_door_time_begin,'%y.%m.%d') estimateDoorTime,
+		DATE_FORMAT(PR.f_sys0_add_time,'%y.%m.%d %H:%i') submitDate,
+		'物业报修' AS parentTypeName,PRT.f_name AS type, PR.f_is_transed AS isTransed,3 AS billType,
+		CASE WHEN PR.f_repaire_state = 3 AND PRER.f_id IS NULL THEN 6 ELSE PR.f_repaire_state END status,
+		CASE WHEN PR.f_repaire_state = 0 THEN '物业派单中' WHEN PR.f_repaire_state = 1 THEN '已取消' WHEN PR.f_repaire_state = 2
+		THEN '已分配师傅'
+		WHEN PR.f_repaire_state = 3 AND PRER.f_id IS NULL THEN '物业关闭' WHEN PR.f_repaire_state = 3 AND PRER.f_id IS NOT
+		NULL THEN '已完成' END statusDesc,
+		PR.f_address AS address,0 AS payAmount,0 as selfBuyAmount, PRER.f_name AS repairName, PRER.f_headImgUrl AS
+		repairUrl, PRER.f_tel AS repairPhone
+		, IFNULL(PR.f_sys0_upd_time, PR.f_sys0_add_time) AS updateTime, PR.f_sys0_add_time addTime
+		,(select f_icon_big_url from t_community_supply_type where f_id = 119) dredgeTypePicURL
+		, null discountPrice, null priceRange,
+		IF(dw.f_level is null or dw.f_level &lt;=0 ,5,dw.f_level) as level, -1 as dbId
+		FROM t_property_repair PR
+		LEFT JOIN t_property_repair_type PRT ON PR.t_property_repair_type_f_id = PRT.f_id
+		LEFT JOIN t_group_building GB ON GB.f_id = PR.t_group_building_f_id
+		LEFT JOIN t_property_repairer PRER ON PR.t_property_repairer_f_id = PRER.f_id
+		LEFT JOIN t_dredge_worker dw on dw.t_user_f_id = PRER.t_user_f_id
+		WHERE PR.f_sys0_del_state = 0 AND PR.t_user_f_id = #{userId} AND GB.f_id = #{gbId}
+		<if test="type!=null and type==1">
+			AND (PR.f_repaire_state in (0,1,2) OR (PR.f_repaire_state = 3 and PR.f_is_transed = 0 and
+			PR.t_property_repairer_f_id is null and PR.f_sys0_upd_time > DATE_SUB(now(),INTERVAL #{repairConverDay}
+			DAY)))
+		</if> <!-- 待处理 -->
+		<if test="type!=null and type==2">
+			AND (PR.f_repaire_state = 3 and PR.t_property_repairer_f_id is not null OR PR.f_is_transed = 1 OR
+			(PR.f_repaire_state = 3 and PR.t_property_repairer_f_id is null and PR.f_sys0_upd_time &lt;
+			DATE_SUB(now(),INTERVAL #{repairConverDay} DAY))
+			)
+		</if> <!-- 已结束 -->
+		ORDER BY addTime DESC
+		<if test="_begin != null and _length != null">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+	
+	<!-- 查询维修单下的耗材信息 -->
+	<select id="selectEbuyProductByDredgeBillId" parameterType="java.math.BigInteger" resultType="java.util.Map">
+		SELECT
+			EP.f_id epId,
+			DBHEPS.f_quantity quantity
+		FROM
+			t_dredge_bill_has_ebuy_product_shelf DBHEPS
+		INNER JOIN t_ebuy_product_shelf EPS ON DBHEPS.t_ebuy_product_shelf_f_id = EPS.f_id
+		INNER JOIN t_ebuy_product EP ON EP.f_id = EPS.t_ebuy_product_id
+		WHERE
+		DBHEPS.f_sys0_del_state=0 
+		and	DBHEPS.t_dredge_bill_f_id = #{dredgeBillId};
+	</select>
+	
+	<!-- 查询维修单是否包含耗材 -->
+	<select id="selectEbuyProductCountByDredgeBillId" parameterType="java.math.BigInteger" resultType="int">
+		SELECT
+			count(0)
+		FROM
+			t_dredge_bill_has_ebuy_product_shelf DBHEPS
+		WHERE DBHEPS.f_sys0_del_state=0 
+		and DBHEPS.t_dredge_bill_f_id = #{dredgeBillId};
+	</select>
+	
+	<!-- 查询维修师傅联系电话 -->
+	<select id="getDredgeMasterMobile" parameterType="java.math.BigInteger" resultType="java.lang.String">
+		SELECT f_mobile FROM t_user WHERE f_id = #{userId};
+	</select>
+	
+	<!-- 更新维修单耗材信息信息。 -->
+    <update id="updateEbuyProductInventory" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_product SET f_left_count = 
+		 (
+		 	CASE  WHEN (f_left_count - #{item.quantity})>0  THEN (f_left_count - #{item.quantity})
+			      ELSE 0 END
+		 )
+		 WHERE f_id=#{item.epId} AND f_left_count > 0
+    	</foreach>
+    </update>
+    
+    <resultMap type="com.cnfantasia.server.api.dredge.entity.DredgeBillHasEbuyProductShelfEnity" id="dredgeBillHasEbuyProductShelfList">
+       <result column="quantity" javaType="int" property="quantity"/> 
+       <result column="productName" javaType="string" property="productName"/> 
+	</resultMap>
+    
+    <resultMap type="com.cnfantasia.server.api.dredge.entity.DredgeMsgEntity" id="dredgeMsgEntity">
+       <result column="merchantName" javaType="string" property="merchantName"/> 
+       <result column="merchantTel" javaType="string" property="merchantTel"/> 
+       <collection property="dredgeBillHasEbuyProductShelfList" resultMap="dredgeBillHasEbuyProductShelfList"></collection>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.domainbase.dredgeBillFollowRecord.entity.DredgeBillFollowRecord" id="dredgeBillFollowRecord">
+       <result column="followTime" javaType="string" property="followTime"/>
+       <result column="followUser" javaType="string" property="followUser"/> 
+       <result column="content" javaType="string" property="content"/> 
+	</resultMap>
+    
+    <!-- 查询短息信息 -->
+	 <select id="getDredgeBillMsgContent" parameterType="java.math.BigInteger" resultMap="dredgeMsgEntity">
+	 	SELECT ESM.f_name merchantName, ESM.f_tel merchantTel,EP.f_name productName,DBHEPS.f_quantity quantity FROM t_ebuy_supply_merchant ESM 
+		INNER JOIN t_ebuy_product EP ON ESM.f_id = EP.t_supply_merchant_f_id
+		INNER JOIN t_ebuy_product_shelf EPS ON EPS.t_ebuy_product_id = EP.f_id 
+		INNER JOIN t_dredge_bill_has_ebuy_product_shelf DBHEPS ON DBHEPS.t_ebuy_product_shelf_f_id = EPS.f_id
+		WHERE DBHEPS.f_sys0_del_state = 0 and DBHEPS.t_dredge_bill_f_id = #{dredgeBillId};
+	 </select>
+	 
+	 <!-- 查询维修订单跟踪信息 -->
+	 <select id="getDredgeBillFollowRecordList" parameterType="java.lang.String" resultMap="dredgeBillFollowRecord">
+	 	select dbfr.f_follow_time followTime,dbfr.f_follow_user followUser,dbfr.f_content content from t_dredge_bill_follow_record dbfr
+		where dbfr.t_dredge_bill_f_id = #{dredgeBillId};
+	 </select>
+	 
+	<sql id="selectProductList_from">
+		from t_ebuy_product_shelf eps
+		LEFT JOIN t_ebuy_product_type ept ON eps.t_ebuy_product_type_id = ept.f_id
+		JOIN t_ebuy_product ep on ep.f_id = eps.t_ebuy_product_id and ep.f_left_count > 0 and ep.f_sys0_del_state = 0
+		where 1=1
+		<if test="appType != null and appType != ''">
+			and ept.f_wlApp_type = #{appType}
+		</if>
+		and eps.f_up_shelf_state = 0
+		and EXISTS (
+			SELECT  1 FROM t_ebuy_supply_merchant esm
+			JOIN t_ebuy_supply_merchant_has_group_building esmgb on esmgb.t_ebuy_supply_merchant_id = esm.f_id and esmgb.f_sys0_del_state = 0
+			JOIN t_ebuy_home_type_has_product ehtp on 1=1 AND ehtp.f_sys0_del_state = 0
+			JOIN t_dredge_type_has_home_type dthp ON dthp.t_ebuy_home_type_f_id = ehtp.t_home_type_id and dthp.f_sys0_del_state = 0
+			where esmgb.t_group_building_id = #{gbId}
+				and ((dthp.f_dredge_type_level = 1 and dthp.t_dredge_type_f_id = #{dredgeTypeId})
+					or (dthp.f_dredge_type_level = 2 and dthp.t_dredge_type_2nd_f_id = #{subTypeId}))
+			AND esm.f_id = ep.t_supply_merchant_f_id and esm.f_type in (2,3) and esm.f_sys0_del_state = 0
+			AND ehtp.t_product_id = ep.f_id
+		)
+	</sql>
+	 
+	<!-- 查出所有可选耗材总数 -->
+	<select id="selectProductList_count" parameterType="map" resultType="int">
+		SELECT count(*)
+		<include refid="selectProductList_from"/>
+	</select>
+	
+	<!-- 查出所有可选耗材 -->
+	<select id="selectProductList_page" parameterType="map" resultType="com.cnfantasia.server.api.dredge.entity.SelfBuyProduct">
+		SELECT DISTINCT eps.f_id id, ep.f_name name, eps.f_price_discount price, ep.f_pic_base pic, ep.f_desc AS 'desc', ep.t_supply_merchant_f_id supplyMerchantId
+		<include refid="selectProductList_from"/>
+		<if test="_begin != null and _length != null">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+	
+	<!-- 查出维修单选中的耗材 -->
+	<select id="selectProductListWithDredgeBillId" parameterType="map" resultType="com.cnfantasia.server.api.dredge.entity.SelfBuyProduct">
+		SELECT eps.f_id id, ep.f_name name, eps.f_price_discount price, ep.f_purchase_price productPursePrice, ep.f_pic_base pic,ep.f_desc 'desc',
+				dbps.f_quantity quantity,ep.t_supply_merchant_f_id supplyMerchantId, eps.f_id productShelfId
+		from t_dredge_bill_has_ebuy_product_shelf dbps
+		JOIN t_dredge_bill db on db.f_id = dbps.t_dredge_bill_f_id
+		JOIN t_ebuy_product_shelf eps on eps.f_id = dbps.t_ebuy_product_shelf_f_id
+		JOIN t_ebuy_product ep on ep.f_id = eps.t_ebuy_product_id
+		where dbps.f_sys0_del_state = 0
+		and db.f_id = #{dredgeBillId}
+		<if test="userId != null and userId != ''">
+			and db.t_user_f_id = #{userId}
+		</if>
+	</select>
+	
+	<update id="deleteSelfBuyProduct" parameterType="java.util.Map">
+		UPDATE t_dredge_bill_has_ebuy_product_shelf dbps
+		JOIN t_dredge_bill db ON db.f_id = dbps.t_dredge_bill_f_id
+		SET dbps.f_sys0_del_state = 1,
+		 dbps.f_sys0_del_time = SYSDATE(),
+		 dbps.f_sys0_del_user = #{userId}
+		WHERE
+		db.f_status in (1,2) <!-- "1":"提交派单中","2":"已接单" 才能删除自选耗材 -->
+		and db.f_id = #{dredgeBillId}
+		and dbps.t_ebuy_product_shelf_f_id in (
+		<foreach item="item" collection="productShelfIds"  separator=",">
+			#{item}
+		</foreach>
+		)
+	</update>
+
+	<select id="getDredgeHasProductAmount" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+		SELECT IFNULL(sum(ps.f_price_discount*dbhs.f_quantity), 0) amount
+		FROM t_dredge_bill_has_ebuy_product_shelf dbhs
+		INNER JOIN t_ebuy_product_shelf ps ON dbhs.t_ebuy_product_shelf_f_id = ps.f_id
+		WHERE dbhs.f_sys0_del_state = 0 and dbhs.t_dredge_bill_f_id = #{dredgeBillId};
+	</select>
+
+	<resultMap type="com.cnfantasia.server.api.dredge.entity.DredgeBillEntity" id="getDredgeBillListMap" extends="dredgeBillBase.dredgeBillBaseMap_AppendTable">
+		<result column="workerMobile" javaType="java.lang.String"  property="workerMobile"/>
+		<result column="workerName" javaType="java.lang.String"  property="workerName"/>
+		<result column="supplyTypeName" javaType="java.lang.String"  property="supplyTypeName"/>
+		<result column="dredgeProductName" javaType="java.lang.String"  property="dredgeProductName"/>
+		<result column="dredgeType" javaType="java.lang.String"  property="dredgeType"/>
+		<result column="dredgeType2nd" javaType="java.lang.String"  property="dredgeType2nd"/>
+		<result column="level" javaType="java.lang.Integer"  property="level"/>
+		<result column="payTime" javaType="java.lang.String"  property="payTime"/>
+		<result column="totalAmount" javaType="java.lang.Long"  property="totalAmount"/>
+		<result column="orderAmount" javaType="java.lang.Long"  property="orderAmount"/>
+		<result column="payMethod" javaType="java.lang.Integer"  property="payMethod"/>
+		<result column="serviceSupplierId" javaType="java.math.BigInteger"  property="serviceSupplierId"/>
+		<result column="userTel" javaType="java.lang.String"  property="userTel"/>
+		<result column="commentLevel" javaType="java.lang.String"  property="commentLevel"/> 
+		<result column="processRecordCount" javaType="int"  property="processRecordCount"/>
+		<result column="blockName" javaType="java.lang.String"  property="blockName"/>
+		<result column="cityName" javaType="java.lang.String"  property="cityName"/>
+		<result column="DBbillNo" javaType="java.lang.String"  property="billNo"/>
+		<result column="buyerId" property="buyerId"/>
+		<result column="serviceSupplier" javaType="java.lang.String" property="serviceSupplier" />
+		<collection property="dredgeBillAmountDetailList" resultMap="dredgeBillAmountDetailBase.dredgeBillAmountDetailBaseMap_AppendTable"
+					javaType="java.util.List" ofType="com.cnfantasia.server.domainbase.dredgeBillAmountDetail.entity.DredgeBillAmountDetail"/>
+		<collection property="processRecordingList" ofType="com.cnfantasia.server.api.dredge.entity.DredgeDetails$ProcessRecording">
+	       	<id column="prId" property="prId"/>
+	       	<result column="recordingTm" property="recordingTm"/>
+	       	<result column="processDesc" property="processDesc"/>
+       </collection>
+       <!-- 
+       <collection property="commentList" ofType="com.cnfantasia.server.api.dredge.entity.DredgeDetails$Comment">
+	       	<id column="commentId" property="commentId"/>
+	       	<result column="name" property="name"/>
+	       	<result column="value" property="value"/>
+       </collection>
+        -->
+	</resultMap>
+
+	<select id="getDredgeBillList" parameterType="java.util.Map" resultMap="getDredgeBillListMap">
+		SELECT
+		_tmp.*, DBAD.f_id AS DBADid,
+		DBAD.f_fee_type AS DBADfeeType,
+		DBAD.f_fee_name AS DBADfeeName,
+		DBAD.f_pay_amount AS DBADpayAmount,
+		dbpr.f_id prId, dbpr.f_recording_time recordingTm, dbpr.f_process_desc processDesc, ss.f_name serviceSupplier,DBCM.f_level AS commentLevel
+		<!-- ,ccp.f_id commentId, cp.f_name name, ccp.f_value value -->
+		FROM
+		(/*加一个from嵌套是为了去除分页显示数据问题，一对多，导致分页数据和数量不一致*/
+			SELECT DB.f_id as DBid,DB.f_bill_no as DBbillNo,DB.f_address as DBaddress,DB.f_content as DBcontent,
+			date_format(DB.f_expectDate,'%Y-%m-%d %T') as DBexpectdate,DB.f_tel as DBtel, DB.f_link_name DBlinkName, DB.f_status as DBstatus, cst.f_name supplyTypeName,
+			DB.f_bill_type as DBbillType,DB.f_pay_amount as DBpayAmount,DB.f_ptbt_amount as DBptbtAmount,
+			DB.f_cancel_reason as DBcancelReason,DB.f_roomId as DBroomid,DB.t_user_f_id as DBtUserFId,DB.t_worker_f_id as DBtWorkerFId/*师傅解放号*/,
+			DB.t_ebuy_order_f_id as DBtEbuyOrderFId,DB.f_push_level as DBpushLevel,date_format(DB.f_push_time,'%Y-%m-%d %T') as DBpushTime,
+			date_format(DB.f_sys0_add_time,'%Y-%m-%d %T') as DBsys0AddTime,DB.t_dredge_type_f_id as DBtDredgeTypeFId,
+			DB.t_address_block_f_id as DBtAddressBlockFId,DB.t_dredge_type_2nd_f_id as DBtDredgeType2ndFId,DB.f_dredge_type_num as DBdredgeTypeNum,
+			DT.f_name as dredgeType, DT2.f_name as dredgeType2nd, ifnull(DW.f_real_name, U.f_nick_name) as workerName, U.f_mobile as workerMobile,DW.f_level AS level,
+			date_format(EO.f_pay_time,'%Y-%m-%d %T') AS payTime, (ifnull(EO.f_amount, 0) + ifnull(EO.f_total_coupon_amount, 0)) orderAmount, ifnull(EO.f_pay_method,0) payMethod, ifnull(DB.f_pay_amount, 0) AS totalAmount,DW.t_service_supplier_f_id AS serviceSupplierId,U1.f_mobile AS userTel,
+			DB.f_pic_url AS DBpicUrl, date_format(DB.f_accept_time,'%Y-%m-%d %T') as DBacceptTime, date_format(DB.f_expect_work_time,'%Y-%m-%d %T') as DBexpectWorkTime,
+			(select count(*) from t_dredge_bill_has_process_recording where t_dredge_bill_f_id = DB.f_id and f_sys0_del_state = 0) processRecordCount, 
+			AB.f_name AS blockName, AC.f_name AS cityName,EO.f_buyer_id buyerId,
+		(select dp.f_name from t_dredge_bill_has_product_spec hps
+		inner join t_dredge_product_specification dps on dps.f_id = hps.f_specific_id
+		inner join t_dredge_product dp on dp.f_id = dps.f_dredge_product_id
+		where hps.f_sys0_del_state = 0 and hps.f_dredge_bill_id = db.f_id limit 1) dredgeProductName
+			
+			FROM t_dredge_bill DB
+			LEFT JOIN t_dredge_worker DW ON DW.t_user_f_id = DB.t_worker_f_id
+			LEFT JOIN t_dredge_type DT ON DB.t_dredge_type_f_id = DT.f_id
+			LEFT JOIN t_dredge_type_2nd DT2 ON DT2.f_id = DB.t_dredge_type_2nd_f_id
+			LEFT JOIN t_community_supply_type cst ON cst.f_id = DT.t_community_supply_type_f_id
+			LEFT JOIN t_user U ON U.f_id = DB.t_worker_f_id
+			LEFT JOIN t_user U1 ON U1.f_id = DB.t_user_f_id
+			LEFT JOIN t_ebuy_order EO ON EO.f_id = DB.t_ebuy_order_f_id /*AND EO.f_pay_status = 2 *//*只查询已经支付完成的订单*/ AND EO.f_sys0_del_state = 0
+			left join t_room r on db.f_roomId = r.f_id
+			left join t_real_room rr on r.t_real_room_f_id = rr.f_id
+			left join t_building b on rr.t_building_f_id = b.f_id
+			left join t_group_building GB on GB.f_id = b.t_group_building_f_id
+			left join t_address_block AB ON AB.f_id = GB.t_block_f_id
+			left join t_address_city AC ON AC.f_id = AB.t_city_f_id
+			
+			WHERE 1 = 1 AND DB.f_sys0_del_state = 0 AND DB.f_bill_type != 4
+			<if test="dredgeBillId != null and !dredgeBillId.equals('')">AND DB.f_id = #{dredgeBillId}</if>
+			<if test="address != null and !address.equals('')">  and (DB.f_address like CONCAT('%',#{address},'%') )</if>
+			<if test="status != null and !status.equals('')">
+			    and (DB.f_status = #{status} OR (2 = #{status} AND DB.f_status IN (2, 7 ,8)))
+			</if>
+			<if test="combineStatus != null and combineStatus == '1'.toString()">
+				and db.f_bill_type = 5 and db.f_status = 0
+			</if>
+			<if test="combineStatus != null and combineStatus == '2'.toString()">
+				and db.f_status = 1
+			</if>
+			<if test="combineStatus != null and combineStatus == '3'.toString()">
+				and db.f_status = 2
+			</if>
+			<if test="combineStatus != null and combineStatus == '4'.toString()">
+				and db.f_status = 8
+			</if>
+			<if test="combineStatus != null and combineStatus == '5'.toString()">
+				and db.f_status in (3,5)
+			</if>
+			<if test="combineStatus != null and combineStatus == '6'.toString()">
+				and db.f_status = 4
+			</if>
+			<if test="combineStatus != null and combineStatus == '7'.toString()">
+				and db.f_status = 9
+			</if>
+			<if test="combineStatus != null and combineStatus == '8'.toString()">
+				and db.f_status = 10
+			</if>
+			<if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">
+				<![CDATA[ and (DB.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+			</if>
+			<if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+				<![CDATA[ and (DB.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+			</if>
+			<if test="dredgeType != null and !dredgeType.equals('')">  and (DT.f_name like CONCAT('%',#{dredgeType},'%') )</if>
+			<if test="cityName != null and !cityName.equals('')">  and (AC.f_name like CONCAT('%',#{cityName},'%') )</if>
+			<if test="blockName != null and !blockName.equals('')">  and (AB.f_name like CONCAT('%',#{blockName},'%') )</if>
+			<if test="tUserFId != null and !tUserFId.equals('')">  and (DB.t_user_f_id = #{tUserFId} ) </if>
+			<if test="userTel != null and !userTel.equals('')">  and (U1.f_mobile = #{userTel} ) </if>
+			<if test="payTime_START != null and !payTime_START.equals('')  ">
+				<![CDATA[ and (EO.f_pay_time >= str_to_date(#{payTime_START},'%Y-%m-%d %T') ) ]]>
+			</if>
+			<if test="payTime_END != null and !payTime_END.equals('')  ">
+				<![CDATA[ and (EO.f_pay_time <= str_to_date(#{payTime_END},'%Y-%m-%d %T') ) ]]>
+			</if>
+			<if test="content != null and !content.equals('')">  and (DB.f_content like CONCAT('%',#{content},'%') ) </if>
+			<if test="expectdate != null and !expectdate.equals('')  ">
+				<![CDATA[ and (DB.f_expectDate = str_to_date(#{expectdate},'%Y-%m-%d %T') ) ]]>
+			</if>
+			<if test="tel != null and !tel.equals('')">  and (DB.f_tel = #{tel} ) </if>
+			<if test="tWorkerFId != null and !tWorkerFId.equals('')">  and (DB.t_worker_f_id = #{tWorkerFId} ) </if>
+			<if test="workerName != null and !workerName.equals('')">
+			    and ((DW.f_real_name like CONCAT('%',#{workerName},'%')) OR (U.f_nick_name like CONCAT('%',#{workerName},'%')) )
+			</if>
+			<if test="workerMobile != null and !workerMobile.equals('')">  and (U.f_mobile = #{workerMobile} ) </if>
+			<if test="billNo != null and !billNo.equals('')">AND DB.f_bill_no = #{billNo}</if>
+			<if test="buyerId != null and !buyerId.equals('')">AND EO.f_buyer_id = #{buyerId}</if>
+			<if test="serviceSupplier != null and !serviceSupplier.equals('')">
+				and exists (
+				select 1 from t_dredge_bill_has_product_spec dbs
+				left join t_dredge_product_specification ps on dbs.f_specific_id = ps.f_id
+				left join t_dredge_product p on ps.f_dredge_product_id = p.f_id
+				left join t_service_supplier ss on p.f_service_supplier_id = ss.f_id
+				where dbs.f_dredge_bill_id = DB.f_id and ss.f_name like concat('%', #{serviceSupplier}, '%')
+				)
+			</if>
+			<include refid="permiOos.dataPermissionCondition"/>
+			ORDER BY DB.f_id DESC
+			<if test="_begin != null and _length != '' ">
+				<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+			</if>
+		) _tmp
+		LEFT JOIN t_dredge_bill_amount_detail DBAD ON _tmp.DBid = DBAD.t_dredge_bill_f_id
+		<!-- 
+		LEFT JOIN t_comments c ON _tmp.DBid = c.f_target_id_2nd
+		LEFT JOIN t_comments_has_t_comments_points ccp ON ccp.t_comments_f_id = c.f_id
+		LEFT JOIN t_comments_points cp ON ccp.t_comments_points_f_id = cp.f_id
+		 -->
+		LEFT JOIN t_comments DBCM ON DBCM.f_target_type=122 AND DBCM.f_target_id_2nd = DBid
+		LEFT JOIN t_dredge_bill_has_process_recording dbpr ON dbpr.t_dredge_bill_f_id = _tmp.DBid AND DBAD.f_sys0_del_state = 0
+		 left join t_dredge_bill_has_product_spec dbs on dbs.f_dredge_bill_id = _tmp.DBid
+		 left join t_dredge_product_specification ps on dbs.f_specific_id = ps.f_id
+		 left join t_dredge_product p on ps.f_dredge_product_id = p.f_id
+		 left join t_service_supplier ss on p.f_service_supplier_id = ss.f_id
+		ORDER BY
+		_tmp.DBid DESC
+	</select>
+
+	<select id="getDredgeBillListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(0)
+		FROM t_dredge_bill DB
+		LEFT JOIN t_dredge_worker DW ON DW.t_user_f_id = DB.t_worker_f_id
+		LEFT JOIN t_dredge_type DT ON DB.t_dredge_type_f_id = DT.f_id
+		LEFT JOIN t_user U ON U.f_id = DB.t_worker_f_id
+		LEFT JOIN t_user U1 ON U1.f_id = DB.t_user_f_id
+		LEFT JOIN t_ebuy_order EO ON EO.f_id = DB.t_ebuy_order_f_id AND EO.f_pay_status = 2/*只查询已经支付完成的订单*/ AND EO.f_sys0_del_state = 0
+		/*LEFT JOIN t_dredge_bill_amount_detail DBAD ON DB.f_id = DBAD.t_dredge_bill_f_id AND DBAD.f_sys0_del_state = 0只需要查询主表数量即可*/
+		left join t_room r on db.f_roomId = r.f_id
+		left join t_real_room rr on r.t_real_room_f_id = rr.f_id
+		left join t_building b on rr.t_building_f_id = b.f_id
+		left join t_group_building GB on GB.f_id = b.t_group_building_f_id
+		left join t_address_block AB ON AB.f_id = GB.t_block_f_id
+		left join t_address_city AC ON AC.f_id = AB.t_city_f_id
+		WHERE 1 = 1 AND DB.f_sys0_del_state = 0 AND DB.f_bill_type != 4
+		<if test="dredgeBillId != null and !dredgeBillId.equals('')">AND DB.f_id = #{dredgeBillId}</if>
+		<if test="address != null and !address.equals('')">  and (DB.f_address like CONCAT('%',#{address},'%') )</if>
+		<if test="status != null and !status.equals('')">
+			and (DB.f_status = #{status} OR (2 = #{status} AND DB.f_status IN (2, 7 ,8)))
+		</if>
+		<if test="combineStatus != null and combineStatus == '1'.toString()">
+			and db.f_bill_type = 5 and db.f_status = 0
+		</if>
+		<if test="combineStatus != null and combineStatus == '2'.toString()">
+			and db.f_status = 1
+		</if>
+		<if test="combineStatus != null and combineStatus == '3'.toString()">
+			and db.f_status = 2
+		</if>
+		<if test="combineStatus != null and combineStatus == '4'.toString()">
+			and db.f_status = 8
+		</if>
+		<if test="combineStatus != null and combineStatus == '5'.toString()">
+			and db.f_status in (3,5)
+		</if>
+		<if test="combineStatus != null and combineStatus == '6'.toString()">
+			and db.f_status = 4
+		</if>
+		<if test="combineStatus != null and combineStatus == '7'.toString()">
+			and db.f_status = 9
+		</if>
+		<if test="combineStatus != null and combineStatus == '8'.toString()">
+			and db.f_status = 10
+		</if>
+		<if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">
+			<![CDATA[ and (DB.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+		</if>
+		<if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+			<![CDATA[ and (DB.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+		</if>
+		<if test="dredgeType != null and !dredgeType.equals('')">  and (DT.f_name like CONCAT('%',#{dredgeType},'%') )</if>
+		<if test="cityName != null and !cityName.equals('')">  and (AC.f_name like CONCAT('%',#{cityName},'%') )</if>
+		<if test="blockName != null and !blockName.equals('')">  and (AB.f_name like CONCAT('%',#{blockName},'%') )</if>
+		<if test="tUserFId != null and !tUserFId.equals('')">  and (DB.t_user_f_id = #{tUserFId} ) </if>
+		<if test="userTel != null and !userTel.equals('')">  and (U1.f_mobile = #{userTel} ) </if>
+		<if test="payTime_START != null and !payTime_START.equals('')  ">
+			<![CDATA[ and (EO.f_pay_time >= str_to_date(#{payTime_START},'%Y-%m-%d %T') ) ]]>
+		</if>
+		<if test="payTime_END != null and !payTime_END.equals('')  ">
+			<![CDATA[ and (EO.f_pay_time <= str_to_date(#{payTime_END},'%Y-%m-%d %T') ) ]]>
+		</if>
+		<if test="content != null and !content.equals('')">  and (DB.f_content like CONCAT('%',#{content},'%') ) </if>
+		<if test="expectdate != null and !expectdate.equals('')  ">
+			<![CDATA[ and (DB.f_expectDate = str_to_date(#{expectdate},'%Y-%m-%d %T') ) ]]>
+		</if>
+		<if test="tel != null and !tel.equals('')">  and (DB.f_tel = #{tel} ) </if>
+		<if test="tWorkerFId != null and !tWorkerFId.equals('')">  and (DB.t_worker_f_id = #{tWorkerFId} ) </if>
+		<if test="workerName != null and !workerName.equals('')">
+			and ((DW.f_real_name like CONCAT('%',#{workerName},'%')) OR (U.f_nick_name like CONCAT('%',#{workerName},'%')) )
+		</if>
+		<if test="workerMobile != null and !workerMobile.equals('')">  and (U.f_mobile = #{workerMobile} ) </if>
+		<if test="billNo != null and !billNo.equals('')">AND DB.f_bill_no = #{billNo}</if>
+		<if test="buyerId != null and !buyerId.equals('')">AND EO.f_buyer_id = #{buyerId}</if>
+		<if test="serviceSupplier != null and !serviceSupplier.equals('')">
+			and exists (
+				select 1 from t_dredge_bill_has_product_spec dbs
+			left join t_dredge_product_specification ps on dbs.f_specific_id = ps.f_id
+			left join t_dredge_product p on ps.f_dredge_product_id = p.f_id
+			left join t_service_supplier ss on p.f_service_supplier_id = ss.f_id
+			where dbs.f_dredge_bill_id = DB.f_id and ss.f_name like concat('%', #{serviceSupplier}, '%')
+			)
+
+		</if>
+		<include refid="permiOos.dataPermissionCondition"/>
+	</select>
+
+	<select id="getDredgeWorkerList" resultType="java.util.Map">
+		SELECT dw.t_user_f_id AS id , concat(dw.f_real_name,"-",dw.t_user_f_id) AS value FROM t_dredge_worker dw
+		WHERE dw.f_audit_status = 2 AND dw.f_sys0_del_state = 0 AND dw.f_real_name IS NOT NULL;
+	</select>
+
+	<update id="editDredgeBillStatus" parameterType="java.util.Map">
+		UPDATE t_dredge_bill db
+		SET db.f_status = #{status},db.t_worker_f_id = null,db.f_pay_amount = null
+		WHERE
+		db.f_id = #{dredgeBillId};
+	</update>
+
+	<update id="delDredgeBillAmountDetail" parameterType="java.util.Map">
+		UPDATE t_dredge_bill_amount_detail SET f_sys0_del_state = 1 WHERE t_dredge_bill_f_id = #{dredgeBillId};
+	</update>
+	
+	<resultMap type="com.cnfantasia.server.api.dredge.entity.DredgeBill4Qsdj" id="dredgeBill4QsdjMap" extends="dredgeBillBase.dredgeBillBaseMap">
+		<result column="fullAddress" javaType="java.lang.String" property="fullAddress"/>
+		<result column="cityName" javaType="java.lang.String" property="cityName"/>
+	</resultMap>
+	
+	<!-- 为轻松到家查询维修单信息  -->
+	<select id="selectDredgeBillDetail4Qsdj" resultMap="dredgeBill4QsdjMap">
+		SELECT
+			CONCAT(ac.f_name,ab.f_name, db.f_address) fullAddress, ac.f_name cityName,
+			<include refid="dredgeBillBase.queryHead"/>
+		FROM
+			t_dredge_bill db
+		JOIN t_room r ON r.f_id = db.f_roomId
+		JOIN t_real_room rr ON rr.f_id = r.t_real_room_f_id
+		JOIN t_building b ON b.f_id = rr.t_building_f_id
+		JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id
+		JOIN t_address_block ab ON ab.f_id = gb.t_block_f_id
+		JOIN t_address_city ac ON ac.f_id = ab.t_city_f_id
+		WHERE
+			db.f_id = #{dbId};
+	</select>
+	
+	<!-- 根据维修单ID查出对应的片区经理人 -->
+	<select id="selectPropertyDistrictByDredgeBillId" parameterType="java.math.BigInteger" resultMap="propertyDistrictBase.propertyDistrictBaseMap">
+		SELECT
+			<include refid="propertyDistrictBase.queryHead"/>
+		FROM
+			t_dredge_bill db
+		JOIN t_room r ON r.f_id = db.f_roomId
+		JOIN t_real_room rr ON rr.f_id = r.t_real_room_f_id
+		JOIN t_building b ON b.f_id = rr.t_building_f_id
+		JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id and gb.f_sys0_del_state = 0
+		JOIN t_property_district_has_group_building dtgb on dtgb.t_group_building_f_id = gb.f_id and dtgb.f_sys0_del_state = 0
+		JOIN t_property_district PD on PD.f_id = dtgb.t_property_district_f_id and PD.f_sys0_del_state = 0
+		where db.f_id = #{dbId} limit 1;
+	</select>
+
+	<select id="qryRepairDredgeType" parameterType="bigInteger" resultType="bigInteger">
+		SELECT DISTINCT DT.f_id FROM t_property_repair_type PRT
+		INNER JOIN t_dredge_type DT ON DT.f_id = PRT.t_dredge_type_f_id AND DT.f_sys0_del_state = 0
+		INNER JOIN t_property_management PM ON PM.f_id = PRT.t_property_management_f_id AND PM.f_sys0_del_state = 0
+		INNER JOIN t_group_building GB ON GB.t_property_management_f_id = PM.f_id AND GB.f_sys0_del_state = 0
+		WHERE 1=1
+		AND PRT.f_sys0_del_state = 0
+		AND GB.f_id = #{gbId}
+	</select>
+
+	<update id="turnDredgeBillById" parameterType="map">
+		update t_dredge_bill set f_expectDate = str_to_date(#{expectDate},'%Y-%m-%d %T'), t_dredge_type_f_id = #{dredgeTypeId},
+		t_dredge_type_2nd_f_id = #{dredgeType2ndId}, f_bill_type = 1,f_pay_amount = null, f_ptbt_amount = null, f_status = 1,
+		f_sys0_add_time = now(), f_sys0_upd_time = now()
+		where f_id = #{dredgeBillId}
+	</update>
+	
+	<!-- 查询服务商品列表 -->
+	<select id="qryDredgeProductList" resultType="com.cnfantasia.server.api.dredge.entity.DredgeProduct4Admin" parameterType="map">
+		SELECT dp.f_id dpId, date_format(dp.f_sys0_upd_time,'%Y-%m-%d %T') updTime, CONCAT('【', ss.f_name,'】',dp.f_name) prdtName, 
+			CONCAT(cst.f_name,'-',dt.f_name, '-', dt2.f_name) fullTypeName, ss.f_name ssName, 
+			if(dp.f_pay_type = 1,'服务前付款','服务后付款') payTypeName, dp.f_status dpStatus
+		from t_dredge_product dp 
+		JOIN t_dredge_type_2nd dt2 on dt2.f_id  = dp.f_dredge_type_2nd_id
+		JOIN t_dredge_type dt on dt.f_id = dt2.t_dredge_type_f_id
+		JOIN t_community_supply_type cst on cst.f_id = dt.t_community_supply_type_f_id
+		JOIN t_service_supplier ss on ss.f_id = dp.f_service_supplier_id
+		where dp.f_sys0_del_state = 0
+		<if test="dpName != null and !dpName.equals('')"> and dp.f_name like CONCAT('%',#{dpName},'%')</if>
+		<if test="upShelfState != null and !upShelfState.equals('')"> and dp.f_status = #{upShelfState}</if>
+		<if test="cstId != null and cstId>0"> and cst.f_id = #{cstId}</if>
+		<if test="dtId != null and dtId>0"> and dt.f_id = #{dtId}</if>
+		<if test="dt2Id != null and dt2Id>0"> and dt2.f_id = #{dt2Id}</if>
+		<if test="ssId != null and ssId>0"> and ss.f_id = #{ssId}</if>
+		<if test="updTime != null and !updTime.equals('')"> and ss.f_id = #{ssId}</if>
+		<if test="updTimeStart != null and !updTimeStart.equals('')"> and dp.f_sys0_upd_time &gt;= #{updTimeStart}</if>
+		<if test="updTimeEnd != null and !updTimeEnd.equals('')"> and dp.f_sys0_upd_time &lt;= #{updTimeEnd}</if>
+		<if test="dpStatus != null and !dpStatus.equals('')"> and dp.f_status = #{dpStatus}</if>
+		order by dp.f_id desc
+		<if test="_begin != null and _length != '' ">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+
+	<select id="getDredgeProductListByDbId" parameterType="map" resultMap="dredgeProductSpecEntityMap">
+		SELECT hps.f_id specId, hps.f_buy_count specBuyNum, dps.f_specification specName,dps.f_sell_price specPrice, dps.f_price_unit specUnit
+		FROM t_dredge_bill db
+		INNER JOIN t_dredge_bill_has_product_spec hps ON hps.f_sys0_del_state = 0 AND hps.f_dredge_bill_id = db.f_id
+		LEFT JOIN t_dredge_product_specification dps ON dps.f_id = hps.f_specific_id
+		WHERE db.f_sys0_del_state = 0 AND db.f_id = #{_parameter}
+	</select>
+	
+	<select id="isPayFirstJfqBill" parameterType="map" resultType="boolean">
+		select count(DISTINCT db.f_id) > 0 from t_dredge_bill db
+		inner join t_dredge_bill_has_product_spec hps on hps.f_sys0_del_state = 0 and hps.f_dredge_bill_id = db.f_id
+		inner join t_dredge_product_specification dps on dps.f_id = hps.f_specific_id
+		inner join t_dredge_product dp on dp.f_id = dps.f_dredge_product_id and dp.f_service_supplier_id = 1
+		where db.f_id = #{_parameter} and db.f_bill_type = 5
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.dredge.entity.DredgeProductView" id="dredgeProductDetailMap" extends="dredgeProductBase.dredgeProductBaseMap_AppendTable">
+		<result column="dt2Id" javaType="java.math.BigInteger"  property="dt2Id"/>
+		<result column="dt2Name" javaType="java.lang.String"  property="dt2Name"/>
+		<result column="dtId" javaType="java.math.BigInteger"  property="dtId"/>
+		<result column="dtName" javaType="java.lang.String"  property="dtName"/>
+		<result column="cstId" javaType="java.math.BigInteger"  property="cstId"/>
+		<result column="cstName" javaType="java.lang.String"  property="cstName"/>
+		<result column="ssId" javaType="java.math.BigInteger"  property="ssId"/>
+		<result column="ssName" javaType="java.lang.String"  property="ssName"/>
+		
+		<collection property="prdtSpecList" resultMap="dredgeProductSpecificationBase.dredgeProductSpecificationBaseMap_AppendTable"
+					javaType="java.util.List" ofType="com.cnfantasia.server.domainbase.dredgeProductSpecification.entity.DredgeProductSpecification"/>
+	</resultMap>
+	
+	<select id="qryDredgeProductDetail" parameterType="java.math.BigInteger" resultMap="dredgeProductDetailMap" >
+		SELECT <include refid="dredgeProductBase.queryHead_AppendTable"/>, 
+		<include refid="dredgeProductSpecificationBase.queryHead_AppendTable"/>,
+		dt2.f_id dt2Id, dt2.f_name dt2Name,
+		dt.f_id dtId, dt.f_name dtName,
+		cst.f_id cstId, cst.f_name cstName,
+		ss.f_id ssId, ss.f_name ssName
+		FROM t_dredge_product DP
+		left JOIN t_dredge_product_specification DPS on DPS.f_dredge_product_id = DP.f_id and DPS.f_sys0_del_state = 0 
+		JOIN t_dredge_type_2nd dt2 on dt2.f_id = DP.f_dredge_type_2nd_id
+		JOIN t_dredge_type dt on dt.f_id = dt2.t_dredge_type_f_id
+		JOIN t_community_supply_Type cst on cst.f_id = dt.t_community_supply_type_f_id
+		JOIN t_service_supplier ss on ss.f_id = DP.f_service_supplier_id
+		where DP.f_id = #{id};
+	</select>
+
+	<select id="getAddressByBlockId" parameterType="map" resultType="string">
+		select concat(ap.f_name, ac.f_name, ab.f_name) from t_address_block ab
+		inner join t_address_city ac on ac.f_sys0_del_state = 0 and ac.f_id = ab.t_city_f_id
+		inner join t_address_province ap on ap.f_sys0_del_state = 0 and ap.f_id = ac.t_province_f_id
+		where ab.f_sys0_del_state = 0 and ab.f_id = #{_parameter}
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.dredge.entity.DredgeProduct4Turn" id="dredgeProduct4TrunMap" extends="dredgeProductBase.dredgeProductBaseMap_AppendTable">
+		<result column="fullName" javaType="java.lang.String"  property="fullName"/>
+		<collection property="prdtSpecList" resultMap="dredgeProductSpecificationBase.dredgeProductSpecificationBaseMap_AppendTable"
+					javaType="java.util.List" ofType="com.cnfantasia.server.domainbase.dredgeProductSpecification.entity.DredgeProductSpecification"/>
+	</resultMap>
+	
+	<select id="qryDredgeProductList4Trun" parameterType="java.math.BigInteger"  resultMap="dredgeProduct4TrunMap">
+		SELECT
+		<include refid="dredgeProductBase.queryHead_AppendTable"/>, 
+		<include refid="dredgeProductSpecificationBase.queryHead_AppendTable"/>,
+		CONCAT(ss.f_name,'-',dp.f_name) fullName
+		FROM
+			t_dredge_product dp
+		LEFT JOIN t_dredge_product_specification dps ON dps.f_dredge_product_id = dp.f_id and dps.f_sys0_del_state = 0
+		JOIN t_service_supplier ss ON ss.f_id = dp.f_service_supplier_id
+		where dp.f_status = 1
+		and dp.f_sys0_del_state = 0
+		and dp.f_dredge_type_2nd_id = #{dt2Id};
+	</select>
+	
+	<!-- 根据商品id查询其销售范围 -->
+	<select id="qryDredgeProductSellRangeByPrdtId" parameterType="java.math.BigInteger"  resultType="com.cnfantasia.server.api.commonBusiness.entity.OperateConfigRange">
+		-- 全国
+		SELECT
+			'全国' acName, '' abName, '' gbName
+		FROM
+			t_dredge_product dp
+		JOIN t_operation_sa_has_eb_supply ohs ON ohs.f_eb_supply_id = dp.f_id AND ohs.f_type = 8 and ohs.f_sys0_del_state = 0
+		JOIN t_operation_service_area osa on osa.f_id = ohs.f_sa_id  and osa.f_level = 1 and osa.t_address_country_f_id = -1 and osa.f_sys0_del_state = 0
+		where dp.f_id = #{dpId}
+				
+		union 
+		
+		-- 行政区
+		SELECT
+			ac.f_name acName, ab.f_name abName, '' gbName
+		FROM
+			t_dredge_product dp
+		JOIN t_operation_sa_has_eb_supply ohs ON ohs.f_eb_supply_id = dp.f_id AND ohs.f_type = 8 and ohs.f_sys0_del_state = 0
+		JOIN t_operation_service_area osa on osa.f_id = ohs.f_sa_id and osa.f_sys0_del_state = 0 and osa.f_level = 4
+		JOIN t_address_block ab on ab.f_id = osa.t_address_block_f_id 
+		JOIN t_address_city ac on ac.f_id = osa.t_address_city_f_id 
+		where dp.f_id = #{dpId}
+		
+		UNION
+		
+		-- 按小区
+		SELECT
+			ac.f_name acName, ab.f_name abName, gb.f_name gbName
+		FROM
+			t_dredge_product dp
+		JOIN t_operation_sa_has_eb_supply ohs ON ohs.f_eb_supply_id = dp.f_id AND ohs.f_type = 8 and ohs.f_sys0_del_state = 0
+		JOIN t_operation_service_area osa on osa.f_id = ohs.f_sa_id and osa.f_sys0_del_state = 0 and osa.f_level = 5
+		JOIN t_group_building gb on gb.f_id = osa.t_group_building_f_id 
+		JOIN t_address_block ab on ab.f_id = gb.t_block_f_id
+		JOIN t_address_city ac on ac.f_id = osa.t_address_city_f_id 
+		where dp.f_id = #{dpId};
+	</select>
+
+	<update id="autoFinishBill">
+		UPDATE t_dredge_bill set f_status = 3
+		where ((f_status = 8 and f_bill_type = 5) or (f_status = 7 and f_bill_type = 4))
+		AND f_sys0_upd_time &lt; date_sub(now(), INTERVAL 7 DAY)
+	</update>
+
+	<select id="isInDredgeProductArea" parameterType="map" resultType="integer">
+		select count(1) from t_dredge_product dp
+		where dp.f_id = #{dredgeProductId}
+		and EXISTS (select 1 from t_operation_sa_has_eb_supply hes
+						where hes.f_sys0_del_state = 0 and hes.f_type = 8 and hes.f_eb_supply_id = dp.f_id and hes.f_sa_id in
+		<foreach collection="addrCodeIdList" open="(" separator="," close=")" item="codeId">
+			#{codeId}
+		</foreach>
+		)
+	</select>
+
+	<select id="getApplyRefundInfo" parameterType="map" resultType="map">
+		select db.f_id dredgeBillId, db.f_bill_no billNo, db.f_pay_amount billTotalAmount, eo.f_pay_method payMethod, DATE_FORMAT(eo.f_pay_time, '%Y-%m-%d %T') payTime,
+		  	ifnull((select ifnull(f_amount,0) from t_ebuy_order_has_coupon where t_ebuy_order_f_id = db.t_ebuy_order_f_id and f_sys0_del_state = 0), 0) couponDiscountMoney,
+        	eo.f_amount orderAmount, ifnull(eo.f_total_coupon_amount,0) orderCouponAmount,
+        	(select dp.f_name from t_dredge_bill_has_product_spec hps
+		inner join t_dredge_product_specification dps on dps.f_id = hps.f_specific_id
+		inner join t_dredge_product dp on dp.f_id = dps.f_dredge_product_id
+		where hps.f_sys0_del_state = 0 and hps.f_dredge_bill_id = db.f_id limit 1) dredgeProductName
+		from t_dredge_bill db
+		inner join t_ebuy_order eo on eo.f_id = db.t_ebuy_order_f_id
+		where db.f_id = #{_parameter} and db.f_sys0_del_state = 0
+	</select>
+
+	<select id="getOpenId" resultType="string" parameterType="map">
+		SELECT ifnull(ln.f_no, ifnull(lnr2.f_apply_acc_no, lnr.f_apply_acc_no)) openId
+        FROM t_user u
+        LEFT JOIN t_login_no ln ON ln.t_user_f_id = u.f_id AND ln.f_sys0_del_state = 0 AND ln.f_type = 8
+        LEFT JOIN t_login_no_bind_relation lnr ON lnr.f_sys0_del_state = 0 AND lnr.f_main_user_id = u.f_id AND lnr.f_apply_acc_type = 8
+        LEFT JOIN t_login_no_bind_relation lnr2 ON lnr2.f_sys0_del_state = 0 AND lnr2.f_main_user_id = lnr.f_apply_user_id AND lnr2.f_apply_acc_type = 8
+        WHERE u.f_sys0_del_state = 0 AND u.f_id = #{userId}
+        ORDER BY ln.f_id DESC LIMIT 1
+	</select>
+</mapper>

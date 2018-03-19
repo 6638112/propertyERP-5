@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户推荐产生的订单 t_user_recommend_order -->
+<mapper namespace="userRecommendOrderBase">
+	<resultMap type="UserRecommendOrder" id="userRecommendOrderBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_user_f_id" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="t_ebuy_order_f_id" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="UserRecommendOrder" id="userRecommendOrderExtendMap" extends="userRecommendOrderBaseMap">
+	</resultMap>
+	<resultMap type="UserRecommendOrder" id="userRecommendOrderBaseMap_AppendTable">
+        <id column="UROid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="UROtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="UROtEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!--  -->        <result column="UROsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="UROsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="UROsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="UROsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="UROsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="UROsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="UROsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="UserRecommendOrder" id="userRecommendOrderBaseMap_AppendTable1">
+        <id column="URO1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="URO1tUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="URO1tEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!--  -->        <result column="URO1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="URO1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="URO1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="URO1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="URO1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="URO1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="URO1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		URO.f_id,URO.t_user_f_id,URO.t_ebuy_order_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		URO.f_id as UROid,URO.t_user_f_id as UROtUserFId,URO.t_ebuy_order_f_id as UROtEbuyOrderFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		URO1.f_id as URO1id,URO1.t_user_f_id as URO1tUserFId,URO1.t_ebuy_order_f_id as URO1tEbuyOrderFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (URO.f_id = #{id} ) </if>        <if test="tUserFId != null">  and (URO.t_user_f_id = #{tUserFId} ) </if>        <if test="tEbuyOrderFId != null">  and (URO.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (URO.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (URO.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (URO.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (URO.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (URO.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (URO.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (URO.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (URO.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (URO.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (URO.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (URO.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (URO.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (URO.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (URO.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (URO.f_id = #{id} ) </if>        <if test="tUserFId != null and !tUserFId.equals('')  ">  and (URO.t_user_f_id = #{tUserFId} ) </if>        <if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  ">  and (URO.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (URO.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (URO.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (URO.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (URO.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (URO.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (URO.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (URO.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (URO.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (URO.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (URO.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (URO.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (URO.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (URO.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (URO.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="userRecommendOrderBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="userRecommendOrderBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="userRecommendOrderBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="userRecommendOrderBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_user_recommend_order URO    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(用户推荐产生的订单)信息。 -->
+	<sql id="select_userRecommendOrder">
+		SELECT <include refid="userRecommendOrderBase.queryHead"/>
+		<include refid="userRecommendOrderBase.busiQueryCondition"/>
+		<include refid="userRecommendOrderBase.dimCheckSql"/>
+		ORDER BY URO.f_id DESC
+	</sql>
+	<select id="select_userRecommendOrder" parameterType="java.util.Map" resultMap="userRecommendOrderBase.userRecommendOrderExtendMap">
+		<include refid="userRecommendOrderBase.select_userRecommendOrder"/>
+	</select>
+	
+	<!-- 根据条件分页查询(用户推荐产生的订单)信息  -->
+	<sql id="select_userRecommendOrder_withPage">
+		SELECT <include refid="userRecommendOrderBase.queryHead"/>
+		<include refid="userRecommendOrderBase.busiQueryCondition"/>
+		<include refid="userRecommendOrderBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_userRecommendOrder_withPage" resultMap="userRecommendOrderBase.userRecommendOrderExtendMap" parameterType="java.util.Map">
+		<include refid="userRecommendOrderBase.select_userRecommendOrder_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(用户推荐产生的订单)信息。 -->
+	<sql id="select_userRecommendOrder_bySeqId">
+		SELECT <include refid="userRecommendOrderBase.queryHead"/>
+		<include refid="userRecommendOrderBase.busiQueryCondition"/>
+		 and URO.f_id = #{_parameter}
+	</sql>
+	<select id="select_userRecommendOrder_bySeqId" parameterType="java.math.BigInteger" resultMap="userRecommendOrderBase.userRecommendOrderBaseMap">
+		<include refid="userRecommendOrderBase.select_userRecommendOrder_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(用户推荐产生的订单)记录数  -->
+	<sql id="select_userRecommendOrder_count">
+		SELECT COUNT(*)
+		<include refid="userRecommendOrderBase.busiQueryCount"/>
+		<include refid="userRecommendOrderBase.dimCheckSql"/>
+	</sql>
+	<select id="select_userRecommendOrder_count" resultType="java.lang.Integer">
+		<include refid="userRecommendOrderBase.select_userRecommendOrder_count"/>
+	</select>
+	
+	 <!-- 往(用户推荐产生的订单)新增一条记录。 -->
+	 <sql id="insert_userRecommendOrder">
+		INSERT INTO t_user_recommend_order 
+		(f_id,t_user_f_id,t_ebuy_order_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tUserFId},#{tEbuyOrderFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_userRecommendOrder" parameterType="UserRecommendOrder">
+		<include refid="userRecommendOrderBase.insert_userRecommendOrder"/>
+    </insert>
+    
+	<!-- 批量新增(用户推荐产生的订单)信息 -->
+    <insert id="insert_userRecommendOrder_Batch" parameterType="java.util.List">
+    	INSERT INTO t_user_recommend_order 
+		(f_id,t_user_f_id,t_ebuy_order_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tUserFId},#{item.tEbuyOrderFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(用户推荐产生的订单)信息。 -->
+    <sql id="update_userRecommendOrder">
+		UPDATE t_user_recommend_order		<trim prefix="SET" prefixOverrides=","> 		<if test="tUserFId != null and !tUserFId.equals('') "> ,t_user_f_id=#{tUserFId}</if> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('') "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_userRecommendOrder" parameterType="UserRecommendOrder">
+		<include refid="userRecommendOrderBase.update_userRecommendOrder"/>
+    </update>
+    
+    <!-- 批量更新(用户推荐产生的订单)信息。 -->
+    <update id="update_userRecommendOrder_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_user_recommend_order		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(用户推荐产生的订单)信息_逻辑删除。 -->
+    <sql id="delete_userRecommendOrder_Logic">
+		UPDATE t_user_recommend_order		<trim prefix="SET" prefixOverrides=","> 		<if test="tUserFId != null and !tUserFId.equals('')  "> ,t_user_f_id=#{tUserFId}</if> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_userRecommendOrder_Logic" parameterType="UserRecommendOrder">
+		<include refid="userRecommendOrderBase.delete_userRecommendOrder_Logic"/>
+    </update>
+    
+    <!-- 批量删除(用户推荐产生的订单)信息_逻辑删除 -->
+    <update id="delete_userRecommendOrder_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_user_recommend_order		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(用户推荐产生的订单)信息。 -->
+    <sql id="delete_userRecommendOrder">
+		DELETE FROM t_user_recommend_order WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_userRecommendOrder" parameterType="java.lang.String">
+		<include refid="userRecommendOrderBase.delete_userRecommendOrder"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(用户推荐产生的订单)信息。 -->
+    <delete id="delete_userRecommendOrder_Batch" parameterType="java.util.List">
+		DELETE FROM t_user_recommend_order WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

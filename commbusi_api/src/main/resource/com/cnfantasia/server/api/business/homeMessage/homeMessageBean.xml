@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="homeMessageDao" class="com.cnfantasia.server.api.homeMessage.dao.HomeMessageDao" parent="abstractBaseDao">
+        <property name="groupHomeMessageBaseService" ref="groupHomeMessageBaseService"/>
+        <property name="userHasHomeMessageBaseService" ref="userHasHomeMessageBaseService"/>
+    </bean>
+
+    <bean id="homeMessageService" class="com.cnfantasia.server.api.homeMessage.service.HomeMessageService">
+        <property name="addressOperationService" ref="addressOperationService"/>
+        <property name="homeMessageDao" ref="homeMessageDao"/>
+        <property name="uuidManager" ref="uuidManager"/>
+        <property name="userBaseService" ref="userBaseService"/>
+        <property name="propertyRepairBaseService" ref="propertyRepairBaseService"/>
+        <property name="sysParamManager" ref="sysParamManager"/>
+        <property name="dredgeBillBaseService" ref="dredgeBillBaseService"/>
+        <property name="ebuyDeliveryOrderBaseService" ref="ebuyDeliveryOrderBaseService"/>
+        <property name="ebuyOrderBaseService" ref="ebuyOrderBaseService"/>
+        <property name="commonRoomDao" ref="commonRoomDao"/>
+        <property name="alterPeriodDataDetailBaseService" ref="alterPeriodDataDetailBaseService"/>
+    </bean>
+
+</beans>

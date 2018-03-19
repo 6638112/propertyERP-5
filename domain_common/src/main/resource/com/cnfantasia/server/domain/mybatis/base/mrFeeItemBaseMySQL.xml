@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:抄表费收费 项配置 t_mr_fee_item -->
+<mapper namespace="mrFeeItemBase">
+	<resultMap type="MrFeeItem" id="mrFeeItemBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 类别名称 -->        <result column="f_last_upd_time" javaType="java.lang.String" property="lastUpdTime"/>  <!-- 最近更新时间 -->        <result column="f_gb_id" javaType="java.math.BigInteger" property="gbId"/>  <!-- 小区Id -->        <result column="f_is_calculate_latefee" javaType="java.lang.Integer" property="isCalculateLatefee"/>  <!-- 是否计算滞纳金（1计算，2不计算） -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MrFeeItem" id="mrFeeItemExtendMap" extends="mrFeeItemBaseMap">
+	</resultMap>
+	<resultMap type="MrFeeItem" id="mrFeeItemBaseMap_AppendTable">
+        <id column="MFIid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MFIname" javaType="java.lang.String" property="name"/>  <!-- 类别名称 -->        <result column="MFIlastUpdTime" javaType="java.lang.String" property="lastUpdTime"/>  <!-- 最近更新时间 -->        <result column="MFIgbId" javaType="java.math.BigInteger" property="gbId"/>  <!-- 小区Id -->        <result column="MFIisCalculateLatefee" javaType="java.lang.Integer" property="isCalculateLatefee"/>  <!-- 是否计算滞纳金（1计算，2不计算） -->        <result column="MFIsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MFIsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MFIsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MFIsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MFIsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MFIsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MFIsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MrFeeItem" id="mrFeeItemBaseMap_AppendTable1">
+        <id column="MFI1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MFI1name" javaType="java.lang.String" property="name"/>  <!-- 类别名称 -->        <result column="MFI1lastUpdTime" javaType="java.lang.String" property="lastUpdTime"/>  <!-- 最近更新时间 -->        <result column="MFI1gbId" javaType="java.math.BigInteger" property="gbId"/>  <!-- 小区Id -->        <result column="MFI1isCalculateLatefee" javaType="java.lang.Integer" property="isCalculateLatefee"/>  <!-- 是否计算滞纳金（1计算，2不计算） -->        <result column="MFI1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MFI1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MFI1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MFI1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MFI1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MFI1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MFI1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		MFI.f_id,MFI.f_name,date_format(MFI.f_last_upd_time,'%Y-%m-%d %T') as f_last_upd_time,MFI.f_gb_id,MFI.f_is_calculate_latefee
+	</sql>
+	<sql id="queryHead_AppendTable">
+		MFI.f_id as MFIid,MFI.f_name as MFIname,date_format(MFI.f_last_upd_time,'%Y-%m-%d %T') as MFIlastUpdTime,MFI.f_gb_id as MFIgbId,MFI.f_is_calculate_latefee as MFIisCalculateLatefee
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		MFI1.f_id as MFI1id,MFI1.f_name as MFI1name,date_format(MFI1.f_last_upd_time,'%Y-%m-%d %T') as MFI1lastUpdTime,MFI1.f_gb_id as MFI1gbId,MFI1.f_is_calculate_latefee as MFI1isCalculateLatefee
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (MFI.f_id = #{id} ) </if>        <if test="name != null">  and (MFI.f_name = #{name} ) </if>        <if test="lastUpdTime != null and !lastUpdTime.equals('')  ">  and (MFI.f_last_upd_time = str_to_date(#{lastUpdTime},'%Y-%m-%d %T') ) </if>        <if test="lastUpdTime_START != null and !lastUpdTime_START.equals('')  ">              <![CDATA[ and (MFI.f_last_upd_time >= str_to_date(#{lastUpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="lastUpdTime_END != null and !lastUpdTime_END.equals('')  ">            <![CDATA[ and (MFI.f_last_upd_time <= str_to_date(#{lastUpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="gbId != null">  and (MFI.f_gb_id = #{gbId} ) </if>        <if test="isCalculateLatefee != null">  and (MFI.f_is_calculate_latefee = #{isCalculateLatefee} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MFI.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MFI.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MFI.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MFI.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MFI.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MFI.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MFI.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MFI.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MFI.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (MFI.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (MFI.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (MFI.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (MFI.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (MFI.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (MFI.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (MFI.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="lastUpdTime != null and !lastUpdTime.equals('')  ">  and (MFI.f_last_upd_time = str_to_date(#{lastUpdTime},'%Y-%m-%d %T') ) </if>        <if test="lastUpdTime_START != null and !lastUpdTime_START.equals('')  ">              <![CDATA[ and (MFI.f_last_upd_time >= str_to_date(#{lastUpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="lastUpdTime_END != null and !lastUpdTime_END.equals('')  ">            <![CDATA[ and (MFI.f_last_upd_time <= str_to_date(#{lastUpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="gbId != null and !gbId.equals('')  ">  and (MFI.f_gb_id = #{gbId} ) </if>        <if test="isCalculateLatefee != null and !isCalculateLatefee.equals('')  ">  and (MFI.f_is_calculate_latefee = #{isCalculateLatefee} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MFI.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MFI.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MFI.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MFI.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MFI.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MFI.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MFI.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MFI.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MFI.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (MFI.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (MFI.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (MFI.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (MFI.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (MFI.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="mrFeeItemBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="mrFeeItemBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="mrFeeItemBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="mrFeeItemBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_mr_fee_item MFI    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(抄表费收费 项配置)信息。 -->
+	<sql id="select_mrFeeItem">
+		SELECT <include refid="mrFeeItemBase.queryHead"/>
+		<include refid="mrFeeItemBase.busiQueryCondition"/>
+		<include refid="mrFeeItemBase.dimCheckSql"/>
+		ORDER BY MFI.f_id DESC
+	</sql>
+	<select id="select_mrFeeItem" parameterType="java.util.Map" resultMap="mrFeeItemBase.mrFeeItemExtendMap">
+		<include refid="mrFeeItemBase.select_mrFeeItem"/>
+	</select>
+	
+	<!-- 根据条件分页查询(抄表费收费 项配置)信息  -->
+	<sql id="select_mrFeeItem_withPage">
+		SELECT <include refid="mrFeeItemBase.queryHead"/>
+		<include refid="mrFeeItemBase.busiQueryCondition"/>
+		<include refid="mrFeeItemBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_mrFeeItem_withPage" resultMap="mrFeeItemBase.mrFeeItemExtendMap" parameterType="java.util.Map">
+		<include refid="mrFeeItemBase.select_mrFeeItem_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(抄表费收费 项配置)信息。 -->
+	<sql id="select_mrFeeItem_bySeqId">
+		SELECT <include refid="mrFeeItemBase.queryHead"/>
+		<include refid="mrFeeItemBase.busiQueryCondition"/>
+		 and MFI.f_id = #{_parameter}
+	</sql>
+	<select id="select_mrFeeItem_bySeqId" parameterType="java.math.BigInteger" resultMap="mrFeeItemBase.mrFeeItemBaseMap">
+		<include refid="mrFeeItemBase.select_mrFeeItem_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(抄表费收费 项配置)记录数  -->
+	<sql id="select_mrFeeItem_count">
+		SELECT COUNT(*)
+		<include refid="mrFeeItemBase.busiQueryCount"/>
+		<include refid="mrFeeItemBase.dimCheckSql"/>
+	</sql>
+	<select id="select_mrFeeItem_count" resultType="java.lang.Integer">
+		<include refid="mrFeeItemBase.select_mrFeeItem_count"/>
+	</select>
+	
+	 <!-- 往(抄表费收费 项配置)新增一条记录。 -->
+	 <sql id="insert_mrFeeItem">
+		INSERT INTO t_mr_fee_item 
+		(f_id,f_name,f_last_upd_time,f_gb_id,f_is_calculate_latefee,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},str_to_date(#{lastUpdTime,jdbcType=DATE},'%Y-%m-%d %T'),#{gbId},#{isCalculateLatefee},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_mrFeeItem" parameterType="MrFeeItem">
+		<include refid="mrFeeItemBase.insert_mrFeeItem"/>
+    </insert>
+    
+	<!-- 批量新增(抄表费收费 项配置)信息 -->
+    <insert id="insert_mrFeeItem_Batch" parameterType="java.util.List">
+    	INSERT INTO t_mr_fee_item 
+		(f_id,f_name,f_last_upd_time,f_gb_id,f_is_calculate_latefee,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},str_to_date(#{item.lastUpdTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.gbId},#{item.isCalculateLatefee},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(抄表费收费 项配置)信息。 -->
+    <sql id="update_mrFeeItem">
+		UPDATE t_mr_fee_item		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="lastUpdTime != null and !lastUpdTime.equals('') "> ,f_last_upd_time=str_to_date(#{lastUpdTime},'%Y-%m-%d %T')</if> 		<if test="gbId != null and !gbId.equals('') "> ,f_gb_id=#{gbId}</if> 		<if test="isCalculateLatefee != null and !isCalculateLatefee.equals('') "> ,f_is_calculate_latefee=#{isCalculateLatefee}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_mrFeeItem" parameterType="MrFeeItem">
+		<include refid="mrFeeItemBase.update_mrFeeItem"/>
+    </update>
+    
+    <!-- 批量更新(抄表费收费 项配置)信息。 -->
+    <update id="update_mrFeeItem_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_mr_fee_item		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.lastUpdTime != null and !item.lastUpdTime.equals('')  "> ,f_last_upd_time=str_to_date(#{item.lastUpdTime},'%Y-%m-%d %T')</if> 		<if test="item.gbId != null and !item.gbId.equals('')  "> ,f_gb_id=#{item.gbId}</if> 		<if test="item.isCalculateLatefee != null and !item.isCalculateLatefee.equals('')  "> ,f_is_calculate_latefee=#{item.isCalculateLatefee}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(抄表费收费 项配置)信息_逻辑删除。 -->
+    <sql id="delete_mrFeeItem_Logic">
+		UPDATE t_mr_fee_item		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="lastUpdTime != null and !lastUpdTime.equals('')  "> ,f_last_upd_time=str_to_date(#{lastUpdTime},'%Y-%m-%d %T')</if> 		<if test="gbId != null and !gbId.equals('')  "> ,f_gb_id=#{gbId}</if> 		<if test="isCalculateLatefee != null and !isCalculateLatefee.equals('')  "> ,f_is_calculate_latefee=#{isCalculateLatefee}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_mrFeeItem_Logic" parameterType="MrFeeItem">
+		<include refid="mrFeeItemBase.delete_mrFeeItem_Logic"/>
+    </update>
+    
+    <!-- 批量删除(抄表费收费 项配置)信息_逻辑删除 -->
+    <update id="delete_mrFeeItem_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_mr_fee_item		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.lastUpdTime != null and !item.lastUpdTime.equals('')  "> ,f_last_upd_time=str_to_date(#{item.lastUpdTime},'%Y-%m-%d %T')</if> 		<if test="item.gbId != null and !item.gbId.equals('')  "> ,f_gb_id=#{item.gbId}</if> 		<if test="item.isCalculateLatefee != null and !item.isCalculateLatefee.equals('')  "> ,f_is_calculate_latefee=#{item.isCalculateLatefee}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(抄表费收费 项配置)信息。 -->
+    <sql id="delete_mrFeeItem">
+		DELETE FROM t_mr_fee_item WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_mrFeeItem" parameterType="java.lang.String">
+		<include refid="mrFeeItemBase.delete_mrFeeItem"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(抄表费收费 项配置)信息。 -->
+    <delete id="delete_mrFeeItem_Batch" parameterType="java.util.List">
+		DELETE FROM t_mr_fee_item WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

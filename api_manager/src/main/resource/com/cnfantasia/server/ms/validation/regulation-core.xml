@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 类型转换器解析器 -->						
+	<bean id="TypeConverterResolver" class="com.cnfantasia.server.common.validation.resolver.MappingTypeConverterResolver">
+		<property name="mapping">
+			<map>
+				<!-- java.util.Date 转换器 -->
+				<entry key="date">
+					<bean class="com.cnfantasia.server.common.validation.converter.DateConverter">
+						<property name="type" value="java.util.Date" />
+						<property name="format" value="yyyyMMdd" />
+					</bean>
+				</entry>
+				<!-- 布尔型转换器 -->
+				<entry key="boolean">
+					<bean class="com.cnfantasia.server.common.validation.converter.BooleanConverter">
+						<property name="type" value="java.lang.Boolean" />
+					</bean>
+				</entry>
+				<!-- decimal格式转换器，可用于金额格式转换 -->
+				<entry key="decimal">
+					<bean class="com.cnfantasia.server.common.validation.converter.BigDecimalConverter">
+						<property name="type" value="java.math.BigDecimal" />
+						<property name="format" value="#.##" />
+					</bean>
+				</entry>
+				<!-- 整型转换 -->
+				<entry key="integer">
+					<bean class="com.cnfantasia.server.common.validation.converter.IntegerConverter">
+						<property name="type" value="java.lang.Integer" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+							
+	<!-- 校验器解析器
+	<bean id="ValidatorResolver" class="com.cnfantasia.server.common.validation.resolver.IOCValidatorResolver" /> -->
+	
+	<!-- 校验器解析器 -->
+	<bean id="ValidatorResolver" class="com.cnfantasia.server.common.validation.resolver.MappingValidatorResolver">
+		<property name="mapping">
+			<map>
+				<!-- 必输校验器定义 -->
+				<entry key="option">
+					<bean class="com.cnfantasia.server.common.validation.validator.OptionValidator">
+						<!-- 默认为不可选 -->
+						<property name="option" value="false" />
+						<!-- 默认消息 -->
+						<property name="message" value="validation.option.input" />
+					</bean>
+				</entry>
+				<!-- 字符长度校验器定义 -->
+				<entry key="clength">
+					<bean class="com.cnfantasia.server.common.validation.validator.LengthValidator">
+						<!-- 按字节长度进行计算 -->
+						<property name="byChar" value="true" />
+						<!-- 消息 -->
+						<property name="message" value="validation.length" />
+					</bean>
+				</entry>
+				<!-- 字节长度校验器定义 -->
+				<entry key="blength">
+					<bean class="com.cnfantasia.server.common.validation.validator.LengthValidator">
+						<!-- 按字节长度进行计算 -->
+						<property name="byChar" value="false" />
+						<!-- 编码方式 -->
+						<property name="encoding" value="UTF-8" />
+						<!-- 消息 -->
+						<property name="message" value="validation.length" />
+					</bean>
+				</entry>
+				<!-- 正则表达式校验器 -->
+				<entry key="pattern">
+					<bean class="com.cnfantasia.server.common.validation.validator.PatternValidator">
+						<property name="message" value="validation.error.pattern" />
+					</bean>
+				</entry>
+				<!-- 提供类型转换功能的校验器 -->
+				<entry key="type">
+					<bean class="com.cnfantasia.server.common.validation.validator.TypeConverterValidator">
+						<property name="resolver" ref="TypeConverterResolver" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<!-- 抽象规章定义 -->
+	<bean id="AbstractRegulation" class="com.cnfantasia.server.common.validation.regulation.RegulationImpl" abstract="true">
+		<property name="validatorResolver" ref="ValidatorResolver" />
+	</bean>
+</beans>

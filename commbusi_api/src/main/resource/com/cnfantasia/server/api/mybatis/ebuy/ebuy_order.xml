@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 电商模块 -->
+<mapper namespace="ebuyorder">
+
+	<resultMap type="com.cnfantasia.server.api.ebuyorder.entity.OrderDetailBean" id="orderDetailMap">
+		<result column="f_id" jdbcType="VARCHAR" property="id"/>
+		<result column="f_order_no" jdbcType="VARCHAR" property="orderNo"/>
+		<result column="f_hua_id" jdbcType="VARCHAR" property="huaId"/>
+		<result column="f_real_name" jdbcType="VARCHAR" property="realName"/>
+		<result column="f_buy_time" jdbcType="TIMESTAMP" property="buyTime"/>
+		<result column="f_amount" jdbcType="NUMERIC" property="amount"/>
+		<result column="fact_amount" jdbcType="NUMERIC" property="factAmount"/>
+		<result column="f_pay_method" jdbcType="VARCHAR" property="payMethod"/>
+		<result column="f_status" jdbcType="VARCHAR" property="status"/>
+		<result column="f_pay_status" jdbcType="VARCHAR" property="payStatus"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.ebuyorder.entity.ReportBean" id="reportMap">
+		<result column="id" jdbcType="VARCHAR" property="id"/>
+		<result column="supply_name" jdbcType="VARCHAR" property="supplyName"/>
+		<result column="product_name" jdbcType="VARCHAR" property="productName"/>
+		<result column="type_name" jdbcType="VARCHAR" property="typeName"/>
+		<result column="price" jdbcType="VARCHAR" property="price"/>
+		<result column="total" jdbcType="VARCHAR" property="total"/>
+		<result column="price_unit" jdbcType="VARCHAR" property="priceUnit"/>
+		<result column="order_no" jdbcType="VARCHAR" property="orderNo"/>
+		<result column="buy_time" jdbcType="VARCHAR" property="buyTime"/>
+		<result column="order_status" jdbcType="VARCHAR" property="orderStatus"/>
+		<result column="logistics_name" jdbcType="VARCHAR" property="logisticsName"/>
+		<result column="logisticse_code" jdbcType="VARCHAR" property="logisticseCode"/>
+		<result column="delivery_fee" jdbcType="VARCHAR" property="deliveryFee"/>
+		<result column="amount" jdbcType="VARCHAR" property="amount"/>
+		<result column="fact_amount" jdbcType="VARCHAR" property="factAmount"/>
+		<result column="pay_status" jdbcType="VARCHAR" property="payStatus"/>
+		<result column="pay_method" jdbcType="VARCHAR" property="payMethod"/>
+		<result column="hua_id" jdbcType="VARCHAR" property="huaId"/>
+		<result column="real_name" jdbcType="VARCHAR" property="realName"/>
+		<result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+		<result column="people_name" jdbcType="VARCHAR" property="peopleName"/>
+		<result column="deliv_phone" jdbcType="VARCHAR" property="deliveryPhone"/>
+		<result column="address" jdbcType="VARCHAR" property="address"/>
+		<result column="pay_time" jdbcType="VARCHAR" property="payTime"/>
+	</resultMap>
+	
+	<select id="countOrderDetail" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(0)
+		from
+		    t_ebuy_order o
+		        left join
+		    t_user u ON o.f_buyer_id = u.f_id and u.f_sys0_del_state = 0 
+		        left join(
+					select 
+						item.t_ebuy_order_f_id, 
+						concat(',',GROUP_CONCAT(p.f_name),',') product_name,
+						concat(',',GROUP_CONCAT(t.f_type_name),',') type_name,
+						concat(',',GROUP_CONCAT(s.f_name),',') supply_name
+					from
+						t_ebuy_order_has_t_ebuy_product item
+							left join
+						t_ebuy_product p ON item.t_ebuy_product_f_id = p.f_id and p.f_sys0_del_state = 0 AND p.f_point_type = 1 
+							left join 
+						t_ebuy_product_type t on p.t_ebuy_product_type_f_id = t.f_id and t.f_sys0_del_state = 0 AND t.f_point_type = 1 
+							left join
+						t_ebuy_supply_merchant s on p.t_supply_merchant_f_id = s.f_id and s.f_sys0_del_state = 0 
+					where 1=1
+						and item.f_sys0_del_state = 0 
+					group by item.t_ebuy_order_f_id
+			) tt on o.f_id = tt.t_ebuy_order_f_id
+		    <include refid="orderConditions"/>
+	</select>
+	
+	<select id="selectOrderDetailByPage" parameterType="java.util.Map" resultMap="orderDetailMap">
+		select 
+			o.f_id,
+		    o.f_order_no,
+		    u.f_hua_id,
+		    u.f_real_name,
+		    o.f_buy_time,
+		    o.f_amount,
+		    o.f_amount fact_amount,
+		    o.f_pay_method,
+		    o.f_status,
+		    o.f_pay_status
+		from
+		    t_ebuy_order o
+		        left join
+		    t_user u ON o.f_buyer_id = u.f_id and u.f_sys0_del_state = 0 
+		        left join(
+					select 
+						item.t_ebuy_order_f_id, 
+						concat(',',GROUP_CONCAT(p.f_name),',') product_name,
+						concat(',',GROUP_CONCAT(t.f_type_name),',') type_name,
+						concat(',',GROUP_CONCAT(s.f_name),',') supply_name
+					from
+						t_ebuy_order_has_t_ebuy_product item
+							left join
+						t_ebuy_product p ON item.t_ebuy_product_f_id = p.f_id and p.f_sys0_del_state = 0 AND p.f_point_type = 1 
+							left join 
+						t_ebuy_product_type t on p.t_ebuy_product_type_f_id = t.f_id and t.f_sys0_del_state = 0 AND t.f_point_type = 1
+							left join
+						t_ebuy_supply_merchant s on p.t_supply_merchant_f_id = s.f_id and s.f_sys0_del_state = 0 
+					where 1=1
+						and item.f_sys0_del_state = 0
+					group by item.t_ebuy_order_f_id
+			) tt on o.f_id = tt.t_ebuy_order_f_id
+		    <include refid="orderConditions"/>
+		    limit #{_begin},#{_length}
+	</select>
+	
+	<sql id="orderConditions">		
+		<where>
+				o.f_sys0_del_state = 0 
+			<if test="orderNo!=null and orderNo!=''">
+				and o.f_order_no = #{orderNo}
+			</if>
+			<if test="huaId!=null and huaId!=''">
+				and u.f_hua_id = #{huaId}
+			</if>
+			<if test="realName!=null and realName!=''">
+				and u.f_real_name like '%${realName}%'
+			</if>
+			<if test="mobile!=null and mobile!=''">
+				and u.f_mobile = #{mobile}
+			</if>
+			<if test="productName!=null and productName!=''">
+				and tt.product_name like '%${productName}%'
+			</if>
+			<if test="typeName!=null and typeName!=''">
+				and tt.type_name like '%${typeName}%'
+			</if>
+			<if test="supplyName!=null and supplyName!=''">
+				and tt.supply_name like '%${supplyName}%'
+			</if>
+			<if test="payMethod!=null and payMethod!=''">
+				and o.f_pay_method = #{payMethod}
+			</if>
+			<if test="orderStatus!=null and orderStatus!=''">
+				and o.f_status = #{orderStatus}
+			</if>
+			<if test="payStatus!=null and payStatus!=''">
+				and o.f_pay_status = #{payStatus}
+			</if>
+			<if test="startTime!=null">
+				<![CDATA[and o.f_buy_time >= #{startTime}]]>
+			</if>
+			<if test="endTime!=null">
+				<![CDATA[and o.f_buy_time < #{endTime}]]>
+			</if>
+			<![CDATA[and o.f_type = 1]]>
+		</where>
+	</sql>
+		
+	<select id="selectOrderItemsForReport" parameterType="java.util.Map" resultMap="reportMap">
+		select
+			o.f_id id,
+			tt.supply_name supply_name,
+			tt.product_name product_name,
+			tt.type_name type_name,
+		    tt.f_product_price price,
+			tt.f_product_qty total,
+			tt.f_price_unit price_unit,
+		    o.f_order_no order_no,
+			o.f_buy_time buy_time,
+			o.f_status order_status,
+			o.f_logisticsName logistics_name,
+		    o.f_logisticseCode logisticse_code,
+		    tt.f_delivery_real_fee delivery_fee,
+			o.f_amount amount,
+			o.f_amount fact_amount,
+			o.f_pay_method pay_method,
+			o.f_pay_status pay_status,
+			u.f_hua_id hua_id,
+			u.f_real_name real_name,
+			u.f_mobile mobile,
+			o.f_deliv_people_name people_name,
+			o.f_deliv_phone deliv_phone,
+			concat(o.f_deliv_address_area,o.f_deliv_address_detail) address,
+			o.f_pay_time pay_time 
+		from
+			t_ebuy_order o
+				left join
+			t_user u on o.f_buyer_id = u.f_id and u.f_sys0_del_state = 0 
+				left join
+			(
+					select
+						item.t_ebuy_order_f_id,
+						s.f_name supply_name,
+						p.f_name product_name,
+						t.f_type_name type_name,
+						item.f_product_price,
+						item.f_product_qty,
+						item.f_delivery_real_fee,
+						p.f_price_unit
+					from
+						t_ebuy_order_has_t_ebuy_product item
+							left join
+						t_ebuy_product p ON item.t_ebuy_product_f_id = p.f_id and p.f_sys0_del_state = 0 AND p.f_point_type = 1 
+							left join 
+						t_ebuy_product_type t on p.t_ebuy_product_type_f_id = t.f_id and t.f_sys0_del_state = 0 AND t.f_point_type = 1
+							left join
+						t_ebuy_supply_merchant s on p.t_supply_merchant_f_id = s.f_id and s.f_sys0_del_state = 0 
+					where 1=1
+						and item.f_sys0_del_state = 0 
+			) tt on o.f_id = tt.t_ebuy_order_f_id
+		<include refid="orderConditions"/>
+		order by o.f_order_no
+	</select>
+
+	<select id="getOrderBuyInfoByOrderId" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.ebuyorder.entity.OrderBuyInfo">
+		SELECT
+			u.f_id userId,
+			ifnull(eo.f_deliv_phone, u.f_mobile) userMobile,
+			sm.f_id supplyMerhantId,
+			sm.f_name supplyMerchantName,
+			sm.f_tel supplyMerchantTel,
+			sum(eoep.f_product_qty) productCount
+		FROM
+			t_ebuy_order eo
+		LEFT JOIN t_ebuy_order_has_t_ebuy_product eoep on eoep.t_ebuy_order_f_id = eo.f_id and eoep.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_supply_merchant sm ON eoep.f_supply_merchant_id = sm.f_id and sm.f_sys0_del_state = 0
+		LEFT JOIN t_user u ON eo.f_buyer_id = u.f_id
+		WHERE
+		eo.f_id = #{orderId}
+		GROUP BY
+			userId,userMobile,
+			supplyMerhantId,
+			supplyMerchantName,
+			supplyMerchantTel
+	</select>
+	
+	<select id="getZiTiOrderBuyInfoByOrderId" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.ebuyorder.entity.OrderBuyInfo">
+		SELECT
+			edo.f_id deliveryOrderId,
+			u.f_id userId,
+			eo.f_deliv_phone userMobile,
+			sm.f_id supplyMerhantId,
+			sm.f_name supplyMerchantName,
+			sm.f_tel supplyMerchantTel,
+			edm.f_name ziTiAddress,
+			sum(eoep.f_product_qty) productCount
+		FROM
+			t_ebuy_order eo
+		LEFT JOIN t_ebuy_order_has_t_ebuy_product eoep on eoep.t_ebuy_order_f_id = eo.f_id and eoep.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_supply_merchant sm ON eoep.f_supply_merchant_id = sm.f_id and sm.f_sys0_del_state = 0
+		LEFT JOIN t_user u ON eo.f_buyer_id = u.f_id
+		LEFT JOIN t_ebuy_supply_merchant_has_t_ebuy_delivery_method smed ON smed.t_ebuy_supply_merchant_f_id = sm.f_id AND smed.f_sys0_del_state = 0
+		inner JOIN t_ebuy_delivery_method edm ON edm.f_id = smed.t_ebuy_delivery_method_f_id AND edm.f_type = 2 AND edm.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_delivery_order edo on edo.t_ebuy_order_f_id = eo.f_id and edo.f_sys0_del_state = 0
+		WHERE
+		eo.f_id = #{orderId}
+		GROUP BY
+			deliveryOrderId,
+			supplyMerhantId,
+			supplyMerchantName,
+			supplyMerchantTel, 
+			ziTiAddress;
+	</select>
+
+	<!-- 获取中秋活动订单信息 -->
+	<select id="getMidAutumnOrderBuyInfoByOrderId" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.ebuyorder.entity.OrderBuyInfo">
+		SELECT
+			ur.f_mobile userMobile, ub.f_nick_name supplyMerchantName, eo.f_order_no orderNo
+		FROM
+			t_user_recommend_order uro
+		JOIN t_ebuy_order eo on eo.f_id = uro.t_ebuy_order_f_id
+		JOIN t_user ub ON ub.f_id = eo.f_buyer_id
+		JOIN t_user ur ON ur.f_id = uro.t_user_f_id
+		JOIN t_ebuy_order_has_t_ebuy_product eoep ON eoep.t_ebuy_order_f_id = uro.t_ebuy_order_f_id
+		JOIN t_ebuy_product_shelf eps on eps.f_id = eoep.t_ebuy_product_f_id
+		JOIN t_ebuy_product ep ON ep.f_id = eps.t_ebuy_product_id
+		WHERE
+			uro.t_ebuy_order_f_id = #{orderId}
+		AND ep.f_id in (124456,124015,124458,124512,124514,124510,124462,124488,124490,124492,124494,124508,124498,124500)  -- 年货专场added by 2018-01-12
+		limit 1;
+	</select>
+
+	<!-- 根据orderId获取双乾支付补贴请求所需额外参数 -->
+	<select id="select_SqPayBtRequest_with_orderId" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.api.payment.entity.SqPayBtPrePayDto">
+		SELECT
+			AP.f_name AS province,
+			AC.f_name AS city,
+			AB.f_name AS block,
+			GB.f_name AS gbName,
+			GB.f_id AS gbId,
+			(CASE EO.f_type WHEN 2 THEN (SELECT
+											IF(PB.f_is_prop_fee=1, 2, 5)<!-- "2":物业费","5":"其他代收费" -->
+										FROM
+											t_ebuy_order_has_t_pay_bill EOHTPB
+											INNER JOIN t_pay_bill PB ON EOHTPB.t_pay_bill_f_id = PB.f_id
+										WHERE
+											EOHTPB.t_ebuy_order_f_id = #{orderId} 
+											and EOHTPB.f_sys0_del_state=0
+											<!-- and PB.f_sys0_del_state=0 不能加这个，杨华的坑--> 
+											LIMIT 1)
+				ELSE EO.f_type END
+			) AS orderType
+		FROM 
+			t_ebuy_order EO
+			LEFT JOIN t_room R ON EO.f_curr_room_id = R.f_id
+			LEFT JOIN t_real_room RR ON R.t_real_room_f_id = RR.f_id
+			LEFT JOIN t_building B ON RR.t_building_f_id = B.f_id
+			LEFT JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id
+			LEFT JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id
+			LEFT JOIN t_address_city AC ON AC.f_id = AB.t_city_f_id
+			LEFT JOIN t_address_province AP ON AP.f_id = AC.t_province_f_id
+		WHERE EO.f_id=#{orderId} AND EO.f_sys0_del_state=0
+	</select>
+	
+	<!-- 是否第一次消费 -->
+	<select id="select_first_consume_count" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			t_ebuy_order EO
+		WHERE
+			EO.f_buyer_id = #{userId}
+		AND EO.f_sys0_del_state = 0
+		AND EO.f_pay_method = 9
+		AND EO.f_type=2
+		AND EO.f_pay_status = 2
+	</select>
+	
+	<select id="is_wy_paid" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM
+			t_ebuy_order
+		WHERE
+			f_id IN (
+				SELECT
+					t_ebuy_order_f_id
+				FROM
+					t_ebuy_order_has_t_pay_bill
+				WHERE
+					t_pay_bill_f_id = (
+						SELECT
+							t_pay_bill_f_id
+						FROM
+							t_ebuy_order_has_t_pay_bill
+						WHERE
+							t_ebuy_order_f_id =#{orderId}
+						AND f_sys0_del_state = 0
+					)
+				AND f_sys0_del_state = 0
+			)
+		AND f_pay_status = 2
+	</select>
+
+	<!-- 查询电商订单包含体验店的商品数 -->
+	<select id="selectMerchantIdListByOrderId" parameterType="map" resultType="java.math.BigInteger">
+		SELECT
+			DISTINCT ep.t_supply_merchant_f_id
+		FROM
+			t_ebuy_order_has_t_ebuy_product eoep
+		JOIN t_ebuy_product_shelf eps on eps.f_id = eoep.t_ebuy_product_f_id
+		JOIN t_ebuy_product ep ON ep.f_id = eps.t_ebuy_product_id
+		WHERE
+			eoep.f_sys0_del_state = 0
+		AND ep.f_sys0_del_state = 0
+		AND eoep.t_ebuy_order_f_id = #{orderId};
+	</select>
+</mapper>

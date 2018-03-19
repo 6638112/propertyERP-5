@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:首页公共消息表 t_group_home_message -->
+<mapper namespace="groupHomeMessageBase">
+	<resultMap type="GroupHomeMessage" id="groupHomeMessageBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_message_code" javaType="java.lang.String" property="messageCode"/>  <!-- t_home_message_type的code -->        <result column="f_gb_id" javaType="java.math.BigInteger" property="gbId"/>  <!-- 小区ID -->        <result column="f_content" javaType="java.lang.String" property="content"/>  <!-- 会过期的消息内容 -->        <result column="f_ext_info" javaType="java.lang.String" property="extInfo"/>  <!-- 额外数据 -->        <result column="f_resource_id" javaType="java.math.BigInteger" property="resourceId"/>  <!-- 来源ID -->        <result column="f_valid_time" javaType="java.lang.String" property="validTime"/>  <!-- 有效开始时间 -->        <result column="f_expire_time" javaType="java.lang.String" property="expireTime"/>  <!-- 过期时间 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="GroupHomeMessage" id="groupHomeMessageExtendMap" extends="groupHomeMessageBaseMap">
+	</resultMap>
+	<resultMap type="GroupHomeMessage" id="groupHomeMessageBaseMap_AppendTable">
+        <id column="GHMid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="GHMmessageCode" javaType="java.lang.String" property="messageCode"/>  <!-- t_home_message_type的code -->        <result column="GHMgbId" javaType="java.math.BigInteger" property="gbId"/>  <!-- 小区ID -->        <result column="GHMcontent" javaType="java.lang.String" property="content"/>  <!-- 会过期的消息内容 -->        <result column="GHMextInfo" javaType="java.lang.String" property="extInfo"/>  <!-- 额外数据 -->        <result column="GHMresourceId" javaType="java.math.BigInteger" property="resourceId"/>  <!-- 来源ID -->        <result column="GHMvalidTime" javaType="java.lang.String" property="validTime"/>  <!-- 有效开始时间 -->        <result column="GHMexpireTime" javaType="java.lang.String" property="expireTime"/>  <!-- 过期时间 -->        <result column="GHMsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="GHMsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="GHMsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="GHMsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="GHMsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="GHMsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="GHMsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="GroupHomeMessage" id="groupHomeMessageBaseMap_AppendTable1">
+        <id column="GHM1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="GHM1messageCode" javaType="java.lang.String" property="messageCode"/>  <!-- t_home_message_type的code -->        <result column="GHM1gbId" javaType="java.math.BigInteger" property="gbId"/>  <!-- 小区ID -->        <result column="GHM1content" javaType="java.lang.String" property="content"/>  <!-- 会过期的消息内容 -->        <result column="GHM1extInfo" javaType="java.lang.String" property="extInfo"/>  <!-- 额外数据 -->        <result column="GHM1resourceId" javaType="java.math.BigInteger" property="resourceId"/>  <!-- 来源ID -->        <result column="GHM1validTime" javaType="java.lang.String" property="validTime"/>  <!-- 有效开始时间 -->        <result column="GHM1expireTime" javaType="java.lang.String" property="expireTime"/>  <!-- 过期时间 -->        <result column="GHM1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="GHM1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="GHM1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="GHM1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="GHM1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="GHM1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="GHM1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		GHM.f_id,GHM.f_message_code,GHM.f_gb_id,GHM.f_content,GHM.f_ext_info,GHM.f_resource_id,date_format(GHM.f_valid_time,'%Y-%m-%d %T') as f_valid_time,date_format(GHM.f_expire_time,'%Y-%m-%d %T') as f_expire_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		GHM.f_id as GHMid,GHM.f_message_code as GHMmessageCode,GHM.f_gb_id as GHMgbId,GHM.f_content as GHMcontent,GHM.f_ext_info as GHMextInfo,GHM.f_resource_id as GHMresourceId,date_format(GHM.f_valid_time,'%Y-%m-%d %T') as GHMvalidTime,date_format(GHM.f_expire_time,'%Y-%m-%d %T') as GHMexpireTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		GHM1.f_id as GHM1id,GHM1.f_message_code as GHM1messageCode,GHM1.f_gb_id as GHM1gbId,GHM1.f_content as GHM1content,GHM1.f_ext_info as GHM1extInfo,GHM1.f_resource_id as GHM1resourceId,date_format(GHM1.f_valid_time,'%Y-%m-%d %T') as GHM1validTime,date_format(GHM1.f_expire_time,'%Y-%m-%d %T') as GHM1expireTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (GHM.f_id = #{id} ) </if>        <if test="messageCode != null">  and (GHM.f_message_code = #{messageCode} ) </if>        <if test="gbId != null">  and (GHM.f_gb_id = #{gbId} ) </if>        <if test="content != null">  and (GHM.f_content = #{content} ) </if>        <if test="extInfo != null">  and (GHM.f_ext_info = #{extInfo} ) </if>        <if test="resourceId != null">  and (GHM.f_resource_id = #{resourceId} ) </if>        <if test="validTime != null and !validTime.equals('')  ">  and (GHM.f_valid_time = str_to_date(#{validTime},'%Y-%m-%d %T') ) </if>        <if test="validTime_START != null and !validTime_START.equals('')  ">              <![CDATA[ and (GHM.f_valid_time >= str_to_date(#{validTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="validTime_END != null and !validTime_END.equals('')  ">            <![CDATA[ and (GHM.f_valid_time <= str_to_date(#{validTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="expireTime != null and !expireTime.equals('')  ">  and (GHM.f_expire_time = str_to_date(#{expireTime},'%Y-%m-%d %T') ) </if>        <if test="expireTime_START != null and !expireTime_START.equals('')  ">              <![CDATA[ and (GHM.f_expire_time >= str_to_date(#{expireTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="expireTime_END != null and !expireTime_END.equals('')  ">            <![CDATA[ and (GHM.f_expire_time <= str_to_date(#{expireTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (GHM.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (GHM.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (GHM.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (GHM.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (GHM.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (GHM.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (GHM.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (GHM.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (GHM.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (GHM.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (GHM.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (GHM.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (GHM.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (GHM.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (GHM.f_id = #{id} ) </if>        <if test="messageCode != null and !messageCode.equals('')  ">  and (GHM.f_message_code like CONCAT('%',#{messageCode},'%') ) </if>        <if test="gbId != null and !gbId.equals('')  ">  and (GHM.f_gb_id = #{gbId} ) </if>        <if test="content != null and !content.equals('')  ">  and (GHM.f_content like CONCAT('%',#{content},'%') ) </if>        <if test="extInfo != null and !extInfo.equals('')  ">  and (GHM.f_ext_info like CONCAT('%',#{extInfo},'%') ) </if>        <if test="resourceId != null and !resourceId.equals('')  ">  and (GHM.f_resource_id = #{resourceId} ) </if>        <if test="validTime != null and !validTime.equals('')  ">  and (GHM.f_valid_time = str_to_date(#{validTime},'%Y-%m-%d %T') ) </if>        <if test="validTime_START != null and !validTime_START.equals('')  ">              <![CDATA[ and (GHM.f_valid_time >= str_to_date(#{validTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="validTime_END != null and !validTime_END.equals('')  ">            <![CDATA[ and (GHM.f_valid_time <= str_to_date(#{validTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="expireTime != null and !expireTime.equals('')  ">  and (GHM.f_expire_time = str_to_date(#{expireTime},'%Y-%m-%d %T') ) </if>        <if test="expireTime_START != null and !expireTime_START.equals('')  ">              <![CDATA[ and (GHM.f_expire_time >= str_to_date(#{expireTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="expireTime_END != null and !expireTime_END.equals('')  ">            <![CDATA[ and (GHM.f_expire_time <= str_to_date(#{expireTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (GHM.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (GHM.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (GHM.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (GHM.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (GHM.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (GHM.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (GHM.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (GHM.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (GHM.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (GHM.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (GHM.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (GHM.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (GHM.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (GHM.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="groupHomeMessageBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="groupHomeMessageBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="groupHomeMessageBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="groupHomeMessageBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_group_home_message GHM    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(首页公共消息表)信息。 -->
+	<sql id="select_groupHomeMessage">
+		SELECT <include refid="groupHomeMessageBase.queryHead"/>
+		<include refid="groupHomeMessageBase.busiQueryCondition"/>
+		<include refid="groupHomeMessageBase.dimCheckSql"/>
+		ORDER BY GHM.f_id DESC
+	</sql>
+	<select id="select_groupHomeMessage" parameterType="java.util.Map" resultMap="groupHomeMessageBase.groupHomeMessageExtendMap">
+		<include refid="groupHomeMessageBase.select_groupHomeMessage"/>
+	</select>
+	
+	<!-- 根据条件分页查询(首页公共消息表)信息  -->
+	<sql id="select_groupHomeMessage_withPage">
+		SELECT <include refid="groupHomeMessageBase.queryHead"/>
+		<include refid="groupHomeMessageBase.busiQueryCondition"/>
+		<include refid="groupHomeMessageBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_groupHomeMessage_withPage" resultMap="groupHomeMessageBase.groupHomeMessageExtendMap" parameterType="java.util.Map">
+		<include refid="groupHomeMessageBase.select_groupHomeMessage_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(首页公共消息表)信息。 -->
+	<sql id="select_groupHomeMessage_bySeqId">
+		SELECT <include refid="groupHomeMessageBase.queryHead"/>
+		<include refid="groupHomeMessageBase.busiQueryCondition"/>
+		 and GHM.f_id = #{_parameter}
+	</sql>
+	<select id="select_groupHomeMessage_bySeqId" parameterType="java.math.BigInteger" resultMap="groupHomeMessageBase.groupHomeMessageBaseMap">
+		<include refid="groupHomeMessageBase.select_groupHomeMessage_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(首页公共消息表)记录数  -->
+	<sql id="select_groupHomeMessage_count">
+		SELECT COUNT(*)
+		<include refid="groupHomeMessageBase.busiQueryCount"/>
+		<include refid="groupHomeMessageBase.dimCheckSql"/>
+	</sql>
+	<select id="select_groupHomeMessage_count" resultType="java.lang.Integer">
+		<include refid="groupHomeMessageBase.select_groupHomeMessage_count"/>
+	</select>
+	
+	 <!-- 往(首页公共消息表)新增一条记录。 -->
+	 <sql id="insert_groupHomeMessage">
+		INSERT INTO t_group_home_message 
+		(f_id,f_message_code,f_gb_id,f_content,f_ext_info,f_resource_id,f_valid_time,f_expire_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{messageCode,jdbcType=VARCHAR},#{gbId},#{content,jdbcType=VARCHAR},#{extInfo,jdbcType=VARCHAR},#{resourceId},str_to_date(#{validTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{expireTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_groupHomeMessage" parameterType="GroupHomeMessage">
+		<include refid="groupHomeMessageBase.insert_groupHomeMessage"/>
+    </insert>
+    
+	<!-- 批量新增(首页公共消息表)信息 -->
+    <insert id="insert_groupHomeMessage_Batch" parameterType="java.util.List">
+    	INSERT INTO t_group_home_message 
+		(f_id,f_message_code,f_gb_id,f_content,f_ext_info,f_resource_id,f_valid_time,f_expire_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.messageCode,jdbcType=VARCHAR},#{item.gbId},#{item.content,jdbcType=VARCHAR},#{item.extInfo,jdbcType=VARCHAR},#{item.resourceId},str_to_date(#{item.validTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.expireTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(首页公共消息表)信息。 -->
+    <sql id="update_groupHomeMessage">
+		UPDATE t_group_home_message		<trim prefix="SET" prefixOverrides=","> 		<if test="messageCode != null and !messageCode.equals('') "> ,f_message_code=#{messageCode}</if> 		<if test="gbId != null and !gbId.equals('') "> ,f_gb_id=#{gbId}</if> 		<if test="content != null and !content.equals('') "> ,f_content=#{content}</if> 		<if test="extInfo != null and !extInfo.equals('') "> ,f_ext_info=#{extInfo}</if> 		<if test="resourceId != null and !resourceId.equals('') "> ,f_resource_id=#{resourceId}</if> 		<if test="validTime != null and !validTime.equals('') "> ,f_valid_time=str_to_date(#{validTime},'%Y-%m-%d %T')</if> 		<if test="expireTime != null and !expireTime.equals('') "> ,f_expire_time=str_to_date(#{expireTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_groupHomeMessage" parameterType="GroupHomeMessage">
+		<include refid="groupHomeMessageBase.update_groupHomeMessage"/>
+    </update>
+    
+    <!-- 批量更新(首页公共消息表)信息。 -->
+    <update id="update_groupHomeMessage_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_group_home_message		<trim prefix="SET" prefixOverrides=","> 		<if test="item.messageCode != null and !item.messageCode.equals('')  "> ,f_message_code=#{item.messageCode}</if> 		<if test="item.gbId != null and !item.gbId.equals('')  "> ,f_gb_id=#{item.gbId}</if> 		<if test="item.content != null and !item.content.equals('')  "> ,f_content=#{item.content}</if> 		<if test="item.extInfo != null and !item.extInfo.equals('')  "> ,f_ext_info=#{item.extInfo}</if> 		<if test="item.resourceId != null and !item.resourceId.equals('')  "> ,f_resource_id=#{item.resourceId}</if> 		<if test="item.validTime != null and !item.validTime.equals('')  "> ,f_valid_time=str_to_date(#{item.validTime},'%Y-%m-%d %T')</if> 		<if test="item.expireTime != null and !item.expireTime.equals('')  "> ,f_expire_time=str_to_date(#{item.expireTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(首页公共消息表)信息_逻辑删除。 -->
+    <sql id="delete_groupHomeMessage_Logic">
+		UPDATE t_group_home_message		<trim prefix="SET" prefixOverrides=","> 		<if test="messageCode != null and !messageCode.equals('')  "> ,f_message_code=#{messageCode}</if> 		<if test="gbId != null and !gbId.equals('')  "> ,f_gb_id=#{gbId}</if> 		<if test="content != null and !content.equals('')  "> ,f_content=#{content}</if> 		<if test="extInfo != null and !extInfo.equals('')  "> ,f_ext_info=#{extInfo}</if> 		<if test="resourceId != null and !resourceId.equals('')  "> ,f_resource_id=#{resourceId}</if> 		<if test="validTime != null and !validTime.equals('')  "> ,f_valid_time=str_to_date(#{validTime},'%Y-%m-%d %T')</if> 		<if test="expireTime != null and !expireTime.equals('')  "> ,f_expire_time=str_to_date(#{expireTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_groupHomeMessage_Logic" parameterType="GroupHomeMessage">
+		<include refid="groupHomeMessageBase.delete_groupHomeMessage_Logic"/>
+    </update>
+    
+    <!-- 批量删除(首页公共消息表)信息_逻辑删除 -->
+    <update id="delete_groupHomeMessage_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_group_home_message		<trim prefix="SET" prefixOverrides=","> 		<if test="item.messageCode != null and !item.messageCode.equals('')  "> ,f_message_code=#{item.messageCode}</if> 		<if test="item.gbId != null and !item.gbId.equals('')  "> ,f_gb_id=#{item.gbId}</if> 		<if test="item.content != null and !item.content.equals('')  "> ,f_content=#{item.content}</if> 		<if test="item.extInfo != null and !item.extInfo.equals('')  "> ,f_ext_info=#{item.extInfo}</if> 		<if test="item.resourceId != null and !item.resourceId.equals('')  "> ,f_resource_id=#{item.resourceId}</if> 		<if test="item.validTime != null and !item.validTime.equals('')  "> ,f_valid_time=str_to_date(#{item.validTime},'%Y-%m-%d %T')</if> 		<if test="item.expireTime != null and !item.expireTime.equals('')  "> ,f_expire_time=str_to_date(#{item.expireTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(首页公共消息表)信息。 -->
+    <sql id="delete_groupHomeMessage">
+		DELETE FROM t_group_home_message WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_groupHomeMessage" parameterType="java.lang.String">
+		<include refid="groupHomeMessageBase.delete_groupHomeMessage"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(首页公共消息表)信息。 -->
+    <delete id="delete_groupHomeMessage_Batch" parameterType="java.util.List">
+		DELETE FROM t_group_home_message WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

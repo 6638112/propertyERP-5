@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  用户提问 -->
+<mapper namespace="dredgeAddress">
+	<select id="getDredgeAddressList" parameterType="map" resultType="com.cnfantasia.server.api.dredgeAddress.entity.DredgeAddressEntity">
+		select da.f_id addressId, da.f_gb_id gbId, da.f_block_id blockId, ab.f_name block, ac.f_id cityId, ac.f_name city, da.f_address address
+ 		from t_dredge_address da
+		INNER JOIN t_address_block ab on ab.f_sys0_del_state = 0 and ab.f_id = da.f_block_id
+		INNER JOIN t_address_city ac on ac.f_sys0_del_state = 0 and ac.f_id = ab.t_city_f_id
+		where da.f_sys0_del_state = 0 and da.t_user_f_id = #{userId}
+	</select>
+
+	<update id="updDredgeAddress" parameterType="map">
+		update t_dredge_address set f_block_id = #{blockId}, f_gb_id = #{gbId}, f_address = #{address} where f_id = #{addressId}
+	</update>
+</mapper>

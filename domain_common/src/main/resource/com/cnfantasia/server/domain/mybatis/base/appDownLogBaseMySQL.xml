@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:应用下载日志 t_app_down_log -->
+<mapper namespace="appDownLogBase">
+	<resultMap type="AppDownLog" id="appDownLogBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_os" javaType="java.lang.String" property="os"/>  <!--  -->        <result column="f_os_ver" javaType="java.lang.String" property="osVer"/>  <!--  -->        <result column="f_time" javaType="java.lang.String" property="time"/>  <!--  -->        <result column="f_ip" javaType="java.lang.String" property="ip"/>  <!--  -->        <result column="f_device" javaType="java.lang.String" property="device"/>  <!--  -->        <result column="f_app_type" javaType="java.lang.String" property="appType"/>  <!--  -->        <result column="f_app_info" javaType="java.lang.String" property="appInfo"/>  <!-- 应用下载信息 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AppDownLog" id="appDownLogExtendMap" extends="appDownLogBaseMap">
+	</resultMap>
+	<resultMap type="AppDownLog" id="appDownLogBaseMap_AppendTable">
+        <id column="ADLid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ADLos" javaType="java.lang.String" property="os"/>  <!--  -->        <result column="ADLosVer" javaType="java.lang.String" property="osVer"/>  <!--  -->        <result column="ADLtime" javaType="java.lang.String" property="time"/>  <!--  -->        <result column="ADLip" javaType="java.lang.String" property="ip"/>  <!--  -->        <result column="ADLdevice" javaType="java.lang.String" property="device"/>  <!--  -->        <result column="ADLappType" javaType="java.lang.String" property="appType"/>  <!--  -->        <result column="ADLappInfo" javaType="java.lang.String" property="appInfo"/>  <!-- 应用下载信息 -->        <result column="ADLsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="ADLsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ADLsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ADLsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ADLsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ADLsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ADLsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AppDownLog" id="appDownLogBaseMap_AppendTable1">
+        <id column="ADL1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="ADL1os" javaType="java.lang.String" property="os"/>  <!--  -->        <result column="ADL1osVer" javaType="java.lang.String" property="osVer"/>  <!--  -->        <result column="ADL1time" javaType="java.lang.String" property="time"/>  <!--  -->        <result column="ADL1ip" javaType="java.lang.String" property="ip"/>  <!--  -->        <result column="ADL1device" javaType="java.lang.String" property="device"/>  <!--  -->        <result column="ADL1appType" javaType="java.lang.String" property="appType"/>  <!--  -->        <result column="ADL1appInfo" javaType="java.lang.String" property="appInfo"/>  <!-- 应用下载信息 -->        <result column="ADL1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="ADL1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="ADL1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="ADL1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="ADL1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="ADL1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="ADL1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		ADL.f_id,ADL.f_os,ADL.f_os_ver,date_format(ADL.f_time,'%Y-%m-%d %T') as f_time,ADL.f_ip,ADL.f_device,ADL.f_app_type,ADL.f_app_info
+	</sql>
+	<sql id="queryHead_AppendTable">
+		ADL.f_id as ADLid,ADL.f_os as ADLos,ADL.f_os_ver as ADLosVer,date_format(ADL.f_time,'%Y-%m-%d %T') as ADLtime,ADL.f_ip as ADLip,ADL.f_device as ADLdevice,ADL.f_app_type as ADLappType,ADL.f_app_info as ADLappInfo
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		ADL1.f_id as ADL1id,ADL1.f_os as ADL1os,ADL1.f_os_ver as ADL1osVer,date_format(ADL1.f_time,'%Y-%m-%d %T') as ADL1time,ADL1.f_ip as ADL1ip,ADL1.f_device as ADL1device,ADL1.f_app_type as ADL1appType,ADL1.f_app_info as ADL1appInfo
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (ADL.f_id = #{id} ) </if>        <if test="os != null">  and (ADL.f_os = #{os} ) </if>        <if test="osVer != null">  and (ADL.f_os_ver = #{osVer} ) </if>        <if test="time != null and !time.equals('')  ">  and (ADL.f_time = str_to_date(#{time},'%Y-%m-%d %T') ) </if>        <if test="time_START != null and !time_START.equals('')  ">              <![CDATA[ and (ADL.f_time >= str_to_date(#{time_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="time_END != null and !time_END.equals('')  ">            <![CDATA[ and (ADL.f_time <= str_to_date(#{time_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="ip != null">  and (ADL.f_ip = #{ip} ) </if>        <if test="device != null">  and (ADL.f_device = #{device} ) </if>        <if test="appType != null">  and (ADL.f_app_type = #{appType} ) </if>        <if test="appInfo != null">  and (ADL.f_app_info = #{appInfo} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (ADL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (ADL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (ADL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ADL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (ADL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (ADL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (ADL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (ADL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (ADL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (ADL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (ADL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (ADL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (ADL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (ADL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (ADL.f_id = #{id} ) </if>        <if test="os != null and !os.equals('')  ">  and (ADL.f_os like CONCAT('%',#{os},'%') ) </if>        <if test="osVer != null and !osVer.equals('')  ">  and (ADL.f_os_ver like CONCAT('%',#{osVer},'%') ) </if>        <if test="time != null and !time.equals('')  ">  and (ADL.f_time = str_to_date(#{time},'%Y-%m-%d %T') ) </if>        <if test="time_START != null and !time_START.equals('')  ">              <![CDATA[ and (ADL.f_time >= str_to_date(#{time_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="time_END != null and !time_END.equals('')  ">            <![CDATA[ and (ADL.f_time <= str_to_date(#{time_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="ip != null and !ip.equals('')  ">  and (ADL.f_ip like CONCAT('%',#{ip},'%') ) </if>        <if test="device != null and !device.equals('')  ">  and (ADL.f_device like CONCAT('%',#{device},'%') ) </if>        <if test="appType != null and !appType.equals('')  ">  and (ADL.f_app_type like CONCAT('%',#{appType},'%') ) </if>        <if test="appInfo != null and !appInfo.equals('')  ">  and (ADL.f_app_info like CONCAT('%',#{appInfo},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (ADL.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (ADL.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (ADL.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ADL.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (ADL.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (ADL.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (ADL.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (ADL.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (ADL.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (ADL.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (ADL.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (ADL.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (ADL.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (ADL.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="appDownLogBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="appDownLogBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="appDownLogBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="appDownLogBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_app_down_log ADL    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(应用下载日志)信息。 -->
+	<sql id="select_appDownLog">
+		SELECT <include refid="appDownLogBase.queryHead"/>
+		<include refid="appDownLogBase.busiQueryCondition"/>
+		<include refid="appDownLogBase.dimCheckSql"/>
+		ORDER BY ADL.f_id DESC
+	</sql>
+	<select id="select_appDownLog" parameterType="java.util.Map" resultMap="appDownLogBase.appDownLogExtendMap">
+		<include refid="appDownLogBase.select_appDownLog"/>
+	</select>
+	
+	<!-- 根据条件分页查询(应用下载日志)信息  -->
+	<sql id="select_appDownLog_withPage">
+		SELECT <include refid="appDownLogBase.queryHead"/>
+		<include refid="appDownLogBase.busiQueryCondition"/>
+		<include refid="appDownLogBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_appDownLog_withPage" resultMap="appDownLogBase.appDownLogExtendMap" parameterType="java.util.Map">
+		<include refid="appDownLogBase.select_appDownLog_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(应用下载日志)信息。 -->
+	<sql id="select_appDownLog_bySeqId">
+		SELECT <include refid="appDownLogBase.queryHead"/>
+		<include refid="appDownLogBase.busiQueryCondition"/>
+		 and ADL.f_id = #{_parameter}
+	</sql>
+	<select id="select_appDownLog_bySeqId" parameterType="java.math.BigInteger" resultMap="appDownLogBase.appDownLogBaseMap">
+		<include refid="appDownLogBase.select_appDownLog_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(应用下载日志)记录数  -->
+	<sql id="select_appDownLog_count">
+		SELECT COUNT(*)
+		<include refid="appDownLogBase.busiQueryCount"/>
+		<include refid="appDownLogBase.dimCheckSql"/>
+	</sql>
+	<select id="select_appDownLog_count" resultType="java.lang.Integer">
+		<include refid="appDownLogBase.select_appDownLog_count"/>
+	</select>
+	
+	 <!-- 往(应用下载日志)新增一条记录。 -->
+	 <sql id="insert_appDownLog">
+		INSERT INTO t_app_down_log 
+		(f_id,f_os,f_os_ver,f_time,f_ip,f_device,f_app_type,f_app_info,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{os,jdbcType=VARCHAR},#{osVer,jdbcType=VARCHAR},str_to_date(#{time,jdbcType=DATE},'%Y-%m-%d %T'),#{ip,jdbcType=VARCHAR},#{device,jdbcType=VARCHAR},#{appType,jdbcType=VARCHAR},#{appInfo,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_appDownLog" parameterType="AppDownLog">
+		<include refid="appDownLogBase.insert_appDownLog"/>
+    </insert>
+    
+	<!-- 批量新增(应用下载日志)信息 -->
+    <insert id="insert_appDownLog_Batch" parameterType="java.util.List">
+    	INSERT INTO t_app_down_log 
+		(f_id,f_os,f_os_ver,f_time,f_ip,f_device,f_app_type,f_app_info,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.os,jdbcType=VARCHAR},#{item.osVer,jdbcType=VARCHAR},str_to_date(#{item.time,jdbcType=DATE},'%Y-%m-%d %T'),#{item.ip,jdbcType=VARCHAR},#{item.device,jdbcType=VARCHAR},#{item.appType,jdbcType=VARCHAR},#{item.appInfo,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(应用下载日志)信息。 -->
+    <sql id="update_appDownLog">
+		UPDATE t_app_down_log		<trim prefix="SET" prefixOverrides=","> 		<if test="os != null and !os.equals('') "> ,f_os=#{os}</if> 		<if test="osVer != null and !osVer.equals('') "> ,f_os_ver=#{osVer}</if> 		<if test="time != null and !time.equals('') "> ,f_time=str_to_date(#{time},'%Y-%m-%d %T')</if> 		<if test="ip != null and !ip.equals('') "> ,f_ip=#{ip}</if> 		<if test="device != null and !device.equals('') "> ,f_device=#{device}</if> 		<if test="appType != null and !appType.equals('') "> ,f_app_type=#{appType}</if> 		<if test="appInfo != null and !appInfo.equals('') "> ,f_app_info=#{appInfo}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_appDownLog" parameterType="AppDownLog">
+		<include refid="appDownLogBase.update_appDownLog"/>
+    </update>
+    
+    <!-- 批量更新(应用下载日志)信息。 -->
+    <update id="update_appDownLog_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_app_down_log		<trim prefix="SET" prefixOverrides=","> 		<if test="item.os != null and !item.os.equals('')  "> ,f_os=#{item.os}</if> 		<if test="item.osVer != null and !item.osVer.equals('')  "> ,f_os_ver=#{item.osVer}</if> 		<if test="item.time != null and !item.time.equals('')  "> ,f_time=str_to_date(#{item.time},'%Y-%m-%d %T')</if> 		<if test="item.ip != null and !item.ip.equals('')  "> ,f_ip=#{item.ip}</if> 		<if test="item.device != null and !item.device.equals('')  "> ,f_device=#{item.device}</if> 		<if test="item.appType != null and !item.appType.equals('')  "> ,f_app_type=#{item.appType}</if> 		<if test="item.appInfo != null and !item.appInfo.equals('')  "> ,f_app_info=#{item.appInfo}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(应用下载日志)信息_逻辑删除。 -->
+    <sql id="delete_appDownLog_Logic">
+		UPDATE t_app_down_log		<trim prefix="SET" prefixOverrides=","> 		<if test="os != null and !os.equals('')  "> ,f_os=#{os}</if> 		<if test="osVer != null and !osVer.equals('')  "> ,f_os_ver=#{osVer}</if> 		<if test="time != null and !time.equals('')  "> ,f_time=str_to_date(#{time},'%Y-%m-%d %T')</if> 		<if test="ip != null and !ip.equals('')  "> ,f_ip=#{ip}</if> 		<if test="device != null and !device.equals('')  "> ,f_device=#{device}</if> 		<if test="appType != null and !appType.equals('')  "> ,f_app_type=#{appType}</if> 		<if test="appInfo != null and !appInfo.equals('')  "> ,f_app_info=#{appInfo}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_appDownLog_Logic" parameterType="AppDownLog">
+		<include refid="appDownLogBase.delete_appDownLog_Logic"/>
+    </update>
+    
+    <!-- 批量删除(应用下载日志)信息_逻辑删除 -->
+    <update id="delete_appDownLog_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_app_down_log		<trim prefix="SET" prefixOverrides=","> 		<if test="item.os != null and !item.os.equals('')  "> ,f_os=#{item.os}</if> 		<if test="item.osVer != null and !item.osVer.equals('')  "> ,f_os_ver=#{item.osVer}</if> 		<if test="item.time != null and !item.time.equals('')  "> ,f_time=str_to_date(#{item.time},'%Y-%m-%d %T')</if> 		<if test="item.ip != null and !item.ip.equals('')  "> ,f_ip=#{item.ip}</if> 		<if test="item.device != null and !item.device.equals('')  "> ,f_device=#{item.device}</if> 		<if test="item.appType != null and !item.appType.equals('')  "> ,f_app_type=#{item.appType}</if> 		<if test="item.appInfo != null and !item.appInfo.equals('')  "> ,f_app_info=#{item.appInfo}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(应用下载日志)信息。 -->
+    <sql id="delete_appDownLog">
+		DELETE FROM t_app_down_log WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_appDownLog" parameterType="java.lang.String">
+		<include refid="appDownLogBase.delete_appDownLog"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(应用下载日志)信息。 -->
+    <delete id="delete_appDownLog_Batch" parameterType="java.util.List">
+		DELETE FROM t_app_down_log WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

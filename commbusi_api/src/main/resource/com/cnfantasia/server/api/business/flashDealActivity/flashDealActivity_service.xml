@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<bean id="flashDealActivityService" class="com.cnfantasia.server.api.flashDealActivity.service.FlashDealActivityService">
+		<property name="flashDealActivityDao" ref="flashDealActivityDao"/>
+		<property name="addressOperationService" ref="addressOperationService"/>
+		<property name="flashDealBuyRecordBaseService" ref="flashDealBuyRecordBaseService"/>
+		<property name="ebuyOrderBaseService" ref="ebuyOrderBaseService"/>
+		<property name="userBaseService" ref="userBaseService"/>
+		<property name="uuidManager" ref="uuidManager"/>
+	</bean>
+
+	<bean id="flashDealActivitySynTask" class="com.cnfantasia.server.ms.flashDealActivity.FlashDealActivitySynTask"/>
+	<bean id="flashDealActivityRemindSynTask" class="com.cnfantasia.server.ms.flashDealActivity.FlashDealActivityRemindSynTask"/>
+
+</beans>  

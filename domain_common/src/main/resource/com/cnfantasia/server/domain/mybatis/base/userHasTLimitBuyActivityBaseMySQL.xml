@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户在限时促销购买情况表 t_user_has_t_limit_buy_activity -->
+<mapper namespace="userHasTLimitBuyActivityBase">
+	<resultMap type="UserHasTLimitBuyActivity" id="userHasTLimitBuyActivityBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键ID -->        <result column="t_limit_buy_activity_f_id" javaType="java.math.BigInteger" property="tLimitBuyActivityFId"/>  <!--  -->        <result column="t_ebuy_product_f_id" javaType="java.math.BigInteger" property="tEbuyProductFId"/>  <!-- 关联的商品 -->        <result column="t_ebuy_order_f_id" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 关联的订单 -->        <result column="f_product_count" javaType="java.lang.Long" property="productCount"/>  <!-- 购买数量 -->        <result column="t_user_f_id" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="UserHasTLimitBuyActivity" id="userHasTLimitBuyActivityExtendMap" extends="userHasTLimitBuyActivityBaseMap">
+	</resultMap>
+	<resultMap type="UserHasTLimitBuyActivity" id="userHasTLimitBuyActivityBaseMap_AppendTable">
+        <id column="UHTLBAid" javaType="java.math.BigInteger" property="id"/>  <!-- 主键ID -->        <result column="UHTLBAtLimitBuyActivityFId" javaType="java.math.BigInteger" property="tLimitBuyActivityFId"/>  <!--  -->        <result column="UHTLBAtEbuyProductFId" javaType="java.math.BigInteger" property="tEbuyProductFId"/>  <!-- 关联的商品 -->        <result column="UHTLBAtEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 关联的订单 -->        <result column="UHTLBAproductCount" javaType="java.lang.Long" property="productCount"/>  <!-- 购买数量 -->        <result column="UHTLBAtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="UHTLBAsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="UHTLBAsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="UHTLBAsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="UHTLBAsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="UHTLBAsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="UHTLBAsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="UHTLBAsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="UserHasTLimitBuyActivity" id="userHasTLimitBuyActivityBaseMap_AppendTable1">
+        <id column="UHTLBA1id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键ID -->        <result column="UHTLBA1tLimitBuyActivityFId" javaType="java.math.BigInteger" property="tLimitBuyActivityFId"/>  <!--  -->        <result column="UHTLBA1tEbuyProductFId" javaType="java.math.BigInteger" property="tEbuyProductFId"/>  <!-- 关联的商品 -->        <result column="UHTLBA1tEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!-- 关联的订单 -->        <result column="UHTLBA1productCount" javaType="java.lang.Long" property="productCount"/>  <!-- 购买数量 -->        <result column="UHTLBA1tUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="UHTLBA1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="UHTLBA1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="UHTLBA1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="UHTLBA1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="UHTLBA1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="UHTLBA1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="UHTLBA1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		UHTLBA.f_id,UHTLBA.t_limit_buy_activity_f_id,UHTLBA.t_ebuy_product_f_id,UHTLBA.t_ebuy_order_f_id,UHTLBA.f_product_count,UHTLBA.t_user_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		UHTLBA.f_id as UHTLBAid,UHTLBA.t_limit_buy_activity_f_id as UHTLBAtLimitBuyActivityFId,UHTLBA.t_ebuy_product_f_id as UHTLBAtEbuyProductFId,UHTLBA.t_ebuy_order_f_id as UHTLBAtEbuyOrderFId,UHTLBA.f_product_count as UHTLBAproductCount,UHTLBA.t_user_f_id as UHTLBAtUserFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		UHTLBA1.f_id as UHTLBA1id,UHTLBA1.t_limit_buy_activity_f_id as UHTLBA1tLimitBuyActivityFId,UHTLBA1.t_ebuy_product_f_id as UHTLBA1tEbuyProductFId,UHTLBA1.t_ebuy_order_f_id as UHTLBA1tEbuyOrderFId,UHTLBA1.f_product_count as UHTLBA1productCount,UHTLBA1.t_user_f_id as UHTLBA1tUserFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (UHTLBA.f_id = #{id} ) </if>        <if test="tLimitBuyActivityFId != null">  and (UHTLBA.t_limit_buy_activity_f_id = #{tLimitBuyActivityFId} ) </if>        <if test="tEbuyProductFId != null">  and (UHTLBA.t_ebuy_product_f_id = #{tEbuyProductFId} ) </if>        <if test="tEbuyOrderFId != null">  and (UHTLBA.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="productCount != null">  and (UHTLBA.f_product_count = #{productCount} ) </if>        <if test="tUserFId != null">  and (UHTLBA.t_user_f_id = #{tUserFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (UHTLBA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (UHTLBA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (UHTLBA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (UHTLBA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (UHTLBA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (UHTLBA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (UHTLBA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (UHTLBA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (UHTLBA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (UHTLBA.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (UHTLBA.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (UHTLBA.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (UHTLBA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (UHTLBA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (UHTLBA.f_id = #{id} ) </if>        <if test="tLimitBuyActivityFId != null and !tLimitBuyActivityFId.equals('')  ">  and (UHTLBA.t_limit_buy_activity_f_id = #{tLimitBuyActivityFId} ) </if>        <if test="tEbuyProductFId != null and !tEbuyProductFId.equals('')  ">  and (UHTLBA.t_ebuy_product_f_id = #{tEbuyProductFId} ) </if>        <if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  ">  and (UHTLBA.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="productCount != null and !productCount.equals('')  ">  and (UHTLBA.f_product_count = #{productCount} ) </if>        <if test="tUserFId != null and !tUserFId.equals('')  ">  and (UHTLBA.t_user_f_id = #{tUserFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (UHTLBA.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (UHTLBA.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (UHTLBA.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (UHTLBA.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (UHTLBA.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (UHTLBA.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (UHTLBA.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (UHTLBA.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (UHTLBA.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (UHTLBA.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (UHTLBA.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (UHTLBA.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (UHTLBA.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (UHTLBA.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="userHasTLimitBuyActivityBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="userHasTLimitBuyActivityBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="userHasTLimitBuyActivityBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="userHasTLimitBuyActivityBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_user_has_t_limit_buy_activity UHTLBA    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(用户在限时促销购买情况表)信息。 -->
+	<sql id="select_userHasTLimitBuyActivity">
+		SELECT <include refid="userHasTLimitBuyActivityBase.queryHead"/>
+		<include refid="userHasTLimitBuyActivityBase.busiQueryCondition"/>
+		<include refid="userHasTLimitBuyActivityBase.dimCheckSql"/>
+		ORDER BY UHTLBA.f_id DESC
+	</sql>
+	<select id="select_userHasTLimitBuyActivity" parameterType="java.util.Map" resultMap="userHasTLimitBuyActivityBase.userHasTLimitBuyActivityExtendMap">
+		<include refid="userHasTLimitBuyActivityBase.select_userHasTLimitBuyActivity"/>
+	</select>
+	
+	<!-- 根据条件分页查询(用户在限时促销购买情况表)信息  -->
+	<sql id="select_userHasTLimitBuyActivity_withPage">
+		SELECT <include refid="userHasTLimitBuyActivityBase.queryHead"/>
+		<include refid="userHasTLimitBuyActivityBase.busiQueryCondition"/>
+		<include refid="userHasTLimitBuyActivityBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_userHasTLimitBuyActivity_withPage" resultMap="userHasTLimitBuyActivityBase.userHasTLimitBuyActivityExtendMap" parameterType="java.util.Map">
+		<include refid="userHasTLimitBuyActivityBase.select_userHasTLimitBuyActivity_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(用户在限时促销购买情况表)信息。 -->
+	<sql id="select_userHasTLimitBuyActivity_bySeqId">
+		SELECT <include refid="userHasTLimitBuyActivityBase.queryHead"/>
+		<include refid="userHasTLimitBuyActivityBase.busiQueryCondition"/>
+		 and UHTLBA.f_id = #{_parameter}
+	</sql>
+	<select id="select_userHasTLimitBuyActivity_bySeqId" parameterType="java.math.BigInteger" resultMap="userHasTLimitBuyActivityBase.userHasTLimitBuyActivityBaseMap">
+		<include refid="userHasTLimitBuyActivityBase.select_userHasTLimitBuyActivity_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(用户在限时促销购买情况表)记录数  -->
+	<sql id="select_userHasTLimitBuyActivity_count">
+		SELECT COUNT(*)
+		<include refid="userHasTLimitBuyActivityBase.busiQueryCount"/>
+		<include refid="userHasTLimitBuyActivityBase.dimCheckSql"/>
+	</sql>
+	<select id="select_userHasTLimitBuyActivity_count" resultType="java.lang.Integer">
+		<include refid="userHasTLimitBuyActivityBase.select_userHasTLimitBuyActivity_count"/>
+	</select>
+	
+	 <!-- 往(用户在限时促销购买情况表)新增一条记录。 -->
+	 <sql id="insert_userHasTLimitBuyActivity">
+		INSERT INTO t_user_has_t_limit_buy_activity 
+		(f_id,t_limit_buy_activity_f_id,t_ebuy_product_f_id,t_ebuy_order_f_id,f_product_count,t_user_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tLimitBuyActivityFId},#{tEbuyProductFId},#{tEbuyOrderFId},#{productCount},#{tUserFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_userHasTLimitBuyActivity" parameterType="UserHasTLimitBuyActivity">
+		<include refid="userHasTLimitBuyActivityBase.insert_userHasTLimitBuyActivity"/>
+    </insert>
+    
+	<!-- 批量新增(用户在限时促销购买情况表)信息 -->
+    <insert id="insert_userHasTLimitBuyActivity_Batch" parameterType="java.util.List">
+    	INSERT INTO t_user_has_t_limit_buy_activity 
+		(f_id,t_limit_buy_activity_f_id,t_ebuy_product_f_id,t_ebuy_order_f_id,f_product_count,t_user_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tLimitBuyActivityFId},#{item.tEbuyProductFId},#{item.tEbuyOrderFId},#{item.productCount},#{item.tUserFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(用户在限时促销购买情况表)信息。 -->
+    <sql id="update_userHasTLimitBuyActivity">
+		UPDATE t_user_has_t_limit_buy_activity		<trim prefix="SET" prefixOverrides=","> 		<if test="tLimitBuyActivityFId != null and !tLimitBuyActivityFId.equals('') "> ,t_limit_buy_activity_f_id=#{tLimitBuyActivityFId}</if> 		<if test="tEbuyProductFId != null and !tEbuyProductFId.equals('') "> ,t_ebuy_product_f_id=#{tEbuyProductFId}</if> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('') "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="productCount != null and !productCount.equals('') "> ,f_product_count=#{productCount}</if> 		<if test="tUserFId != null and !tUserFId.equals('') "> ,t_user_f_id=#{tUserFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_userHasTLimitBuyActivity" parameterType="UserHasTLimitBuyActivity">
+		<include refid="userHasTLimitBuyActivityBase.update_userHasTLimitBuyActivity"/>
+    </update>
+    
+    <!-- 批量更新(用户在限时促销购买情况表)信息。 -->
+    <update id="update_userHasTLimitBuyActivity_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_user_has_t_limit_buy_activity		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tLimitBuyActivityFId != null and !item.tLimitBuyActivityFId.equals('')  "> ,t_limit_buy_activity_f_id=#{item.tLimitBuyActivityFId}</if> 		<if test="item.tEbuyProductFId != null and !item.tEbuyProductFId.equals('')  "> ,t_ebuy_product_f_id=#{item.tEbuyProductFId}</if> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.productCount != null and !item.productCount.equals('')  "> ,f_product_count=#{item.productCount}</if> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(用户在限时促销购买情况表)信息_逻辑删除。 -->
+    <sql id="delete_userHasTLimitBuyActivity_Logic">
+		UPDATE t_user_has_t_limit_buy_activity		<trim prefix="SET" prefixOverrides=","> 		<if test="tLimitBuyActivityFId != null and !tLimitBuyActivityFId.equals('')  "> ,t_limit_buy_activity_f_id=#{tLimitBuyActivityFId}</if> 		<if test="tEbuyProductFId != null and !tEbuyProductFId.equals('')  "> ,t_ebuy_product_f_id=#{tEbuyProductFId}</if> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="productCount != null and !productCount.equals('')  "> ,f_product_count=#{productCount}</if> 		<if test="tUserFId != null and !tUserFId.equals('')  "> ,t_user_f_id=#{tUserFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_userHasTLimitBuyActivity_Logic" parameterType="UserHasTLimitBuyActivity">
+		<include refid="userHasTLimitBuyActivityBase.delete_userHasTLimitBuyActivity_Logic"/>
+    </update>
+    
+    <!-- 批量删除(用户在限时促销购买情况表)信息_逻辑删除 -->
+    <update id="delete_userHasTLimitBuyActivity_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_user_has_t_limit_buy_activity		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tLimitBuyActivityFId != null and !item.tLimitBuyActivityFId.equals('')  "> ,t_limit_buy_activity_f_id=#{item.tLimitBuyActivityFId}</if> 		<if test="item.tEbuyProductFId != null and !item.tEbuyProductFId.equals('')  "> ,t_ebuy_product_f_id=#{item.tEbuyProductFId}</if> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.productCount != null and !item.productCount.equals('')  "> ,f_product_count=#{item.productCount}</if> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(用户在限时促销购买情况表)信息。 -->
+    <sql id="delete_userHasTLimitBuyActivity">
+		DELETE FROM t_user_has_t_limit_buy_activity WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_userHasTLimitBuyActivity" parameterType="java.lang.String">
+		<include refid="userHasTLimitBuyActivityBase.delete_userHasTLimitBuyActivity"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(用户在限时促销购买情况表)信息。 -->
+    <delete id="delete_userHasTLimitBuyActivity_Batch" parameterType="java.util.List">
+		DELETE FROM t_user_has_t_limit_buy_activity WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:维修单的与第三方供应商的信息 t_dredge_bill_other_info -->
+<mapper namespace="dredgeBillOtherInfoBase">
+	<resultMap type="DredgeBillOtherInfo" id="dredgeBillOtherInfoBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_service_spl_order_num" javaType="java.lang.String" property="serviceSplOrderNum"/>  <!-- 第三方服务商的订单编码 -->        <result column="t_dredge_bill_f_id" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!--  -->        <result column="t_dredge_3rd_spl_f_id" javaType="java.math.BigInteger" property="tDredge3rdSplFId"/>  <!--  -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="DredgeBillOtherInfo" id="dredgeBillOtherInfoExtendMap" extends="dredgeBillOtherInfoBaseMap">
+	</resultMap>
+	<resultMap type="DredgeBillOtherInfo" id="dredgeBillOtherInfoBaseMap_AppendTable">
+        <id column="DBOIid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="DBOIserviceSplOrderNum" javaType="java.lang.String" property="serviceSplOrderNum"/>  <!-- 第三方服务商的订单编码 -->        <result column="DBOItDredgeBillFId" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!--  -->        <result column="DBOItDredge3rdSplFId" javaType="java.math.BigInteger" property="tDredge3rdSplFId"/>  <!--  -->        <result column="DBOIsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="DBOIsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="DBOIsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="DBOIsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="DBOIsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="DBOIsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="DBOIsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="DredgeBillOtherInfo" id="dredgeBillOtherInfoBaseMap_AppendTable1">
+        <id column="DBOI1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="DBOI1serviceSplOrderNum" javaType="java.lang.String" property="serviceSplOrderNum"/>  <!-- 第三方服务商的订单编码 -->        <result column="DBOI1tDredgeBillFId" javaType="java.math.BigInteger" property="tDredgeBillFId"/>  <!--  -->        <result column="DBOI1tDredge3rdSplFId" javaType="java.math.BigInteger" property="tDredge3rdSplFId"/>  <!--  -->        <result column="DBOI1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="DBOI1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="DBOI1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="DBOI1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="DBOI1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="DBOI1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="DBOI1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		DBOI.f_id,DBOI.f_service_spl_order_num,DBOI.t_dredge_bill_f_id,DBOI.t_dredge_3rd_spl_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		DBOI.f_id as DBOIid,DBOI.f_service_spl_order_num as DBOIserviceSplOrderNum,DBOI.t_dredge_bill_f_id as DBOItDredgeBillFId,DBOI.t_dredge_3rd_spl_f_id as DBOItDredge3rdSplFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		DBOI1.f_id as DBOI1id,DBOI1.f_service_spl_order_num as DBOI1serviceSplOrderNum,DBOI1.t_dredge_bill_f_id as DBOI1tDredgeBillFId,DBOI1.t_dredge_3rd_spl_f_id as DBOI1tDredge3rdSplFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (DBOI.f_id = #{id} ) </if>        <if test="serviceSplOrderNum != null">  and (DBOI.f_service_spl_order_num = #{serviceSplOrderNum} ) </if>        <if test="tDredgeBillFId != null">  and (DBOI.t_dredge_bill_f_id = #{tDredgeBillFId} ) </if>        <if test="tDredge3rdSplFId != null">  and (DBOI.t_dredge_3rd_spl_f_id = #{tDredge3rdSplFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (DBOI.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (DBOI.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (DBOI.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (DBOI.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (DBOI.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (DBOI.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (DBOI.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (DBOI.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (DBOI.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (DBOI.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (DBOI.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (DBOI.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (DBOI.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (DBOI.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (DBOI.f_id = #{id} ) </if>        <if test="serviceSplOrderNum != null and !serviceSplOrderNum.equals('')  ">  and (DBOI.f_service_spl_order_num like CONCAT('%',#{serviceSplOrderNum},'%') ) </if>        <if test="tDredgeBillFId != null and !tDredgeBillFId.equals('')  ">  and (DBOI.t_dredge_bill_f_id = #{tDredgeBillFId} ) </if>        <if test="tDredge3rdSplFId != null and !tDredge3rdSplFId.equals('')  ">  and (DBOI.t_dredge_3rd_spl_f_id = #{tDredge3rdSplFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (DBOI.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (DBOI.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (DBOI.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (DBOI.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (DBOI.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (DBOI.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (DBOI.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (DBOI.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (DBOI.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (DBOI.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (DBOI.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (DBOI.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (DBOI.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (DBOI.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="dredgeBillOtherInfoBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="dredgeBillOtherInfoBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="dredgeBillOtherInfoBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="dredgeBillOtherInfoBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_dredge_bill_other_info DBOI    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(维修单的与第三方供应商的信息)信息。 -->
+	<sql id="select_dredgeBillOtherInfo">
+		SELECT <include refid="dredgeBillOtherInfoBase.queryHead"/>
+		<include refid="dredgeBillOtherInfoBase.busiQueryCondition"/>
+		<include refid="dredgeBillOtherInfoBase.dimCheckSql"/>
+		ORDER BY DBOI.f_id DESC
+	</sql>
+	<select id="select_dredgeBillOtherInfo" parameterType="java.util.Map" resultMap="dredgeBillOtherInfoBase.dredgeBillOtherInfoExtendMap">
+		<include refid="dredgeBillOtherInfoBase.select_dredgeBillOtherInfo"/>
+	</select>
+	
+	<!-- 根据条件分页查询(维修单的与第三方供应商的信息)信息  -->
+	<sql id="select_dredgeBillOtherInfo_withPage">
+		SELECT <include refid="dredgeBillOtherInfoBase.queryHead"/>
+		<include refid="dredgeBillOtherInfoBase.busiQueryCondition"/>
+		<include refid="dredgeBillOtherInfoBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_dredgeBillOtherInfo_withPage" resultMap="dredgeBillOtherInfoBase.dredgeBillOtherInfoExtendMap" parameterType="java.util.Map">
+		<include refid="dredgeBillOtherInfoBase.select_dredgeBillOtherInfo_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(维修单的与第三方供应商的信息)信息。 -->
+	<sql id="select_dredgeBillOtherInfo_bySeqId">
+		SELECT <include refid="dredgeBillOtherInfoBase.queryHead"/>
+		<include refid="dredgeBillOtherInfoBase.busiQueryCondition"/>
+		 and DBOI.f_id = #{_parameter}
+	</sql>
+	<select id="select_dredgeBillOtherInfo_bySeqId" parameterType="java.math.BigInteger" resultMap="dredgeBillOtherInfoBase.dredgeBillOtherInfoBaseMap">
+		<include refid="dredgeBillOtherInfoBase.select_dredgeBillOtherInfo_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(维修单的与第三方供应商的信息)记录数  -->
+	<sql id="select_dredgeBillOtherInfo_count">
+		SELECT COUNT(*)
+		<include refid="dredgeBillOtherInfoBase.busiQueryCount"/>
+		<include refid="dredgeBillOtherInfoBase.dimCheckSql"/>
+	</sql>
+	<select id="select_dredgeBillOtherInfo_count" resultType="java.lang.Integer">
+		<include refid="dredgeBillOtherInfoBase.select_dredgeBillOtherInfo_count"/>
+	</select>
+	
+	 <!-- 往(维修单的与第三方供应商的信息)新增一条记录。 -->
+	 <sql id="insert_dredgeBillOtherInfo">
+		INSERT INTO t_dredge_bill_other_info 
+		(f_id,f_service_spl_order_num,t_dredge_bill_f_id,t_dredge_3rd_spl_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{serviceSplOrderNum,jdbcType=VARCHAR},#{tDredgeBillFId},#{tDredge3rdSplFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_dredgeBillOtherInfo" parameterType="DredgeBillOtherInfo">
+		<include refid="dredgeBillOtherInfoBase.insert_dredgeBillOtherInfo"/>
+    </insert>
+    
+	<!-- 批量新增(维修单的与第三方供应商的信息)信息 -->
+    <insert id="insert_dredgeBillOtherInfo_Batch" parameterType="java.util.List">
+    	INSERT INTO t_dredge_bill_other_info 
+		(f_id,f_service_spl_order_num,t_dredge_bill_f_id,t_dredge_3rd_spl_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.serviceSplOrderNum,jdbcType=VARCHAR},#{item.tDredgeBillFId},#{item.tDredge3rdSplFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(维修单的与第三方供应商的信息)信息。 -->
+    <sql id="update_dredgeBillOtherInfo">
+		UPDATE t_dredge_bill_other_info		<trim prefix="SET" prefixOverrides=","> 		<if test="serviceSplOrderNum != null and !serviceSplOrderNum.equals('') "> ,f_service_spl_order_num=#{serviceSplOrderNum}</if> 		<if test="tDredgeBillFId != null and !tDredgeBillFId.equals('') "> ,t_dredge_bill_f_id=#{tDredgeBillFId}</if> 		<if test="tDredge3rdSplFId != null and !tDredge3rdSplFId.equals('') "> ,t_dredge_3rd_spl_f_id=#{tDredge3rdSplFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_dredgeBillOtherInfo" parameterType="DredgeBillOtherInfo">
+		<include refid="dredgeBillOtherInfoBase.update_dredgeBillOtherInfo"/>
+    </update>
+    
+    <!-- 批量更新(维修单的与第三方供应商的信息)信息。 -->
+    <update id="update_dredgeBillOtherInfo_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_bill_other_info		<trim prefix="SET" prefixOverrides=","> 		<if test="item.serviceSplOrderNum != null and !item.serviceSplOrderNum.equals('')  "> ,f_service_spl_order_num=#{item.serviceSplOrderNum}</if> 		<if test="item.tDredgeBillFId != null and !item.tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{item.tDredgeBillFId}</if> 		<if test="item.tDredge3rdSplFId != null and !item.tDredge3rdSplFId.equals('')  "> ,t_dredge_3rd_spl_f_id=#{item.tDredge3rdSplFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(维修单的与第三方供应商的信息)信息_逻辑删除。 -->
+    <sql id="delete_dredgeBillOtherInfo_Logic">
+		UPDATE t_dredge_bill_other_info		<trim prefix="SET" prefixOverrides=","> 		<if test="serviceSplOrderNum != null and !serviceSplOrderNum.equals('')  "> ,f_service_spl_order_num=#{serviceSplOrderNum}</if> 		<if test="tDredgeBillFId != null and !tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{tDredgeBillFId}</if> 		<if test="tDredge3rdSplFId != null and !tDredge3rdSplFId.equals('')  "> ,t_dredge_3rd_spl_f_id=#{tDredge3rdSplFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_dredgeBillOtherInfo_Logic" parameterType="DredgeBillOtherInfo">
+		<include refid="dredgeBillOtherInfoBase.delete_dredgeBillOtherInfo_Logic"/>
+    </update>
+    
+    <!-- 批量删除(维修单的与第三方供应商的信息)信息_逻辑删除 -->
+    <update id="delete_dredgeBillOtherInfo_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_bill_other_info		<trim prefix="SET" prefixOverrides=","> 		<if test="item.serviceSplOrderNum != null and !item.serviceSplOrderNum.equals('')  "> ,f_service_spl_order_num=#{item.serviceSplOrderNum}</if> 		<if test="item.tDredgeBillFId != null and !item.tDredgeBillFId.equals('')  "> ,t_dredge_bill_f_id=#{item.tDredgeBillFId}</if> 		<if test="item.tDredge3rdSplFId != null and !item.tDredge3rdSplFId.equals('')  "> ,t_dredge_3rd_spl_f_id=#{item.tDredge3rdSplFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(维修单的与第三方供应商的信息)信息。 -->
+    <sql id="delete_dredgeBillOtherInfo">
+		DELETE FROM t_dredge_bill_other_info WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_dredgeBillOtherInfo" parameterType="java.lang.String">
+		<include refid="dredgeBillOtherInfoBase.delete_dredgeBillOtherInfo"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(维修单的与第三方供应商的信息)信息。 -->
+    <delete id="delete_dredgeBillOtherInfo_Batch" parameterType="java.util.List">
+		DELETE FROM t_dredge_bill_other_info WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

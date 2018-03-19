@@ -1,0 +1,188 @@
+/**   
+* Filename:    TestFetchData03.java   
+* @version:    1.0  
+* Create at:   2014年5月13日 上午3:29:06   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年5月13日    shiyl      1.0         1.0 Version   
+*/
+package test.com.cnfantasia.server.api;
+
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.net.URLEncoder;
+
+import org.junit.Test;
+
+import test.HttpClientTest;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.cnfantasia.server.api.pub.constant.SEQConstants;
+import com.cnfantasia.server.api.pub.utils.MapConverter;
+import com.cnfantasia.server.api.pub.uuidMaker.UuidManager;
+import com.cnfantasia.server.apibase.addressBlock.dao.IAddressBlockBaseDao;
+import com.cnfantasia.server.apibase.addressBlock.entity.AddressBlock;
+import com.cnfantasia.server.apibase.addressCity.dao.IAddressCityBaseDao;
+import com.cnfantasia.server.apibase.addressCity.entity.AddressCity;
+import com.cnfantasia.server.apibase.addressProvince.dao.IAddressProvinceBaseDao;
+import com.cnfantasia.server.apibase.addressProvince.entity.AddressProvince;
+import com.cnfantasia.server.apibase.building.dao.IBuildingBaseDao;
+import com.cnfantasia.server.apibase.building.entity.Building;
+import com.cnfantasia.server.apibase.groupBuilding.dao.IGroupBuildingBaseDao;
+import com.cnfantasia.server.apibase.groupBuilding.entity.GroupBuilding;
+import com.cnfantasia.server.apibase.realRoom.dao.IRealRoomBaseDao;
+import com.cnfantasia.server.apibase.realRoom.entity.RealRoom;
+import com.cnfantasia.server.common.utils.ChineseCharToEn;
+import com.cnfantasia.server.common.utils.PinyinUtil;
+
+/**
+ * Filename:    TestFetchData03.java
+ * @version:    1.0.0
+ * Create at:   2014年5月13日 上午3:29:06
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年5月13日       shiyl             1.0             1.0 Version
+ */
+public class TestFetchData03 extends BaseTest{
+//	private static boolean qryProvince = false;
+	private static boolean qryCity = false;
+	private static boolean qryBlock = false;
+	private static boolean qryGroupBuilding = false;
+	private static boolean qryBuilding = false;
+	private static boolean qryRealRoom = false;
+	
+//	@Test
+	public void fetchProvince() throws UnsupportedEncodingException{
+		ChineseCharToEn cte = new ChineseCharToEn();
+		//获取省列表 广东省
+		JSONArray provinceList = HttpClientTest.doPost("http://cyz.colourlife.com/site/regions?region_id=0");
+//		System.out.println(provinceList);
+		for(Object obj1:provinceList){
+			JSONObject province  = (JSONObject)obj1;
+			String id1 = province.getString("id");
+			String name1 = province.getString("name");
+			System.out.println(id1+" "+name1);
+			IAddressProvinceBaseDao addressProvinceBaseDao = ctx.getBean("addressProvinceBaseDao", IAddressProvinceBaseDao.class);
+			if(addressProvinceBaseDao.selectAddressProvinceBySeqId(id1)==null){
+				AddressProvince addressProvince = new AddressProvince(new BigInteger(id1), name1);
+				addressProvinceBaseDao.insertAddressProvince(MapConverter.toMap(addressProvince));
+			}else{
+				System.out.println("不新增province");
+			}
+			//根据省查询市 深圳市
+			if("20".equals(id1)){qryCity = true;}
+			if(!qryCity){continue;}
+			JSONArray address_cityList = HttpClientTest.doPost("http://cyz.colourlife.com/site/regions?parent_id="+id1);
+//			System.out.println(address_cityList);
+			for(Object obj2:address_cityList){
+				JSONObject address_city  = (JSONObject)obj2;
+				String id2 = address_city.getString("id");
+				String name2 = address_city.getString("name");
+				String alpha = cte.getFirstLetter(name2).toUpperCase(); ;
+				System.out.println(id2+" "+name2);
+				IAddressCityBaseDao addressCityBaseDao = ctx.getBean("addressCityBaseDao", IAddressCityBaseDao.class);
+				if(addressCityBaseDao.selectAddressCityBySeqId(id2)==null){
+					AddressCity addressCity = new AddressCity(new BigInteger(id2), name2, new BigInteger(id1),alpha);
+					addressCityBaseDao.insertAddressCity(MapConverter.toMap(addressCity));
+				}else{
+					System.out.println("不新增address_city");
+				}
+				//根据市查询区 宝安区
+				if("254".equals(id2)){qryBlock = true;}
+				if(!qryBlock){continue;}
+				JSONArray address_blockList = HttpClientTest.doPost("http://cyz.colourlife.com/site/regions?parent_id="+id2);
+//				System.out.println(address_blockList);
+				for(Object obj3:address_blockList){
+					JSONObject address_block  = (JSONObject)obj3;
+					String id3 = address_block.getString("id");
+					String name3 = address_block.getString("name");
+					System.out.println(id3+" "+name3);
+					IAddressBlockBaseDao addressBlockBaseDao= ctx.getBean("addressBlockBaseDao", IAddressBlockBaseDao.class);
+					if(addressBlockBaseDao.selectAddressBlockBySeqId(id3)==null){
+						AddressBlock addressBlock = new AddressBlock(new BigInteger(id3), name3, new BigInteger(id2));
+						addressBlockBaseDao.insertAddressBlock(MapConverter.toMap(addressBlock));
+					}else{
+						System.out.println("不新增address_block");
+					}
+					//根据地区查询小区列表 深圳花都
+					if("2275".equals(id3)){qryGroupBuilding = true;}
+					if(!qryGroupBuilding){continue;}
+					JSONArray group_buildingList = HttpClientTest.doPost("http://cyz.colourlife.com/site/communities?region_id="+id3);
+//					System.out.println(group_buildingList);
+					for(Object obj4:group_buildingList){
+						JSONObject group_building  = (JSONObject)obj4;
+						String id4 = group_building.getString("id");
+						String name4 = group_building.getString("name");
+						System.out.println(id4+" "+name4);
+						IGroupBuildingBaseDao groupBuildingBaseDao= ctx.getBean("groupBuildingBaseDao", IGroupBuildingBaseDao.class);
+						if(groupBuildingBaseDao.selectGroupBuildingBySeqId(id4)==null){
+							GroupBuilding groupBuilding = new GroupBuilding(new BigInteger(id4), null, null, null, new BigInteger("1"), name4, new BigInteger(id3), 0, null, 1, PinyinUtil.hanyuToPinyinSimple(name4), null, null, 9);
+							groupBuildingBaseDao.insertGroupBuilding(MapConverter.toMap(groupBuilding));
+						}else{
+							System.out.println("不新增group_building");
+						}
+						//根据小区查询楼栋
+						if("264".equals(id4)){qryBuilding = true;}
+						if(!qryBuilding){continue;}
+//						JSONArray buildingList = HttpClientTest.doPost("http://cyz.colourlife.com/site/builds?community_id="+id4);
+						String colourdBuildsUrl = "http://cyz.colourlife.com/site/colourdBuilds?community_id=";
+						colourdBuildsUrl+=URLEncoder.encode(id4,"UTF-8");
+						colourdBuildsUrl = colourdBuildsUrl.replaceAll("\\+", "%20");
+						JSONArray buildingList = HttpClientTest.doPost(colourdBuildsUrl);
+						System.out.println(buildingList);
+						for(Object obj5:buildingList){
+							JSONObject building  = (JSONObject)obj5;
+							String id5 = building.getString("id");
+							String name5 = building.getString("name");
+							System.out.println(id5+" "+name5);
+							IBuildingBaseDao buildingBaseDao = ctx.getBean("buildingBaseDao", IBuildingBaseDao.class);
+							Building buildingTT = new Building(null, null, new BigInteger(id4), name5, null, null, 9, null, id5);
+							BigInteger realId5 = null;
+							if(buildingBaseDao.selectBuildingCount(MapConverter.toMap(buildingTT), false)<=0){
+								realId5 = UuidManager.getNextUuidBigInteger(SEQConstants.t_building);
+								buildingTT.setId(realId5);
+								buildingBaseDao.insertBuilding(MapConverter.toMap(buildingTT));
+							}else{
+								System.out.println("不新增building:"+buildingTT);
+							}
+							//根据楼栋查询门牌
+//							if("ZZS-THY-东门".equals(id5)){qryRealRoom = true;realId5 = new BigInteger("53300");}
+							if("JX-XHC-KJ195".equals(id5)){qryRealRoom = true;realId5 = new BigInteger("58166");}
+							if(!qryRealRoom){continue;}
+							String realRoomUrl = "http://cyz.colourlife.com/site/colourdRooms?build_id=";
+							realRoomUrl+=URLEncoder.encode(id5,"UTF-8");
+							realRoomUrl = realRoomUrl.replaceAll("\\+", "%20");
+							JSONArray realRoomList = HttpClientTest.doPost(realRoomUrl);
+							for(Object obj6:realRoomList){
+								JSONObject realRoom  = (JSONObject)obj6;
+								String id6 = realRoom.getString("id");
+								String name6 = realRoom.getString("name");
+								System.out.println(id6+" "+name6);
+								IRealRoomBaseDao realRoomBaseDao = ctx.getBean("realRoomBaseDao", IRealRoomBaseDao.class);
+								RealRoom realRoomTT = new RealRoom(null, name6, null, realId5, null, null, 9, null, id6);
+								BigInteger realId6 = null;
+								if(realRoomBaseDao.selectRealRoomCount(MapConverter.toMap(realRoomTT), false)<=0){
+									realId6 = UuidManager.getNextUuidBigInteger(SEQConstants.t_real_room);
+									realRoomTT.setId(realId6);
+									realRoomBaseDao.insertRealRoom(MapConverter.toMap(realRoomTT));
+								}else{
+									System.out.println("不新增realRoom:"+realRoomTT);
+								}
+								
+							}
+						}
+					}
+				}
+			}
+		}
+		
+	}
+	
+}

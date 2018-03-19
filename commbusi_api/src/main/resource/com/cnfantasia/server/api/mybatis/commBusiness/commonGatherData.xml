@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 数据归集-公共 -->
+<mapper namespace="commonGatherData">
+	
+	<!-- 更新点赞数量，附加方式 -->
+	<!-- <update id="update_CommonGatherData_All_Append_Count" parameterType="java.util.Map">
+		UPDATE t_common_gather_data CGD
+		SET CGD.f_total_support_count = CGD.f_total_support_count + #{supportCount}
+			,CGD.f_total_comment_count = CGD.f_total_comment_count + #{commentCount}
+			,CGD.f_total_collect_count = CGD.f_total_collect_count + #{collectCount}
+		WHERE 1=1
+		AND CGD.f_sys0_del_state = 0
+		AND CGD.f_target_type = #{goalType}
+		AND CGD.f_target_id = #{goalId}
+	</update> -->
+	
+	<!-- 查询单个信息详情 -->
+	<select id="select_GatherData_Signal" parameterType="java.util.Map" resultMap="commonGatherDataBase.commonGatherDataBaseMap_AppendTable">
+		SELECT <include refid="commonGatherDataBase.queryHead_AppendTable"/>
+		FROM t_common_gather_data CGD
+		WHERE 1=1
+		AND CGD.f_sys0_del_state = 0
+		AND CGD.f_target_type = #{goalType}
+		AND CGD.f_target_id = #{goalId}
+	</select>
+	
+	<!-- 查询多个信息详情,单个类别 -->
+	<select id="select_GatherData_Multi_oneType"  parameterType="java.util.Map" resultMap="commonGatherDataBase.commonGatherDataBaseMap_AppendTable">
+		SELECT <include refid="commonGatherDataBase.queryHead_AppendTable"/>
+		FROM ( 
+			<foreach collection="goalIdList" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item} f_id
+			</foreach>
+		) A_tmp 
+		INNER JOIN t_common_gather_data CGD ON CGD.f_id = A_tmp.f_id AND CGD.f_sys0_del_state = 0
+			AND CGD.f_target_type = #{goalType}
+		WHERE 1=1
+	</select>
+	
+	<!-- 查询多个信息详情,多个类别 -->
+	<select id="select_GatherData_Multi_someType" parameterType="java.util.List" resultMap="commonGatherDataBase.commonGatherDataBaseMap_AppendTable">
+		SELECT <include refid="commonGatherDataBase.queryHead_AppendTable"/>
+		FROM ( 
+			<foreach collection="list" item="item" index="index" separator=" union all select " open=" select " close="">
+				#{item.goalType} goalType
+				,#{item.goalId} goalId
+			</foreach>
+		) A_tmp 
+		INNER JOIN t_common_gather_data CGD ON 1=1
+			AND CGD.f_target_type = A_tmp.goalType AND CGD.f_target_id = A_tmp.goalId
+			AND CGD.f_sys0_del_state = 0
+		WHERE 1=1
+	</select>
+	
+	<!-- 附加的方式批量更新数据 -->
+	<update id="update_CommonGatherData_Batch_Append" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+			UPDATE t_common_gather_data SET <!-- f_id=#{item.id} --> f_sys0_upd_time= SYSDATE()
+			,f_last_update_time=SYSDATE()
+	 		<if test="item.totalSupportCount != null and !item.totalSupportCount.equals('')  ">
+	 			<![CDATA[,f_total_support_count= case when (f_total_support_count+#{item.totalSupportCount})<=0 then 0 else (f_total_support_count+#{item.totalSupportCount}) end]]>
+	 		</if>
+	 		<if test="item.totalCommentCount != null and !item.totalCommentCount.equals('')  ">
+	 			<![CDATA[,f_total_comment_count= case when (f_total_comment_count+#{item.totalCommentCount})<=0 then 0 else (f_total_comment_count+#{item.totalCommentCount}) end]]>
+	 		</if>
+	 		<if test="item.totalCollectCount != null and !item.totalCollectCount.equals('')  ">
+	 			<![CDATA[,f_total_collect_count=case when (f_total_collect_count+#{item.totalCollectCount})<=0 then 0 else (f_total_collect_count+#{item.totalCollectCount}) end]]>
+	 		</if>
+			WHERE f_id=#{item.id}
+	   	</foreach>
+	</update>
+	
+</mapper>

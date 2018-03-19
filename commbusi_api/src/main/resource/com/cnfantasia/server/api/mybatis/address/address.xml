@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  功能栏 -->
+<mapper namespace="address">
+
+    <resultMap id="addressProvinceDtoMap" type="com.cnfantasia.server.api.address.dto.AddressProvinceDto">
+        <id column="provinceId" property="provinceId" javaType="java.lang.Long"/>
+        <result column="provinceName" property="provinceName" javaType="java.lang.String"/>
+        <association property="cityList" resultMap="addressCityDtoMap"/>
+    </resultMap>
+
+    <resultMap id="addressCityDtoMap" type="com.cnfantasia.server.api.address.dto.AddressCityDto">
+        <id column="cityId" property="cityId" javaType="java.lang.Long"/>
+        <result column="cityName" property="cityName" javaType="java.lang.String"/>
+        <association property="blockList" resultMap="addressBlockDtoMap"/>
+    </resultMap>
+
+    <resultMap id="addressBlockDtoMap" type="com.cnfantasia.server.api.address.dto.AddressBlockDto">
+        <id column="blockId" property="blockId" javaType="java.lang.Long"/>
+        <result column="blockName" property="blockName" javaType="java.lang.String"/>
+    </resultMap>
+
+    <select id="getAddressAllLevelList" resultMap="addressProvinceDtoMap">
+        select ap.f_id provinceId, ap.f_name provinceName, ac.f_id cityId, ac.f_name cityName, ab.f_id blockId, ab.f_name blockName
+        from t_address_province ap
+        inner join t_address_city ac on ac.t_province_f_id = ap.f_id and ac.f_sys0_del_state = 0
+        inner join t_address_block ab on ab.t_city_f_id = ac.f_id and ab.f_sys0_del_state = 0
+        where ap.f_sys0_del_state = 0
+        order by convert(ap.f_name using gbk),convert(ac.f_name using gbk),convert(ab.f_name using gbk)
+    </select>
+</mapper>

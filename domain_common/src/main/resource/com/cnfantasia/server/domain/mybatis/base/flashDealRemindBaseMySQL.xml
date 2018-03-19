@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:一元Go提醒 t_flash_deal_remind -->
+<mapper namespace="flashDealRemindBase">
+	<resultMap type="FlashDealRemind" id="flashDealRemindBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_flash_deal_activity_f_id" javaType="java.math.BigInteger" property="tFlashDealActivityFId"/>  <!--  -->        <result column="f_activity_start_time" javaType="java.lang.String" property="activityStartTime"/>  <!-- 活动开始时间（冗余） -->        <result column="t_user_f_id" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="f_remind_status" javaType="java.lang.Integer" property="remindStatus"/>  <!-- 提醒状态 -->        <result column="f_remind_time" javaType="java.lang.String" property="remindTime"/>  <!-- 提醒时间 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="FlashDealRemind" id="flashDealRemindExtendMap" extends="flashDealRemindBaseMap">
+	</resultMap>
+	<resultMap type="FlashDealRemind" id="flashDealRemindBaseMap_AppendTable">
+        <id column="FDRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="FDRtFlashDealActivityFId" javaType="java.math.BigInteger" property="tFlashDealActivityFId"/>  <!--  -->        <result column="FDRactivityStartTime" javaType="java.lang.String" property="activityStartTime"/>  <!-- 活动开始时间（冗余） -->        <result column="FDRtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="FDRremindStatus" javaType="java.lang.Integer" property="remindStatus"/>  <!-- 提醒状态 -->        <result column="FDRremindTime" javaType="java.lang.String" property="remindTime"/>  <!-- 提醒时间 -->        <result column="FDRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="FDRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="FDRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="FDRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="FDRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="FDRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="FDRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="FlashDealRemind" id="flashDealRemindBaseMap_AppendTable1">
+        <id column="FDR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="FDR1tFlashDealActivityFId" javaType="java.math.BigInteger" property="tFlashDealActivityFId"/>  <!--  -->        <result column="FDR1activityStartTime" javaType="java.lang.String" property="activityStartTime"/>  <!-- 活动开始时间（冗余） -->        <result column="FDR1tUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!--  -->        <result column="FDR1remindStatus" javaType="java.lang.Integer" property="remindStatus"/>  <!-- 提醒状态 -->        <result column="FDR1remindTime" javaType="java.lang.String" property="remindTime"/>  <!-- 提醒时间 -->        <result column="FDR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="FDR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="FDR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="FDR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="FDR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="FDR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="FDR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		FDR.f_id,FDR.t_flash_deal_activity_f_id,date_format(FDR.f_activity_start_time,'%Y-%m-%d %T') as f_activity_start_time,FDR.t_user_f_id,FDR.f_remind_status,date_format(FDR.f_remind_time,'%Y-%m-%d %T') as f_remind_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		FDR.f_id as FDRid,FDR.t_flash_deal_activity_f_id as FDRtFlashDealActivityFId,date_format(FDR.f_activity_start_time,'%Y-%m-%d %T') as FDRactivityStartTime,FDR.t_user_f_id as FDRtUserFId,FDR.f_remind_status as FDRremindStatus,date_format(FDR.f_remind_time,'%Y-%m-%d %T') as FDRremindTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		FDR1.f_id as FDR1id,FDR1.t_flash_deal_activity_f_id as FDR1tFlashDealActivityFId,date_format(FDR1.f_activity_start_time,'%Y-%m-%d %T') as FDR1activityStartTime,FDR1.t_user_f_id as FDR1tUserFId,FDR1.f_remind_status as FDR1remindStatus,date_format(FDR1.f_remind_time,'%Y-%m-%d %T') as FDR1remindTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (FDR.f_id = #{id} ) </if>        <if test="tFlashDealActivityFId != null">  and (FDR.t_flash_deal_activity_f_id = #{tFlashDealActivityFId} ) </if>        <if test="activityStartTime != null and !activityStartTime.equals('')  ">  and (FDR.f_activity_start_time = str_to_date(#{activityStartTime},'%Y-%m-%d %T') ) </if>        <if test="activityStartTime_START != null and !activityStartTime_START.equals('')  ">              <![CDATA[ and (FDR.f_activity_start_time >= str_to_date(#{activityStartTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="activityStartTime_END != null and !activityStartTime_END.equals('')  ">            <![CDATA[ and (FDR.f_activity_start_time <= str_to_date(#{activityStartTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="tUserFId != null">  and (FDR.t_user_f_id = #{tUserFId} ) </if>        <if test="remindStatus != null">  and (FDR.f_remind_status = #{remindStatus} ) </if>        <if test="remindTime != null and !remindTime.equals('')  ">  and (FDR.f_remind_time = str_to_date(#{remindTime},'%Y-%m-%d %T') ) </if>        <if test="remindTime_START != null and !remindTime_START.equals('')  ">              <![CDATA[ and (FDR.f_remind_time >= str_to_date(#{remindTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="remindTime_END != null and !remindTime_END.equals('')  ">            <![CDATA[ and (FDR.f_remind_time <= str_to_date(#{remindTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (FDR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (FDR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (FDR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (FDR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (FDR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (FDR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (FDR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (FDR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (FDR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (FDR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (FDR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (FDR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (FDR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (FDR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (FDR.f_id = #{id} ) </if>        <if test="tFlashDealActivityFId != null and !tFlashDealActivityFId.equals('')  ">  and (FDR.t_flash_deal_activity_f_id = #{tFlashDealActivityFId} ) </if>        <if test="activityStartTime != null and !activityStartTime.equals('')  ">  and (FDR.f_activity_start_time = str_to_date(#{activityStartTime},'%Y-%m-%d %T') ) </if>        <if test="activityStartTime_START != null and !activityStartTime_START.equals('')  ">              <![CDATA[ and (FDR.f_activity_start_time >= str_to_date(#{activityStartTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="activityStartTime_END != null and !activityStartTime_END.equals('')  ">            <![CDATA[ and (FDR.f_activity_start_time <= str_to_date(#{activityStartTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="tUserFId != null and !tUserFId.equals('')  ">  and (FDR.t_user_f_id = #{tUserFId} ) </if>        <if test="remindStatus != null and !remindStatus.equals('')  ">  and (FDR.f_remind_status = #{remindStatus} ) </if>        <if test="remindTime != null and !remindTime.equals('')  ">  and (FDR.f_remind_time = str_to_date(#{remindTime},'%Y-%m-%d %T') ) </if>        <if test="remindTime_START != null and !remindTime_START.equals('')  ">              <![CDATA[ and (FDR.f_remind_time >= str_to_date(#{remindTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="remindTime_END != null and !remindTime_END.equals('')  ">            <![CDATA[ and (FDR.f_remind_time <= str_to_date(#{remindTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (FDR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (FDR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (FDR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (FDR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (FDR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (FDR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (FDR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (FDR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (FDR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (FDR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (FDR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (FDR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (FDR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (FDR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="flashDealRemindBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="flashDealRemindBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="flashDealRemindBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="flashDealRemindBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_flash_deal_remind FDR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(一元Go提醒)信息。 -->
+	<sql id="select_flashDealRemind">
+		SELECT <include refid="flashDealRemindBase.queryHead"/>
+		<include refid="flashDealRemindBase.busiQueryCondition"/>
+		<include refid="flashDealRemindBase.dimCheckSql"/>
+		ORDER BY FDR.f_id DESC
+	</sql>
+	<select id="select_flashDealRemind" parameterType="java.util.Map" resultMap="flashDealRemindBase.flashDealRemindExtendMap">
+		<include refid="flashDealRemindBase.select_flashDealRemind"/>
+	</select>
+	
+	<!-- 根据条件分页查询(一元Go提醒)信息  -->
+	<sql id="select_flashDealRemind_withPage">
+		SELECT <include refid="flashDealRemindBase.queryHead"/>
+		<include refid="flashDealRemindBase.busiQueryCondition"/>
+		<include refid="flashDealRemindBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_flashDealRemind_withPage" resultMap="flashDealRemindBase.flashDealRemindExtendMap" parameterType="java.util.Map">
+		<include refid="flashDealRemindBase.select_flashDealRemind_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(一元Go提醒)信息。 -->
+	<sql id="select_flashDealRemind_bySeqId">
+		SELECT <include refid="flashDealRemindBase.queryHead"/>
+		<include refid="flashDealRemindBase.busiQueryCondition"/>
+		 and FDR.f_id = #{_parameter}
+	</sql>
+	<select id="select_flashDealRemind_bySeqId" parameterType="java.math.BigInteger" resultMap="flashDealRemindBase.flashDealRemindBaseMap">
+		<include refid="flashDealRemindBase.select_flashDealRemind_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(一元Go提醒)记录数  -->
+	<sql id="select_flashDealRemind_count">
+		SELECT COUNT(*)
+		<include refid="flashDealRemindBase.busiQueryCount"/>
+		<include refid="flashDealRemindBase.dimCheckSql"/>
+	</sql>
+	<select id="select_flashDealRemind_count" resultType="java.lang.Integer">
+		<include refid="flashDealRemindBase.select_flashDealRemind_count"/>
+	</select>
+	
+	 <!-- 往(一元Go提醒)新增一条记录。 -->
+	 <sql id="insert_flashDealRemind">
+		INSERT INTO t_flash_deal_remind 
+		(f_id,t_flash_deal_activity_f_id,f_activity_start_time,t_user_f_id,f_remind_status,f_remind_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tFlashDealActivityFId},str_to_date(#{activityStartTime,jdbcType=DATE},'%Y-%m-%d %T'),#{tUserFId},#{remindStatus},str_to_date(#{remindTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_flashDealRemind" parameterType="FlashDealRemind">
+		<include refid="flashDealRemindBase.insert_flashDealRemind"/>
+    </insert>
+    
+	<!-- 批量新增(一元Go提醒)信息 -->
+    <insert id="insert_flashDealRemind_Batch" parameterType="java.util.List">
+    	INSERT INTO t_flash_deal_remind 
+		(f_id,t_flash_deal_activity_f_id,f_activity_start_time,t_user_f_id,f_remind_status,f_remind_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tFlashDealActivityFId},str_to_date(#{item.activityStartTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.tUserFId},#{item.remindStatus},str_to_date(#{item.remindTime,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(一元Go提醒)信息。 -->
+    <sql id="update_flashDealRemind">
+		UPDATE t_flash_deal_remind		<trim prefix="SET" prefixOverrides=","> 		<if test="tFlashDealActivityFId != null and !tFlashDealActivityFId.equals('') "> ,t_flash_deal_activity_f_id=#{tFlashDealActivityFId}</if> 		<if test="activityStartTime != null and !activityStartTime.equals('') "> ,f_activity_start_time=str_to_date(#{activityStartTime},'%Y-%m-%d %T')</if> 		<if test="tUserFId != null and !tUserFId.equals('') "> ,t_user_f_id=#{tUserFId}</if> 		<if test="remindStatus != null and !remindStatus.equals('') "> ,f_remind_status=#{remindStatus}</if> 		<if test="remindTime != null and !remindTime.equals('') "> ,f_remind_time=str_to_date(#{remindTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_flashDealRemind" parameterType="FlashDealRemind">
+		<include refid="flashDealRemindBase.update_flashDealRemind"/>
+    </update>
+    
+    <!-- 批量更新(一元Go提醒)信息。 -->
+    <update id="update_flashDealRemind_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_flash_deal_remind		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tFlashDealActivityFId != null and !item.tFlashDealActivityFId.equals('')  "> ,t_flash_deal_activity_f_id=#{item.tFlashDealActivityFId}</if> 		<if test="item.activityStartTime != null and !item.activityStartTime.equals('')  "> ,f_activity_start_time=str_to_date(#{item.activityStartTime},'%Y-%m-%d %T')</if> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.remindStatus != null and !item.remindStatus.equals('')  "> ,f_remind_status=#{item.remindStatus}</if> 		<if test="item.remindTime != null and !item.remindTime.equals('')  "> ,f_remind_time=str_to_date(#{item.remindTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(一元Go提醒)信息_逻辑删除。 -->
+    <sql id="delete_flashDealRemind_Logic">
+		UPDATE t_flash_deal_remind		<trim prefix="SET" prefixOverrides=","> 		<if test="tFlashDealActivityFId != null and !tFlashDealActivityFId.equals('')  "> ,t_flash_deal_activity_f_id=#{tFlashDealActivityFId}</if> 		<if test="activityStartTime != null and !activityStartTime.equals('')  "> ,f_activity_start_time=str_to_date(#{activityStartTime},'%Y-%m-%d %T')</if> 		<if test="tUserFId != null and !tUserFId.equals('')  "> ,t_user_f_id=#{tUserFId}</if> 		<if test="remindStatus != null and !remindStatus.equals('')  "> ,f_remind_status=#{remindStatus}</if> 		<if test="remindTime != null and !remindTime.equals('')  "> ,f_remind_time=str_to_date(#{remindTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_flashDealRemind_Logic" parameterType="FlashDealRemind">
+		<include refid="flashDealRemindBase.delete_flashDealRemind_Logic"/>
+    </update>
+    
+    <!-- 批量删除(一元Go提醒)信息_逻辑删除 -->
+    <update id="delete_flashDealRemind_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_flash_deal_remind		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tFlashDealActivityFId != null and !item.tFlashDealActivityFId.equals('')  "> ,t_flash_deal_activity_f_id=#{item.tFlashDealActivityFId}</if> 		<if test="item.activityStartTime != null and !item.activityStartTime.equals('')  "> ,f_activity_start_time=str_to_date(#{item.activityStartTime},'%Y-%m-%d %T')</if> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.remindStatus != null and !item.remindStatus.equals('')  "> ,f_remind_status=#{item.remindStatus}</if> 		<if test="item.remindTime != null and !item.remindTime.equals('')  "> ,f_remind_time=str_to_date(#{item.remindTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(一元Go提醒)信息。 -->
+    <sql id="delete_flashDealRemind">
+		DELETE FROM t_flash_deal_remind WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_flashDealRemind" parameterType="java.lang.String">
+		<include refid="flashDealRemindBase.delete_flashDealRemind"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(一元Go提醒)信息。 -->
+    <delete id="delete_flashDealRemind_Batch" parameterType="java.util.List">
+		DELETE FROM t_flash_deal_remind WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

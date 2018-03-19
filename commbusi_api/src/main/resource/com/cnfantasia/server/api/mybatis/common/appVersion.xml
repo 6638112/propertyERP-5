@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 发送短信 -->
+<mapper namespace="appVersion">
+	<cache
+		eviction="LRU"
+		flushInterval="300000"
+		size="5"
+		readOnly="true"/>
+	
+	<select id="getMaxIosVersion" resultType="Integer">
+		select max(floor(t.f_version/10000) * 100 + floor(mod(t.f_version, 10000) / 100)*10 + mod(t.f_version, 100))
+		 from t_app_version t
+		 where t.t_app_base_info_f_id = 102
+		 and t.f_sys0_del_state = 0
+	</select>
+	
+</mapper>

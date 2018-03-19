@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://www.springframework.org/schema/tx  
+            http://www.springframework.org/schema/tx/spring-tx.xsd  
+            http://www.springframework.org/schema/aop  
+            http://www.springframework.org/schema/aop/spring-aop.xsd
+            http://www.springframework.org/schema/util
+			http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- 初始化容器对象 -->
+	<bean class="com.cnfantasia.server.common.context.FocContext" />
+
+	<!-- 国际化资源管理 -->
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:/com/cnfantasia/server/api/msg/dictionary</value>
+				<value>classpath:/com/cnfantasia/server/api/msg/exception</value>
+				<value>classpath:/com/cnfantasia/server/api/msg/message</value>
+				
+				<value>classpath:/com/cnfantasia/server/commbusi/msg/message</value>
+				<value>classpath:/com/cnfantasia/server/commbusi/msg/exception</value>
+				<value>classpath:/com/cnfantasia/server/common/config/msg/exception</value><!-- 引用公共的资源 -->
+			</list>
+		</property>
+		<property name="cacheSeconds" value="-1" />
+		<property name="fallbackToSystemLocale" value="false" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	<bean id="messageSourceUtil" class="com.cnfantasia.server.common.messageSource.MessageSourceUtil">
+		<property name="messageSource" ref="messageSource" />
+	</bean>
+	
+	<!-- 文件上传 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >
+	     <!-- 限制制上传文件的大小 -->
+	  <!-- <property name="maxUploadSize">
+	     <value>1024</value>
+	  </property> -->
+	</bean>
+	
+	
+	<!-- 对模型视图名称的解析，在请求时模型视图名称添加前后缀 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
+	
+	<!-- 日志记录拦截器 -->
+	<bean id="SysLoggerProcessInterceptor" class="com.cnfantasia.server.api.pub.logger.SysLoggerProcessInterceptor">
+		<!-- <property name="sysUrlManager" ref="sysUrlManager"></property> -->
+		<property name="sysLoggerManager" ref="sysLoggerManager"></property>
+	</bean>
+	
+	<!-- 请求头信息拦截处理 -->
+	<bean id="HeaderInterceptor" class="com.cnfantasia.server.api.pub.header.HeaderInterceptor">
+		<property name="commonLoginService" ref="commonLoginService"/><!-- syl-add-2014-6-11 17:31:25 -->
+	</bean>
+
+	<!--重复提交数据拦截器-->
+	<bean id="repeatReqInterceptor"
+		  class="com.cnfantasia.server.business.pub.RepeatReqValidation.APIRepeatReqInteceptor"/>
+
+	
+	<!-- 请求的Json转换拦截器 -->
+	<!-- <bean id="jsonRequestInterceptor" class="com.cnfantasia.server.common.json.JsonRequestInterceptor" /> -->
+	
+	<!-- 规章对象解析器 -->
+	<bean id="RegulationResolver" class="com.cnfantasia.server.common.validation.resolver.IOCRegulationResolver"></bean>
+	<!-- 表达式执行器定义 -->
+	<bean id="StringExpressionExecutor" class="com.cnfantasia.server.common.validation.express.StringExpressionExecutor">
+		<property name="regulationResolver" ref="RegulationResolver" />
+	</bean>
+	
+	<!-- 校验拦截器 -->
+	<bean id="ValidationInterceptor" class="com.cnfantasia.server.api.pub.validation.ValidationInterceptor">
+		<property name="executor" ref="StringExpressionExecutor" />
+	</bean>
+	<!-- 使用RequestMappingHandlerMapping是为了能转换成HandlerMethod -->
+	<!-- <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"> -->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="SysLoggerProcessInterceptor" /><!-- 放置在最前 -->
+				<ref bean="HeaderInterceptor" />
+				<ref bean="repeatReqInterceptor" />
+				<!-- <ref bean="jsonRequestInterceptor" /> -->
+				<ref bean="ValidationInterceptor" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 处理器-适配器 RequestMappingHandlerAdapter是为了解决请求匹配的问题 -->
+	<!-- <bean id="handlerAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"> -->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+	    <property name="cacheSeconds" value="0" />
+	    <property name="messageConverters" ref="messageConverters" />
+	</bean>
+	<!-- Http messageConverters，用于将对象输出到客户端-->
+	<util:list id="messageConverters">
+		<bean class = "org.springframework.http.converter.StringHttpMessageConverter"> <!-- 写在前，解决返回引号的转义问题 -->
+	         <property name = "supportedMediaTypes">
+	         	<list>
+	         		<value>text/plain;charset=UTF-8</value>
+	         	</list>
+	         </property>  
+         </bean>
+	    <bean class="com.cnfantasia.server.api.pub.MappingJackson2JsonpHttpMessageConverter">
+	        <!-- <property name="supportedMediaTypes">
+	            <list>
+	                <value>application/json</value>
+	                <value>application/javascript</value>
+	                <value>text/json</value>
+	                <value>text/javascript</value>
+	            </list>
+	        </property> -->
+	        <property name="objectMapper">
+                <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                    <property name="serializationInclusion">
+                    	<!-- NON_NULL表示转Json时，不输出null值给客户端 -->
+                        <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
+                    </property>
+                </bean>
+            </property>
+	    </bean>
+	    
+	</util:list>
+	
+	<bean  id="objectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
+	
+	<!-- 由于取消自动注册，DispatcherServlet会在spring上下文寻找 id 为 handlerExceptionResolver作为异常解析器 -->
+	<bean id="handlerExceptionResolver" class="com.cnfantasia.server.api.pub.exception.AnnotationHandlerMethodExceptionResolver">
+	    <!-- <property name="defaultErrorView" value="error"/> --><!-- 错误页面 /jsp/error.jsp --><!-- 注释掉目的：防止跳转到jsp页面导致错误 -->
+	    <property name="messageConverters" ref="messageConverters"/><!-- 见上一篇，有定义过，标有@ResponseBody被此messageConverters输出 -->
+	    <property name="sysLoggerManager" ref="sysLoggerManager"/><!-- 日志记录处理 -->
+	</bean>
+	
+	
+	    
+</beans>  

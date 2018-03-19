@@ -1,0 +1,48 @@
+/**   
+* Filename:    PayBillService.java   
+* @version:    1.0  
+* Create at:   2014年6月3日 上午7:54:04   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年6月3日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.paybill.service;
+
+import java.math.BigInteger;
+
+import com.cnfantasia.server.api.paybill.dao.IPayBillDao;
+import com.cnfantasia.server.api.plotproperty.entity.PayBillEntity;
+import com.cnfantasia.server.apibase.payBill.service.PayBillBaseService;
+
+/**
+ * Filename:    PayBillService.java
+ * @version:    1.0.0
+ * Create at:   2014年6月3日 上午7:54:04
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年6月3日       shiyl             1.0             1.0 Version
+ */
+public class PayBillService extends PayBillBaseService implements IPayBillService{
+	private IPayBillDao payBillDao;
+	public void setPayBillDao(IPayBillDao payBillDao) {
+		this.payBillDao = payBillDao;
+	}
+	
+	@Override
+	public PayBillEntity getPayBillByMonth(String yearMonth, BigInteger userId) {
+		return payBillDao.selectPayBillByMonth(yearMonth, userId);
+	}
+
+//	@Override
+//	public List<PayBillEntity> getPayBillByMonthMulti(String yearMonthStart, String yearMonthEnd, BigInteger userId) {
+//		return payBillDao.selectPayBillByMonthMulti(yearMonthStart, yearMonthEnd, userId);
+//	}
+	
+	
+}

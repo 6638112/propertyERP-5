@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 版本更新 -->
+<mapper namespace="version">
+	<cache
+		eviction="LRU"
+		flushInterval="600000" 
+		size="2048"
+		readOnly="true"/>
+	<!-- FIFO -->
+	<!-- 10分钟10*60*1000 -->
+	
+	<!-- 手动调用清除缓存使用 -->
+	<select id="cleanCache" resultType="long" useCache="false" flushCache="true">
+    	select 1
+    </select>
+	
+	<!-- 版本信息Map -->
+	<resultMap type="com.cnfantasia.server.api.version.entity.AppVersionEntity" id="appVersionEntity_MapAppendTable" extends="appVersionBase.appVersionBaseMap_AppendTable">
+		<!-- 应用基本信息 -->
+		<association property="appBaseInfo" resultMap="appBaseInfoBase.appBaseInfoBaseMap_AppendTable" />
+	</resultMap>
+	<!-- 查询最新的版本信息 -->
+	<select id="select_VersionEntity_LastInfo" parameterType="java.util.Map" resultMap="appVersionEntity_MapAppendTable">
+		SELECT <include refid="appVersionBase.queryHead_AppendTable"/>,<include refid="appBaseInfoBase.queryHead_AppendTable"/>
+		FROM t_app_version AV INNER JOIN t_app_base_info ABI ON AV.t_app_base_info_f_id = ABI.f_id AND ABI.f_sys0_del_state = 0
+		WHERE 1=1
+		AND AV.f_sys0_del_state = 0
+		AND AV.f_version = ( 
+			SELECT MAX(f_version) FROM t_app_version AV02
+			INNER JOIN t_app_base_info ABI02 ON AV02.t_app_base_info_f_id = ABI02.f_id AND ABI02.f_sys0_del_state = 0 
+			WHERE 1=1 
+			AND AV02.f_sys0_del_state = 0 
+			AND ABI02.f_id=#{appId} 
+		) 
+		AND ABI.f_id=#{appId}
+	</select>
+	
+	<!-- 查询用户是否为灰度用户 0否 1是 -->
+	<select id="select_IsGateUser_ByUserId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT fun_qry_isGateUser(#{userId})
+	</select>
+	
+	<!-- 查询最新版本信息 包含灰度条件 -->
+	<select id="select_LastVersionInfo_WithGate" parameterType="java.util.Map" resultMap="appVersionEntity_MapAppendTable">
+		SELECT <include refid="appVersionBase.queryHead_AppendTable"/>,<include refid="appBaseInfoBase.queryHead_AppendTable"/>
+		FROM t_app_version AV 
+			INNER JOIN t_app_base_info ABI ON AV.t_app_base_info_f_id = ABI.f_id AND ABI.f_sys0_del_state = 0
+		WHERE 1=1
+		AND AV.f_sys0_del_state = 0
+		AND AV.f_version = ( 
+			SELECT MAX(f_version) FROM t_app_version AV02
+			INNER JOIN t_app_base_info ABI02 ON AV02.t_app_base_info_f_id = ABI02.f_id AND ABI02.f_sys0_del_state = 0 
+			WHERE 1=1 
+			AND AV02.f_sys0_del_state = 0 
+			<if test="isForceUpd != null and !isForceUpd.equals('') "> <!-- 只查最新的强升版本 -->
+				AND AV02.f_force_update = #{isForceUpd} 
+			</if>
+			AND ABI02.f_id=#{appId}
+			AND AV02.f_gate_type IN
+			<foreach item="item" collection="containGateTypeList" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		) 
+		AND ABI.f_id=#{appId}
+		AND AV.f_gate_type IN
+		<foreach item="item" collection="containGateTypeList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.version.entity.AppVersionChannelEntity" id="appVersionChannelEntity_Map_Append"
+		extends="appVersionChannelBase.appVersionChannelBaseMap_AppendTable">
+		
+	</resultMap>
+	<!-- 通过渠道编码查询最新版本信息 包含灰度条件 -->
+	<select id="select_LastVersionInfo_WithGate_byChannelCode" parameterType="java.util.Map" resultMap="appVersionChannelEntity_Map_Append">
+		SELECT <include refid="appVersionChannelBase.queryHead_AppendTable"/>
+		FROM t_app_version_channel AVC
+			INNER JOIN t_app_base_info ABI ON AVC.t_app_base_info_f_id = ABI.f_id AND ABI.f_sys0_del_state = 0
+		WHERE 1=1
+		AND AVC.f_sys0_del_state = 0
+		AND AVC.f_version = ( 
+			SELECT MAX(f_version) FROM t_app_version_channel AVC02
+			INNER JOIN t_app_base_info ABI02 ON AVC02.t_app_base_info_f_id = ABI02.f_id AND ABI02.f_sys0_del_state = 0 
+			WHERE 1=1 
+			AND AVC02.f_sys0_del_state = 0 
+			AND ABI02.f_id=#{appId}
+			AND AVC02.f_gate_type IN
+			<foreach item="item" collection="containGateTypeList" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND AVC02.f_channel_code = #{channelCode} <!-- 渠道编码 -->
+		) 
+		AND ABI.f_id=#{appId}
+		AND AVC.f_gate_type IN
+		<foreach item="item" collection="containGateTypeList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		AND AVC.f_channel_code = #{channelCode} <!-- 渠道编码 -->
+	</select>
+</mapper>

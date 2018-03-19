@@ -1,0 +1,280 @@
+package com.cnfantasia.server.common.httpcllient;
+
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
+import org.apache.commons.httpclient.params.HttpMethodParams;
+
+/**
+ * 类名：HttpClient  <br />
+ *
+ * 功能：
+ *
+ */
+public abstract class AbstractHttpClient<A, R> implements Client<A, R> {
+	// apache 
+	protected HttpClient httpClient;
+	
+	// 超时时间
+	private int connectionTimeOut;
+	
+	// 发送缓存大小
+	private int sendBufferSize;
+	
+	// 类型
+	private Map<String, String> headers;
+	
+	// 默认参数
+	//private Map<String, Object> defaultParamas;
+	
+	// 基础路径
+	private String baseURL;
+	
+	// 编码格式
+	private String encoding;
+	
+	// 使用的方法
+	private MethodName method;
+	
+	/**
+	 * 
+	 * 类名：MethodName  <br />
+	 */
+	public enum MethodName {
+		
+		POST,
+		
+		GET,
+		
+		//PUT
+	}
+	@Override
+	public R submit(A args,HttpMethod httpMethod) throws Exception {
+		
+		try {
+			if(httpMethod==null){
+				// 创建方法
+				httpMethod = createHttpMethod(args);
+			}
+			//设定编码
+			httpMethod.getParams().setHttpElementCharset(encoding);
+			httpMethod.getParams().setUriCharset(encoding);
+			httpMethod.getParams().setContentCharset(encoding);
+			httpMethod.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, encoding);
+//	    httpMethod.addRequestHeader("Content-Type","text/html;charset="+encoding);
+//	    httpMethod.setRequestHeader("Content-Type", "text/html;charset="+encoding);
+	    // 设置编码格式
+	    httpClient.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, encoding);
+	    httpClient.getParams().setContentCharset(encoding);
+	    httpClient.getParams().setHttpElementCharset(encoding);
+	    httpClient.getParams().setUriCharset(encoding);
+			// 预处理方法
+			preMethod(args, httpMethod);
+			
+			// 执行
+			httpClient.executeMethod(httpMethod);
+			
+			// 处理返回结果
+			return postMethod(args, httpMethod);
+		} finally {
+			if (null != httpMethod) {
+				httpMethod.releaseConnection();
+			}
+		}
+	
+	}
+	/**
+	 * 
+	 * 功能: <br/>
+	 * 
+	 */
+	@Override
+	public R submit(A args) throws Exception {
+		return submit(args, null);
+	}
+	
+	/**
+	 * 
+	 * 功能： <br/>
+	 */
+	protected abstract R postMethod(A args, HttpMethod httpMethod) throws Exception;
+
+	/**
+	 * 
+	 * 功能： <br/>
+	 */
+	protected abstract Map<String, String> getParameters(A args);
+
+	/**
+	 * 
+	 * 功能： <br/>
+	 */
+	protected HttpMethod createHttpMethod(A args) {
+
+		HttpMethod m = null;
+
+		switch (method) {
+			case POST:
+				m = new PostMethod(getUrl(args));
+				break;
+			case GET:
+				m = new GetMethod(getUrl(args));
+				break;
+		}
+
+		return m;
+	}
+
+	/**
+	 * 
+	 * 功能： <br/>
+	 */
+	protected void preMethod(A args, HttpMethod httpMethod) throws Exception {
+		// 处理请求头
+		if (null != headers && !headers.isEmpty()) {
+			for (Entry<String, String> entry : headers.entrySet()) {
+				// 设置请求头类型
+				httpMethod.setRequestHeader(entry.getKey(), entry.getValue());
+			}
+		}
+
+		// 处理参数
+		Map<String, String> parameters = getParameters(args);
+		if (null != parameters && !parameters.isEmpty()) {
+			NameValuePair[] navs = new NameValuePair[parameters.size()];
+
+			int i = 0;
+			for (Entry<String, String> entry : parameters.entrySet()) {
+				navs[i++] = new NameValuePair(entry.getKey(), entry.getValue());
+			}
+
+			if (httpMethod instanceof PostMethod) {
+				((PostMethod) httpMethod).addParameters(navs);
+			} else {
+				httpMethod.setQueryString(navs);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * 功能： <br/>
+	 */
+	protected String getUrl(A args) {
+		return baseURL;
+	}
+
+	/**
+	 * 
+	 * 功能： <br/>
+	 */
+	public void init() {
+		httpClient = new HttpClient();
+
+		HttpConnectionManagerParams params = httpClient.getHttpConnectionManager().getParams();
+		if (connectionTimeOut > 0) {
+			params.setConnectionTimeout(connectionTimeOut);
+		}
+
+		if (sendBufferSize > 0) {
+			params.setSendBufferSize(sendBufferSize);
+		}
+
+		if (null == method) {
+			method = MethodName.POST;
+		}
+
+		// 设置编码格式
+		httpClient.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, encoding);
+	}
+
+	/**
+	 */
+	public HttpClient getHttpClient() {
+		return httpClient;
+	}
+
+	/**
+	 */
+	public void setHttpClient(HttpClient httpClient) {
+		this.httpClient = httpClient;
+	}
+
+	/**
+	 */
+	public int getConnectionTimeOut() {
+		return connectionTimeOut;
+	}
+
+	/**
+	 */
+	public void setConnectionTimeOut(int connectionTimeOut) {
+		this.connectionTimeOut = connectionTimeOut;
+	}
+
+	/**
+	 */
+	public int getSendBufferSize() {
+		return sendBufferSize;
+	}
+
+	/**
+	 */
+	public void setSendBufferSize(int sendBufferSize) {
+		this.sendBufferSize = sendBufferSize;
+	}
+
+	/**
+	 */
+	public Map<String, String> getHeaders() {
+		return headers;
+	}
+
+	/**
+	 */
+	public void setHeaders(Map<String, String> headers) {
+		this.headers = headers;
+	}
+
+	/**
+	 */
+	public String getBaseURL() {
+		return baseURL;
+	}
+
+	/**
+	 */
+	public void setBaseURL(String baseURL) {
+		this.baseURL = baseURL;
+	}
+
+	/**
+	 */
+	public String getEncoding() {
+		return encoding;
+	}
+
+	/**
+	 */
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
+	/**
+	 */
+	public MethodName getMethod() {
+		return method;
+	}
+
+	/**
+	 */
+	public void setMethod(MethodName method) {
+		this.method = method;
+	}
+}

@@ -1,0 +1,140 @@
+/**   
+ * Filename:    HttpClientUtil.java   
+ * @version:    1.0  
+ * Create at:   2014年5月29日 上午3:31:34   
+ * Description:  
+ *   
+ * Modification History:   
+ * Date        Author      Version     Description   
+ * ----------------------------------------------------------------- 
+ * 2014年5月29日    shiyl      1.0         1.0 Version   
+ */
+package com.cnfantasia.server.common.utils;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.alibaba.fastjson.JSONObject;
+
+/**
+ * Filename: HttpClientUtil.java
+ * 
+ * @version: 1.0.0 Create at: 2014年5月29日 上午3:31:34 Description:
+ * 
+ *           Modification History: Date Author Version Description
+ *           ------------------------------------------------------------------
+ *           2014年5月29日 shiyl 1.0 1.0 Version
+ */
+public class HttpClientUtil {
+	private static final HttpClient client = new HttpClient();
+	private static Log logger = LogFactory.getLog(HttpClientUtil.class);
+	private static String encoding="utf-8";
+	public static void main(String[] args) {
+		String url = "http://q.qlogo.cn/qqapp/101097644/75FC7541B095E9A373BA656F0E1C6775/100";
+		String goalPath = "D:/a.jpg";
+		try {
+			byte[] responseBody = HttpClientUtil.doGet(url);
+			FileUtils.byteToFile(responseBody, goalPath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static byte[] doGet(String url) throws IOException {
+		return doGet(url, null);
+	}
+
+	public static byte[] doGet(String url, HttpMethodParams params) throws IOException {
+		GetMethod getMethod = new GetMethod(url);
+		if (params != null) {
+			getMethod.setParams(params);
+		}
+		int statusCode = client.executeMethod(getMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			logger.debug("Method failed: " + getMethod.getStatusLine());
+		}
+		byte[] responseBody = getMethod.getResponseBody();// 获得返回的结果
+		return responseBody;
+	}
+	
+//	public static byte[] doPost(String url) throws IOException {
+//		return doPost(url, new HttpMethodParams());
+//	}
+	public static byte[] doPost(String url, Map<String,Object> parameters) throws HttpException, IOException{
+		PostMethod postMethod = new PostMethod(url);	
+	//设定编码
+		postMethod.getParams().setHttpElementCharset(encoding);
+		postMethod.getParams().setUriCharset(encoding);
+		postMethod.getParams().setContentCharset(encoding);
+		postMethod.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, encoding);
+//    httpMethod.addRequestHeader("Content-Type","text/html;charset="+encoding);
+//    httpMethod.setRequestHeader("Content-Type", "text/html;charset="+encoding);
+    // 设置编码格式
+		postMethod.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, encoding);
+		postMethod.getParams().setContentCharset(encoding);
+		postMethod.getParams().setHttpElementCharset(encoding);
+		postMethod.getParams().setUriCharset(encoding);
+		// 处理参数
+			if (null != parameters && !parameters.isEmpty()) {
+				NameValuePair[] navs = new NameValuePair[parameters.size()];
+
+				int i = 0;
+				for (Entry<String, Object> entry : parameters.entrySet()) {
+					navs[i++] = new NameValuePair(entry.getKey(), entry.getValue().toString());
+				}
+				postMethod.addParameters(navs);
+			}
+			int statusCode = client.executeMethod(postMethod);
+			if (statusCode != HttpStatus.SC_OK) {
+				logger.debug("Method failed: " + postMethod.getStatusLine());
+			}
+			byte[] responseBody = postMethod.getResponseBody();// 获得返回的结果
+			return responseBody;
+	}
+//	public static byte[] doPost(String url, String body) throws HttpException, IOException{
+//		PostMethod postMethod = new PostMethod(url);
+//		postMethod.setRequestBody(body);
+////		postMethod.setQueryString(body);
+//		int statusCode = client.executeMethod(postMethod);
+//		if (statusCode != HttpStatus.SC_OK) {
+//			logger.debug("Method failed: " + postMethod.getStatusLine());
+//		}
+//		byte[] responseBody = postMethod.getResponseBody();// 获得返回的结果
+//		return responseBody;
+//	}
+	public static byte[] doPost(String url, JSONObject jsonObject) throws HttpException, IOException{
+		Map<String, Object> params = new HashMap<String, Object>();
+		for(String key:jsonObject.keySet()){
+			params.put(key, jsonObject.get(key));
+		}
+		return doPost(url, params);
+	}
+//	public static byte[] doPost(String url, HttpMethodParams params) throws HttpException, IOException{
+//		PostMethod postMethod = new PostMethod(url);
+//		if (params != null) {
+//			postMethod.setParams(params);
+//		}
+//			
+//		
+//		int statusCode = client.executeMethod(postMethod);
+//		if (statusCode != HttpStatus.SC_OK) {
+//			logger.debug("Method failed: " + postMethod.getStatusLine());
+//		}
+//		byte[] responseBody = postMethod.getResponseBody();// 获得返回的结果
+//		return responseBody;
+//	}
+	
+	
+}

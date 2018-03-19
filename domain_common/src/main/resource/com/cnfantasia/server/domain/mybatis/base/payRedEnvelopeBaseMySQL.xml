@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:粮票信息表 t_pay_red_envelope -->
+<mapper namespace="payRedEnvelopeBase">
+	<resultMap type="PayRedEnvelope" id="payRedEnvelopeBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="f_from_type" javaType="java.lang.Integer" property="fromType"/>  <!-- 粮票来源类型={"1" -->
+        <result column="f_from_id" javaType="java.math.BigInteger" property="fromId"/>  <!-- 来源Id -->
+        <result column="f_from_time" javaType="java.lang.String" property="fromTime"/>  <!-- 兑换时间 -->
+        <result column="f_user_id" javaType="java.math.BigInteger" property="userId"/>  <!-- 所属用户Id(现在粮票都属于门牌，该字段暂不使用) -->
+        <result column="f_room_id" javaType="java.math.BigInteger" property="roomId"/>  <!-- 所属门牌Id -->
+        <result column="f_converter_id" javaType="java.math.BigInteger" property="converterId"/>  <!-- 兑换人Id -->
+        <result column="f_amount_total" javaType="java.lang.Long" property="amountTotal"/>  <!-- 总金额 -->
+        <result column="f_amount_avaible" javaType="java.lang.Long" property="amountAvaible"/>  <!-- 可用余额 -->
+        <result column="f_status" javaType="java.lang.Integer" property="status"/>  <!-- 粮票状态 -->
+        <result column="f_out_date" javaType="java.lang.String" property="outDate"/>  <!-- 失效时间 -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PayRedEnvelope" id="payRedEnvelopeExtendMap" extends="payRedEnvelopeBaseMap">
+	</resultMap>
+	<resultMap type="PayRedEnvelope" id="payRedEnvelopeBaseMap_AppendTable">
+        <id column="PREid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="PREfromType" javaType="java.lang.Integer" property="fromType"/>  <!-- 粮票来源类型={"1" -->
+        <result column="PREfromId" javaType="java.math.BigInteger" property="fromId"/>  <!-- 来源Id -->
+        <result column="PREfromTime" javaType="java.lang.String" property="fromTime"/>  <!-- 兑换时间 -->
+        <result column="PREuserId" javaType="java.math.BigInteger" property="userId"/>  <!-- 所属用户Id(现在粮票都属于门牌，该字段暂不使用) -->
+        <result column="PREroomId" javaType="java.math.BigInteger" property="roomId"/>  <!-- 所属门牌Id -->
+        <result column="PREconverterId" javaType="java.math.BigInteger" property="converterId"/>  <!-- 兑换人Id -->
+        <result column="PREamountTotal" javaType="java.lang.Long" property="amountTotal"/>  <!-- 总金额 -->
+        <result column="PREamountAvaible" javaType="java.lang.Long" property="amountAvaible"/>  <!-- 可用余额 -->
+        <result column="PREstatus" javaType="java.lang.Integer" property="status"/>  <!-- 粮票状态 -->
+        <result column="PREoutDate" javaType="java.lang.String" property="outDate"/>  <!-- 失效时间 -->
+        <result column="PREsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="PREsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="PREsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="PREsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="PREsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="PREsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="PREsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PayRedEnvelope" id="payRedEnvelopeBaseMap_AppendTable1">
+        <id column="PRE1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="PRE1fromType" javaType="java.lang.Integer" property="fromType"/>  <!-- 粮票来源类型={"1" -->
+        <result column="PRE1fromId" javaType="java.math.BigInteger" property="fromId"/>  <!-- 来源Id -->
+        <result column="PRE1fromTime" javaType="java.lang.String" property="fromTime"/>  <!-- 兑换时间 -->
+        <result column="PRE1userId" javaType="java.math.BigInteger" property="userId"/>  <!-- 所属用户Id(现在粮票都属于门牌，该字段暂不使用) -->
+        <result column="PRE1roomId" javaType="java.math.BigInteger" property="roomId"/>  <!-- 所属门牌Id -->
+        <result column="PRE1converterId" javaType="java.math.BigInteger" property="converterId"/>  <!-- 兑换人Id -->
+        <result column="PRE1amountTotal" javaType="java.lang.Long" property="amountTotal"/>  <!-- 总金额 -->
+        <result column="PRE1amountAvaible" javaType="java.lang.Long" property="amountAvaible"/>  <!-- 可用余额 -->
+        <result column="PRE1status" javaType="java.lang.Integer" property="status"/>  <!-- 粮票状态 -->
+        <result column="PRE1outDate" javaType="java.lang.String" property="outDate"/>  <!-- 失效时间 -->
+        <result column="PRE1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="PRE1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="PRE1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="PRE1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="PRE1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="PRE1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="PRE1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PRE.f_id,PRE.f_from_type,PRE.f_from_id,date_format(PRE.f_from_time,'%Y-%m-%d %T') as f_from_time,PRE.f_user_id,PRE.f_room_id,PRE.f_converter_id,PRE.f_amount_total,PRE.f_amount_avaible,PRE.f_status,date_format(PRE.f_out_date,'%Y-%m-%d %T') as f_out_date,date_format(PRE.f_sys0_add_time,'%Y-%m-%d %T') as f_sys0_add_time,date_format(PRE.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PRE.f_id as PREid,PRE.f_from_type as PREfromType,PRE.f_from_id as PREfromId,date_format(PRE.f_from_time,'%Y-%m-%d %T') as PREfromTime,PRE.f_user_id as PREuserId,PRE.f_room_id as PREroomId,PRE.f_converter_id as PREconverterId,PRE.f_amount_total as PREamountTotal,PRE.f_amount_avaible as PREamountAvaible,PRE.f_status as PREstatus,date_format(PRE.f_out_date,'%Y-%m-%d %T') as PREoutDate,date_format(PRE.f_sys0_add_time,'%Y-%m-%d %T') as PREsys0AddTime,date_format(PRE.f_sys0_upd_time,'%Y-%m-%d %T') as PREsys0UpdTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PRE1.f_id as PRE1id,PRE1.f_from_type as PRE1fromType,PRE1.f_from_id as PRE1fromId,date_format(PRE1.f_from_time,'%Y-%m-%d %T') as PRE1fromTime,PRE1.f_user_id as PRE1userId,PRE1.f_room_id as PRE1roomId,PRE1.f_converter_id as PRE1converterId,PRE1.f_amount_total as PRE1amountTotal,PRE1.f_amount_avaible as PRE1amountAvaible,PRE1.f_status as PRE1status,date_format(PRE1.f_out_date,'%Y-%m-%d %T') as PRE1outDate,date_format(PRE1.f_sys0_add_time,'%Y-%m-%d %T') as PRE1sys0AddTime,date_format(PRE1.f_sys0_upd_time,'%Y-%m-%d %T') as PRE1sys0UpdTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PRE.f_id = #{id} ) </if>
+        <if test="fromType != null">  and (PRE.f_from_type = #{fromType} ) </if>
+        <if test="fromId != null">  and (PRE.f_from_id = #{fromId} ) </if>
+        <if test="fromTime != null and !fromTime.equals('')  ">  and (PRE.f_from_time = str_to_date(#{fromTime},'%Y-%m-%d %T') ) </if>
+        <if test="fromTime_START != null and !fromTime_START.equals('')  ">  
+            <![CDATA[ and (PRE.f_from_time >= str_to_date(#{fromTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="fromTime_END != null and !fromTime_END.equals('')  ">
+            <![CDATA[ and (PRE.f_from_time <= str_to_date(#{fromTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="userId != null">  and (PRE.f_user_id = #{userId} ) </if>
+        <if test="roomId != null">  and (PRE.f_room_id = #{roomId} ) </if>
+        <if test="converterId != null">  and (PRE.f_converter_id = #{converterId} ) </if>
+        <if test="amountTotal != null">  and (PRE.f_amount_total = #{amountTotal} ) </if>
+        <if test="amountAvaible != null">  and (PRE.f_amount_avaible = #{amountAvaible} ) </if>
+        <if test="status != null">  and (PRE.f_status = #{status} ) </if>
+        <if test="outDate != null and !outDate.equals('')  ">  and (PRE.f_out_date = str_to_date(#{outDate},'%Y-%m-%d %T') ) </if>
+        <if test="outDate_START != null and !outDate_START.equals('')  ">  
+            <![CDATA[ and (PRE.f_out_date >= str_to_date(#{outDate_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="outDate_END != null and !outDate_END.equals('')  ">
+            <![CDATA[ and (PRE.f_out_date <= str_to_date(#{outDate_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PRE.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (PRE.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (PRE.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PRE.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (PRE.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (PRE.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PRE.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (PRE.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (PRE.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (PRE.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (PRE.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (PRE.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (PRE.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (PRE.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PRE.f_id = #{id} ) </if>
+        <if test="fromType != null and !fromType.equals('')  ">  and (PRE.f_from_type = #{fromType} ) </if>
+        <if test="fromId != null and !fromId.equals('')  ">  and (PRE.f_from_id = #{fromId} ) </if>
+        <if test="fromTime != null and !fromTime.equals('')  ">  and (PRE.f_from_time = str_to_date(#{fromTime},'%Y-%m-%d %T') ) </if>
+        <if test="fromTime_START != null and !fromTime_START.equals('')  ">  
+            <![CDATA[ and (PRE.f_from_time >= str_to_date(#{fromTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="fromTime_END != null and !fromTime_END.equals('')  ">
+            <![CDATA[ and (PRE.f_from_time <= str_to_date(#{fromTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="userId != null and !userId.equals('')  ">  and (PRE.f_user_id = #{userId} ) </if>
+        <if test="roomId != null and !roomId.equals('')  ">  and (PRE.f_room_id = #{roomId} ) </if>
+        <if test="converterId != null and !converterId.equals('')  ">  and (PRE.f_converter_id = #{converterId} ) </if>
+        <if test="amountTotal != null and !amountTotal.equals('')  ">  and (PRE.f_amount_total = #{amountTotal} ) </if>
+        <if test="amountAvaible != null and !amountAvaible.equals('')  ">  and (PRE.f_amount_avaible = #{amountAvaible} ) </if>
+        <if test="status != null and !status.equals('')  ">  and (PRE.f_status = #{status} ) </if>
+        <if test="outDate != null and !outDate.equals('')  ">  and (PRE.f_out_date = str_to_date(#{outDate},'%Y-%m-%d %T') ) </if>
+        <if test="outDate_START != null and !outDate_START.equals('')  ">  
+            <![CDATA[ and (PRE.f_out_date >= str_to_date(#{outDate_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="outDate_END != null and !outDate_END.equals('')  ">
+            <![CDATA[ and (PRE.f_out_date <= str_to_date(#{outDate_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PRE.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (PRE.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (PRE.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PRE.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (PRE.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (PRE.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PRE.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (PRE.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (PRE.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PRE.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PRE.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PRE.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PRE.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (PRE.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="payRedEnvelopeBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="payRedEnvelopeBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="payRedEnvelopeBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="payRedEnvelopeBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_pay_red_envelope PRE
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(粮票信息表)信息。 -->
+	<sql id="select_payRedEnvelope">
+		SELECT <include refid="payRedEnvelopeBase.queryHead"/>
+		<include refid="payRedEnvelopeBase.busiQueryCondition"/>
+		<include refid="payRedEnvelopeBase.dimCheckSql"/>
+		ORDER BY PRE.f_id DESC
+	</sql>
+	<select id="select_payRedEnvelope" parameterType="java.util.Map" resultMap="payRedEnvelopeBase.payRedEnvelopeExtendMap">
+		<include refid="payRedEnvelopeBase.select_payRedEnvelope"/>
+	</select>
+	
+	<!-- 根据条件分页查询(粮票信息表)信息  -->
+	<sql id="select_payRedEnvelope_withPage">
+		SELECT <include refid="payRedEnvelopeBase.queryHead"/>
+		<include refid="payRedEnvelopeBase.busiQueryCondition"/>
+		<include refid="payRedEnvelopeBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_payRedEnvelope_withPage" resultMap="payRedEnvelopeBase.payRedEnvelopeExtendMap" parameterType="java.util.Map">
+		<include refid="payRedEnvelopeBase.select_payRedEnvelope_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(粮票信息表)信息。 -->
+	<sql id="select_payRedEnvelope_bySeqId">
+		SELECT <include refid="payRedEnvelopeBase.queryHead"/>
+		<include refid="payRedEnvelopeBase.busiQueryCondition"/>
+		 and PRE.f_id = #{_parameter}
+	</sql>
+	<select id="select_payRedEnvelope_bySeqId" parameterType="java.math.BigInteger" resultMap="payRedEnvelopeBase.payRedEnvelopeBaseMap">
+		<include refid="payRedEnvelopeBase.select_payRedEnvelope_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(粮票信息表)记录数  -->
+	<sql id="select_payRedEnvelope_count">
+		SELECT COUNT(*)
+		<include refid="payRedEnvelopeBase.busiQueryCount"/>
+		<include refid="payRedEnvelopeBase.dimCheckSql"/>
+	</sql>
+	<select id="select_payRedEnvelope_count" resultType="java.lang.Integer">
+		<include refid="payRedEnvelopeBase.select_payRedEnvelope_count"/>
+	</select>
+	
+	 <!-- 往(粮票信息表)新增一条记录。 -->
+	 <sql id="insert_payRedEnvelope">
+		INSERT INTO t_pay_red_envelope 
+		(f_id,f_from_type,f_from_id,f_from_time,f_user_id,f_room_id,f_converter_id,f_amount_total,f_amount_avaible,f_status,f_out_date,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{fromType},#{fromId},str_to_date(#{fromTime,jdbcType=DATE},'%Y-%m-%d %T'),#{userId},#{roomId},#{converterId},#{amountTotal},#{amountAvaible},#{status},str_to_date(#{outDate,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_payRedEnvelope" parameterType="PayRedEnvelope">
+		<include refid="payRedEnvelopeBase.insert_payRedEnvelope"/>
+    </insert>
+    
+	<!-- 批量新增(粮票信息表)信息 -->
+    <insert id="insert_payRedEnvelope_Batch" parameterType="java.util.List">
+    	INSERT INTO t_pay_red_envelope 
+		(f_id,f_from_type,f_from_id,f_from_time,f_user_id,f_room_id,f_converter_id,f_amount_total,f_amount_avaible,f_status,f_out_date,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.fromType},#{item.fromId},str_to_date(#{item.fromTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.userId},#{item.roomId},#{item.converterId},#{item.amountTotal},#{item.amountAvaible},#{item.status},str_to_date(#{item.outDate,jdbcType=DATE},'%Y-%m-%d %T'),sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(粮票信息表)信息。 -->
+    <sql id="update_payRedEnvelope">
+		UPDATE t_pay_red_envelope
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="fromType != null and !fromType.equals('') "> ,f_from_type=#{fromType}</if>
+ 		<if test="fromId != null and !fromId.equals('') "> ,f_from_id=#{fromId}</if>
+ 		<if test="fromTime != null and !fromTime.equals('') "> ,f_from_time=str_to_date(#{fromTime},'%Y-%m-%d %T')</if>
+ 		<if test="userId != null and !userId.equals('') "> ,f_user_id=#{userId}</if>
+ 		<if test="roomId != null and !roomId.equals('') "> ,f_room_id=#{roomId}</if>
+ 		<if test="converterId != null and !converterId.equals('') "> ,f_converter_id=#{converterId}</if>
+ 		<if test="amountTotal != null and !amountTotal.equals('') "> ,f_amount_total=#{amountTotal}</if>
+ 		<if test="amountAvaible != null and !amountAvaible.equals('') "> ,f_amount_avaible=#{amountAvaible}</if>
+ 		<if test="status != null and !status.equals('') "> ,f_status=#{status}</if>
+ 		<if test="outDate != null and !outDate.equals('') "> ,f_out_date=str_to_date(#{outDate},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_payRedEnvelope" parameterType="PayRedEnvelope">
+		<include refid="payRedEnvelopeBase.update_payRedEnvelope"/>
+    </update>
+    
+    <!-- 批量更新(粮票信息表)信息。 -->
+    <update id="update_payRedEnvelope_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_red_envelope
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.fromType != null and !item.fromType.equals('')  "> ,f_from_type=#{item.fromType}</if>
+ 		<if test="item.fromId != null and !item.fromId.equals('')  "> ,f_from_id=#{item.fromId}</if>
+ 		<if test="item.fromTime != null and !item.fromTime.equals('')  "> ,f_from_time=str_to_date(#{item.fromTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if>
+ 		<if test="item.roomId != null and !item.roomId.equals('')  "> ,f_room_id=#{item.roomId}</if>
+ 		<if test="item.converterId != null and !item.converterId.equals('')  "> ,f_converter_id=#{item.converterId}</if>
+ 		<if test="item.amountTotal != null and !item.amountTotal.equals('')  "> ,f_amount_total=#{item.amountTotal}</if>
+ 		<if test="item.amountAvaible != null and !item.amountAvaible.equals('')  "> ,f_amount_avaible=#{item.amountAvaible}</if>
+ 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if>
+ 		<if test="item.outDate != null and !item.outDate.equals('')  "> ,f_out_date=str_to_date(#{item.outDate},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(粮票信息表)信息_逻辑删除。 -->
+    <sql id="delete_payRedEnvelope_Logic">
+		UPDATE t_pay_red_envelope
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="fromType != null and !fromType.equals('')  "> ,f_from_type=#{fromType}</if>
+ 		<if test="fromId != null and !fromId.equals('')  "> ,f_from_id=#{fromId}</if>
+ 		<if test="fromTime != null and !fromTime.equals('')  "> ,f_from_time=str_to_date(#{fromTime},'%Y-%m-%d %T')</if>
+ 		<if test="userId != null and !userId.equals('')  "> ,f_user_id=#{userId}</if>
+ 		<if test="roomId != null and !roomId.equals('')  "> ,f_room_id=#{roomId}</if>
+ 		<if test="converterId != null and !converterId.equals('')  "> ,f_converter_id=#{converterId}</if>
+ 		<if test="amountTotal != null and !amountTotal.equals('')  "> ,f_amount_total=#{amountTotal}</if>
+ 		<if test="amountAvaible != null and !amountAvaible.equals('')  "> ,f_amount_avaible=#{amountAvaible}</if>
+ 		<if test="status != null and !status.equals('')  "> ,f_status=#{status}</if>
+ 		<if test="outDate != null and !outDate.equals('')  "> ,f_out_date=str_to_date(#{outDate},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_payRedEnvelope_Logic" parameterType="PayRedEnvelope">
+		<include refid="payRedEnvelopeBase.delete_payRedEnvelope_Logic"/>
+    </update>
+    
+    <!-- 批量删除(粮票信息表)信息_逻辑删除 -->
+    <update id="delete_payRedEnvelope_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_red_envelope
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.fromType != null and !item.fromType.equals('')  "> ,f_from_type=#{item.fromType}</if>
+ 		<if test="item.fromId != null and !item.fromId.equals('')  "> ,f_from_id=#{item.fromId}</if>
+ 		<if test="item.fromTime != null and !item.fromTime.equals('')  "> ,f_from_time=str_to_date(#{item.fromTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.userId != null and !item.userId.equals('')  "> ,f_user_id=#{item.userId}</if>
+ 		<if test="item.roomId != null and !item.roomId.equals('')  "> ,f_room_id=#{item.roomId}</if>
+ 		<if test="item.converterId != null and !item.converterId.equals('')  "> ,f_converter_id=#{item.converterId}</if>
+ 		<if test="item.amountTotal != null and !item.amountTotal.equals('')  "> ,f_amount_total=#{item.amountTotal}</if>
+ 		<if test="item.amountAvaible != null and !item.amountAvaible.equals('')  "> ,f_amount_avaible=#{item.amountAvaible}</if>
+ 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if>
+ 		<if test="item.outDate != null and !item.outDate.equals('')  "> ,f_out_date=str_to_date(#{item.outDate},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(粮票信息表)信息。 -->
+    <sql id="delete_payRedEnvelope">
+		DELETE FROM t_pay_red_envelope WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_payRedEnvelope" parameterType="java.lang.String">
+		<include refid="payRedEnvelopeBase.delete_payRedEnvelope"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(粮票信息表)信息。 -->
+    <delete id="delete_payRedEnvelope_Batch" parameterType="java.util.List">
+		DELETE FROM t_pay_red_envelope WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

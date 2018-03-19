@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 现金流量汇总表 -->
+<mapper namespace="cashFlowSummary">
+	<!-- 查询“物业费”、“其他代收费用”数据 -->
+	<select id="select_WY_OTHER" parameterType="java.util.Map" resultMap="cashFlowSummaryBase.cashFlowSummaryBaseMap">
+		SELECT
+			PB.f_id AS f_src_bill_id,
+			RR.f_id AS t_real_room_id,
+			AP.f_name AS f_province_name,
+			AC.f_name AS f_city_name,
+			GB.f_id AS t_group_building_id,
+			GB.f_name AS f_gb_name,
+			B.f_id AS t_building_id,
+			B.f_name AS f_building_name,
+			IFNULL(
+				RR.f_unit_name,
+				LEFT (
+					RR.f_num,
+					locate('-', RR.f_num) - 1
+				)
+			) AS f_unit,
+			substring(
+				RR.f_num,
+				locate('-', RR.f_num) + 1
+			) AS f_room_num,
+			PB.f_amount,
+			<choose>
+				<when test="feeType==1">1 AS f_bill_type,</when>
+				<when test="feeType==2">3 AS f_bill_type,</when>
+			</choose>
+			DATE_FORMAT(
+				PB.f_sys0_upd_time,
+				'%Y-%m-%d %H:%i:%s'
+			) AS f_bill_time,
+			now() AS f_sys0_add_time
+		FROM
+			t_pay_bill PB
+		LEFT JOIN t_real_room RR ON PB.t_real_room_f_id = RR.f_id
+		LEFT JOIN t_building B ON RR.t_building_f_id = B.f_id
+		LEFT JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id
+		LEFT JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id
+		LEFT JOIN t_address_city AC ON AC.f_id = AB.t_city_f_id
+		LEFT JOIN t_address_province AP ON AP.f_id = AC.t_province_f_id
+		WHERE
+			PB.f_sys0_del_state = 0
+		AND PB.f_is_pay = 1
+		AND PB.f_is_prop_fee = #{feeType}
+		AND (
+			PB.f_cash_status = 1
+			OR PB.f_cash_status IS NULL
+		)
+		LIMIT #{limitCount}
+	</select>
+	
+	<!-- 查询“停车费”数据-->
+	<select id="selectParking" resultMap="cashFlowSummaryBase.cashFlowSummaryBaseMap">
+		SELECT
+			CNPL.f_id AS f_src_bill_id,
+			AP.f_name AS f_province_name,
+			AC.f_name AS f_city_name,
+			GB.f_id AS t_group_building_id,
+			GB.f_name AS f_gb_name,
+			CNPL.f_fee AS f_amount,
+			2 AS f_bill_type,
+			DATE_FORMAT(
+				IFNULL(EO.f_pay_time, CNPL.f_pay_time),
+				'%Y-%m-%d %H:%i:%s'
+			) AS f_bill_time,
+			now() AS f_sys0_add_time
+		FROM
+			t_car_num_pay_log CNPL
+			INNER JOIN t_ebuy_order EO ON EO.f_id = CNPL.t_ebuy_order_id
+			INNER JOIN t_car_num_list CNL ON CNL.f_id=CNPL.t_car_num_id
+			<!-- IF：“CNPL.t_group_building_f_id”不为null，则为临停车缴费；否则为月卡、年卡缴费 -->
+			LEFT JOIN t_group_building GB ON GB.f_id=IF(CNPL.t_group_building_f_id IS NOT NULL, CNPL.t_group_building_f_id, CNL.t_group_building_f_id)
+			LEFT JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id
+			LEFT JOIN t_address_city AC ON AC.f_id = AB.t_city_f_id
+			LEFT JOIN t_address_province AP ON AP.f_id = AC.t_province_f_id
+		WHERE
+			CNPL.f_sys0_del_state = 0
+			AND (CNPL.f_status = 0 OR CNPL.f_status = 1)
+			AND (
+				CNPL.f_cash_status = 1
+				OR CNPL.f_cash_status IS NULL
+			)
+		GROUP BY EO.f_id
+		LIMIT #{limitCount}
+	</select>
+	
+	<!-- 查询“自营超市”、“楼下店”数据 -->
+	<select id="select_shop" resultMap="cashFlowSummaryBase.cashFlowSummaryBaseMap">
+		SELECT
+			EDO.f_id AS f_src_bill_id,
+			RR.f_id AS t_real_room_id,
+			AP.f_name AS f_province_name,
+			AC.f_name AS f_city_name,
+			GB.f_id AS t_group_building_id,
+			GB.f_name AS f_gb_name,
+			B.f_id AS t_building_id,
+			B.f_name AS f_building_name,
+			IFNULL(
+				RR.f_unit_name,
+				LEFT (
+					RR.f_num,
+					locate('-', RR.f_num) - 1
+				)
+			) AS f_unit,
+			substring(
+				RR.f_num,
+				locate('-', RR.f_num) + 1
+			) AS f_room_num,
+			<!-- 运单商品销售金额 -->
+			IFNULL((
+				SELECT
+					sum(
+						IFNULL(P.f_product_qty, 0) * IFNULL(P.f_product_price, 0)
+					)
+				FROM
+					t_ebuy_delivery_order_product DP
+				LEFT JOIN t_ebuy_order_has_t_ebuy_product P ON DP.t_ebuy_order_has_t_ebuy_product_f_id = P.f_id
+				LEFT JOIN t_ebuy_product_shelf PS ON PS.f_id = P.t_ebuy_product_f_id
+				LEFT JOIN t_ebuy_product PR ON PS.t_ebuy_product_id = PR.f_id
+				WHERE
+					DP.t_ebuy_delivery_order_f_id = EDO.f_id
+			), 0) + 
+			<!-- 解放区运费 -->
+			IFNULL(EDO.f_delivery_real_fee, 0) - 
+			<!-- 退款金额 -->
+			IFNULL((
+				SELECT
+					SUM(IFNULL(ERO.f_refund_fee, 0))
+				FROM
+					t_ebuy_refund_order ERO
+				WHERE
+					ERO.t_ebuy_delivery_order_f_id = EDO.f_id
+				AND ERO.f_sys0_del_state = 0
+				AND ERO.f_refund_status = 2
+			), 0) * 100 AS f_amount,
+			<choose>
+				<when test="shopType!=null and shopType=='down'.toString()"><!-- 楼下店 -->
+					4 AS f_bill_type,
+				</when>
+				<when test="shopType!=null and shopType=='selfRun'.toString()"><!-- 自营超市 -->
+					5 AS f_bill_type,
+				</when>
+				<otherwise>-1 AS f_bill_type,</otherwise>
+			</choose>
+			DATE_FORMAT(
+				EO.f_pay_time,
+				'%Y-%m-%d %H:%i:%s'
+			) AS f_bill_time,
+			now() AS f_sys0_add_time
+		FROM
+			t_ebuy_order EO
+		INNER JOIN t_ebuy_delivery_order EDO ON EO.f_id = EDO.t_ebuy_order_f_id
+		INNER JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EDO.t_supply_merchant_f_id
+		<choose>
+			<when test="shopType!=null and shopType=='down'.toString()"><!-- 楼下店 -->
+				AND ESM.f_type = 2<!-- 1:自营（全国）;2:附近商家;3:物业专供; 4自营（区域） -->
+			</when>
+			<when test="shopType!=null and shopType=='selfRun'.toString()"><!-- 自营超市 -->
+				AND (ESM.f_type = 1 or ESM.f_type = 4)
+			</when>
+			<otherwise>AND 1=2</otherwise>
+		</choose>
+		LEFT JOIN t_room R ON EO.f_curr_room_id = R.f_id
+		LEFT JOIN t_real_room RR ON R.t_real_room_f_id = RR.f_id
+		LEFT JOIN t_building B ON RR.t_building_f_id = B.f_id
+		LEFT JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id
+		LEFT JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id
+		LEFT JOIN t_address_city AC ON AC.f_id = AB.t_city_f_id
+		LEFT JOIN t_address_province AP ON AP.f_id = AC.t_province_f_id
+		WHERE
+			EO.f_type = 1
+		AND EO.f_sys0_del_state=0
+		AND (
+			EDO.f_cash_status = 1
+			OR EDO.f_cash_status IS NULL
+		)
+		AND (EDO.f_status = 3 OR EDO.f_refund_status = 2)
+		LIMIT #{limitCount}
+	</select>
+	
+	<!-- 查询“上门维修”数据 -->
+	<select id="selectRepair" resultMap="cashFlowSummaryBase.cashFlowSummaryBaseMap">
+		SELECT
+			DB.f_id AS f_src_bill_id,
+			RR.f_id AS t_real_room_id,
+			AP.f_name AS f_province_name,
+			AC.f_name AS f_city_name,
+			GB.f_id AS t_group_building_id,
+			GB.f_name AS f_gb_name,
+			B.f_id AS t_building_id,
+			B.f_name AS f_building_name,
+			IFNULL(
+				RR.f_unit_name,
+				LEFT (
+					RR.f_num,
+					locate('-', RR.f_num) - 1
+				)
+			) AS f_unit,
+			substring(
+				RR.f_num,
+				locate('-', RR.f_num) + 1
+			) AS f_room_num,
+			DB.f_pay_amount AS f_amount,
+			6 AS f_bill_type,
+			DATE_FORMAT(
+				EO.f_pay_time,
+				'%Y-%m-%d %H:%i:%s'
+			) AS f_bill_time,
+			now() AS f_sys0_add_time
+		FROM
+			t_dredge_bill DB
+		LEFT JOIN t_ebuy_order EO ON EO.f_id = DB.t_ebuy_order_f_id
+		LEFT JOIN t_room R ON EO.f_curr_room_id = R.f_id
+		LEFT JOIN t_real_room RR ON R.t_real_room_f_id = RR.f_id
+		LEFT JOIN t_building B ON RR.t_building_f_id = B.f_id
+		LEFT JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id
+		LEFT JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id
+		LEFT JOIN t_address_city AC ON AC.f_id = AB.t_city_f_id
+		LEFT JOIN t_address_province AP ON AP.f_id = AC.t_province_f_id
+		WHERE
+			DB.f_sys0_del_state = 0
+		AND (
+			DB.f_cash_status = 1
+			OR DB.f_cash_status IS NULL
+		)
+		AND (DB.f_status = 3 OR DB.f_status = 5)
+		LIMIT #{limitCount}
+	</select>
+	
+	<!-- 查询物业宝、停车宝现金流 -->
+	<select id="select_WYB_ParkingB" parameterType="java.util.Map" resultMap="cashFlowSummaryBase.cashFlowSummaryBaseMap">
+		SELECT
+		    FB.f_order_no AS f_src_bill_id,
+			RR.f_id AS t_real_room_id,
+			AP.f_name AS f_province_name,
+			AC.f_name AS f_city_name,
+			GB.f_id AS t_group_building_id,
+			GB.f_name AS f_gb_name,
+			B.f_id AS t_building_id,
+			B.f_name AS f_building_name,
+			IFNULL(
+				RR.f_unit_name,
+				LEFT (
+					RR.f_num,
+					locate('-', RR.f_num) - 1
+				)
+			) AS f_unit,
+			substring(
+				RR.f_num,
+				locate('-', RR.f_num) + 1
+			) AS f_room_num,
+			FB.f_buy_money * 100 AS f_amount,
+			<choose>
+				<when test="financeType==1">7 AS f_bill_type,</when>
+				<when test="financeType==2">8 AS f_bill_type,</when>
+			</choose>
+			DATE_FORMAT(
+				FB.f_buy_time,
+				'%Y-%m-%d %H:%i:%s'
+			) AS f_bill_time,
+			now() AS f_sys0_add_time
+		FROM
+			t_finance_buy FB
+		LEFT JOIN t_real_room RR ON FB.t_real_room_id = RR.f_id
+		LEFT JOIN t_building B ON RR.t_building_f_id = B.f_id
+		LEFT JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id
+		LEFT JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id
+		LEFT JOIN t_address_city AC ON AC.f_id = AB.t_city_f_id
+		LEFT JOIN t_address_province AP ON AP.f_id = AC.t_province_f_id
+		WHERE
+			FB.f_finance_type = #{financeType}
+			AND (
+				FB.f_cash_status = 1
+				OR FB.f_cash_status IS NULL
+			)
+		LIMIT #{limitCount}
+	</select>
+	
+	<!-- 修改表t_finance_buy字段f_cash_status -->
+	<update id="update_finance_buy_cash_status_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_finance_buy SET f_cash_status=2 WHERE f_order_no=#{item}
+    	</foreach>
+    </update>
+    
+    <!-- 修改表t_dredge_bill字段f_cash_status -->
+    <update id="update_dredge_bill_cash_status_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_dredge_bill SET f_cash_status=2 WHERE f_id=#{item}
+    	</foreach>
+    </update>
+    
+    <!-- 修改表t_ebuy_order字段f_cash_status -->
+    <update id="update_ebuy_order_cash_status_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_delivery_order SET f_cash_status=2 WHERE f_id=#{item}
+    	</foreach>
+    </update>
+    
+    <!-- 修改表t_car_num_pay_log字段f_cash_status -->
+    <update id="update_car_num_pay_log_cash_status_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_car_num_pay_log SET f_cash_status=2 WHERE f_id=#{item}
+    	</foreach>
+    </update>
+    
+    <!-- 修改表t_pay_bill字段f_cash_status -->
+    <update id="update_pay_bill_cash_status_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_bill SET f_cash_status=2 WHERE f_id=#{item}
+    	</foreach>
+    </update>
+</mapper>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:评论 t_comments -->
+<mapper namespace="comments">
+	<resultMap type="com.cnfantasia.server.api.comments.entity.CommentsEntity" id="commentsEntityMap_Append" 
+		extends="commentsBase.commentsBaseMap_AppendTable">
+		<!-- 评论者信息 -->
+		<association property="user" resultMap="commonUser.userSimpleEntity_Map_Append"></association>
+		<!-- 评论者所在小区信息 -->
+		<association property="userGroupBuilding" resultMap="groupBuildingBase.groupBuildingBaseMap_AppendTable"></association>
+		<!-- 被艾特的用户列表 -->
+		<!-- <collection property="noticeUserList" resultMap=""></collection> -->
+		<!-- 评论使用的标签 -->
+		<collection property="commentsLabelList" resultMap="commentsLabelBase.commentsLabelBaseMap_AppendTable"/>
+		<!-- 评论使用的评分项 -->
+		<collection property="commentsHasTCommentsPointsEntityList" resultMap="commentsHasTCommentsPointsEntity_Map_Append"/>
+	</resultMap>
+	<!-- 评论包含评分项信息 -->
+	<resultMap type="com.cnfantasia.server.api.comments.entity.CommentsHasTCommentsPointsEntity" id="commentsHasTCommentsPointsEntity_Map_Append"
+		extends="commentsHasTCommentsPointsBase.commentsHasTCommentsPointsBaseMap_AppendTable">
+		<!-- 评分项信息 -->
+		<association property="commentsPoints" resultMap="commentsPointsBase.commentsPointsBaseMap_AppendTable"></association>
+	</resultMap>
+	
+	<sql id="append_Comments_user_GroupBuilding_info_from">
+		INNER JOIN t_group_building GB ON GB.f_sys0_del_state = 0
+			AND GB.f_id = (
+				SELECT B.t_group_building_f_id
+				FROM t_room R
+				INNER JOIN t_real_room RR ON R.t_real_room_f_id = RR.f_id AND RR.f_sys0_del_state = 0
+				INNER JOIN t_building B ON RR.t_building_f_id = B.f_id AND B.f_sys0_del_state = 0
+				WHERE 1=1 
+				AND R.f_id = U.f_default_room_id 
+				AND R.f_sys0_del_state = 0
+			)
+	</sql>
+	
+	<!-- 评论基本信息查询 -->
+	<sql id="select_comments_info_base">
+		SELECT <include refid="commentsBase.queryHead_AppendTable"/>
+			,<include refid="commonUser.userSimple_common_select"/>
+			,<include refid="groupBuildingBase.queryHead_AppendTable"/><!-- 评论者所在小区 -->
+		FROM t_comments C
+			INNER JOIN t_user U ON U.f_id = C.f_user_id AND U.f_sys0_del_state = 0
+			<include refid="append_Comments_user_GroupBuilding_info_from"/>
+			<include refid="commonUser.userSimple_common_from"/>
+		WHERE 1=1
+			AND C.f_sys0_del_state = 0
+	</sql>
+	<!-- 评论附加信息select -->
+	<sql id="select_comments_info_extend_select">
+		<include refid="commentsLabelBase.queryHead_AppendTable"/>
+		,<include refid="commentsHasTCommentsPointsBase.queryHead_AppendTable"/><!-- 评论包含评分项 -->
+		,<include refid="commentsPointsBase.queryHead_AppendTable"/><!-- 评分项信息 -->
+	</sql>
+	<!-- 评论附加信息from -->
+	<sql id="select_comments_info_extend_from">
+		LEFT JOIN (
+			t_comments_has_t_comments_label CHTCL
+			INNER JOIN t_comments_label CL ON CL.f_id = CHTCL.t_comments_label_f_id AND CL.f_sys0_del_state = 0
+		) ON CHTCL.t_comments_f_id = _tmp.Cid AND CHTCL.f_sys0_del_state = 0
+		LEFT JOIN (
+			t_comments_has_t_comments_points CHTCP
+			INNER JOIN t_comments_points CP ON CP.f_id = CHTCP.t_comments_points_f_id AND CP.f_sys0_del_state = 0
+		) ON CHTCP.t_comments_f_id = _tmp.Cid AND CHTCP.f_sys0_del_state = 0
+	</sql>
+	
+    <!-- 根据targetId,targetType查询最近一条评论的内容-->
+	<select id="select_firstComentDetail_by_TargetIdType" parameterType="java.util.Map" resultMap="commentsEntityMap_Append">
+		SELECT _tmp.* 
+			,<include refid="select_comments_info_extend_select"/>
+		FROM (
+			<include refid="select_comments_info_base"/>
+			AND C.f_id=(
+				SELECT max(f_id) 
+				FROM t_comments 
+				WHERE 1=1 
+				AND f_sys0_del_state = 0
+				AND f_target_id = #{targetId} 
+				AND f_target_type= #{targetType}
+			)
+		) _tmp
+		<include refid="select_comments_info_extend_from"/>
+	</select>
+	
+	<!-- 分页查询评论列表  -->
+	<sql id="select_comments_list_comm">
+		<include refid="select_comments_info_base"/>
+		AND C.f_target_type = #{goalType}
+		<if test="goalType == 121"> <!-- 物业保修的评论，评论的是维修单，但实际上要取出对师傅评论 added by wenfq -->
+		AND C.f_target_id in (select f_id from t_property_repair where t_property_repairer_f_id =(
+			select t_property_repairer_f_id from t_property_repair where f_id = #{goalId}))
+		</if>
+		<if test="goalType != 121"> <!-- 普通的评论, 走之前的逻辑  added by wenfq -->
+			AND C.f_target_id = #{goalId}
+		</if>
+	</sql>
+	<select id="select_comments_list_page" parameterType="java.util.Map" resultMap="commentsEntityMap_Append">
+		SELECT _tmp.* 
+			,<include refid="select_comments_info_extend_select"/>
+		FROM (
+			<include refid="select_comments_list_comm"/>
+			ORDER BY C.f_time DESC 
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		) _tmp
+		<include refid="select_comments_info_extend_from"/>
+	</select>
+	<select id="select_comments_list_count" parameterType="java.util.Map" resultType="java.lang.Integer" >
+		SELECT COUNT(*)
+		FROM ( <include refid="select_comments_list_comm"/> ) as tbl01
+	</select>
+	
+	<!-- 单个目标对象包含的评论列表信息 -->
+	<resultMap type="com.cnfantasia.server.api.comments.entity.GoalIdCommentsEntity" id="goalIdCommentsEntity_Map_Append">
+		<!-- 评论目标Id -->
+		<id column="ext_goalId" javaType="java.math.BigInteger" property="goalId"/>  <!-- 目标Id -->
+		<!-- 评论列表 -->
+		<collection property="commentsEntityList" resultMap="commentsEntityMap_Append"/>
+	</resultMap>
+	<!-- 查询多个目标Id对应的部分评论信息 -->
+	<select id="select_comments_list_Multi" parameterType="java.util.Map" resultMap="goalIdCommentsEntity_Map_Append">
+		SELECT
+			tab.*
+		FROM
+			(
+				SELECT
+					tab1.*,
+				IF (
+					@f_target_id = tab1.CtargetId ,@rank :=@rank + 1 ,@rank := 1
+				) AS f_rank,
+				@f_target_id := tab1.CtargetId ext_goalId
+			FROM
+				(
+					<include refid="select_comments_info_base"/>
+					AND C.f_target_type = #{goalType}
+					AND C.f_target_id IN 
+					<foreach item="item" collection="goalIdList" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+					ORDER BY
+						C.f_target_id,
+						C.f_time ASC
+				) tab1,
+				(
+					SELECT
+						@f_target_id := NULL,
+						@rank := 0
+				) tab2
+			) tab
+		WHERE 1=1
+			<if test="commentsLength != null and !(commentsLength.equals('')) ">
+	            AND <![CDATA[  tab.f_rank <= #{commentsLength} ]]>
+	        </if>
+			
+	</select>
+	
+	<!-- 查询全部评论 -->
+	<select id="select_comments_list" parameterType="java.util.Map" resultMap="commentsEntityMap_Append">
+		SELECT _tmp.* 
+			,<include refid="select_comments_info_extend_select"/>
+		FROM (
+			<include refid="select_comments_list_comm"/>
+			ORDER BY C.f_time DESC 
+			<!-- <![CDATA[ LIMIT #{_begin},#{_length} ]]> -->
+		) _tmp
+		<include refid="select_comments_info_extend_from"/>
+	</select>
+	
+	<!-- 查询评论详情 -->
+	<select id="select_comments_detail" parameterType="java.util.Map" resultMap="commentsEntityMap_Append">
+		SELECT _tmp.* 
+			,<include refid="select_comments_info_extend_select"/>
+		FROM (
+			<include refid="select_comments_info_base"/>
+			AND C.f_id = #{commentId}
+		) _tmp
+		<include refid="select_comments_info_extend_from"/>
+	</select>
+	
+	<!-- 删除评论信息_逻辑删除 -->
+	<update id="del_comments_logic" parameterType="java.util.Map">
+		UPDATE t_comments
+		SET f_sys0_del_state = 1
+		<if test="sys0DelTime != null and sys0DelTime != '' "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= SYSDATE() </if>
+		WHERE 1=1 
+		AND f_sys0_del_state = 0
+		AND f_id = #{id}
+		AND f_user_id = #{userId}
+	</update>
+	
+	<!-- 查询某个数据的平均评论取值 -->
+	<select id="select_Comments_Average_Level" parameterType="java.util.Map" resultType="java.lang.Double">
+		SELECT AVG(C.f_level)
+		FROM t_comments C
+		WHERE 1=1
+		AND C.f_sys0_del_state = 0
+		AND C.f_target_type = #{goalType}
+		<if test="goalType == 121"> <!-- 物业保修的评论，评论的是维修单，但实际上要取出对师傅评论 added by wenfq -->
+		AND C.f_target_id in (select f_id from t_property_repair where t_property_repairer_f_id =(
+			select t_property_repairer_f_id from t_property_repair where f_id = #{goalId}))
+		</if>
+		<if test="goalType != 121"> <!-- 普通的评论, 走之前的逻辑  added by wenfq -->
+			AND C.f_target_id = #{goalId}
+		</if>
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.api.comments.entity.CommentsPointsAvgEntity" id="commentsPointsAvgEntity_Map_Append"
+		extends="commentsPointsBase.commentsPointsBaseMap_AppendTable">
+		<result column="ext_avgPoints" javaType="java.lang.Double" property="avgPoints"/> <!-- 评分项平均取值 -->
+	</resultMap>
+	<!-- 查询指定记录的其它评分项的平均取值 -->
+	<select id="select_CommentsPoints_Average_Level" parameterType="java.util.Map" resultMap="commentsPointsAvgEntity_Map_Append">
+		SELECT <include refid="commentsPointsBase.queryHead_AppendTable"/>
+			,AVG(CHTCP.f_value) AS ext_avgPoints
+		FROM t_comments C 
+			INNER JOIN t_comments_has_t_comments_points CHTCP ON CHTCP.t_comments_f_id = C.f_id AND CHTCP.f_sys0_del_state = 0
+			INNER JOIN t_comments_points CP ON CP.f_id = CHTCP.t_comments_points_f_id AND CP.f_sys0_del_state = 0
+		WHERE 1=1
+		AND C.f_sys0_del_state = 0
+		AND C.f_target_type = #{goalType}
+		AND C.f_target_id = #{goalId}
+		GROUP BY CP.f_id
+	</select>
+
+	<!--查询营销活动埋点-->
+	<select id="select_activityUrl_by_placeCode" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT
+			ea.f_link_url AS url
+		FROM
+			t_ebuy_advertise ea
+		INNER JOIN t_operation_sa_has_eb_supply OSHES ON OSHES.f_sys0_del_state = 0
+			AND ea.f_code = #{placeCode}
+		  	AND OSHES.f_type = 4 /*{"1":"电商商家","2":"街坊广告","3":"首页动态图标","4":"广告","5":"一元GO"}' 埋点类型对应的是4广告--t_ebuy_advertise*/
+			AND ea.f_id = OSHES.f_eb_supply_id
+		INNER JOIN (
+				<foreach collection = "codeIdList" item = "item" index="index" separator=" union all select " open="select" close="" >
+					#{item} saId
+				</foreach >
+			) A_tmp ON OSHES.f_sa_id = A_tmp.saId
+	</select>
+</mapper>

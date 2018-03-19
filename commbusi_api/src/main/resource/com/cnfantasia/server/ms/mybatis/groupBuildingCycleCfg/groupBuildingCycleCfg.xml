@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--账期配置 -->
+<mapper namespace="groupBuildingCycleCfg">
+    <select id="getIsHasSameCycleCfg" parameterType="java.util.Map" resultMap="groupBuildingBillCycleConfigBase.groupBuildingBillCycleConfigBaseMap">
+        SELECT <include refid="groupBuildingBillCycleConfigBase.queryHead"/>
+        FROM t_group_building_bill_cycle_config GBBCC
+        WHERE 1 = 1 AND GBBCC.f_sys0_del_state = 0
+        AND GBBCC.f_bill_name = #{feeName}
+        AND GBBCC.t_gb_id = #{gbId}
+        <if test="id != null and !id.equals('')  ">
+            AND GBBCC.f_id != #{id}
+        </if>
+    </select>
+
+    <!--查询可以自动生成账期的数据-->
+    <select id="getGroupBuildingBillCycleConfigsForAuto" resultMap="groupBuildingBillCycleConfigBase.groupBuildingBillCycleConfigBaseMap">
+        SELECT <include refid="groupBuildingBillCycleConfigBase.queryHead"/>
+        FROM t_group_building_bill_cycle_config GBBCC
+        WHERE 1 = 1
+        AND GBBCC.f_sys0_del_state = 0
+        AND (GBBCC.f_charging_mode=1 OR GBBCC.f_charging_mode=2)
+        AND DATE_FORMAT(GBBCC.f_bill_pay_start, '%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
+    </select>
+
+    <!--注：任何地方不能再次引用该SQL-->
+    <select id="getGroupBuildingBillCycleConfigsForAutoById" parameterType="java.math.BigInteger" resultMap="groupBuildingBillCycleConfigBase.groupBuildingBillCycleConfigBaseMap">
+        SELECT <include refid="groupBuildingBillCycleConfigBase.queryHead"/>
+        FROM t_group_building_bill_cycle_config GBBCC
+        WHERE 1 = 1
+        AND GBBCC.f_sys0_del_state = 0
+        AND (GBBCC.f_charging_mode=1 OR GBBCC.f_charging_mode=2)
+        AND GBBCC.f_id = #{id}
+    </select>
+
+    <select id="getNeedCreateBillRealRoom" parameterType="java.util.Map" resultType="com.cnfantasia.server.domainbase.realRoom.entity.RealRoom">
+        SELECT rr.f_id as id, rr.t_property_proprietor_f_id as tPropertyProprietorFId FROM t_real_room rr
+        INNER JOIN t_building b ON rr.t_building_f_id = b.f_id AND b.f_check_status in (1,9)
+        INNER JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id AND gb.f_id = #{gbId}
+        WHERE rr.f_check_status in (1,9) AND rr.f_id not in(
+        SELECT pb.t_real_room_f_id FROM t_pay_bill pb WHERE pb.t_bill_cycle_id = #{cycleId} AND pb.f_sys0_del_state = 0
+        );
+    </select>
+
+    <select id="getSameCycleByLastTime" parameterType="java.util.Map" resultMap="groupBuildingBillCycleBase.groupBuildingBillCycleBaseMap">
+        SELECT <include refid="groupBuildingBillCycleBase.queryHead"/>
+        FROM t_group_building_bill_cycle GBBC
+        INNER JOIN t_pay_bill_type PBT ON PBT.f_id = GBBC.t_pay_bill_type_id AND PBT.f_sys0_del_state = 0 AND PBT.f_name = #{payBillTypeName}
+        WHERE GBBC.t_group_building_id = #{gbId} AND GBBC.f_id != #{cycleId}
+        ORDER BY GBBC.f_bill_month_start DESC
+    </select>
+
+    <resultMap type="com.cnfantasia.server.api.groupBuildingCycleCfg.entity.UnPaidPayBillEntity" id="getUnPaidPayBillListMap" extends="payBillBase.payBillBaseMap_AppendTable">
+        <collection property="propertyFeeDetailList" resultMap="propertyFeeDetailBase.propertyFeeDetailBaseMap_AppendTable"/>
+    </resultMap>
+    <select id="getUnPaidPayBillList" parameterType="java.util.Map" resultMap="getUnPaidPayBillListMap">
+        SELECT <include refid="payBillBase.queryHead_AppendTable"/>,<include refid="propertyFeeDetailBase.queryHead_AppendTable"/>
+        FROM t_pay_bill PB INNER JOIN t_property_fee_detail PFD ON PB.f_id = PFD.t_pay_bill_f_id AND PFD.f_sys0_del_state = 0
+        INNER JOIN t_pay_bill_type PBT ON PBT.f_id = PB.f_bill_type_id AND PBT.f_sys0_del_state = 0 AND PBT.f_name = #{payBillTypeName}
+        INNER JOIN t_real_room rr ON rr.f_id = PB.t_real_room_f_id
+        INNER JOIN t_building b ON b.f_id = rr.t_building_f_id
+        INNER JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id AND gb.f_id = #{gbId}
+        WHERE PB.f_sys0_del_state = 0 AND PB.f_bank_collection_status != 1 AND PB.f_is_pay = 2
+        <if test="chargingMode != null and chargingMode=2">
+          AND date_format(PB.f_pay_day_end,'%Y-%m-%d') &lt; date_format(now(),'%Y-%m-%d')
+        </if>
+        ORDER BY PB.f_bill_month_start DESC
+    </select>
+
+    <select id="isHashSameBillCycle" parameterType="java.util.Map" resultType="java.lang.Integer">
+       SELECT count(0) from t_group_building_bill_cycle gbbc
+        INNER JOIN t_pay_bill_type pbt ON pbt.f_id = gbbc.t_pay_bill_type_id AND pbt.f_sys0_del_state=0
+		where gbbc.t_group_building_id = #{gbId} AND gbbc.f_sys0_del_state=0
+		and pbt.f_name = #{billTypeName}
+		and (
+			(	LEFT(gbbc.f_bill_month_start, 7) &lt;= LEFT(#{billMonthStart}, 7)
+				and LEFT(gbbc.f_bill_month_end, 7) >= LEFT(#{billMonthEnd}, 7)
+			)
+			or
+			(	LEFT(gbbc.f_bill_month_start, 7) >= LEFT(#{billMonthStart}, 7)
+				and LEFT(gbbc.f_bill_month_end, 7) &lt;= LEFT(#{billMonthEnd}, 7)
+			)
+			or
+			(
+				LEFT(gbbc.f_bill_month_start, 7) >=  LEFT(#{billMonthStart}, 7)
+				and LEFT(gbbc.f_bill_month_start, 7) &lt;= LEFT(#{billMonthEnd}, 7)
+				and LEFT(gbbc.f_bill_month_end, 7) >= LEFT(#{billMonthEnd}, 7)
+			 )
+			or
+			(
+				 LEFT(gbbc.f_bill_month_start, 7) &lt;= LEFT(#{billMonthStart}, 7)
+				 and LEFT(gbbc.f_bill_month_end, 7) >= LEFT(#{billMonthStart}, 7)
+				 and LEFT(gbbc.f_bill_month_end, 7) &lt;= LEFT(#{billMonthEnd}, 7)
+			 )
+			 or
+			(
+				LEFT(gbbc.f_bill_pay_start, 10) &lt;= LEFT(#{billPayStart}, 10)
+				and LEFT(gbbc.f_bill_pay_end, 10) >=  LEFT(#{billPayEnd}, 10)
+            )
+			or
+			(	LEFT(gbbc.f_bill_pay_start, 10) >= LEFT(#{billPayStart}, 10)
+				and LEFT(gbbc.f_bill_pay_end, 10) &lt;= LEFT(#{billPayEnd}, 10)
+			)
+			or
+			(
+				 LEFT(gbbc.f_bill_pay_start, 10) >= LEFT(#{billPayStart}, 10)
+				 and LEFT(gbbc.f_bill_pay_start, 10) &lt;= LEFT(#{billPayEnd}, 10)
+				 and LEFT(gbbc.f_bill_pay_end, 10) >= LEFT(#{billPayEnd}, 10)
+			 )
+			or
+			(
+				 LEFT(gbbc.f_bill_pay_start, 10) &lt;= LEFT(#{billPayStart}, 10)
+				 and LEFT(gbbc.f_bill_pay_end, 10) >= LEFT(#{billPayStart}, 10)
+				 and LEFT(gbbc.f_bill_pay_end, 10) &lt;= LEFT(#{billPayEnd}, 10)
+			 )
+			)
+    </select>
+
+    <!--查询小区下的账期配置信息-->
+    <resultMap id="getGroupBuildingBillCycleConfigByCondition_Map" type="com.cnfantasia.server.api.groupBuildingCycleCfg.entity.GroupBuildingBillCycleConfigEntity" extends="groupBuildingBillCycleConfigBase.groupBuildingBillCycleConfigExtendMap">
+        <collection property="fixedFeeItems" resultMap="fixedFeeItemBase.fixedFeeItemBaseMap_AppendTable" />
+        <collection property="mrFeeItems" resultMap="mrFeeItemBase.mrFeeItemBaseMap_AppendTable" />
+        <collection property="tmpFeeItems" resultMap="tmpFeeItemBase.tmpFeeItemBaseMap_AppendTable" />
+    </resultMap>
+    <select id="getGroupBuildingBillCycleConfigByCondition" parameterType="java.util.Map" resultMap="getGroupBuildingBillCycleConfigByCondition_Map">
+        SELECT
+          <include refid="groupBuildingBillCycleConfigBase.queryHead"/>
+          ,<include refid="fixedFeeItemBase.queryHead_AppendTable"/>,<include refid="mrFeeItemBase.queryHead_AppendTable"/>,<include refid="tmpFeeItemBase.queryHead_AppendTable"/>
+        FROM t_group_building_bill_cycle_config gbbcc
+        LEFT JOIN t_group_building_bill_cycle_config_has_fee_item gbbchfi ON gbbchfi.t_gb_cycle_cfg_id = gbbcc.f_id AND gbbchfi.f_fee_type = 2 AND gbbchfi.f_sys0_del_state = 0/*查询常规 1：抄表收费，2：常规收费，3：临时收费*/
+        LEFT JOIN t_fixed_fee_item FFI ON FFI.f_id = gbbchfi.t_fee_item_id AND FFI.f_sys0_del_state = 0
+        LEFT JOIN t_group_building_bill_cycle_config_has_fee_item gbbchfi1 ON gbbchfi1.t_gb_cycle_cfg_id = gbbcc.f_id AND gbbchfi1.f_fee_type = 1 AND gbbchfi1.f_sys0_del_state = 0/*查询抄表 1：抄表收费，2：常规收费，3：临时收费*/
+        LEFT JOIN t_mr_fee_item MFI ON MFI.f_id = gbbchfi1.t_fee_item_id AND MFI.f_sys0_del_state = 0
+        LEFT JOIN t_group_building_bill_cycle_config_has_fee_item gbbchfi2 ON gbbchfi2.t_gb_cycle_cfg_id = gbbcc.f_id AND gbbchfi2.f_fee_type = 3 AND gbbchfi2.f_sys0_del_state = 0/*查询临时 1：抄表收费，2：常规收费，3：临时收费*/
+        LEFT JOIN t_tmp_fee_item TFI ON TFI.f_id =  gbbchfi2.t_fee_item_id AND TFI.f_sys0_del_state = 0
+        WHERE gbbcc.t_gb_id = #{tGbId} AND gbbcc.f_sys0_del_state = 0
+        ORDER BY GBBCC.f_id ASC
+    </select>
+
+    <select id="getBuildingHasFixedFeeItemList" parameterType="java.math.BigInteger" resultMap="fixedFeeItemBase.fixedFeeItemExtendMap">
+        SELECT <include refid="fixedFeeItemBase.queryHead"/> FROM t_fixed_fee_item FFI
+         INNER JOIN t_group_building_ext gbe ON gbe.f_id = FFI.t_gb_id AND gbe.f_fixed_fee_status = 1
+         WHERE FFI.f_sys0_del_state = 0 AND FFI.t_gb_id = #{gbId} AND FFI.f_id NOT IN (
+            SELECT a.t_fee_item_id FROM t_group_building_bill_cycle_config_has_fee_item a
+            WHERE a.f_sys0_del_state = 0 AND a.f_fee_type = 2 AND a.t_gb_id = #{gbId}
+         )
+    </select>
+
+    <select id="getBuildingHasMrFeeItemList" parameterType="java.math.BigInteger" resultMap="mrFeeItemBase.mrFeeItemExtendMap">
+        SELECT <include refid="mrFeeItemBase.queryHead"/> FROM t_mr_fee_item MFI
+         INNER JOIN t_group_building_ext gbe ON gbe.f_id = MFI.f_gb_id AND gbe.f_meter_fee_status = 1
+         WHERE MFI.f_sys0_del_state = 0 AND MFI.f_gb_id = #{gbId} AND MFI.f_id NOT IN (
+            SELECT a.t_fee_item_id FROM t_group_building_bill_cycle_config_has_fee_item a
+            WHERE a.f_sys0_del_state = 0 AND a.f_fee_type = 1 AND a.t_gb_id = #{gbId}
+         )
+    </select>
+
+    <select id="getBuildingHasTmpFeeItemList" parameterType="java.math.BigInteger" resultMap="tmpFeeItemBase.tmpFeeItemExtendMap">
+        SELECT <include refid="tmpFeeItemBase.queryHead"/> FROM t_tmp_fee_item TFI
+         INNER JOIN t_group_building_ext gbe ON gbe.f_id = TFI.t_gb_id AND gbe.f_temp_fee_status = 1
+         WHERE TFI.f_sys0_del_state = 0 AND TFI.t_gb_id = #{gbId} AND TFI.f_id NOT IN (
+            SELECT a.t_fee_item_id FROM t_group_building_bill_cycle_config_has_fee_item a
+            WHERE a.f_sys0_del_state = 0 AND a.f_fee_type = 3 AND a.t_gb_id = #{gbId}
+         )
+    </select>
+
+    <select id="getHasFeeItemsForCheck" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT
+          CONCAT(ifnull(FFI.f_name,''),ifnull(MFI.f_name,''),ifnull(TFI.f_name,''))
+        FROM t_group_building_bill_cycle_config gbbcc
+        LEFT JOIN t_group_building_bill_cycle_config_has_fee_item gbbchfi ON gbbchfi.t_gb_cycle_cfg_id = gbbcc.f_id AND gbbchfi.f_fee_type = 2 AND gbbchfi.f_sys0_del_state = 0/*查询常规 1：抄表收费，2：常规收费，3：临时收费*/
+        LEFT JOIN t_fixed_fee_item FFI ON FFI.f_id = gbbchfi.t_fee_item_id AND FFI.f_sys0_del_state = 0
+        LEFT JOIN t_group_building_bill_cycle_config_has_fee_item gbbchfi1 ON gbbchfi1.t_gb_cycle_cfg_id = gbbcc.f_id AND gbbchfi1.f_fee_type = 1 AND gbbchfi1.f_sys0_del_state = 0/*查询抄表 1：抄表收费，2：常规收费，3：临时收费*/
+        LEFT JOIN t_mr_fee_item MFI ON MFI.f_id = gbbchfi1.t_fee_item_id AND MFI.f_sys0_del_state = 0
+        LEFT JOIN t_group_building_bill_cycle_config_has_fee_item gbbchfi2 ON gbbchfi2.t_gb_cycle_cfg_id = gbbcc.f_id AND gbbchfi2.f_fee_type = 3 AND gbbchfi2.f_sys0_del_state = 0/*查询临时 1：抄表收费，2：常规收费，3：临时收费*/
+        LEFT JOIN t_tmp_fee_item TFI ON TFI.f_id =  gbbchfi2.t_fee_item_id AND TFI.f_sys0_del_state = 0
+        WHERE 1=1
+        <if test="gbId != null and gbId != ''">
+            AND gbbcc.t_gb_id = #{gbId}
+        </if>
+        <if test="gbCycleCfgId != null and gbCycleCfgId != ''">
+            AND gbbcc.f_id != #{gbCycleCfgId}
+        </if>
+        <if test="fixedFeeItems != null and fixedFeeItems.size() > 0">
+            AND FFI.f_id IN
+            <foreach item="item" collection="fixedFeeItems"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="mrFeeItems != null and mrFeeItems.size() > 0">
+            AND MFI.f_id IN
+            <foreach item="item" collection="mrFeeItems"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="tmpFeeItems != null and tmpFeeItems.size() > 0">
+            AND TFI.f_id IN
+            <foreach item="item" collection="tmpFeeItems"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <resultMap id="getNeedInitFixedData_Map" type="com.cnfantasia.server.api.groupBuildingCycleCfg.entity.FixedFeeItemInitEntity">
+        <id column="realRoomId" property="realRoomId" javaType="java.math.BigInteger"/>
+        <result column="propertyProprietorFId" property="propertyProprietorFId" javaType="java.math.BigInteger"/>
+        <collection property="fixedFeeItemHasRooms" resultMap="fixedFeeItemHasRoomBase.fixedFeeItemHasRoomBaseMap_AppendTable"/>
+    </resultMap>
+    <select id="getNeedInitFixedData" parameterType="java.util.Map" resultMap="getNeedInitFixedData_Map">
+       SELECT ffird.t_real_room_id AS realRoomId, rr.t_property_proprietor_f_id AS propertyProprietorFId,
+        FFIHR.f_id as FFIHRid,FFIHR.t_fixed_fee_item_id as FFIHRtFixedFeeItemId,ffi.f_name as FFIHRname,
+        FFIHR.f_signal_price as FFIHRsignalPrice,FFIHR.f_price_unit_value as FFIHRpriceUnitValue,
+        FFIHR.f_total_price as FFIHRtotalPrice,FFIHR.t_fixed_fee_data_id as FFIHRtFixedFeeDataId,
+        date_format(FFIHR.f_bill_month_start,'%Y-%m-%d %T') as FFIHRbillMonthStart
+       FROM t_fixed_fee_item_room_data ffird
+       INNER JOIN t_fixed_fee_item_has_room ffihr ON ffihr.t_fixed_fee_data_id = ffird.f_id AND ffihr.f_sys0_del_state = 0
+       INNER JOIN t_real_room rr ON rr.f_id = ffird.t_real_room_id AND rr.f_sys0_del_state = 0
+       INNER JOIN t_fixed_fee_item ffi ON ffi.f_id = ffihr.t_fixed_fee_item_id AND ffi.f_sys0_del_state = 0
+       WHERE ffihr.t_fixed_fee_item_id IN
+        <foreach item="item" collection="fixedFeeItemsIds"  open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getNeedInitFixedDataMinDate" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT ffihr.f_bill_month_start
+        FROM t_fixed_fee_item_room_data ffird
+        INNER JOIN t_fixed_fee_item_has_room ffihr ON ffihr.t_fixed_fee_data_id = ffird.f_id AND ffihr.f_sys0_del_state = 0
+        INNER JOIN t_real_room rr ON rr.f_id = ffird.t_real_room_id AND rr.f_sys0_del_state = 0
+        WHERE ffird.f_sys0_del_state = 0 AND ffihr.t_fixed_fee_item_id IN
+        <foreach item="item" collection="fixedFeeItemsIds"  open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND ffihr.f_bill_month_start IS NOT NULL AND date_format(ffihr.f_bill_month_start,'%Y-%m')!='0000-00'
+        ORDER BY ffihr.f_bill_month_start ASC limit 1;
+    </select>
+
+    <resultMap id="getNeedUnpaidPayBillAndCycle_Map" type="com.cnfantasia.server.ms.revenue.entity.AlterUnPaidEntity" extends="groupBuildingBillCycleBase.groupBuildingBillCycleBaseMap_AppendTable">
+        <result column="billName" property="billName" javaType="java.lang.String"/>
+        <collection property="payBills" resultMap="payBillBase.payBillBaseMap_AppendTable"/>
+    </resultMap>
+    <select id="getNeedUnpaidPayBillAndCycle" resultMap="getNeedUnpaidPayBillAndCycle_Map">
+        SELECT pbt.f_name AS billName,<include refid="groupBuildingBillCycleBase.queryHead_AppendTable"/>,<include refid="payBillBase.queryHead_AppendTable"/>
+        FROM t_group_building_bill_cycle gbbc
+        INNER JOIN t_pay_bill_type pbt ON pbt.f_id = gbbc.t_pay_bill_type_id AND pbt.f_sys0_del_state = 0
+        INNER JOIN t_pay_bill pb ON pb.t_bill_cycle_id = gbbc.f_id
+        LEFT JOIN t_property_fee_detail_unpaid pfdu ON pfdu.t_pay_bill_id = pb.f_id
+        WHERE date_format(gbbc.f_bill_pay_start, '%Y-%m-%d') = date_format(NOW(), '%Y-%m-%d')
+          AND pfdu.f_id IS NULL AND gbbc.f_charging_mode = 2 AND pb.f_sys0_del_state = 0 AND gbbc.f_sys0_del_state = 0
+    </select>
+    
+    <select id="getNeedUnpaidPayBillAndCycle02" parameterType="java.math.BigInteger" resultMap="getNeedUnpaidPayBillAndCycle_Map">
+        SELECT pbt.f_name AS billName,<include refid="groupBuildingBillCycleBase.queryHead_AppendTable"/>,<include refid="payBillBase.queryHead_AppendTable"/>
+        FROM t_group_building_bill_cycle gbbc
+        INNER JOIN t_group_building_bill_cycle_config gbbccc ON gbbccc.t_gb_id = gbbc.f_id
+        INNER JOIN t_pay_bill_type pbt ON pbt.f_id = gbbc.t_pay_bill_type_id AND pbt.f_sys0_del_state = 0
+        INNER JOIN t_pay_bill pb ON pb.t_bill_cycle_id = gbbc.f_id
+        LEFT JOIN t_property_fee_detail_unpaid pfdu ON pfdu.t_pay_bill_id = pb.f_id
+        WHERE date_format(gbbc.f_bill_pay_start, '%Y-%m-%d') &lt;= date_format(NOW(), '%Y-%m-%d')
+        AND date_format(gbbc.f_bill_pay_end, '%Y-%m-%d') &gt;= date_format(NOW(), '%Y-%m-%d')
+        AND gbbccc.f_id = #{cycleCfgId}
+        AND pfdu.f_id IS NULL AND pb.f_sys0_del_state = 0 AND gbbc.f_sys0_del_state = 0
+    </select>
+
+    <select id="getMaxBillEndMonthByFixedItem" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT MAX(f_bill_month_end) FROM t_pay_bill PB
+        INNER JOIN t_property_fee_detail PFD ON PFD.t_pay_bill_f_id = PB.f_id AND PFD.f_fee_type=2 AND PFD.f_sys0_del_state = 0
+        WHERE PB.f_is_pay = 2 AND PB.f_sys0_del_state=0 AND PFD.f_name=#{feeName} AND PB.t_real_room_f_id=#{realRoomId};
+    </select>
+
+    <resultMap id="getNeedUpdatedPayBills_Map" type="com.cnfantasia.server.api.groupBuildingCycleCfg.entity.UpdatePayBillEntity" extends="payBillBase.payBillBaseMap_AppendTable">
+        <collection property="propertyFeeDetailList" resultMap="propertyFeeDetailBase.propertyFeeDetailBaseMap_AppendTable"/>
+    </resultMap>
+    <select id="getNeedUpdatedPayBills" parameterType="java.util.Map" resultMap="getNeedUpdatedPayBills_Map">
+        SELECT <include refid="payBillBase.queryHead_AppendTable"/>,<include refid="propertyFeeDetailBase.queryHead_AppendTable"/>
+        FROM t_pay_bill AS PB INNER JOIN t_property_fee_detail PFD ON PB.f_id = PFD.t_pay_bill_f_id AND PFD.f_sys0_del_state = 0
+        WHERE PB.f_cycle_type = 2 AND PFD.f_sys0_del_state = 0 AND PB.f_sys0_del_state = 0
+              AND PB.f_is_pay = 2 AND date_format(PB.f_pay_day_start,'%Y-%m-%d') &gt; date_format(NOW(),'%Y-%m-%d')
+              AND PFD.f_item_has_room_id IN
+            <foreach item="item" collection="itemHasRoomIds"  open="(" separator="," close=")">
+                #{item}
+            </foreach>;
+    </select>
+
+    <select id="getGroupBuildingBillCycleByItemId" parameterType="java.math.BigInteger" resultMap="groupBuildingBillCycleBase.groupBuildingBillCycleBaseMap_AppendTable">
+        SELECT
+          <include refid="groupBuildingBillCycleBase.queryHead_AppendTable"/>
+        FROM
+          t_group_building_bill_cycle_config gbbcc
+        INNER JOIN t_group_building_bill_cycle_config_has_fee_item gbbcchfi ON gbbcc.f_id = gbbcchfi.t_gb_cycle_cfg_id AND gbbcchfi.f_sys0_del_state = 0
+        INNER JOIN t_group_building_bill_cycle GBBC ON GBBC.f_gbbc_cfg_id = gbbcc.f_id AND GBBC.f_sys0_del_state = 0
+        WHERE
+            gbbcc.f_sys0_del_state = 0
+            AND GBBC.f_charging_mode = 2
+            AND date_format(GBBC.f_bill_pay_start,'%Y-%m-%d') &gt; date_format(NOW(), '%Y-%m-%d')
+            AND gbbcchfi.t_fee_item_id = #{itemId};
+    </select>
+
+    <select id="getNeedUpdatedPayBillsByRoom" parameterType="java.util.Map" resultMap="payBillBase.payBillBaseMap_AppendTable">
+        SELECT <include refid="payBillBase.queryHead_AppendTable"/>
+        FROM
+          t_group_building_bill_cycle_config gbbcc
+        INNER JOIN t_group_building_bill_cycle_config_has_fee_item gbbcchfi ON gbbcc.f_id = gbbcchfi.t_gb_cycle_cfg_id
+          AND gbbcchfi.f_sys0_del_state = 0
+        INNER JOIN t_group_building_bill_cycle gbbc ON gbbc.f_gbbc_cfg_id = gbbcc.f_id
+        INNER JOIN t_pay_bill PB ON PB.t_bill_cycle_id = gbbc.f_id
+        WHERE
+            PB.f_is_pay = 2
+            AND PB.f_sys0_del_state = 0
+            AND gbbc.f_sys0_del_state = 0
+            AND gbbc.f_charging_mode = 2
+            AND date_format(PB.f_pay_day_start,'%Y-%m-%d') > date_format(NOW(),'%Y-%m-%d')
+            AND PB.t_real_room_f_id=#{realRoomId}
+            AND gbbcchfi.t_fee_item_id IN
+                <foreach item="item" collection="itemIds"  open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+    </select>
+
+    <select id="getBuildingBillCycleConfigsByItemIds" parameterType="java.util.Map" resultMap="groupBuildingBillCycleConfigBase.groupBuildingBillCycleConfigBaseMap_AppendTable">
+        SELECT DISTINCT <include refid="groupBuildingBillCycleConfigBase.queryHead_AppendTable"/>
+        FROM
+          t_group_building_bill_cycle_config GBBCC INNER JOIN t_group_building_bill_cycle_config_has_fee_item GBBCCHFI
+          ON GBBCC.f_id = GBBCCHFI.t_gb_cycle_cfg_id
+        WHERE GBBCCHFI.f_sys0_del_state=0 AND GBBCC.f_sys0_del_state=0 AND GBBCC.f_charging_mode=2 AND GBBCCHFI.t_fee_item_id IN
+        <foreach item="item" collection="itemIds"  open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getMrFeeItemByCondition" parameterType="java.util.Map" resultMap="mrFeeItemBase.mrFeeItemBaseMap">
+        SELECT
+            MFI.*
+        FROM
+            t_group_building_bill_cycle GBBC
+        INNER JOIN t_group_building_bill_cycle_config GBBCC ON GBBC.f_gbbc_cfg_id = GBBCC.f_id
+        INNER JOIN t_group_building_bill_cycle_config_has_fee_item GBBCCHFI ON GBBCCHFI.t_gb_cycle_cfg_id = GBBCC.f_id
+        INNER JOIN t_mr_fee_item MFI ON MFI.f_id = GBBCCHFI.t_fee_item_id
+        WHERE
+              GBBC.f_sys0_del_state = 0
+            AND GBBCC.f_sys0_del_state = 0
+            AND GBBCCHFI.f_sys0_del_state = 0
+            AND MFI.f_sys0_del_state=0
+            AND GBBCCHFI.f_fee_type = 1
+            AND GBBCCHFI.t_gb_id = #{gbId}
+            AND GBBC.f_id = #{cycleId}
+        ORDER BY MFI.f_id ASC;
+    </select>
+
+    <select id="getTmpFeeItemByCondition" parameterType="java.util.Map" resultMap="tmpFeeItemBase.tmpFeeItemBaseMap">
+        SELECT
+            TFI.*
+        FROM
+            t_group_building_bill_cycle GBBC
+        INNER JOIN t_group_building_bill_cycle_config GBBCC ON GBBC.f_gbbc_cfg_id = GBBCC.f_id
+        INNER JOIN t_group_building_bill_cycle_config_has_fee_item GBBCCHFI ON GBBCCHFI.t_gb_cycle_cfg_id = GBBCC.f_id
+        INNER JOIN t_tmp_fee_item TFI ON TFI.f_id = GBBCCHFI.t_fee_item_id
+        WHERE
+              GBBC.f_sys0_del_state = 0
+            AND GBBCC.f_sys0_del_state = 0
+            AND GBBCCHFI.f_sys0_del_state = 0
+            AND TFI.f_sys0_del_state=0
+            AND GBBCCHFI.f_fee_type = 3
+            AND GBBCCHFI.t_gb_id = #{gbId}
+            AND GBBC.f_id = #{cycleId}
+        ORDER BY TFI.f_id ASC;
+    </select>
+
+    <update id="saveGroupBuildingBillCycleConfigHasFeeItem" parameterType="java.util.Map">
+        /*删除*/
+        DELETE FROM t_group_building_bill_cycle_config_has_fee_item WHERE t_gb_cycle_cfg_id = #{gbCycleCfgId};
+        /*插入*/
+        <if test="itemList != null and itemList.size() > 0">
+          INSERT INTO t_group_building_bill_cycle_config_has_fee_item
+            (`t_gb_id`, `t_gb_cycle_cfg_id`, `t_fee_item_id`, `f_fee_type`, `f_sys0_add_time`, `f_sys0_add_user`,`f_sys0_del_state`)
+          VALUES
+            <if test="itemList != null and itemList.size() > 0">
+                <foreach item="item" collection="itemList"  separator=","><!-- open="("  close=")" -->
+                    (#{gbId},#{gbCycleCfgId},#{item.id},#{item.type},sysdate(),1,0)
+                </foreach>
+            </if>
+        </if>
+    </update>
+
+    <update id="delCollectFeesCfg" parameterType="java.util.Map">
+        UPDATE t_group_building_bill_cycle_config SET f_sys0_del_state = 1, f_sys0_del_time = now(),f_sys0_del_user=#{userId} WHERE f_id = #{id};
+        UPDATE t_group_building_bill_cycle_config_has_fee_item SET f_sys0_del_state = 1, f_sys0_del_time = now(),f_sys0_del_user=#{userId} WHERE t_gb_cycle_cfg_id = #{id};
+        <!-- 删除账单  明细  -->
+        UPDATE t_group_building_bill_cycle gbbc
+          INNER JOIN t_pay_bill pb ON pb.t_bill_cycle_id = gbbc.f_id
+          INNER JOIN t_property_fee_detail pfd ON pfd.t_pay_bill_f_id = pb.f_id
+          SET pfd.f_sys0_del_state = 1,pb.f_sys0_del_state = 1, pfd.f_sys0_del_time = now(), pb.f_sys0_del_time = now(),pfd.f_sys0_del_user=#{userId},pb.f_sys0_del_user=#{userId}
+        WHERE
+          gbbc.f_gbbc_cfg_id = #{id} AND pb.f_is_pay = 2 AND (pb.f_finance_status = 0 OR pb.f_finance_status IS NULL);
+        <!-- 删除 账期 账单名称 -->
+        UPDATE t_group_building_bill_cycle gbbc
+          INNER JOIN t_pay_bill_type pbt ON pbt.f_id = gbbc.t_pay_bill_type_id
+          LEFT JOIN t_pay_bill pb ON pb.t_bill_cycle_id = gbbc.f_id AND pb.f_is_pay=1 AND pb.f_sys0_del_state = 0
+          SET gbbc.f_sys0_del_state=1, pbt.f_sys0_del_state=1,gbbc.f_sys0_del_time = now(), pbt.f_sys0_del_time = now(),gbbc.f_sys0_del_user=#{userId},pbt.f_sys0_del_user=#{userId}
+        WHERE pb.f_id IS NULL AND (pb.f_finance_status = 0 OR pb.f_finance_status IS NULL) AND gbbc.f_gbbc_cfg_id = #{id};
+    </update>
+
+    <update id="delNoPayBillsGroupBuildingCycles" parameterType="java.util.List">
+         UPDATE t_group_building_bill_cycle gbbc
+          INNER JOIN t_pay_bill_type pbt ON pbt.f_id = gbbc.t_pay_bill_type_id
+          LEFT JOIN t_pay_bill pb ON pb.t_bill_cycle_id = gbbc.f_id AND pb.f_sys0_del_state = 0
+          SET gbbc.f_sys0_del_state=1,gbbc.f_sys0_del_time = now(),pbt.f_sys0_del_time = now(), pbt.f_sys0_del_state=1
+        WHERE pb.f_id IS NULL AND gbbc.f_id IN
+        <foreach collection="cycleIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+    
+    <update id="setMaxRechargeNull" parameterType="java.util.Map">
+        UPDATE t_group_building_bill_cycle_config SET f_max_recharge=NULL WHERE f_id=#{id}
+    </update>
+    
+    
+</mapper>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:物业缴费单 t_pay_bill -->
+<mapper namespace="payBill">
+	<resultMap type="com.cnfantasia.server.ms.payBill.entity.PayBillEntity" id="payBillEntity" extends="payBillBase.payBillBaseMap_AppendTable">
+        <result column="groupBuildingName" javaType="java.lang.String" property="groupBuildingName"/> 
+        <result column="buildingName" javaType="java.lang.String" property="buildingName"/> 
+        <result column="realRoomUnitName" javaType="java.lang.String" property="realRoomUnitName"/>  
+        <result column="realRoomNum" javaType="java.lang.String" property="realRoomNum"/>  
+        <result column="propertyProprietorName" javaType="java.lang.String" property="propertyProprietorName"/>  
+        <result column="identifyNo" javaType="java.lang.String" property="identifyNo"/>  
+        <result column="payPeriodStart" javaType="int" property="payPeriodStart"/>  
+        <result column="payPeriodEnd" javaType="int" property="payPeriodEnd"/>  
+        <result column="updateUserName" javaType="java.lang.String" property="updateUserName"/>  
+        <result column="contractNum" javaType="java.lang.String" property="contractNum"/>  
+	</resultMap>
+	
+	<!-- 导入导出账单 对应的类型  -->
+	<resultMap type="com.cnfantasia.server.ms.payBill.entity.PayBillWithFeeDetailEntity" id="payBillWithFeeDetailEntity" extends="payBillEntity">
+        <collection  property="propertyFeeDetails" resultMap="propertyFeeDetailBase.propertyFeeDetailBaseMap_AppendTable"/>
+	</resultMap>
+	
+	<sql id="select_payBill_for_list">
+		select date_format(PB.f_month,'%Y年%m月') as payBill_f_month, GB.f_name groupBuildingName, B.f_name buildingName, RR.f_unit_name realRoomUnitName, RR.f_num_tail realRoomNum,
+    	RR.f_contract_no contractNum, PP.f_name propertyProprietorName, PP.f_identify_no identifyNo, GB.f_pay_period_start payPeriodStart, GB.f_pay_period_end payPeriodEnd, 
+    	PB.f_id as payBill_f_id,PB.f_amount as payBill_f_amount,PB.f_discount as payBill_f_discount,PB.f_is_pay as payBill_f_is_pay,PB.f_payment_way as payBill_f_payment_way,PB.t_real_room_f_id as payBill_t_real_room_f_id,PB.f_property_proprietor_id as payBill_f_property_proprietor_id,PB.f_succ_pay_amount as payBill_f_succ_pay_amount,PB.f_prize_record_id as payBill_f_prize_record_id,date_format(PB.f_sys0_add_time,'%Y-%m-%d %T') as payBill_f_sys0_add_time,date_format(PB.f_sys0_upd_time,'%Y-%m-%d %T') as payBill_f_sys0_upd_time,date_format(PB.f_sys0_del_time,'%Y-%m-%d %T') as payBill_f_sys0_del_time,PB.f_sys0_add_user as payBill_f_sys0_add_user,PB.f_sys0_upd_user as payBill_f_sys0_upd_user,PB.f_sys0_del_user as payBill_f_sys0_del_user,PB.f_sys0_del_state as payBill_f_sys0_del_state
+	</sql>
+	
+	<!-- 根据物业公司用户Id，找 所管辖小区的账单信息  -->
+    <select id="select_payBill_byOmsUserId" parameterType="java.util.Map" resultMap="payBillEntity">
+    	<include refid="select_payBill_for_list"/>
+    	FROM t_pay_bill PB
+    	inner join t_property_proprietor PP on PP.f_id = PB.f_property_proprietor_id
+    	inner join t_real_room RR on RR.f_id = PB.t_real_room_f_id
+    	inner join t_building B on B.F_id = RR.t_building_f_id
+    	inner join t_group_building GB on GB.f_id = B.t_group_building_f_id  	
+    	inner join t_property_company PC on PC.f_id = GB.t_property_company_f_id
+    	inner join t_oms_user OU on OU.f_id = PC.f_admin_id
+    	WHERE 1=1
+    	 <if test="omsUserId != null and omsUserId != 1 "> and OU.f_id = ${omsUserId}</if><!-- 管理员要看到所有 -->
+    	 <if test="gbName != null and gbName != '' ">  and (GB.f_name like CONCAT('%',#{gbName},'%')) </if>
+    	 <if test="contractNum != null and contractNum != '' ">  and (RR.f_contract_no like CONCAT('%',#{contractNum}, '%')) </if>
+    	 <if test="ppName != null and ppName != '' ">  and (PP.f_name like CONCAT('%',#{ppName},'%') ) </if>
+    	 <if test="pbMonth != null and pbMonth != '' ">  and (PB.f_month like CONCAT('%',#{pbMonth},'%') ) </if>
+    	 <if test="isPay != null and isPay != '' ">  and (PB.f_is_pay = #{isPay} ) </if>
+    	 <if test="paymentWay != null and paymentWay != '' ">  and (PB.f_payment_way = #{paymentWay} ) </if>
+    	 <if test="payTimeStart != null and payTimeStart != '' ">  and (PB.f_sys0_upd_time &gt;= #{payTimeStart} ) </if>
+    	 <if test="payTimeEnd != null and payTimeEnd != '' ">  and (PB.f_sys0_upd_time &lt;= #{payTimeEnd}  ) </if>
+    	order by PB.f_sys0_upd_time desc
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<!-- step1 校验导入的账单是否正确，传导出数据的《小区+楼栋+单元+房间号+业主名称》拼成一个大串《小区+楼栋+单元+房间号+业主名称》返回 -->
+    <select id="select_verifyInfo_for_ImportedPayBill_step1" parameterType="java.util.ArrayList" resultType="string">
+    	select concat(GB.f_name,B.f_name,RR.f_unit_name,RR.f_num_tail,PP.f_name) 
+    	FROM t_property_proprietor PP
+    	inner join t_real_room RR on RR.t_property_proprietor_f_id = PP.f_id
+    	inner join t_building B on B.F_id = RR.t_building_f_id
+    	inner join t_group_building GB on GB.f_id = B.t_group_building_f_id
+    	WHERE 1=1 
+    	and concat(GB.f_name,B.f_name,RR.f_unit_name,RR.f_num_tail,PP.f_name) 
+    	in (  
+        <foreach item="guard" index="index" collection="list"  
+            separator=","> #{guard} </foreach>  
+        )  
+	</select>
+	
+	<!-- step2 校验导入的账单是否已存在，传导出数据的《小区+楼栋+单元+房间号+业主名称》拼成一个大串《账单年月+小区+楼栋+单元+房间号+业主名称》返回 -->
+    <select id="select_verifyInfo_for_ImportedPayBill_step2" parameterType="java.util.ArrayList" resultType="string">
+    	select concat(year(PB.f_month), month(PB.f_month), GB.f_name,B.f_name,RR.f_unit_name,RR.f_num_tail,PP.f_name) 
+    	FROM t_pay_bill PB
+    	inner join t_property_proprietor PP on PP.f_id = PB.f_property_proprietor_id
+    	inner join t_real_room RR on RR.f_id = PB.t_real_room_f_id
+    	inner join t_building B on B.F_id = RR.t_building_f_id
+    	inner join t_group_building GB on GB.f_id = B.t_group_building_f_id
+    	WHERE 1=1 
+    	and concat(year(PB.f_month), month(PB.f_month), GB.f_name, B.f_name,RR.f_unit_name,RR.f_num_tail,PP.f_name) 
+    	in (  
+        <foreach item="guard" index="index" collection="list"  
+            separator=","> #{guard} </foreach>  
+        )  
+	</select>
+	
+	
+	<!--step3  对校验通过的账单，找到其对应的rrid和ppid，传导出数据的《小区+楼栋+单元+房间号+业主名称》拼成一个大串《小区+楼栋+单元+房间号+业主名称+“_”+房间ID+“_”+业主ID》返回 -->
+    <select id="select_verifyInfo_for_ImportedPayBill_step3" parameterType="java.util.ArrayList" resultType="string">
+    	select concat(GB.f_name,B.f_name,RR.f_unit_name,RR.f_num_tail,PP.f_name, "_", RR.f_id, "_", PP.f_id) 
+    	FROM t_property_proprietor PP
+    	inner join t_real_room RR on RR.t_property_proprietor_f_id = PP.f_id
+    	inner join t_building B on B.F_id = RR.t_building_f_id
+    	inner join t_group_building GB on GB.f_id = B.t_group_building_f_id
+    	WHERE 1=1 
+    	and concat(GB.f_name,B.f_name,RR.f_unit_name,RR.f_num_tail,PP.f_name) 
+    	in (  
+        <foreach item="guard" index="index" collection="list"  
+            separator=","> #{guard} </foreach>  
+        )  
+	</select>
+	
+	<!-- 导出账单 -->
+	<select id="select_paybill_for_export" parameterType="java.util.ArrayList" resultMap="payBillWithFeeDetailEntity">
+		select date_format(PB.f_month,'%Y年%m月') as payBill_f_month, GB.f_name groupBuildingName, B.f_name buildingName, RR.f_unit_name realRoomUnitName, RR.f_num_tail realRoomNum,
+    	RR.f_contract_no contractNum, PP.f_name propertyProprietorName, PP.f_identify_no identifyNo, GB.f_pay_period_start payPeriodStart, GB.f_pay_period_end payPeriodEnd, 
+
+    	PB.f_id as payBill_f_id,PB.f_amount as payBill_f_amount,PB.f_discount as payBill_f_discount,PB.f_succ_pay_amount payBill_f_succ_pay_amount, PB.f_is_pay as payBill_f_is_pay,date_format(PB.f_sys0_upd_time,'%Y-%m-%d %T') as payBill_f_sys0_upd_time, GB.f_pay_period_start payPeriodStart, GB.f_pay_period_end payPeriodEnd,
+    	PFD.f_type propertyFeeDetail_f_type, PFD.f_total_price propertyFeeDetail_f_total_price,PFD.f_signal_price propertyFeeDetail_f_signal_price,PFD.f_price_unit_name propertyFeeDetail_f_price_unit_name,
+    	PFD.f_price_unit_value propertyFeeDetail_f_price_unit_value
+    	FROM t_pay_bill PB
+    	inner join t_property_proprietor PP on PP.f_id = PB.f_property_proprietor_id
+    	inner join t_real_room RR on RR.f_id = PB.t_real_room_f_id
+    	inner join t_building B on B.F_id = RR.t_building_f_id
+    	inner join t_group_building GB on GB.f_id = B.t_group_building_f_id
+    	inner join t_property_fee_detail PFD on PFD.t_pay_bill_f_id = PB.f_id AND PFD.f_sys0_del_state = 0
+    	WHERE 1=1 
+    	and PB.f_id in (  
+        <foreach item="item" index="index" collection="list"  
+            separator=","> #{item} </foreach>  
+        )  
+	</select>
+	
+	<!-- 查看单条账单详情 -->
+	<select id="select_paybill_for_detail" parameterType="java.math.BigInteger" resultMap="payBillWithFeeDetailEntity">
+		select date_format(PB.f_month,'%Y年%m月') as payBill_f_month, GB.f_name groupBuildingName, B.f_name buildingName, RR.f_unit_name realRoomUnitName, RR.f_num_tail realRoomNum,
+    	RR.f_contract_no contractNum, PP.f_name propertyProprietorName, PP.f_identify_no identifyNo, GB.f_pay_period_start payPeriodStart, GB.f_pay_period_end payPeriodEnd, 
+    	PB.f_id as payBill_f_id,PB.f_amount as payBill_f_amount, GB.f_pay_period_start payPeriodStart, GB.f_pay_period_end payPeriodEnd,
+    	PB.f_is_pay payBill_f_is_pay, PB.f_succ_pay_amount payBill_f_succ_pay_amount, PB.f_discount payBill_f_discount, PB.f_payment_way payBill_f_payment_way,PB.f_sys0_upd_time payBill_f_sys0_upd_time,
+    	PFD.f_type propertyFeeDetail_f_type, PFD.f_total_price propertyFeeDetail_f_total_price,PFD.f_signal_price propertyFeeDetail_f_signal_price,PFD.f_price_unit_name propertyFeeDetail_f_price_unit_name,
+    	PFD.f_price_unit_value propertyFeeDetail_f_price_unit_value, 
+    	OU.f_real_name updateUserName
+    	FROM t_pay_bill PB
+    	inner join t_property_proprietor PP on PP.f_id = PB.f_property_proprietor_id
+    	inner join t_real_room RR on RR.f_id = PB.t_real_room_f_id
+    	inner join t_building B on B.F_id = RR.t_building_f_id
+    	inner join t_group_building GB on GB.f_id = B.t_group_building_f_id
+    	inner join t_property_fee_detail PFD on PFD.t_pay_bill_f_id = PB.f_id AND PFD.f_sys0_del_state = 0
+    	left join t_oms_user OU on OU.f_id = PB.f_sys0_upd_user
+    	WHERE 1=1 
+    	and PB.f_id = #{_parameter}
+	</select>
+	
+	<!-- 查看账单支付详情 -->
+	<select id="select_payBill_with_payRecord" parameterType="java.lang.String" resultType="java.util.HashMap">
+		select U.f_real_name userName,  EPR.f_pay_status payStatus, EPR.f_pay_method payMethod, EPR.f_flow_no flowNo, date_format(EPR.f_sys0_add_time,'%Y-%m-%d %T')  payTime
+		FROM t_pay_bill PB
+    	inner join t_ebuy_order_has_t_pay_bill EOHTPB on EOHTPB.t_pay_bill_f_id = PB.f_id
+    	inner join t_ebuy_order EO on EOHTPB.t_ebuy_order_f_id = EO.f_id
+    	inner join t_ebuy_pay_record  EPR on EPR.t_ebuy_order_f_id = EO.f_id
+    	inner join t_user U on U.f_id = EO.f_buyer_id 
+    	WHERE 1=1 
+    	and PB.f_id = #{_parameter}
+	</select>
+	
+	<!-- 手功标记账单为已缴费 -->
+	<update id="markByManual" parameterType="java.util.HashMap" >
+		update t_pay_bill set f_is_pay = 1, f_payment_way = 2, f_succ_pay_amount = f_amount,f_sys0_upd_time= sysdate(), f_sys0_upd_user = #{omsUserId}
+    	WHERE f_id = #{id}
+	</update>
+</mapper>

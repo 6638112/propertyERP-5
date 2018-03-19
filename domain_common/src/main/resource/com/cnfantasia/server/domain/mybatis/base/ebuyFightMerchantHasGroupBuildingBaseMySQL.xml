@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:自提点服务小区关系表 t_ebuy_fight_merchant_has_group_building -->
+<mapper namespace="ebuyFightMerchantHasGroupBuildingBase">
+	<resultMap type="EbuyFightMerchantHasGroupBuilding" id="ebuyFightMerchantHasGroupBuildingBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_ebuy_fight_supply_merchant_f_id" javaType="java.math.BigInteger" property="tEbuyFightSupplyMerchantFId"/>  <!-- 自提点表ID -->        <result column="t_group_building_id" javaType="java.math.BigInteger" property="tGroupBuildingId"/>  <!-- 服务小区id -->        <result column="f_distance" javaType="java.lang.Long" property="distance"/>  <!-- 距离 -->        <result column="f_delive_time" javaType="java.lang.Long" property="deliveTime"/>  <!-- 到达时间 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyFightMerchantHasGroupBuilding" id="ebuyFightMerchantHasGroupBuildingExtendMap" extends="ebuyFightMerchantHasGroupBuildingBaseMap">
+	</resultMap>
+	<resultMap type="EbuyFightMerchantHasGroupBuilding" id="ebuyFightMerchantHasGroupBuildingBaseMap_AppendTable">
+        <id column="EFMHGBid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EFMHGBtEbuyFightSupplyMerchantFId" javaType="java.math.BigInteger" property="tEbuyFightSupplyMerchantFId"/>  <!-- 自提点表ID -->        <result column="EFMHGBtGroupBuildingId" javaType="java.math.BigInteger" property="tGroupBuildingId"/>  <!-- 服务小区id -->        <result column="EFMHGBdistance" javaType="java.lang.Long" property="distance"/>  <!-- 距离 -->        <result column="EFMHGBdeliveTime" javaType="java.lang.Long" property="deliveTime"/>  <!-- 到达时间 -->        <result column="EFMHGBsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EFMHGBsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EFMHGBsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EFMHGBsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EFMHGBsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EFMHGBsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EFMHGBsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="EbuyFightMerchantHasGroupBuilding" id="ebuyFightMerchantHasGroupBuildingBaseMap_AppendTable1">
+        <id column="EFMHGB1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EFMHGB1tEbuyFightSupplyMerchantFId" javaType="java.math.BigInteger" property="tEbuyFightSupplyMerchantFId"/>  <!-- 自提点表ID -->        <result column="EFMHGB1tGroupBuildingId" javaType="java.math.BigInteger" property="tGroupBuildingId"/>  <!-- 服务小区id -->        <result column="EFMHGB1distance" javaType="java.lang.Long" property="distance"/>  <!-- 距离 -->        <result column="EFMHGB1deliveTime" javaType="java.lang.Long" property="deliveTime"/>  <!-- 到达时间 -->        <result column="EFMHGB1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EFMHGB1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EFMHGB1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EFMHGB1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EFMHGB1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EFMHGB1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EFMHGB1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EFMHGB.f_id,EFMHGB.t_ebuy_fight_supply_merchant_f_id,EFMHGB.t_group_building_id,EFMHGB.f_distance,EFMHGB.f_delive_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EFMHGB.f_id as EFMHGBid,EFMHGB.t_ebuy_fight_supply_merchant_f_id as EFMHGBtEbuyFightSupplyMerchantFId,EFMHGB.t_group_building_id as EFMHGBtGroupBuildingId,EFMHGB.f_distance as EFMHGBdistance,EFMHGB.f_delive_time as EFMHGBdeliveTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EFMHGB1.f_id as EFMHGB1id,EFMHGB1.t_ebuy_fight_supply_merchant_f_id as EFMHGB1tEbuyFightSupplyMerchantFId,EFMHGB1.t_group_building_id as EFMHGB1tGroupBuildingId,EFMHGB1.f_distance as EFMHGB1distance,EFMHGB1.f_delive_time as EFMHGB1deliveTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EFMHGB.f_id = #{id} ) </if>        <if test="tEbuyFightSupplyMerchantFId != null">  and (EFMHGB.t_ebuy_fight_supply_merchant_f_id = #{tEbuyFightSupplyMerchantFId} ) </if>        <if test="tGroupBuildingId != null">  and (EFMHGB.t_group_building_id = #{tGroupBuildingId} ) </if>        <if test="distance != null">  and (EFMHGB.f_distance = #{distance} ) </if>        <if test="deliveTime != null">  and (EFMHGB.f_delive_time = #{deliveTime} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EFMHGB.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EFMHGB.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EFMHGB.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EFMHGB.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EFMHGB.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EFMHGB.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EFMHGB.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EFMHGB.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EFMHGB.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EFMHGB.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EFMHGB.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EFMHGB.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EFMHGB.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EFMHGB.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EFMHGB.f_id = #{id} ) </if>        <if test="tEbuyFightSupplyMerchantFId != null and !tEbuyFightSupplyMerchantFId.equals('')  ">  and (EFMHGB.t_ebuy_fight_supply_merchant_f_id = #{tEbuyFightSupplyMerchantFId} ) </if>        <if test="tGroupBuildingId != null and !tGroupBuildingId.equals('')  ">  and (EFMHGB.t_group_building_id = #{tGroupBuildingId} ) </if>        <if test="distance != null and !distance.equals('')  ">  and (EFMHGB.f_distance = #{distance} ) </if>        <if test="deliveTime != null and !deliveTime.equals('')  ">  and (EFMHGB.f_delive_time = #{deliveTime} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EFMHGB.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EFMHGB.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EFMHGB.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EFMHGB.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EFMHGB.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EFMHGB.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EFMHGB.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EFMHGB.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EFMHGB.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EFMHGB.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EFMHGB.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EFMHGB.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EFMHGB.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EFMHGB.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyFightMerchantHasGroupBuildingBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyFightMerchantHasGroupBuildingBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyFightMerchantHasGroupBuildingBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyFightMerchantHasGroupBuildingBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_fight_merchant_has_group_building EFMHGB    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(自提点服务小区关系表)信息。 -->
+	<sql id="select_ebuyFightMerchantHasGroupBuilding">
+		SELECT <include refid="ebuyFightMerchantHasGroupBuildingBase.queryHead"/>
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.busiQueryCondition"/>
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.dimCheckSql"/>
+		ORDER BY EFMHGB.f_id DESC
+	</sql>
+	<select id="select_ebuyFightMerchantHasGroupBuilding" parameterType="java.util.Map" resultMap="ebuyFightMerchantHasGroupBuildingBase.ebuyFightMerchantHasGroupBuildingExtendMap">
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.select_ebuyFightMerchantHasGroupBuilding"/>
+	</select>
+	
+	<!-- 根据条件分页查询(自提点服务小区关系表)信息  -->
+	<sql id="select_ebuyFightMerchantHasGroupBuilding_withPage">
+		SELECT <include refid="ebuyFightMerchantHasGroupBuildingBase.queryHead"/>
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.busiQueryCondition"/>
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyFightMerchantHasGroupBuilding_withPage" resultMap="ebuyFightMerchantHasGroupBuildingBase.ebuyFightMerchantHasGroupBuildingExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.select_ebuyFightMerchantHasGroupBuilding_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(自提点服务小区关系表)信息。 -->
+	<sql id="select_ebuyFightMerchantHasGroupBuilding_bySeqId">
+		SELECT <include refid="ebuyFightMerchantHasGroupBuildingBase.queryHead"/>
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.busiQueryCondition"/>
+		 and EFMHGB.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyFightMerchantHasGroupBuilding_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyFightMerchantHasGroupBuildingBase.ebuyFightMerchantHasGroupBuildingBaseMap">
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.select_ebuyFightMerchantHasGroupBuilding_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(自提点服务小区关系表)记录数  -->
+	<sql id="select_ebuyFightMerchantHasGroupBuilding_count">
+		SELECT COUNT(*)
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.busiQueryCount"/>
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyFightMerchantHasGroupBuilding_count" resultType="java.lang.Integer">
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.select_ebuyFightMerchantHasGroupBuilding_count"/>
+	</select>
+	
+	 <!-- 往(自提点服务小区关系表)新增一条记录。 -->
+	 <sql id="insert_ebuyFightMerchantHasGroupBuilding">
+		INSERT INTO t_ebuy_fight_merchant_has_group_building 
+		(f_id,t_ebuy_fight_supply_merchant_f_id,t_group_building_id,f_distance,f_delive_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tEbuyFightSupplyMerchantFId},#{tGroupBuildingId},#{distance},#{deliveTime},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_ebuyFightMerchantHasGroupBuilding" parameterType="EbuyFightMerchantHasGroupBuilding">
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.insert_ebuyFightMerchantHasGroupBuilding"/>
+    </insert>
+    
+	<!-- 批量新增(自提点服务小区关系表)信息 -->
+    <insert id="insert_ebuyFightMerchantHasGroupBuilding_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_fight_merchant_has_group_building 
+		(f_id,t_ebuy_fight_supply_merchant_f_id,t_group_building_id,f_distance,f_delive_time,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tEbuyFightSupplyMerchantFId},#{item.tGroupBuildingId},#{item.distance},#{item.deliveTime},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(自提点服务小区关系表)信息。 -->
+    <sql id="update_ebuyFightMerchantHasGroupBuilding">
+		UPDATE t_ebuy_fight_merchant_has_group_building		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyFightSupplyMerchantFId != null and !tEbuyFightSupplyMerchantFId.equals('') "> ,t_ebuy_fight_supply_merchant_f_id=#{tEbuyFightSupplyMerchantFId}</if> 		<if test="tGroupBuildingId != null and !tGroupBuildingId.equals('') "> ,t_group_building_id=#{tGroupBuildingId}</if> 		<if test="distance != null and !distance.equals('') "> ,f_distance=#{distance}</if> 		<if test="deliveTime != null and !deliveTime.equals('') "> ,f_delive_time=#{deliveTime}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyFightMerchantHasGroupBuilding" parameterType="EbuyFightMerchantHasGroupBuilding">
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.update_ebuyFightMerchantHasGroupBuilding"/>
+    </update>
+    
+    <!-- 批量更新(自提点服务小区关系表)信息。 -->
+    <update id="update_ebuyFightMerchantHasGroupBuilding_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_fight_merchant_has_group_building		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyFightSupplyMerchantFId != null and !item.tEbuyFightSupplyMerchantFId.equals('')  "> ,t_ebuy_fight_supply_merchant_f_id=#{item.tEbuyFightSupplyMerchantFId}</if> 		<if test="item.tGroupBuildingId != null and !item.tGroupBuildingId.equals('')  "> ,t_group_building_id=#{item.tGroupBuildingId}</if> 		<if test="item.distance != null and !item.distance.equals('')  "> ,f_distance=#{item.distance}</if> 		<if test="item.deliveTime != null and !item.deliveTime.equals('')  "> ,f_delive_time=#{item.deliveTime}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(自提点服务小区关系表)信息_逻辑删除。 -->
+    <sql id="delete_ebuyFightMerchantHasGroupBuilding_Logic">
+		UPDATE t_ebuy_fight_merchant_has_group_building		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyFightSupplyMerchantFId != null and !tEbuyFightSupplyMerchantFId.equals('')  "> ,t_ebuy_fight_supply_merchant_f_id=#{tEbuyFightSupplyMerchantFId}</if> 		<if test="tGroupBuildingId != null and !tGroupBuildingId.equals('')  "> ,t_group_building_id=#{tGroupBuildingId}</if> 		<if test="distance != null and !distance.equals('')  "> ,f_distance=#{distance}</if> 		<if test="deliveTime != null and !deliveTime.equals('')  "> ,f_delive_time=#{deliveTime}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyFightMerchantHasGroupBuilding_Logic" parameterType="EbuyFightMerchantHasGroupBuilding">
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.delete_ebuyFightMerchantHasGroupBuilding_Logic"/>
+    </update>
+    
+    <!-- 批量删除(自提点服务小区关系表)信息_逻辑删除 -->
+    <update id="delete_ebuyFightMerchantHasGroupBuilding_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_fight_merchant_has_group_building		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyFightSupplyMerchantFId != null and !item.tEbuyFightSupplyMerchantFId.equals('')  "> ,t_ebuy_fight_supply_merchant_f_id=#{item.tEbuyFightSupplyMerchantFId}</if> 		<if test="item.tGroupBuildingId != null and !item.tGroupBuildingId.equals('')  "> ,t_group_building_id=#{item.tGroupBuildingId}</if> 		<if test="item.distance != null and !item.distance.equals('')  "> ,f_distance=#{item.distance}</if> 		<if test="item.deliveTime != null and !item.deliveTime.equals('')  "> ,f_delive_time=#{item.deliveTime}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(自提点服务小区关系表)信息。 -->
+    <sql id="delete_ebuyFightMerchantHasGroupBuilding">
+		DELETE FROM t_ebuy_fight_merchant_has_group_building WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyFightMerchantHasGroupBuilding" parameterType="java.lang.String">
+		<include refid="ebuyFightMerchantHasGroupBuildingBase.delete_ebuyFightMerchantHasGroupBuilding"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(自提点服务小区关系表)信息。 -->
+    <delete id="delete_ebuyFightMerchantHasGroupBuilding_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_fight_merchant_has_group_building WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

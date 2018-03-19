@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<!-- 不要过滤图片等静态资源，其中**代表可以跨越目录，*不可以跨越目录。 -->
+	<http pattern="/**/*.jpg" security="none" />
+	<http pattern="/**/*.gif" security="none" />
+	<http pattern="/**/*.png" security="none" />
+	<http pattern="/**/*.css" security="none" />
+	<http pattern="/**/*.js" security="none" />
+	<http pattern="/login.html" security="none" />
+	<http pattern="/index.jsp" security="none" />
+	<http pattern="/index.html" security="none" />
+	<http pattern="/logn/doLogout.html" security="none" />
+	
+	<http use-expressions="true" auto-config="true"
+		access-denied-page="/accessDenied.html">
+		<form-login authentication-failure-url="/login.html?errflag=1"
+			default-target-url="/logn/doLogin.html" />
+		<logout logout-success-url="/logn/doLogout.html"
+			delete-cookies="JSESSIONID" />
+		
+		<!-- 防止用户重复登录，max-sessions表示最多允许多少次重复登录 -->
+		<!-- org.springframework.security.web.session.HttpSessionEventPublisher使用的配置 -->
+		<session-management invalid-session-url="/sessionTimeout.html">
+			<concurrency-control max-sessions="1" 
+				expired-url="/accessExpired.html" />
+		</session-management>
+		<!--
+			<custom-filter ref="custSynTaskFilter"
+			before="CONCURRENT_SESSION_FILTER" />
+		-->
+		<custom-filter ref="custSecurityFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+		<custom-filter ref="custLogutFilter" before="LOGOUT_FILTER" />
+	</http>
+
+	<!--
+		判断数据同步任务状态 <beans:bean id="custSynTaskFilter"
+		class="com.emanual.manage.pub.security.EManualSynTaskCheckedFilter">
+		</beans:bean>
+	-->
+
+	<beans:bean id="custLogutFilter"
+		class="com.emanual.manage.pub.security.EManualLogoutFilter">
+		<beans:property name="logouturl" value="/j_spring_security_logout" />
+	</beans:bean>
+
+	<beans:bean id="custSecurityFilter"
+		class="com.emanual.manage.pub.security.EManualFilterSecurityInterceptor">
+		<beans:property name="securityMetadataSource" ref="emanualSecurityMetadataSource" /><!-- 资源源数据定义，查询所有权限关系信息 ,系统启动时加载。-->
+		<beans:property name="authenticationManager" ref="authenticationManager" /><!-- 认证管理器,查询用户信息，用户登录时查询。-->
+		<beans:property name="accessDecisionManager" ref="emanualAccessDecisionManager" /><!-- 访问决策器，决定是否通过 ，用户登录时验证。-->
+	</beans:bean>
+
+	<!-- 用户的密码加密或解密 -->
+	<beans:bean id="passwordEncoder"
+		class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+
+	<beans:bean id="emanualDetailsManager"
+		class="com.emanual.manage.pub.security.EManualUserDetailService" /><!-- 实现UserDetailService接口 -->
+
+	<!-- 访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源。 -->
+	<beans:bean id="emanualAccessDecisionManager"
+		class="com.emanual.manage.pub.security.EManualAccessDecisionManager" />
+
+	<beans:bean id="resourcesDao"
+		class="com.emanual.manage.pub.security.EManualResourcesDao" />
+
+	<!-- 资源源数据定义，将所有的资源和权限对应关系建立起来，即定义某一资源可以被哪些角色去访问。 -->
+	<beans:bean id="emanualSecurityMetadataSource"
+		class="com.emanual.manage.pub.security.EManualInvocationSecurityMetadataSource">
+		<beans:constructor-arg name="resourcesDao" ref="resourcesDao"></beans:constructor-arg>
+	</beans:bean>
+	
+	<!-- 认证管理器，实现用户认证的入口，主要实现UserDetailService接口即可 -->
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider user-service-ref="emanualDetailsManager">
+
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans> 

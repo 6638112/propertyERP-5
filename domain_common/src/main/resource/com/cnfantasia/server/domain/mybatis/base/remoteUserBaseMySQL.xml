@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:远程用户信息 t_remote_user -->
+<mapper namespace="remoteUserBase">
+	<resultMap type="RemoteUser" id="remoteUserBaseMap">
+        <id column="f_uid" javaType="java.lang.Long" property="uid"/>  <!-- 远程用户Id -->        <result column="t_user_f_id" javaType="java.math.BigInteger" property="tUserFId"/>  <!-- 本系统用户Id -->        <result column="f_user_name" javaType="java.lang.String" property="userName"/>  <!-- 远程用户名 -->        <result column="f_password" javaType="java.lang.String" property="password"/>  <!-- 远程用户密码 -->        <result column="f_email" javaType="java.lang.String" property="email"/>  <!-- 远程用户邮箱 -->
+	</resultMap>
+	<resultMap type="RemoteUser" id="remoteUserExtendMap" extends="remoteUserBaseMap">
+	</resultMap>
+	<resultMap type="RemoteUser" id="remoteUserBaseMap_AppendTable">
+        <id column="RUuid" javaType="java.lang.Long" property="uid"/>  <!-- 远程用户Id -->        <result column="RUtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!-- 本系统用户Id -->        <result column="RUuserName" javaType="java.lang.String" property="userName"/>  <!-- 远程用户名 -->        <result column="RUpassword" javaType="java.lang.String" property="password"/>  <!-- 远程用户密码 -->        <result column="RUemail" javaType="java.lang.String" property="email"/>  <!-- 远程用户邮箱 -->
+	</resultMap>
+	<resultMap type="RemoteUser" id="remoteUserBaseMap_AppendTable1">
+        <id column="RU1uid" javaType="java.lang.Long" property="uid"/>  <!-- 远程用户Id -->        <result column="RU1tUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!-- 本系统用户Id -->        <result column="RU1userName" javaType="java.lang.String" property="userName"/>  <!-- 远程用户名 -->        <result column="RU1password" javaType="java.lang.String" property="password"/>  <!-- 远程用户密码 -->        <result column="RU1email" javaType="java.lang.String" property="email"/>  <!-- 远程用户邮箱 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		RU.f_uid,RU.t_user_f_id,RU.f_user_name,RU.f_password,RU.f_email
+	</sql>
+	<sql id="queryHead_AppendTable">
+		RU.f_uid as RUuid,RU.t_user_f_id as RUtUserFId,RU.f_user_name as RUuserName,RU.f_password as RUpassword,RU.f_email as RUemail
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		RU1.f_uid as RU1uid,RU1.t_user_f_id as RU1tUserFId,RU1.f_user_name as RU1userName,RU1.f_password as RU1password,RU1.f_email as RU1email
+	</sql>
+	<sql id="querySql">
+        <if test="uid != null">  and (RU.f_uid = #{uid} ) </if>        <if test="tUserFId != null">  and (RU.t_user_f_id = #{tUserFId} ) </if>        <if test="userName != null">  and (RU.f_user_name = #{userName} ) </if>        <if test="password != null">  and (RU.f_password = #{password} ) </if>        <if test="email != null">  and (RU.f_email = #{email} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="uid != null and !uid.equals('')  ">  and (RU.f_uid = #{uid} ) </if>        <if test="tUserFId != null and !tUserFId.equals('')  ">  and (RU.t_user_f_id = #{tUserFId} ) </if>        <if test="userName != null and !userName.equals('')  ">  and (RU.f_user_name like CONCAT('%',#{userName},'%') ) </if>        <if test="password != null and !password.equals('')  ">  and (RU.f_password like CONCAT('%',#{password},'%') ) </if>        <if test="email != null and !email.equals('')  ">  and (RU.f_email like CONCAT('%',#{email},'%') ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="remoteUserBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="remoteUserBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="remoteUserBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="remoteUserBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_remote_user RU    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(远程用户信息)信息。 -->
+	<sql id="select_remoteUser">
+		SELECT <include refid="remoteUserBase.queryHead"/>
+		<include refid="remoteUserBase.busiQueryCondition"/>
+		<include refid="remoteUserBase.dimCheckSql"/>
+		ORDER BY RU.f_uid DESC
+	</sql>
+	<select id="select_remoteUser" parameterType="java.util.Map" resultMap="remoteUserBase.remoteUserExtendMap">
+		<include refid="remoteUserBase.select_remoteUser"/>
+	</select>
+	
+	<!-- 根据条件分页查询(远程用户信息)信息  -->
+	<sql id="select_remoteUser_withPage">
+		SELECT <include refid="remoteUserBase.queryHead"/>
+		<include refid="remoteUserBase.busiQueryCondition"/>
+		<include refid="remoteUserBase.dimCheckSql"/>
+		ORDER BY f_uid DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_remoteUser_withPage" resultMap="remoteUserBase.remoteUserExtendMap" parameterType="java.util.Map">
+		<include refid="remoteUserBase.select_remoteUser_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(远程用户信息)信息。 -->
+	<sql id="select_remoteUser_bySeqId">
+		SELECT <include refid="remoteUserBase.queryHead"/>
+		<include refid="remoteUserBase.busiQueryCondition"/>
+		 and RU.f_uid = #{_parameter}
+	</sql>
+	<select id="select_remoteUser_bySeqId" parameterType="java.lang.Long" resultMap="remoteUserBase.remoteUserBaseMap">
+		<include refid="remoteUserBase.select_remoteUser_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(远程用户信息)记录数  -->
+	<sql id="select_remoteUser_count">
+		SELECT COUNT(*)
+		<include refid="remoteUserBase.busiQueryCount"/>
+		<include refid="remoteUserBase.dimCheckSql"/>
+	</sql>
+	<select id="select_remoteUser_count" resultType="java.lang.Integer">
+		<include refid="remoteUserBase.select_remoteUser_count"/>
+	</select>
+	
+	 <!-- 往(远程用户信息)新增一条记录。 -->
+	 <sql id="insert_remoteUser">
+		INSERT INTO t_remote_user 
+		(f_uid,t_user_f_id,f_user_name,f_password,f_email) VALUES 
+		(#{uid},#{tUserFId},#{userName,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR})
+	 </sql>
+    <insert id="insert_remoteUser" parameterType="RemoteUser">
+		<include refid="remoteUserBase.insert_remoteUser"/>
+    </insert>
+    
+	<!-- 批量新增(远程用户信息)信息 -->
+    <insert id="insert_remoteUser_Batch" parameterType="java.util.List">
+    	INSERT INTO t_remote_user 
+		(f_uid,t_user_f_id,f_user_name,f_password,f_email) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.uid},#{item.tUserFId},#{item.userName,jdbcType=VARCHAR},#{item.password,jdbcType=VARCHAR},#{item.email,jdbcType=VARCHAR})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(远程用户信息)信息。 -->
+    <sql id="update_remoteUser">
+		UPDATE t_remote_user		<trim prefix="SET" prefixOverrides=","> 		<if test="tUserFId != null and !tUserFId.equals('') "> ,t_user_f_id=#{tUserFId}</if> 		<if test="userName != null and !userName.equals('') "> ,f_user_name=#{userName}</if> 		<if test="password != null and !password.equals('') "> ,f_password=#{password}</if> 		<if test="email != null and !email.equals('') "> ,f_email=#{email}</if>		</trim>		WHERE f_uid=#{uid}
+    </sql>
+	<update id="update_remoteUser" parameterType="RemoteUser">
+		<include refid="remoteUserBase.update_remoteUser"/>
+    </update>
+    
+    <!-- 批量更新(远程用户信息)信息。 -->
+    <update id="update_remoteUser_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_remote_user		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.userName != null and !item.userName.equals('')  "> ,f_user_name=#{item.userName}</if> 		<if test="item.password != null and !item.password.equals('')  "> ,f_password=#{item.password}</if> 		<if test="item.email != null and !item.email.equals('')  "> ,f_email=#{item.email}</if>		</trim>		WHERE f_uid=#{item.uid}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(远程用户信息)信息_逻辑删除。 -->
+    <!-- <sql id="delete_remoteUser_Logic">
+		UPDATE t_remote_user		<trim prefix="SET" prefixOverrides=","> 		<if test="tUserFId != null and !tUserFId.equals('')  "> ,t_user_f_id=#{tUserFId}</if> 		<if test="userName != null and !userName.equals('')  "> ,f_user_name=#{userName}</if> 		<if test="password != null and !password.equals('')  "> ,f_password=#{password}</if> 		<if test="email != null and !email.equals('')  "> ,f_email=#{email}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_uid=#{uid}
+    </sql>
+    <update id="delete_remoteUser_Logic" parameterType="RemoteUser">
+		<include refid="remoteUserBase.delete_remoteUser_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(远程用户信息)信息_逻辑删除 -->
+    <!-- <update id="delete_remoteUser_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_remote_user		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.userName != null and !item.userName.equals('')  "> ,f_user_name=#{item.userName}</if> 		<if test="item.password != null and !item.password.equals('')  "> ,f_password=#{item.password}</if> 		<if test="item.email != null and !item.email.equals('')  "> ,f_email=#{item.email}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_uid=#{item.uid}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(远程用户信息)信息。 -->
+    <sql id="delete_remoteUser">
+		DELETE FROM t_remote_user WHERE f_uid=#{_parameter}
+    </sql>
+    <delete id="delete_remoteUser" parameterType="java.lang.String">
+		<include refid="remoteUserBase.delete_remoteUser"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(远程用户信息)信息。 -->
+    <delete id="delete_remoteUser_Batch" parameterType="java.util.List">
+		DELETE FROM t_remote_user WHERE 1=1 AND f_uid IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

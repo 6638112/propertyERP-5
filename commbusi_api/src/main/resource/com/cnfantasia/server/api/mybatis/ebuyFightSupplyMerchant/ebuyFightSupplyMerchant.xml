@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ebuyFightSupplyMerchant">
+	<resultMap id="fightMerchantMap" type="com.cnfantasia.server.api.ebuyFightSupplyMerchant.entity.EbuyFightSupplyMerchantDto">
+		<id column="merchantId" property="fightMerchantId" javaType="java.math.BigInteger"/>
+		<result column="cityName" property="cityName" javaType="java.lang.String"/>
+		<result column="cityId" property="cityId" javaType="java.math.BigInteger"/>
+		<result column="gbCount" property="groupBuildingCount" javaType="java.lang.Integer"/>
+		<result column="addMan" property="addMan" javaType="java.lang.String"/>
+		<result column="updateMan" property="updateMan" javaType="java.lang.String"/>
+		<association property="ebuyFightSupplyMerchant" javaType="com.cnfantasia.server.domainbase.ebuyFightSupplyMerchant.entity.EbuyFightSupplyMerchant">
+			<id column="merchantId" property="id" javaType="java.math.BigInteger"/>
+			<result column="merchantName" property="name" javaType="java.lang.String"/>
+			<result column="f_deliv_address" property="delivAddress" javaType="java.lang.String"/>
+			<result column="f_tel" property="tel" javaType="java.lang.String"/>
+		</association>
+	</resultMap>
+
+	<sql id="fightMerchantList_fromAndWhere">
+		FROM t_ebuy_fight_supply_merchant efsm
+		left join t_ebuy_fight_merchant_has_group_building fgb on fgb.t_ebuy_fight_supply_merchant_f_id = efsm.f_id and fgb.f_sys0_del_state = 0
+		left join t_group_building gb on gb.f_id = fgb.t_group_building_id and gb.f_sys0_del_state = 0
+		left join t_address_block ab on ab.f_id = gb.t_block_f_id and ab.f_sys0_del_state = 0
+		left join t_address_city ac on ac.f_id = ab.t_city_f_id and ac.f_sys0_del_state = 0
+		left join t_oms_user ou1 on ou1.f_id=efsm.f_sys0_add_user
+        left join t_oms_user ou2 on ou2.f_id=efsm.f_sys0_upd_user
+		where efsm.f_sys0_del_state = 0
+		<if test="cityName != null and cityName != ''">
+			and ac.f_name like concat('%',#{cityName},'%')
+		</if>
+		<if test="groupBuildingName != null and groupBuildingName != ''">
+			and gb.f_name like concat('%',#{groupBuildingName},'%')
+		</if>
+		<if test="fightMerchantName != null and fightMerchantName != ''">
+			and efsm.f_name like concat('%',#{fightMerchantName},'%')
+		</if>
+		<if test="fightMerchantId != null and fightMerchantId != ''">
+			and efsm.f_id = #{fightMerchantId}
+		</if>
+	</sql>
+	<!--查询自提点列表-->
+	<select id="getFightMerchantList" parameterType="java.util.Map" resultMap="fightMerchantMap">
+		SELECT ac.f_name as cityName,ac.f_id as cityId,efsm.f_id as merchantId,efsm.f_name as merchantName,efsm.f_deliv_address,efsm.f_tel,count(fgb.f_id) as gbCount,
+		IF (
+			ou1.f_real_name IS NULL
+			OR ou1.f_real_name = '',
+			ou1.f_user_account,
+			ou1.f_real_name
+		) AS addMan,
+		IF (
+			ou2.f_real_name IS NULL
+			OR ou2.f_real_name = '',
+			ou2.f_user_account,
+			ou2.f_real_name
+		) AS updateMan
+		<include refid="fightMerchantList_fromAndWhere"/>
+		group by ac.f_name,efsm.f_id,efsm.f_name,efsm.f_deliv_address,efsm.f_tel order by efsm.f_sys0_add_time desc
+		<if test="_begin != null and _length != null">
+			<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+		</if>
+	</select>
+
+	<!--查询自提点总数-->
+	<select id="getFightMerchantCount" parameterType="java.util.Map" resultType="java.math.BigInteger">
+		SELECT COUNT(DISTINCT efsm.f_id)
+		<include refid="fightMerchantList_fromAndWhere"/>
+	</select>
+
+	<select id="getEbuyFightMerchantHasGbByGbidAndProductId" parameterType="java.util.Map" resultMap="ebuyFightMerchantHasGroupBuildingBase.ebuyFightMerchantHasGroupBuildingBaseMap_AppendTable">
+		SELECT DISTINCT <include refid="ebuyFightMerchantHasGroupBuildingBase.queryHead_AppendTable"/>
+		FROM t_ebuy_fight_merchant_has_group_building EFMHGB
+		LEFT JOIN t_ebuy_fight_supply_merchant fsm on EFMHGB.t_ebuy_fight_supply_merchant_f_id = fsm.f_id and fsm.f_sys0_del_state = 0
+		LEFT JOIN t_ebuy_product_fight_groups pfg on pfg.t_ebuy_fight_supply_merchant_f_id = fsm.f_id and pfg.f_sys0_del_state = 0
+		WHERE EFMHGB.f_sys0_del_state = 0 AND pfg.f_expire_date > now()
+		<if test="gbId != null and gbId != ''">
+			and EFMHGB.t_group_building_id = #{gbId}
+		</if>
+		<if test="productId != null and productId != ''">
+			and pfg.t_ebuy_product_f_id = #{productId}
+		</if>
+	</select>
+</mapper>

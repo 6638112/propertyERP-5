@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:抄表费收费 账单读表数 t_mr_pay_bill_record -->
+<mapper namespace="mrPayBillRecordBase">
+	<resultMap type="MrPayBillRecord" id="mrPayBillRecordBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_pay_bill_f_id" javaType="java.math.BigInteger" property="tPayBillFId"/>  <!--  -->        <result column="t_property_fee_detail_f_id" javaType="java.math.BigInteger" property="tPropertyFeeDetailFId"/>  <!--  -->        <result column="t_mr_fee_item_f_id" javaType="java.math.BigInteger" property="tMrFeeItemFId"/>  <!--  -->        <result column="f_start_value" javaType="java.lang.Double" property="startValue"/>  <!-- 本次账单用量开始值 -->        <result column="f_end_value" javaType="java.lang.Double" property="endValue"/>  <!-- 本次账单用量结束值 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MrPayBillRecord" id="mrPayBillRecordExtendMap" extends="mrPayBillRecordBaseMap">
+	</resultMap>
+	<resultMap type="MrPayBillRecord" id="mrPayBillRecordBaseMap_AppendTable">
+        <id column="MPBRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MPBRtPayBillFId" javaType="java.math.BigInteger" property="tPayBillFId"/>  <!--  -->        <result column="MPBRtPropertyFeeDetailFId" javaType="java.math.BigInteger" property="tPropertyFeeDetailFId"/>  <!--  -->        <result column="MPBRtMrFeeItemFId" javaType="java.math.BigInteger" property="tMrFeeItemFId"/>  <!--  -->        <result column="MPBRstartValue" javaType="java.lang.Double" property="startValue"/>  <!-- 本次账单用量开始值 -->        <result column="MPBRendValue" javaType="java.lang.Double" property="endValue"/>  <!-- 本次账单用量结束值 -->        <result column="MPBRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MPBRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MPBRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MPBRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MPBRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MPBRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MPBRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MrPayBillRecord" id="mrPayBillRecordBaseMap_AppendTable1">
+        <id column="MPBR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MPBR1tPayBillFId" javaType="java.math.BigInteger" property="tPayBillFId"/>  <!--  -->        <result column="MPBR1tPropertyFeeDetailFId" javaType="java.math.BigInteger" property="tPropertyFeeDetailFId"/>  <!--  -->        <result column="MPBR1tMrFeeItemFId" javaType="java.math.BigInteger" property="tMrFeeItemFId"/>  <!--  -->        <result column="MPBR1startValue" javaType="java.lang.Double" property="startValue"/>  <!-- 本次账单用量开始值 -->        <result column="MPBR1endValue" javaType="java.lang.Double" property="endValue"/>  <!-- 本次账单用量结束值 -->        <result column="MPBR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MPBR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MPBR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MPBR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MPBR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MPBR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MPBR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		MPBR.f_id,MPBR.t_pay_bill_f_id,MPBR.t_property_fee_detail_f_id,MPBR.t_mr_fee_item_f_id,MPBR.f_start_value,MPBR.f_end_value
+	</sql>
+	<sql id="queryHead_AppendTable">
+		MPBR.f_id as MPBRid,MPBR.t_pay_bill_f_id as MPBRtPayBillFId,MPBR.t_property_fee_detail_f_id as MPBRtPropertyFeeDetailFId,MPBR.t_mr_fee_item_f_id as MPBRtMrFeeItemFId,MPBR.f_start_value as MPBRstartValue,MPBR.f_end_value as MPBRendValue
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		MPBR1.f_id as MPBR1id,MPBR1.t_pay_bill_f_id as MPBR1tPayBillFId,MPBR1.t_property_fee_detail_f_id as MPBR1tPropertyFeeDetailFId,MPBR1.t_mr_fee_item_f_id as MPBR1tMrFeeItemFId,MPBR1.f_start_value as MPBR1startValue,MPBR1.f_end_value as MPBR1endValue
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (MPBR.f_id = #{id} ) </if>        <if test="tPayBillFId != null">  and (MPBR.t_pay_bill_f_id = #{tPayBillFId} ) </if>        <if test="tPropertyFeeDetailFId != null">  and (MPBR.t_property_fee_detail_f_id = #{tPropertyFeeDetailFId} ) </if>        <if test="tMrFeeItemFId != null">  and (MPBR.t_mr_fee_item_f_id = #{tMrFeeItemFId} ) </if>        <if test="startValue != null">  and (MPBR.f_start_value = #{startValue} ) </if>        <if test="endValue != null">  and (MPBR.f_end_value = #{endValue} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MPBR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MPBR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MPBR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MPBR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MPBR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MPBR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MPBR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MPBR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MPBR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (MPBR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (MPBR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (MPBR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (MPBR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (MPBR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (MPBR.f_id = #{id} ) </if>        <if test="tPayBillFId != null and !tPayBillFId.equals('')  ">  and (MPBR.t_pay_bill_f_id = #{tPayBillFId} ) </if>        <if test="tPropertyFeeDetailFId != null and !tPropertyFeeDetailFId.equals('')  ">  and (MPBR.t_property_fee_detail_f_id = #{tPropertyFeeDetailFId} ) </if>        <if test="tMrFeeItemFId != null and !tMrFeeItemFId.equals('')  ">  and (MPBR.t_mr_fee_item_f_id = #{tMrFeeItemFId} ) </if>        <if test="startValue != null and !startValue.equals('')  ">  and (MPBR.f_start_value = #{startValue} ) </if>        <if test="endValue != null and !endValue.equals('')  ">  and (MPBR.f_end_value = #{endValue} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MPBR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MPBR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MPBR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MPBR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MPBR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MPBR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MPBR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MPBR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MPBR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (MPBR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (MPBR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (MPBR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (MPBR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (MPBR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="mrPayBillRecordBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="mrPayBillRecordBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="mrPayBillRecordBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="mrPayBillRecordBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_mr_pay_bill_record MPBR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(抄表费收费 账单读表数)信息。 -->
+	<sql id="select_mrPayBillRecord">
+		SELECT <include refid="mrPayBillRecordBase.queryHead"/>
+		<include refid="mrPayBillRecordBase.busiQueryCondition"/>
+		<include refid="mrPayBillRecordBase.dimCheckSql"/>
+		ORDER BY MPBR.f_id DESC
+	</sql>
+	<select id="select_mrPayBillRecord" parameterType="java.util.Map" resultMap="mrPayBillRecordBase.mrPayBillRecordExtendMap">
+		<include refid="mrPayBillRecordBase.select_mrPayBillRecord"/>
+	</select>
+	
+	<!-- 根据条件分页查询(抄表费收费 账单读表数)信息  -->
+	<sql id="select_mrPayBillRecord_withPage">
+		SELECT <include refid="mrPayBillRecordBase.queryHead"/>
+		<include refid="mrPayBillRecordBase.busiQueryCondition"/>
+		<include refid="mrPayBillRecordBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_mrPayBillRecord_withPage" resultMap="mrPayBillRecordBase.mrPayBillRecordExtendMap" parameterType="java.util.Map">
+		<include refid="mrPayBillRecordBase.select_mrPayBillRecord_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(抄表费收费 账单读表数)信息。 -->
+	<sql id="select_mrPayBillRecord_bySeqId">
+		SELECT <include refid="mrPayBillRecordBase.queryHead"/>
+		<include refid="mrPayBillRecordBase.busiQueryCondition"/>
+		 and MPBR.f_id = #{_parameter}
+	</sql>
+	<select id="select_mrPayBillRecord_bySeqId" parameterType="java.math.BigInteger" resultMap="mrPayBillRecordBase.mrPayBillRecordBaseMap">
+		<include refid="mrPayBillRecordBase.select_mrPayBillRecord_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(抄表费收费 账单读表数)记录数  -->
+	<sql id="select_mrPayBillRecord_count">
+		SELECT COUNT(*)
+		<include refid="mrPayBillRecordBase.busiQueryCount"/>
+		<include refid="mrPayBillRecordBase.dimCheckSql"/>
+	</sql>
+	<select id="select_mrPayBillRecord_count" resultType="java.lang.Integer">
+		<include refid="mrPayBillRecordBase.select_mrPayBillRecord_count"/>
+	</select>
+	
+	 <!-- 往(抄表费收费 账单读表数)新增一条记录。 -->
+	 <sql id="insert_mrPayBillRecord">
+		INSERT INTO t_mr_pay_bill_record 
+		(f_id,t_pay_bill_f_id,t_property_fee_detail_f_id,t_mr_fee_item_f_id,f_start_value,f_end_value,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tPayBillFId},#{tPropertyFeeDetailFId},#{tMrFeeItemFId},#{startValue},#{endValue},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_mrPayBillRecord" parameterType="MrPayBillRecord">
+		<include refid="mrPayBillRecordBase.insert_mrPayBillRecord"/>
+    </insert>
+    
+	<!-- 批量新增(抄表费收费 账单读表数)信息 -->
+    <insert id="insert_mrPayBillRecord_Batch" parameterType="java.util.List">
+    	INSERT INTO t_mr_pay_bill_record 
+		(f_id,t_pay_bill_f_id,t_property_fee_detail_f_id,t_mr_fee_item_f_id,f_start_value,f_end_value,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tPayBillFId},#{item.tPropertyFeeDetailFId},#{item.tMrFeeItemFId},#{item.startValue},#{item.endValue},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(抄表费收费 账单读表数)信息。 -->
+    <sql id="update_mrPayBillRecord">
+		UPDATE t_mr_pay_bill_record		<trim prefix="SET" prefixOverrides=","> 		<if test="tPayBillFId != null and !tPayBillFId.equals('') "> ,t_pay_bill_f_id=#{tPayBillFId}</if> 		<if test="tPropertyFeeDetailFId != null and !tPropertyFeeDetailFId.equals('') "> ,t_property_fee_detail_f_id=#{tPropertyFeeDetailFId}</if> 		<if test="tMrFeeItemFId != null and !tMrFeeItemFId.equals('') "> ,t_mr_fee_item_f_id=#{tMrFeeItemFId}</if> 		<if test="startValue != null and !startValue.equals('') "> ,f_start_value=#{startValue}</if> 		<if test="endValue != null and !endValue.equals('') "> ,f_end_value=#{endValue}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_mrPayBillRecord" parameterType="MrPayBillRecord">
+		<include refid="mrPayBillRecordBase.update_mrPayBillRecord"/>
+    </update>
+    
+    <!-- 批量更新(抄表费收费 账单读表数)信息。 -->
+    <update id="update_mrPayBillRecord_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_mr_pay_bill_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tPayBillFId != null and !item.tPayBillFId.equals('')  "> ,t_pay_bill_f_id=#{item.tPayBillFId}</if> 		<if test="item.tPropertyFeeDetailFId != null and !item.tPropertyFeeDetailFId.equals('')  "> ,t_property_fee_detail_f_id=#{item.tPropertyFeeDetailFId}</if> 		<if test="item.tMrFeeItemFId != null and !item.tMrFeeItemFId.equals('')  "> ,t_mr_fee_item_f_id=#{item.tMrFeeItemFId}</if> 		<if test="item.startValue != null and !item.startValue.equals('')  "> ,f_start_value=#{item.startValue}</if> 		<if test="item.endValue != null and !item.endValue.equals('')  "> ,f_end_value=#{item.endValue}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(抄表费收费 账单读表数)信息_逻辑删除。 -->
+    <sql id="delete_mrPayBillRecord_Logic">
+		UPDATE t_mr_pay_bill_record		<trim prefix="SET" prefixOverrides=","> 		<if test="tPayBillFId != null and !tPayBillFId.equals('')  "> ,t_pay_bill_f_id=#{tPayBillFId}</if> 		<if test="tPropertyFeeDetailFId != null and !tPropertyFeeDetailFId.equals('')  "> ,t_property_fee_detail_f_id=#{tPropertyFeeDetailFId}</if> 		<if test="tMrFeeItemFId != null and !tMrFeeItemFId.equals('')  "> ,t_mr_fee_item_f_id=#{tMrFeeItemFId}</if> 		<if test="startValue != null and !startValue.equals('')  "> ,f_start_value=#{startValue}</if> 		<if test="endValue != null and !endValue.equals('')  "> ,f_end_value=#{endValue}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_mrPayBillRecord_Logic" parameterType="MrPayBillRecord">
+		<include refid="mrPayBillRecordBase.delete_mrPayBillRecord_Logic"/>
+    </update>
+    
+    <!-- 批量删除(抄表费收费 账单读表数)信息_逻辑删除 -->
+    <update id="delete_mrPayBillRecord_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_mr_pay_bill_record		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tPayBillFId != null and !item.tPayBillFId.equals('')  "> ,t_pay_bill_f_id=#{item.tPayBillFId}</if> 		<if test="item.tPropertyFeeDetailFId != null and !item.tPropertyFeeDetailFId.equals('')  "> ,t_property_fee_detail_f_id=#{item.tPropertyFeeDetailFId}</if> 		<if test="item.tMrFeeItemFId != null and !item.tMrFeeItemFId.equals('')  "> ,t_mr_fee_item_f_id=#{item.tMrFeeItemFId}</if> 		<if test="item.startValue != null and !item.startValue.equals('')  "> ,f_start_value=#{item.startValue}</if> 		<if test="item.endValue != null and !item.endValue.equals('')  "> ,f_end_value=#{item.endValue}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(抄表费收费 账单读表数)信息。 -->
+    <sql id="delete_mrPayBillRecord">
+		DELETE FROM t_mr_pay_bill_record WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_mrPayBillRecord" parameterType="java.lang.String">
+		<include refid="mrPayBillRecordBase.delete_mrPayBillRecord"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(抄表费收费 账单读表数)信息。 -->
+    <delete id="delete_mrPayBillRecord_Batch" parameterType="java.util.List">
+		DELETE FROM t_mr_pay_bill_record WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

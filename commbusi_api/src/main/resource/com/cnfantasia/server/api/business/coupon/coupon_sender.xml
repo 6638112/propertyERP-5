@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="abstractCouponSender" class="com.cnfantasia.server.api.coupon.service.couponSender.AbstractCouponSender" abstract="true">
+		<property name="couponDao" ref="couponDao"></property>
+		<property name="ebuyOrderBaseDao" ref="ebuyOrderBaseDao"></property>
+		<property name="userCouponBaseDao" ref="userCouponBaseDao"></property>
+		<property name="couponBaseDao" ref="couponBaseDao"></property>
+		<property name="uuidManager" ref="uuidManager"></property>
+		<property name="redpointContentBaseService" ref="redpointContentBaseService"/>
+		<property name="redpointContentSourceBaseService" ref="redpointContentSourceBaseService"/>
+	</bean>
+
+	<bean id="cashCouponSender" class="com.cnfantasia.server.api.coupon.service.couponSender.CashCouponSender" parent="abstractCouponSender">
+	</bean>
+	
+</beans>

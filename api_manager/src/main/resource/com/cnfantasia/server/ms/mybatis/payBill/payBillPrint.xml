@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="payBillPrint">
+	<resultMap id="printFeeDetailMap" type="com.cnfantasia.server.ms.payBill.entity.PrintFeeDetail">
+		<id property="pfdId" column="pfdId"/>
+		<result property="name" column="name" />
+		<result property="startValue" column="startValue" />
+		<result property="endValue" column="endValue" />
+		<result property="totalMoney" column="totalMoney" />
+		<result property="unPaid" column="unPaid" />
+		<result property="signalPrice" column="signalPrice" />
+		<result property="priceUnitValue" column="priceUnitValue" />
+		<result property="mpbrId" column="mpbrId" />
+		<result property="owe" javaType="java.lang.Boolean" column="owe" />
+		<collection property="mrPriceList" ofType="java.lang.String">
+			<constructor>
+				<arg column="mrPriceList"/>
+			</constructor>
+		</collection>
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.ms.payBill.entity.CommPrintKey" id="commPrintKey_Map">
+		<result property="isPay" column="isPay" />
+		<result property="lastUunpaid" column="f_last_unpaid" />
+		<result property="customerName" column="customerName" />
+		<result property="billTypeName" column="billTypeName" />
+		<result property="month" column="month" />
+		<result property="payTime" column="payTime" />
+		<result property="pcName" column="pcName" />
+		<result property="now" column="now" />
+		<result property="adIconUrl" column="adIconUrl" />
+		<collection property="printFeeDetails" resultMap="printFeeDetailMap" />
+	</resultMap>
+
+	<resultMap type="com.cnfantasia.server.ms.payBill.entity.TemplatePrintKey" id="templateKey_Map">
+		<id column="payBillId" property="payBillId"/>
+		<result property="companyIcon" column="$companyIcon$" />
+		<result property="roomAddress" column="$roomAddress$" />
+		<result property="realName" column="$realName$" />
+		<result property="gbName" column="$gbName$" />
+		<result property="feeDateYear" column="$feeDateYear$" />
+		<result property="feeDateMonth" column="$feeDateMonth$" />
+		<result property="feeName" column="$feeName$" />
+		<result property="wyPayStartYear" column="$wyPayStartYear$" />
+		<result property="wyPayStartMonth" column="$wyPayStartMonth$" />
+		<result property="wyPayEndYear" column="$wyPayEndYear$" />
+		<result property="wyPayEndMonth" column="$wyPayEndMonth$" />
+		<result property="monthLastDay" column="$monthLastDay$" />
+		<result property="sdPayStartYear" column="$sdPayStartYear$" />
+		<result property="sdPayStartMonth" column="$sdPayStartMonth$" />
+		<result property="sdPayEndYear" column="$sdPayEndYear$" />
+		<result property="sdPayEndMonth" column="$sdPayEndMonth$" />
+		<result property="totalFee" column="$totalFee$" />
+		<result property="payEndYear" column="$payEndYear$" />
+		<result property="payEndMonth" column="$payEndMonth$" />
+		<result property="billYYYYMM" column="$billYYYYMM$" />
+		<result property="pc" column="$pc$" />
+		<result property="now" column="$now$" />
+		<result property="roomSize" column="$roomSize$" />
+		<result property="lastUunpaid" column="f_last_unpaid" />
+		<collection property="printFeeDetails" resultMap="printFeeDetailMap" />
+	</resultMap>
+	
+	<sql id="commOrderWithTemplate">
+		ORDER BY
+			_t1.payBillId DESC,
+			<!-- 按照【收费项设置】的顺序排序 -->
+			CASE _t1.feeType
+				WHEN 1 THEN
+					3
+				WHEN 2 THEN
+					1
+				WHEN 3 THEN
+					4
+				WHEN 4 THEN
+					2
+				END ASC,
+			<!-- 按照每个设置项的顺序排序 -->
+			_t1.pfdId DESC
+	</sql>
+	
+	<sql id="commOrderWithNoTemplate">
+		ORDER BY
+			_t.f_id DESC,
+			<!-- 按照【收费项设置】的顺序排序 -->
+			CASE _t.f_fee_type
+				WHEN 1 THEN
+					3
+				WHEN 2 THEN
+					1
+				WHEN 3 THEN
+					4
+				WHEN 4 THEN
+					2
+				END ASC,
+			<!-- 按照每个设置项的顺序排序 -->
+			_t.pfdId DESC
+	</sql>
+
+	<!-- 有模板 start -->
+	<sql id="selectByGbIdWithTemplate">
+		SELECT *
+		FROM (
+			SELECT
+			PB.f_id payBillId,
+			0/*PB.f_last_unpaid/100 v509抄表往月欠费存储在t_property_fee_detail中，不在存储在t_pay_bil中了*/ f_last_unpaid,
+			(
+			PB.f_id != PFD.t_pay_bill_f_id
+			) AS owe,
+			PB.f_bill_type_name `$feeName$`,
+			GB.f_name `$gbName$`,
+			<!-- IF(PBT.f_is_prop_fee=3, 1, 0)：只有抄水表的月份需要加1 -->
+			left(ADDDATE(IF(PB.f_paytime_type=2, GBBC.f_bill_month_end, GBBC.f_bill_month),INTERVAL IF(PBT.f_is_prop_fee=3, 1, 0) MONTH) , 4) `$feeDateYear$`,
+			substring(ADDDATE(IF(PB.f_paytime_type=2, GBBC.f_bill_month_end, GBBC.f_bill_month),INTERVAL IF(PBT.f_is_prop_fee=3, 1, 0) MONTH), 6, 2) `$feeDateMonth$`,
+	
+			left(IF(PB.f_paytime_type=2,GBBC.f_bill_month_start, GBBC.f_bill_month), 4) `$wyPayStartYear$`,
+			substring(IF(PB.f_paytime_type=2,GBBC.f_bill_month_start, GBBC.f_bill_month), 6, 2) `$wyPayStartMonth$`,
+			left(IF(PB.f_paytime_type=2,GBBC.f_bill_month_end, GBBC.f_bill_month), 4) `$wyPayEndYear$`,
+			substring(IF(PB.f_paytime_type=2,GBBC.f_bill_month_end, GBBC.f_bill_month), 6, 2) `$wyPayEndMonth$`,
+			date_format(LAST_DAY(IF(PB.f_paytime_type=2,GBBC.f_bill_month_end, GBBC.f_bill_month)),'%d') `$monthLastDay$`,
+	
+			left(ADDDATE(IF(PB.f_paytime_type=2, GBBC.f_bill_month_end, GBBC.f_bill_month),INTERVAL IF(PBT.f_is_prop_fee=3, -1, -2) MONTH) , 4) `$sdPayStartYear$`,
+			substring(ADDDATE(IF(PB.f_paytime_type=2, GBBC.f_bill_month_end, GBBC.f_bill_month),INTERVAL IF(PBT.f_is_prop_fee=3, -1, -2) MONTH), 6, 2) `$sdPayStartMonth$`,
+			left(ADDDATE(IF(PB.f_paytime_type=2, GBBC.f_bill_month_end, GBBC.f_bill_month),INTERVAL IF(PBT.f_is_prop_fee=3, 0, -1) MONTH) , 4) `$sdPayEndYear$`,
+			substring(ADDDATE(IF(PB.f_paytime_type=2, GBBC.f_bill_month_end, GBBC.f_bill_month),INTERVAL IF(PBT.f_is_prop_fee=3, 0, -1) MONTH), 6, 2) `$sdPayEndMonth$`,
+	
+			IF(locate('水', PB.f_bill_type_name)>0,
+			CONCAT(date_format(GBBC.f_bill_month_start, '%Y年%m月1日起至'), date_format(GBBC.f_bill_month_end, '%Y年%m月'), date_format(LAST_DAY(GBBC.f_bill_month_end),'%d'), '日所用水电量产生的'),
+			date_format(IF(PB.f_paytime_type=2,GBBC.f_bill_month_end, GBBC.f_bill_month), '%Y年%m月')
+			) `$billYYYYMM$`,
+			date_format(GBBC.f_bill_pay_end,'%Y') `$payEndYear$`,
+			date_format(GBBC.f_bill_pay_end,'%m') `$payEndMonth$`,
+	
+			CONCAT(PFD.f_name, IF(PFD.f_fee_type=1, CONCAT('-', PFD.f_mr_name), '')) `name`,
+			cast(PFD.f_total_price*IF(PFD.f_fee_type=2, IFNULL(PFD.f_bill_month_size, 1), 1)/100 AS DECIMAL(28,2)) `totalMoney`,
+			PFD.f_signal_price/100 `signalPrice`,
+			cast(PFD.f_price_unit_value/100 AS DECIMAL(28,2)) `priceUnitValue`,
+			MPBR.f_start_value startValue,
+			MPBR.f_end_value endValue,
+			MPBR.f_id as mpbrId,
+			(
+				IFNULL(
+					(
+					SELECT
+						CAST(SUM(IFNULL(_PFD.f_total_price, 0)*IF(PFD.f_fee_type=2, IFNULL(PFD.f_bill_month_size, 1), 1)+IFNULL(_PFD.f_unpaid, 0))/100 AS DECIMAL(28,2))
+					FROM t_property_fee_detail _PFD
+					WHERE
+						PB.f_id = _PFD.t_pay_bill_f_id
+						AND _PFD.f_total_price >= 0
+						AND _PFD.f_sys0_del_state = 0
+					), 0)
+				+
+				IFNULL(
+					(
+					SELECT
+						CAST(SUM(IFNULL(_PFD.f_total_price, 0)*IF(PFD.f_fee_type=2, IFNULL(PFD.f_bill_month_size, 1), 1)+IFNULL(_PFD.f_unpaid, 0))/100 AS DECIMAL(28,2))
+					FROM t_property_fee_detail _PFD
+					INNER JOIN t_pay_bill PB3 ON _PFD.t_pay_bill_f_id=PB3.f_id AND PB3.f_is_pay=2 AND PB3.f_sys0_del_state=0
+					WHERE
+						PFDU.t_unpaid_pay_bill_id = _PFD.t_pay_bill_f_id
+						AND _PFD.f_total_price >= 0
+						AND _PFD.f_sys0_del_state = 0
+					), 0)
+			) `$totalFee$`,
+			CONCAT(B.f_name, '-', RR.f_num) AS `$roomAddress$`,
+			PP.f_name `$realName$`,
+			PC.f_name `$pc$`,
+			<if test="code != null and code.equals('template1')">
+				<![CDATA[date_format(now(), '<u>%Y</u>年<u>%m</u>月<u>%d</u>日') `$now$`]]>,
+			</if>
+			<if test="code != null and code.equals('template2')">
+				<![CDATA[date_format(now(), '%Y年%m月%d日') `$now$`]]>,
+			</if>
+			CONCAT(OCSP.f_sys_para_value, '/propertyCommpany/payBillPrintCompanyIcon_', IFNULL(GB.t_property_company_f_id, PM.t_property_company_f_id), '.png') `$companyIcon$`,
+			RR.f_room_size `$roomSize$`,
+			PFD.f_id pfdId,
+			PFD.f_fee_type feeType,
+			MFIF.f_unit_value mrPriceList
+		FROM
+			t_group_building_bill_cycle GBBC
+			INNER JOIN t_pay_bill PB ON PB.t_bill_cycle_id = GBBC.f_id AND PB.f_sys0_del_state = 0
+			LEFT JOIN t_real_room RR ON RR.f_id = PB.t_real_room_f_id AND RR.f_sys0_del_state = 0
+			LEFT JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0
+			LEFT JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id AND GB.f_sys0_del_state = 0
+			LEFT JOIN t_property_management PM ON PM.f_id=GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+			Left JOIN t_property_company PC ON PC.f_id=IFNULL(GB.t_property_company_f_id, PM.t_property_company_f_id) AND PC.f_sys0_del_state = 0
+	
+			LEFT JOIN t_property_fee_detail_unpaid PFDU ON PFDU.t_pay_bill_id = PB.f_id
+			LEFT JOIN t_property_fee_detail PFD ON PB.f_id = PFD.t_pay_bill_f_id AND PFD.f_sys0_del_state = 0 AND PFD.f_total_price>=0
+			<if test="feeType != null and !feeType.equals('')">
+				AND PFD.f_fee_type=#{feeType}
+			</if>
+			<if test="code != null and code.equals('template2')">
+				AND PFD.f_type!=8
+			</if>
+			LEFT JOIN t_mr_pay_bill_record MPBR ON MPBR.t_property_fee_detail_f_id=PFD.f_id AND MPBR.f_sys0_del_state=0
+			LEFT JOIN t_pay_bill_type PBT ON PBT.f_id=PB.f_bill_type_id AND PBT.f_sys0_del_state=0
+			LEFT JOIN t_property_proprietor PP ON PP.f_id=PB.f_property_proprietor_id and PP.f_sys0_del_state = 0
+			LEFT JOIN t_oms_comm_sys_para OCSP ON OCSP.f_sys_para_code='privateImageServerUrl'
+			LEFT JOIN t_mr_standard_room MSR ON MSR.t_real_room_id = PB.t_real_room_f_id AND MSR.t_mr_fee_item_id = MPBR.t_mr_fee_item_f_id AND MSR.f_sys0_del_state = 0
+			LEFT JOIN t_mr_fee_item_formula MFIF ON MFIF.t_mr_calculate_rule_cfg_id = MSR.t_mr_calculate_rule_cfg_id AND MFIF.f_sys0_del_state = 0
+		WHERE 1=1
+			<if test="payBillIdList!= null">
+				AND PB.f_sys0_del_state = 0
+				AND PB.f_id IN
+				<foreach collection="payBillIdList" item="payBillId" open="(" close=")" separator=",">
+					#{payBillId}
+				</foreach>
+			</if>
+			<if test="payBillIdList== null">
+				AND GBBC.f_id = #{gbbcId}
+				AND GBBC.f_sys0_del_state = 0
+			</if>
+		UNION
+			SELECT
+			PB.f_id payBillId,
+			0/*PB.f_last_unpaid/100 v509抄表往月欠费存储在t_property_fee_detail中，不在存储在t_pay_bil中了*/ f_last_unpaid,
+			(
+			PB.f_id != PFD.t_pay_bill_f_id
+			) AS owe,
+			PB.f_bill_type_name `$feeName$`,
+			GB.f_name `$gbName$`,
+			<!-- IF(PBT.f_is_prop_fee=3, 1, 0)：只有抄水表的月份需要加1 -->
+			left(ADDDATE(IF(PB.f_paytime_type=2, GBBC.f_bill_month_end, GBBC.f_bill_month),INTERVAL IF(PBT.f_is_prop_fee=3, 1, 0) MONTH) , 4) `$feeDateYear$`,
+			substring(ADDDATE(IF(PB.f_paytime_type=2, GBBC.f_bill_month_end, GBBC.f_bill_month),INTERVAL IF(PBT.f_is_prop_fee=3, 1, 0) MONTH), 6, 2) `$feeDateMonth$`,
+	
+			left(IF(PB.f_paytime_type=2,GBBC.f_bill_month_start, GBBC.f_bill_month), 4) `$wyPayStartYear$`,
+			substring(IF(PB.f_paytime_type=2,GBBC.f_bill_month_start, GBBC.f_bill_month), 6, 2) `$wyPayStartMonth$`,
+			left(IF(PB.f_paytime_type=2,GBBC.f_bill_month_end, GBBC.f_bill_month), 4) `$wyPayEndYear$`,
+			substring(IF(PB.f_paytime_type=2,GBBC.f_bill_month_end, GBBC.f_bill_month), 6, 2) `$wyPayEndMonth$`,
+			date_format(LAST_DAY(IF(PB.f_paytime_type=2,GBBC.f_bill_month_end, GBBC.f_bill_month)),'%d') `$monthLastDay$`,
+	
+			left(ADDDATE(IF(PB.f_paytime_type=2, GBBC.f_bill_month_end, GBBC.f_bill_month),INTERVAL IF(PBT.f_is_prop_fee=3, -1, -2) MONTH) , 4) `$sdPayStartYear$`,
+			substring(ADDDATE(IF(PB.f_paytime_type=2, GBBC.f_bill_month_end, GBBC.f_bill_month),INTERVAL IF(PBT.f_is_prop_fee=3, -1, -2) MONTH), 6, 2) `$sdPayStartMonth$`,
+			left(ADDDATE(IF(PB.f_paytime_type=2, GBBC.f_bill_month_end, GBBC.f_bill_month),INTERVAL IF(PBT.f_is_prop_fee=3, 0, -1) MONTH) , 4) `$sdPayEndYear$`,
+			substring(ADDDATE(IF(PB.f_paytime_type=2, GBBC.f_bill_month_end, GBBC.f_bill_month),INTERVAL IF(PBT.f_is_prop_fee=3, 0, -1) MONTH), 6, 2) `$sdPayEndMonth$`,
+	
+			IF(locate('水', PB.f_bill_type_name)>0,
+			CONCAT(date_format(GBBC.f_bill_month_start, '%Y年%m月1日起至'), date_format(GBBC.f_bill_month_end, '%Y年%m月'), date_format(LAST_DAY(GBBC.f_bill_month_end),'%d'), '日所用水电量产生的'),
+			date_format(IF(PB.f_paytime_type=2,GBBC.f_bill_month_end, GBBC.f_bill_month), '%Y年%m月')
+			) `$billYYYYMM$`,
+			date_format(GBBC.f_bill_pay_end,'%Y') `$payEndYear$`,
+			date_format(GBBC.f_bill_pay_end,'%m') `$payEndMonth$`,
+	
+			CONCAT(PFD.f_name, IF(PFD.f_fee_type=1, CONCAT('-', PFD.f_mr_name), '')) `name`,
+			cast(PFD.f_total_price*IF(PFD.f_fee_type=2, IFNULL(PFD.f_bill_month_size, 1), 1)/100 AS DECIMAL(28,2)) `totalMoney`,
+			PFD.f_signal_price/100 `signalPrice`,
+			cast(PFD.f_price_unit_value/100 AS DECIMAL(28,2)) `priceUnitValue`,
+			MPBR.f_start_value startValue,
+			MPBR.f_end_value endValue,
+			MPBR.f_id as mpbrId,
+			(
+				IFNULL(
+					(
+					SELECT
+						CAST(SUM(IFNULL(_PFD.f_total_price, 0)*IF(PFD.f_fee_type=2, IFNULL(PFD.f_bill_month_size, 1), 1)+IFNULL(_PFD.f_unpaid, 0))/100 AS DECIMAL(28,2))
+					FROM t_property_fee_detail _PFD
+					WHERE
+						PB.f_id = _PFD.t_pay_bill_f_id
+						AND _PFD.f_total_price >= 0
+						AND _PFD.f_sys0_del_state = 0
+					), 0)
+				+
+				IFNULL(
+					(
+					SELECT
+						CAST(SUM(IFNULL(_PFD.f_total_price, 0)*IF(PFD.f_fee_type=2, IFNULL(PFD.f_bill_month_size, 1), 1)+IFNULL(_PFD.f_unpaid, 0))/100 AS DECIMAL(28,2))
+					FROM t_property_fee_detail _PFD
+					INNER JOIN t_pay_bill PB3 ON _PFD.t_pay_bill_f_id=PB3.f_id AND PB3.f_is_pay=2 AND PB3.f_sys0_del_state=0
+					WHERE
+						PFDU.t_unpaid_pay_bill_id = _PFD.t_pay_bill_f_id
+						AND _PFD.f_total_price >= 0
+						AND _PFD.f_sys0_del_state = 0
+					), 0)
+			) `$totalFee$`,
+			CONCAT(B.f_name, '-', RR.f_num) AS `$roomAddress$`,
+			PP.f_name `$realName$`,
+			PC.f_name `$pc$`,
+			<if test="code != null and code.equals('template1')">
+				<![CDATA[date_format(now(), '<u>%Y</u>年<u>%m</u>月<u>%d</u>日') `$now$`]]>,
+			</if>
+			<if test="code != null and code.equals('template2')">
+				<![CDATA[date_format(now(), '%Y年%m月%d日') `$now$`]]>,
+			</if>
+			CONCAT(OCSP.f_sys_para_value, '/propertyCommpany/payBillPrintCompanyIcon_', IFNULL(GB.t_property_company_f_id, PM.t_property_company_f_id), '.png') `$companyIcon$`,
+			RR.f_room_size `$roomSize$`,
+			PFD.f_id pfdId,
+			PFD.f_fee_type feeType,
+			MFIF.f_unit_value mrPriceList
+		FROM
+			t_group_building_bill_cycle GBBC
+			INNER JOIN t_pay_bill PB ON PB.t_bill_cycle_id = GBBC.f_id AND PB.f_sys0_del_state = 0
+			LEFT JOIN t_real_room RR ON RR.f_id = PB.t_real_room_f_id AND RR.f_sys0_del_state = 0
+			LEFT JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0
+			LEFT JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id AND GB.f_sys0_del_state = 0
+			LEFT JOIN t_property_management PM ON PM.f_id=GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+			Left JOIN t_property_company PC ON PC.f_id=IFNULL(GB.t_property_company_f_id, PM.t_property_company_f_id) AND PC.f_sys0_del_state = 0
+	
+			INNER JOIN t_property_fee_detail_unpaid PFDU ON PFDU.t_pay_bill_id = PB.f_id
+			INNER JOIN t_pay_bill PB2 ON PFDU.t_unpaid_pay_bill_id=PB2.f_id AND PB2.f_is_pay=2 AND PB2.f_sys0_del_state=0
+			INNER JOIN t_property_fee_detail PFD ON PFDU.t_unpaid_pay_bill_id = PFD.t_pay_bill_f_id AND PFD.f_sys0_del_state = 0 AND PFD.f_total_price>=0
+			<if test="feeType != null and !feeType.equals('')">
+				AND PFD.f_fee_type=#{feeType}
+			</if>
+			<if test="code != null and code.equals('template2')">
+				AND PFD.f_type!=8
+			</if>
+			LEFT JOIN t_mr_pay_bill_record MPBR ON MPBR.t_property_fee_detail_f_id=PFD.f_id AND MPBR.f_sys0_del_state=0
+			LEFT JOIN t_pay_bill_type PBT ON PBT.f_id=PB.f_bill_type_id AND PBT.f_sys0_del_state=0
+			LEFT JOIN t_property_proprietor PP ON PP.f_id=PB.f_property_proprietor_id and PP.f_sys0_del_state = 0
+			LEFT JOIN t_oms_comm_sys_para OCSP ON OCSP.f_sys_para_code='privateImageServerUrl'			
+			LEFT JOIN t_mr_standard_room MSR ON MSR.t_real_room_id = PB.t_real_room_f_id AND MSR.t_mr_fee_item_id = MPBR.t_mr_fee_item_f_id AND MSR.f_sys0_del_state = 0
+			LEFT JOIN t_mr_fee_item_formula MFIF ON MFIF.t_mr_calculate_rule_cfg_id = MSR.t_mr_calculate_rule_cfg_id AND MFIF.f_sys0_del_state = 0
+		WHERE 1=1
+			<if test="payBillIdList!= null">
+				AND PB.f_sys0_del_state = 0
+				AND PB.f_id IN
+				<foreach collection="payBillIdList" item="payBillId" open="(" close=")" separator=",">
+					#{payBillId}
+				</foreach>
+			</if>
+			<if test="payBillIdList== null">
+				AND GBBC.f_id = #{gbbcId}
+				AND GBBC.f_sys0_del_state = 0
+			</if>
+		) _t1
+		<include refid="commOrderWithTemplate"></include>
+	</sql>
+	<!-- 有模板 end -->
+
+	<!-- 无模板 start -->
+	<sql id="commSelectWithNoTemplate1">
+		SELECT
+		*
+		FROM(
+		SELECT
+		PB.f_id,
+		PFD.f_fee_type,
+		MPBR.t_mr_fee_item_f_id,
+		false AS owe,
+		0/*PB.f_last_unpaid/100 v509抄表往月欠费存储在t_property_fee_detail中，不在存储在t_pay_bil中了*/ f_last_unpaid,
+		PB.f_is_pay AS isPay,
+		CONCAT(GB.f_name, '-', B.f_name, '-', RR.f_num) AS customerName,
+		PB.f_bill_type_name AS billTypeName,
+		IF(PB.f_paytime_type=1, DATE_FORMAT(IFNULL(PB.f_bill_month, PB.f_month), '%Y年%m月'), CONCAT(left(PB.f_bill_month_start, 7), '~', left(PB.f_bill_month_end, 7))) AS `month`,
+		DATE_FORMAT(PB.f_sys0_upd_time, '%Y-%m-%d %H:%i:%s') AS payTime,
+		CONCAT(PFD.f_name, IF(PFD.f_fee_type=1, CONCAT('-', PFD.f_mr_name), '')) AS name,
+		PFD.f_total_price*IF(PFD.f_fee_type=2, IFNULL(PFD.f_bill_month_size, 1), 1)/100 AS totalMoney,
+		DATE_FORMAT(now() , '%Y-%m-%d') `now`,
+		PC.f_name pcName,
+		CONCAT(
+		LEFT (
+		CSP2.f_sys_para_value,
+		LOCATE(';', CSP2.f_sys_para_value) - 1
+		),
+		CSP1.f_sys_para_value,
+		PGA.f_icon
+		) adIconUrl,
+		PFD.f_id pfdId,
+		null mrPriceList
+		FROM
+		t_group_building_bill_cycle GBBC
+		INNER JOIN t_pay_bill PB ON PB.t_bill_cycle_id = GBBC.f_id AND PB.f_sys0_del_state = 0
+		LEFT JOIN t_real_room RR ON RR.f_id = PB.t_real_room_f_id AND RR.f_sys0_del_state = 0
+		LEFT JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0
+		LEFT JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id AND GB.f_sys0_del_state = 0
+		LEFT JOIN t_property_management PM ON PM.f_id=GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+		Left JOIN t_property_company PC ON PC.f_id=IFNULL(GB.t_property_company_f_id, PM.t_property_company_f_id) AND PC.f_sys0_del_state = 0
+		LEFT JOIN t_property_fee_detail PFD ON PB.f_id = PFD.t_pay_bill_f_id AND PFD.f_sys0_del_state = 0 AND PFD.f_total_price>=0
+		<if test="feeType != null and !feeType.equals('')">
+			AND PFD.f_fee_type=#{feeType}
+		</if>
+		LEFT JOIN t_mr_pay_bill_record MPBR ON MPBR.t_property_fee_detail_f_id=PFD.f_id AND MPBR.f_sys0_del_state=0
+		LEFT JOIN t_property_gb_ad PGA ON PGA.f_gb_id = 0 AND PGA.f_sys0_del_state = 0
+		LEFT JOIN t_comm_sys_para CSP1 ON CSP1.f_sys_para_code = 'PropertyGbAdBaseUrl'
+		LEFT JOIN t_comm_sys_para CSP2 ON CSP2.f_sys_para_code = 'FileServerConfig'
+		WHERE 1=1
+		AND GBBC.f_id = #{gbbcId}
+		AND GBBC.f_sys0_del_state = 0
+
+		UNION
+
+		SELECT
+		PB.f_id,
+		PFD.f_fee_type,
+		MPBR.t_mr_fee_item_f_id,
+		true AS owe,
+		0/*PB.f_last_unpaid/100 v509抄表往月欠费存储在t_property_fee_detail中，不在存储在t_pay_bil中了*/ f_last_unpaid,
+		PB.f_is_pay AS isPay,
+		CONCAT(GB.f_name, '-', B.f_name, '-', RR.f_num) AS customerName,
+		PB.f_bill_type_name AS billTypeName,
+		IF(PB.f_paytime_type=1, DATE_FORMAT(IFNULL(PB.f_bill_month, PB.f_month), '%Y年%m月'), CONCAT(left(PB.f_bill_month_start, 7), '~', left(PB.f_bill_month_end, 7))) AS `month`,
+		DATE_FORMAT(PB.f_sys0_upd_time, '%Y-%m-%d %H:%i:%s') AS payTime,
+		CONCAT(PFD.f_name, IF(PFD.f_fee_type=1, CONCAT('-', PFD.f_mr_name), '')) AS name,
+		PFD.f_total_price*IF(PFD.f_fee_type=2, IFNULL(PFD.f_bill_month_size, 1), 1)/100 AS totalMoney,
+		DATE_FORMAT(now() , '%Y-%m-%d') `now`,
+		PC.f_name pcName,
+		CONCAT(
+		LEFT (
+		CSP2.f_sys_para_value,
+		LOCATE(';', CSP2.f_sys_para_value) - 1
+		),
+		CSP1.f_sys_para_value,
+		PGA.f_icon
+		) adIconUrl,
+		PFD.f_id pfdId,
+		null mrPriceList
+		FROM
+		t_group_building_bill_cycle GBBC
+		INNER JOIN t_pay_bill PB ON PB.t_bill_cycle_id = GBBC.f_id AND PB.f_sys0_del_state = 0
+		LEFT JOIN t_real_room RR ON RR.f_id = PB.t_real_room_f_id AND RR.f_sys0_del_state = 0
+		LEFT JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0
+		LEFT JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id AND GB.f_sys0_del_state = 0
+		LEFT JOIN t_property_management PM ON PM.f_id=GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+		Left JOIN t_property_company PC ON PC.f_id=IFNULL(GB.t_property_company_f_id, PM.t_property_company_f_id) AND PC.f_sys0_del_state = 0
+		INNER JOIN t_property_fee_detail_unpaid PFDU ON PFDU.t_pay_bill_id = PB.f_id
+		INNER JOIN t_pay_bill PB2 ON PFDU.t_unpaid_pay_bill_id=PB2.f_id AND PB2.f_is_pay=2 AND PB2.f_sys0_del_state=0
+		INNER JOIN t_property_fee_detail PFD ON PFDU.t_unpaid_pay_bill_id = PFD.t_pay_bill_f_id
+		AND PFD.f_sys0_del_state = 0
+		AND PFD.f_total_price > 0
+		<if test="feeType != null and !feeType.equals('')">
+			AND PFD.f_fee_type=#{feeType}
+		</if>
+		LEFT JOIN t_mr_pay_bill_record MPBR ON MPBR.t_property_fee_detail_f_id=PFD.f_id AND MPBR.f_sys0_del_state=0
+		LEFT JOIN t_property_gb_ad PGA ON PGA.f_gb_id = 0 AND PGA.f_sys0_del_state = 0
+		LEFT JOIN t_comm_sys_para CSP1 ON CSP1.f_sys_para_code = 'PropertyGbAdBaseUrl'
+		LEFT JOIN t_comm_sys_para CSP2 ON CSP2.f_sys_para_code = 'FileServerConfig'
+		WHERE 1=1
+		AND GBBC.f_id = #{gbbcId}
+		AND GBBC.f_sys0_del_state = 0
+		) _t
+		<include refid="commOrderWithNoTemplate"></include>
+	</sql>
+
+	<sql id="commSelectWithNoTemplate2">
+		SELECT
+		*
+		FROM(
+		SELECT
+		PB.f_id,
+		PFD.f_fee_type,
+		MPBR.t_mr_fee_item_f_id,
+		false AS owe,
+		0/*PB.f_last_unpaid/100 v509抄表往月欠费存储在t_property_fee_detail中，不在存储在t_pay_bil中了*/ f_last_unpaid,
+		PB.f_is_pay AS isPay,
+		CONCAT(GB.f_name, '-', B.f_name, '-', RR.f_num) AS customerName,
+		PB.f_bill_type_name AS billTypeName,
+		IF(PB.f_paytime_type=1, DATE_FORMAT(IFNULL(PB.f_bill_month, PB.f_month), '%Y年%m月'), CONCAT(left(PB.f_bill_month_start, 7), '~', left(PB.f_bill_month_end, 7))) AS `month`,
+		DATE_FORMAT(PB.f_sys0_upd_time, '%Y-%m-%d %H:%i:%s') AS payTime,
+		CONCAT(PFD.f_name, IF(PFD.f_fee_type=1, CONCAT('-', PFD.f_mr_name), '')) AS name,
+		PFD.f_total_price*IF(PFD.f_fee_type=2, IFNULL(PFD.f_bill_month_size, 1), 1)/100 AS totalMoney,
+		DATE_FORMAT(now() , '%Y-%m-%d') `now`,
+		PC.f_name pcName,
+		CONCAT(
+		LEFT (
+		CSP2.f_sys_para_value,
+		LOCATE(';', CSP2.f_sys_para_value) - 1
+		),
+		CSP1.f_sys_para_value,
+		PGA.f_icon
+		) adIconUrl,
+		PFD.f_id pfdId,
+		null mrPriceList
+		FROM
+		t_group_building_bill_cycle GBBC
+		INNER JOIN t_pay_bill PB ON PB.t_bill_cycle_id = GBBC.f_id AND PB.f_sys0_del_state = 0
+		LEFT JOIN t_real_room RR ON RR.f_id = PB.t_real_room_f_id AND RR.f_sys0_del_state = 0
+		LEFT JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0
+		LEFT JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id AND GB.f_sys0_del_state = 0
+		LEFT JOIN t_property_management PM ON PM.f_id=GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+		Left JOIN t_property_company PC ON PC.f_id=IFNULL(GB.t_property_company_f_id, PM.t_property_company_f_id) AND PC.f_sys0_del_state = 0
+		LEFT JOIN t_property_fee_detail PFD ON PB.f_id = PFD.t_pay_bill_f_id AND PFD.f_sys0_del_state = 0 AND PFD.f_total_price>=0
+		<if test="feeType != null and !feeType.equals('')">
+			AND PFD.f_fee_type=#{feeType}
+		</if>
+		LEFT JOIN t_mr_pay_bill_record MPBR ON MPBR.t_property_fee_detail_f_id=PFD.f_id AND MPBR.f_sys0_del_state=0
+		LEFT JOIN t_property_gb_ad PGA ON PGA.f_gb_id = 0 AND PGA.f_sys0_del_state = 0
+		LEFT JOIN t_comm_sys_para CSP1 ON CSP1.f_sys_para_code = 'PropertyGbAdBaseUrl'
+		LEFT JOIN t_comm_sys_para CSP2 ON CSP2.f_sys_para_code = 'FileServerConfig'
+		WHERE 1=1
+		AND PB.f_sys0_del_state = 0
+		AND PB.f_id IN
+		<foreach collection="payBillIdList" item="payBillId" open="(" close=")" separator=",">
+			#{payBillId}
+		</foreach>
+
+		UNION
+
+		SELECT
+		PB.f_id,
+		PFD.f_fee_type,
+		MPBR.t_mr_fee_item_f_id,
+		true AS owe,
+		0/*PB.f_last_unpaid/100 v509抄表往月欠费存储在t_property_fee_detail中，不在存储在t_pay_bil中了*/ f_last_unpaid,
+		PB.f_is_pay AS isPay,
+		CONCAT(GB.f_name, '-', B.f_name, '-', RR.f_num) AS customerName,
+		PB.f_bill_type_name AS billTypeName,
+		IF(PB.f_paytime_type=1, DATE_FORMAT(IFNULL(PB.f_bill_month, PB.f_month), '%Y年%m月'), CONCAT(left(PB.f_bill_month_start, 7), '~', left(PB.f_bill_month_end, 7))) AS `month`,
+		DATE_FORMAT(PB.f_sys0_upd_time, '%Y-%m-%d %H:%i:%s') AS payTime,
+		CONCAT(PFD.f_name, IF(PFD.f_fee_type=1, CONCAT('-', PFD.f_mr_name), '')) AS name,
+		PFD.f_total_price*IF(PFD.f_fee_type=2, IFNULL(PFD.f_bill_month_size, 1), 1)/100 AS totalMoney,
+		DATE_FORMAT(now() , '%Y-%m-%d') `now`,
+		PC.f_name pcName,
+		CONCAT(
+		LEFT (
+		CSP2.f_sys_para_value,
+		LOCATE(';', CSP2.f_sys_para_value) - 1
+		),
+		CSP1.f_sys_para_value,
+		PGA.f_icon
+		) adIconUrl,
+		PFD.f_id pfdId,
+		null mrPriceList
+		FROM
+		t_group_building_bill_cycle GBBC
+		INNER JOIN t_pay_bill PB ON PB.t_bill_cycle_id = GBBC.f_id AND PB.f_sys0_del_state = 0
+		LEFT JOIN t_real_room RR ON RR.f_id = PB.t_real_room_f_id AND RR.f_sys0_del_state = 0
+		LEFT JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0
+		LEFT JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id AND GB.f_sys0_del_state = 0
+		LEFT JOIN t_property_management PM ON PM.f_id=GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+		Left JOIN t_property_company PC ON PC.f_id=IFNULL(GB.t_property_company_f_id, PM.t_property_company_f_id) AND PC.f_sys0_del_state = 0
+		INNER JOIN t_property_fee_detail_unpaid PFDU ON PFDU.t_pay_bill_id = PB.f_id
+		INNER JOIN t_pay_bill PB2 ON PFDU.t_unpaid_pay_bill_id=PB2.f_id AND PB2.f_is_pay=2 AND PB2.f_sys0_del_state=0
+		INNER JOIN t_property_fee_detail PFD ON PFDU.t_unpaid_pay_bill_id = PFD.t_pay_bill_f_id
+		AND PFD.f_sys0_del_state = 0
+		AND PFD.f_total_price >= 0
+		<if test="feeType != null and !feeType.equals('')">
+			AND PFD.f_fee_type=#{feeType}
+		</if>
+		LEFT JOIN t_mr_pay_bill_record MPBR ON MPBR.t_property_fee_detail_f_id=PFD.f_id AND MPBR.f_sys0_del_state=0
+		LEFT JOIN t_property_gb_ad PGA ON PGA.f_gb_id = 0 AND PGA.f_sys0_del_state = 0
+		LEFT JOIN t_comm_sys_para CSP1 ON CSP1.f_sys_para_code = 'PropertyGbAdBaseUrl'
+		LEFT JOIN t_comm_sys_para CSP2 ON CSP2.f_sys_para_code = 'FileServerConfig'
+		WHERE 1=1
+		AND PB.f_sys0_del_state = 0
+		AND PB.f_id IN
+		<foreach collection="payBillIdList" item="payBillId" open="(" close=")" separator=",">
+			#{payBillId}
+		</foreach>
+		) _t
+		<include refid="commOrderWithNoTemplate"></include>
+	</sql>
+	<!-- 无模板 end -->
+
+	<!-- 有模板，账单打印（根据gbId） -->
+	<select id="selectByGbIdWithTemplate" parameterType="java.util.Map" resultMap="templateKey_Map">
+		<include refid="selectByGbIdWithTemplate"></include>
+	</select>
+
+	<!-- 无模板，账单打印（根据账单gbId） -->
+	<select id="selectByGbIdWithNoTemplate" parameterType="java.util.Map" resultMap="commPrintKey_Map">
+		<choose>
+			<when test="payBillIdList != null">
+				<include refid="commSelectWithNoTemplate2"></include>
+			</when>
+			<otherwise>
+				<include refid="commSelectWithNoTemplate1"></include>
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- ========================================以下为根据payBillId查询 -->
+	<!-- 有模板，账单打印（根据账单id） -->
+	<select id="selectByBillIdWithTemplate" parameterType="java.util.Map" resultMap="templateKey_Map">
+		<include refid="selectByGbIdWithTemplate"></include>
+	</select>
+
+	<!-- 无模板，账单打印（根据账单id） -->
+	<select id="selectByBillIdWithNoTemplate" parameterType="java.util.Map" resultMap="commPrintKey_Map">
+		<choose>
+			<when test="payBillIdList != null">
+				<include refid="commSelectWithNoTemplate2"></include>
+			</when>
+			<otherwise>
+				<include refid="commSelectWithNoTemplate1"></include>
+			</otherwise>
+		</choose>
+	</select>
+
+	<resultMap id="printTemplateHashMap" type="HashMap">
+		<id property="key" column="code"/>
+		<association property="value" resultMap="printTemplateEntityMap"/>
+	</resultMap>
+
+	<resultMap id="printTemplateEntityMap" type="com.cnfantasia.server.ms.payBill.entity.PrintTemplateEntity">
+		<result property="id" column="id"/>
+		<result property="serviceState" column="serviceState"/>
+		<result property="templateContent" column="templateContent"/>
+		<result property="code" column="code"/>
+	</resultMap>
+
+	<!-- 根据小区id查询打印模板 -->
+	<select id="selectPrintTemplateByGbId" parameterType="java.math.BigInteger" resultMap="printTemplateHashMap" resultOrdered="true">
+		SELECT
+		PC.f_id id,
+		PC.f_service_state serviceState,
+		PC.f_template_content templateContent,
+		PIT.f_code `code`
+		FROM
+		t_print_config PC
+		INNER JOIN t_print_init_template PIT ON PIT.f_id = PC.t_print_init_template_f_id
+		AND PIT.f_sys0_del_state = 0
+		WHERE
+		PC.t_group_building_f_id = #{gbId}
+		AND PC.f_sys0_del_state = 0
+	</select>
+
+	<!-- 将小区模板设置为f_service_state=1 -->
+	<update id="updatePrintTemplateStopService" parameterType="java.math.BigInteger">
+		update t_print_config set f_service_state=1, f_sys0_upd_time=now() where t_group_building_f_id=#{gbId}
+	</update>
+
+</mapper>

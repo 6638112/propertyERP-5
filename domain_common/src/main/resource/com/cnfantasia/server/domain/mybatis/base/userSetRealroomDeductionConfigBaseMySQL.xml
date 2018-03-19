@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户房间划扣配置 t_user_set_realroom_deduction_config -->
+<mapper namespace="userSetRealroomDeductionConfigBase">
+	<resultMap type="UserSetRealroomDeductionConfig" id="userSetRealroomDeductionConfigBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_user_f_id" javaType="java.math.BigInteger" property="tUserFId"/>  <!-- 购买用户id -->        <result column="t_real_room_f_id" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->        <result column="f_open_state" javaType="java.lang.Integer" property="openState"/>  <!-- 开启状态 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="UserSetRealroomDeductionConfig" id="userSetRealroomDeductionConfigExtendMap" extends="userSetRealroomDeductionConfigBaseMap">
+	</resultMap>
+	<resultMap type="UserSetRealroomDeductionConfig" id="userSetRealroomDeductionConfigBaseMap_AppendTable">
+        <id column="USRDCid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="USRDCtUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!-- 购买用户id -->        <result column="USRDCtRealRoomFId" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->        <result column="USRDCopenState" javaType="java.lang.Integer" property="openState"/>  <!-- 开启状态 -->        <result column="USRDCsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="USRDCsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="USRDCsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="USRDCsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="USRDCsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="USRDCsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="USRDCsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="UserSetRealroomDeductionConfig" id="userSetRealroomDeductionConfigBaseMap_AppendTable1">
+        <id column="USRDC1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="USRDC1tUserFId" javaType="java.math.BigInteger" property="tUserFId"/>  <!-- 购买用户id -->        <result column="USRDC1tRealRoomFId" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!--  -->        <result column="USRDC1openState" javaType="java.lang.Integer" property="openState"/>  <!-- 开启状态 -->        <result column="USRDC1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="USRDC1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="USRDC1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="USRDC1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="USRDC1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="USRDC1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="USRDC1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		USRDC.f_id,USRDC.t_user_f_id,USRDC.t_real_room_f_id,USRDC.f_open_state
+	</sql>
+	<sql id="queryHead_AppendTable">
+		USRDC.f_id as USRDCid,USRDC.t_user_f_id as USRDCtUserFId,USRDC.t_real_room_f_id as USRDCtRealRoomFId,USRDC.f_open_state as USRDCopenState
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		USRDC1.f_id as USRDC1id,USRDC1.t_user_f_id as USRDC1tUserFId,USRDC1.t_real_room_f_id as USRDC1tRealRoomFId,USRDC1.f_open_state as USRDC1openState
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (USRDC.f_id = #{id} ) </if>        <if test="tUserFId != null">  and (USRDC.t_user_f_id = #{tUserFId} ) </if>        <if test="tRealRoomFId != null">  and (USRDC.t_real_room_f_id = #{tRealRoomFId} ) </if>        <if test="openState != null">  and (USRDC.f_open_state = #{openState} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (USRDC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (USRDC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (USRDC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (USRDC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (USRDC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (USRDC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (USRDC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (USRDC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (USRDC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (USRDC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (USRDC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (USRDC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (USRDC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (USRDC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (USRDC.f_id = #{id} ) </if>        <if test="tUserFId != null and !tUserFId.equals('')  ">  and (USRDC.t_user_f_id = #{tUserFId} ) </if>        <if test="tRealRoomFId != null and !tRealRoomFId.equals('')  ">  and (USRDC.t_real_room_f_id = #{tRealRoomFId} ) </if>        <if test="openState != null and !openState.equals('')  ">  and (USRDC.f_open_state = #{openState} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (USRDC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (USRDC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (USRDC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (USRDC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (USRDC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (USRDC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (USRDC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (USRDC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (USRDC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (USRDC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (USRDC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (USRDC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (USRDC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (USRDC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="userSetRealroomDeductionConfigBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="userSetRealroomDeductionConfigBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="userSetRealroomDeductionConfigBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="userSetRealroomDeductionConfigBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_user_set_realroom_deduction_config USRDC    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(用户房间划扣配置)信息。 -->
+	<sql id="select_userSetRealroomDeductionConfig">
+		SELECT <include refid="userSetRealroomDeductionConfigBase.queryHead"/>
+		<include refid="userSetRealroomDeductionConfigBase.busiQueryCondition"/>
+		<include refid="userSetRealroomDeductionConfigBase.dimCheckSql"/>
+		ORDER BY USRDC.f_id DESC
+	</sql>
+	<select id="select_userSetRealroomDeductionConfig" parameterType="java.util.Map" resultMap="userSetRealroomDeductionConfigBase.userSetRealroomDeductionConfigExtendMap">
+		<include refid="userSetRealroomDeductionConfigBase.select_userSetRealroomDeductionConfig"/>
+	</select>
+	
+	<!-- 根据条件分页查询(用户房间划扣配置)信息  -->
+	<sql id="select_userSetRealroomDeductionConfig_withPage">
+		SELECT <include refid="userSetRealroomDeductionConfigBase.queryHead"/>
+		<include refid="userSetRealroomDeductionConfigBase.busiQueryCondition"/>
+		<include refid="userSetRealroomDeductionConfigBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_userSetRealroomDeductionConfig_withPage" resultMap="userSetRealroomDeductionConfigBase.userSetRealroomDeductionConfigExtendMap" parameterType="java.util.Map">
+		<include refid="userSetRealroomDeductionConfigBase.select_userSetRealroomDeductionConfig_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(用户房间划扣配置)信息。 -->
+	<sql id="select_userSetRealroomDeductionConfig_bySeqId">
+		SELECT <include refid="userSetRealroomDeductionConfigBase.queryHead"/>
+		<include refid="userSetRealroomDeductionConfigBase.busiQueryCondition"/>
+		 and USRDC.f_id = #{_parameter}
+	</sql>
+	<select id="select_userSetRealroomDeductionConfig_bySeqId" parameterType="java.math.BigInteger" resultMap="userSetRealroomDeductionConfigBase.userSetRealroomDeductionConfigBaseMap">
+		<include refid="userSetRealroomDeductionConfigBase.select_userSetRealroomDeductionConfig_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(用户房间划扣配置)记录数  -->
+	<sql id="select_userSetRealroomDeductionConfig_count">
+		SELECT COUNT(*)
+		<include refid="userSetRealroomDeductionConfigBase.busiQueryCount"/>
+		<include refid="userSetRealroomDeductionConfigBase.dimCheckSql"/>
+	</sql>
+	<select id="select_userSetRealroomDeductionConfig_count" resultType="java.lang.Integer">
+		<include refid="userSetRealroomDeductionConfigBase.select_userSetRealroomDeductionConfig_count"/>
+	</select>
+	
+	 <!-- 往(用户房间划扣配置)新增一条记录。 -->
+	 <sql id="insert_userSetRealroomDeductionConfig">
+		INSERT INTO t_user_set_realroom_deduction_config 
+		(f_id,t_user_f_id,t_real_room_f_id,f_open_state,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tUserFId},#{tRealRoomFId},#{openState},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_userSetRealroomDeductionConfig" parameterType="UserSetRealroomDeductionConfig">
+		<include refid="userSetRealroomDeductionConfigBase.insert_userSetRealroomDeductionConfig"/>
+    </insert>
+    
+	<!-- 批量新增(用户房间划扣配置)信息 -->
+    <insert id="insert_userSetRealroomDeductionConfig_Batch" parameterType="java.util.List">
+    	INSERT INTO t_user_set_realroom_deduction_config 
+		(f_id,t_user_f_id,t_real_room_f_id,f_open_state,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tUserFId},#{item.tRealRoomFId},#{item.openState},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(用户房间划扣配置)信息。 -->
+    <sql id="update_userSetRealroomDeductionConfig">
+		UPDATE t_user_set_realroom_deduction_config		<trim prefix="SET" prefixOverrides=","> 		<if test="tUserFId != null and !tUserFId.equals('') "> ,t_user_f_id=#{tUserFId}</if> 		<if test="tRealRoomFId != null and !tRealRoomFId.equals('') "> ,t_real_room_f_id=#{tRealRoomFId}</if> 		<if test="openState != null and !openState.equals('') "> ,f_open_state=#{openState}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_userSetRealroomDeductionConfig" parameterType="UserSetRealroomDeductionConfig">
+		<include refid="userSetRealroomDeductionConfigBase.update_userSetRealroomDeductionConfig"/>
+    </update>
+    
+    <!-- 批量更新(用户房间划扣配置)信息。 -->
+    <update id="update_userSetRealroomDeductionConfig_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_user_set_realroom_deduction_config		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.tRealRoomFId != null and !item.tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{item.tRealRoomFId}</if> 		<if test="item.openState != null and !item.openState.equals('')  "> ,f_open_state=#{item.openState}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(用户房间划扣配置)信息_逻辑删除。 -->
+    <sql id="delete_userSetRealroomDeductionConfig_Logic">
+		UPDATE t_user_set_realroom_deduction_config		<trim prefix="SET" prefixOverrides=","> 		<if test="tUserFId != null and !tUserFId.equals('')  "> ,t_user_f_id=#{tUserFId}</if> 		<if test="tRealRoomFId != null and !tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{tRealRoomFId}</if> 		<if test="openState != null and !openState.equals('')  "> ,f_open_state=#{openState}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_userSetRealroomDeductionConfig_Logic" parameterType="UserSetRealroomDeductionConfig">
+		<include refid="userSetRealroomDeductionConfigBase.delete_userSetRealroomDeductionConfig_Logic"/>
+    </update>
+    
+    <!-- 批量删除(用户房间划扣配置)信息_逻辑删除 -->
+    <update id="delete_userSetRealroomDeductionConfig_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_user_set_realroom_deduction_config		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tUserFId != null and !item.tUserFId.equals('')  "> ,t_user_f_id=#{item.tUserFId}</if> 		<if test="item.tRealRoomFId != null and !item.tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{item.tRealRoomFId}</if> 		<if test="item.openState != null and !item.openState.equals('')  "> ,f_open_state=#{item.openState}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(用户房间划扣配置)信息。 -->
+    <sql id="delete_userSetRealroomDeductionConfig">
+		DELETE FROM t_user_set_realroom_deduction_config WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_userSetRealroomDeductionConfig" parameterType="java.lang.String">
+		<include refid="userSetRealroomDeductionConfigBase.delete_userSetRealroomDeductionConfig"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(用户房间划扣配置)信息。 -->
+    <delete id="delete_userSetRealroomDeductionConfig_Batch" parameterType="java.util.List">
+		DELETE FROM t_user_set_realroom_deduction_config WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

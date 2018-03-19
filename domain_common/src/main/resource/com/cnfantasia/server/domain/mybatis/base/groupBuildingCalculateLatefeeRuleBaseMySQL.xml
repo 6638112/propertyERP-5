@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:小区滞纳金配置表 t_group_building_calculate_latefee_rule -->
+<mapper namespace="groupBuildingCalculateLatefeeRuleBase">
+	<resultMap type="GroupBuildingCalculateLatefeeRule" id="groupBuildingCalculateLatefeeRuleBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_gb_id" javaType="java.math.BigInteger" property="tGbId"/>  <!--  -->        <result column="f_calculate_type" javaType="java.lang.Integer" property="calculateType"/>  <!-- 计算方式（1按月计算，2按天计算） -->        <result column="f_calculate_days_by_month" javaType="java.lang.Long" property="calculateDaysByMonth"/>  <!-- 按月计算的天数 -->        <result column="f_calculate_start" javaType="java.lang.Long" property="calculateStart"/>  <!-- 开始计算时间(每月几号 -->        <result column="f_calculate_rate" javaType="java.lang.Double" property="calculateRate"/>  <!-- 滞纳金率利 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="GroupBuildingCalculateLatefeeRule" id="groupBuildingCalculateLatefeeRuleExtendMap" extends="groupBuildingCalculateLatefeeRuleBaseMap">
+	</resultMap>
+	<resultMap type="GroupBuildingCalculateLatefeeRule" id="groupBuildingCalculateLatefeeRuleBaseMap_AppendTable">
+        <id column="GBCLRid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="GBCLRtGbId" javaType="java.math.BigInteger" property="tGbId"/>  <!--  -->        <result column="GBCLRcalculateType" javaType="java.lang.Integer" property="calculateType"/>  <!-- 计算方式（1按月计算，2按天计算） -->        <result column="GBCLRcalculateDaysByMonth" javaType="java.lang.Long" property="calculateDaysByMonth"/>  <!-- 按月计算的天数 -->        <result column="GBCLRcalculateStart" javaType="java.lang.Long" property="calculateStart"/>  <!-- 开始计算时间(每月几号 -->        <result column="GBCLRcalculateRate" javaType="java.lang.Double" property="calculateRate"/>  <!-- 滞纳金率利 -->        <result column="GBCLRsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="GBCLRsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="GBCLRsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="GBCLRsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="GBCLRsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="GBCLRsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="GBCLRsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="GroupBuildingCalculateLatefeeRule" id="groupBuildingCalculateLatefeeRuleBaseMap_AppendTable1">
+        <id column="GBCLR1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="GBCLR1tGbId" javaType="java.math.BigInteger" property="tGbId"/>  <!--  -->        <result column="GBCLR1calculateType" javaType="java.lang.Integer" property="calculateType"/>  <!-- 计算方式（1按月计算，2按天计算） -->        <result column="GBCLR1calculateDaysByMonth" javaType="java.lang.Long" property="calculateDaysByMonth"/>  <!-- 按月计算的天数 -->        <result column="GBCLR1calculateStart" javaType="java.lang.Long" property="calculateStart"/>  <!-- 开始计算时间(每月几号 -->        <result column="GBCLR1calculateRate" javaType="java.lang.Double" property="calculateRate"/>  <!-- 滞纳金率利 -->        <result column="GBCLR1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="GBCLR1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="GBCLR1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="GBCLR1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="GBCLR1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="GBCLR1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="GBCLR1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		GBCLR.f_id,GBCLR.t_gb_id,GBCLR.f_calculate_type,GBCLR.f_calculate_days_by_month,GBCLR.f_calculate_start,GBCLR.f_calculate_rate
+	</sql>
+	<sql id="queryHead_AppendTable">
+		GBCLR.f_id as GBCLRid,GBCLR.t_gb_id as GBCLRtGbId,GBCLR.f_calculate_type as GBCLRcalculateType,GBCLR.f_calculate_days_by_month as GBCLRcalculateDaysByMonth,GBCLR.f_calculate_start as GBCLRcalculateStart,GBCLR.f_calculate_rate as GBCLRcalculateRate
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		GBCLR1.f_id as GBCLR1id,GBCLR1.t_gb_id as GBCLR1tGbId,GBCLR1.f_calculate_type as GBCLR1calculateType,GBCLR1.f_calculate_days_by_month as GBCLR1calculateDaysByMonth,GBCLR1.f_calculate_start as GBCLR1calculateStart,GBCLR1.f_calculate_rate as GBCLR1calculateRate
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (GBCLR.f_id = #{id} ) </if>        <if test="tGbId != null">  and (GBCLR.t_gb_id = #{tGbId} ) </if>        <if test="calculateType != null">  and (GBCLR.f_calculate_type = #{calculateType} ) </if>        <if test="calculateDaysByMonth != null">  and (GBCLR.f_calculate_days_by_month = #{calculateDaysByMonth} ) </if>        <if test="calculateStart != null">  and (GBCLR.f_calculate_start = #{calculateStart} ) </if>        <if test="calculateRate != null">  and (GBCLR.f_calculate_rate = #{calculateRate} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (GBCLR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (GBCLR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (GBCLR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (GBCLR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (GBCLR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (GBCLR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (GBCLR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (GBCLR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (GBCLR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (GBCLR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (GBCLR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (GBCLR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (GBCLR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (GBCLR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (GBCLR.f_id = #{id} ) </if>        <if test="tGbId != null and !tGbId.equals('')  ">  and (GBCLR.t_gb_id = #{tGbId} ) </if>        <if test="calculateType != null and !calculateType.equals('')  ">  and (GBCLR.f_calculate_type = #{calculateType} ) </if>        <if test="calculateDaysByMonth != null and !calculateDaysByMonth.equals('')  ">  and (GBCLR.f_calculate_days_by_month = #{calculateDaysByMonth} ) </if>        <if test="calculateStart != null and !calculateStart.equals('')  ">  and (GBCLR.f_calculate_start = #{calculateStart} ) </if>        <if test="calculateRate != null and !calculateRate.equals('')  ">  and (GBCLR.f_calculate_rate = #{calculateRate} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (GBCLR.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (GBCLR.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (GBCLR.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (GBCLR.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (GBCLR.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (GBCLR.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (GBCLR.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (GBCLR.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (GBCLR.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (GBCLR.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (GBCLR.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (GBCLR.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (GBCLR.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (GBCLR.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="groupBuildingCalculateLatefeeRuleBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="groupBuildingCalculateLatefeeRuleBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="groupBuildingCalculateLatefeeRuleBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="groupBuildingCalculateLatefeeRuleBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_group_building_calculate_latefee_rule GBCLR    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(小区滞纳金配置表)信息。 -->
+	<sql id="select_groupBuildingCalculateLatefeeRule">
+		SELECT <include refid="groupBuildingCalculateLatefeeRuleBase.queryHead"/>
+		<include refid="groupBuildingCalculateLatefeeRuleBase.busiQueryCondition"/>
+		<include refid="groupBuildingCalculateLatefeeRuleBase.dimCheckSql"/>
+		ORDER BY GBCLR.f_id DESC
+	</sql>
+	<select id="select_groupBuildingCalculateLatefeeRule" parameterType="java.util.Map" resultMap="groupBuildingCalculateLatefeeRuleBase.groupBuildingCalculateLatefeeRuleExtendMap">
+		<include refid="groupBuildingCalculateLatefeeRuleBase.select_groupBuildingCalculateLatefeeRule"/>
+	</select>
+	
+	<!-- 根据条件分页查询(小区滞纳金配置表)信息  -->
+	<sql id="select_groupBuildingCalculateLatefeeRule_withPage">
+		SELECT <include refid="groupBuildingCalculateLatefeeRuleBase.queryHead"/>
+		<include refid="groupBuildingCalculateLatefeeRuleBase.busiQueryCondition"/>
+		<include refid="groupBuildingCalculateLatefeeRuleBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_groupBuildingCalculateLatefeeRule_withPage" resultMap="groupBuildingCalculateLatefeeRuleBase.groupBuildingCalculateLatefeeRuleExtendMap" parameterType="java.util.Map">
+		<include refid="groupBuildingCalculateLatefeeRuleBase.select_groupBuildingCalculateLatefeeRule_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(小区滞纳金配置表)信息。 -->
+	<sql id="select_groupBuildingCalculateLatefeeRule_bySeqId">
+		SELECT <include refid="groupBuildingCalculateLatefeeRuleBase.queryHead"/>
+		<include refid="groupBuildingCalculateLatefeeRuleBase.busiQueryCondition"/>
+		 and GBCLR.f_id = #{_parameter}
+	</sql>
+	<select id="select_groupBuildingCalculateLatefeeRule_bySeqId" parameterType="java.math.BigInteger" resultMap="groupBuildingCalculateLatefeeRuleBase.groupBuildingCalculateLatefeeRuleBaseMap">
+		<include refid="groupBuildingCalculateLatefeeRuleBase.select_groupBuildingCalculateLatefeeRule_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(小区滞纳金配置表)记录数  -->
+	<sql id="select_groupBuildingCalculateLatefeeRule_count">
+		SELECT COUNT(*)
+		<include refid="groupBuildingCalculateLatefeeRuleBase.busiQueryCount"/>
+		<include refid="groupBuildingCalculateLatefeeRuleBase.dimCheckSql"/>
+	</sql>
+	<select id="select_groupBuildingCalculateLatefeeRule_count" resultType="java.lang.Integer">
+		<include refid="groupBuildingCalculateLatefeeRuleBase.select_groupBuildingCalculateLatefeeRule_count"/>
+	</select>
+	
+	 <!-- 往(小区滞纳金配置表)新增一条记录。 -->
+	 <sql id="insert_groupBuildingCalculateLatefeeRule">
+		INSERT INTO t_group_building_calculate_latefee_rule 
+		(f_id,t_gb_id,f_calculate_type,f_calculate_days_by_month,f_calculate_start,f_calculate_rate,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tGbId},#{calculateType},#{calculateDaysByMonth},#{calculateStart},#{calculateRate},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_groupBuildingCalculateLatefeeRule" parameterType="GroupBuildingCalculateLatefeeRule">
+		<include refid="groupBuildingCalculateLatefeeRuleBase.insert_groupBuildingCalculateLatefeeRule"/>
+    </insert>
+    
+	<!-- 批量新增(小区滞纳金配置表)信息 -->
+    <insert id="insert_groupBuildingCalculateLatefeeRule_Batch" parameterType="java.util.List">
+    	INSERT INTO t_group_building_calculate_latefee_rule 
+		(f_id,t_gb_id,f_calculate_type,f_calculate_days_by_month,f_calculate_start,f_calculate_rate,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tGbId},#{item.calculateType},#{item.calculateDaysByMonth},#{item.calculateStart},#{item.calculateRate},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(小区滞纳金配置表)信息。 -->
+    <sql id="update_groupBuildingCalculateLatefeeRule">
+		UPDATE t_group_building_calculate_latefee_rule		<trim prefix="SET" prefixOverrides=","> 		<if test="tGbId != null and !tGbId.equals('') "> ,t_gb_id=#{tGbId}</if> 		<if test="calculateType != null and !calculateType.equals('') "> ,f_calculate_type=#{calculateType}</if> 		<if test="calculateDaysByMonth != null and !calculateDaysByMonth.equals('') "> ,f_calculate_days_by_month=#{calculateDaysByMonth}</if> 		<if test="calculateStart != null and !calculateStart.equals('') "> ,f_calculate_start=#{calculateStart}</if> 		<if test="calculateRate != null and !calculateRate.equals('') "> ,f_calculate_rate=#{calculateRate}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_groupBuildingCalculateLatefeeRule" parameterType="GroupBuildingCalculateLatefeeRule">
+		<include refid="groupBuildingCalculateLatefeeRuleBase.update_groupBuildingCalculateLatefeeRule"/>
+    </update>
+    
+    <!-- 批量更新(小区滞纳金配置表)信息。 -->
+    <update id="update_groupBuildingCalculateLatefeeRule_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_group_building_calculate_latefee_rule		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if> 		<if test="item.calculateType != null and !item.calculateType.equals('')  "> ,f_calculate_type=#{item.calculateType}</if> 		<if test="item.calculateDaysByMonth != null and !item.calculateDaysByMonth.equals('')  "> ,f_calculate_days_by_month=#{item.calculateDaysByMonth}</if> 		<if test="item.calculateStart != null and !item.calculateStart.equals('')  "> ,f_calculate_start=#{item.calculateStart}</if> 		<if test="item.calculateRate != null and !item.calculateRate.equals('')  "> ,f_calculate_rate=#{item.calculateRate}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(小区滞纳金配置表)信息_逻辑删除。 -->
+    <sql id="delete_groupBuildingCalculateLatefeeRule_Logic">
+		UPDATE t_group_building_calculate_latefee_rule		<trim prefix="SET" prefixOverrides=","> 		<if test="tGbId != null and !tGbId.equals('')  "> ,t_gb_id=#{tGbId}</if> 		<if test="calculateType != null and !calculateType.equals('')  "> ,f_calculate_type=#{calculateType}</if> 		<if test="calculateDaysByMonth != null and !calculateDaysByMonth.equals('')  "> ,f_calculate_days_by_month=#{calculateDaysByMonth}</if> 		<if test="calculateStart != null and !calculateStart.equals('')  "> ,f_calculate_start=#{calculateStart}</if> 		<if test="calculateRate != null and !calculateRate.equals('')  "> ,f_calculate_rate=#{calculateRate}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_groupBuildingCalculateLatefeeRule_Logic" parameterType="GroupBuildingCalculateLatefeeRule">
+		<include refid="groupBuildingCalculateLatefeeRuleBase.delete_groupBuildingCalculateLatefeeRule_Logic"/>
+    </update>
+    
+    <!-- 批量删除(小区滞纳金配置表)信息_逻辑删除 -->
+    <update id="delete_groupBuildingCalculateLatefeeRule_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_group_building_calculate_latefee_rule		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tGbId != null and !item.tGbId.equals('')  "> ,t_gb_id=#{item.tGbId}</if> 		<if test="item.calculateType != null and !item.calculateType.equals('')  "> ,f_calculate_type=#{item.calculateType}</if> 		<if test="item.calculateDaysByMonth != null and !item.calculateDaysByMonth.equals('')  "> ,f_calculate_days_by_month=#{item.calculateDaysByMonth}</if> 		<if test="item.calculateStart != null and !item.calculateStart.equals('')  "> ,f_calculate_start=#{item.calculateStart}</if> 		<if test="item.calculateRate != null and !item.calculateRate.equals('')  "> ,f_calculate_rate=#{item.calculateRate}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(小区滞纳金配置表)信息。 -->
+    <sql id="delete_groupBuildingCalculateLatefeeRule">
+		DELETE FROM t_group_building_calculate_latefee_rule WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_groupBuildingCalculateLatefeeRule" parameterType="java.lang.String">
+		<include refid="groupBuildingCalculateLatefeeRuleBase.delete_groupBuildingCalculateLatefeeRule"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(小区滞纳金配置表)信息。 -->
+    <delete id="delete_groupBuildingCalculateLatefeeRule_Batch" parameterType="java.util.List">
+		DELETE FROM t_group_building_calculate_latefee_rule WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

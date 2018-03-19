@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户表 t_invite_reward_config -->
+<mapper namespace="inviteReward">
+    <!-- 查询注册新人是否已经领过验证门牌的奖励 -->
+	<select id="select_registerInviteRewardRecord_forCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT COUNT(IRR.f_id) FROM t_invite_reward_record IRR WHERE IRR.f_sys0_del_state=0
+		AND IRR.f_record_type=#{recordType}
+		AND EXISTS(
+			SELECT 1 FROM t_invite_reward_relation REL WHERE REL.f_sys0_del_state=0
+			AND IRR.t_invite_reward_relation_f_id = REL.f_id AND REL.t_register_user_f_id=#{tRegisterUserFId}
+		)
+    </select>
+    
+    <!-- 查询邀请手机号是否注册,返回注册的主账号 -->
+	<select id="select_user_id_for_invite_phone" parameterType="java.util.Map" resultType="java.math.BigInteger">
+    	SELECT 
+    		IF(LNBR.f_apply_user_id is null,LN.t_user_f_id,LNBR.f_apply_user_id) userId FROM t_login_no LN
+		LEFT JOIN t_login_no_bind_relation LNBR ON LNBR.f_apply_user_id = LN.t_user_f_id
+		WHERE LN.f_sys0_del_state=0
+    	<if test="userPhone != null and userPhone != '' "> AND LN.f_no = #{userPhone} </if>
+    	<if test="loginType != null and loginType != '' "> AND LN.f_type = #{loginType} </if>
+    	LIMIT 0,1
+    </select>
+    
+    <!-- 查询当前用户是否是玫瑰园小区用户 -->
+	<select id="select_user_isRoseGraden_forCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT COUNT(IRC.f_id) FROM t_invite_reward_config IRC 
+		WHERE IRC.f_sys0_del_state=0 AND IRC.f_invite_type=#{inviteType}
+		AND IRC.f_invite_code IN(
+			SELECT U.f_mobile FROM t_user U WHERE U.f_id=#{userId}
+		)
+    </select>
+</mapper>

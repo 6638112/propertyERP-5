@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:小区信息 t_group_building -->
+<mapper namespace="groupBuilding">
+	<resultMap type="com.cnfantasia.server.api.room.entity.GroupBuildingEntity" id="groupBuildingMap" extends="groupBuildingBase.groupBuildingBaseMap">
+		<!-- 物业管理信息 -->
+        <association column="t_property_management_f_id" javaType="com.cnfantasia.server.api.room.entity.PropertyManagementEntity" 
+        	property="propertyManagementEntity" select="propertyManagement.select_propertyManagement_bySeqId"/>
+        <!-- 小区信息 -->
+        <association column="t_block_f_id" javaType="com.cnfantasia.server.api.room.entity.AddressBlockEntity" 
+        	property="addressBlockEntity" select="addressBlock.select_addressBlock_bySeqId"/>
+	</resultMap>
+    
+    <!-- 根据序列号查询某个(小区信息)信息。 -->
+	<select id="select_groupBuilding_bySeqId" parameterType="java.math.BigInteger" resultMap="groupBuildingMap">
+		<include refid="groupBuildingBase.select_groupBuilding_bySeqId"/>
+	</select>
+	
+	<!-- 根据关键字搜索小区信息列表:返回包括 小区信息及所属城市信息 -->
+    <sql id="select_GroupBuildingDim_BySearchKey_Common">
+		FROM t_group_building GB 
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id AND AP.f_sys0_del_state = 0
+		WHERE 1=1
+		AND GB.f_sys0_del_state = 0
+		<if test="searchKey != null and searchKey != '' ">  
+            <![CDATA[ AND ( GB.f_name like CONCAT('%',#{searchKey},'%') OR GB.f_pinyin_name like CONCAT('%',#{searchKey},'%') ) ]]>
+        </if>
+        <if test="blockId != null and blockId != '' ">  and (AB.f_id = #{blockId} ) </if>
+		<if test="cityId != null and cityId != '' ">  and (AC.f_id = #{cityId} ) </if>
+		<if test="cityId == null or cityId == '' ">  
+			<if test="cityName != null and cityName != '' ">
+				and (AC.f_name like CONCAT('%',#{cityName},'%') )
+			</if>
+		</if>
+		AND (<!-- (GB.f_creater = #{userId}) or syl-del-2015-5-20 17:47:46 --> (GB.f_check_status = 1 or GB.f_check_status= 9 )) <!-- {"0":"待审核","1":"审核通过","2":"审核不通过","9":"无需审核"} -->
+		AND ( ISNULL(GB.f_source_type) OR (GB.f_source_type!=31) ) <!-- 数据来源类型=={"1":"运维平台录入","2":"手工搜集","11":"百度地图API","12":"深圳国土局一手房","13":"深圳国土局二手房","21":"美丽加","31":"彩之云"} -->
+    </sql>
+    <!-- <select id="select_GroupBuildingDim_BySearchKey" resultMap="commonRoom.groupBuildingMap_Search" parameterType="java.util.Map">
+    	SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>,
+    		<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+    	<include refid="select_GroupBuildingDim_BySearchKey_Common"/>
+    </select> -->
+    <select id="select_GroupBuildingDim_BySearchKey_WithPage" resultMap="commonRoom.groupBuildingMap_Search" parameterType="java.util.Map">
+    	SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>,
+		<include refid="addressBlockBase.queryHead_AppendTable"/>,
+		<include refid="addressCityBase.queryHead_AppendTable"/>,
+		<include refid="addressProvinceBase.queryHead_AppendTable"/>
+    	<include refid="select_GroupBuildingDim_BySearchKey_Common"/>
+    	ORDER BY CASE WHEN GB.f_sign_status= 1 THEN GB.f_cooperation_type ELSE -1 END DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+    </select>
+    <select id="select_GroupBuildingDim_BySearchKey_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT COUNT(0) 
+    	<include refid="select_GroupBuildingDim_BySearchKey_Common"/>
+    </select>
+    
+    <!-- 根据小区Id查询其下的所有楼栋和门牌 -->
+    <resultMap type="com.cnfantasia.server.api.room.entity.BuildingAndRealRoomListEntity" id="buildingAndRoomListMap" extends="buildingBase.buildingBaseMap_AppendTable">
+    	<collection property="realRroomList" resultMap="realRoomBase.realRoomBaseMap_AppendTable">
+    	</collection>
+    </resultMap>
+    <select id="select_BuildingAndRoomList_ByGroupBuildingId" resultMap="buildingAndRoomListMap">
+    	SELECT <include refid="buildingBase.queryHead_AppendTable"/>,<include refid="realRoomBase.queryHead_AppendTable"/>
+    	FROM t_building B 
+    		INNER JOIN t_real_room RR ON B.f_id = RR.t_building_f_id AND RR.f_sys0_del_state = 0
+    	WHERE 1=1
+    	AND B.f_sys0_del_state = 0
+    	AND B.t_group_building_f_id = #{_parameter}
+    	AND (B.f_check_status = 1 or B.f_check_status= 9 ) <!-- {"0":"待审核","1":"审核通过","2":"审核不通过","9":"无需审核"} -->
+    	AND (RR.f_check_status = 1 or RR.f_check_status= 9 ) <!-- {"0":"待审核","1":"审核通过","2":"审核不通过","9":"无需审核"} -->
+    	<!-- order by B.f_id, RR.f_unit_name, RR.f_num_tail -->
+    	order by B.f_name,RR.f_num
+    </select>
+    
+    
+    <!-- 小区信息 -->
+	<resultMap type="com.cnfantasia.server.api.room.entity.GroupBuildingEntity" id="groupBuildingEntityMap_Append"
+		extends="groupBuildingBase.groupBuildingBaseMap_AppendTable">
+		<result column="ext_haveSupport" javaType="java.lang.Integer" property="haveSupport"/><!-- 是否已支持 -->
+		<result column="ext_totalSupportCount" javaType="java.lang.Integer" property="totalSupportCount"/><!-- 总支持人数 -->
+		
+		<association property="addressBlockEntity" resultMap="commonRoom.addressBlockMap_Search"/>
+		<association property="propertyManagementEntity" resultMap="propertyManagementEntityMap_Append"/>
+	</resultMap>
+	<resultMap type="com.cnfantasia.server.api.room.entity.PropertyManagementEntity" id="propertyManagementEntityMap_Append"
+		extends="propertyManagementBase.propertyManagementBaseMap_AppendTable">
+	</resultMap>
+	
+	<!-- 根据小区Id查询对应的小区信息 -->
+	<select id="select_GroupBuildingEntity_ById" parameterType="java.util.Map" resultMap="groupBuildingEntityMap_Append">
+		SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>,<include refid="addressBlockBase.queryHead_AppendTable"/>
+   			,<include refid="addressCityBase.queryHead_AppendTable"/>,<include refid="addressProvinceBase.queryHead_AppendTable"/>
+   			,<include refid="propertyManagementBase.queryHead_AppendTable"/>
+   			,CASE WHEN ISNULL(S.f_id) THEN 2 ELSE 1 END AS ext_haveSupport <!-- 是否已经点支持，1是2否 -->
+   			,(SELECT CASE WHEN ISNULL(sum(CGD.f_total_support_count)) THEN 0 ELSE sum(CGD.f_total_support_count) END 
+				FROM t_common_gather_data CGD WHERE 1=1
+				AND CGD.f_target_type = 41  <!-- 41小区支持 --> 
+				AND CGD.f_target_id = GB.f_id
+				AND CGD.f_sys0_del_state = 0
+			) AS ext_totalSupportCount <!-- 支持的总人数 -->
+			<!-- ,ext_favour_count AS ext_totalSupportCount -->
+		FROM t_group_building GB
+			INNER JOIN (
+				t_address_block AB 
+				INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+				INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+			) ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+			LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+		
+			LEFT JOIN t_support S ON 
+				S.f_target_type = 41  <!-- 41小区支持 --> 
+				AND S.f_user_id = #{userId}
+				AND GB.f_id = S.f_target_id  
+				AND S.f_sys0_del_state = 0
+			<!-- LEFT JOIN
+				(SELECT f_target_id,COUNT(0) ext_favour_count 
+					FROM t_support S2 
+					WHERE 1=1 
+					AND S2.f_target_type = 41 
+					AND S2.f_sys0_del_state = 0 GROUP BY S2.f_target_id ) S2  
+			ON GB.f_id = S2.f_target_id  -->
+		
+		WHERE 1 = 1
+		AND GB.f_sys0_del_state = 0
+		AND GB.f_id = #{groupBuildingId}
+	</select>
+	
+	<select id="select_groupBuilding_info_by_block_city_province" parameterType="map" resultType="java.util.Map">
+		SELECT
+			ab.f_id blockId,
+			ab.f_name AS blockName,
+			ac.f_id cityId,
+			ac.f_name AS cityName,
+			ap.f_id provinceId,
+			ap.f_name AS provinceName
+		FROM
+			t_address_block ab
+		JOIN t_address_city ac ON ac.f_id = ab.t_city_f_id
+		JOIN t_address_province ap ON ap.f_id = ac.t_province_f_id
+		WHERE 
+		ab.f_name LIKE CONCAT('%', #{blockName}, '%')
+		AND ac.f_name LIKE CONCAT('%', #{cityName}, '%')
+		AND ap.f_name LIKE CONCAT('%', #{provinceName}, '%')
+    </select>
+    
+	<select id="select_groupBuilding_info_by_id" parameterType="java.math.BigInteger" resultType="java.util.Map">
+		SELECT
+			gb.f_id gbId,
+			gb.f_sign_status signStatus,
+			gb.f_name AS gbName,
+			ab.f_id blockId,
+			ab.f_name AS blockName,
+			ac.f_id cityId,
+			ac.f_name AS cityName,
+			ap.f_id provinceId,
+			ap.f_name AS provinceName
+		from t_group_building gb 
+		left join t_address_block ab on gb.t_block_f_id=ab.f_id
+		left join t_address_city ac on ab.t_city_f_id=ac.f_id
+		left join t_address_province ap on ac.t_province_f_id=ap.f_id
+		where gb.f_id=#{gbId}
+    </select>
+    
+    <select id="select_group_building_by_address" parameterType="java.util.Map" resultType="java.util.Map">
+    	select GB.f_id as gbId, GB.f_sign_status as signStatus
+    	FROM t_group_building GB 
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id AND AP.f_sys0_del_state = 0
+		WHERE 1=1
+		AND GB.f_sys0_del_state = 0
+        AND GB.f_name = #{gbName}
+        and AB.f_id = #{block} 
+		and (AC.f_id = #{city}
+		AND (GB.f_check_status = 1 or GB.f_check_status= 9 ) <!-- {"0":"待审核","1":"审核通过","2":"审核不通过","9":"无需审核"} -->
+		AND (ISNULL(GB.f_source_type) OR (GB.f_source_type!=31)))
+    </select>
+	
+	<update id="updateGroupBuildingBillAvgBacth" parameterType="java.util.Map">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+			UPDATE t_group_building SET f_bill_amt_avg=#{item.billAmtAvg}
+			WHERE 1=1  
+			AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 按省市区小区名来查找,精准查找 -->
+	<select id="getGroupBuildingByLocationCondtion1" parameterType="map" resultType="java.math.BigInteger">
+		SELECT
+			gb.f_id
+		FROM
+			t_group_building gb
+		JOIN t_address_block ab ON ab.f_id = gb.t_block_f_id
+		JOIN t_address_city ac ON ac.f_id = ab.t_city_f_id
+		JOIN t_address_province ap ON ap.f_id = ac.t_province_f_id
+		WHERE
+			gb.f_sys0_del_state = 0
+		AND gb.f_check_status IN (1, 9)
+		AND gb.f_name LIKE CONCAT('%', #{gbName}, '%')
+		AND ab.f_name LIKE CONCAT('%', #{blockName}, '%')
+		AND ac.f_name LIKE CONCAT('%', #{cityName}, '%')
+		AND ap.f_name LIKE CONCAT('%', #{provinceName}, '%')
+		limit 1;
+	</select>
+	
+	  <!-- 按省市区小区名来查找，查找本区域有签约的小区 -->
+	<select id="getGroupBuildingByLocationCondtion2" parameterType="map" resultType="java.math.BigInteger">	
+		SELECT
+			gb.f_id
+		FROM
+			t_group_building gb
+		JOIN t_address_block ab ON ab.f_id = gb.t_block_f_id
+		JOIN t_address_city ac ON ac.f_id = ab.t_city_f_id
+		JOIN t_address_province ap ON ap.f_id = ac.t_province_f_id
+		WHERE
+			gb.f_sys0_del_state = 0
+		AND gb.f_check_status IN (1, 9) and gb.f_sign_status = 1
+		AND ab.f_name LIKE CONCAT('%', #{blockName}, '%')
+		AND ac.f_name LIKE CONCAT('%', #{cityName}, '%')
+		AND ap.f_name LIKE CONCAT('%', #{provinceName}, '%')
+		limit 1;
+	</select>
+	
+	 <!-- 按省市区小区名来查找，查找本市有签约的小区 -->
+	<select id="getGroupBuildingByLocationCondtion3" parameterType="map" resultType="java.math.BigInteger">		
+		SELECT
+			gb.f_id
+		FROM
+			t_group_building gb
+		JOIN t_address_block ab ON ab.f_id = gb.t_block_f_id
+		JOIN t_address_city ac ON ac.f_id = ab.t_city_f_id
+		JOIN t_address_province ap ON ap.f_id = ac.t_province_f_id
+		WHERE
+			gb.f_sys0_del_state = 0
+		AND gb.f_check_status IN (1, 9) and gb.f_sign_status = 1
+		AND ac.f_name LIKE CONCAT('%', #{cityName}, '%')
+		AND ap.f_name LIKE CONCAT('%', #{provinceName}, '%')
+		limit 1;
+	</select>
+
+	<select id="getNearbyGbs" parameterType="map" resultType="com.cnfantasia.server.api.room.entity.SimpleGbInfo">
+		select fnGetdistance(#{lng},#{lat},gb.f_baidu_locat_lng,gb.f_baidu_locat_lat) as distance, gb.f_id gbId, gb.f_name gbName, gb.f_sign_status signStatus,
+		ab.f_id blockId, ab.f_name blockName, ac.f_id cityId, ac.f_name cityName, ap.f_id provinceId, ap.f_name provinceName
+		from t_group_building gb
+		inner join t_address_block ab on ab.f_sys0_del_state = 0 and ab.f_id = gb.t_block_f_id
+		inner join t_address_city ac on ac.f_sys0_del_state = 0 and ac.f_id = ab.t_city_f_id
+		inner join t_address_province ap on ap.f_sys0_del_state = 0 and ap.f_id = ac.t_province_f_id
+		where gb.f_sys0_del_state = 0
+		and gb.f_baidu_locat_lng &lt; #{lng} + 0.05 and gb.f_baidu_locat_lng > #{lng} - 0.05
+		and gb.f_baidu_locat_lat &lt; #{lat} + 0.05 and gb.f_baidu_locat_lat > #{lat} - 0.05
+		AND (gb.f_check_status = 1 or gb.f_check_status= 9)
+		and (gb.f_source_type is null or gb.f_source_type!=31)
+		order by signStatus desc, distance, gb.f_id desc
+		limit 10
+	</select>
+
+	<select id="getRecentGbs" parameterType="map" resultType="com.cnfantasia.server.api.room.entity.SimpleGbInfo">
+		select DISTINCT gb.f_id gbId, gb.f_name gbName, gb.f_sign_status signStatus, ab.f_id blockId, ab.f_name blockName, ac.f_id cityId, ac.f_name cityName, ap.f_id provinceId, ap.f_name provinceName
+		from t_user_switch_gb sg
+		inner join t_group_building gb on gb.f_sys0_del_state = 0 and gb.f_id = sg.f_gb_id
+		inner join t_address_block ab on ab.f_sys0_del_state = 0 and ab.f_id = gb.t_block_f_id
+		inner join t_address_city ac on ac.f_sys0_del_state = 0 and ac.f_id = ab.t_city_f_id
+		inner join t_address_province ap on ap.f_sys0_del_state = 0 and ap.f_id = ac.t_province_f_id
+		where sg.f_sys0_del_state = 0 and sg.f_user_id = #{_parameter}
+		order by sg.f_id desc limit 3
+	</select>
+
+	<select id="getDefaultGbInfo" parameterType="map" resultType="com.cnfantasia.server.api.room.entity.SimpleGbInfo">
+		select gb.f_id gbId, gb.f_name gbName, gb.f_sign_status signStatus, ab.f_id blockId, ab.f_name blockName, ac.f_id cityId, ac.f_name cityName, ap.f_id provinceId, ap.f_name provinceName
+		from t_user u
+		inner join t_room r on r.f_id = u.f_default_room_id and r.f_sys0_del_state = 0
+		inner join t_real_room rr on rr.f_id = r.t_real_room_f_id and r.f_sys0_del_state = 0
+		inner join t_building b on b.f_id = rr.t_building_f_id and b.f_sys0_del_state = 0
+		inner join t_group_building gb on gb.f_sys0_del_state = 0 and gb.f_id = b.t_group_building_f_id
+		inner join t_address_block ab on ab.f_sys0_del_state = 0 and ab.f_id = gb.t_block_f_id
+		inner join t_address_city ac on ac.f_sys0_del_state = 0 and ac.f_id = ab.t_city_f_id
+		inner join t_address_province ap on ap.f_sys0_del_state = 0 and ap.f_id = ac.t_province_f_id
+		where u.f_id = #{_parameter} and gb.f_id != -1
+	</select>
+</mapper>

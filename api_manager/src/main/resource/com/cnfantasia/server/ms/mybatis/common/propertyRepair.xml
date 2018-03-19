@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 物业报修 -->
+<mapper namespace="propertyRepair">
+
+	<resultMap id="propertyRepairTypeMap" type="com.cnfantasia.server.ms.propertyRepair.entity.PropertyRepairTypeEntity" extends="propertyRepairTypeBase.propertyRepairTypeBaseMap_AppendTable">
+		<result column="pmName" property="pmName" javaType="string"/>
+		<result column="pmId" property="pmId" javaType="java.math.BigInteger"/>
+	</resultMap>
+	
+	<!-- 查询小区下所有的保修类型 -->
+	<select id="select_PropertyRepairType_List_ByGbId" resultMap="propertyRepairTypeMap">
+		select PM.f_name as pmName, PM.f_id pmId, <include refid="propertyRepairTypeBase.queryHead_AppendTable" />
+		FROM t_property_repair_type PRT
+		LEFT JOIN t_property_management PM ON PM.f_id = PRT.t_property_management_f_id AND PM.f_sys0_del_state = 0
+		LEFT JOIN t_group_building GB ON GB.t_property_management_f_id = PM.f_id AND GB.f_sys0_del_state = 0
+    	WHERE 1=1 
+    	AND PRT.f_sys0_del_state = 0
+    	AND GB.f_id = #{gbId}
+	</select>
+	
+	<!-- 根据登录用户查询下所有的保修类型 -->
+	<select id="select_RepairerType_List_byOmsUser" parameterType="map" resultMap="propertyRepairTypeMap">
+		<if test="gbIdList !=null">
+			select distinct PM.f_name as pmName, PM.f_id pmId, <include refid="propertyRepairTypeBase.queryHead_AppendTable" />
+			FROM t_property_repair_type PRT
+			LEFT JOIN t_property_management PM ON PM.f_id = PRT.t_property_management_f_id AND PM.f_sys0_del_state = 0
+			left join t_group_building gb on gb.t_property_management_f_id = PM.f_id and gb.f_sys0_del_state = 0
+		   	WHERE 1=1 
+		   	AND PRT.f_sys0_del_state = 0
+		   	<include refid="permi.dataPermissionCondition" />
+		</if>
+		<if test="gbIdList ==null and isadmin==0 and isPmUser==1"> <!-- 管理处用户 -->
+			select PM.f_name as pmName, PM.f_id pmId, <include refid="propertyRepairTypeBase.queryHead_AppendTable" />
+			FROM t_property_repair_type PRT
+			LEFT JOIN t_property_management PM ON PM.f_id = PRT.t_property_management_f_id AND PM.f_sys0_del_state = 0
+			LEFT JOIN t_property_management_has_oms_user PMHOU ON PMHOU.t_property_management_f_id = PM.f_id AND PMHOU.f_sys0_del_state = 0
+			LEFT JOIN t_oms_user OU ON OU.f_id = PMHOU.t_oms_user_f_id AND OU.f_sys0_del_state = 0
+		   	WHERE 1=1 
+		   	AND PRT.f_sys0_del_state = 0
+		   	AND OU.f_id = #{omsUserId}
+    	</if>
+    	
+    	<if test="gbIdList ==null and isadmin==0 and isPmUser==0"> <!-- 物业公司用户 -->
+    		select PM.f_name as pmName,PM.f_id pmId, <include refid="propertyRepairTypeBase.queryHead_AppendTable" />
+			FROM t_property_repair_type PRT
+			LEFT JOIN t_property_management PM ON PM.f_id = PRT.t_property_management_f_id AND PM.f_sys0_del_state = 0
+			LEFT JOIN t_property_company PC ON PC.f_id = PM.t_property_company_f_id AND PC.f_sys0_del_state = 0
+		   	WHERE 1=1 
+		   	AND PRT.f_sys0_del_state = 0
+		   	AND PC.f_admin_id = #{omsUserId}
+    	</if>
+    	
+    	<if test="gbIdList ==null and isadmin==1"> <!-- 解放区后台管理用户，要看到所有数据 -->
+    		select PM.f_name as pmName,PM.f_id pmId, <include refid="propertyRepairTypeBase.queryHead_AppendTable" />
+			FROM t_property_repair_type PRT
+			LEFT JOIN t_property_management PM ON PM.f_id = PRT.t_property_management_f_id AND PM.f_sys0_del_state = 0
+		   	WHERE 1=1 
+		   	AND PRT.f_sys0_del_state = 0
+    	</if>
+    	
+    	<if test="prtName!=null and !prtName.equals('')">AND PRT.f_name = #{prtName}</if>
+    	order by PRT.f_id desc
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<!-- 根据登录用户查询下所管辖的管理处 -->
+	<select id="select_PropertyManagement_List_byOmsUser" parameterType="OmsUser" resultMap="propertyManagementBase.propertyManagementBaseMap_AppendTable">
+		<if test="isadmin==0 and isPmUser==1"> <!-- 管理处用户 -->
+			select <include refid="propertyManagementBase.queryHead_AppendTable" />
+			FROM t_property_management PM 
+			LEFT JOIN t_property_management_has_oms_user PMHOU ON PMHOU.t_property_management_f_id = PM.f_id AND PMHOU.f_sys0_del_state = 0
+		   	WHERE PM.f_sys0_del_state = 0
+		   	AND (PMHOU.t_oms_user_f_id = #{id} or PMHOU.t_oms_user_f_id = #{parentUserId})
+    	</if>
+    	
+    	<if test="isadmin==0 and isPmUser==0"> <!-- 物业公司用户 -->
+    		select <include refid="propertyManagementBase.queryHead_AppendTable" />
+			FROM t_property_management PM 
+			LEFT JOIN t_property_company PC ON PC.f_id = PM.t_property_company_f_id AND PC.f_sys0_del_state = 0
+		   	WHERE 1=1 
+		   	AND PM.f_sys0_del_state = 0
+		   	<if test="isSubUser==0"> <!-- 物业公司 -->
+		   		AND PC.f_admin_id = #{id}
+		   	</if>
+		   	<if test="isSubUser==1"> <!-- 物业公司子账号 -->
+		   		AND PC.f_admin_id = #{parentUserId}
+		   	</if>
+    	</if>
+    	
+    	<if test="isadmin==1"> <!-- 解放区后台管理用户，要看到所有数据 -->
+    		select <include refid="propertyManagementBase.queryHead_AppendTable" />
+			FROM t_property_management PM 
+		   	WHERE 1=1 
+		   	AND PM.f_sys0_del_state = 0
+    	</if>
+	</select>
+	
+	<!-- 根据后台账号查询所管辖的小区报修配置信息 -->
+	<select id="select_PropertyRepairConfig_List_byOmsUser" parameterType="map" resultType="com.cnfantasia.server.ms.propertyRepair.entity.PropertyRepairConfig">
+		select PM.f_name pmName,GB.f_id gbId, GB.f_name gbName, if(_tmp.supportCount is null, 0, _tmp.supportCount) supportCount, if(GBHTPS.f_id is null, 0, 1) as openStatus
+		FROM t_group_building GB
+		LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+		<if test="isPmUser.equals(1)">
+		LEFT JOIN t_property_management_has_oms_user PMHOU ON PMHOU.t_property_management_f_id = PM.f_id AND PMHOU.f_sys0_del_state = 0
+		LEFT JOIN t_oms_user OU ON OU.f_id = PMHOU.t_oms_user_f_id and OU.f_sys0_del_state = 0
+    	</if>
+    	<if test="isPmUser.equals(0)">
+		LEFT JOIN t_property_company PC ON PC.f_id = PM.t_property_company_f_id AND PC.f_id = GB.t_property_company_f_id  AND PC.f_sys0_del_state = 0 
+		LEFT JOIN t_oms_user OU ON OU.f_id = PC.f_admin_id and OU.f_sys0_del_state = 0
+    	</if>
+		LEFT JOIN (select f_target_id, count(*) supportCount from t_support where f_target_type = 111 and f_sys0_del_state = 0 group by f_target_id) _tmp on _tmp.f_target_id = GB.f_id
+		LEFT JOIN t_group_building_has_t_property_service GBHTPS ON GBHTPS.t_group_building_f_id = GB.f_id 
+			and t_property_service_f_id = 102 <!-- 102 报修服务 -->
+			and GBHTPS.f_status = 1 <!-- 1开户服务，2关闭服务 -->
+			and GBHTPS.f_sys0_del_state = 0
+    	WHERE 1=1 
+    		AND GB.f_sys0_del_state = 0
+    	<if test="isadmin!=null and isadmin==0">
+    		AND OU.f_id = #{omsUserId}
+    	</if>
+		<if test="pmName != null and !pmName.equals('')">
+			AND PM.f_name like CONCAT('%',#{pmName}, '%')
+		</if>
+		<if test="gbName != null and !gbName.equals('')">
+			AND GB.f_name like CONCAT('%', #{gbName},'%')
+		</if>
+		<if test="openStatus != null and openStatus.equals(1)">
+			AND GBHTPS.f_id is not null
+		</if>
+		<if test="openStatus != null and openStatus.equals(0)">
+			AND GBHTPS.f_id is null
+		</if>
+    	order by GB.f_id desc
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.ms.propertyRepair.entity.PropertyRepairerEntity" id="propertyRepairerEntity" extends="propertyRepairerBase.propertyRepairerBaseMap">
+		<result property="repairTypeName" column="repairTypeName" />
+		<result property="propertyManagmentName" column="propertyManagmentName" />
+		<result property="starLevel" column="starLevel" />
+	</resultMap>
+	
+	<!-- 根据后台账号查询维修工列表 -->
+	<select id="select_PropertyRepairer_List_byOmsUser" parameterType="map" resultMap="propertyRepairerEntity">
+		select <include refid="propertyRepairerBase.queryHead"/>,
+		PM.f_name propertyManagmentName, PRT.f_name repairTypeName, 
+	    (SELECT 
+	        AVG(f_level) starLevel
+	    FROM
+	        t_comments
+	    WHERE
+	        f_target_type = 121
+	            AND f_sys0_del_state = 0 AND f_target_id IN (select f_id from t_property_repair where t_property_repairer_f_id = PR.f_id and f_sys0_del_state = 0)
+	    ) as starLevel
+		FROM t_property_repairer PR
+		LEFT JOIN t_property_management PM ON PM.f_id = PR.t_property_management_f_id AND PM.f_sys0_del_state = 0
+		LEFT JOIN t_property_repair_type PRT ON PRT.f_id = PR.t_property_repair_type_f_id  
+    	WHERE 1=1 
+    	AND PR.f_sys0_del_state = 0     	
+    	<if test="gbIdList !=null">
+	   		<if test="gbIdList.size() > 0">
+	    	and EXISTS (SELECT f_id from t_group_building gb  where  GB.f_id IN 
+			<foreach item="item" collection="gbIdList" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+				and gb.t_property_management_f_id = PM.f_id )
+	   		</if>
+	   		<if test="gbIdList.size() == 0"><!-- 无小区权限用户 -->
+		    	and EXISTS (SELECT f_id from t_group_building gb where  GB.f_id = -2 and gb.t_property_management_f_id = PM.f_id )
+	   		</if>
+		</if>
+    	
+    	<if test="prName!=null and !prName.equals('')">AND PR.f_name like CONCAT('%',#{prName},'%')</if>
+    	<if test="prPhone!=null and !prPhone.equals('')">AND PR.f_tel like CONCAT('%',#{prPhone},'%')</if>
+    	order by PR.f_sys0_add_time desc
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<resultMap id="propertyRepairMap" type="com.cnfantasia.server.ms.propertyRepair.entity.PropertyRepairEntity" extends="propertyRepairBase.propertyRepairBaseMap_AppendTable">
+		<result column="prtName" property="repairTypeName" javaType="string"/>
+		<result column="gbName" property="gbName" javaType="string"/>
+		<result column="pmName" property="pmName" javaType="string"/>
+		<result column="userNickName" property="userNickName" javaType="string"/>
+		<result column="selfBuyAmount" property="selfBuyAmount" javaType="integer"/>
+		<result column="manuFeeAmount" property="manuFeeAmount" javaType="integer"/>
+		<result column="otherAmount" property="otherAmount" javaType="integer"/>
+		<association property="propertyRepairer" resultMap="propertyRepairerBase.propertyRepairerBaseMap_AppendTable1" />
+	</resultMap>
+	
+	<!-- 查询所有报修单 -->
+	<select id="select_PropertyRepair_List_byOmsUser" parameterType="map" resultMap="propertyRepairMap">
+		SELECT distinct PRT.f_name prtName, GB.f_name gbName, PM.f_name pmName, U.f_nick_name userNickName,
+				null selfBuyAmount, null manuFeeAmount, null otherAmount,
+		<include refid="propertyRepairBase.queryHead_AppendTable" />,
+		<include refid="propertyRepairerBase.queryHead_AppendTable1" />
+		FROM t_property_repair PR 
+		LEFT JOIN t_property_repair_type PRT ON PRT.f_id = PR.t_property_repair_type_f_id
+		LEFT JOIN t_group_building GB ON GB.f_id = PR.t_group_building_f_id AND GB.f_sys0_del_state = 0
+		LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id
+		LEFT JOIN t_property_repairer PR1 ON PR1.f_id = PR.t_property_repairer_f_id
+		LEFT JOIN t_user U ON U.f_id = PR.t_user_f_id AND U.f_sys0_del_state = 0
+		LEFT JOIN t_property_company PC ON PC.f_id = PM.t_property_company_f_id AND PC.f_sys0_del_state = 0
+		<!-- LEFT JOIN t_oms_user OU ON OU.f_id = PC.f_admin_id and OU.f_sys0_del_state = 0 -->
+		<!-- 
+		<if test="isadmin==0">  非解放区管理账号 
+			<if test="isPmUser.equals(1)">
+				LEFT JOIN t_property_management_has_oms_user PMHOU ON PMHOU.t_property_management_f_id = PM.f_id AND PMHOU.f_sys0_del_state = 0
+				LEFT JOIN t_oms_user OU ON OU.f_id = PMHOU.t_oms_user_f_id and OU.f_sys0_del_state = 0
+			 </if>
+			 <if test="isPmUser.equals(0)">
+				LEFT JOIN t_property_company PC ON PC.f_id = PM.t_property_company_f_id AND PC.f_sys0_del_state = 0
+				LEFT JOIN t_oms_user OU ON OU.f_id = PC.f_admin_id and OU.f_sys0_del_state = 0
+			 </if>
+		 </if>		
+		  --> 
+		WHERE PR.f_sys0_del_state = 0 
+		<!--  <if test="isadmin==0">AND OU.f_id = #{omsUserId}</if> -->
+		<if test="repairId != null and repairId != ''">AND PR.f_id = #{repairId}</if>
+		<if test="repairNumber!=null and !repairNumber.equals('')">AND PR.f_number like CONCAT('%',#{repairNumber},'%')</if>
+		<if test="huaId!=null and !huaId.equals('')">AND PR.f_sys0_add_user = #{huaId} </if>
+		<if test="gbName!=null and !gbName.equals('')">AND GB.f_name like CONCAT('%',#{gbName},'%')</if>
+		
+		<if test="createTimeBegin!=null and !createTimeBegin.equals('')">AND PR.f_sys0_add_time &gt;= #{createTimeBegin}</if>
+		<if test="createTimeEnd!=null and !createTimeEnd.equals('')">AND PR.f_sys0_add_time &lt;= #{createTimeEnd}</if>
+		
+		<if test="assignTimeBegin!=null and !assignTimeBegin.equals('')">AND PR.f_asign_time &gt;= #{assignTimeBegin}</if>
+		<if test="assignTimeEnd!=null and !assignTimeEnd.equals('')">AND PR.f_asign_time &lt;= #{assignTimeEnd}</if>
+		
+		<if test="finishTimeBegin!=null and !finishTimeBegin.equals('')">AND PR.f_finished_time &gt;= #{finishTimeBegin}</if>
+		<if test="finishTimeEnd!=null and !finishTimeEnd.equals('')">AND PR.f_finished_time &lt;= #{finishTimeEnd}</if>
+		
+		<if test="repairType!=null and !repairType.equals('')">AND PRT.f_name = #{repairType}</if>
+		<if test="repairState!=null and !repairState.equals('')">AND PR.f_repaire_state = #{repairState}</if>
+		<if test="repairer!=null and !repairer.equals('')">AND PR1.f_name = #{repairer}</if>
+		<include refid="permi.dataPermissionCondition" />
+
+		UNION
+		SELECT dt.f_name prtName, gb.f_name gbName, pm.f_name pmName, u.f_nick_name userNickName,
+		(SELECT IFNULL(sum(ps.f_price_discount*dbhs.f_quantity), 0) amount
+		FROM t_dredge_bill_has_ebuy_product_shelf dbhs
+		INNER JOIN t_ebuy_product_shelf ps ON dbhs.t_ebuy_product_shelf_f_id = ps.f_id
+		WHERE dbhs.f_sys0_del_state = 0 and dbhs.t_dredge_bill_f_id = db.f_id) as selfBuyAmount,
+		(select ifnull(f_pay_amount,0) from t_dredge_bill_amount_detail where t_dredge_bill_f_id = db.f_id and f_sys0_del_state = 0 and f_fee_type = 0 order by f_id desc limit 1) manuFeeAmount,
+		(select ifnull(f_pay_amount,0) from t_dredge_bill_amount_detail where t_dredge_bill_f_id = db.f_id and f_sys0_del_state = 0 and f_fee_type = 1 order by f_id desc limit 1) otherAmount,
+		db.f_id AS PRid,
+		db.f_bill_no AS PRnumber,
+		db.f_address AS PRaddress,
+		db.f_tel AS PRtel,
+		db.f_content AS PRrepairContent,
+		date_format(
+		db.f_expectDate,
+		'%Y-%m-%d %T'
+		) AS PRexpectDate,
+		'' AS PRexpectTimeBegin,
+		'' AS PRexpectTimeEnd,
+		db.f_status AS PRrepaireState,
+		null AS PRcancelTime,
+		date_format(
+		db.f_accept_time,
+		'%Y-%m-%d %T'
+		) AS PRasignTime,
+		null AS PRasignDesc,
+		CASE WHEN db.f_status in (3,5,7,8) THEN date_format(db.f_sys0_upd_time,'%Y-%m-%d %T') ELSE null end AS PRfinishedTime,
+		null AS PRpicUrl,
+		null AS PRtGroupBuildingFId,
+		db.t_user_f_id AS PRtUserFId,
+		null AS PRtRoomFId,
+		null AS PRisTransed,
+		null AS PRtPropertyRepairerFId,
+		date_format(
+		db.f_expect_work_time,
+		'%Y-%m-%d %T'
+		) AS PRestimateDoorTimeBegin,
+		null AS PRestimateDoorTimeEnd,
+		-100 AS PRtPropertyRepairTypeFId,
+		null AS PRsoftwareBillId,
+		date_format(
+		db.f_sys0_add_time,
+		'%Y-%m-%d %T'
+		) AS PRsys0AddTime,
+		null AS PRsys0UpdTime,
+		db.t_user_f_id AS PRsys0AddUser,
+		null AS PRfinishDesc,
+		<include refid="propertyRepairerBase.queryHead_AppendTable1" />
+		FROM
+		t_dredge_bill db
+		INNER JOIN t_dredge_type dt on dt.f_id = db.t_dredge_type_f_id
+		INNER JOIN t_room r on db.f_roomId = r.f_id
+		INNER JOIN t_real_room rr on rr.f_id = r.t_real_room_f_id
+		INNER JOIN t_building b on b.f_id = rr.t_building_f_id
+		INNER JOIN t_group_building gb on gb.f_id = b.t_group_building_f_id
+		LEFT JOIN t_property_management pm on gb.t_property_management_f_id = pm.f_id
+		INNER JOIN t_user u on u.f_id = db.t_user_f_id
+		LEFT JOIN t_user u2 ON u2.f_id = db.t_worker_f_id AND u2.f_sys0_del_state = 0
+		LEFT JOIN t_property_repairer PR1 ON PR1.t_user_f_id = u2.f_id and PR1.f_sys0_del_state = 0
+		WHERE
+		db.f_sys0_del_state = 0
+		AND db.f_bill_type = 4
+
+		<if test="repairId != null and repairId != ''">AND db.f_id = #{repairId}</if>
+		<if test="repairNumber!=null and !repairNumber.equals('')">AND db.f_bill_no like CONCAT('%',#{repairNumber},'%')</if>
+		<if test="huaId!=null and !huaId.equals('')">AND db.f_sys0_add_user = #{huaId} </if>
+		<if test="gbName!=null and !gbName.equals('')">AND gb.f_name like CONCAT('%',#{gbName},'%')</if>
+
+		<if test="createTimeBegin!=null and !createTimeBegin.equals('')">AND db.f_sys0_add_time &gt;= #{createTimeBegin}</if>
+		<if test="createTimeEnd!=null and !createTimeEnd.equals('')">AND db.f_sys0_add_time &lt;= #{createTimeEnd}</if>
+
+		<if test="assignTimeBegin!=null and !assignTimeBegin.equals('')">AND db.f_accept_time &gt;= #{assignTimeBegin}</if>
+		<if test="assignTimeEnd!=null and !assignTimeEnd.equals('')">AND db.f_accept_time &lt;= #{assignTimeEnd}</if>
+
+		<if test="repairType!=null and !repairType.equals('')">AND (select tdt.f_name from t_dredge_type tdt where db.t_dredge_type_f_id = tdt.f_id ) = #{repairType}</if>
+ 		<if test="repairState!=null and !repairState.equals('')">
+			AND ( (db.f_status = 1 AND #{repairState} = 0) OR (#{repairState} = 2 and db.f_status = 2) OR (#{repairState} = 3 and db.f_status IN (3,5,6,7,8)) )
+		</if>
+		<if test="repairer!=null and !repairer.equals('')">AND PR1.f_name = #{repairer}</if>
+		<include refid="permi.dataPermissionCondition" />
+		order by PRsys0AddTime desc
+
+		<if test="_begin != null and _length != null "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<!-- 根据id 查询报修单详情-->
+	<select id="select_PropertyRepair_byId" parameterType="string" resultMap="propertyRepairMap">
+		SELECT PRT.f_name prtName, GB.f_name gbName, PM.f_name pmName,
+		<include refid="propertyRepairBase.queryHead_AppendTable" />,
+		<include refid="propertyRepairerBase.queryHead_AppendTable1" />
+		FROM t_property_repair PR 
+		LEFT JOIN t_property_repair_type PRT ON PRT.f_id = PR.t_property_repair_type_f_id 
+		LEFT JOIN t_group_building GB ON GB.f_id = PR.t_group_building_f_id 
+		LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id
+		LEFT JOIN t_property_repairer PR1 ON PR1.f_id = PR.t_property_repairer_f_id
+		WHERE PR.f_id = #{id} 
+	</select>
+	
+	<!-- 根据prId 得到师傅的评论平均分-->
+	<select id="select_avg_level_for_property_repairer" parameterType="java.math.BigInteger" resultType="double">
+		select ifNull(avg(C.f_level),0) from t_comments C
+		where C.f_target_id in (select f_id from t_property_repair where t_property_repairer_f_id =(
+			select t_property_repairer_f_id from t_property_repair where f_id = #{prId}))
+	</select>
+	
+	<resultMap type="com.cnfantasia.server.ms.propertyRepair.entity.PropertyRepairTypeEntity" id="propertyRepairTypeEntity" extends="propertyRepairTypeBase.propertyRepairTypeBaseMap">
+		<id column="id" property="id" javaType="java.math.BigInteger"/>
+		<result column="baseTypeId" property="baseTypeId" javaType="java.math.BigInteger"/>
+		<result column="baseTypeName" property="baseTypeName" javaType="string"/>
+		<result column="DTPCdesc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->
+		<result column="DTPCpriceDesc" javaType="java.lang.String" property="priceDesc"/>  <!-- 价格说明 -->
+		<result column="priceCfgId" javaType="java.math.BigInteger" property="priceCfgId"/><!--维修类别价格配置-->
+	</resultMap>
+	
+	<!-- 根据管理区id查出维修类别 -->
+	<select id="select_prTypeList_by_pmId" parameterType="java.math.BigInteger" resultMap="propertyRepairTypeEntity">
+		select DT.f_id baseTypeId, DT.f_name baseTypeName, PRT.f_id id,
+			IFNULL(DTPC.f_desc,DT2.f_desc) AS DTPCdesc ,IFNULL(DTPC.f_price_desc,DT2.f_price_desc) AS DTPCpriceDesc, DTPC.f_id AS priceCfgId
+		FROM
+		t_property_repair_type PRT
+		RIGHT JOIN t_dredge_type DT ON DT.f_sys0_del_state = 0 AND PRT.t_dredge_type_f_id = DT.f_id
+		LEFT JOIN t_dredge_type_2nd DT2 on DT2.t_dredge_type_f_id = DT.f_id and DT2.f_sys0_del_state = 0
+		LEFT JOIN t_dredge_type_price_config DTPC ON DTPC.t_dredge_type_f_id = DT.f_id AND DTPC.f_sys0_del_state = 0 AND DTPC.t_property_management_f_id = #{pmId}
+		WHERE
+			PRT.f_sys0_del_state = 0
+		AND PRT.t_property_management_f_id = #{pmId};
+	</select>
+	
+	<!-- 根据房号id查出维修类别 -->
+	<select id="select_prTypeList_by_roomId" parameterType="java.math.BigInteger" resultMap="propertyRepairTypeEntity">
+		select  DT.f_id baseTypeId, DT.f_name baseTypeName, PRT.f_id id,<include refid="propertyRepairTypeBase.queryHead" />
+		FROM
+		t_property_repair_type PRT
+		RIGHT JOIN t_dredge_type DT ON DT.f_sys0_del_state = 0 AND PRT.t_dredge_type_f_id = DT.f_id
+		LEFT JOIN t_property_management pm on pm.f_id = PRT.t_property_management_f_id
+		LEFT JOIN t_group_building gb on gb.t_property_management_f_id = pm.f_id
+		LEFT JOIN t_building b on b.t_group_building_f_id = gb.f_id 
+		LEFT JOIN t_real_room rr on rr.t_building_f_id = b.f_id
+		LEFT JOIN t_room r on r.t_real_room_f_id = rr.f_id
+		WHERE
+			PRT.f_sys0_del_state = 0
+		AND r.f_id = #{roomId};
+	</select>
+	
+	<!-- 根据房号id查询是否开通物业报修服务 -->
+	<select id="qry_isOpenRepaireService_by_roomId" parameterType="java.math.BigInteger" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			t_room r
+		JOIN t_real_room rr ON rr.f_id = r.t_real_room_f_id
+		JOIN t_building b ON b.f_id = rr.t_building_f_id
+		JOIN t_group_building gb ON gb.f_id = b.t_group_building_f_id
+		JOIN t_group_building_has_t_property_service gbps ON gbps.t_group_building_f_id = gb.f_id
+		WHERE
+			r.f_id = #{roomId} and gbps.f_status = 1;
+	</select>
+
+	<!-- 根据条件查询(疏通类型)信息。 -->
+	<resultMap type="com.cnfantasia.server.ms.propertyRepair.entity.DredgeTypeEntity" id="dredgeTypeBaseMap">
+		<id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+		<result column="f_code" javaType="java.lang.String" property="code"/>  <!-- 编码 -->
+		<result column="t_community_supply_type_f_id" javaType="java.math.BigInteger" property="tCommunitySupplyTypeFId"/>  <!-- 疏通服务类别所属商家类型 -->
+		<result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 类型名称 -->
+		<result column="f_pic_url" javaType="java.lang.String" property="picUrl"/>  <!-- 图标 -->
+		<result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->
+		<result column="f_price_desc" javaType="java.lang.String" property="priceDesc"/>  <!-- 价格说明 -->
+		<result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+		<result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+		<result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+		<result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+		<result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+		<result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+		<result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+		<result column="f_service_process_url" javaType="java.lang.String" property="serviceProcessUrl"/>  <!-- 服务流程说明URL -->
+		<result column="f_is_has_num" javaType="java.lang.Integer" property="isHasNum"/>  <!-- 是否存在数量选择（1是，0否，默认为0） -->
+	</resultMap>
+	<select id="select_dredgeType" parameterType="java.util.Map" resultMap="dredgeTypeBaseMap">
+		<include refid="select_dredgeType"/>
+	</select>
+	<sql id="select_dredgeType">
+		SELECT DT.f_id,DT.f_code,DT.t_community_supply_type_f_id,DT.f_name,DT.f_pic_url,DT.f_desc,DT.f_price_desc,DT.f_service_process_url,DT.f_is_has_num
+		FROM t_dredge_type DT
+		WHERE 1=1
+		<if test="id != null">  and (DT.f_id = #{id} ) </if>
+		<if test="code != null">  and (DT.f_code = #{code} ) </if>
+		<if test="tCommunitySupplyTypeFId != null">  and (DT.t_community_supply_type_f_id = #{tCommunitySupplyTypeFId} ) </if>
+		<if test="name != null">  and (DT.f_name = #{name} ) </if>
+		<if test="picUrl != null">  and (DT.f_pic_url = #{picUrl} ) </if>
+		<if test="desc != null">  and (DT.f_desc = #{desc} ) </if>
+		<if test="priceDesc != null">  and (DT.f_price_desc = #{priceDesc} ) </if>
+		<if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (DT.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+		<if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">
+			<![CDATA[ and (DT.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+		</if>
+		<if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+			<![CDATA[ and (DT.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+		</if>
+		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (DT.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+		<if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">
+			<![CDATA[ and (DT.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+		</if>
+		<if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+			<![CDATA[ and (DT.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+		</if>
+		<if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (DT.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+		<if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">
+			<![CDATA[ and (DT.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+		</if>
+		<if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+			<![CDATA[ and (DT.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+		</if>
+		<if test="sys0AddUser != null">  and (DT.f_sys0_add_user = #{sys0AddUser} ) </if>
+		<if test="sys0UpdUser != null">  and (DT.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+		<if test="sys0DelUser != null">  and (DT.f_sys0_del_user = #{sys0DelUser} ) </if>
+		<if test="sys0DelState != null">  and (DT.f_sys0_del_state = #{sys0DelState} ) </if>
+		<if test="sys0DelState == null">  and (DT.f_sys0_del_state = 0 ) </if>
+		<if test="serviceProcessUrl != null">  and (DT.f_service_process_url = #{serviceProcessUrl} ) </if>
+		<if test="isHasNum != null">  and (DT.f_is_has_num = #{isHasNum} ) </if>
+		ORDER BY DT.f_id DESC
+	</sql>
+	
+</mapper>

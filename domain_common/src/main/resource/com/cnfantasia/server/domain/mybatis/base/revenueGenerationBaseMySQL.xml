@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN: t_revenue_generation -->
+<mapper namespace="revenueGenerationBase">
+	<resultMap type="RevenueGeneration" id="revenueGenerationBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键，不自动生成。和目标收益表的主键相等 -->        <result column="f_type" javaType="java.lang.Integer" property="type"/>  <!-- 收益类型 -->        <result column="f_revenue_status" javaType="java.lang.Integer" property="revenueStatus"/>  <!-- 收益明细生成状态 -->        <result column="f_revenue_tm" javaType="java.lang.String" property="revenueTm"/>  <!-- 生成收益的时间 -->
+	</resultMap>
+	<resultMap type="RevenueGeneration" id="revenueGenerationExtendMap" extends="revenueGenerationBaseMap">
+	</resultMap>
+	<resultMap type="RevenueGeneration" id="revenueGenerationBaseMap_AppendTable">
+        <id column="RGid" javaType="java.math.BigInteger" property="id"/>  <!-- 主键，不自动生成。和目标收益表的主键相等 -->        <result column="RGtype" javaType="java.lang.Integer" property="type"/>  <!-- 收益类型 -->        <result column="RGrevenueStatus" javaType="java.lang.Integer" property="revenueStatus"/>  <!-- 收益明细生成状态 -->        <result column="RGrevenueTm" javaType="java.lang.String" property="revenueTm"/>  <!-- 生成收益的时间 -->
+	</resultMap>
+	<resultMap type="RevenueGeneration" id="revenueGenerationBaseMap_AppendTable1">
+        <id column="RG1id" javaType="java.math.BigInteger" property="id"/>  <!-- 主键，不自动生成。和目标收益表的主键相等 -->        <result column="RG1type" javaType="java.lang.Integer" property="type"/>  <!-- 收益类型 -->        <result column="RG1revenueStatus" javaType="java.lang.Integer" property="revenueStatus"/>  <!-- 收益明细生成状态 -->        <result column="RG1revenueTm" javaType="java.lang.String" property="revenueTm"/>  <!-- 生成收益的时间 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		RG.f_id,RG.f_type,RG.f_revenue_status,date_format(RG.f_revenue_tm,'%Y-%m-%d %T') as f_revenue_tm
+	</sql>
+	<sql id="queryHead_AppendTable">
+		RG.f_id as RGid,RG.f_type as RGtype,RG.f_revenue_status as RGrevenueStatus,date_format(RG.f_revenue_tm,'%Y-%m-%d %T') as RGrevenueTm
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		RG1.f_id as RG1id,RG1.f_type as RG1type,RG1.f_revenue_status as RG1revenueStatus,date_format(RG1.f_revenue_tm,'%Y-%m-%d %T') as RG1revenueTm
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (RG.f_id = #{id} ) </if>        <if test="type != null">  and (RG.f_type = #{type} ) </if>        <if test="revenueStatus != null">  and (RG.f_revenue_status = #{revenueStatus} ) </if>        <if test="revenueTm != null and !revenueTm.equals('')  ">  and (RG.f_revenue_tm = str_to_date(#{revenueTm},'%Y-%m-%d %T') ) </if>        <if test="revenueTm_START != null and !revenueTm_START.equals('')  ">              <![CDATA[ and (RG.f_revenue_tm >= str_to_date(#{revenueTm_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="revenueTm_END != null and !revenueTm_END.equals('')  ">            <![CDATA[ and (RG.f_revenue_tm <= str_to_date(#{revenueTm_END},'%Y-%m-%d %T') ) ]]>        </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (RG.f_id = #{id} ) </if>        <if test="type != null and !type.equals('')  ">  and (RG.f_type = #{type} ) </if>        <if test="revenueStatus != null and !revenueStatus.equals('')  ">  and (RG.f_revenue_status = #{revenueStatus} ) </if>        <if test="revenueTm != null and !revenueTm.equals('')  ">  and (RG.f_revenue_tm = str_to_date(#{revenueTm},'%Y-%m-%d %T') ) </if>        <if test="revenueTm_START != null and !revenueTm_START.equals('')  ">              <![CDATA[ and (RG.f_revenue_tm >= str_to_date(#{revenueTm_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="revenueTm_END != null and !revenueTm_END.equals('')  ">            <![CDATA[ and (RG.f_revenue_tm <= str_to_date(#{revenueTm_END},'%Y-%m-%d %T') ) ]]>        </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="revenueGenerationBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="revenueGenerationBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="revenueGenerationBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="revenueGenerationBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_revenue_generation RG    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询()信息。 -->
+	<sql id="select_revenueGeneration">
+		SELECT <include refid="revenueGenerationBase.queryHead"/>
+		<include refid="revenueGenerationBase.busiQueryCondition"/>
+		<include refid="revenueGenerationBase.dimCheckSql"/>
+		ORDER BY RG.f_id DESC
+	</sql>
+	<select id="select_revenueGeneration" parameterType="java.util.Map" resultMap="revenueGenerationBase.revenueGenerationExtendMap">
+		<include refid="revenueGenerationBase.select_revenueGeneration"/>
+	</select>
+	
+	<!-- 根据条件分页查询()信息  -->
+	<sql id="select_revenueGeneration_withPage">
+		SELECT <include refid="revenueGenerationBase.queryHead"/>
+		<include refid="revenueGenerationBase.busiQueryCondition"/>
+		<include refid="revenueGenerationBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_revenueGeneration_withPage" resultMap="revenueGenerationBase.revenueGenerationExtendMap" parameterType="java.util.Map">
+		<include refid="revenueGenerationBase.select_revenueGeneration_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个()信息。 -->
+	<sql id="select_revenueGeneration_bySeqId">
+		SELECT <include refid="revenueGenerationBase.queryHead"/>
+		<include refid="revenueGenerationBase.busiQueryCondition"/>
+		 and RG.f_id = #{_parameter}
+	</sql>
+	<select id="select_revenueGeneration_bySeqId" parameterType="java.math.BigInteger" resultMap="revenueGenerationBase.revenueGenerationBaseMap">
+		<include refid="revenueGenerationBase.select_revenueGeneration_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的()记录数  -->
+	<sql id="select_revenueGeneration_count">
+		SELECT COUNT(*)
+		<include refid="revenueGenerationBase.busiQueryCount"/>
+		<include refid="revenueGenerationBase.dimCheckSql"/>
+	</sql>
+	<select id="select_revenueGeneration_count" resultType="java.lang.Integer">
+		<include refid="revenueGenerationBase.select_revenueGeneration_count"/>
+	</select>
+	
+	 <!-- 往()新增一条记录。 -->
+	 <sql id="insert_revenueGeneration">
+		INSERT INTO t_revenue_generation 
+		(f_id,f_type,f_revenue_status,f_revenue_tm) VALUES 
+		(#{id},#{type},#{revenueStatus},str_to_date(#{revenueTm,jdbcType=DATE},'%Y-%m-%d %T'))
+	 </sql>
+    <insert id="insert_revenueGeneration" parameterType="RevenueGeneration">
+		<include refid="revenueGenerationBase.insert_revenueGeneration"/>
+    </insert>
+    
+	<!-- 批量新增()信息 -->
+    <insert id="insert_revenueGeneration_Batch" parameterType="java.util.List">
+    	INSERT INTO t_revenue_generation 
+		(f_id,f_type,f_revenue_status,f_revenue_tm) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.type},#{item.revenueStatus},str_to_date(#{item.revenueTm,jdbcType=DATE},'%Y-%m-%d %T'))
+		</foreach>
+    </insert>
+    
+    <!-- 更新()信息。 -->
+    <sql id="update_revenueGeneration">
+		UPDATE t_revenue_generation		<trim prefix="SET" prefixOverrides=","> 		<if test="type != null and !type.equals('') "> ,f_type=#{type}</if> 		<if test="revenueStatus != null and !revenueStatus.equals('') "> ,f_revenue_status=#{revenueStatus}</if> 		<if test="revenueTm != null and !revenueTm.equals('') "> ,f_revenue_tm=str_to_date(#{revenueTm},'%Y-%m-%d %T')</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_revenueGeneration" parameterType="RevenueGeneration">
+		<include refid="revenueGenerationBase.update_revenueGeneration"/>
+    </update>
+    
+    <!-- 批量更新()信息。 -->
+    <update id="update_revenueGeneration_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_revenue_generation		<trim prefix="SET" prefixOverrides=","> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.revenueStatus != null and !item.revenueStatus.equals('')  "> ,f_revenue_status=#{item.revenueStatus}</if> 		<if test="item.revenueTm != null and !item.revenueTm.equals('')  "> ,f_revenue_tm=str_to_date(#{item.revenueTm},'%Y-%m-%d %T')</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除()信息_逻辑删除。 -->
+    <!-- <sql id="delete_revenueGeneration_Logic">
+		UPDATE t_revenue_generation		<trim prefix="SET" prefixOverrides=","> 		<if test="type != null and !type.equals('')  "> ,f_type=#{type}</if> 		<if test="revenueStatus != null and !revenueStatus.equals('')  "> ,f_revenue_status=#{revenueStatus}</if> 		<if test="revenueTm != null and !revenueTm.equals('')  "> ,f_revenue_tm=str_to_date(#{revenueTm},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_revenueGeneration_Logic" parameterType="RevenueGeneration">
+		<include refid="revenueGenerationBase.delete_revenueGeneration_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除()信息_逻辑删除 -->
+    <!-- <update id="delete_revenueGeneration_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_revenue_generation		<trim prefix="SET" prefixOverrides=","> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.revenueStatus != null and !item.revenueStatus.equals('')  "> ,f_revenue_status=#{item.revenueStatus}</if> 		<if test="item.revenueTm != null and !item.revenueTm.equals('')  "> ,f_revenue_tm=str_to_date(#{item.revenueTm},'%Y-%m-%d %T')</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除()信息。 -->
+    <sql id="delete_revenueGeneration">
+		DELETE FROM t_revenue_generation WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_revenueGeneration" parameterType="java.lang.String">
+		<include refid="revenueGenerationBase.delete_revenueGeneration"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除()信息。 -->
+    <delete id="delete_revenueGeneration_Batch" parameterType="java.util.List">
+		DELETE FROM t_revenue_generation WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

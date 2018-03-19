@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN: t_pay_bill -->
+<mapper namespace="payBillBase">
+	<resultMap type="PayBill" id="payBillBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="f_short_code" javaType="java.lang.String" property="shortCode"/>  <!-- 账单的唯一短编码 -->
+        <result column="f_amount" javaType="java.lang.Long" property="amount"/>  <!-- 待缴总金额 -->
+        <result column="f_month" javaType="java.lang.String" property="month"/>  <!-- 账单对应可用的折扣月份 -->
+        <result column="f_bill_month" javaType="java.lang.String" property="billMonth"/>  <!-- 账单月份,为空则取折扣月份 -->
+        <result column="f_is_pay" javaType="java.lang.Integer" property="isPay"/>  <!-- 缴费状态 -->
+        <result column="f_pay_time" javaType="java.lang.String" property="payTime"/>  <!-- 付款时间 -->
+        <result column="f_finance_status" javaType="java.lang.Integer" property="financeStatus"/>  <!-- 是否物业宝抵扣过 -->
+        <result column="f_dedu_price" javaType="java.lang.Long" property="deduPrice"/>  <!-- 物业宝抵扣金额 -->
+        <result column="f_payment_way" javaType="java.lang.Integer" property="paymentWay"/>  <!-- 缴费方式 -->
+        <result column="t_real_room_f_id" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!-- 所属真实门牌的Id -->
+        <result column="f_property_proprietor_id" javaType="java.lang.String" property="propertyProprietorId"/>  <!-- 当前真实门牌的业主Id -->
+        <result column="f_succ_pay_amount" javaType="java.lang.Long" property="succPayAmount"/>  <!-- 用户实际支付的账单金额 -->
+        <result column="f_discount" javaType="java.lang.Double" property="discount"/>  <!-- 使用的折扣 -->
+        <result column="f_prize_record_id" javaType="java.lang.String" property="prizeRecordId"/>  <!-- 中奖记录Id -->
+        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="f_bill_time_cfg_id" javaType="java.math.BigInteger" property="billTimeCfgId"/>  <!-- 所属类别缴费时间配置Id -->
+        <result column="f_bill_type_id" javaType="java.math.BigInteger" property="billTypeId"/>  <!-- 基础类别信息Id -->
+        <result column="f_bill_type_name" javaType="java.lang.String" property="billTypeName"/>  <!-- 费用类别名称(冗余) -->
+        <result column="f_is_prop_fee" javaType="java.lang.Integer" property="isPropFee"/>  <!-- 是否为物业费(冗余) -->
+        <result column="f_paytime_type" javaType="java.lang.Integer" property="paytimeType"/>  <!-- 缴费时间方式 -->
+        <result column="f_cycle_type" javaType="java.lang.Integer" property="cycleType"/>  <!-- 周期缴费方式 -->
+        <result column="f_bill_month_size" javaType="java.lang.Long" property="billMonthSize"/>  <!-- 账单月份跨度(冗余) -->
+        <result column="f_bill_month_start" javaType="java.lang.String" property="billMonthStart"/>  <!-- 账单开始月份(冗余) -->
+        <result column="f_bill_month_end" javaType="java.lang.String" property="billMonthEnd"/>  <!-- 账单截止月份(冗余) -->
+        <result column="f_pay_day_start" javaType="java.lang.String" property="payDayStart"/>  <!-- 缴费开始日期(冗余) -->
+        <result column="f_pay_day_end" javaType="java.lang.String" property="payDayEnd"/>  <!-- 缴费截止日期(冗余) -->
+        <result column="f_hb_amount" javaType="java.lang.Long" property="hbAmount"/>  <!-- 红包补贴 -->
+        <result column="f_prefer_type" javaType="java.lang.Integer" property="preferType"/>  <!-- 优惠类型 -->
+        <result column="t_bill_cycle_id" javaType="java.math.BigInteger" property="tBillCycleId"/>  <!-- 账期管理id -->
+        <result column="t_group_building_bill_cycle_config_f_id" javaType="java.math.BigInteger" property="tGroupBuildingBillCycleConfigFId"/>  <!-- 物业缴费充值（需要） -->
+        <result column="f_cash_status" javaType="java.lang.Integer" property="cashStatus"/>  <!-- 现金流生成状态 -->
+        <result column="t_realroom_software_fee_f_id" javaType="java.math.BigInteger" property="tRealroomSoftwareFeeFId"/>  <!-- 使用物业对接数据生成的账单，费用对应的ID -->
+        <result column="f_last_unpaid" javaType="java.lang.Long" property="lastUnpaid"/>  <!-- 往月欠费（单位 -->
+        <result column="f_bank_collection_status" javaType="java.lang.Integer" property="bankCollectionStatus"/>  <!-- 账单银行托收状态={0或null -->
+	</resultMap>
+	<resultMap type="PayBill" id="payBillExtendMap" extends="payBillBaseMap">
+	</resultMap>
+	<resultMap type="PayBill" id="payBillBaseMap_AppendTable">
+        <id column="PBid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="PBshortCode" javaType="java.lang.String" property="shortCode"/>  <!-- 账单的唯一短编码 -->
+        <result column="PBamount" javaType="java.lang.Long" property="amount"/>  <!-- 待缴总金额 -->
+        <result column="PBmonth" javaType="java.lang.String" property="month"/>  <!-- 账单对应可用的折扣月份 -->
+        <result column="PBbillMonth" javaType="java.lang.String" property="billMonth"/>  <!-- 账单月份,为空则取折扣月份 -->
+        <result column="PBisPay" javaType="java.lang.Integer" property="isPay"/>  <!-- 缴费状态 -->
+        <result column="PBpayTime" javaType="java.lang.String" property="payTime"/>  <!-- 付款时间 -->
+        <result column="PBfinanceStatus" javaType="java.lang.Integer" property="financeStatus"/>  <!-- 是否物业宝抵扣过 -->
+        <result column="PBdeduPrice" javaType="java.lang.Long" property="deduPrice"/>  <!-- 物业宝抵扣金额 -->
+        <result column="PBpaymentWay" javaType="java.lang.Integer" property="paymentWay"/>  <!-- 缴费方式 -->
+        <result column="PBtRealRoomFId" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!-- 所属真实门牌的Id -->
+        <result column="PBpropertyProprietorId" javaType="java.lang.String" property="propertyProprietorId"/>  <!-- 当前真实门牌的业主Id -->
+        <result column="PBsuccPayAmount" javaType="java.lang.Long" property="succPayAmount"/>  <!-- 用户实际支付的账单金额 -->
+        <result column="PBdiscount" javaType="java.lang.Double" property="discount"/>  <!-- 使用的折扣 -->
+        <result column="PBprizeRecordId" javaType="java.lang.String" property="prizeRecordId"/>  <!-- 中奖记录Id -->
+        <result column="PBsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="PBsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="PBsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="PBsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="PBsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="PBsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="PBsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="PBbillTimeCfgId" javaType="java.math.BigInteger" property="billTimeCfgId"/>  <!-- 所属类别缴费时间配置Id -->
+        <result column="PBbillTypeId" javaType="java.math.BigInteger" property="billTypeId"/>  <!-- 基础类别信息Id -->
+        <result column="PBbillTypeName" javaType="java.lang.String" property="billTypeName"/>  <!-- 费用类别名称(冗余) -->
+        <result column="PBisPropFee" javaType="java.lang.Integer" property="isPropFee"/>  <!-- 是否为物业费(冗余) -->
+        <result column="PBpaytimeType" javaType="java.lang.Integer" property="paytimeType"/>  <!-- 缴费时间方式 -->
+        <result column="PBcycleType" javaType="java.lang.Integer" property="cycleType"/>  <!-- 周期缴费方式 -->
+        <result column="PBbillMonthSize" javaType="java.lang.Long" property="billMonthSize"/>  <!-- 账单月份跨度(冗余) -->
+        <result column="PBbillMonthStart" javaType="java.lang.String" property="billMonthStart"/>  <!-- 账单开始月份(冗余) -->
+        <result column="PBbillMonthEnd" javaType="java.lang.String" property="billMonthEnd"/>  <!-- 账单截止月份(冗余) -->
+        <result column="PBpayDayStart" javaType="java.lang.String" property="payDayStart"/>  <!-- 缴费开始日期(冗余) -->
+        <result column="PBpayDayEnd" javaType="java.lang.String" property="payDayEnd"/>  <!-- 缴费截止日期(冗余) -->
+        <result column="PBhbAmount" javaType="java.lang.Long" property="hbAmount"/>  <!-- 红包补贴 -->
+        <result column="PBpreferType" javaType="java.lang.Integer" property="preferType"/>  <!-- 优惠类型 -->
+        <result column="PBtBillCycleId" javaType="java.math.BigInteger" property="tBillCycleId"/>  <!-- 账期管理id -->
+        <result column="PBtGroupBuildingBillCycleConfigFId" javaType="java.math.BigInteger" property="tGroupBuildingBillCycleConfigFId"/>  <!-- 物业缴费充值（需要） -->
+        <result column="PBcashStatus" javaType="java.lang.Integer" property="cashStatus"/>  <!-- 现金流生成状态 -->
+        <result column="PBtRealroomSoftwareFeeFId" javaType="java.math.BigInteger" property="tRealroomSoftwareFeeFId"/>  <!-- 使用物业对接数据生成的账单，费用对应的ID -->
+        <result column="PBlastUnpaid" javaType="java.lang.Long" property="lastUnpaid"/>  <!-- 往月欠费（单位 -->
+        <result column="PBbankCollectionStatus" javaType="java.lang.Integer" property="bankCollectionStatus"/>  <!-- 账单银行托收状态={0或null -->
+	</resultMap>
+	<resultMap type="PayBill" id="payBillBaseMap_AppendTable1">
+        <id column="PB1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="PB1shortCode" javaType="java.lang.String" property="shortCode"/>  <!-- 账单的唯一短编码 -->
+        <result column="PB1amount" javaType="java.lang.Long" property="amount"/>  <!-- 待缴总金额 -->
+        <result column="PB1month" javaType="java.lang.String" property="month"/>  <!-- 账单对应可用的折扣月份 -->
+        <result column="PB1billMonth" javaType="java.lang.String" property="billMonth"/>  <!-- 账单月份,为空则取折扣月份 -->
+        <result column="PB1isPay" javaType="java.lang.Integer" property="isPay"/>  <!-- 缴费状态 -->
+        <result column="PB1payTime" javaType="java.lang.String" property="payTime"/>  <!-- 付款时间 -->
+        <result column="PB1financeStatus" javaType="java.lang.Integer" property="financeStatus"/>  <!-- 是否物业宝抵扣过 -->
+        <result column="PB1deduPrice" javaType="java.lang.Long" property="deduPrice"/>  <!-- 物业宝抵扣金额 -->
+        <result column="PB1paymentWay" javaType="java.lang.Integer" property="paymentWay"/>  <!-- 缴费方式 -->
+        <result column="PB1tRealRoomFId" javaType="java.math.BigInteger" property="tRealRoomFId"/>  <!-- 所属真实门牌的Id -->
+        <result column="PB1propertyProprietorId" javaType="java.lang.String" property="propertyProprietorId"/>  <!-- 当前真实门牌的业主Id -->
+        <result column="PB1succPayAmount" javaType="java.lang.Long" property="succPayAmount"/>  <!-- 用户实际支付的账单金额 -->
+        <result column="PB1discount" javaType="java.lang.Double" property="discount"/>  <!-- 使用的折扣 -->
+        <result column="PB1prizeRecordId" javaType="java.lang.String" property="prizeRecordId"/>  <!-- 中奖记录Id -->
+        <result column="PB1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->
+        <result column="PB1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->
+        <result column="PB1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->
+        <result column="PB1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->
+        <result column="PB1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->
+        <result column="PB1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->
+        <result column="PB1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+        <result column="PB1billTimeCfgId" javaType="java.math.BigInteger" property="billTimeCfgId"/>  <!-- 所属类别缴费时间配置Id -->
+        <result column="PB1billTypeId" javaType="java.math.BigInteger" property="billTypeId"/>  <!-- 基础类别信息Id -->
+        <result column="PB1billTypeName" javaType="java.lang.String" property="billTypeName"/>  <!-- 费用类别名称(冗余) -->
+        <result column="PB1isPropFee" javaType="java.lang.Integer" property="isPropFee"/>  <!-- 是否为物业费(冗余) -->
+        <result column="PB1paytimeType" javaType="java.lang.Integer" property="paytimeType"/>  <!-- 缴费时间方式 -->
+        <result column="PB1cycleType" javaType="java.lang.Integer" property="cycleType"/>  <!-- 周期缴费方式 -->
+        <result column="PB1billMonthSize" javaType="java.lang.Long" property="billMonthSize"/>  <!-- 账单月份跨度(冗余) -->
+        <result column="PB1billMonthStart" javaType="java.lang.String" property="billMonthStart"/>  <!-- 账单开始月份(冗余) -->
+        <result column="PB1billMonthEnd" javaType="java.lang.String" property="billMonthEnd"/>  <!-- 账单截止月份(冗余) -->
+        <result column="PB1payDayStart" javaType="java.lang.String" property="payDayStart"/>  <!-- 缴费开始日期(冗余) -->
+        <result column="PB1payDayEnd" javaType="java.lang.String" property="payDayEnd"/>  <!-- 缴费截止日期(冗余) -->
+        <result column="PB1hbAmount" javaType="java.lang.Long" property="hbAmount"/>  <!-- 红包补贴 -->
+        <result column="PB1preferType" javaType="java.lang.Integer" property="preferType"/>  <!-- 优惠类型 -->
+        <result column="PB1tBillCycleId" javaType="java.math.BigInteger" property="tBillCycleId"/>  <!-- 账期管理id -->
+        <result column="PB1tGroupBuildingBillCycleConfigFId" javaType="java.math.BigInteger" property="tGroupBuildingBillCycleConfigFId"/>  <!-- 物业缴费充值（需要） -->
+        <result column="PB1cashStatus" javaType="java.lang.Integer" property="cashStatus"/>  <!-- 现金流生成状态 -->
+        <result column="PB1tRealroomSoftwareFeeFId" javaType="java.math.BigInteger" property="tRealroomSoftwareFeeFId"/>  <!-- 使用物业对接数据生成的账单，费用对应的ID -->
+        <result column="PB1lastUnpaid" javaType="java.lang.Long" property="lastUnpaid"/>  <!-- 往月欠费（单位 -->
+        <result column="PB1bankCollectionStatus" javaType="java.lang.Integer" property="bankCollectionStatus"/>  <!-- 账单银行托收状态={0或null -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PB.f_id,PB.f_short_code,PB.f_amount,date_format(PB.f_month,'%Y-%m-%d %T') as f_month,date_format(PB.f_bill_month,'%Y-%m-%d %T') as f_bill_month,PB.f_is_pay,date_format(PB.f_pay_time,'%Y-%m-%d %T') as f_pay_time,PB.f_finance_status,PB.f_dedu_price,PB.f_payment_way,PB.t_real_room_f_id,PB.f_property_proprietor_id,PB.f_succ_pay_amount,PB.f_discount,PB.f_prize_record_id,date_format(PB.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time,PB.f_bill_time_cfg_id,PB.f_bill_type_id,PB.f_bill_type_name,PB.f_is_prop_fee,PB.f_paytime_type,PB.f_cycle_type,PB.f_bill_month_size,date_format(PB.f_bill_month_start,'%Y-%m-%d %T') as f_bill_month_start,date_format(PB.f_bill_month_end,'%Y-%m-%d %T') as f_bill_month_end,date_format(PB.f_pay_day_start,'%Y-%m-%d %T') as f_pay_day_start,date_format(PB.f_pay_day_end,'%Y-%m-%d %T') as f_pay_day_end,PB.f_hb_amount,PB.f_prefer_type,PB.t_bill_cycle_id,PB.t_group_building_bill_cycle_config_f_id,PB.f_cash_status,PB.t_realroom_software_fee_f_id,PB.f_last_unpaid,PB.f_bank_collection_status
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PB.f_id as PBid,PB.f_short_code as PBshortCode,PB.f_amount as PBamount,date_format(PB.f_month,'%Y-%m-%d %T') as PBmonth,date_format(PB.f_bill_month,'%Y-%m-%d %T') as PBbillMonth,PB.f_is_pay as PBisPay,date_format(PB.f_pay_time,'%Y-%m-%d %T') as PBpayTime,PB.f_finance_status as PBfinanceStatus,PB.f_dedu_price as PBdeduPrice,PB.f_payment_way as PBpaymentWay,PB.t_real_room_f_id as PBtRealRoomFId,PB.f_property_proprietor_id as PBpropertyProprietorId,PB.f_succ_pay_amount as PBsuccPayAmount,PB.f_discount as PBdiscount,PB.f_prize_record_id as PBprizeRecordId,date_format(PB.f_sys0_upd_time,'%Y-%m-%d %T') as PBsys0UpdTime,PB.f_bill_time_cfg_id as PBbillTimeCfgId,PB.f_bill_type_id as PBbillTypeId,PB.f_bill_type_name as PBbillTypeName,PB.f_is_prop_fee as PBisPropFee,PB.f_paytime_type as PBpaytimeType,PB.f_cycle_type as PBcycleType,PB.f_bill_month_size as PBbillMonthSize,date_format(PB.f_bill_month_start,'%Y-%m-%d %T') as PBbillMonthStart,date_format(PB.f_bill_month_end,'%Y-%m-%d %T') as PBbillMonthEnd,date_format(PB.f_pay_day_start,'%Y-%m-%d %T') as PBpayDayStart,date_format(PB.f_pay_day_end,'%Y-%m-%d %T') as PBpayDayEnd,PB.f_hb_amount as PBhbAmount,PB.f_prefer_type as PBpreferType,PB.t_bill_cycle_id as PBtBillCycleId,PB.t_group_building_bill_cycle_config_f_id as PBtGroupBuildingBillCycleConfigFId,PB.f_cash_status as PBcashStatus,PB.t_realroom_software_fee_f_id as PBtRealroomSoftwareFeeFId,PB.f_last_unpaid as PBlastUnpaid,PB.f_bank_collection_status as PBbankCollectionStatus
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PB1.f_id as PB1id,PB1.f_short_code as PB1shortCode,PB1.f_amount as PB1amount,date_format(PB1.f_month,'%Y-%m-%d %T') as PB1month,date_format(PB1.f_bill_month,'%Y-%m-%d %T') as PB1billMonth,PB1.f_is_pay as PB1isPay,date_format(PB1.f_pay_time,'%Y-%m-%d %T') as PB1payTime,PB1.f_finance_status as PB1financeStatus,PB1.f_dedu_price as PB1deduPrice,PB1.f_payment_way as PB1paymentWay,PB1.t_real_room_f_id as PB1tRealRoomFId,PB1.f_property_proprietor_id as PB1propertyProprietorId,PB1.f_succ_pay_amount as PB1succPayAmount,PB1.f_discount as PB1discount,PB1.f_prize_record_id as PB1prizeRecordId,date_format(PB1.f_sys0_upd_time,'%Y-%m-%d %T') as PB1sys0UpdTime,PB1.f_bill_time_cfg_id as PB1billTimeCfgId,PB1.f_bill_type_id as PB1billTypeId,PB1.f_bill_type_name as PB1billTypeName,PB1.f_is_prop_fee as PB1isPropFee,PB1.f_paytime_type as PB1paytimeType,PB1.f_cycle_type as PB1cycleType,PB1.f_bill_month_size as PB1billMonthSize,date_format(PB1.f_bill_month_start,'%Y-%m-%d %T') as PB1billMonthStart,date_format(PB1.f_bill_month_end,'%Y-%m-%d %T') as PB1billMonthEnd,date_format(PB1.f_pay_day_start,'%Y-%m-%d %T') as PB1payDayStart,date_format(PB1.f_pay_day_end,'%Y-%m-%d %T') as PB1payDayEnd,PB1.f_hb_amount as PB1hbAmount,PB1.f_prefer_type as PB1preferType,PB1.t_bill_cycle_id as PB1tBillCycleId,PB1.t_group_building_bill_cycle_config_f_id as PB1tGroupBuildingBillCycleConfigFId,PB1.f_cash_status as PB1cashStatus,PB1.t_realroom_software_fee_f_id as PB1tRealroomSoftwareFeeFId,PB1.f_last_unpaid as PB1lastUnpaid,PB1.f_bank_collection_status as PB1bankCollectionStatus
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PB.f_id = #{id} ) </if>
+        <if test="shortCode != null">  and (PB.f_short_code = #{shortCode} ) </if>
+        <if test="amount != null">  and (PB.f_amount = #{amount} ) </if>
+        <if test="month != null and !month.equals('')  ">  and (PB.f_month = str_to_date(#{month},'%Y-%m-%d %T') ) </if>
+        <if test="month_START != null and !month_START.equals('')  ">  
+            <![CDATA[ and (PB.f_month >= str_to_date(#{month_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="month_END != null and !month_END.equals('')  ">
+            <![CDATA[ and (PB.f_month <= str_to_date(#{month_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonth != null and !billMonth.equals('')  ">  and (PB.f_bill_month = str_to_date(#{billMonth},'%Y-%m-%d %T') ) </if>
+        <if test="billMonth_START != null and !billMonth_START.equals('')  ">  
+            <![CDATA[ and (PB.f_bill_month >= str_to_date(#{billMonth_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonth_END != null and !billMonth_END.equals('')  ">
+            <![CDATA[ and (PB.f_bill_month <= str_to_date(#{billMonth_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="isPay != null">  and (PB.f_is_pay = #{isPay} ) </if>
+        <if test="payTime != null and !payTime.equals('')  ">  and (PB.f_pay_time = str_to_date(#{payTime},'%Y-%m-%d %T') ) </if>
+        <if test="payTime_START != null and !payTime_START.equals('')  ">  
+            <![CDATA[ and (PB.f_pay_time >= str_to_date(#{payTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payTime_END != null and !payTime_END.equals('')  ">
+            <![CDATA[ and (PB.f_pay_time <= str_to_date(#{payTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="financeStatus != null">  and (PB.f_finance_status = #{financeStatus} ) </if>
+        <if test="deduPrice != null">  and (PB.f_dedu_price = #{deduPrice} ) </if>
+        <if test="paymentWay != null">  and (PB.f_payment_way = #{paymentWay} ) </if>
+        <if test="tRealRoomFId != null">  and (PB.t_real_room_f_id = #{tRealRoomFId} ) </if>
+        <if test="propertyProprietorId != null">  and (PB.f_property_proprietor_id = #{propertyProprietorId} ) </if>
+        <if test="succPayAmount != null">  and (PB.f_succ_pay_amount = #{succPayAmount} ) </if>
+        <if test="discount != null">  and (PB.f_discount = #{discount} ) </if>
+        <if test="prizeRecordId != null">  and (PB.f_prize_record_id = #{prizeRecordId} ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PB.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (PB.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (PB.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PB.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (PB.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (PB.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PB.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (PB.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (PB.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null">  and (PB.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null">  and (PB.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null">  and (PB.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null">  and (PB.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null">  and (PB.f_sys0_del_state = 0 ) </if>
+        <if test="billTimeCfgId != null">  and (PB.f_bill_time_cfg_id = #{billTimeCfgId} ) </if>
+        <if test="billTypeId != null">  and (PB.f_bill_type_id = #{billTypeId} ) </if>
+        <if test="billTypeName != null">  and (PB.f_bill_type_name = #{billTypeName} ) </if>
+        <if test="isPropFee != null">  and (PB.f_is_prop_fee = #{isPropFee} ) </if>
+        <if test="paytimeType != null">  and (PB.f_paytime_type = #{paytimeType} ) </if>
+        <if test="cycleType != null">  and (PB.f_cycle_type = #{cycleType} ) </if>
+        <if test="billMonthSize != null">  and (PB.f_bill_month_size = #{billMonthSize} ) </if>
+        <if test="billMonthStart != null and !billMonthStart.equals('')  ">  and (PB.f_bill_month_start = str_to_date(#{billMonthStart},'%Y-%m-%d %T') ) </if>
+        <if test="billMonthStart_START != null and !billMonthStart_START.equals('')  ">  
+            <![CDATA[ and (PB.f_bill_month_start >= str_to_date(#{billMonthStart_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonthStart_END != null and !billMonthStart_END.equals('')  ">
+            <![CDATA[ and (PB.f_bill_month_start <= str_to_date(#{billMonthStart_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonthEnd != null and !billMonthEnd.equals('')  ">  and (PB.f_bill_month_end = str_to_date(#{billMonthEnd},'%Y-%m-%d %T') ) </if>
+        <if test="billMonthEnd_START != null and !billMonthEnd_START.equals('')  ">  
+            <![CDATA[ and (PB.f_bill_month_end >= str_to_date(#{billMonthEnd_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonthEnd_END != null and !billMonthEnd_END.equals('')  ">
+            <![CDATA[ and (PB.f_bill_month_end <= str_to_date(#{billMonthEnd_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payDayStart != null and !payDayStart.equals('')  ">  and (PB.f_pay_day_start = str_to_date(#{payDayStart},'%Y-%m-%d %T') ) </if>
+        <if test="payDayStart_START != null and !payDayStart_START.equals('')  ">  
+            <![CDATA[ and (PB.f_pay_day_start >= str_to_date(#{payDayStart_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payDayStart_END != null and !payDayStart_END.equals('')  ">
+            <![CDATA[ and (PB.f_pay_day_start <= str_to_date(#{payDayStart_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payDayEnd != null and !payDayEnd.equals('')  ">  and (PB.f_pay_day_end = str_to_date(#{payDayEnd},'%Y-%m-%d %T') ) </if>
+        <if test="payDayEnd_START != null and !payDayEnd_START.equals('')  ">  
+            <![CDATA[ and (PB.f_pay_day_end >= str_to_date(#{payDayEnd_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payDayEnd_END != null and !payDayEnd_END.equals('')  ">
+            <![CDATA[ and (PB.f_pay_day_end <= str_to_date(#{payDayEnd_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="hbAmount != null">  and (PB.f_hb_amount = #{hbAmount} ) </if>
+        <if test="preferType != null">  and (PB.f_prefer_type = #{preferType} ) </if>
+        <if test="tBillCycleId != null">  and (PB.t_bill_cycle_id = #{tBillCycleId} ) </if>
+        <if test="tGroupBuildingBillCycleConfigFId != null">  and (PB.t_group_building_bill_cycle_config_f_id = #{tGroupBuildingBillCycleConfigFId} ) </if>
+        <if test="cashStatus != null">  and (PB.f_cash_status = #{cashStatus} ) </if>
+        <if test="tRealroomSoftwareFeeFId != null">  and (PB.t_realroom_software_fee_f_id = #{tRealroomSoftwareFeeFId} ) </if>
+        <if test="lastUnpaid != null">  and (PB.f_last_unpaid = #{lastUnpaid} ) </if>
+        <if test="bankCollectionStatus != null">  and (PB.f_bank_collection_status = #{bankCollectionStatus} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PB.f_id = #{id} ) </if>
+        <if test="shortCode != null and !shortCode.equals('')  ">  and (PB.f_short_code like CONCAT('%',#{shortCode},'%') ) </if>
+        <if test="amount != null and !amount.equals('')  ">  and (PB.f_amount = #{amount} ) </if>
+        <if test="month != null and !month.equals('')  ">  and (PB.f_month = str_to_date(#{month},'%Y-%m-%d %T') ) </if>
+        <if test="month_START != null and !month_START.equals('')  ">  
+            <![CDATA[ and (PB.f_month >= str_to_date(#{month_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="month_END != null and !month_END.equals('')  ">
+            <![CDATA[ and (PB.f_month <= str_to_date(#{month_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonth != null and !billMonth.equals('')  ">  and (PB.f_bill_month = str_to_date(#{billMonth},'%Y-%m-%d %T') ) </if>
+        <if test="billMonth_START != null and !billMonth_START.equals('')  ">  
+            <![CDATA[ and (PB.f_bill_month >= str_to_date(#{billMonth_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonth_END != null and !billMonth_END.equals('')  ">
+            <![CDATA[ and (PB.f_bill_month <= str_to_date(#{billMonth_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="isPay != null and !isPay.equals('')  ">  and (PB.f_is_pay = #{isPay} ) </if>
+        <if test="payTime != null and !payTime.equals('')  ">  and (PB.f_pay_time = str_to_date(#{payTime},'%Y-%m-%d %T') ) </if>
+        <if test="payTime_START != null and !payTime_START.equals('')  ">  
+            <![CDATA[ and (PB.f_pay_time >= str_to_date(#{payTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payTime_END != null and !payTime_END.equals('')  ">
+            <![CDATA[ and (PB.f_pay_time <= str_to_date(#{payTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="financeStatus != null and !financeStatus.equals('')  ">  and (PB.f_finance_status = #{financeStatus} ) </if>
+        <if test="deduPrice != null and !deduPrice.equals('')  ">  and (PB.f_dedu_price = #{deduPrice} ) </if>
+        <if test="paymentWay != null and !paymentWay.equals('')  ">  and (PB.f_payment_way = #{paymentWay} ) </if>
+        <if test="tRealRoomFId != null and !tRealRoomFId.equals('')  ">  and (PB.t_real_room_f_id = #{tRealRoomFId} ) </if>
+        <if test="propertyProprietorId != null and !propertyProprietorId.equals('')  ">  and (PB.f_property_proprietor_id like CONCAT('%',#{propertyProprietorId},'%') ) </if>
+        <if test="succPayAmount != null and !succPayAmount.equals('')  ">  and (PB.f_succ_pay_amount = #{succPayAmount} ) </if>
+        <if test="discount != null and !discount.equals('')  ">  and (PB.f_discount = #{discount} ) </if>
+        <if test="prizeRecordId != null and !prizeRecordId.equals('')  ">  and (PB.f_prize_record_id like CONCAT('%',#{prizeRecordId},'%') ) </if>
+        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PB.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">  
+            <![CDATA[ and (PB.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">
+            <![CDATA[ and (PB.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PB.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+            <![CDATA[ and (PB.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+            <![CDATA[ and (PB.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PB.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>
+        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">  
+            <![CDATA[ and (PB.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">
+            <![CDATA[ and (PB.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PB.f_sys0_add_user = #{sys0AddUser} ) </if>
+        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PB.f_sys0_upd_user = #{sys0UpdUser} ) </if>
+        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PB.f_sys0_del_user = #{sys0DelUser} ) </if>
+        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PB.f_sys0_del_state = #{sys0DelState} ) </if>
+        <if test="sys0DelState == null or sys0DelState == '' ">  and (PB.f_sys0_del_state = 0 ) </if>
+        <if test="billTimeCfgId != null and !billTimeCfgId.equals('')  ">  and (PB.f_bill_time_cfg_id = #{billTimeCfgId} ) </if>
+        <if test="billTypeId != null and !billTypeId.equals('')  ">  and (PB.f_bill_type_id = #{billTypeId} ) </if>
+        <if test="billTypeName != null and !billTypeName.equals('')  ">  and (PB.f_bill_type_name like CONCAT('%',#{billTypeName},'%') ) </if>
+        <if test="isPropFee != null and !isPropFee.equals('')  ">  and (PB.f_is_prop_fee = #{isPropFee} ) </if>
+        <if test="paytimeType != null and !paytimeType.equals('')  ">  and (PB.f_paytime_type = #{paytimeType} ) </if>
+        <if test="cycleType != null and !cycleType.equals('')  ">  and (PB.f_cycle_type = #{cycleType} ) </if>
+        <if test="billMonthSize != null and !billMonthSize.equals('')  ">  and (PB.f_bill_month_size = #{billMonthSize} ) </if>
+        <if test="billMonthStart != null and !billMonthStart.equals('')  ">  and (PB.f_bill_month_start = str_to_date(#{billMonthStart},'%Y-%m-%d %T') ) </if>
+        <if test="billMonthStart_START != null and !billMonthStart_START.equals('')  ">  
+            <![CDATA[ and (PB.f_bill_month_start >= str_to_date(#{billMonthStart_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonthStart_END != null and !billMonthStart_END.equals('')  ">
+            <![CDATA[ and (PB.f_bill_month_start <= str_to_date(#{billMonthStart_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonthEnd != null and !billMonthEnd.equals('')  ">  and (PB.f_bill_month_end = str_to_date(#{billMonthEnd},'%Y-%m-%d %T') ) </if>
+        <if test="billMonthEnd_START != null and !billMonthEnd_START.equals('')  ">  
+            <![CDATA[ and (PB.f_bill_month_end >= str_to_date(#{billMonthEnd_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="billMonthEnd_END != null and !billMonthEnd_END.equals('')  ">
+            <![CDATA[ and (PB.f_bill_month_end <= str_to_date(#{billMonthEnd_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payDayStart != null and !payDayStart.equals('')  ">  and (PB.f_pay_day_start = str_to_date(#{payDayStart},'%Y-%m-%d %T') ) </if>
+        <if test="payDayStart_START != null and !payDayStart_START.equals('')  ">  
+            <![CDATA[ and (PB.f_pay_day_start >= str_to_date(#{payDayStart_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payDayStart_END != null and !payDayStart_END.equals('')  ">
+            <![CDATA[ and (PB.f_pay_day_start <= str_to_date(#{payDayStart_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payDayEnd != null and !payDayEnd.equals('')  ">  and (PB.f_pay_day_end = str_to_date(#{payDayEnd},'%Y-%m-%d %T') ) </if>
+        <if test="payDayEnd_START != null and !payDayEnd_START.equals('')  ">  
+            <![CDATA[ and (PB.f_pay_day_end >= str_to_date(#{payDayEnd_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payDayEnd_END != null and !payDayEnd_END.equals('')  ">
+            <![CDATA[ and (PB.f_pay_day_end <= str_to_date(#{payDayEnd_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="hbAmount != null and !hbAmount.equals('')  ">  and (PB.f_hb_amount = #{hbAmount} ) </if>
+        <if test="preferType != null and !preferType.equals('')  ">  and (PB.f_prefer_type = #{preferType} ) </if>
+        <if test="tBillCycleId != null and !tBillCycleId.equals('')  ">  and (PB.t_bill_cycle_id = #{tBillCycleId} ) </if>
+        <if test="tGroupBuildingBillCycleConfigFId != null and !tGroupBuildingBillCycleConfigFId.equals('')  ">  and (PB.t_group_building_bill_cycle_config_f_id = #{tGroupBuildingBillCycleConfigFId} ) </if>
+        <if test="cashStatus != null and !cashStatus.equals('')  ">  and (PB.f_cash_status = #{cashStatus} ) </if>
+        <if test="tRealroomSoftwareFeeFId != null and !tRealroomSoftwareFeeFId.equals('')  ">  and (PB.t_realroom_software_fee_f_id = #{tRealroomSoftwareFeeFId} ) </if>
+        <if test="lastUnpaid != null and !lastUnpaid.equals('')  ">  and (PB.f_last_unpaid = #{lastUnpaid} ) </if>
+        <if test="bankCollectionStatus != null and !bankCollectionStatus.equals('')  ">  and (PB.f_bank_collection_status = #{bankCollectionStatus} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="payBillBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="payBillBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="payBillBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="payBillBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_pay_bill PB
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询()信息。 -->
+	<sql id="select_payBill">
+		SELECT <include refid="payBillBase.queryHead"/>
+		<include refid="payBillBase.busiQueryCondition"/>
+		<include refid="payBillBase.dimCheckSql"/>
+		ORDER BY PB.f_id DESC
+	</sql>
+	<select id="select_payBill" parameterType="java.util.Map" resultMap="payBillBase.payBillExtendMap">
+		<include refid="payBillBase.select_payBill"/>
+	</select>
+	
+	<!-- 根据条件分页查询()信息  -->
+	<sql id="select_payBill_withPage">
+		SELECT <include refid="payBillBase.queryHead"/>
+		<include refid="payBillBase.busiQueryCondition"/>
+		<include refid="payBillBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_payBill_withPage" resultMap="payBillBase.payBillExtendMap" parameterType="java.util.Map">
+		<include refid="payBillBase.select_payBill_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个()信息。 -->
+	<sql id="select_payBill_bySeqId">
+		SELECT <include refid="payBillBase.queryHead"/>
+		<include refid="payBillBase.busiQueryCondition"/>
+		 and PB.f_id = #{_parameter}
+	</sql>
+	<select id="select_payBill_bySeqId" parameterType="java.math.BigInteger" resultMap="payBillBase.payBillBaseMap">
+		<include refid="payBillBase.select_payBill_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的()记录数  -->
+	<sql id="select_payBill_count">
+		SELECT COUNT(*)
+		<include refid="payBillBase.busiQueryCount"/>
+		<include refid="payBillBase.dimCheckSql"/>
+	</sql>
+	<select id="select_payBill_count" resultType="java.lang.Integer">
+		<include refid="payBillBase.select_payBill_count"/>
+	</select>
+	
+	 <!-- 往()新增一条记录。 -->
+	 <sql id="insert_payBill">
+		INSERT INTO t_pay_bill 
+		(f_id,f_short_code,f_amount,f_month,f_bill_month,f_is_pay,f_pay_time,f_finance_status,f_dedu_price,f_payment_way,t_real_room_f_id,f_property_proprietor_id,f_succ_pay_amount,f_discount,f_prize_record_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_bill_time_cfg_id,f_bill_type_id,f_bill_type_name,f_is_prop_fee,f_paytime_type,f_cycle_type,f_bill_month_size,f_bill_month_start,f_bill_month_end,f_pay_day_start,f_pay_day_end,f_hb_amount,f_prefer_type,t_bill_cycle_id,t_group_building_bill_cycle_config_f_id,f_cash_status,t_realroom_software_fee_f_id,f_last_unpaid,f_bank_collection_status) VALUES 
+		(#{id},#{shortCode,jdbcType=VARCHAR},#{amount},str_to_date(#{month,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{billMonth,jdbcType=DATE},'%Y-%m-%d %T'),#{isPay},str_to_date(#{payTime,jdbcType=DATE},'%Y-%m-%d %T'),#{financeStatus},#{deduPrice},#{paymentWay},#{tRealRoomFId},#{propertyProprietorId,jdbcType=VARCHAR},#{succPayAmount},#{discount},#{prizeRecordId,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0,#{billTimeCfgId},#{billTypeId},#{billTypeName,jdbcType=VARCHAR},#{isPropFee},#{paytimeType},#{cycleType},#{billMonthSize},str_to_date(#{billMonthStart,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{billMonthEnd,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{payDayStart,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{payDayEnd,jdbcType=DATE},'%Y-%m-%d %T'),#{hbAmount},#{preferType},#{tBillCycleId},#{tGroupBuildingBillCycleConfigFId},#{cashStatus},#{tRealroomSoftwareFeeFId},#{lastUnpaid},#{bankCollectionStatus})
+	 </sql>
+    <insert id="insert_payBill" parameterType="PayBill">
+		<include refid="payBillBase.insert_payBill"/>
+    </insert>
+    
+	<!-- 批量新增()信息 -->
+    <insert id="insert_payBill_Batch" parameterType="java.util.List">
+    	INSERT INTO t_pay_bill 
+		(f_id,f_short_code,f_amount,f_month,f_bill_month,f_is_pay,f_pay_time,f_finance_status,f_dedu_price,f_payment_way,t_real_room_f_id,f_property_proprietor_id,f_succ_pay_amount,f_discount,f_prize_record_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_bill_time_cfg_id,f_bill_type_id,f_bill_type_name,f_is_prop_fee,f_paytime_type,f_cycle_type,f_bill_month_size,f_bill_month_start,f_bill_month_end,f_pay_day_start,f_pay_day_end,f_hb_amount,f_prefer_type,t_bill_cycle_id,t_group_building_bill_cycle_config_f_id,f_cash_status,t_realroom_software_fee_f_id,f_last_unpaid,f_bank_collection_status) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.shortCode,jdbcType=VARCHAR},#{item.amount},str_to_date(#{item.month,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.billMonth,jdbcType=DATE},'%Y-%m-%d %T'),#{item.isPay},str_to_date(#{item.payTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.financeStatus},#{item.deduPrice},#{item.paymentWay},#{item.tRealRoomFId},#{item.propertyProprietorId,jdbcType=VARCHAR},#{item.succPayAmount},#{item.discount},#{item.prizeRecordId,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0,#{item.billTimeCfgId},#{item.billTypeId},#{item.billTypeName,jdbcType=VARCHAR},#{item.isPropFee},#{item.paytimeType},#{item.cycleType},#{item.billMonthSize},str_to_date(#{item.billMonthStart,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.billMonthEnd,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.payDayStart,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.payDayEnd,jdbcType=DATE},'%Y-%m-%d %T'),#{item.hbAmount},#{item.preferType},#{item.tBillCycleId},#{item.tGroupBuildingBillCycleConfigFId},#{item.cashStatus},#{item.tRealroomSoftwareFeeFId},#{item.lastUnpaid},#{item.bankCollectionStatus})
+		</foreach>
+    </insert>
+    
+    <!-- 更新()信息。 -->
+    <sql id="update_payBill">
+		UPDATE t_pay_bill
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="shortCode != null and !shortCode.equals('') "> ,f_short_code=#{shortCode}</if>
+ 		<if test="amount != null and !amount.equals('') "> ,f_amount=#{amount}</if>
+ 		<if test="month != null and !month.equals('') "> ,f_month=str_to_date(#{month},'%Y-%m-%d %T')</if>
+ 		<if test="billMonth != null and !billMonth.equals('') "> ,f_bill_month=str_to_date(#{billMonth},'%Y-%m-%d %T')</if>
+ 		<if test="isPay != null and !isPay.equals('') "> ,f_is_pay=#{isPay}</if>
+ 		<if test="payTime != null and !payTime.equals('') "> ,f_pay_time=str_to_date(#{payTime},'%Y-%m-%d %T')</if>
+ 		<if test="financeStatus != null and !financeStatus.equals('') "> ,f_finance_status=#{financeStatus}</if>
+ 		<if test="deduPrice != null and !deduPrice.equals('') "> ,f_dedu_price=#{deduPrice}</if>
+ 		<if test="paymentWay != null and !paymentWay.equals('') "> ,f_payment_way=#{paymentWay}</if>
+ 		<if test="tRealRoomFId != null and !tRealRoomFId.equals('') "> ,t_real_room_f_id=#{tRealRoomFId}</if>
+ 		<if test="propertyProprietorId != null and !propertyProprietorId.equals('') "> ,f_property_proprietor_id=#{propertyProprietorId}</if>
+ 		<if test="succPayAmount != null and !succPayAmount.equals('') "> ,f_succ_pay_amount=#{succPayAmount}</if>
+ 		<if test="discount != null and !discount.equals('') "> ,f_discount=#{discount}</if>
+ 		<if test="prizeRecordId != null and !prizeRecordId.equals('') "> ,f_prize_record_id=#{prizeRecordId}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+ 		<if test="billTimeCfgId != null and !billTimeCfgId.equals('') "> ,f_bill_time_cfg_id=#{billTimeCfgId}</if>
+ 		<if test="billTypeId != null and !billTypeId.equals('') "> ,f_bill_type_id=#{billTypeId}</if>
+ 		<if test="billTypeName != null and !billTypeName.equals('') "> ,f_bill_type_name=#{billTypeName}</if>
+ 		<if test="isPropFee != null and !isPropFee.equals('') "> ,f_is_prop_fee=#{isPropFee}</if>
+ 		<if test="paytimeType != null and !paytimeType.equals('') "> ,f_paytime_type=#{paytimeType}</if>
+ 		<if test="cycleType != null and !cycleType.equals('') "> ,f_cycle_type=#{cycleType}</if>
+ 		<if test="billMonthSize != null and !billMonthSize.equals('') "> ,f_bill_month_size=#{billMonthSize}</if>
+ 		<if test="billMonthStart != null and !billMonthStart.equals('') "> ,f_bill_month_start=str_to_date(#{billMonthStart},'%Y-%m-%d %T')</if>
+ 		<if test="billMonthEnd != null and !billMonthEnd.equals('') "> ,f_bill_month_end=str_to_date(#{billMonthEnd},'%Y-%m-%d %T')</if>
+ 		<if test="payDayStart != null and !payDayStart.equals('') "> ,f_pay_day_start=str_to_date(#{payDayStart},'%Y-%m-%d %T')</if>
+ 		<if test="payDayEnd != null and !payDayEnd.equals('') "> ,f_pay_day_end=str_to_date(#{payDayEnd},'%Y-%m-%d %T')</if>
+ 		<if test="hbAmount != null and !hbAmount.equals('') "> ,f_hb_amount=#{hbAmount}</if>
+ 		<if test="preferType != null and !preferType.equals('') "> ,f_prefer_type=#{preferType}</if>
+ 		<if test="tBillCycleId != null and !tBillCycleId.equals('') "> ,t_bill_cycle_id=#{tBillCycleId}</if>
+ 		<if test="tGroupBuildingBillCycleConfigFId != null and !tGroupBuildingBillCycleConfigFId.equals('') "> ,t_group_building_bill_cycle_config_f_id=#{tGroupBuildingBillCycleConfigFId}</if>
+ 		<if test="cashStatus != null and !cashStatus.equals('') "> ,f_cash_status=#{cashStatus}</if>
+ 		<if test="tRealroomSoftwareFeeFId != null and !tRealroomSoftwareFeeFId.equals('') "> ,t_realroom_software_fee_f_id=#{tRealroomSoftwareFeeFId}</if>
+ 		<if test="lastUnpaid != null and !lastUnpaid.equals('') "> ,f_last_unpaid=#{lastUnpaid}</if>
+ 		<if test="bankCollectionStatus != null and !bankCollectionStatus.equals('') "> ,f_bank_collection_status=#{bankCollectionStatus}</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_payBill" parameterType="PayBill">
+		<include refid="payBillBase.update_payBill"/>
+    </update>
+    
+    <!-- 批量更新()信息。 -->
+    <update id="update_payBill_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_bill
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.shortCode != null and !item.shortCode.equals('')  "> ,f_short_code=#{item.shortCode}</if>
+ 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if>
+ 		<if test="item.month != null and !item.month.equals('')  "> ,f_month=str_to_date(#{item.month},'%Y-%m-%d %T')</if>
+ 		<if test="item.billMonth != null and !item.billMonth.equals('')  "> ,f_bill_month=str_to_date(#{item.billMonth},'%Y-%m-%d %T')</if>
+ 		<if test="item.isPay != null and !item.isPay.equals('')  "> ,f_is_pay=#{item.isPay}</if>
+ 		<if test="item.payTime != null and !item.payTime.equals('')  "> ,f_pay_time=str_to_date(#{item.payTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.financeStatus != null and !item.financeStatus.equals('')  "> ,f_finance_status=#{item.financeStatus}</if>
+ 		<if test="item.deduPrice != null and !item.deduPrice.equals('')  "> ,f_dedu_price=#{item.deduPrice}</if>
+ 		<if test="item.paymentWay != null and !item.paymentWay.equals('')  "> ,f_payment_way=#{item.paymentWay}</if>
+ 		<if test="item.tRealRoomFId != null and !item.tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{item.tRealRoomFId}</if>
+ 		<if test="item.propertyProprietorId != null and !item.propertyProprietorId.equals('')  "> ,f_property_proprietor_id=#{item.propertyProprietorId}</if>
+ 		<if test="item.succPayAmount != null and !item.succPayAmount.equals('')  "> ,f_succ_pay_amount=#{item.succPayAmount}</if>
+ 		<if test="item.discount != null and !item.discount.equals('')  "> ,f_discount=#{item.discount}</if>
+ 		<if test="item.prizeRecordId != null and !item.prizeRecordId.equals('')  "> ,f_prize_record_id=#{item.prizeRecordId}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>
+ 		<if test="item.billTimeCfgId != null and !item.billTimeCfgId.equals('')  "> ,f_bill_time_cfg_id=#{item.billTimeCfgId}</if>
+ 		<if test="item.billTypeId != null and !item.billTypeId.equals('')  "> ,f_bill_type_id=#{item.billTypeId}</if>
+ 		<if test="item.billTypeName != null and !item.billTypeName.equals('')  "> ,f_bill_type_name=#{item.billTypeName}</if>
+ 		<if test="item.isPropFee != null and !item.isPropFee.equals('')  "> ,f_is_prop_fee=#{item.isPropFee}</if>
+ 		<if test="item.paytimeType != null and !item.paytimeType.equals('')  "> ,f_paytime_type=#{item.paytimeType}</if>
+ 		<if test="item.cycleType != null and !item.cycleType.equals('')  "> ,f_cycle_type=#{item.cycleType}</if>
+ 		<if test="item.billMonthSize != null and !item.billMonthSize.equals('')  "> ,f_bill_month_size=#{item.billMonthSize}</if>
+ 		<if test="item.billMonthStart != null and !item.billMonthStart.equals('')  "> ,f_bill_month_start=str_to_date(#{item.billMonthStart},'%Y-%m-%d %T')</if>
+ 		<if test="item.billMonthEnd != null and !item.billMonthEnd.equals('')  "> ,f_bill_month_end=str_to_date(#{item.billMonthEnd},'%Y-%m-%d %T')</if>
+ 		<if test="item.payDayStart != null and !item.payDayStart.equals('')  "> ,f_pay_day_start=str_to_date(#{item.payDayStart},'%Y-%m-%d %T')</if>
+ 		<if test="item.payDayEnd != null and !item.payDayEnd.equals('')  "> ,f_pay_day_end=str_to_date(#{item.payDayEnd},'%Y-%m-%d %T')</if>
+ 		<if test="item.hbAmount != null and !item.hbAmount.equals('')  "> ,f_hb_amount=#{item.hbAmount}</if>
+ 		<if test="item.preferType != null and !item.preferType.equals('')  "> ,f_prefer_type=#{item.preferType}</if>
+ 		<if test="item.tBillCycleId != null and !item.tBillCycleId.equals('')  "> ,t_bill_cycle_id=#{item.tBillCycleId}</if>
+ 		<if test="item.tGroupBuildingBillCycleConfigFId != null and !item.tGroupBuildingBillCycleConfigFId.equals('')  "> ,t_group_building_bill_cycle_config_f_id=#{item.tGroupBuildingBillCycleConfigFId}</if>
+ 		<if test="item.cashStatus != null and !item.cashStatus.equals('')  "> ,f_cash_status=#{item.cashStatus}</if>
+ 		<if test="item.tRealroomSoftwareFeeFId != null and !item.tRealroomSoftwareFeeFId.equals('')  "> ,t_realroom_software_fee_f_id=#{item.tRealroomSoftwareFeeFId}</if>
+ 		<if test="item.lastUnpaid != null and !item.lastUnpaid.equals('')  "> ,f_last_unpaid=#{item.lastUnpaid}</if>
+ 		<if test="item.bankCollectionStatus != null and !item.bankCollectionStatus.equals('')  "> ,f_bank_collection_status=#{item.bankCollectionStatus}</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除()信息_逻辑删除。 -->
+    <sql id="delete_payBill_Logic">
+		UPDATE t_pay_bill
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="shortCode != null and !shortCode.equals('')  "> ,f_short_code=#{shortCode}</if>
+ 		<if test="amount != null and !amount.equals('')  "> ,f_amount=#{amount}</if>
+ 		<if test="month != null and !month.equals('')  "> ,f_month=str_to_date(#{month},'%Y-%m-%d %T')</if>
+ 		<if test="billMonth != null and !billMonth.equals('')  "> ,f_bill_month=str_to_date(#{billMonth},'%Y-%m-%d %T')</if>
+ 		<if test="isPay != null and !isPay.equals('')  "> ,f_is_pay=#{isPay}</if>
+ 		<if test="payTime != null and !payTime.equals('')  "> ,f_pay_time=str_to_date(#{payTime},'%Y-%m-%d %T')</if>
+ 		<if test="financeStatus != null and !financeStatus.equals('')  "> ,f_finance_status=#{financeStatus}</if>
+ 		<if test="deduPrice != null and !deduPrice.equals('')  "> ,f_dedu_price=#{deduPrice}</if>
+ 		<if test="paymentWay != null and !paymentWay.equals('')  "> ,f_payment_way=#{paymentWay}</if>
+ 		<if test="tRealRoomFId != null and !tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{tRealRoomFId}</if>
+ 		<if test="propertyProprietorId != null and !propertyProprietorId.equals('')  "> ,f_property_proprietor_id=#{propertyProprietorId}</if>
+ 		<if test="succPayAmount != null and !succPayAmount.equals('')  "> ,f_succ_pay_amount=#{succPayAmount}</if>
+ 		<if test="discount != null and !discount.equals('')  "> ,f_discount=#{discount}</if>
+ 		<if test="prizeRecordId != null and !prizeRecordId.equals('')  "> ,f_prize_record_id=#{prizeRecordId}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="billTimeCfgId != null and !billTimeCfgId.equals('')  "> ,f_bill_time_cfg_id=#{billTimeCfgId}</if>
+ 		<if test="billTypeId != null and !billTypeId.equals('')  "> ,f_bill_type_id=#{billTypeId}</if>
+ 		<if test="billTypeName != null and !billTypeName.equals('')  "> ,f_bill_type_name=#{billTypeName}</if>
+ 		<if test="isPropFee != null and !isPropFee.equals('')  "> ,f_is_prop_fee=#{isPropFee}</if>
+ 		<if test="paytimeType != null and !paytimeType.equals('')  "> ,f_paytime_type=#{paytimeType}</if>
+ 		<if test="cycleType != null and !cycleType.equals('')  "> ,f_cycle_type=#{cycleType}</if>
+ 		<if test="billMonthSize != null and !billMonthSize.equals('')  "> ,f_bill_month_size=#{billMonthSize}</if>
+ 		<if test="billMonthStart != null and !billMonthStart.equals('')  "> ,f_bill_month_start=str_to_date(#{billMonthStart},'%Y-%m-%d %T')</if>
+ 		<if test="billMonthEnd != null and !billMonthEnd.equals('')  "> ,f_bill_month_end=str_to_date(#{billMonthEnd},'%Y-%m-%d %T')</if>
+ 		<if test="payDayStart != null and !payDayStart.equals('')  "> ,f_pay_day_start=str_to_date(#{payDayStart},'%Y-%m-%d %T')</if>
+ 		<if test="payDayEnd != null and !payDayEnd.equals('')  "> ,f_pay_day_end=str_to_date(#{payDayEnd},'%Y-%m-%d %T')</if>
+ 		<if test="hbAmount != null and !hbAmount.equals('')  "> ,f_hb_amount=#{hbAmount}</if>
+ 		<if test="preferType != null and !preferType.equals('')  "> ,f_prefer_type=#{preferType}</if>
+ 		<if test="tBillCycleId != null and !tBillCycleId.equals('')  "> ,t_bill_cycle_id=#{tBillCycleId}</if>
+ 		<if test="tGroupBuildingBillCycleConfigFId != null and !tGroupBuildingBillCycleConfigFId.equals('')  "> ,t_group_building_bill_cycle_config_f_id=#{tGroupBuildingBillCycleConfigFId}</if>
+ 		<if test="cashStatus != null and !cashStatus.equals('')  "> ,f_cash_status=#{cashStatus}</if>
+ 		<if test="tRealroomSoftwareFeeFId != null and !tRealroomSoftwareFeeFId.equals('')  "> ,t_realroom_software_fee_f_id=#{tRealroomSoftwareFeeFId}</if>
+ 		<if test="lastUnpaid != null and !lastUnpaid.equals('')  "> ,f_last_unpaid=#{lastUnpaid}</if>
+ 		<if test="bankCollectionStatus != null and !bankCollectionStatus.equals('')  "> ,f_bank_collection_status=#{bankCollectionStatus}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_payBill_Logic" parameterType="PayBill">
+		<include refid="payBillBase.delete_payBill_Logic"/>
+    </update>
+    
+    <!-- 批量删除()信息_逻辑删除 -->
+    <update id="delete_payBill_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_pay_bill
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.shortCode != null and !item.shortCode.equals('')  "> ,f_short_code=#{item.shortCode}</if>
+ 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if>
+ 		<if test="item.month != null and !item.month.equals('')  "> ,f_month=str_to_date(#{item.month},'%Y-%m-%d %T')</if>
+ 		<if test="item.billMonth != null and !item.billMonth.equals('')  "> ,f_bill_month=str_to_date(#{item.billMonth},'%Y-%m-%d %T')</if>
+ 		<if test="item.isPay != null and !item.isPay.equals('')  "> ,f_is_pay=#{item.isPay}</if>
+ 		<if test="item.payTime != null and !item.payTime.equals('')  "> ,f_pay_time=str_to_date(#{item.payTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.financeStatus != null and !item.financeStatus.equals('')  "> ,f_finance_status=#{item.financeStatus}</if>
+ 		<if test="item.deduPrice != null and !item.deduPrice.equals('')  "> ,f_dedu_price=#{item.deduPrice}</if>
+ 		<if test="item.paymentWay != null and !item.paymentWay.equals('')  "> ,f_payment_way=#{item.paymentWay}</if>
+ 		<if test="item.tRealRoomFId != null and !item.tRealRoomFId.equals('')  "> ,t_real_room_f_id=#{item.tRealRoomFId}</if>
+ 		<if test="item.propertyProprietorId != null and !item.propertyProprietorId.equals('')  "> ,f_property_proprietor_id=#{item.propertyProprietorId}</if>
+ 		<if test="item.succPayAmount != null and !item.succPayAmount.equals('')  "> ,f_succ_pay_amount=#{item.succPayAmount}</if>
+ 		<if test="item.discount != null and !item.discount.equals('')  "> ,f_discount=#{item.discount}</if>
+ 		<if test="item.prizeRecordId != null and !item.prizeRecordId.equals('')  "> ,f_prize_record_id=#{item.prizeRecordId}</if>
+ 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if>
+ 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if>
+ 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if>
+ 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if>
+ 		<if test="item.billTimeCfgId != null and !item.billTimeCfgId.equals('')  "> ,f_bill_time_cfg_id=#{item.billTimeCfgId}</if>
+ 		<if test="item.billTypeId != null and !item.billTypeId.equals('')  "> ,f_bill_type_id=#{item.billTypeId}</if>
+ 		<if test="item.billTypeName != null and !item.billTypeName.equals('')  "> ,f_bill_type_name=#{item.billTypeName}</if>
+ 		<if test="item.isPropFee != null and !item.isPropFee.equals('')  "> ,f_is_prop_fee=#{item.isPropFee}</if>
+ 		<if test="item.paytimeType != null and !item.paytimeType.equals('')  "> ,f_paytime_type=#{item.paytimeType}</if>
+ 		<if test="item.cycleType != null and !item.cycleType.equals('')  "> ,f_cycle_type=#{item.cycleType}</if>
+ 		<if test="item.billMonthSize != null and !item.billMonthSize.equals('')  "> ,f_bill_month_size=#{item.billMonthSize}</if>
+ 		<if test="item.billMonthStart != null and !item.billMonthStart.equals('')  "> ,f_bill_month_start=str_to_date(#{item.billMonthStart},'%Y-%m-%d %T')</if>
+ 		<if test="item.billMonthEnd != null and !item.billMonthEnd.equals('')  "> ,f_bill_month_end=str_to_date(#{item.billMonthEnd},'%Y-%m-%d %T')</if>
+ 		<if test="item.payDayStart != null and !item.payDayStart.equals('')  "> ,f_pay_day_start=str_to_date(#{item.payDayStart},'%Y-%m-%d %T')</if>
+ 		<if test="item.payDayEnd != null and !item.payDayEnd.equals('')  "> ,f_pay_day_end=str_to_date(#{item.payDayEnd},'%Y-%m-%d %T')</if>
+ 		<if test="item.hbAmount != null and !item.hbAmount.equals('')  "> ,f_hb_amount=#{item.hbAmount}</if>
+ 		<if test="item.preferType != null and !item.preferType.equals('')  "> ,f_prefer_type=#{item.preferType}</if>
+ 		<if test="item.tBillCycleId != null and !item.tBillCycleId.equals('')  "> ,t_bill_cycle_id=#{item.tBillCycleId}</if>
+ 		<if test="item.tGroupBuildingBillCycleConfigFId != null and !item.tGroupBuildingBillCycleConfigFId.equals('')  "> ,t_group_building_bill_cycle_config_f_id=#{item.tGroupBuildingBillCycleConfigFId}</if>
+ 		<if test="item.cashStatus != null and !item.cashStatus.equals('')  "> ,f_cash_status=#{item.cashStatus}</if>
+ 		<if test="item.tRealroomSoftwareFeeFId != null and !item.tRealroomSoftwareFeeFId.equals('')  "> ,t_realroom_software_fee_f_id=#{item.tRealroomSoftwareFeeFId}</if>
+ 		<if test="item.lastUnpaid != null and !item.lastUnpaid.equals('')  "> ,f_last_unpaid=#{item.lastUnpaid}</if>
+ 		<if test="item.bankCollectionStatus != null and !item.bankCollectionStatus.equals('')  "> ,f_bank_collection_status=#{item.bankCollectionStatus}</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除()信息。 -->
+    <sql id="delete_payBill">
+		DELETE FROM t_pay_bill WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_payBill" parameterType="java.lang.String">
+		<include refid="payBillBase.delete_payBill"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除()信息。 -->
+    <delete id="delete_payBill_Batch" parameterType="java.util.List">
+		DELETE FROM t_pay_bill WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

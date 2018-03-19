@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+            
+	
+	<!-- 奖池抽象类 -->
+	<bean id="abstractPrizePool" class="com.cnfantasia.server.api.prize.service.AbstractPrizePool" abstract="true">
+		<property name="dualDao"  ref="dualDao"/>
+		<property name="prizeRuleManager"  ref="prizeRuleManager"/>
+		<property name="commonPrizeService"  ref="commonPrizeService"/>
+		<property name="prizeDao"  ref="prizeDao"/>
+	</bean>
+	<!-- 签约小区抽奖prizePool -->
+	<bean id="prizePoolSign" class="com.cnfantasia.server.api.prize.service.PrizePoolSign" parent="abstractPrizePool"  scope="singleton">
+	</bean>
+	<!-- 非签约小区抽奖prizePool -->
+	<bean id="prizePoolUnSign" class="com.cnfantasia.server.api.prize.service.PrizePoolUnSign" parent="abstractPrizePool"  scope="singleton">
+	</bean>
+	
+	
+	<!-- 奖池组抽象类 -->
+	<bean id="abstractPrizePoolGroup" class="com.cnfantasia.server.api.prize.service.AbstractPrizePoolGroup" abstract="true">
+	</bean>
+	
+	<!-- 奖池组抽奖 -->
+	<bean id="prizePoolGroup" class="com.cnfantasia.server.api.prize.service.PrizePoolGroup" parent="abstractPrizePoolGroup" init-method="init" scope="singleton">
+		<constructor-arg name="prizePoolSign" ref="prizePoolSign" />
+		<constructor-arg name="prizePoolUnSign" ref="prizePoolUnSign" />
+	</bean>
+	
+	
+	<!-- 奖池处理工厂 -->
+	<bean id="prizePoolFactory" class="com.cnfantasia.server.api.prize.service.PrizePoolFactory2DB" scope="singleton">
+		<property name="prizeDao" ref="prizeDao"></property>
+		<property name="commonRoomService" ref="commonRoomService"></property>
+		<property name="uuidManager" ref="uuidManager" />
+		<property name="prizeRecordTmpBaseDao" ref="prizeRecordTmpBaseDao" />
+		<property name="prizeRecordBaseDao" ref="prizeRecordBaseDao" />
+		<property name="surpriseGiftService" ref="surpriseGiftService" />
+	</bean>
+	<!-- <bean id="prizePoolFactory" class="com.cnfantasia.server.api.prize.service.PrizePoolFactory" scope="singleton">
+		<property name="prizePoolGroup" ref="prizePoolGroup"></property>
+		<property name="prizeRuleManager" ref="prizeRuleManager" />
+		<property name="prizeRuleLoaderService" ref="prizeRuleLoaderService" />
+		<property name="commonRoomService" ref="commonRoomService" />
+		<property name="dualDao" ref="dualDao" />
+		<property name="commonPrizeService" ref="commonPrizeService" />
+		<property name="uuidManager" ref="uuidManager" />
+		<property name="prizeRecordTmpBaseDao" ref="prizeRecordTmpBaseDao" />
+		<property name="prizeRecordBaseDao" ref="prizeRecordBaseDao" />
+	</bean> -->
+	
+	<bean id="prizeService" class="com.cnfantasia.server.api.prize.service.PrizeService">
+		<property name="commonRoomService" ref="commonRoomService"/>
+		<property name="prizeDao" ref="prizeDao"/>
+		<!-- <property name="userTmpBaseDao" ref="userTmpBaseDao"/> -->
+		<!-- <property name="userDao" ref="userDao"/> -->
+		<property name="dualDao" ref="dualDao"/>
+		<property name="userHasTRoomBaseDao" ref="userHasTRoomBaseDao"/>
+		<property name="userBaseDao" ref="userBaseDao"/>
+		<!-- <property name="sysParamManager" ref="sysParamManager" /> -->
+		<property name="prizePoolFactory" ref="prizePoolFactory" />
+		<property name="commonDeviceService" ref="commonDeviceService" />
+		
+		<property name="commonPrizeService" ref="commonPrizeService" />
+		<property name="commonUserService" ref="commonUserService" />
+		<property name="prizeRuleManager" ref="prizeRuleManager"></property>
+		
+		<property name="uuidManager" ref="uuidManager"></property>
+		<property name="msgpushService" ref="msgpushService"></property>
+		<property name="surpriseGiftService" ref="surpriseGiftService"></property>
+		
+		<property name="discount2hbRule" ref="discount2hbRule"></property>
+	</bean>
+	
+</beans>  

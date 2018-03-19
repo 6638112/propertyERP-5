@@ -1,0 +1,47 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%
+	String path2 = request.getContextPath();
+	String basePath2 = request.getScheme() + "://"
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path2;
+%>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"></meta>
+	<meta name="viewport" content="width=640,minimum-scale=0.5,maximum-scale=1.0,user-scalable=no, initial-scale=1.0"></meta>
+	<link href="<%=basePath2%>/css/main.css" rel="stylesheet" type="text/css" ></link>
+	<title>下载页面</title>
+	<script type="text/javascript">
+		function androidDown(){
+			<%
+			if(request.getAttribute("androidPath")!=null){
+				%>window.location="<%=request.getAttribute("androidPath")%>";<%
+			}
+			%>
+		}
+		function iosDown(){
+			<%
+			if(request.getAttribute("iosPath")!=null){
+				%>window.location="<%=request.getAttribute("iosPath")%>";<%
+			}
+			%>
+		}
+	</script>
+</head>
+<body>
+	<section class="main">
+		<div class="txt-01">Hello!<br></br>欢迎下载解放区</div>
+		<figure><img src="<%=basePath2%>/images/logo-small.png"></img></figure>
+		<div class="txt-02">解放区</div>	
+		<!-- <div class="txt-03">版本 1.01</div> -->
+	</section>
+	<section class="dl-btn">
+		<div class="btn" onclick="androidDown();"><img src="<%=basePath2%>/images/android-icon.png"></img>Android 下载 <%=request.getAttribute("androiddVer")==null?"":request.getAttribute("androiddVer")%> </div>
+	    <div class="btn mtop40" onclick="iosDown();"><img src="<%=basePath2%>/images/app-icon.png"></img>App Store 下载 <%=request.getAttribute("iosVer")==null?"":request.getAttribute("iosVer")%> </div>
+	</section>
+	<footer>
+		<p>Copyright <span>&copy;</span> 2014 深圳前海邻里乐科技服务有限公司 <br />All rights reserved.</p>
+	</footer>
+</body>
+
+</html>

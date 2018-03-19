@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eubyProductFightGroups">
+    <resultMap id="ebuyProductFightGroupsDtoMap" type="com.cnfantasia.server.api.ebuyProductFightGroups.entity.EbuyProductFightGroupsDto">
+        <id property="productFightGroupsId" column="groupId" javaType="java.math.BigInteger"/>
+        <result property="ziTiDianName" column="ziTiDianName" javaType="java.lang.String"/>
+        <result property="addMan" column="addMan" javaType="java.lang.String"/>
+        <result property="updateMan" column="updateMan" javaType="java.lang.String"/>
+        <association property="ebuyProductFightGroups" javaType="com.cnfantasia.server.domainbase.ebuyProductFightGroups.entity.EbuyProductFightGroups">
+            <id property="id" column="groupId" javaType="java.math.BigInteger"/>
+            <result property="priceDiscount" column="discountPrice" javaType="java.lang.Long"/>
+            <result property="price" column="price" javaType="java.lang.Long"/>
+            <result property="fightNum" column="fightNum" javaType="java.math.BigInteger"/>
+            <result property="fightStatus" column="fightStatus" javaType="java.lang.Long"/>
+            <result property="startDate" column="startDate" javaType="java.lang.String"/>
+            <result property="expireDate" column="expireDate" javaType="java.lang.String"/>
+            <result property="leftCount" column="leftCount" javaType="java.lang.Long"/>
+            <result property="tEbuyFightSupplyMerchantFId" column="fightMerchantId" javaType="java.math.BigInteger"/>
+        </association>
+        <association property="ebuySupplyMerchant" javaType="com.cnfantasia.server.domainbase.ebuySupplyMerchant.entity.EbuySupplyMerchant">
+            <id property="id" column="merchantId" javaType="java.math.BigInteger"/>
+            <result property="name" column="merchantName" javaType="java.lang.String"/>
+        </association>
+        <association property="ebuyProduct" javaType="com.cnfantasia.server.domainbase.ebuyProduct.entity.EbuyProduct">
+            <id property="id" column="productId" javaType="java.math.BigInteger"/>
+            <result property="name" column="productName" javaType="java.lang.String"/>
+            <result property="priceDiscount" column="productPrice" javaType="java.lang.Long"/>
+            <result property="tEbuyProductTypeFId" column="productType" javaType="java.math.BigInteger"/>
+            <result property="desc" column="productDesc" javaType="java.lang.String"/>
+        </association>
+    </resultMap>
+    <sql id="dto_from_and_where">
+        FROM t_ebuy_product_fight_groups epfg
+        LEFT JOIN t_ebuy_product ep ON epfg.t_ebuy_product_f_id = ep.f_id AND ep.f_sys0_del_state = 0
+        LEFT JOIN t_ebuy_supply_merchant esm ON ep.t_supply_merchant_f_id = esm.f_id AND ep.f_sys0_del_state = 0
+        LEFT JOIN t_ebuy_fight_supply_merchant fsm ON fsm.f_id = epfg.t_ebuy_fight_supply_merchant_f_id and fsm.f_sys0_del_state = 0
+        LEFT JOIN t_oms_user ou1 ON ou1.f_id=epfg.f_sys0_add_user
+        LEFT JOIN t_oms_user ou2 ON ou2.f_id=epfg.f_sys0_upd_user
+        WHERE epfg.f_sys0_del_state = 0
+        <if test="ziTiDianName != null and ziTiDianName != ''">
+            and fsm.f_name like concat('%',#{ziTiDianName},'%')
+        </if>
+        <if test="productFightGroupsId != null and productFightGroupsId != ''">
+            and epfg.f_id = #{productFightGroupsId}
+        </if>
+        <if test="productId != null and productId != ''">
+            and epfg.t_ebuy_product_f_id = #{productId}
+        </if>
+        <if test="fightStatus != null and !fightStatus.equals('') and fightStatus == '3'.toString()">
+            and epfg.f_start_date &lt; now() and epfg.f_expire_date &lt; now()
+        </if>
+        <if test="fightStatus != null and !fightStatus.equals('') and fightStatus == '0'.toString()">
+            and epfg.f_start_date > now() and epfg.f_expire_date > now()
+        </if>
+        <if test="fightStatus != null and !fightStatus.equals('') and fightStatus == '1'.toString()">
+            and epfg.f_start_date &lt; now() and epfg.f_expire_date > now()
+        </if>
+        <if test="productName != null and productName != ''">
+            and ep.f_name like concat('%', #{productName}, '%')
+        </if>
+        <if test="supplyMerchantName != null and supplyMerchantName != ''">
+            and esm.f_name like concat('%', #{supplyMerchantName}, '%')
+        </if>
+        <if test="expireDate != null and expireDate != ''">
+            and epfg.f_expire_date &lt;= #{expireDate}
+        </if>
+        <choose>
+            <when test="sortType != null and sortType == '2'.toString()">
+                ORDER BY epfg.f_start_date DESC
+            </when>
+            <when test="sortType != null and sortType == '3'.toString()">
+                ORDER BY epfg.f_expire_date DESC
+            </when>
+            <otherwise>ORDER BY epfg.f_id DESC </otherwise>
+        </choose>
+    </sql>
+    <select id="getEbuyProductFightGroups" parameterType="Map" resultMap="ebuyProductFightGroupsDtoMap">
+        SELECT
+        epfg.f_id as groupId,
+        epfg.t_ebuy_product_f_id as productId,
+        epfg.t_ebuy_fight_supply_merchant_f_id as merchantId,
+        epfg.f_price_discount as discountPrice,
+        epfg.f_price as price,
+        epfg.f_fight_num as fightNum,
+        case when epfg.f_start_date &lt; now() and epfg.f_expire_date &lt; now() then 3 WHEN epfg.f_start_date > now() and epfg.f_expire_date > now() then 0 else 1 end fightStatus,
+        epfg.f_left_count as leftCount,
+        epfg.t_ebuy_fight_supply_merchant_f_id fightMerchantId,
+        date_format(epfg.f_start_date,'%Y-%m-%d %T') as startDate,
+        date_format(epfg.f_expire_date,'%Y-%m-%d %T') as expireDate,
+        esm.f_name as merchantName,
+        ep.f_name as productName,
+        ep.f_price_discount as productPrice,
+        ep.t_ebuy_product_type_f_id as productType,
+        ep.f_desc as productDesc,
+        fsm.f_name as ziTiDianName,
+        IF (
+			ou1.f_real_name IS NULL
+			OR ou1.f_real_name = '',
+			ou1.f_user_account,
+			ou1.f_real_name
+		) AS addMan,
+		IF (
+			ou2.f_real_name IS NULL
+			OR ou2.f_real_name = '',
+			ou2.f_user_account,
+			ou2.f_real_name
+		) AS updateMan
+        <include refid="dto_from_and_where"/>
+        <if test="begin != null and length != null">
+            limit #{begin}, #{length}
+        </if>
+    </select>
+
+    <select id="getEbuyProductFightGroupsCount" parameterType="Map" resultType="java.math.BigInteger">
+        SELECT COUNT(1)
+        <include refid="dto_from_and_where"/>
+    </select>
+
+    <delete id="updateProductFightGroupsPriceByProductId" parameterType="java.util.Map">
+        UPDATE t_ebuy_product_fight_groups SET f_price_discount = #{price} WHERE t_ebuy_product_f_id = #{productId}
+    </delete>
+</mapper>

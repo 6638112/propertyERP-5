@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:小区服务关系表 t_group_building_has_t_property_service -->
+<mapper namespace="groupBuildingHasTPropertyServiceBase">
+	<resultMap type="GroupBuildingHasTPropertyService" id="groupBuildingHasTPropertyServiceBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_group_building_f_id" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!--  -->        <result column="t_property_service_f_id" javaType="java.math.BigInteger" property="tPropertyServiceFId"/>  <!--  -->        <result column="f_server_tel" javaType="java.lang.String" property="serverTel"/>  <!-- 服务电话（座机） -->        <result column="f_server_mobile" javaType="java.lang.String" property="serverMobile"/>  <!-- 服务电话（手机） -->        <result column="f_status" javaType="java.lang.Integer" property="status"/>  <!-- 服务开启状态 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="GroupBuildingHasTPropertyService" id="groupBuildingHasTPropertyServiceExtendMap" extends="groupBuildingHasTPropertyServiceBaseMap">
+	</resultMap>
+	<resultMap type="GroupBuildingHasTPropertyService" id="groupBuildingHasTPropertyServiceBaseMap_AppendTable">
+        <id column="GBHTPSid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="GBHTPStGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!--  -->        <result column="GBHTPStPropertyServiceFId" javaType="java.math.BigInteger" property="tPropertyServiceFId"/>  <!--  -->        <result column="GBHTPSserverTel" javaType="java.lang.String" property="serverTel"/>  <!-- 服务电话（座机） -->        <result column="GBHTPSserverMobile" javaType="java.lang.String" property="serverMobile"/>  <!-- 服务电话（手机） -->        <result column="GBHTPSstatus" javaType="java.lang.Integer" property="status"/>  <!-- 服务开启状态 -->        <result column="GBHTPSsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="GBHTPSsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="GBHTPSsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="GBHTPSsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="GBHTPSsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="GBHTPSsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="GBHTPSsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="GroupBuildingHasTPropertyService" id="groupBuildingHasTPropertyServiceBaseMap_AppendTable1">
+        <id column="GBHTPS1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="GBHTPS1tGroupBuildingFId" javaType="java.math.BigInteger" property="tGroupBuildingFId"/>  <!--  -->        <result column="GBHTPS1tPropertyServiceFId" javaType="java.math.BigInteger" property="tPropertyServiceFId"/>  <!--  -->        <result column="GBHTPS1serverTel" javaType="java.lang.String" property="serverTel"/>  <!-- 服务电话（座机） -->        <result column="GBHTPS1serverMobile" javaType="java.lang.String" property="serverMobile"/>  <!-- 服务电话（手机） -->        <result column="GBHTPS1status" javaType="java.lang.Integer" property="status"/>  <!-- 服务开启状态 -->        <result column="GBHTPS1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="GBHTPS1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="GBHTPS1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="GBHTPS1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="GBHTPS1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="GBHTPS1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="GBHTPS1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		GBHTPS.f_id,GBHTPS.t_group_building_f_id,GBHTPS.t_property_service_f_id,GBHTPS.f_server_tel,GBHTPS.f_server_mobile,GBHTPS.f_status
+	</sql>
+	<sql id="queryHead_AppendTable">
+		GBHTPS.f_id as GBHTPSid,GBHTPS.t_group_building_f_id as GBHTPStGroupBuildingFId,GBHTPS.t_property_service_f_id as GBHTPStPropertyServiceFId,GBHTPS.f_server_tel as GBHTPSserverTel,GBHTPS.f_server_mobile as GBHTPSserverMobile,GBHTPS.f_status as GBHTPSstatus
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		GBHTPS1.f_id as GBHTPS1id,GBHTPS1.t_group_building_f_id as GBHTPS1tGroupBuildingFId,GBHTPS1.t_property_service_f_id as GBHTPS1tPropertyServiceFId,GBHTPS1.f_server_tel as GBHTPS1serverTel,GBHTPS1.f_server_mobile as GBHTPS1serverMobile,GBHTPS1.f_status as GBHTPS1status
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (GBHTPS.f_id = #{id} ) </if>        <if test="tGroupBuildingFId != null">  and (GBHTPS.t_group_building_f_id = #{tGroupBuildingFId} ) </if>        <if test="tPropertyServiceFId != null">  and (GBHTPS.t_property_service_f_id = #{tPropertyServiceFId} ) </if>        <if test="serverTel != null">  and (GBHTPS.f_server_tel = #{serverTel} ) </if>        <if test="serverMobile != null">  and (GBHTPS.f_server_mobile = #{serverMobile} ) </if>        <if test="status != null">  and (GBHTPS.f_status = #{status} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (GBHTPS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (GBHTPS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (GBHTPS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (GBHTPS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (GBHTPS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (GBHTPS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (GBHTPS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (GBHTPS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (GBHTPS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (GBHTPS.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (GBHTPS.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (GBHTPS.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (GBHTPS.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (GBHTPS.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (GBHTPS.f_id = #{id} ) </if>        <if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  ">  and (GBHTPS.t_group_building_f_id = #{tGroupBuildingFId} ) </if>        <if test="tPropertyServiceFId != null and !tPropertyServiceFId.equals('')  ">  and (GBHTPS.t_property_service_f_id = #{tPropertyServiceFId} ) </if>        <if test="serverTel != null and !serverTel.equals('')  ">  and (GBHTPS.f_server_tel like CONCAT('%',#{serverTel},'%') ) </if>        <if test="serverMobile != null and !serverMobile.equals('')  ">  and (GBHTPS.f_server_mobile like CONCAT('%',#{serverMobile},'%') ) </if>        <if test="status != null and !status.equals('')  ">  and (GBHTPS.f_status = #{status} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (GBHTPS.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (GBHTPS.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (GBHTPS.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (GBHTPS.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (GBHTPS.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (GBHTPS.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (GBHTPS.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (GBHTPS.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (GBHTPS.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (GBHTPS.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (GBHTPS.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (GBHTPS.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (GBHTPS.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (GBHTPS.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="groupBuildingHasTPropertyServiceBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="groupBuildingHasTPropertyServiceBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="groupBuildingHasTPropertyServiceBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="groupBuildingHasTPropertyServiceBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_group_building_has_t_property_service GBHTPS    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(小区服务关系表)信息。 -->
+	<sql id="select_groupBuildingHasTPropertyService">
+		SELECT <include refid="groupBuildingHasTPropertyServiceBase.queryHead"/>
+		<include refid="groupBuildingHasTPropertyServiceBase.busiQueryCondition"/>
+		<include refid="groupBuildingHasTPropertyServiceBase.dimCheckSql"/>
+		ORDER BY GBHTPS.f_id DESC
+	</sql>
+	<select id="select_groupBuildingHasTPropertyService" parameterType="java.util.Map" resultMap="groupBuildingHasTPropertyServiceBase.groupBuildingHasTPropertyServiceExtendMap">
+		<include refid="groupBuildingHasTPropertyServiceBase.select_groupBuildingHasTPropertyService"/>
+	</select>
+	
+	<!-- 根据条件分页查询(小区服务关系表)信息  -->
+	<sql id="select_groupBuildingHasTPropertyService_withPage">
+		SELECT <include refid="groupBuildingHasTPropertyServiceBase.queryHead"/>
+		<include refid="groupBuildingHasTPropertyServiceBase.busiQueryCondition"/>
+		<include refid="groupBuildingHasTPropertyServiceBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_groupBuildingHasTPropertyService_withPage" resultMap="groupBuildingHasTPropertyServiceBase.groupBuildingHasTPropertyServiceExtendMap" parameterType="java.util.Map">
+		<include refid="groupBuildingHasTPropertyServiceBase.select_groupBuildingHasTPropertyService_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(小区服务关系表)信息。 -->
+	<sql id="select_groupBuildingHasTPropertyService_bySeqId">
+		SELECT <include refid="groupBuildingHasTPropertyServiceBase.queryHead"/>
+		<include refid="groupBuildingHasTPropertyServiceBase.busiQueryCondition"/>
+		 and GBHTPS.f_id = #{_parameter}
+	</sql>
+	<select id="select_groupBuildingHasTPropertyService_bySeqId" parameterType="java.math.BigInteger" resultMap="groupBuildingHasTPropertyServiceBase.groupBuildingHasTPropertyServiceBaseMap">
+		<include refid="groupBuildingHasTPropertyServiceBase.select_groupBuildingHasTPropertyService_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(小区服务关系表)记录数  -->
+	<sql id="select_groupBuildingHasTPropertyService_count">
+		SELECT COUNT(*)
+		<include refid="groupBuildingHasTPropertyServiceBase.busiQueryCount"/>
+		<include refid="groupBuildingHasTPropertyServiceBase.dimCheckSql"/>
+	</sql>
+	<select id="select_groupBuildingHasTPropertyService_count" resultType="java.lang.Integer">
+		<include refid="groupBuildingHasTPropertyServiceBase.select_groupBuildingHasTPropertyService_count"/>
+	</select>
+	
+	 <!-- 往(小区服务关系表)新增一条记录。 -->
+	 <sql id="insert_groupBuildingHasTPropertyService">
+		INSERT INTO t_group_building_has_t_property_service 
+		(f_id,t_group_building_f_id,t_property_service_f_id,f_server_tel,f_server_mobile,f_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tGroupBuildingFId},#{tPropertyServiceFId},#{serverTel,jdbcType=VARCHAR},#{serverMobile,jdbcType=VARCHAR},#{status},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_groupBuildingHasTPropertyService" parameterType="GroupBuildingHasTPropertyService">
+		<include refid="groupBuildingHasTPropertyServiceBase.insert_groupBuildingHasTPropertyService"/>
+    </insert>
+    
+	<!-- 批量新增(小区服务关系表)信息 -->
+    <insert id="insert_groupBuildingHasTPropertyService_Batch" parameterType="java.util.List">
+    	INSERT INTO t_group_building_has_t_property_service 
+		(f_id,t_group_building_f_id,t_property_service_f_id,f_server_tel,f_server_mobile,f_status,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tGroupBuildingFId},#{item.tPropertyServiceFId},#{item.serverTel,jdbcType=VARCHAR},#{item.serverMobile,jdbcType=VARCHAR},#{item.status},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(小区服务关系表)信息。 -->
+    <sql id="update_groupBuildingHasTPropertyService">
+		UPDATE t_group_building_has_t_property_service		<trim prefix="SET" prefixOverrides=","> 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('') "> ,t_group_building_f_id=#{tGroupBuildingFId}</if> 		<if test="tPropertyServiceFId != null and !tPropertyServiceFId.equals('') "> ,t_property_service_f_id=#{tPropertyServiceFId}</if> 		<if test="serverTel != null and !serverTel.equals('') "> ,f_server_tel=#{serverTel}</if> 		<if test="serverMobile != null and !serverMobile.equals('') "> ,f_server_mobile=#{serverMobile}</if> 		<if test="status != null and !status.equals('') "> ,f_status=#{status}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_groupBuildingHasTPropertyService" parameterType="GroupBuildingHasTPropertyService">
+		<include refid="groupBuildingHasTPropertyServiceBase.update_groupBuildingHasTPropertyService"/>
+    </update>
+    
+    <!-- 批量更新(小区服务关系表)信息。 -->
+    <update id="update_groupBuildingHasTPropertyService_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_group_building_has_t_property_service		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if> 		<if test="item.tPropertyServiceFId != null and !item.tPropertyServiceFId.equals('')  "> ,t_property_service_f_id=#{item.tPropertyServiceFId}</if> 		<if test="item.serverTel != null and !item.serverTel.equals('')  "> ,f_server_tel=#{item.serverTel}</if> 		<if test="item.serverMobile != null and !item.serverMobile.equals('')  "> ,f_server_mobile=#{item.serverMobile}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(小区服务关系表)信息_逻辑删除。 -->
+    <sql id="delete_groupBuildingHasTPropertyService_Logic">
+		UPDATE t_group_building_has_t_property_service		<trim prefix="SET" prefixOverrides=","> 		<if test="tGroupBuildingFId != null and !tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{tGroupBuildingFId}</if> 		<if test="tPropertyServiceFId != null and !tPropertyServiceFId.equals('')  "> ,t_property_service_f_id=#{tPropertyServiceFId}</if> 		<if test="serverTel != null and !serverTel.equals('')  "> ,f_server_tel=#{serverTel}</if> 		<if test="serverMobile != null and !serverMobile.equals('')  "> ,f_server_mobile=#{serverMobile}</if> 		<if test="status != null and !status.equals('')  "> ,f_status=#{status}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_groupBuildingHasTPropertyService_Logic" parameterType="GroupBuildingHasTPropertyService">
+		<include refid="groupBuildingHasTPropertyServiceBase.delete_groupBuildingHasTPropertyService_Logic"/>
+    </update>
+    
+    <!-- 批量删除(小区服务关系表)信息_逻辑删除 -->
+    <update id="delete_groupBuildingHasTPropertyService_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_group_building_has_t_property_service		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tGroupBuildingFId != null and !item.tGroupBuildingFId.equals('')  "> ,t_group_building_f_id=#{item.tGroupBuildingFId}</if> 		<if test="item.tPropertyServiceFId != null and !item.tPropertyServiceFId.equals('')  "> ,t_property_service_f_id=#{item.tPropertyServiceFId}</if> 		<if test="item.serverTel != null and !item.serverTel.equals('')  "> ,f_server_tel=#{item.serverTel}</if> 		<if test="item.serverMobile != null and !item.serverMobile.equals('')  "> ,f_server_mobile=#{item.serverMobile}</if> 		<if test="item.status != null and !item.status.equals('')  "> ,f_status=#{item.status}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(小区服务关系表)信息。 -->
+    <sql id="delete_groupBuildingHasTPropertyService">
+		DELETE FROM t_group_building_has_t_property_service WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_groupBuildingHasTPropertyService" parameterType="java.lang.String">
+		<include refid="groupBuildingHasTPropertyServiceBase.delete_groupBuildingHasTPropertyService"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(小区服务关系表)信息。 -->
+    <delete id="delete_groupBuildingHasTPropertyService_Batch" parameterType="java.util.List">
+		DELETE FROM t_group_building_has_t_property_service WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

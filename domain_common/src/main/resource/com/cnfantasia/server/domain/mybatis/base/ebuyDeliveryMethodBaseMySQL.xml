@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:配送方式 t_ebuy_delivery_method -->
+<mapper namespace="ebuyDeliveryMethodBase">
+	<resultMap type="EbuyDeliveryMethod" id="ebuyDeliveryMethodBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="f_fee" javaType="java.lang.Long" property="fee"/>  <!-- 运费 -->        <result column="f_fast_time" javaType="java.lang.Long" property="fastTime"/>  <!-- 最快时间(分钟) -->        <result column="f_desc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="f_price_amount_start" javaType="java.lang.Long" property="priceAmountStart"/>  <!-- 商品总价起始金额(分) -->        <result column="f_price_amount_end" javaType="java.lang.Long" property="priceAmountEnd"/>  <!-- 商品总价截止金额(分) -->        <result column="f_type" javaType="java.lang.Integer" property="type"/>  <!-- 配送类型 -->
+	</resultMap>
+	<resultMap type="EbuyDeliveryMethod" id="ebuyDeliveryMethodExtendMap" extends="ebuyDeliveryMethodBaseMap">
+	</resultMap>
+	<resultMap type="EbuyDeliveryMethod" id="ebuyDeliveryMethodBaseMap_AppendTable">
+        <id column="EDMid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EDMname" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="EDMfee" javaType="java.lang.Long" property="fee"/>  <!-- 运费 -->        <result column="EDMfastTime" javaType="java.lang.Long" property="fastTime"/>  <!-- 最快时间(分钟) -->        <result column="EDMdesc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="EDMsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EDMsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EDMsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EDMsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EDMsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EDMsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EDMsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="EDMpriceAmountStart" javaType="java.lang.Long" property="priceAmountStart"/>  <!-- 商品总价起始金额(分) -->        <result column="EDMpriceAmountEnd" javaType="java.lang.Long" property="priceAmountEnd"/>  <!-- 商品总价截止金额(分) -->        <result column="EDMtype" javaType="java.lang.Integer" property="type"/>  <!-- 配送类型 -->
+	</resultMap>
+	<resultMap type="EbuyDeliveryMethod" id="ebuyDeliveryMethodBaseMap_AppendTable1">
+        <id column="EDM1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EDM1name" javaType="java.lang.String" property="name"/>  <!-- 名称 -->        <result column="EDM1fee" javaType="java.lang.Long" property="fee"/>  <!-- 运费 -->        <result column="EDM1fastTime" javaType="java.lang.Long" property="fastTime"/>  <!-- 最快时间(分钟) -->        <result column="EDM1desc" javaType="java.lang.String" property="desc"/>  <!-- 描述 -->        <result column="EDM1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="EDM1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="EDM1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="EDM1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="EDM1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="EDM1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="EDM1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="EDM1priceAmountStart" javaType="java.lang.Long" property="priceAmountStart"/>  <!-- 商品总价起始金额(分) -->        <result column="EDM1priceAmountEnd" javaType="java.lang.Long" property="priceAmountEnd"/>  <!-- 商品总价截止金额(分) -->        <result column="EDM1type" javaType="java.lang.Integer" property="type"/>  <!-- 配送类型 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EDM.f_id,EDM.f_name,EDM.f_fee,EDM.f_fast_time,EDM.f_desc,EDM.f_price_amount_start,EDM.f_price_amount_end,EDM.f_type
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EDM.f_id as EDMid,EDM.f_name as EDMname,EDM.f_fee as EDMfee,EDM.f_fast_time as EDMfastTime,EDM.f_desc as EDMdesc,EDM.f_price_amount_start as EDMpriceAmountStart,EDM.f_price_amount_end as EDMpriceAmountEnd,EDM.f_type as EDMtype
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EDM1.f_id as EDM1id,EDM1.f_name as EDM1name,EDM1.f_fee as EDM1fee,EDM1.f_fast_time as EDM1fastTime,EDM1.f_desc as EDM1desc,EDM1.f_price_amount_start as EDM1priceAmountStart,EDM1.f_price_amount_end as EDM1priceAmountEnd,EDM1.f_type as EDM1type
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EDM.f_id = #{id} ) </if>        <if test="name != null">  and (EDM.f_name = #{name} ) </if>        <if test="fee != null">  and (EDM.f_fee = #{fee} ) </if>        <if test="fastTime != null">  and (EDM.f_fast_time = #{fastTime} ) </if>        <if test="desc != null">  and (EDM.f_desc = #{desc} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EDM.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EDM.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EDM.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EDM.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EDM.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EDM.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EDM.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EDM.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EDM.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EDM.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EDM.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EDM.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EDM.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EDM.f_sys0_del_state = 0 ) </if>        <if test="priceAmountStart != null">  and (EDM.f_price_amount_start = #{priceAmountStart} ) </if>        <if test="priceAmountEnd != null">  and (EDM.f_price_amount_end = #{priceAmountEnd} ) </if>        <if test="type != null">  and (EDM.f_type = #{type} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EDM.f_id = #{id} ) </if>        <if test="name != null and !name.equals('')  ">  and (EDM.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="fee != null and !fee.equals('')  ">  and (EDM.f_fee = #{fee} ) </if>        <if test="fastTime != null and !fastTime.equals('')  ">  and (EDM.f_fast_time = #{fastTime} ) </if>        <if test="desc != null and !desc.equals('')  ">  and (EDM.f_desc like CONCAT('%',#{desc},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EDM.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EDM.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EDM.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EDM.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EDM.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EDM.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EDM.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EDM.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EDM.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EDM.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EDM.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EDM.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EDM.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EDM.f_sys0_del_state = 0 ) </if>        <if test="priceAmountStart != null and !priceAmountStart.equals('')  ">  and (EDM.f_price_amount_start = #{priceAmountStart} ) </if>        <if test="priceAmountEnd != null and !priceAmountEnd.equals('')  ">  and (EDM.f_price_amount_end = #{priceAmountEnd} ) </if>        <if test="type != null and !type.equals('')  ">  and (EDM.f_type = #{type} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyDeliveryMethodBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyDeliveryMethodBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyDeliveryMethodBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyDeliveryMethodBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_delivery_method EDM    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(配送方式)信息。 -->
+	<sql id="select_ebuyDeliveryMethod">
+		SELECT <include refid="ebuyDeliveryMethodBase.queryHead"/>
+		<include refid="ebuyDeliveryMethodBase.busiQueryCondition"/>
+		<include refid="ebuyDeliveryMethodBase.dimCheckSql"/>
+		ORDER BY EDM.f_id DESC
+	</sql>
+	<select id="select_ebuyDeliveryMethod" parameterType="java.util.Map" resultMap="ebuyDeliveryMethodBase.ebuyDeliveryMethodExtendMap">
+		<include refid="ebuyDeliveryMethodBase.select_ebuyDeliveryMethod"/>
+	</select>
+	
+	<!-- 根据条件分页查询(配送方式)信息  -->
+	<sql id="select_ebuyDeliveryMethod_withPage">
+		SELECT <include refid="ebuyDeliveryMethodBase.queryHead"/>
+		<include refid="ebuyDeliveryMethodBase.busiQueryCondition"/>
+		<include refid="ebuyDeliveryMethodBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyDeliveryMethod_withPage" resultMap="ebuyDeliveryMethodBase.ebuyDeliveryMethodExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyDeliveryMethodBase.select_ebuyDeliveryMethod_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(配送方式)信息。 -->
+	<sql id="select_ebuyDeliveryMethod_bySeqId">
+		SELECT <include refid="ebuyDeliveryMethodBase.queryHead"/>
+		<include refid="ebuyDeliveryMethodBase.busiQueryCondition"/>
+		 and EDM.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyDeliveryMethod_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyDeliveryMethodBase.ebuyDeliveryMethodBaseMap">
+		<include refid="ebuyDeliveryMethodBase.select_ebuyDeliveryMethod_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(配送方式)记录数  -->
+	<sql id="select_ebuyDeliveryMethod_count">
+		SELECT COUNT(*)
+		<include refid="ebuyDeliveryMethodBase.busiQueryCount"/>
+		<include refid="ebuyDeliveryMethodBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyDeliveryMethod_count" resultType="java.lang.Integer">
+		<include refid="ebuyDeliveryMethodBase.select_ebuyDeliveryMethod_count"/>
+	</select>
+	
+	 <!-- 往(配送方式)新增一条记录。 -->
+	 <sql id="insert_ebuyDeliveryMethod">
+		INSERT INTO t_ebuy_delivery_method 
+		(f_id,f_name,f_fee,f_fast_time,f_desc,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_price_amount_start,f_price_amount_end,f_type) VALUES 
+		(#{id},#{name,jdbcType=VARCHAR},#{fee},#{fastTime},#{desc,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0,#{priceAmountStart},#{priceAmountEnd},#{type})
+	 </sql>
+    <insert id="insert_ebuyDeliveryMethod" parameterType="EbuyDeliveryMethod">
+		<include refid="ebuyDeliveryMethodBase.insert_ebuyDeliveryMethod"/>
+    </insert>
+    
+	<!-- 批量新增(配送方式)信息 -->
+    <insert id="insert_ebuyDeliveryMethod_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_delivery_method 
+		(f_id,f_name,f_fee,f_fast_time,f_desc,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_price_amount_start,f_price_amount_end,f_type) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name,jdbcType=VARCHAR},#{item.fee},#{item.fastTime},#{item.desc,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0,#{item.priceAmountStart},#{item.priceAmountEnd},#{item.type})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(配送方式)信息。 -->
+    <sql id="update_ebuyDeliveryMethod">
+		UPDATE t_ebuy_delivery_method		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="fee != null and !fee.equals('') "> ,f_fee=#{fee}</if> 		<if test="fastTime != null and !fastTime.equals('') "> ,f_fast_time=#{fastTime}</if> 		<if test="desc != null and !desc.equals('') "> ,f_desc=#{desc}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if> 		<if test="priceAmountStart != null and !priceAmountStart.equals('') "> ,f_price_amount_start=#{priceAmountStart}</if> 		<if test="priceAmountEnd != null and !priceAmountEnd.equals('') "> ,f_price_amount_end=#{priceAmountEnd}</if> 		<if test="type != null and !type.equals('') "> ,f_type=#{type}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyDeliveryMethod" parameterType="EbuyDeliveryMethod">
+		<include refid="ebuyDeliveryMethodBase.update_ebuyDeliveryMethod"/>
+    </update>
+    
+    <!-- 批量更新(配送方式)信息。 -->
+    <update id="update_ebuyDeliveryMethod_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_delivery_method		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.fee != null and !item.fee.equals('')  "> ,f_fee=#{item.fee}</if> 		<if test="item.fastTime != null and !item.fastTime.equals('')  "> ,f_fast_time=#{item.fastTime}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if> 		<if test="item.priceAmountStart != null and !item.priceAmountStart.equals('')  "> ,f_price_amount_start=#{item.priceAmountStart}</if> 		<if test="item.priceAmountEnd != null and !item.priceAmountEnd.equals('')  "> ,f_price_amount_end=#{item.priceAmountEnd}</if> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(配送方式)信息_逻辑删除。 -->
+    <sql id="delete_ebuyDeliveryMethod_Logic">
+		UPDATE t_ebuy_delivery_method		<trim prefix="SET" prefixOverrides=","> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="fee != null and !fee.equals('')  "> ,f_fee=#{fee}</if> 		<if test="fastTime != null and !fastTime.equals('')  "> ,f_fast_time=#{fastTime}</if> 		<if test="desc != null and !desc.equals('')  "> ,f_desc=#{desc}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="priceAmountStart != null and !priceAmountStart.equals('')  "> ,f_price_amount_start=#{priceAmountStart}</if> 		<if test="priceAmountEnd != null and !priceAmountEnd.equals('')  "> ,f_price_amount_end=#{priceAmountEnd}</if> 		<if test="type != null and !type.equals('')  "> ,f_type=#{type}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyDeliveryMethod_Logic" parameterType="EbuyDeliveryMethod">
+		<include refid="ebuyDeliveryMethodBase.delete_ebuyDeliveryMethod_Logic"/>
+    </update>
+    
+    <!-- 批量删除(配送方式)信息_逻辑删除 -->
+    <update id="delete_ebuyDeliveryMethod_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_delivery_method		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.fee != null and !item.fee.equals('')  "> ,f_fee=#{item.fee}</if> 		<if test="item.fastTime != null and !item.fastTime.equals('')  "> ,f_fast_time=#{item.fastTime}</if> 		<if test="item.desc != null and !item.desc.equals('')  "> ,f_desc=#{item.desc}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.priceAmountStart != null and !item.priceAmountStart.equals('')  "> ,f_price_amount_start=#{item.priceAmountStart}</if> 		<if test="item.priceAmountEnd != null and !item.priceAmountEnd.equals('')  "> ,f_price_amount_end=#{item.priceAmountEnd}</if> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(配送方式)信息。 -->
+    <sql id="delete_ebuyDeliveryMethod">
+		DELETE FROM t_ebuy_delivery_method WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyDeliveryMethod" parameterType="java.lang.String">
+		<include refid="ebuyDeliveryMethodBase.delete_ebuyDeliveryMethod"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(配送方式)信息。 -->
+    <delete id="delete_ebuyDeliveryMethod_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_delivery_method WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

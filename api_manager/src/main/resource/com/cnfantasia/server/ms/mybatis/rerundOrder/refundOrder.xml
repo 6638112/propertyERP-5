@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 退款管理 -->
+<mapper namespace="refundOrder">
+	<!-- 退款订单 -->
+	<resultMap type="com.cnfantasia.server.ms.refundOrder.entity.RefudOrderEntity" id="refundOrderMap" extends="ebuyRefundOrderBase.ebuyRefundOrderBaseMap_AppendTable">
+		<result column="EOorderNo" javaType="java.lang.String" property="orderNo"/> <!-- 订单号-->
+		<result column="REReason" javaType="java.lang.String" property="applyReason"/><!-- 申请原因 -->
+		<result column="payFlowNo" javaType="java.lang.String" property="payFlowNo"/><!-- 支付流水号 -->
+		<result column="addMan" javaType="java.lang.String" property="addMan"/>
+		<result column="updateMan" javaType="java.lang.String" property="updateMan"/>
+		<association property="ebuySupplyMerchant" javaType="com.cnfantasia.server.domainbase.ebuySupplyMerchant.entity.EbuySupplyMerchant">
+			<result column="ESMid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+	        <result column="ESMname" javaType="java.lang.String" property="name"/>  <!-- 供应商名称 -->
+	        <result column="ESMtel" javaType="java.lang.String" property="tel"/>  <!-- 供应商的联系方式 -->
+		</association>
+		<association property="deliveryOrder"  resultMap="ebuyDeliveryOrderBase.ebuyDeliveryOrderBaseMap_AppendTable"/>
+		<collection property="productList" resultMap="RefudOrderProductMap"/>
+	</resultMap>
+	<!-- 退款商品 -->
+	<resultMap type="com.cnfantasia.server.ms.refundOrder.entity.RefudOrderProductEntity" id="RefudOrderProductMap" extends="ebuyRefundOrderProductBase.ebuyRefundOrderProductBaseMap_AppendTable">
+		<result column="EPproductname" javaType="java.lang.String" property="refundproductName"/>  <!-- 商品名称 -->
+		<result column="EOHTEPproductQty" javaType="java.lang.Long" property="productQty"/><!-- 商品数量 -->
+		<result column="EOHTEPproductPrice" javaType="java.lang.Long" property="productPrice"/><!-- 商品价格 -->
+		<result column="EPTtypename" javaType="java.lang.String" property="productType"/>  <!--分类名称 -->
+	</resultMap>
+	<!-- 退款订单列表 -->
+	<select id="refundOrderListall" parameterType="java.util.Map" resultMap="refundOrderMap">
+		SELECT 
+		<include refid="ebuyRefundOrderBase.queryHead_AppendTable"/>,
+		<include refid="ebuyRefundOrderProductBase.queryHead_AppendTable" />,
+		<include refid="ebuyDeliveryOrderBase.queryHead_AppendTable"/>,
+		ESM.f_id as ESMid,ESM.f_name as ESMname,ESM.f_tel as ESMtel,date_format(ERO.f_sys0_upd_time,'%Y-%m-%d %T') as EROsys0UpdTime,
+		EOHTEP.f_product_qty as EOHTEPproductQty,
+		EOHTEP.f_product_price as EOHTEPproductPrice,
+		EO.f_order_no as EOorderNo,EPR.f_flow_no as payFlowNo,
+		IF (
+			ou1.f_real_name IS NULL
+			OR ou1.f_real_name = '',
+			ou1.f_id,
+			ou1.f_real_name
+		) AS addMan,
+		IF (
+			ou2.f_real_name IS NULL
+			OR ou2.f_real_name = '',
+			ou2.f_user_account,
+			ou2.f_real_name
+		) AS updateMan
+		FROM 
+		t_ebuy_refund_order ERO
+			LEFT JOIN t_ebuy_delivery_order EDO ON ERO.t_ebuy_delivery_order_f_id = EDO.f_id AND ERO.f_sys0_del_state=0
+			LEFT JOIN t_ebuy_order EO ON EO.f_id = EDO.t_ebuy_order_f_id
+			LEFT JOIN t_ebuy_pay_record EPR ON EPR.t_ebuy_order_f_id = EDO.t_ebuy_order_f_id
+			LEFT JOIN t_ebuy_refund_order_product EROP ON ERO.f_id = EROP.t_ebuy_refund_order_f_id
+			LEFT JOIN t_ebuy_supply_merchant ESM ON ERO.t_supply_merchant_f_id = ESM.f_id
+			LEFT JOIN t_ebuy_order_has_t_ebuy_product EOHTEP ON EOHTEP.f_id = EROP.t_ebuy_order_has_t_ebuy_product_f_id
+			left join t_user ou1 on ou1.f_id=ERO.f_sys0_add_user
+       		left join t_oms_user ou2 on ou2.f_id=ERO.f_sys0_upd_user
+			
+			WHERE 1=1 AND ERO.f_sys0_del_state=0
+        	<if test="orderNo != null and !orderNo.equals('')  ">  and (EO.f_order_no like CONCAT('%',#{orderNo},'%') ) </if>
+        	<if test="refundStatus != null and !refundStatus.equals('')">  and (ERO.f_refund_status = #{refundStatus} ) </if>
+        	<if test="refundNo != null and !refundNo.equals('')">  and (ERO.f_pay_status = #{refundNo} ) </if>
+        	<if test="buyerId != null and !buyerId.equals('')">  and (ERO.f_buyer_id = #{buyerId} ) </if>
+        	        <if test="createTime != null and !createTime.equals('')  ">  and (ERO.f_create_time = str_to_date(#{createTime},'%Y-%m-%d %T') ) </if>
+	        <if test="createTime_START != null and !createTime_START.equals('')  ">  
+	            <![CDATA[ and (ERO.f_create_time >= str_to_date(#{createTime_START},'%Y-%m-%d %T') ) ]]>
+	        </if>
+	        <if test="createTime_END != null and !createTime_END.equals('')  ">
+	            <![CDATA[ and (ERO.f_create_time <= str_to_date(#{createTime_END},'%Y-%m-%d %T') ) ]]>
+	        </if>
+	                <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ERO.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+	        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+	            <![CDATA[ and (ERO.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+	        </if>
+	        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+	            <![CDATA[ and (ERO.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+	        </if>
+			ORDER BY ERO.f_create_time DESC
+	</select>
+	
+	<!-- 退款订单数 -->
+	<select id="refundOrderListcount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(DISTINCT ERO.f_id)
+		FROM 
+		t_ebuy_refund_order ERO
+			LEFT JOIN t_ebuy_delivery_order EDO ON ERO.t_ebuy_delivery_order_f_id = EDO.f_id AND ERO.f_sys0_del_state=0
+			LEFT JOIN t_ebuy_order EO ON EO.f_id = EDO.t_ebuy_order_f_id
+			LEFT JOIN t_ebuy_pay_record EPR ON EPR.t_ebuy_order_f_id = EDO.t_ebuy_order_f_id
+			LEFT JOIN t_ebuy_refund_order_product EROP ON ERO.f_id = EROP.t_ebuy_refund_order_f_id
+			LEFT JOIN t_ebuy_supply_merchant ESM ON ERO.t_supply_merchant_f_id = ESM.f_id
+			LEFT JOIN t_ebuy_order_has_t_ebuy_product EOHTEP ON EOHTEP.f_id = EROP.t_ebuy_order_has_t_ebuy_product_f_id
+			WHERE 1=1 AND ERO.f_sys0_del_state=0
+        	<if test="orderNo != null and !orderNo.equals('')  ">  and (EO.f_order_no like CONCAT('%',#{orderNo},'%') ) </if>
+        	<if test="refundStatus != null and !refundStatus.equals('')">  and (ERO.f_refund_status = #{refundStatus} ) </if>
+        	<if test="refundNo != null and !refundNo.equals('')">  and (ERO.f_pay_status = #{refundNo} ) </if>
+        	<if test="buyerId != null and !buyerId.equals('')">  and (ERO.f_buyer_id = #{buyerId} ) </if>
+        	        <if test="createTime != null and !createTime.equals('')  ">  and (ERO.f_create_time = str_to_date(#{createTime},'%Y-%m-%d %T') ) </if>
+	        <if test="createTime_START != null and !createTime_START.equals('')  ">  
+	            <![CDATA[ and (ERO.f_create_time >= str_to_date(#{createTime_START},'%Y-%m-%d %T') ) ]]>
+	        </if>
+	        <if test="createTime_END != null and !createTime_END.equals('')  ">
+	            <![CDATA[ and (ERO.f_create_time <= str_to_date(#{createTime_END},'%Y-%m-%d %T') ) ]]>
+	        </if>
+	                <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (ERO.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>
+	        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">  
+	            <![CDATA[ and (ERO.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>
+	        </if>
+	        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">
+	            <![CDATA[ and (ERO.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>
+	        </if>
+	</select>
+	
+		<!-- 退款订单详情 -->
+	<select id="refundOrderDetail" parameterType="java.math.BigInteger" resultMap="refundOrderMap">
+		SELECT 
+		<include refid="ebuyRefundOrderBase.queryHead_AppendTable"/>,
+		<include refid="ebuyRefundOrderProductBase.queryHead_AppendTable" />,
+		EP.f_name as EPproductname,EPT.f_type_name as EPTtypename,
+		ESM.f_id as ESMid,ESM.f_name as ESMname,ESM.f_tel as ESMtel,
+		EOHTEP.f_product_qty as EOHTEPproductQty,
+		EOHTEP.f_product_price as EOHTEPproductPrice,ER.f_reason as REReason,
+		date_format(ERO.f_sys0_upd_time,'%Y-%m-%d %T') as EROsys0UpdTime
+		FROM 
+		t_ebuy_refund_order ERO 
+			INNER JOIN t_ebuy_refund_order_product EROP ON ERO.f_id = EROP.t_ebuy_refund_order_f_id
+			INNER JOIN t_ebuy_supply_merchant ESM ON ERO.t_supply_merchant_f_id = ESM.f_id
+			INNER JOIN t_ebuy_order_has_t_ebuy_product EOHTEP ON EOHTEP.f_id = EROP.t_ebuy_order_has_t_ebuy_product_f_id
+			INNER JOIN t_ebuy_product_shelf EPS ON EOHTEP.t_ebuy_product_f_id = EPS.f_id
+			INNER JOIN t_ebuy_product EP ON EP.f_id = EPS.t_ebuy_product_id
+			INNER JOIN  t_ebuy_product_type EPT ON EPT.f_id = EPS.t_ebuy_product_type_id
+			INNER JOIN t_ebuy_refund_audit ER ON ERO.t_ebuy_refund_audit_f_id = ER.f_id
+			WHERE 1=1 AND ERO.f_id=#{refundId}
+	</select>
+</mapper>

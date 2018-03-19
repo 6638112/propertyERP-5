@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+            
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		p:dataSource-ref="dataSourceDynamic" />
+		<!-- 注意此处的dataSource要用对，否则事务会失效！！！ -->
+	<!-- 通过AOP配置提供事务增强，让service包下所有Bean的所有方法拥有事务 -->
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="serviceMethod" expression=" execution(* com.cnfantasia.server.*.*.service..*(..))" />
+		<aop:advisor pointcut-ref="serviceMethod" advice-ref="txAdvice" />
+	</aop:config>
+	<!-- <aop:config proxy-target-class="true">
+		<aop:pointcut id="serviceMethod02" expression=" execution(* com.cnfantasia.server.apibase.*.service..*(..))" />
+		<aop:advisor pointcut-ref="serviceMethod02" advice-ref="txAdvice" />
+	</aop:config>
+	
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="serviceMethod03" expression=" execution(* com.cnfantasia.server.business.*.service..*(..))" />
+		<aop:advisor pointcut-ref="serviceMethod03" advice-ref="txAdvice" />
+	</aop:config> -->
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="save*" propagation="REQUIRED" timeout="30"/>
+	        <tx:method name="del*" propagation="REQUIRED" timeout="30"/>
+	        <tx:method name="update*" propagation="REQUIRED" timeout="30"/>
+	        <tx:method name="add*" propagation="REQUIRED" timeout="30"/>
+	        <tx:method name="find*" propagation="REQUIRED" read-only="true" timeout="30"/>
+	        <tx:method name="get*" propagation="SUPPORTS" read-only="true" timeout="30" />
+	        <tx:method name="fetch*" propagation="SUPPORTS" read-only="true" timeout="30"/>
+	        <tx:method name="*2Map*" propagation="SUPPORTS" read-only="true" timeout="30"/>
+	        <tx:method name="*" propagation="REQUIRED" timeout="30"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 支持@Transactional注解事务控制  by wenfq -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+</beans>  

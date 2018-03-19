@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户登录账号 t_login_no -->
+<mapper namespace="login">
+	<resultMap type="com.cnfantasia.server.api.login.entity.LoginNoEntity" id="loginNoEntity_Map_Append" extends="loginNoBase.loginNoBaseMap_AppendTable">
+	  	<!-- 用户信息 -->
+        <!-- <association column="t_user_f_id" javaType="com.cnfantasia.server.api.user.entity.UserEntity" property="userEntity" select="user.select_user_bySeqId"/> -->
+        <association column="LNtUserFId" javaType="com.cnfantasia.server.api.user.entity.UserEntity" property="userEntity" select="user.select_user_bySeqId"/>
+	</resultMap>
+	<!-- 根据账号密码查询登录信息 -->
+	<select id="select_loginNo_byNamePwd" parameterType="java.util.HashMap" resultMap="loginNoEntity_Map_Append">
+	     SELECT 
+	     <include refid="loginNoBase.queryHead_AppendTable"/>
+	     <![CDATA[ 
+	     FROM t_login_no LN
+	     WHERE 1=1
+	     	 AND LN.f_sys0_del_state = 0
+		     AND (LN.f_no = #{no} )
+		     AND (LN.f_password = #{password} )
+		     AND (LN.f_type = #{type} )
+	     ORDER BY LN.f_id DESC
+	     ]]>
+	</select>
+	<!-- 根据账号及类型查询登录信息 -->
+	<select id="select_loginNo_byNoAndType" parameterType="java.util.HashMap" resultMap="loginNoEntity_Map_Append">
+	     SELECT 
+	     <include refid="loginNoBase.queryHead_AppendTable"/>
+	     <![CDATA[ 
+	     FROM t_login_no LN
+	     WHERE 1=1
+	     AND LN.f_sys0_del_state = 0
+	     AND (LN.f_no = #{no} )
+	     AND (LN.f_type = #{type} )
+	     ORDER BY LN.f_id DESC
+	     ]]>
+	</select>
+	<!-- 通过用户Id，密码 设置新密码 -->
+	<!-- <update id="setNewPwd_byNamePwdType" parameterType="java.util.HashMap">
+		UPDATE t_login_no SET f_password=#{password}
+			,f_sys0_upd_time= SYSDATE()
+		WHERE 1=1
+		AND f_sys0_del_state = 0
+		AND t_user_f_id=#{tUserFId}
+    </update> -->
+    
+	<!-- 通过账号，账号类别获取对应的用户Id -->
+	<!-- <select id="select_UserId_ByAccount" parameterType="java.util.HashMap" resultType="java.math.BigInteger">
+	     SELECT LN.t_user_f_id
+	     <![CDATA[ 
+	     FROM t_login_no LN
+	     WHERE 1=1
+	     AND LN.f_sys0_del_state = 0
+	     AND (LN.f_no = #{no} )
+	     AND (LN.f_type = #{type} )
+	     ORDER BY LN.f_id DESC
+	     ]]>
+	</select> -->
+	
+	<!-- 通过用户Id和密码查询登录信息表中匹配的记录数 -->
+	<select id="select_Count_ByIdPwd" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+	     <![CDATA[ 
+	     FROM t_login_no LN
+	     WHERE 1=1
+	     AND LN.f_sys0_del_state = 0
+	     AND (LN.t_user_f_id = #{tUserFId} )
+	     AND (LN.f_password = #{password} )
+	     ]]>
+    </select>
+    
+	<!-- 根据临时用户Id删除临时中奖记录 -->
+    <update id="delete_PrizeRecordTmp_ByUserTmpId_Logic" parameterType="java.util.Map">
+    	UPDATE t_prize_record_tmp PRT
+    		INNER JOIN t_user_tmp UT ON UT.f_id = PRT.t_user_tmp_f_id AND UT.f_sys0_del_state = 0
+    			AND UT.f_device_type = #{deviceType} 
+    			AND UT.f_device_id = #{deviceId} 
+    	SET PRT.f_sys0_del_state = 1,PRT.f_sys0_del_time = SYSDATE() 
+    	WHERE 1=1
+    	AND PRT.f_sys0_del_state = 0
+    	<!-- AND t_user_tmp_f_id=#{_parameter} -->
+    	<!-- DELETE FROM t_prize_record_tmp WHERE t_user_tmp_f_id=#{_parameter} -->
+    </update>
+    
+    <!-- 查询最后一次的抽奖记录 -->
+    <select id="select_LastRecord" parameterType="java.math.BigInteger" resultMap="prizeRecordTmpBase.prizeRecordTmpBaseMap_AppendTable">
+    	SELECT <include refid="prizeRecordTmpBase.queryHead_AppendTable"/> 
+    	FROM t_prize_record_tmp PRT
+    	WHERE 1=1 
+    	AND f_sys0_del_state = 0
+    	AND PRT.t_user_tmp_f_id = #{_parameter}
+    	AND PRT.f_id = (
+    		SELECT max(f_id) 
+    		FROM t_prize_record_tmp 
+    		WHERE 1=1 
+    		AND f_sys0_del_state = 0
+    		AND t_user_tmp_f_id = #{_parameter}
+    		) 
+    </select>
+    
+</mapper>

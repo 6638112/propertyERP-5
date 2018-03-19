@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:首页分类 t_ebuy_home_type -->
+<mapper namespace="ebuyHomeTypeBase">
+	<resultMap type="EbuyHomeType" id="ebuyHomeTypeBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_name1" javaType="java.lang.String" property="name1"/>  <!-- 名称，对应女 -->        <result column="f_name2" javaType="java.lang.String" property="name2"/>  <!-- 名称,对应性别男 -->        <result column="f_name3" javaType="java.lang.String" property="name3"/>  <!-- 名称，对应性别不详显示的运营主题名称 -->        <result column="t_sort" javaType="java.lang.String" property="tSort"/>  <!-- 排序 -->        <result column="f_type" javaType="java.lang.Integer" property="type"/>  <!-- 类型 -->        <result column="f_color" javaType="java.lang.String" property="color"/>  <!-- 显示颜色 -->        <result column="f_sex" javaType="java.lang.Integer" property="sex"/>  <!-- 0男;1女;2不分性别 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="EbuyHomeType" id="ebuyHomeTypeExtendMap" extends="ebuyHomeTypeBaseMap">
+	</resultMap>
+	<resultMap type="EbuyHomeType" id="ebuyHomeTypeBaseMap_AppendTable">
+        <id column="EHTid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EHTname1" javaType="java.lang.String" property="name1"/>  <!-- 名称，对应女 -->        <result column="EHTname2" javaType="java.lang.String" property="name2"/>  <!-- 名称,对应性别男 -->        <result column="EHTname3" javaType="java.lang.String" property="name3"/>  <!-- 名称，对应性别不详显示的运营主题名称 -->        <result column="EHTtSort" javaType="java.lang.String" property="tSort"/>  <!-- 排序 -->        <result column="EHTtype" javaType="java.lang.Integer" property="type"/>  <!-- 类型 -->        <result column="EHTcolor" javaType="java.lang.String" property="color"/>  <!-- 显示颜色 -->        <result column="EHTsex" javaType="java.lang.Integer" property="sex"/>  <!-- 0男;1女;2不分性别 -->        <result column="EHTsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="EHTsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="EHTsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="EHTsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="EHTsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="EHTsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="EHTsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<resultMap type="EbuyHomeType" id="ebuyHomeTypeBaseMap_AppendTable1">
+        <id column="EHT1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="EHT1name1" javaType="java.lang.String" property="name1"/>  <!-- 名称，对应女 -->        <result column="EHT1name2" javaType="java.lang.String" property="name2"/>  <!-- 名称,对应性别男 -->        <result column="EHT1name3" javaType="java.lang.String" property="name3"/>  <!-- 名称，对应性别不详显示的运营主题名称 -->        <result column="EHT1tSort" javaType="java.lang.String" property="tSort"/>  <!-- 排序 -->        <result column="EHT1type" javaType="java.lang.Integer" property="type"/>  <!-- 类型 -->        <result column="EHT1color" javaType="java.lang.String" property="color"/>  <!-- 显示颜色 -->        <result column="EHT1sex" javaType="java.lang.Integer" property="sex"/>  <!-- 0男;1女;2不分性别 -->        <result column="EHT1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="EHT1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="EHT1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="EHT1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="EHT1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="EHT1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="EHT1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!--  -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		EHT.f_id,EHT.f_name1,EHT.f_name2,EHT.f_name3,EHT.t_sort,EHT.f_type,EHT.f_color,EHT.f_sex
+	</sql>
+	<sql id="queryHead_AppendTable">
+		EHT.f_id as EHTid,EHT.f_name1 as EHTname1,EHT.f_name2 as EHTname2,EHT.f_name3 as EHTname3,EHT.t_sort as EHTtSort,EHT.f_type as EHTtype,EHT.f_color as EHTcolor,EHT.f_sex as EHTsex
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		EHT1.f_id as EHT1id,EHT1.f_name1 as EHT1name1,EHT1.f_name2 as EHT1name2,EHT1.f_name3 as EHT1name3,EHT1.t_sort as EHT1tSort,EHT1.f_type as EHT1type,EHT1.f_color as EHT1color,EHT1.f_sex as EHT1sex
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (EHT.f_id = #{id} ) </if>        <if test="name1 != null">  and (EHT.f_name1 = #{name1} ) </if>        <if test="name2 != null">  and (EHT.f_name2 = #{name2} ) </if>        <if test="name3 != null">  and (EHT.f_name3 = #{name3} ) </if>        <if test="tSort != null">  and (EHT.t_sort = #{tSort} ) </if>        <if test="type != null">  and (EHT.f_type = #{type} ) </if>        <if test="color != null">  and (EHT.f_color = #{color} ) </if>        <if test="sex != null">  and (EHT.f_sex = #{sex} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EHT.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EHT.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EHT.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EHT.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EHT.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EHT.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EHT.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EHT.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EHT.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (EHT.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (EHT.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (EHT.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (EHT.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (EHT.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (EHT.f_id = #{id} ) </if>        <if test="name1 != null and !name1.equals('')  ">  and (EHT.f_name1 like CONCAT('%',#{name1},'%') ) </if>        <if test="name2 != null and !name2.equals('')  ">  and (EHT.f_name2 like CONCAT('%',#{name2},'%') ) </if>        <if test="name3 != null and !name3.equals('')  ">  and (EHT.f_name3 like CONCAT('%',#{name3},'%') ) </if>        <if test="tSort != null and !tSort.equals('')  ">  and (EHT.t_sort like CONCAT('%',#{tSort},'%') ) </if>        <if test="type != null and !type.equals('')  ">  and (EHT.f_type = #{type} ) </if>        <if test="color != null and !color.equals('')  ">  and (EHT.f_color like CONCAT('%',#{color},'%') ) </if>        <if test="sex != null and !sex.equals('')  ">  and (EHT.f_sex = #{sex} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (EHT.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (EHT.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (EHT.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (EHT.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (EHT.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (EHT.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (EHT.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (EHT.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (EHT.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (EHT.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (EHT.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (EHT.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (EHT.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (EHT.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="ebuyHomeTypeBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="ebuyHomeTypeBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="ebuyHomeTypeBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="ebuyHomeTypeBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_ebuy_home_type EHT    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(首页分类)信息。 -->
+	<sql id="select_ebuyHomeType">
+		SELECT <include refid="ebuyHomeTypeBase.queryHead"/>
+		<include refid="ebuyHomeTypeBase.busiQueryCondition"/>
+		<include refid="ebuyHomeTypeBase.dimCheckSql"/>
+		ORDER BY EHT.f_id DESC
+	</sql>
+	<select id="select_ebuyHomeType" parameterType="java.util.Map" resultMap="ebuyHomeTypeBase.ebuyHomeTypeExtendMap">
+		<include refid="ebuyHomeTypeBase.select_ebuyHomeType"/>
+	</select>
+	
+	<!-- 根据条件分页查询(首页分类)信息  -->
+	<sql id="select_ebuyHomeType_withPage">
+		SELECT <include refid="ebuyHomeTypeBase.queryHead"/>
+		<include refid="ebuyHomeTypeBase.busiQueryCondition"/>
+		<include refid="ebuyHomeTypeBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_ebuyHomeType_withPage" resultMap="ebuyHomeTypeBase.ebuyHomeTypeExtendMap" parameterType="java.util.Map">
+		<include refid="ebuyHomeTypeBase.select_ebuyHomeType_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(首页分类)信息。 -->
+	<sql id="select_ebuyHomeType_bySeqId">
+		SELECT <include refid="ebuyHomeTypeBase.queryHead"/>
+		<include refid="ebuyHomeTypeBase.busiQueryCondition"/>
+		 and EHT.f_id = #{_parameter}
+	</sql>
+	<select id="select_ebuyHomeType_bySeqId" parameterType="java.math.BigInteger" resultMap="ebuyHomeTypeBase.ebuyHomeTypeBaseMap">
+		<include refid="ebuyHomeTypeBase.select_ebuyHomeType_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(首页分类)记录数  -->
+	<sql id="select_ebuyHomeType_count">
+		SELECT COUNT(*)
+		<include refid="ebuyHomeTypeBase.busiQueryCount"/>
+		<include refid="ebuyHomeTypeBase.dimCheckSql"/>
+	</sql>
+	<select id="select_ebuyHomeType_count" resultType="java.lang.Integer">
+		<include refid="ebuyHomeTypeBase.select_ebuyHomeType_count"/>
+	</select>
+	
+	 <!-- 往(首页分类)新增一条记录。 -->
+	 <sql id="insert_ebuyHomeType">
+		INSERT INTO t_ebuy_home_type 
+		(f_id,f_name1,f_name2,f_name3,t_sort,f_type,f_color,f_sex,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{name1,jdbcType=VARCHAR},#{name2,jdbcType=VARCHAR},#{name3,jdbcType=VARCHAR},#{tSort,jdbcType=VARCHAR},#{type},#{color,jdbcType=VARCHAR},#{sex},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_ebuyHomeType" parameterType="EbuyHomeType">
+		<include refid="ebuyHomeTypeBase.insert_ebuyHomeType"/>
+    </insert>
+    
+	<!-- 批量新增(首页分类)信息 -->
+    <insert id="insert_ebuyHomeType_Batch" parameterType="java.util.List">
+    	INSERT INTO t_ebuy_home_type 
+		(f_id,f_name1,f_name2,f_name3,t_sort,f_type,f_color,f_sex,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.name1,jdbcType=VARCHAR},#{item.name2,jdbcType=VARCHAR},#{item.name3,jdbcType=VARCHAR},#{item.tSort,jdbcType=VARCHAR},#{item.type},#{item.color,jdbcType=VARCHAR},#{item.sex},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(首页分类)信息。 -->
+    <sql id="update_ebuyHomeType">
+		UPDATE t_ebuy_home_type		<trim prefix="SET" prefixOverrides=","> 		<if test="name1 != null and !name1.equals('') "> ,f_name1=#{name1}</if> 		<if test="name2 != null and !name2.equals('') "> ,f_name2=#{name2}</if> 		<if test="name3 != null and !name3.equals('') "> ,f_name3=#{name3}</if> 		<if test="tSort != null and !tSort.equals('') "> ,t_sort=#{tSort}</if> 		<if test="type != null and !type.equals('') "> ,f_type=#{type}</if> 		<if test="color != null and !color.equals('') "> ,f_color=#{color}</if> 		<if test="sex != null and !sex.equals('') "> ,f_sex=#{sex}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_ebuyHomeType" parameterType="EbuyHomeType">
+		<include refid="ebuyHomeTypeBase.update_ebuyHomeType"/>
+    </update>
+    
+    <!-- 批量更新(首页分类)信息。 -->
+    <update id="update_ebuyHomeType_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_home_type		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name1 != null and !item.name1.equals('')  "> ,f_name1=#{item.name1}</if> 		<if test="item.name2 != null and !item.name2.equals('')  "> ,f_name2=#{item.name2}</if> 		<if test="item.name3 != null and !item.name3.equals('')  "> ,f_name3=#{item.name3}</if> 		<if test="item.tSort != null and !item.tSort.equals('')  "> ,t_sort=#{item.tSort}</if> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.color != null and !item.color.equals('')  "> ,f_color=#{item.color}</if> 		<if test="item.sex != null and !item.sex.equals('')  "> ,f_sex=#{item.sex}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(首页分类)信息_逻辑删除。 -->
+    <sql id="delete_ebuyHomeType_Logic">
+		UPDATE t_ebuy_home_type		<trim prefix="SET" prefixOverrides=","> 		<if test="name1 != null and !name1.equals('')  "> ,f_name1=#{name1}</if> 		<if test="name2 != null and !name2.equals('')  "> ,f_name2=#{name2}</if> 		<if test="name3 != null and !name3.equals('')  "> ,f_name3=#{name3}</if> 		<if test="tSort != null and !tSort.equals('')  "> ,t_sort=#{tSort}</if> 		<if test="type != null and !type.equals('')  "> ,f_type=#{type}</if> 		<if test="color != null and !color.equals('')  "> ,f_color=#{color}</if> 		<if test="sex != null and !sex.equals('')  "> ,f_sex=#{sex}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_ebuyHomeType_Logic" parameterType="EbuyHomeType">
+		<include refid="ebuyHomeTypeBase.delete_ebuyHomeType_Logic"/>
+    </update>
+    
+    <!-- 批量删除(首页分类)信息_逻辑删除 -->
+    <update id="delete_ebuyHomeType_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_ebuy_home_type		<trim prefix="SET" prefixOverrides=","> 		<if test="item.name1 != null and !item.name1.equals('')  "> ,f_name1=#{item.name1}</if> 		<if test="item.name2 != null and !item.name2.equals('')  "> ,f_name2=#{item.name2}</if> 		<if test="item.name3 != null and !item.name3.equals('')  "> ,f_name3=#{item.name3}</if> 		<if test="item.tSort != null and !item.tSort.equals('')  "> ,t_sort=#{item.tSort}</if> 		<if test="item.type != null and !item.type.equals('')  "> ,f_type=#{item.type}</if> 		<if test="item.color != null and !item.color.equals('')  "> ,f_color=#{item.color}</if> 		<if test="item.sex != null and !item.sex.equals('')  "> ,f_sex=#{item.sex}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(首页分类)信息。 -->
+    <sql id="delete_ebuyHomeType">
+		DELETE FROM t_ebuy_home_type WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_ebuyHomeType" parameterType="java.lang.String">
+		<include refid="ebuyHomeTypeBase.delete_ebuyHomeType"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(首页分类)信息。 -->
+    <delete id="delete_ebuyHomeType_Batch" parameterType="java.util.List">
+		DELETE FROM t_ebuy_home_type WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

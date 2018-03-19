@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:记录用户的Cookie t_cookie_info -->
+<mapper namespace="cookieInfoBase">
+	<resultMap type="CookieInfo" id="cookieInfoBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_hmsr" javaType="java.lang.String" property="hmsr"/>  <!--  -->        <result column="f_hmmd" javaType="java.lang.String" property="hmmd"/>  <!--  -->        <result column="f_hmpl" javaType="java.lang.String" property="hmpl"/>  <!--  -->        <result column="f_hmkw" javaType="java.lang.String" property="hmkw"/>  <!--  -->        <result column="f_hmci" javaType="java.lang.String" property="hmci"/>  <!--  -->        <result column="t_property_company_f_id" javaType="java.math.BigInteger" property="tPropertyCompanyFId"/>  <!-- 申请注册物业公司的ID -->        <result column="t_oms_user_f_id" javaType="java.math.BigInteger" property="tOmsUserFId"/>  <!-- 所对应后台管理账号id -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CookieInfo" id="cookieInfoExtendMap" extends="cookieInfoBaseMap">
+	</resultMap>
+	<resultMap type="CookieInfo" id="cookieInfoBaseMap_AppendTable">
+        <id column="CIid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CIhmsr" javaType="java.lang.String" property="hmsr"/>  <!--  -->        <result column="CIhmmd" javaType="java.lang.String" property="hmmd"/>  <!--  -->        <result column="CIhmpl" javaType="java.lang.String" property="hmpl"/>  <!--  -->        <result column="CIhmkw" javaType="java.lang.String" property="hmkw"/>  <!--  -->        <result column="CIhmci" javaType="java.lang.String" property="hmci"/>  <!--  -->        <result column="CItPropertyCompanyFId" javaType="java.math.BigInteger" property="tPropertyCompanyFId"/>  <!-- 申请注册物业公司的ID -->        <result column="CItOmsUserFId" javaType="java.math.BigInteger" property="tOmsUserFId"/>  <!-- 所对应后台管理账号id -->        <result column="CIsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CIsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CIsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CIsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CIsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CIsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CIsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="CookieInfo" id="cookieInfoBaseMap_AppendTable1">
+        <id column="CI1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CI1hmsr" javaType="java.lang.String" property="hmsr"/>  <!--  -->        <result column="CI1hmmd" javaType="java.lang.String" property="hmmd"/>  <!--  -->        <result column="CI1hmpl" javaType="java.lang.String" property="hmpl"/>  <!--  -->        <result column="CI1hmkw" javaType="java.lang.String" property="hmkw"/>  <!--  -->        <result column="CI1hmci" javaType="java.lang.String" property="hmci"/>  <!--  -->        <result column="CI1tPropertyCompanyFId" javaType="java.math.BigInteger" property="tPropertyCompanyFId"/>  <!-- 申请注册物业公司的ID -->        <result column="CI1tOmsUserFId" javaType="java.math.BigInteger" property="tOmsUserFId"/>  <!-- 所对应后台管理账号id -->        <result column="CI1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="CI1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="CI1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="CI1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="CI1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="CI1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="CI1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CI.f_id,CI.f_hmsr,CI.f_hmmd,CI.f_hmpl,CI.f_hmkw,CI.f_hmci,CI.t_property_company_f_id,CI.t_oms_user_f_id
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CI.f_id as CIid,CI.f_hmsr as CIhmsr,CI.f_hmmd as CIhmmd,CI.f_hmpl as CIhmpl,CI.f_hmkw as CIhmkw,CI.f_hmci as CIhmci,CI.t_property_company_f_id as CItPropertyCompanyFId,CI.t_oms_user_f_id as CItOmsUserFId
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CI1.f_id as CI1id,CI1.f_hmsr as CI1hmsr,CI1.f_hmmd as CI1hmmd,CI1.f_hmpl as CI1hmpl,CI1.f_hmkw as CI1hmkw,CI1.f_hmci as CI1hmci,CI1.t_property_company_f_id as CI1tPropertyCompanyFId,CI1.t_oms_user_f_id as CI1tOmsUserFId
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CI.f_id = #{id} ) </if>        <if test="hmsr != null">  and (CI.f_hmsr = #{hmsr} ) </if>        <if test="hmmd != null">  and (CI.f_hmmd = #{hmmd} ) </if>        <if test="hmpl != null">  and (CI.f_hmpl = #{hmpl} ) </if>        <if test="hmkw != null">  and (CI.f_hmkw = #{hmkw} ) </if>        <if test="hmci != null">  and (CI.f_hmci = #{hmci} ) </if>        <if test="tPropertyCompanyFId != null">  and (CI.t_property_company_f_id = #{tPropertyCompanyFId} ) </if>        <if test="tOmsUserFId != null">  and (CI.t_oms_user_f_id = #{tOmsUserFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CI.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CI.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CI.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CI.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CI.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CI.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CI.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CI.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CI.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (CI.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (CI.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (CI.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (CI.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (CI.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CI.f_id = #{id} ) </if>        <if test="hmsr != null and !hmsr.equals('')  ">  and (CI.f_hmsr like CONCAT('%',#{hmsr},'%') ) </if>        <if test="hmmd != null and !hmmd.equals('')  ">  and (CI.f_hmmd like CONCAT('%',#{hmmd},'%') ) </if>        <if test="hmpl != null and !hmpl.equals('')  ">  and (CI.f_hmpl like CONCAT('%',#{hmpl},'%') ) </if>        <if test="hmkw != null and !hmkw.equals('')  ">  and (CI.f_hmkw like CONCAT('%',#{hmkw},'%') ) </if>        <if test="hmci != null and !hmci.equals('')  ">  and (CI.f_hmci like CONCAT('%',#{hmci},'%') ) </if>        <if test="tPropertyCompanyFId != null and !tPropertyCompanyFId.equals('')  ">  and (CI.t_property_company_f_id = #{tPropertyCompanyFId} ) </if>        <if test="tOmsUserFId != null and !tOmsUserFId.equals('')  ">  and (CI.t_oms_user_f_id = #{tOmsUserFId} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (CI.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (CI.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (CI.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (CI.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (CI.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (CI.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (CI.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (CI.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (CI.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (CI.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (CI.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (CI.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (CI.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (CI.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="cookieInfoBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="cookieInfoBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="cookieInfoBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="cookieInfoBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_cookie_info CI    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(记录用户的Cookie)信息。 -->
+	<sql id="select_cookieInfo">
+		SELECT <include refid="cookieInfoBase.queryHead"/>
+		<include refid="cookieInfoBase.busiQueryCondition"/>
+		<include refid="cookieInfoBase.dimCheckSql"/>
+		ORDER BY CI.f_id DESC
+	</sql>
+	<select id="select_cookieInfo" parameterType="java.util.Map" resultMap="cookieInfoBase.cookieInfoExtendMap">
+		<include refid="cookieInfoBase.select_cookieInfo"/>
+	</select>
+	
+	<!-- 根据条件分页查询(记录用户的Cookie)信息  -->
+	<sql id="select_cookieInfo_withPage">
+		SELECT <include refid="cookieInfoBase.queryHead"/>
+		<include refid="cookieInfoBase.busiQueryCondition"/>
+		<include refid="cookieInfoBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_cookieInfo_withPage" resultMap="cookieInfoBase.cookieInfoExtendMap" parameterType="java.util.Map">
+		<include refid="cookieInfoBase.select_cookieInfo_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(记录用户的Cookie)信息。 -->
+	<sql id="select_cookieInfo_bySeqId">
+		SELECT <include refid="cookieInfoBase.queryHead"/>
+		<include refid="cookieInfoBase.busiQueryCondition"/>
+		 and CI.f_id = #{_parameter}
+	</sql>
+	<select id="select_cookieInfo_bySeqId" parameterType="java.math.BigInteger" resultMap="cookieInfoBase.cookieInfoBaseMap">
+		<include refid="cookieInfoBase.select_cookieInfo_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(记录用户的Cookie)记录数  -->
+	<sql id="select_cookieInfo_count">
+		SELECT COUNT(*)
+		<include refid="cookieInfoBase.busiQueryCount"/>
+		<include refid="cookieInfoBase.dimCheckSql"/>
+	</sql>
+	<select id="select_cookieInfo_count" resultType="java.lang.Integer">
+		<include refid="cookieInfoBase.select_cookieInfo_count"/>
+	</select>
+	
+	 <!-- 往(记录用户的Cookie)新增一条记录。 -->
+	 <sql id="insert_cookieInfo">
+		INSERT INTO t_cookie_info 
+		(f_id,f_hmsr,f_hmmd,f_hmpl,f_hmkw,f_hmci,t_property_company_f_id,t_oms_user_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{hmsr,jdbcType=VARCHAR},#{hmmd,jdbcType=VARCHAR},#{hmpl,jdbcType=VARCHAR},#{hmkw,jdbcType=VARCHAR},#{hmci,jdbcType=VARCHAR},#{tPropertyCompanyFId},#{tOmsUserFId},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_cookieInfo" parameterType="CookieInfo">
+		<include refid="cookieInfoBase.insert_cookieInfo"/>
+    </insert>
+    
+	<!-- 批量新增(记录用户的Cookie)信息 -->
+    <insert id="insert_cookieInfo_Batch" parameterType="java.util.List">
+    	INSERT INTO t_cookie_info 
+		(f_id,f_hmsr,f_hmmd,f_hmpl,f_hmkw,f_hmci,t_property_company_f_id,t_oms_user_f_id,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.hmsr,jdbcType=VARCHAR},#{item.hmmd,jdbcType=VARCHAR},#{item.hmpl,jdbcType=VARCHAR},#{item.hmkw,jdbcType=VARCHAR},#{item.hmci,jdbcType=VARCHAR},#{item.tPropertyCompanyFId},#{item.tOmsUserFId},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(记录用户的Cookie)信息。 -->
+    <sql id="update_cookieInfo">
+		UPDATE t_cookie_info		<trim prefix="SET" prefixOverrides=","> 		<if test="hmsr != null and !hmsr.equals('') "> ,f_hmsr=#{hmsr}</if> 		<if test="hmmd != null and !hmmd.equals('') "> ,f_hmmd=#{hmmd}</if> 		<if test="hmpl != null and !hmpl.equals('') "> ,f_hmpl=#{hmpl}</if> 		<if test="hmkw != null and !hmkw.equals('') "> ,f_hmkw=#{hmkw}</if> 		<if test="hmci != null and !hmci.equals('') "> ,f_hmci=#{hmci}</if> 		<if test="tPropertyCompanyFId != null and !tPropertyCompanyFId.equals('') "> ,t_property_company_f_id=#{tPropertyCompanyFId}</if> 		<if test="tOmsUserFId != null and !tOmsUserFId.equals('') "> ,t_oms_user_f_id=#{tOmsUserFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_cookieInfo" parameterType="CookieInfo">
+		<include refid="cookieInfoBase.update_cookieInfo"/>
+    </update>
+    
+    <!-- 批量更新(记录用户的Cookie)信息。 -->
+    <update id="update_cookieInfo_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_cookie_info		<trim prefix="SET" prefixOverrides=","> 		<if test="item.hmsr != null and !item.hmsr.equals('')  "> ,f_hmsr=#{item.hmsr}</if> 		<if test="item.hmmd != null and !item.hmmd.equals('')  "> ,f_hmmd=#{item.hmmd}</if> 		<if test="item.hmpl != null and !item.hmpl.equals('')  "> ,f_hmpl=#{item.hmpl}</if> 		<if test="item.hmkw != null and !item.hmkw.equals('')  "> ,f_hmkw=#{item.hmkw}</if> 		<if test="item.hmci != null and !item.hmci.equals('')  "> ,f_hmci=#{item.hmci}</if> 		<if test="item.tPropertyCompanyFId != null and !item.tPropertyCompanyFId.equals('')  "> ,t_property_company_f_id=#{item.tPropertyCompanyFId}</if> 		<if test="item.tOmsUserFId != null and !item.tOmsUserFId.equals('')  "> ,t_oms_user_f_id=#{item.tOmsUserFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(记录用户的Cookie)信息_逻辑删除。 -->
+    <sql id="delete_cookieInfo_Logic">
+		UPDATE t_cookie_info		<trim prefix="SET" prefixOverrides=","> 		<if test="hmsr != null and !hmsr.equals('')  "> ,f_hmsr=#{hmsr}</if> 		<if test="hmmd != null and !hmmd.equals('')  "> ,f_hmmd=#{hmmd}</if> 		<if test="hmpl != null and !hmpl.equals('')  "> ,f_hmpl=#{hmpl}</if> 		<if test="hmkw != null and !hmkw.equals('')  "> ,f_hmkw=#{hmkw}</if> 		<if test="hmci != null and !hmci.equals('')  "> ,f_hmci=#{hmci}</if> 		<if test="tPropertyCompanyFId != null and !tPropertyCompanyFId.equals('')  "> ,t_property_company_f_id=#{tPropertyCompanyFId}</if> 		<if test="tOmsUserFId != null and !tOmsUserFId.equals('')  "> ,t_oms_user_f_id=#{tOmsUserFId}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_cookieInfo_Logic" parameterType="CookieInfo">
+		<include refid="cookieInfoBase.delete_cookieInfo_Logic"/>
+    </update>
+    
+    <!-- 批量删除(记录用户的Cookie)信息_逻辑删除 -->
+    <update id="delete_cookieInfo_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_cookie_info		<trim prefix="SET" prefixOverrides=","> 		<if test="item.hmsr != null and !item.hmsr.equals('')  "> ,f_hmsr=#{item.hmsr}</if> 		<if test="item.hmmd != null and !item.hmmd.equals('')  "> ,f_hmmd=#{item.hmmd}</if> 		<if test="item.hmpl != null and !item.hmpl.equals('')  "> ,f_hmpl=#{item.hmpl}</if> 		<if test="item.hmkw != null and !item.hmkw.equals('')  "> ,f_hmkw=#{item.hmkw}</if> 		<if test="item.hmci != null and !item.hmci.equals('')  "> ,f_hmci=#{item.hmci}</if> 		<if test="item.tPropertyCompanyFId != null and !item.tPropertyCompanyFId.equals('')  "> ,t_property_company_f_id=#{item.tPropertyCompanyFId}</if> 		<if test="item.tOmsUserFId != null and !item.tOmsUserFId.equals('')  "> ,t_oms_user_f_id=#{item.tOmsUserFId}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(记录用户的Cookie)信息。 -->
+    <sql id="delete_cookieInfo">
+		DELETE FROM t_cookie_info WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_cookieInfo" parameterType="java.lang.String">
+		<include refid="cookieInfoBase.delete_cookieInfo"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(记录用户的Cookie)信息。 -->
+    <delete id="delete_cookieInfo_Batch" parameterType="java.util.List">
+		DELETE FROM t_cookie_info WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

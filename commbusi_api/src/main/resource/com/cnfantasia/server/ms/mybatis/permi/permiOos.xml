@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 权限控制模块 -->
+<mapper namespace="permiOos">
+	
+	<!-- 数据权限过滤条件 -->
+	<sql id="dataPermissionCondition">
+		<if test="gbIdList !=null">
+			   		<if test="gbIdList.size() > 0">
+					and GB.f_id in 
+					<foreach item="item" collection="gbIdList" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+			   		</if>
+			   		<if test="gbIdList.size() == 0"><!-- 无小区权限用户 -->
+			   			and GB.f_id = -2
+			   		</if>
+		</if>
+	</sql>
+	
+</mapper>

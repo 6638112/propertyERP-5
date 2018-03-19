@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:消息参数表 t_message_parameter -->
+<mapper namespace="messageParameterBase">
+	<resultMap type="MessageParameter" id="messageParameterBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_message_f_id" javaType="java.math.BigInteger" property="tMessageFId"/>  <!-- 消息Id -->        <result column="f_key" javaType="java.lang.String" property="key"/>  <!-- 参数key -->        <result column="f_value" javaType="java.lang.String" property="value"/>  <!-- 参数value -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MessageParameter" id="messageParameterExtendMap" extends="messageParameterBaseMap">
+	</resultMap>
+	<resultMap type="MessageParameter" id="messageParameterBaseMap_AppendTable">
+        <id column="MPid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MPtMessageFId" javaType="java.math.BigInteger" property="tMessageFId"/>  <!-- 消息Id -->        <result column="MPkey" javaType="java.lang.String" property="key"/>  <!-- 参数key -->        <result column="MPvalue" javaType="java.lang.String" property="value"/>  <!-- 参数value -->        <result column="MPsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MPsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MPsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MPsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MPsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MPsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MPsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="MessageParameter" id="messageParameterBaseMap_AppendTable1">
+        <id column="MP1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="MP1tMessageFId" javaType="java.math.BigInteger" property="tMessageFId"/>  <!-- 消息Id -->        <result column="MP1key" javaType="java.lang.String" property="key"/>  <!-- 参数key -->        <result column="MP1value" javaType="java.lang.String" property="value"/>  <!-- 参数value -->        <result column="MP1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="MP1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="MP1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="MP1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="MP1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="MP1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="MP1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		MP.f_id,MP.t_message_f_id,MP.f_key,MP.f_value
+	</sql>
+	<sql id="queryHead_AppendTable">
+		MP.f_id as MPid,MP.t_message_f_id as MPtMessageFId,MP.f_key as MPkey,MP.f_value as MPvalue
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		MP1.f_id as MP1id,MP1.t_message_f_id as MP1tMessageFId,MP1.f_key as MP1key,MP1.f_value as MP1value
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (MP.f_id = #{id} ) </if>        <if test="tMessageFId != null">  and (MP.t_message_f_id = #{tMessageFId} ) </if>        <if test="key != null">  and (MP.f_key = #{key} ) </if>        <if test="value != null">  and (MP.f_value = #{value} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (MP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (MP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (MP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (MP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (MP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (MP.f_id = #{id} ) </if>        <if test="tMessageFId != null and !tMessageFId.equals('')  ">  and (MP.t_message_f_id = #{tMessageFId} ) </if>        <if test="key != null and !key.equals('')  ">  and (MP.f_key like CONCAT('%',#{key},'%') ) </if>        <if test="value != null and !value.equals('')  ">  and (MP.f_value like CONCAT('%',#{value},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (MP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (MP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (MP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (MP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (MP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (MP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (MP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (MP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (MP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (MP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (MP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (MP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (MP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (MP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="messageParameterBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="messageParameterBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="messageParameterBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="messageParameterBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_message_parameter MP    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(消息参数表)信息。 -->
+	<sql id="select_messageParameter">
+		SELECT <include refid="messageParameterBase.queryHead"/>
+		<include refid="messageParameterBase.busiQueryCondition"/>
+		<include refid="messageParameterBase.dimCheckSql"/>
+		ORDER BY MP.f_id DESC
+	</sql>
+	<select id="select_messageParameter" parameterType="java.util.Map" resultMap="messageParameterBase.messageParameterExtendMap">
+		<include refid="messageParameterBase.select_messageParameter"/>
+	</select>
+	
+	<!-- 根据条件分页查询(消息参数表)信息  -->
+	<sql id="select_messageParameter_withPage">
+		SELECT <include refid="messageParameterBase.queryHead"/>
+		<include refid="messageParameterBase.busiQueryCondition"/>
+		<include refid="messageParameterBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_messageParameter_withPage" resultMap="messageParameterBase.messageParameterExtendMap" parameterType="java.util.Map">
+		<include refid="messageParameterBase.select_messageParameter_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(消息参数表)信息。 -->
+	<sql id="select_messageParameter_bySeqId">
+		SELECT <include refid="messageParameterBase.queryHead"/>
+		<include refid="messageParameterBase.busiQueryCondition"/>
+		 and MP.f_id = #{_parameter}
+	</sql>
+	<select id="select_messageParameter_bySeqId" parameterType="java.math.BigInteger" resultMap="messageParameterBase.messageParameterBaseMap">
+		<include refid="messageParameterBase.select_messageParameter_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(消息参数表)记录数  -->
+	<sql id="select_messageParameter_count">
+		SELECT COUNT(*)
+		<include refid="messageParameterBase.busiQueryCount"/>
+		<include refid="messageParameterBase.dimCheckSql"/>
+	</sql>
+	<select id="select_messageParameter_count" resultType="java.lang.Integer">
+		<include refid="messageParameterBase.select_messageParameter_count"/>
+	</select>
+	
+	 <!-- 往(消息参数表)新增一条记录。 -->
+	 <sql id="insert_messageParameter">
+		INSERT INTO t_message_parameter 
+		(f_id,t_message_f_id,f_key,f_value,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tMessageFId},#{key,jdbcType=VARCHAR},#{value,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_messageParameter" parameterType="MessageParameter">
+		<include refid="messageParameterBase.insert_messageParameter"/>
+    </insert>
+    
+	<!-- 批量新增(消息参数表)信息 -->
+    <insert id="insert_messageParameter_Batch" parameterType="java.util.List">
+    	INSERT INTO t_message_parameter 
+		(f_id,t_message_f_id,f_key,f_value,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tMessageFId},#{item.key,jdbcType=VARCHAR},#{item.value,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(消息参数表)信息。 -->
+    <sql id="update_messageParameter">
+		UPDATE t_message_parameter		<trim prefix="SET" prefixOverrides=","> 		<if test="tMessageFId != null and !tMessageFId.equals('') "> ,t_message_f_id=#{tMessageFId}</if> 		<if test="key != null and !key.equals('') "> ,f_key=#{key}</if> 		<if test="value != null and !value.equals('') "> ,f_value=#{value}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_messageParameter" parameterType="MessageParameter">
+		<include refid="messageParameterBase.update_messageParameter"/>
+    </update>
+    
+    <!-- 批量更新(消息参数表)信息。 -->
+    <update id="update_messageParameter_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_message_parameter		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tMessageFId != null and !item.tMessageFId.equals('')  "> ,t_message_f_id=#{item.tMessageFId}</if> 		<if test="item.key != null and !item.key.equals('')  "> ,f_key=#{item.key}</if> 		<if test="item.value != null and !item.value.equals('')  "> ,f_value=#{item.value}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(消息参数表)信息_逻辑删除。 -->
+    <sql id="delete_messageParameter_Logic">
+		UPDATE t_message_parameter		<trim prefix="SET" prefixOverrides=","> 		<if test="tMessageFId != null and !tMessageFId.equals('')  "> ,t_message_f_id=#{tMessageFId}</if> 		<if test="key != null and !key.equals('')  "> ,f_key=#{key}</if> 		<if test="value != null and !value.equals('')  "> ,f_value=#{value}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_messageParameter_Logic" parameterType="MessageParameter">
+		<include refid="messageParameterBase.delete_messageParameter_Logic"/>
+    </update>
+    
+    <!-- 批量删除(消息参数表)信息_逻辑删除 -->
+    <update id="delete_messageParameter_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_message_parameter		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tMessageFId != null and !item.tMessageFId.equals('')  "> ,t_message_f_id=#{item.tMessageFId}</if> 		<if test="item.key != null and !item.key.equals('')  "> ,f_key=#{item.key}</if> 		<if test="item.value != null and !item.value.equals('')  "> ,f_value=#{item.value}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(消息参数表)信息。 -->
+    <sql id="delete_messageParameter">
+		DELETE FROM t_message_parameter WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_messageParameter" parameterType="java.lang.String">
+		<include refid="messageParameterBase.delete_messageParameter"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(消息参数表)信息。 -->
+    <delete id="delete_messageParameter_Batch" parameterType="java.util.List">
+		DELETE FROM t_message_parameter WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+  
+<!DOCTYPE configuration PUBLIC   
+    "-//mybatis.org//DTD Config 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">  
+  
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+  	</settings>
+  	<typeAliases>
+  		<!-- 电商模块 -->
+		<typeAlias type="com.cnfantasia.server.api.ebuy.entity.EbuyFilmTicket" alias="EbuyFilmTicket"/>
+		<typeAlias type="com.cnfantasia.server.api.ebuy.entity.EbuyFlowRecharge" alias="EbuyFlowRecharge"/>
+		<typeAlias type="com.cnfantasia.server.api.ebuyorder.entity.EbuyMerchantBean" alias="EbuyMerchantBean"/>
+		<typeAlias type="com.cnfantasia.server.api.ebuyorder.entity.MerchantOrder" alias="MerchantOrder"/>
+		<typeAlias type="com.cnfantasia.server.api.ebuy.entity.EbuyIdentifyInfo" alias="EbuyIdentifyInfo"/>
+		
+		<!-- 物业宝相关 -->
+		<typeAlias type="com.cnfantasia.server.api.plotproperty.entity.FinanceReqEntity" alias="FinanceReqEntity"/>
+		<typeAlias type="com.cnfantasia.server.api.plotproperty.entity.FinanceBuyEntity" alias="FinanceBuyEntity"/>
+		<typeAlias type="com.cnfantasia.server.api.plotproperty.entity.FinanceDeductionEntity" alias="FinanceDeductionEntity"/>
+		<typeAlias type="com.cnfantasia.server.api.plotproperty.entity.FinanceReqEntity" alias="FinanceReqEntity"/>
+		<typeAlias type="com.cnfantasia.server.api.plotproperty.entity.FinanceLogEntity" alias="FinanceLogEntity"/>
+		<typeAlias type="com.cnfantasia.server.api.plotproperty.entity.FinanceProfitEntity" alias="FinanceProfitEntity"/>
+		<typeAlias type="com.cnfantasia.server.api.plotproperty.entity.FinanceDeductionDetail" alias="FinanceDeductionDetail"/>
+		
+		<typeAlias type="com.cnfantasia.server.domainbase.revenueGeneration.entity.RevenueGeneration" alias="RevenueGeneration"/>
+		
+  	</typeAliases>
+    <mappers> 
+        
+        <!--引入sql配置文件base-->
+        <!-- 公共模块 -->
+        <mapper resource="com/cnfantasia/server/api/mybatis/common/commonLock.xml"/>
+        <mapper resource="com/cnfantasia/server/api/mybatis/common/commMsg.xml"/>
+        <mapper resource="com/cnfantasia/server/api/mybatis/common/appVersion.xml"/>
+		<mapper resource="com/cnfantasia/server/api/mybatis/commBusiness/commonSql.xml"/>
+		<mapper resource="com/cnfantasia/server/api/mybatis/commBusiness/commonRoom.xml"/>
+		<mapper resource="com/cnfantasia/server/api/mybatis/commBusiness/commonUser.xml"/>
+        
+        <!-- 运维文案 -->
+        <mapper resource="com/cnfantasia/server/api/mybatis/operation/operation.xml"/>
+        
+        <!-- 电商模块 -->
+        <mapper resource="com/cnfantasia/server/api/mybatis/ebuy/ebuyNew.xml"/>
+        <mapper resource="com/cnfantasia/server/api/mybatis/ebuy/ebuyAdvertise.xml"/>
+		<mapper resource="com/cnfantasia/server/api/mybatis/ebuy/ebuyFilmTicket.xml"/>
+		<mapper resource="com/cnfantasia/server/api/mybatis/ebuy/ebuyFlowRecharge.xml"/>
+		<mapper resource="com/cnfantasia/server/api/mybatis/ebuy/ebuyMerchant2.xml"/>
+		<mapper resource="com/cnfantasia/server/api/mybatis/ebuy/ebuyIdentifyInfo.xml"/>
+		<mapper resource="com/cnfantasia/server/api/mybatis/ebuy/ebuyFight.xml"/>
+		
+        <!-- 博客队列 -->
+        <mapper resource="com/cnfantasia/server/api/mybatis/microblogQueue/microblogQueue.xml"/>
+
+
+		<mapper resource="com/cnfantasia/server/api/mybatis/commBusiness/commonEbuy.xml"/>
+
+		<!-- 疏通服务 -->
+		<mapper resource="com/cnfantasia/server/api/mybatis/dredge/dredge.xml"/>
+		
+		<!-- 运营消息 -->
+		<mapper resource="com/cnfantasia/server/api/mybatis/operateMsg/operateMsg.xml"/>
+		
+		<!-- 抄表服务 -->
+		<mapper resource="com/cnfantasia/server/api/mybatis/meterReading/meterReading.xml"/>
+		
+		<!-- 抽奖配置 -->
+		<mapper resource="com/cnfantasia/server/api/mybatis/prizeActivity/prizeActivity.xml"/>
+		
+		<!-- 物业宝相关 -->
+		<mapper resource="com/cnfantasia/server/api/mybatis/plotproperty/finance.xml"/>
+		
+		<!-- 电商数据临时表 -->
+        <mapper resource="com/cnfantasia/server/ms/mybatis/ebuyProductTemp/ebuyProductTemp.xml"/>
+	
+		<!-- 收益中心 -->
+        <mapper resource="com/cnfantasia/server/ms/mybatis/revenue/revenue.xml"/>
+        <mapper resource="com/cnfantasia/server/ms/mybatis/revenue/revenueDredge.xml"/>
+        <mapper resource="com/cnfantasia/server/ms/mybatis/revenue/revenueFinance.xml"/>
+        <mapper resource="com/cnfantasia/server/ms/mybatis/revenue/revenueCar.xml"/>
+        <mapper resource="com/cnfantasia/server/ms/mybatis/revenue/revenueFinanceDedu.xml"/>
+        <mapper resource="com/cnfantasia/server/ms/mybatis/revenue/revenueCarDedu.xml"/>
+        
+        <!-- 提现单推送 -->
+        <mapper resource="com/cnfantasia/server/ms/mybatis/revenue/revenuePush.xml"/>
+        <mapper resource="com/cnfantasia/server/api/mybatis/paybillUserPrefer/paybillUserPrefer.xml"/>
+        
+        <!-- 收费管理 -->
+        <mapper resource="com/cnfantasia/server/api/mybatis/plotproperty/plotpropertyCfg.xml"/>
+        
+        <!-- 接口加密 -->
+        <mapper resource="com/cnfantasia/server/api/mybatis/encrypt/encrypt.xml"/>
+        
+        <!-- 通知框架 -->
+        <mapper resource="com/cnfantasia/server/ms/mybatis/notification/notification.xml"/>
+
+		<!--消费券-->
+		<mapper resource="com/cnfantasia/server/api/mybatis/coupon/coupon.xml" />
+		<mapper resource="com/cnfantasia/server/api/mybatis/couponArea/couponArea.xml" />
+		
+		<!-- 物业代扣卡 -->
+		<mapper resource="com/cnfantasia/server/api/mybatis/propertycard/propertycard.xml"/>
+		<!-- 自定义活动模板 -->
+		<mapper resource="com/cnfantasia/server/api/mybatis/selfActivity/selfActivity.xml"/>
+
+		<!--自提点-->
+		<mapper resource="com/cnfantasia/server/api/mybatis/ebuyFightSupplyMerchant/ebuyFightSupplyMerchant.xml"/>
+		<!--拼购-->
+		<mapper resource="com/cnfantasia/server/api/mybatis/ebuyProductFightGroups/eubyProductFightGroups.xml"/>
+
+		<!-- 红点模块 -->
+        <mapper resource="com/cnfantasia/server/api/mybatis/redpoint/redpoint.xml"/>
+
+		<mapper resource="com/cnfantasia/server/api/mybatis/roomVerifyPayment/roomVerifyPayment.xml"/>
+		<mapper resource="com/cnfantasia/server/api/mybatis/cashFlowSummary/cashFlowSummary.xml"/>
+
+		<!-- 账单用户优惠关系 -->
+		<mapper resource="com/cnfantasia/server/api/mybatis/paybillUserPrefer/paybillUserPrefer.xml"/>
+		<!-- 临停车缴费消息发送 -->
+		<mapper resource="com/cnfantasia/server/api/mybatis/carYhsMsg/carYhsMsg.xml"/>
+		<!-- 购销供应商结算 -->
+		<mapper resource="com/cnfantasia/server/api/mybatis/ebuyProductSettle/ebuyProductSettle.xml"/>
+		<!-- 双乾支付优惠补贴 -->
+		<mapper resource="com/cnfantasia/server/api/mybatis/cashSqpayBt/cashSqpayBt.xml"/>
+
+		<!-- 缴费限制 -->
+		<mapper resource="com/cnfantasia/server/ms/mybatis/payCountInit/payCountInit.xml"/>
+
+		<!--选择周期缴费-->
+		<mapper resource="com/cnfantasia/server/ms/mybatis/alterPeriod/alterPeriod.xml"/>
+
+		<!--物业软件对接-->
+		<mapper resource="com/cnfantasia/server/api/mybatis/propertySoftwareDock/propertySoftwareDock.xml"/>
+
+		<!--限时抢购-->
+		<mapper resource="com/cnfantasia/server/api/mybatis/limitBuy/limitBuy.xml"/>
+
+		<!--用户寻求帮助-->
+		<mapper resource="com/cnfantasia/server/api/mybatis/userQuestion/userQuestion.xml"/>
+		<!--固定收费项配置-->
+		<mapper resource="com/cnfantasia/server/ms/mybatis/fixedFeeCfg/fixedFeeCfg.xml"/>
+		<!--首页动态消息-->
+		<mapper resource="com/cnfantasia/server/api/mybatis/homeMessage/homeMessage.xml"/>
+		<mapper resource="com/cnfantasia/server/ms/mybatis/permi/permiOos.xml"/>
+		<mapper resource="com/cnfantasia/server/ms/mybatis/bankCollection/bankCollection.xml"/>
+		<!--账期配置-->
+		<mapper resource="com/cnfantasia/server/ms/mybatis/groupBuildingCycleCfg/groupBuildingCycleCfg.xml"/>
+
+		<mapper resource="com/cnfantasia/server/api/mybatis/dredgeAddress/dredgeAddress.xml"/>
+        <!-- 生活缴费 -->
+        <mapper resource="com/cnfantasia/server/api/mybatis/livingPay/livingPay.xml"/>
+
+		<!--滞纳金计算-->
+		<mapper resource="com/cnfantasia/server/api/mybatis/latefee/latefee.xml"/>
+
+		<!-- 支付配置 -->
+		<mapper resource="com/cnfantasia/server/api/mybatis/payConfig/payConfig.xml"/>
+    </mappers>
+</configuration> 

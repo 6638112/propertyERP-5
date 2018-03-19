@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 数据表 t_ebuy_product -->
+<mapper namespace="ebuyProduct">
+	<resultMap type="com.cnfantasia.server.ms.ebuyProduct.entity.EbuyProductEntity" id="ebuyProductEntity" extends="ebuyProductBase.ebuyProductBaseMap_AppendTable">
+		<id property="supplyMerchant.id" column="ESMid"/>
+		<id property="ebuyHomeType.id" column="EHTid"/>
+		<result column="addMan" javaType="java.lang.String" property="addMan"/>
+		<result column="updateMan" javaType="java.lang.String" property="updateMan"/>
+		<association property="supplyMerchant" resultMap="ebuySupplyMerchantBase.ebuySupplyMerchantBaseMap_AppendTable" />
+		<association property="ebuyHomeType" resultMap="ebuyHomeTypeBase.ebuyHomeTypeBaseMap_AppendTable" />
+	</resultMap>
+	<resultMap type="com.cnfantasia.server.ms.ebuyProduct.entity.EbuyProductEntity" id="ebuyProductEntityShelf" extends="ebuyProductBase.ebuyProductBaseMap_AppendTable">
+		<!-- 
+		    <id property="supplyMerchant.id" column="ESMid"/>
+			<id property="productType.id" column="EPTid"/>
+			<id property="ebuyHomeType.id" column="EHTid"/>
+			<id property="ebuyProductShelf.id" column="EPSid"/>
+			以上四行id的作用：
+			association数据对应的唯一标识id必须加上，否则MyBatis将以t_ebuy_product表的id作
+			为整个记录的唯一标识，会导致实际有10条记录，却只查出来4条记录的混乱结果 
+			@author Liyl
+			@date 2016-04-22
+		-->
+		<!-- 只有“货架管理页面需要” -->
+		<id property="supplyMerchant.id" column="ESMid"/>
+		<id property="productType.id" column="EPTid"/>
+		<id property="ebuyHomeType.id" column="EHTid"/>
+		<id property="ebuyProductShelf.id" column="EPSid"/>
+		<result column="countEqOnApp" javaType="java.lang.Integer" property="countEqOnApp"/>
+		<result column="addMan" javaType="java.lang.String" property="addMan"/>
+		<result column="updateMan" javaType="java.lang.String" property="updateMan"/>
+		<association property="supplyMerchant" resultMap="ebuySupplyMerchantBase.ebuySupplyMerchantBaseMap_AppendTable" />
+		<association property="productType" resultMap="ebuyProductTypeBase.ebuyProductTypeBaseMap_AppendTable" />
+		<association property="ebuyHomeType" resultMap="ebuyHomeTypeBase.ebuyHomeTypeBaseMap_AppendTable" />
+		<association property="ebuyProductShelf" resultMap="ebuyProductShelfBase.ebuyProductShelfBaseMap_AppendTable" />
+	</resultMap>
+	<sql id="appebuyproductlist">
+	EP.f_id as EPid,EP.f_src_id as EPsrcId,EP.t_supply_merchant_f_id as EPtSupplyMerchantFId,EP.f_name as EPname,EP.f_name_mini as EPnameMini,EP.f_price as EPprice,EPS.f_price_discount as EPpriceDiscount,EP.f_purchase_price as EPpurchasePrice,EP.f_default_delivery_id as EPdefaultDeliveryId,EP.f_left_count as EPleftCount,date_format(EP.f_create_time,'%Y-%m-%d %T') as EPcreateTime,EP.f_sel_num as EPselNum,EP.f_pic_base as EPpicBase,EP.f_pic_base_mini as EPpicBaseMini,EP.t_ebuy_product_type_f_id as EPtEbuyProductTypeFId,EP.t_ebuy_product_type_for_enter_f_id as EPtEbuyProductTypeForEnterFId,EP.t_ebuy_delivery_desc_id as EPtEbuyDeliveryDescId,EP.f_price_unit as EPpriceUnit,EP.f_specification as EPspecification,EP.f_desc as EPdesc,EP.f_status as EPstatus,EP.f_status_audit as EPstatusAudit,date_format(EP.f_up_shelf_time,'%Y-%m-%d %T') as EPupShelfTime,date_format(EP.f_down_shelf_time,'%Y-%m-%d %T') as EPdownShelfTime,EP.f_pic_special as EPpicSpecial,EP.f_price_point as EPpricePoint,EP.f_price_discount_point as EPpriceDiscountPoint,EP.f_point_type as EPpointType,EP.f_wlApp_type as EPwlappType,EP.f_special_product_type as EPspecialProductType,EP.f_application_rang as EPapplicationRang,date_format(EP.f_end_time,'%Y-%m-%d %T') as EPendTime,EP.f_convert_process as EPconvertProcess,EP.f_attention_info as EPattentionInfo,EP.f_film_ticket_num as EPfilmTicketNum,date_format(EP.f_sys0_upd_time,'%Y-%m-%d %T') as EPsys0UpdTime
+	</sql>
+		
+	<!-- 商品列表-->
+	<select id="select_ebuyProduct_list" parameterType="java.util.Map" resultMap="ebuyProductEntity">
+		select 
+				<if test="APP == true">
+					<include refid="ebuyProduct.appebuyproductlist" />,
+				</if>
+				<if test="APP == null">
+					<include refid="ebuyProductBase.queryHead_AppendTable"/>,
+				</if> 
+		       <include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>,
+		       <include refid="ebuyHomeTypeBase.queryHead_AppendTable"/>,
+		       IF (
+					ou1.f_real_name IS NULL
+					OR ou1.f_real_name = '',
+					ou1.f_user_account,
+					ou1.f_real_name
+				) AS addMan,
+				IF (
+					ou2.f_real_name IS NULL
+					OR ou2.f_real_name = '',
+					ou2.f_user_account,
+					ou2.f_real_name
+				) AS updateMan
+		       ,date_format(
+					EP.f_sys0_add_time,
+					'%Y-%m-%d %T'
+				) AS EPsys0AddTime 
+			   ,IFNULL(EP.f_sys0_upd_time,EP.f_sys0_add_time) AS updTime
+		FROM t_ebuy_product EP
+		left JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id
+		left join t_ebuy_home_type_has_product EHTHP on EHTHP.t_product_id = EP.f_id and EHTHP.f_sys0_del_state=0
+		left join t_ebuy_home_type EHT on EHTHP.t_home_type_id=EHT.f_id and EHT.f_sys0_del_state=0
+		left join t_oms_user ou1 on ou1.f_id=EP.f_sys0_add_user
+        left join t_oms_user ou2 on ou2.f_id=EP.f_sys0_upd_user
+    	WHERE 1=1 
+			  <include refid="ebuyProductBase.dimCheckSql"/>
+			  <if test="appType != null">  and (EPT.f_wlApp_type = #{appType} ) </if>
+        	  <if test="supplyName != null">  and (ESM.f_name = #{supplyName} ) </if>
+        	  <if test="supplyMerchantType != null">  and (ESM.f_type = #{supplyMerchantType} ) </if>
+              <if test="typeName != null">  and (EPT.f_type_name = #{typeName} ) </if>
+              <!-- <if test="state==up">
+              	<![CDATA[AND ((EP.f_status =1 AND EP.f_status_audit=5)OR(EP.f_status_audit IN(3,4)))]]>
+              </if> -->
+              <if test="supplyMerchantList!=null and supplyMerchantList.size() != 0">
+                and ESM.f_id in
+                <foreach collection="supplyMerchantList" item="supply"
+                    index="index" open="(" close=")" separator=",">
+                    #{supply.id}
+                </foreach>
+              </if>
+        <choose>
+        	<!-- 由多到少 -->
+        	<when test="orderType == 2">ORDER BY EP.f_left_count DESC</when>
+        	<!-- 由少到多-->
+        	<when test="orderType == 3">ORDER BY EP.f_left_count ASC</when>
+        	<otherwise>
+        		<choose>
+		        	<when test="orderbytime == 'upshelfTime'">ORDER BY EP.f_up_shelf_time DESC</when>
+		        	<when test="orderbytime == 'downshelfTime'">ORDER BY EP.f_down_shelf_time DESC</when>
+		        	<otherwise>ORDER BY updTime DESC</otherwise>
+		        </choose>  
+        	</otherwise>
+        </choose>
+        <if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<!-- 货架管理 -->
+	<select id="select_ebuyProduct_shelf" parameterType="java.util.Map" resultMap="ebuyProductEntityShelf">
+		select 
+				<if test="APP == true">
+					<include refid="ebuyProduct.appebuyproductlist" />,
+				</if>
+				<if test="APP == null">
+					<include refid="ebuyProductBase.queryHead_AppendTable"/>,
+				</if> 
+		       <include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>,
+		       <include refid="ebuyProductTypeBase.queryHead_AppendTable"/>,
+		       <include refid="ebuyHomeTypeBase.queryHead_AppendTable"/>,
+		       <include refid="ebuyProductShelfBase.queryHead_AppendTable"/>,
+		       IF (
+					ou1.f_real_name IS NULL
+					OR ou1.f_real_name = '',
+					ou1.f_user_account,
+					ou1.f_real_name
+				) AS addMan,
+				IF (
+					ou2.f_real_name IS NULL
+					OR ou2.f_real_name = '',
+					ou2.f_user_account,
+					ou2.f_real_name
+				) AS updateMan
+		FROM t_ebuy_product EP
+		INNER JOIN t_ebuy_product_shelf EPS ON EP.f_id = EPS.t_ebuy_product_id 
+		left JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id
+		left JOIN t_ebuy_product_type EPT ON EPT.f_id = EPS.t_ebuy_product_type_id
+		<!-- <if test="APP == true">
+			<![CDATA[AND EPT.f_point_type=1 AND EPT.f_wlApp_type=1]]>
+		</if> -->
+		left join t_ebuy_home_type_has_product EHTHP on EHTHP.t_product_id = EP.f_id and EHTHP.f_sys0_del_state=0
+		left join t_ebuy_home_type EHT on EHTHP.t_home_type_id=EHT.f_id and EHT.f_sys0_del_state=0
+		left join t_oms_user ou1 on ou1.f_id=EPS.f_sys0_add_user
+        left join t_oms_user ou2 on ou2.f_id=EPS.f_sys0_upd_user
+    	WHERE 1=1 and EPS.f_up_shelf_state=0
+			  <include refid="ebuyProductBase.dimCheckSql"/>
+			  <if test="appType != null">  and (EPT.f_wlApp_type = #{appType} ) </if>
+			  <if test="sys0DelState != null">  and (EPS.f_sys0_del_state = #{sys0DelState} ) </if>
+        	  <if test="sys0DelState == null">  and (EPS.f_sys0_del_state = 0 ) </if>
+        	  <if test="supplyName != null">  and (ESM.f_name = #{supplyName} ) </if>
+        	  <if test="supplyMerchantType != null">  and (ESM.f_type = #{supplyMerchantType} ) </if>
+              <if test="typeName != null">  and (EPT.f_type_name = #{typeName} ) </if>
+              <if test="ebuyProductTypeId != null">  and (EPT.f_id = #{ebuyProductTypeId} ) </if>
+			  <if test="ebuyHomeType != null">
+				and EHT.f_id = #{ebuyHomeType}
+			  </if>
+              <if test="productUp == true">
+              	<![CDATA[AND ((EP.f_status =1 AND EP.f_status_audit=5)OR(EP.f_status_audit IN(3,4)))]]>
+              </if>
+              <if test="supplyMerchantList!=null and supplyMerchantList.size() != 0">
+                and ESM.f_id in
+                <foreach collection="supplyMerchantList" item="supply"
+                    index="index" open="(" close=")" separator=",">
+                    #{supply.id}
+                </foreach>
+              </if>
+        <choose>
+        	<!-- 由多到少 -->
+        	<when test="orderType == 2">ORDER BY EP.f_left_count DESC</when>
+        	<!-- 由少到多-->
+        	<when test="orderType == 3">ORDER BY EP.f_left_count ASC</when>
+        	<otherwise>
+        		<choose>
+		        	<when test="orderbytime == 'upshelfTime'">ORDER BY EP.f_up_shelf_time DESC</when>
+		        	<when test="orderbytime == 'downshelfTime'">ORDER BY EP.f_down_shelf_time DESC</when>
+		        	<otherwise>ORDER BY EP.f_id DESC</otherwise>
+		        </choose>  
+        	</otherwise>
+        </choose>
+        <if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	<!-- 上架管理 -->
+	<select id="select_ebuyProduct_up" parameterType="java.util.Map" resultMap="ebuyProductEntityShelf">
+		select 
+				<if test="APP == true">
+					<include refid="ebuyProduct.appebuyproductlist" />,
+				</if>
+				<if test="APP == null">
+					<include refid="ebuyProductBase.queryHead_AppendTable"/>,
+				</if> 
+		       <include refid="ebuySupplyMerchantBase.queryHead_AppendTable"/>,
+		       <include refid="ebuyProductTypeBase.queryHead_AppendTable"/>,
+		       <include refid="ebuyHomeTypeBase.queryHead_AppendTable"/>,
+		       <include refid="ebuyProductShelfBase.queryHead_AppendTable"/>,
+		       (SELECT
+					count(*)
+				FROM
+					t_ebuy_product_shelf a
+				LEFT JOIN t_ebuy_product b ON a.t_ebuy_product_id = b.f_id
+				LEFT JOIN t_ebuy_product_type c ON a.t_ebuy_product_type_id = c.f_id
+				WHERE
+					b.f_id = EP.f_id
+				AND a.f_id = b.f_id
+				AND c.f_wlApp_type = 1)as countEqOnApp,
+				IF (
+					ou1.f_real_name IS NULL
+					OR ou1.f_real_name = '',
+					ou1.f_user_account,
+					ou1.f_real_name
+				) AS addMan,
+				IF (
+					ou2.f_real_name IS NULL
+					OR ou2.f_real_name = '',
+					ou2.f_user_account,
+					ou2.f_real_name
+				) AS updateMan
+		FROM t_ebuy_product EP
+		INNER JOIN t_ebuy_product_shelf EPS ON EP.f_id = EPS.t_ebuy_product_id 
+		left JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id
+		left JOIN t_ebuy_product_type EPT ON EPT.f_id = EPS.t_ebuy_product_type_id
+		<!-- <if test="APP == true">
+			<![CDATA[AND EPT.f_point_type=1 AND EPT.f_wlApp_type=1]]>
+		</if> -->
+		left join t_ebuy_home_type_has_product EHTHP on EHTHP.t_product_id = EP.f_id and EHTHP.f_sys0_del_state=0
+		left join t_ebuy_home_type EHT on EHTHP.t_home_type_id=EHT.f_id and EHT.f_sys0_del_state=0
+		left join t_oms_user ou1 on ou1.f_id=EPS.f_sys0_add_user
+        left join t_oms_user ou2 on ou2.f_id=EPS.f_sys0_upd_user
+    	WHERE 1=1 and EP.f_status_audit!=2 
+			  <include refid="ebuyProductBase.dimCheckSql"/>
+			  <if test="appType != null">  and (EPT.f_wlApp_type = #{appType} ) </if>
+			  <if test="sys0DelState != null">  and (EPS.f_sys0_del_state = #{sys0DelState} ) </if>
+        	  <if test="sys0DelState == null">  and (EPS.f_sys0_del_state = 0 ) </if>
+        	  <if test="supplyName != null">  and (ESM.f_name = #{supplyName} ) </if>
+        	  <if test="supplyMerchantType != null">  and (ESM.f_type = #{supplyMerchantType} ) </if>
+              <if test="typeName != null">  and (EPT.f_type_name = #{typeName} ) </if>
+              <if test="upShelfState != null">  and (EPS.f_up_shelf_state = #{upShelfState} ) </if>
+              <if test="ebuyProductTypeId != null">  and (EPT.f_id = #{ebuyProductTypeId} ) </if>
+              <if test="productUp == true">
+              	<![CDATA[AND ((EPS.f_up_shelf_state=1)OR(EP.f_status_audit IN(3,4)))]]>
+              </if>
+			  <if test="applyTime_START != null and !applyTime_START.equals('')  ">
+				<![CDATA[ and (EPS.f_apply_time >= str_to_date(#{applyTime_START},'%Y-%m-%d %T') ) ]]>
+			  </if>
+			  <if test="applyTime_END != null and !applyTime_END.equals('')  ">
+				<![CDATA[ and (EPS.f_apply_time <= str_to_date(#{applyTime_END},'%Y-%m-%d %T') ) ]]>
+			  </if>
+              <if test="supplyMerchantList!=null and supplyMerchantList.size() != 0">
+                and ESM.f_id in
+                <foreach collection="supplyMerchantList" item="supply"
+                    index="index" open="(" close=")" separator=",">
+                    #{supply.id}
+                </foreach>
+              </if>
+        ORDER BY EPS.f_apply_time DESC
+        <if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<select id="select_ebuyProduct3" parameterType="java.util.Map" resultMap="ebuyProductBase.ebuyProductBaseMap_AppendTable">
+		select <include refid="ebuyProductTempBase.queryHead_AppendTable"/>
+		FROM t_ebuy_product EP
+		left JOIN t_ebuy_supply_merchant ESM ON ESM.f_id = EP.t_supply_merchant_f_id
+		left JOIN t_ebuy_product_type EPT ON EPT.f_id = EP.t_ebuy_product_type_f_id
+    	WHERE 1=1 
+	</select>
+	
+	<update id="updateShelfStatus" parameterType="java.util.List" >
+		update t_ebuy_product_temp set f_status = 1 where f_src_id is not null and f_src_id not in 
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")" >
+			#{item}
+		</foreach>
+	</update>
+	<select id="select_product_audit_msg" parameterType="java.lang.Object" resultType="java.lang.Integer">
+		SELECT COUNT(f_id) FROM t_ebuy_product_audit WHERE 1=1 AND f_id=#{auditId}
+	</select>
+	<insert id="insertebuyproductaudit" parameterType="java.util.Map">
+		INSERT INTO t_ebuy_product_audit (f_id, f_reason, f_sys0_del_state) VALUES ('${auditId}', '${auitReason}', '0');
+	</insert>
+	<update id="updateProductAudit" parameterType="java.lang.Object">
+		UPDATE t_ebuy_product_audit SET f_reason=#{auitReason} WHERE 1=1 AND f_id=#{auditId}
+	</update>
+	
+	<select id="select_shelf_count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM
+			t_ebuy_product_shelf EPS
+		LEFT JOIN t_ebuy_product_type EPT ON EPS.t_ebuy_product_type_id = EPT.f_id
+		WHERE
+			EPS.t_ebuy_product_id = #{epId}
+		AND EPT.f_wlApp_type = #{appType}
+	</select>
+	
+	<select id="select_shelf_app_type" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			EPS.f_id as id
+		FROM
+			t_ebuy_product_shelf EPS
+		LEFT JOIN t_ebuy_product_type EPT ON EPS.t_ebuy_product_type_id = EPT.f_id
+		WHERE
+			EPS.t_ebuy_product_id = #{epId}
+		AND EPT.f_wlApp_type = #{appType}
+	</select>
+	
+	<!-- 查询APP平台上t_ebuy_product表id与t_ebuy_product_shelf表id相同的数量 -->
+	<select id="select_count_for_epid_eq_shelfid_on_app" resultType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM
+			t_ebuy_product_shelf a
+		LEFT JOIN t_ebuy_product b ON a.t_ebuy_product_id = b.f_id
+		LEFT JOIN t_ebuy_product_type c ON a.t_ebuy_product_type_id = c.f_id
+		WHERE
+			b.f_id = #{productId} 
+		AND a.f_id = b.f_id
+		AND c.f_wlApp_type = 1
+	</select>
+	
+	<!-- 商品autocomplete -->
+	<select id="ebuy_product_filter" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			ep.f_name AS epName
+		FROM
+			t_ebuy_product ep
+		WHERE
+			locate(#{epName}, ep.f_name)>0 
+			and ep.f_sys0_del_state=0
+		limit 10
+	</select>
+
+	<select id="isProductOwner" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from t_ebuy_product ep
+		INNER JOIN t_ebuy_supply_merchant sm on sm.f_id = ep.t_supply_merchant_f_id
+		INNER JOIN t_oms_user_has_t_ebuy_supply_merchant uhm on uhm.t_oms_user_id = #{userId} and uhm.t_ebuy_supply_merchant_id = sm.f_id and uhm.f_sys0_del_state = 0
+		where ep.f_id = #{ebuyProductId}
+	</select>
+	
+	<select id="getProductList_forImport" parameterType="map" resultMap="ebuyProductBase.ebuyProductBaseMap">
+		SELECT
+			EP.*
+		FROM
+			t_ebuy_product EP
+		WHERE
+			t_supply_merchant_f_id = #{storeId}
+			AND f_code IN 
+			<foreach collection="epiList" item="epi" open="(" close=")" separator=",">
+				#{epi.prdtCode}
+			</foreach>
+	</select>
+	
+	<!-- 导入新商品需要上架的，自动上架 -->
+	<update id="upToShelfProductAfterImported" parameterType="list">
+		<foreach collection="list" item="epi">
+			<if test="epi.firstImport == 0 or epi.firstImport == null or epi.firstImport.equals('')">
+				UPDATE t_ebuy_product set f_status = #{epi.upShelfState}, f_sys0_upd_time = SYSDATE() 
+				where f_id = #{epi.ebuyProduct.id};
+				
+				update t_ebuy_product_shelf 
+				set f_price_discount=#{epi.sellPrice}*100, 
+					f_price= #{epi.marketPrice}*100, 
+					f_up_shelf_state = #{epi.upShelfState}, 
+					f_sys0_upd_time = SYSDATE()
+				where f_sys0_del_state = 0 and t_ebuy_product_type_id = 30
+				and t_ebuy_product_id=#{epi.ebuyProduct.id};
+				
+				update t_ebuy_product_shelf 
+				set f_price_discount=#{epi.sellPrice}*100, 
+					f_price= #{epi.marketPrice}*100, 
+					t_ebuy_product_type_id = #{epi.ebuyProductTypeId},
+					f_up_shelf_state = #{epi.upShelfState}, 
+					f_sys0_upd_time = SYSDATE()
+				where f_sys0_del_state = 0 and t_ebuy_product_type_id != 30
+				and t_ebuy_product_id=#{epi.ebuyProduct.id};
+			</if>
+			
+			<if test="epi.firstImport !='' and epi.firstImport == 1">
+			INSERT INTO `t_ebuy_product_shelf` (
+				`f_id`,
+				`t_ebuy_product_id`,
+				`t_ebuy_product_type_id`,
+				`f_price`,
+				`f_price_discount`,
+				`f_sort`,
+				`f_up_shelf_state`,
+				`f_apply_time`,
+				`f_hand_time`,
+				`f_sys0_del_state`
+			)
+			VALUES
+				(
+					uuid_nextval('t_ebuy_product_shelf'),
+					#{epi.ebuyProduct.id},
+					#{epi.ebuyProductTypeId},
+					#{epi.marketPrice}*100,
+					#{epi.sellPrice}*100,
+					NULL,
+					#{epi.upShelfState},
+					SYSDATE(),
+					SYSDATE(),
+					'0'
+				);
+			
+			INSERT INTO `t_ebuy_product_shelf` (
+				`f_id`,
+				`t_ebuy_product_id`,
+				`t_ebuy_product_type_id`,
+				`f_price`,
+				`f_price_discount`,
+				`f_sort`,
+				`f_up_shelf_state`,
+				`f_apply_time`,
+				`f_hand_time`,
+				`f_sys0_del_state`
+			)
+			VALUES
+				(
+					uuid_nextval('t_ebuy_product_shelf'),
+					#{epi.ebuyProduct.id},
+					'30',
+					#{epi.marketPrice}*100,
+					#{epi.sellPrice}*100,
+					NULL,
+					#{epi.upShelfState},
+					SYSDATE(),
+					SYSDATE(),
+					'0'
+				);
+			</if>
+		</foreach> 
+	</update>
+	
+	<select id="selectExistedJfqStoreProductTypeInfo" parameterType="map" resultType="com.cnfantasia.server.ms.ebuyProduct.entity.JfqStoreProductTypeInfoEntity">
+		SELECT
+		    jspti.f_id `id`,
+			jspti.f_name `name`,
+			jspti.t_ebuy_product_type_f_id `typeId`,
+			jspti.f_sell_price_rate `sellPriceRate`
+		FROM
+			t_jfq_store_product_type_info jspti
+		WHERE
+			jspti.f_name IN
+			<foreach collection="typeSet" item="typeName" open="(" close=")" separator=",">
+				#{typeName}
+			</foreach>
+			AND jspti.f_sys0_del_state = 0
+	</select>
+</mapper>

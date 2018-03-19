@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 性能优化 -->
+<mapper namespace="performPro">
+	<select id="select_Is_NewUser" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(UT.f_id)
+		FROM t_user_tmp UT
+		WHERE 1=1
+		AND UT.f_sys0_del_state = 0
+		AND UT.f_device_type = #{deviceType}
+		AND UT.f_device_id = #{deviceId}
+	</select>
+	
+	<select id="select_Is_FamalyMember" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<include refid="commonSql.qry_userIds_count_withOutSelf"/>
+	</select>
+	
+	<select id="select_Is_BizType" resultType="java.lang.String">
+		SELECT
+			date_format(
+			MAX(
+				greatest(
+				CASE
+						WHEN NOT ISNULL(CST.f_sys0_add_time) THEN CST.f_sys0_add_time
+						ELSE 0
+				END, CASE
+						WHEN NOT ISNULL(CST.f_sys0_upd_time) THEN CST.f_sys0_upd_time
+						ELSE 0
+				END, CASE
+						WHEN NOT ISNULL(CST.f_sys0_del_time) THEN CST.f_sys0_del_time
+						ELSE 0
+				END
+				)
+			)
+			,'%Y-%m-%d %T') AS maxTime
+		FROM t_community_supply_type CST
+		WHERE 1=1
+		AND CST.f_sys0_del_state = 0 
+	</select>
+	
+	<select id="select_Is_MultDevice" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		FROM (
+			SELECT LL.f_channel,LL.f_device_id
+			FROM t_login_log LL
+	    	WHERE 1=1
+	    	AND LL.t_user_f_id = #{userId}
+	    	AND LL.f_channel != #{deviceId}
+	    	AND LL.f_device_id != #{deviceType}
+	    	GROUP BY LL.f_channel,LL.f_device_id
+    	) AS TMP
+	</select>
+</mapper>

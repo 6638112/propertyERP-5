@@ -1,0 +1,72 @@
+package com.cnfantasia.server.api.microblog.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.log4j.Logger;
+
+//import com.kingdee.youshang.Env;
+//import com.kingdee.youshang.platform.app.update.ClientInfo;
+//import com.kingdee.youshang.platform.app.update.IAppUpdateService;
+//import com.kingdee.youshang.platform.app.update.UpdateRecord;
+//import com.kingdee.youshang.platform.app.update.UserActivity;
+
+public class ClientPool {
+	protected final static Logger LOG = Logger.getLogger(ClientPool.class);
+	private static BlockingQueue<ClientInfo> activityQueue = new LinkedBlockingQueue<ClientInfo>();
+	private static BlockingQueue<ClientInfo> updateQueue = new LinkedBlockingQueue<ClientInfo>();
+	static{
+		for(int i=0;i<2;i++){
+			new Thread(new ClientInfoWorker(activityQueue,(IAppUpdateService)Env.getBean("clientActivityService"))).start();
+		}
+		/*for(int i=0;i<2;i++){
+			new Thread(new ClientInfoWorker(updateQueue,(IAppUpdateService)Env.getBean("clientUpdateService"))).start();
+		}*/
+	}
+	static AtomicInteger at = new AtomicInteger(0);
+	/** 批量插入数据量 */
+	private static final int SUBMIT_NUMBER = 100;
+	public static void addActivity(UserActivity info) {
+		//LOG.debug("offer");
+		at.incrementAndGet();
+		activityQueue.offer(info); 
+	}
+	public static void addUpdate(UpdateRecord info) {
+		updateQueue.offer(info);
+	}
+	
+	/**
+	 * 每隔一段时间批量插入
+	 * @author pony_ma
+	 *
+	 */
+	static class ClientInfoWorker implements Runnable {
+		private final BlockingQueue<ClientInfo> queue;
+		private final IAppUpdateService updateService;
+		ClientInfoWorker(BlockingQueue<ClientInfo> objQueue,IAppUpdateService updateService){
+			queue = objQueue;
+			this.updateService = updateService;
+		}
+		public void run() {
+			while (true) {
+				try {
+					List<ClientInfo> lstInfo = new ArrayList<ClientInfo>();
+					queue.drainTo(lstInfo, SUBMIT_NUMBER);
+					updateService.addClientInfo(lstInfo,SUBMIT_NUMBER);
+					while(queue.size()==0){//调用size比较多，用LinkedBlockingQueue的size无需对队列加锁
+						Thread.sleep(60*1000);//5*60*1000
+					}
+					
+				} catch (Exception ex) {
+					LOG.error("add activity failed!!!", ex);
+				}
+			}
+
+		}
+
+	}
+	
+}

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:银行基础资料 t_basedata_bank -->
+<mapper namespace="basedataBankBase">
+	<resultMap type="BasedataBank" id="basedataBankBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_number" javaType="java.lang.String" property="number"/>  <!-- 银行代号 -->        <result column="f_name" javaType="java.lang.String" property="name"/>  <!-- 银行名称 -->        <result column="f_description" javaType="java.lang.String" property="description"/>  <!-- 描述 -->
+	</resultMap>
+	<resultMap type="BasedataBank" id="basedataBankExtendMap" extends="basedataBankBaseMap">
+	</resultMap>
+	<resultMap type="BasedataBank" id="basedataBankBaseMap_AppendTable">
+        <id column="BBid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="BBnumber" javaType="java.lang.String" property="number"/>  <!-- 银行代号 -->        <result column="BBname" javaType="java.lang.String" property="name"/>  <!-- 银行名称 -->        <result column="BBdescription" javaType="java.lang.String" property="description"/>  <!-- 描述 -->
+	</resultMap>
+	<resultMap type="BasedataBank" id="basedataBankBaseMap_AppendTable1">
+        <id column="BB1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="BB1number" javaType="java.lang.String" property="number"/>  <!-- 银行代号 -->        <result column="BB1name" javaType="java.lang.String" property="name"/>  <!-- 银行名称 -->        <result column="BB1description" javaType="java.lang.String" property="description"/>  <!-- 描述 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		BB.f_id,BB.f_number,BB.f_name,BB.f_description
+	</sql>
+	<sql id="queryHead_AppendTable">
+		BB.f_id as BBid,BB.f_number as BBnumber,BB.f_name as BBname,BB.f_description as BBdescription
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		BB1.f_id as BB1id,BB1.f_number as BB1number,BB1.f_name as BB1name,BB1.f_description as BB1description
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (BB.f_id = #{id} ) </if>        <if test="number != null">  and (BB.f_number = #{number} ) </if>        <if test="name != null">  and (BB.f_name = #{name} ) </if>        <if test="description != null">  and (BB.f_description = #{description} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (BB.f_id = #{id} ) </if>        <if test="number != null and !number.equals('')  ">  and (BB.f_number like CONCAT('%',#{number},'%') ) </if>        <if test="name != null and !name.equals('')  ">  and (BB.f_name like CONCAT('%',#{name},'%') ) </if>        <if test="description != null and !description.equals('')  ">  and (BB.f_description like CONCAT('%',#{description},'%') ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="basedataBankBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="basedataBankBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="basedataBankBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="basedataBankBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_basedata_bank BB    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(银行基础资料)信息。 -->
+	<sql id="select_basedataBank">
+		SELECT <include refid="basedataBankBase.queryHead"/>
+		<include refid="basedataBankBase.busiQueryCondition"/>
+		<include refid="basedataBankBase.dimCheckSql"/>
+		ORDER BY BB.f_id DESC
+	</sql>
+	<select id="select_basedataBank" parameterType="java.util.Map" resultMap="basedataBankBase.basedataBankExtendMap">
+		<include refid="basedataBankBase.select_basedataBank"/>
+	</select>
+	
+	<!-- 根据条件分页查询(银行基础资料)信息  -->
+	<sql id="select_basedataBank_withPage">
+		SELECT <include refid="basedataBankBase.queryHead"/>
+		<include refid="basedataBankBase.busiQueryCondition"/>
+		<include refid="basedataBankBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_basedataBank_withPage" resultMap="basedataBankBase.basedataBankExtendMap" parameterType="java.util.Map">
+		<include refid="basedataBankBase.select_basedataBank_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(银行基础资料)信息。 -->
+	<sql id="select_basedataBank_bySeqId">
+		SELECT <include refid="basedataBankBase.queryHead"/>
+		<include refid="basedataBankBase.busiQueryCondition"/>
+		 and BB.f_id = #{_parameter}
+	</sql>
+	<select id="select_basedataBank_bySeqId" parameterType="java.math.BigInteger" resultMap="basedataBankBase.basedataBankBaseMap">
+		<include refid="basedataBankBase.select_basedataBank_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(银行基础资料)记录数  -->
+	<sql id="select_basedataBank_count">
+		SELECT COUNT(*)
+		<include refid="basedataBankBase.busiQueryCount"/>
+		<include refid="basedataBankBase.dimCheckSql"/>
+	</sql>
+	<select id="select_basedataBank_count" resultType="java.lang.Integer">
+		<include refid="basedataBankBase.select_basedataBank_count"/>
+	</select>
+	
+	 <!-- 往(银行基础资料)新增一条记录。 -->
+	 <sql id="insert_basedataBank">
+		INSERT INTO t_basedata_bank 
+		(f_id,f_number,f_name,f_description) VALUES 
+		(#{id},#{number,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR})
+	 </sql>
+    <insert id="insert_basedataBank" parameterType="BasedataBank">
+		<include refid="basedataBankBase.insert_basedataBank"/>
+    </insert>
+    
+	<!-- 批量新增(银行基础资料)信息 -->
+    <insert id="insert_basedataBank_Batch" parameterType="java.util.List">
+    	INSERT INTO t_basedata_bank 
+		(f_id,f_number,f_name,f_description) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.number,jdbcType=VARCHAR},#{item.name,jdbcType=VARCHAR},#{item.description,jdbcType=VARCHAR})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(银行基础资料)信息。 -->
+    <sql id="update_basedataBank">
+		UPDATE t_basedata_bank		<trim prefix="SET" prefixOverrides=","> 		<if test="number != null and !number.equals('') "> ,f_number=#{number}</if> 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if> 		<if test="description != null and !description.equals('') "> ,f_description=#{description}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_basedataBank" parameterType="BasedataBank">
+		<include refid="basedataBankBase.update_basedataBank"/>
+    </update>
+    
+    <!-- 批量更新(银行基础资料)信息。 -->
+    <update id="update_basedataBank_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_basedata_bank		<trim prefix="SET" prefixOverrides=","> 		<if test="item.number != null and !item.number.equals('')  "> ,f_number=#{item.number}</if> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.description != null and !item.description.equals('')  "> ,f_description=#{item.description}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(银行基础资料)信息_逻辑删除。 -->
+    <!-- <sql id="delete_basedataBank_Logic">
+		UPDATE t_basedata_bank		<trim prefix="SET" prefixOverrides=","> 		<if test="number != null and !number.equals('')  "> ,f_number=#{number}</if> 		<if test="name != null and !name.equals('')  "> ,f_name=#{name}</if> 		<if test="description != null and !description.equals('')  "> ,f_description=#{description}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_basedataBank_Logic" parameterType="BasedataBank">
+		<include refid="basedataBankBase.delete_basedataBank_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(银行基础资料)信息_逻辑删除 -->
+    <!-- <update id="delete_basedataBank_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_basedata_bank		<trim prefix="SET" prefixOverrides=","> 		<if test="item.number != null and !item.number.equals('')  "> ,f_number=#{item.number}</if> 		<if test="item.name != null and !item.name.equals('')  "> ,f_name=#{item.name}</if> 		<if test="item.description != null and !item.description.equals('')  "> ,f_description=#{item.description}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(银行基础资料)信息。 -->
+    <sql id="delete_basedataBank">
+		DELETE FROM t_basedata_bank WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_basedataBank" parameterType="java.lang.String">
+		<include refid="basedataBankBase.delete_basedataBank"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(银行基础资料)信息。 -->
+    <delete id="delete_basedataBank_Batch" parameterType="java.util.List">
+		DELETE FROM t_basedata_bank WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

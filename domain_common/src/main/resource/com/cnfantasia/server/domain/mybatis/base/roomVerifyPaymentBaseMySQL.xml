@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:门牌验证缴费情况查询表 t_room_verify_payment -->
+<mapper namespace="roomVerifyPaymentBase">
+	<resultMap type="RoomVerifyPayment" id="roomVerifyPaymentBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="t_real_room_id" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!--  -->
+        <result column="t_address_province_id" javaType="java.math.BigInteger" property="tAddressProvinceId"/>  <!-- 省 -->
+        <result column="f_province" javaType="java.lang.String" property="province"/>  <!-- 省（冗余） -->
+        <result column="t_address_city_id" javaType="java.math.BigInteger" property="tAddressCityId"/>  <!-- 市 -->
+        <result column="f_city" javaType="java.lang.String" property="city"/>  <!-- 市（冗余） -->
+        <result column="t_group_building_id" javaType="java.math.BigInteger" property="tGroupBuildingId"/>  <!-- 小区 -->
+        <result column="f_gb_name" javaType="java.lang.String" property="gbName"/>  <!-- 小区（冗余） -->
+        <result column="t_building_id" javaType="java.math.BigInteger" property="tBuildingId"/>  <!-- 楼栋 -->
+        <result column="f_building_name" javaType="java.lang.String" property="buildingName"/>  <!-- 楼栋（冗余） -->
+        <result column="f_unit" javaType="java.lang.String" property="unit"/>  <!-- 单元 -->
+        <result column="f_room_num" javaType="java.lang.String" property="roomNum"/>  <!-- 房间号 -->
+        <result column="f_register_state" javaType="java.lang.Integer" property="registerState"/>  <!-- 注册状态 -->
+        <result column="f_pay_state" javaType="java.lang.Integer" property="payState"/>  <!-- 缴费状态 -->
+        <result column="f_pay_time" javaType="java.lang.String" property="payTime"/>  <!-- 缴费时间 -->
+	</resultMap>
+	<resultMap type="RoomVerifyPayment" id="roomVerifyPaymentExtendMap" extends="roomVerifyPaymentBaseMap">
+	</resultMap>
+	<resultMap type="RoomVerifyPayment" id="roomVerifyPaymentBaseMap_AppendTable">
+        <id column="RVPid" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="RVPtRealRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!--  -->
+        <result column="RVPtAddressProvinceId" javaType="java.math.BigInteger" property="tAddressProvinceId"/>  <!-- 省 -->
+        <result column="RVPprovince" javaType="java.lang.String" property="province"/>  <!-- 省（冗余） -->
+        <result column="RVPtAddressCityId" javaType="java.math.BigInteger" property="tAddressCityId"/>  <!-- 市 -->
+        <result column="RVPcity" javaType="java.lang.String" property="city"/>  <!-- 市（冗余） -->
+        <result column="RVPtGroupBuildingId" javaType="java.math.BigInteger" property="tGroupBuildingId"/>  <!-- 小区 -->
+        <result column="RVPgbName" javaType="java.lang.String" property="gbName"/>  <!-- 小区（冗余） -->
+        <result column="RVPtBuildingId" javaType="java.math.BigInteger" property="tBuildingId"/>  <!-- 楼栋 -->
+        <result column="RVPbuildingName" javaType="java.lang.String" property="buildingName"/>  <!-- 楼栋（冗余） -->
+        <result column="RVPunit" javaType="java.lang.String" property="unit"/>  <!-- 单元 -->
+        <result column="RVProomNum" javaType="java.lang.String" property="roomNum"/>  <!-- 房间号 -->
+        <result column="RVPregisterState" javaType="java.lang.Integer" property="registerState"/>  <!-- 注册状态 -->
+        <result column="RVPpayState" javaType="java.lang.Integer" property="payState"/>  <!-- 缴费状态 -->
+        <result column="RVPpayTime" javaType="java.lang.String" property="payTime"/>  <!-- 缴费时间 -->
+	</resultMap>
+	<resultMap type="RoomVerifyPayment" id="roomVerifyPaymentBaseMap_AppendTable1">
+        <id column="RVP1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->
+        <result column="RVP1tRealRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!--  -->
+        <result column="RVP1tAddressProvinceId" javaType="java.math.BigInteger" property="tAddressProvinceId"/>  <!-- 省 -->
+        <result column="RVP1province" javaType="java.lang.String" property="province"/>  <!-- 省（冗余） -->
+        <result column="RVP1tAddressCityId" javaType="java.math.BigInteger" property="tAddressCityId"/>  <!-- 市 -->
+        <result column="RVP1city" javaType="java.lang.String" property="city"/>  <!-- 市（冗余） -->
+        <result column="RVP1tGroupBuildingId" javaType="java.math.BigInteger" property="tGroupBuildingId"/>  <!-- 小区 -->
+        <result column="RVP1gbName" javaType="java.lang.String" property="gbName"/>  <!-- 小区（冗余） -->
+        <result column="RVP1tBuildingId" javaType="java.math.BigInteger" property="tBuildingId"/>  <!-- 楼栋 -->
+        <result column="RVP1buildingName" javaType="java.lang.String" property="buildingName"/>  <!-- 楼栋（冗余） -->
+        <result column="RVP1unit" javaType="java.lang.String" property="unit"/>  <!-- 单元 -->
+        <result column="RVP1roomNum" javaType="java.lang.String" property="roomNum"/>  <!-- 房间号 -->
+        <result column="RVP1registerState" javaType="java.lang.Integer" property="registerState"/>  <!-- 注册状态 -->
+        <result column="RVP1payState" javaType="java.lang.Integer" property="payState"/>  <!-- 缴费状态 -->
+        <result column="RVP1payTime" javaType="java.lang.String" property="payTime"/>  <!-- 缴费时间 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		RVP.f_id,RVP.t_real_room_id,RVP.t_address_province_id,RVP.f_province,RVP.t_address_city_id,RVP.f_city,RVP.t_group_building_id,RVP.f_gb_name,RVP.t_building_id,RVP.f_building_name,RVP.f_unit,RVP.f_room_num,RVP.f_register_state,RVP.f_pay_state,date_format(RVP.f_pay_time,'%Y-%m-%d %T') as f_pay_time
+	</sql>
+	<sql id="queryHead_AppendTable">
+		RVP.f_id as RVPid,RVP.t_real_room_id as RVPtRealRoomId,RVP.t_address_province_id as RVPtAddressProvinceId,RVP.f_province as RVPprovince,RVP.t_address_city_id as RVPtAddressCityId,RVP.f_city as RVPcity,RVP.t_group_building_id as RVPtGroupBuildingId,RVP.f_gb_name as RVPgbName,RVP.t_building_id as RVPtBuildingId,RVP.f_building_name as RVPbuildingName,RVP.f_unit as RVPunit,RVP.f_room_num as RVProomNum,RVP.f_register_state as RVPregisterState,RVP.f_pay_state as RVPpayState,date_format(RVP.f_pay_time,'%Y-%m-%d %T') as RVPpayTime
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		RVP1.f_id as RVP1id,RVP1.t_real_room_id as RVP1tRealRoomId,RVP1.t_address_province_id as RVP1tAddressProvinceId,RVP1.f_province as RVP1province,RVP1.t_address_city_id as RVP1tAddressCityId,RVP1.f_city as RVP1city,RVP1.t_group_building_id as RVP1tGroupBuildingId,RVP1.f_gb_name as RVP1gbName,RVP1.t_building_id as RVP1tBuildingId,RVP1.f_building_name as RVP1buildingName,RVP1.f_unit as RVP1unit,RVP1.f_room_num as RVP1roomNum,RVP1.f_register_state as RVP1registerState,RVP1.f_pay_state as RVP1payState,date_format(RVP1.f_pay_time,'%Y-%m-%d %T') as RVP1payTime
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (RVP.f_id = #{id} ) </if>
+        <if test="tRealRoomId != null">  and (RVP.t_real_room_id = #{tRealRoomId} ) </if>
+        <if test="tAddressProvinceId != null">  and (RVP.t_address_province_id = #{tAddressProvinceId} ) </if>
+        <if test="province != null">  and (RVP.f_province = #{province} ) </if>
+        <if test="tAddressCityId != null">  and (RVP.t_address_city_id = #{tAddressCityId} ) </if>
+        <if test="city != null">  and (RVP.f_city = #{city} ) </if>
+        <if test="tGroupBuildingId != null">  and (RVP.t_group_building_id = #{tGroupBuildingId} ) </if>
+        <if test="gbName != null">  and (RVP.f_gb_name = #{gbName} ) </if>
+        <if test="tBuildingId != null">  and (RVP.t_building_id = #{tBuildingId} ) </if>
+        <if test="buildingName != null">  and (RVP.f_building_name = #{buildingName} ) </if>
+        <if test="unit != null">  and (RVP.f_unit = #{unit} ) </if>
+        <if test="roomNum != null">  and (RVP.f_room_num = #{roomNum} ) </if>
+        <if test="registerState != null">  and (RVP.f_register_state = #{registerState} ) </if>
+        <if test="payState != null">  and (RVP.f_pay_state = #{payState} ) </if>
+        <if test="payTime != null and !payTime.equals('')  ">  and (RVP.f_pay_time = str_to_date(#{payTime},'%Y-%m-%d %T') ) </if>
+        <if test="payTime_START != null and !payTime_START.equals('')  ">  
+            <![CDATA[ and (RVP.f_pay_time >= str_to_date(#{payTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payTime_END != null and !payTime_END.equals('')  ">
+            <![CDATA[ and (RVP.f_pay_time <= str_to_date(#{payTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (RVP.f_id = #{id} ) </if>
+        <if test="tRealRoomId != null and !tRealRoomId.equals('')  ">  and (RVP.t_real_room_id = #{tRealRoomId} ) </if>
+        <if test="tAddressProvinceId != null and !tAddressProvinceId.equals('')  ">  and (RVP.t_address_province_id = #{tAddressProvinceId} ) </if>
+        <if test="province != null and !province.equals('')  ">  and (RVP.f_province like CONCAT('%',#{province},'%') ) </if>
+        <if test="tAddressCityId != null and !tAddressCityId.equals('')  ">  and (RVP.t_address_city_id = #{tAddressCityId} ) </if>
+        <if test="city != null and !city.equals('')  ">  and (RVP.f_city like CONCAT('%',#{city},'%') ) </if>
+        <if test="tGroupBuildingId != null and !tGroupBuildingId.equals('')  ">  and (RVP.t_group_building_id = #{tGroupBuildingId} ) </if>
+        <if test="gbName != null and !gbName.equals('')  ">  and (RVP.f_gb_name like CONCAT('%',#{gbName},'%') ) </if>
+        <if test="tBuildingId != null and !tBuildingId.equals('')  ">  and (RVP.t_building_id = #{tBuildingId} ) </if>
+        <if test="buildingName != null and !buildingName.equals('')  ">  and (RVP.f_building_name like CONCAT('%',#{buildingName},'%') ) </if>
+        <if test="unit != null and !unit.equals('')  ">  and (RVP.f_unit like CONCAT('%',#{unit},'%') ) </if>
+        <if test="roomNum != null and !roomNum.equals('')  ">  and (RVP.f_room_num like CONCAT('%',#{roomNum},'%') ) </if>
+        <if test="registerState != null and !registerState.equals('')  ">  and (RVP.f_register_state = #{registerState} ) </if>
+        <if test="payState != null and !payState.equals('')  ">  and (RVP.f_pay_state = #{payState} ) </if>
+        <if test="payTime != null and !payTime.equals('')  ">  and (RVP.f_pay_time = str_to_date(#{payTime},'%Y-%m-%d %T') ) </if>
+        <if test="payTime_START != null and !payTime_START.equals('')  ">  
+            <![CDATA[ and (RVP.f_pay_time >= str_to_date(#{payTime_START},'%Y-%m-%d %T') ) ]]>
+        </if>
+        <if test="payTime_END != null and !payTime_END.equals('')  ">
+            <![CDATA[ and (RVP.f_pay_time <= str_to_date(#{payTime_END},'%Y-%m-%d %T') ) ]]>
+        </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="roomVerifyPaymentBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="roomVerifyPaymentBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="roomVerifyPaymentBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="roomVerifyPaymentBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_room_verify_payment RVP
+    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(门牌验证缴费情况查询表)信息。 -->
+	<sql id="select_roomVerifyPayment">
+		SELECT <include refid="roomVerifyPaymentBase.queryHead"/>
+		<include refid="roomVerifyPaymentBase.busiQueryCondition"/>
+		<include refid="roomVerifyPaymentBase.dimCheckSql"/>
+		ORDER BY RVP.f_id DESC
+	</sql>
+	<select id="select_roomVerifyPayment" parameterType="java.util.Map" resultMap="roomVerifyPaymentBase.roomVerifyPaymentExtendMap">
+		<include refid="roomVerifyPaymentBase.select_roomVerifyPayment"/>
+	</select>
+	
+	<!-- 根据条件分页查询(门牌验证缴费情况查询表)信息  -->
+	<sql id="select_roomVerifyPayment_withPage">
+		SELECT <include refid="roomVerifyPaymentBase.queryHead"/>
+		<include refid="roomVerifyPaymentBase.busiQueryCondition"/>
+		<include refid="roomVerifyPaymentBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_roomVerifyPayment_withPage" resultMap="roomVerifyPaymentBase.roomVerifyPaymentExtendMap" parameterType="java.util.Map">
+		<include refid="roomVerifyPaymentBase.select_roomVerifyPayment_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(门牌验证缴费情况查询表)信息。 -->
+	<sql id="select_roomVerifyPayment_bySeqId">
+		SELECT <include refid="roomVerifyPaymentBase.queryHead"/>
+		<include refid="roomVerifyPaymentBase.busiQueryCondition"/>
+		 and RVP.f_id = #{_parameter}
+	</sql>
+	<select id="select_roomVerifyPayment_bySeqId" parameterType="java.math.BigInteger" resultMap="roomVerifyPaymentBase.roomVerifyPaymentBaseMap">
+		<include refid="roomVerifyPaymentBase.select_roomVerifyPayment_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(门牌验证缴费情况查询表)记录数  -->
+	<sql id="select_roomVerifyPayment_count">
+		SELECT COUNT(*)
+		<include refid="roomVerifyPaymentBase.busiQueryCount"/>
+		<include refid="roomVerifyPaymentBase.dimCheckSql"/>
+	</sql>
+	<select id="select_roomVerifyPayment_count" resultType="java.lang.Integer">
+		<include refid="roomVerifyPaymentBase.select_roomVerifyPayment_count"/>
+	</select>
+	
+	 <!-- 往(门牌验证缴费情况查询表)新增一条记录。 -->
+	 <sql id="insert_roomVerifyPayment">
+		INSERT INTO t_room_verify_payment 
+		(f_id,t_real_room_id,t_address_province_id,f_province,t_address_city_id,f_city,t_group_building_id,f_gb_name,t_building_id,f_building_name,f_unit,f_room_num,f_register_state,f_pay_state,f_pay_time) VALUES 
+		(#{id},#{tRealRoomId},#{tAddressProvinceId},#{province,jdbcType=VARCHAR},#{tAddressCityId},#{city,jdbcType=VARCHAR},#{tGroupBuildingId},#{gbName,jdbcType=VARCHAR},#{tBuildingId},#{buildingName,jdbcType=VARCHAR},#{unit,jdbcType=VARCHAR},#{roomNum,jdbcType=VARCHAR},#{registerState},#{payState},str_to_date(#{payTime,jdbcType=DATE},'%Y-%m-%d %T'))
+	 </sql>
+    <insert id="insert_roomVerifyPayment" parameterType="RoomVerifyPayment">
+		<include refid="roomVerifyPaymentBase.insert_roomVerifyPayment"/>
+    </insert>
+    
+	<!-- 批量新增(门牌验证缴费情况查询表)信息 -->
+    <insert id="insert_roomVerifyPayment_Batch" parameterType="java.util.List">
+    	INSERT INTO t_room_verify_payment 
+		(f_id,t_real_room_id,t_address_province_id,f_province,t_address_city_id,f_city,t_group_building_id,f_gb_name,t_building_id,f_building_name,f_unit,f_room_num,f_register_state,f_pay_state,f_pay_time) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tRealRoomId},#{item.tAddressProvinceId},#{item.province,jdbcType=VARCHAR},#{item.tAddressCityId},#{item.city,jdbcType=VARCHAR},#{item.tGroupBuildingId},#{item.gbName,jdbcType=VARCHAR},#{item.tBuildingId},#{item.buildingName,jdbcType=VARCHAR},#{item.unit,jdbcType=VARCHAR},#{item.roomNum,jdbcType=VARCHAR},#{item.registerState},#{item.payState},str_to_date(#{item.payTime,jdbcType=DATE},'%Y-%m-%d %T'))
+		</foreach>
+    </insert>
+    
+    <!-- 更新(门牌验证缴费情况查询表)信息。 -->
+    <sql id="update_roomVerifyPayment">
+		UPDATE t_room_verify_payment
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tRealRoomId != null and !tRealRoomId.equals('') "> ,t_real_room_id=#{tRealRoomId}</if>
+ 		<if test="tAddressProvinceId != null and !tAddressProvinceId.equals('') "> ,t_address_province_id=#{tAddressProvinceId}</if>
+ 		<if test="province != null and !province.equals('') "> ,f_province=#{province}</if>
+ 		<if test="tAddressCityId != null and !tAddressCityId.equals('') "> ,t_address_city_id=#{tAddressCityId}</if>
+ 		<if test="city != null and !city.equals('') "> ,f_city=#{city}</if>
+ 		<if test="tGroupBuildingId != null and !tGroupBuildingId.equals('') "> ,t_group_building_id=#{tGroupBuildingId}</if>
+ 		<if test="gbName != null and !gbName.equals('') "> ,f_gb_name=#{gbName}</if>
+ 		<if test="tBuildingId != null and !tBuildingId.equals('') "> ,t_building_id=#{tBuildingId}</if>
+ 		<if test="buildingName != null and !buildingName.equals('') "> ,f_building_name=#{buildingName}</if>
+ 		<if test="unit != null and !unit.equals('') "> ,f_unit=#{unit}</if>
+ 		<if test="roomNum != null and !roomNum.equals('') "> ,f_room_num=#{roomNum}</if>
+ 		<if test="registerState != null and !registerState.equals('') "> ,f_register_state=#{registerState}</if>
+ 		<if test="payState != null and !payState.equals('') "> ,f_pay_state=#{payState}</if>
+ 		<if test="payTime != null and !payTime.equals('') "> ,f_pay_time=str_to_date(#{payTime},'%Y-%m-%d %T')</if>
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_roomVerifyPayment" parameterType="RoomVerifyPayment">
+		<include refid="roomVerifyPaymentBase.update_roomVerifyPayment"/>
+    </update>
+    
+    <!-- 批量更新(门牌验证缴费情况查询表)信息。 -->
+    <update id="update_roomVerifyPayment_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_room_verify_payment
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tRealRoomId != null and !item.tRealRoomId.equals('')  "> ,t_real_room_id=#{item.tRealRoomId}</if>
+ 		<if test="item.tAddressProvinceId != null and !item.tAddressProvinceId.equals('')  "> ,t_address_province_id=#{item.tAddressProvinceId}</if>
+ 		<if test="item.province != null and !item.province.equals('')  "> ,f_province=#{item.province}</if>
+ 		<if test="item.tAddressCityId != null and !item.tAddressCityId.equals('')  "> ,t_address_city_id=#{item.tAddressCityId}</if>
+ 		<if test="item.city != null and !item.city.equals('')  "> ,f_city=#{item.city}</if>
+ 		<if test="item.tGroupBuildingId != null and !item.tGroupBuildingId.equals('')  "> ,t_group_building_id=#{item.tGroupBuildingId}</if>
+ 		<if test="item.gbName != null and !item.gbName.equals('')  "> ,f_gb_name=#{item.gbName}</if>
+ 		<if test="item.tBuildingId != null and !item.tBuildingId.equals('')  "> ,t_building_id=#{item.tBuildingId}</if>
+ 		<if test="item.buildingName != null and !item.buildingName.equals('')  "> ,f_building_name=#{item.buildingName}</if>
+ 		<if test="item.unit != null and !item.unit.equals('')  "> ,f_unit=#{item.unit}</if>
+ 		<if test="item.roomNum != null and !item.roomNum.equals('')  "> ,f_room_num=#{item.roomNum}</if>
+ 		<if test="item.registerState != null and !item.registerState.equals('')  "> ,f_register_state=#{item.registerState}</if>
+ 		<if test="item.payState != null and !item.payState.equals('')  "> ,f_pay_state=#{item.payState}</if>
+ 		<if test="item.payTime != null and !item.payTime.equals('')  "> ,f_pay_time=str_to_date(#{item.payTime},'%Y-%m-%d %T')</if>
+		</trim>
+		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(门牌验证缴费情况查询表)信息_逻辑删除。 -->
+    <!-- <sql id="delete_roomVerifyPayment_Logic">
+		UPDATE t_room_verify_payment
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tRealRoomId != null and !tRealRoomId.equals('')  "> ,t_real_room_id=#{tRealRoomId}</if>
+ 		<if test="tAddressProvinceId != null and !tAddressProvinceId.equals('')  "> ,t_address_province_id=#{tAddressProvinceId}</if>
+ 		<if test="province != null and !province.equals('')  "> ,f_province=#{province}</if>
+ 		<if test="tAddressCityId != null and !tAddressCityId.equals('')  "> ,t_address_city_id=#{tAddressCityId}</if>
+ 		<if test="city != null and !city.equals('')  "> ,f_city=#{city}</if>
+ 		<if test="tGroupBuildingId != null and !tGroupBuildingId.equals('')  "> ,t_group_building_id=#{tGroupBuildingId}</if>
+ 		<if test="gbName != null and !gbName.equals('')  "> ,f_gb_name=#{gbName}</if>
+ 		<if test="tBuildingId != null and !tBuildingId.equals('')  "> ,t_building_id=#{tBuildingId}</if>
+ 		<if test="buildingName != null and !buildingName.equals('')  "> ,f_building_name=#{buildingName}</if>
+ 		<if test="unit != null and !unit.equals('')  "> ,f_unit=#{unit}</if>
+ 		<if test="roomNum != null and !roomNum.equals('')  "> ,f_room_num=#{roomNum}</if>
+ 		<if test="registerState != null and !registerState.equals('')  "> ,f_register_state=#{registerState}</if>
+ 		<if test="payState != null and !payState.equals('')  "> ,f_pay_state=#{payState}</if>
+ 		<if test="payTime != null and !payTime.equals('')  "> ,f_pay_time=str_to_date(#{payTime},'%Y-%m-%d %T')</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{id}
+    </sql>
+    <update id="delete_roomVerifyPayment_Logic" parameterType="RoomVerifyPayment">
+		<include refid="roomVerifyPaymentBase.delete_roomVerifyPayment_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(门牌验证缴费情况查询表)信息_逻辑删除 -->
+    <!-- <update id="delete_roomVerifyPayment_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_room_verify_payment
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="item.tRealRoomId != null and !item.tRealRoomId.equals('')  "> ,t_real_room_id=#{item.tRealRoomId}</if>
+ 		<if test="item.tAddressProvinceId != null and !item.tAddressProvinceId.equals('')  "> ,t_address_province_id=#{item.tAddressProvinceId}</if>
+ 		<if test="item.province != null and !item.province.equals('')  "> ,f_province=#{item.province}</if>
+ 		<if test="item.tAddressCityId != null and !item.tAddressCityId.equals('')  "> ,t_address_city_id=#{item.tAddressCityId}</if>
+ 		<if test="item.city != null and !item.city.equals('')  "> ,f_city=#{item.city}</if>
+ 		<if test="item.tGroupBuildingId != null and !item.tGroupBuildingId.equals('')  "> ,t_group_building_id=#{item.tGroupBuildingId}</if>
+ 		<if test="item.gbName != null and !item.gbName.equals('')  "> ,f_gb_name=#{item.gbName}</if>
+ 		<if test="item.tBuildingId != null and !item.tBuildingId.equals('')  "> ,t_building_id=#{item.tBuildingId}</if>
+ 		<if test="item.buildingName != null and !item.buildingName.equals('')  "> ,f_building_name=#{item.buildingName}</if>
+ 		<if test="item.unit != null and !item.unit.equals('')  "> ,f_unit=#{item.unit}</if>
+ 		<if test="item.roomNum != null and !item.roomNum.equals('')  "> ,f_room_num=#{item.roomNum}</if>
+ 		<if test="item.registerState != null and !item.registerState.equals('')  "> ,f_register_state=#{item.registerState}</if>
+ 		<if test="item.payState != null and !item.payState.equals('')  "> ,f_pay_state=#{item.payState}</if>
+ 		<if test="item.payTime != null and !item.payTime.equals('')  "> ,f_pay_time=str_to_date(#{item.payTime},'%Y-%m-%d %T')</if>
+ 		,f_sys0_del_state= 1 
+		</trim>
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(门牌验证缴费情况查询表)信息。 -->
+    <sql id="delete_roomVerifyPayment">
+		DELETE FROM t_room_verify_payment WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_roomVerifyPayment" parameterType="java.lang.String">
+		<include refid="roomVerifyPaymentBase.delete_roomVerifyPayment"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(门牌验证缴费情况查询表)信息。 -->
+    <delete id="delete_roomVerifyPayment_Batch" parameterType="java.util.List">
+		DELETE FROM t_room_verify_payment WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

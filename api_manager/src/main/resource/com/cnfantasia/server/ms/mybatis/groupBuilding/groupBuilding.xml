@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:用户表 t_pay_bill -->
+<mapper namespace="groupBuilding">
+	<resultMap type="com.cnfantasia.server.ms.groupBuilding.entity.GroupBuildingSimpleEntity" id="GroupBuildingSimpleEntity_Map_Append"
+    	extends="groupBuildingBase.groupBuildingBaseMap_AppendTable">
+    	<result column="t_address_block" javaType="java.lang.String" property="addressBlockName"/> 
+    	<result column="t_address_city" javaType="java.lang.String" property="addressCityName"/> 
+    	<result column="t_address_province" javaType="java.lang.String" property="addressProvinceName"/> 
+    	<result column="propertyCompanyName" javaType="java.lang.String" property="propertyCompanyName"/> 
+    	<result column="propertyManagementName" javaType="java.lang.String" property="propertyManagementName"/> 
+    	<result column="isSoftwareDock" javaType="java.lang.Boolean" property="hasSoftwareDock"/>
+		<result column="fixedFeeStatus" javaType="java.lang.Integer" property="fixedFeeStatus"/>  <!-- 是否开启定期收费配置 -->
+		<result column="meterFeeStatus" javaType="java.lang.Integer" property="meterFeeStatus"/>  <!-- 是否开启抄表收费配置 -->
+		<result column="tempFeeStatus" javaType="java.lang.Integer" property="tempFeeStatus"/>  <!-- 是否开启临时收费配置 -->
+		<result column="cityId" javaType="java.math.BigInteger" property="cityId"/>
+		<result column="blockId" javaType="java.math.BigInteger" property="blockId"/>
+		<result column="openBankcollection" javaType="java.lang.Integer" property="openBankcollection"/>
+	</resultMap>
+    <resultMap type="com.cnfantasia.server.ms.groupBuilding.entity.GroupBuildingSimpleViewEntity" id="GroupBuildingSimpleViewEntity"
+    	extends="GroupBuildingSimpleEntity_Map_Append">
+    	<association property="propertyCompany" resultMap="propertyCompanyBase.propertyCompanyBaseMap_AppendTable"></association>
+    </resultMap>
+    <!-- 物业新增商铺查询小区 -->
+    <select id="select_groupBuilding_forAddSupply" parameterType="map" resultType="com.cnfantasia.server.ms.groupBuilding.entity.GroupBuildingSimpleViewEntity">
+    	select 
+    		GB.f_id id, GB.f_name name, GB.f_address_desc addressDesc,
+    		AB.f_name addressBlockName, AC.f_name addressCityName, AP.f_name addressProvinceName
+    	from t_group_building GB
+    		<if test="isPmUser !=null and isPmUser == 1" > <!-- 管理处账号 -->
+				inner join t_property_management PM on PM.f_id=GB.t_property_management_f_id and PM.f_sys0_del_state=0
+				inner join t_property_management_has_oms_user PMHOU on PM.f_id = PMHOU.t_property_management_f_id and PMHOU.f_sys0_del_state=0
+			</if>
+    		INNER JOIN t_property_company PC on GB.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+		where GB.f_sys0_del_state=0
+		<if test="isPmUser !=null and isPmUser == 0" >and PC.f_admin_id=#{adminId}</if>
+		<if test="isPmUser !=null and isPmUser == 1" >and PMHOU.t_oms_user_f_id=#{adminId}</if>
+		
+		union
+		
+		<!-- 代理商和代理人推荐的且被审核通过的小区 -->  
+		select 
+    		GB.f_id id, GB.f_name name, GB.f_address_desc addressDesc,
+    		AB.f_name addressBlockName, AC.f_name addressCityName, AP.f_name addressProvinceName
+    	from t_group_building GB 
+		INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+		LEFT JOIN t_group_building_register GBR on GBR.f_name = GB.f_name and GBR.t_address_block_f_id = GB.t_block_f_id
+		left join t_channel_partner_recommend CPR on CPR.f_id = GBR.t_channel_partner_recommend_f_id
+		left join t_channel_partner CP on CP.f_id = CPR.t_channel_partner_f_id 
+		left join t_oms_user OU on OU.f_id = CP.t_oms_user_f_id
+		WHERE GBR.f_auditStatus =1 and  OU.f_id = #{adminId};
+    </select>
+    
+    <!-- 物业新增商铺服务小区 -->
+    <select id="select_groupBuilding_forSupplyService" parameterType="java.util.Map" resultMap="GroupBuildingSimpleViewEntity">
+    	select 
+    		<include refid="groupBuildingBase.queryHead_AppendTable"/>,
+    		<include refid="propertyCompanyBase.queryHead_AppendTable"/>,
+    		AB.f_name t_address_block,AC.f_name t_address_city,AP.f_name t_address_province
+    	from t_group_building GB
+    		INNER JOIN t_group_building_has_t_community_supply_tmp GBST on GB.f_id=GBST.t_group_building_f_id
+    		LEFT JOIN t_property_company PC on GB.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+		where GBST.t_community_supply_tmp_f_id=#{tmpId};
+    </select>
+    
+    <!-- 小区管理查询List -->
+    <select id="select_groupBuilding_forList" parameterType="java.util.Map" resultMap="GroupBuildingSimpleEntity_Map_Append">
+    	select 
+    		<include refid="groupBuildingBase.queryHead_AppendTable"/>,
+    		AB.f_name t_address_block,AC.f_name t_address_city,AP.f_name t_address_province,
+    		PC.f_name propertyCompanyName
+    		,PM.f_name propertyManagementName
+			,(select 1 from t_gb_software_config gsc where gsc.f_sys0_del_state = 0 and gsc.f_gb_id = GB.f_id and gsc.f_is_valid = 1) isSoftwareDock
+    	from t_group_building GB
+    		<if test="isPmUser !=null and isPmUser == 1" > 
+    			<!-- 管理处账号只能看到它所管辖的小区，所以用inner join -->
+				inner join t_property_management PM on PM.f_id=GB.t_property_management_f_id and PM.f_sys0_del_state=0
+				inner join t_property_management_has_oms_user PMHOU on PM.f_id = PMHOU.t_property_management_f_id and PMHOU.f_sys0_del_state=0
+			</if>
+			<if test="isPmUser == 0">
+				left join t_property_management PM on PM.f_id=GB.t_property_management_f_id 
+			</if>
+    		left JOIN t_property_company PC on GB.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+		where GB.f_sys0_del_state=0
+		<if test="isAdmin ==null or isAdmin == 0">
+			<if test="isPmUser !=null and isPmUser == 0" >and PC.f_admin_id=#{adminId}</if>
+			<if test="isPmUser !=null and isPmUser == 1" >and PMHOU.t_oms_user_f_id=#{adminId}</if>
+		</if>
+		<if test="gbId !=null and gbId != ''" >and GB.f_id = #{gbId}</if>
+		<if test="pcName !=null and pcName != ''" >and PC.f_name like CONCAT('%',#{pcName}, '%')</if>
+		<if test="pmName !=null and pmName != ''" >and PM.f_name like CONCAT('%',#{pmName}, '%')</if>
+		<if test="gbName !=null and gbName != ''" >and GB.f_name like CONCAT('%',#{gbName}, '%')</if>
+		<if test="isGBConfig !=null " >and GB.f_check_status in (1, 9)</if> <!-- 小区参数配置进来查列表，只需要显示1或9的即可 -->
+		<if test="isPCAddNew !=null and isPCAddNew != ''" >and GB.f_check_status in (0,1,2) and PC.f_name is not null</if> <!-- 物业新增小区审核，不需要显示9 -->
+		<if test="auditStatus !=null and auditStatus != ''" >and GB.f_check_status = #{auditStatus}</if>
+		<if test="signStatus !=null and signStatus != ''" >and GB.f_sign_status = #{signStatus}</if>
+		<if test="isCanPay !=null and isCanPay != ''" >and GB.f_propfee_canpay = #{isCanPay}</if>
+		<if test="paytimeType !=null and paytimeType != ''" >
+			<if test="paytimeType == 1"> <!-- 月度缴费， GB.f_pay_period_end里有值且大于0 -->
+				and GB.f_pay_period_end &gt; 0
+			</if>
+			<if test="paytimeType == 2"><!-- 周期缴费，GB.f_pay_period_end==0 -->
+				and GB.f_pay_period_end = 0
+			</if>
+		</if>
+		<if test="signStatus == null or signStatus == ''" >
+		ORDER BY GB.f_sys0_add_time DESC
+		</if>
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+    </select>
+    
+    <!-- 渠道新增小区-待审核 -->
+     <select id="select_groupBuilding_forCPList" parameterType="map" resultType="com.cnfantasia.server.ms.groupBuilding.entity.GroupBuildingSimpleEntity">
+    	select gbr.f_id id, cpr.f_pc_name propertyCompanyName, gbr.f_address_desc addressDesc, gbr.f_auditStatus checkStatus,
+    	gbr.f_name as name, ab.f_name addressBlockName, ac.f_name addressCityName, ap.f_name addressProvinceName
+		from t_group_building_register gbr
+		inner join t_channel_partner_recommend cpr on gbr.t_channel_partner_recommend_f_id = cpr.f_id  
+		left join t_address_block ab on ab.f_id = gbr.t_address_block_f_id
+		left join t_address_city ac on ac.f_id = ab.t_city_f_id
+		left join t_address_province ap on ap.f_id = ac.t_province_f_id
+		where 1=1
+		and gbr.f_sys0_del_state=0
+		<if test="pcName !=null and pcName != ''" >and cpr.f_pc_name like CONCAT('%',#{pcName}, '%')</if>
+		<if test="gbName !=null and gbName != ''" >and gbr.f_name like CONCAT('%',#{gbName}, '%')</if>
+		<if test="auditStatus !=null and auditStatus != ''" >and gbr.f_auditStatus = #{auditStatus}</if>
+		order by gbr.f_sys0_add_time desc
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+    </select> 
+    
+    
+    <!-- 渠道新增-小区审核 -->
+    <select id="select_groupBuilding_byGbrId" parameterType="java.math.BigInteger" resultType="com.cnfantasia.server.ms.groupBuilding.entity.GroupBuildingSimpleEntity">
+    	select gbr.f_id id, cpr.f_pc_name propertyCompanyName, gbr.f_address_desc addressDesc, gbr.f_auditStatus checkStatus,
+    	gbr.f_name as name, ab.f_name addressBlockName, ac.f_name addressCityName, ap.f_name addressProvinceName
+		from t_group_building_register gbr
+		inner join t_channel_partner_recommend cpr on gbr.t_channel_partner_recommend_f_id = cpr.f_id  
+		left join t_address_block ab on ab.f_id = gbr.t_address_block_f_id
+		left join t_address_city ac on ac.f_id = ab.t_city_f_id
+		left join t_address_province ap on ap.f_id = ac.t_province_f_id
+		where 1=1
+		and gbr.f_id=#{id}
+    </select>
+    
+    <!-- 小区管理 -->
+    <select id="select_groupBuilding_byId" parameterType="map" resultMap="GroupBuildingSimpleEntity_Map_Append">
+    	select 
+    		<include refid="groupBuildingBase.queryHead_AppendTable"/>,
+    		AB.f_name t_address_block,AC.f_name t_address_city,AP.f_name t_address_province,
+    		PC.f_name propertyCompanyName
+    		,PM.f_name propertyManagementName
+			,gbe.f_fixed_fee_status AS fixedFeeStatus
+			,gbe.f_meter_fee_status AS meterFeeStatus
+			,gbe.f_temp_fee_status AS tempFeeStatus
+			,gbe.f_open_bank_collection AS openBankcollection
+    	from t_group_building GB
+			LEFT JOIN t_property_management PM on PM.f_id=GB.t_property_management_f_id and PM.f_sys0_del_state=0
+    		LEFT JOIN t_property_company PC on GB.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+			INNER JOIN t_address_block AB ON GB.t_block_f_id = AB.f_id  AND AB.f_sys0_del_state = 0
+			INNER JOIN t_address_city AC ON AB.t_city_f_id = AC.f_id  AND AC.f_sys0_del_state = 0
+			INNER JOIN t_address_province AP ON AC.t_province_f_id = AP.f_id  AND AP.f_sys0_del_state = 0
+			LEFT JOIN t_group_building_ext gbe ON  gbe.f_id = gb.f_id
+		where GB.f_id = #{userId}
+    </select>
+    
+    <!-- 小区管理弹出窗查询List -->
+    <select id="select_groupBuilding_forDialogList" parameterType="java.util.Map" resultMap="GroupBuildingSimpleEntity_Map_Append">
+    	select 
+    		<include refid="groupBuildingBase.queryHead_AppendTable"/>,
+    		PC.f_name propertyCompanyName
+    		,PM.f_name propertyManagementName
+    		from t_group_building GB
+			left JOIN t_property_management PM on PM.f_id=GB.t_property_management_f_id and PM.f_sys0_del_state=0
+    		INNER JOIN t_property_company PC on GB.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+		where GB.f_sys0_del_state=0 and GB.f_check_status in(1,9)
+		<!-- <if test="isAdmin ==null or isAdmin == 0">
+			<if test="isPmUser !=null and isPmUser == 0" >and PC.f_admin_id=#{adminId}</if>
+			<if test="isPmUser !=null and isPmUser == 1" >and PMHOU.t_oms_user_f_id=#{adminId}</if>
+		</if> -->
+		<include refid="permi.dataPermissionCondition"/>
+		<if test="gbId !=null and gbId != ''" >and GB.f_id = #{gbId}</if>
+		<if test="mgtId !=null and mgtId != ''" >and PM.f_id = #{mgtId}</if>
+		<if test="pcName !=null and pcName != ''" >and PC.f_name like CONCAT('%',#{pcName}, '%')</if>
+		<if test="pmName !=null and pmName != ''" >and PM.f_name like CONCAT('%',#{pmName}, '%')</if>
+		<if test="gbName !=null and gbName != ''" >and GB.f_name like CONCAT('%',#{gbName}, '%')</if>
+		ORDER BY GB.f_id DESC
+		<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+    </select>
+    
+    <!-- 小区添加根据小区名和所属地区ID验证重复 -->
+    <select id="select_groupBuilding_isExists" parameterType="java.util.Map" resultType="java.lang.Long">
+    	SELECT 
+    		if(GB.t_property_company_f_id is null OR GB.t_property_company_f_id=0,GB.f_id,2) isExists
+    	FROM t_group_building GB
+		WHERE GB.f_sys0_del_state=0
+		<if test="blockId !=null and blockId != ''" >AND GB.t_block_f_id = #{blockId}</if>
+		<if test="gbName !=null and gbName != ''" >AND GB.f_name = #{gbName}</if>
+    </select>
+    
+    <!-- 查询短信通知提醒手机号 -->
+    <select id="select_mobiles" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT DISTINCT
+			U.f_mobile
+		FROM
+			(t_building B
+		LEFT JOIN t_real_room RR ON B.f_id = RR.t_building_f_id AND RR.f_sys0_del_state = 0
+		LEFT JOIN t_room R ON R.t_real_room_f_id = RR.f_id AND R.f_sys0_del_state = 0
+		LEFT JOIN t_user_has_t_room UHTR ON UHTR.t_room_f_id = R.f_id AND UHTR.f_sys0_del_state = 0
+		LEFT JOIN t_user U ON U.f_id = UHTR.t_user_f_id AND U.f_sys0_del_state = 0)
+		<if test="msgType==1" >
+		<!-- 缴费通知：只查询当期未缴费的用户手机号 -->
+		INNER JOIN t_pay_bill PB ON PB.t_real_room_f_id=RR.f_id AND PB.f_sys0_del_state=0
+		INNER JOIN t_group_building GB ON GB.f_id = B.t_group_building_f_id AND (
+			PB.f_is_pay = 2
+			AND 
+			(
+			<!-- 按月缴费 -->
+			(PB.f_paytime_type = 1
+			AND STR_TO_DATE(DATE_FORMAT(NOW(),'%Y-%m-%d'), '%Y-%m-%d') BETWEEN CASE
+			WHEN
+					EXTRACT(DAY FROM NOW()) &gt; GB.f_pay_period_end
+			THEN
+					STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 0 MONTH), '%Y-%m-'), LPAD(LEAST(GB.f_pay_period_start, LAST_DAY(DATE_ADD(NOW(), INTERVAL 0 MONTH))), 2, '0')), '%Y-%m-%d')
+			WHEN
+					EXTRACT(DAY FROM NOW()) &lt;= GB.f_pay_period_end
+			THEN
+					STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL - 1 MONTH), '%Y-%m-'), LPAD(LEAST(GB.f_pay_period_start, LAST_DAY(DATE_ADD(NOW(), INTERVAL - 1 MONTH))), 2, '0')), '%Y-%m-%d')
+			END AND CASE
+			WHEN
+					EXTRACT(DAY FROM NOW()) &gt; GB.f_pay_period_end
+			THEN
+					STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-'), LPAD(LEAST(GB.f_pay_period_end, LAST_DAY(DATE_ADD(NOW(), INTERVAL 1 MONTH))), 2, '0')), '%Y-%m-%d')
+			WHEN
+					EXTRACT(DAY FROM NOW()) &lt;= GB.f_pay_period_end
+			THEN
+					STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 0 MONTH), '%Y-%m-'), LPAD(LEAST(GB.f_pay_period_end, LAST_DAY(DATE_ADD(NOW(), INTERVAL 0 MONTH))), 2, '0')), '%Y-%m-%d')
+			END
+			AND DATE_FORMAT(DATE_ADD(CASE
+									WHEN
+											EXTRACT(DAY FROM NOW()) &gt; GB.f_pay_period_end
+									THEN
+											STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-'), LPAD(LEAST(GB.f_pay_period_end, LAST_DAY(DATE_ADD(NOW(), INTERVAL 1 MONTH))), 2, '0')), '%Y-%m-%d')
+									WHEN
+											EXTRACT(DAY FROM NOW()) &lt;= GB.f_pay_period_end
+									THEN
+											STR_TO_DATE(CONCAT(DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 0 MONTH), '%Y-%m-'), LPAD(LEAST(GB.f_pay_period_end, LAST_DAY(DATE_ADD(NOW(), INTERVAL 0 MONTH))), 2, '0')), '%Y-%m-%d')
+							END,
+							INTERVAL IFNULL(f_property_month_change, 0) MONTH), '%Y-%m-01') = DATE_FORMAT(PB.f_bill_month, '%Y-%m-01')
+			)OR(
+				<!-- 按周期缴费 -->
+				PB.f_paytime_type = 2
+				AND PB.f_pay_day_start &lt;= SYSDATE()
+				AND DATE_ADD(PB.f_pay_day_end,INTERVAL 1 DAY) &gt; SYSDATE()
+			)
+			)
+		)
+		</if>
+		WHERE
+			B.t_group_building_f_id = #{gbId}
+		AND B.f_sys0_del_state = 0
+		AND U.f_mobile IS NOT NULL
+    </select>
+
+	<select id="getBuildingListByNameAndCityId" parameterType="java.util.Map" resultType="java.util.Map">
+		select gb.f_id as id, gb.f_name as name, gb.f_sign_status as signStatus, gb.f_address_desc as addressDesc from t_group_building gb
+		left join t_address_block ab on gb.t_block_f_id = ab.f_id and ab.f_sys0_del_state = 0
+		inner join t_address_city ac on ac.f_id = ab.t_city_f_id and ac.f_sys0_del_state = 0
+		where gb.f_sys0_del_state = 0
+		<if test="name != null and name != ''">
+			and gb.f_name like concat('%', #{name}, '%')
+		</if>
+		<if test="cityId != null and cityId != ''">
+			and ab.t_city_f_id = #{cityId}
+		</if>
+		order by gb.f_sign_status desc
+		<if test="begin != null and length != null">
+			limit #{begin}, #{length}
+		</if>
+
+	</select>
+
+	<select id="getBuildingListByNameAndBlockId" parameterType="java.util.Map" resultType="java.util.Map">
+		select gb.f_id as id, gb.f_name as name, gb.f_sign_status as signStatus, gb.f_address_desc as addressDesc from t_group_building gb
+		left join t_address_block ab on gb.t_block_f_id = ab.f_id and ab.f_sys0_del_state = 0
+		inner join t_address_city ac on ac.f_id = ab.t_city_f_id and ac.f_sys0_del_state = 0
+		where gb.f_sys0_del_state = 0 AND gb.f_check_status in (1, 9)
+		<if test="name != null and name != ''">
+			and gb.f_name like concat('%', #{name}, '%')
+		</if>
+		<if test="blockId != null and blockId != ''">
+			and ab.f_id = #{blockId}
+		</if>
+		<include refid="permi.dataPermissionCondition"/>
+		<if test="null != gbIdList and gbIdList.size() > 0 ">
+			AND gb.f_id IN
+			<foreach item="gbId" collection="gbIdList" open="(" separator="," close=")">
+				#{gbId}
+			</foreach>
+		</if>
+		order by gb.f_sign_status desc
+	</select>
+	
+	<select id="searchByNameAndMerchantServiceArea" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			gb.f_id AS id,
+			gb.f_name AS name,
+			gb.f_sign_status AS signStatus,
+			gb.f_address_desc AS addressDesc
+		FROM
+			t_group_building gb
+			INNER JOIN t_ebuy_supply_merchant_has_group_building esmhgb ON esmhgb.t_group_building_id = gb.f_id
+			AND esmhgb.f_sys0_del_state = 0
+		WHERE
+			esmhgb.t_ebuy_supply_merchant_id = #{merchantId}
+			AND gb.f_sys0_del_state = 0 
+			<if test = "gbName != null and gbName != ''">
+				AND locate(#{gbName}, gb.f_name)>0
+			</if >
+			ORDER BY gb.f_sign_status DESC
+	</select>
+
+	<select id="getBuildingListBySeqIdList" parameterType="java.util.List" resultType="java.util.Map">
+		select gb.f_id as id, gb.f_name as name, gb.f_address_desc as addressDesc from t_group_building gb
+		where gb.f_sys0_del_state = 0 and gb.f_id in (
+		<foreach item="item" collection="list"  separator=",">
+			#{item}
+		</foreach>
+		)
+	</select>
+	
+	<!-- 小区下拉列表查询List -->
+    <select id="select_groupBuilding_forSelectList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			GB.f_id as id, GB.f_name as name, GBE.f_fixed_fee_status AS fixedFee, GBE.f_meter_fee_status AS meterFee, GBE.f_temp_fee_status AS tempFee, GB.f_property_period_type AS propertyPeriodType
+		FROM t_group_building GB
+		<if test="isSubUser !=null and isSubUser == 1" >
+			<!-- 管理处账号只能看到它所管辖的小区，所以用inner join -->
+			INNER JOIN t_property_management PM ON PM.f_id=GB.t_property_management_f_id and PM.f_sys0_del_state=0
+			INNER JOIN t_property_management_has_oms_user PMHOU ON PM.f_id = PMHOU.t_property_management_f_id and PMHOU.f_sys0_del_state=0
+		</if>
+		<if test="isSubUser == 0">
+			LEFT JOIN t_property_management PM ON PM.f_id=GB.t_property_management_f_id
+		</if>
+		LEFT JOIN t_property_company PC ON GB.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+		LEFT JOIN t_group_building_ext GBE ON GBE.f_id = GB.f_id
+		WHERE GB.f_sys0_del_state=0
+		<if test="isAdmin ==null or isAdmin == 0">
+			<if test="isSubUser !=null and isSubUser == 0" >AND PC.f_admin_id=#{adminId}</if>
+			<if test="isSubUser !=null and isSubUser == 1" >AND PMHOU.t_oms_user_f_id=#{adminId}</if>
+		</if>
+		<if test="openBankCollection != null and openBankCollection.equals(1)">
+			/*银行托收小区列表使用*/
+			AND GBE.f_open_bank_collection = #{openBankCollection}
+		</if>
+		<include refid="permi.dataPermissionCondition"/>
+		AND GB.f_sign_status = 1
+		AND GB.f_propfee_canpay = 1
+		<if test="gbName != null and !gbName.equals('') "> and (GB.f_name like CONCAT('%',#{gbName},'%') )</if>
+		<if test="tGbId != null and !tGbId.equals('') "> and (GB.f_id = #{tGbId})</if>
+		ORDER BY GB.f_id DESC
+		<if test="_begin != null and _length != null">
+			limit #{_begin}, #{_length}
+		</if>
+    </select>
+    
+    <select id="select_groupBuilding_realRoom" parameterType="java.math.BigInteger" resultType="java.math.BigInteger">
+    	SELECT
+			rr.f_id
+		FROM
+			t_real_room rr
+		INNER JOIN t_building b ON rr.t_building_f_id = b.f_id AND b.f_check_status in (1, 9)
+		INNER JOIN t_group_building gb ON b.t_group_building_f_id = gb.f_id
+		WHERE rr.f_check_status in (1, 9) AND
+			gb.f_id = #{gbId};
+    </select>
+    
+     <select id="select_groupBuilding_billType_by_gbId" parameterType="java.util.Map" resultType="java.util.Map">
+    	SELECT
+			PBT.f_id AS id ,PBT.f_name AS name
+		FROM
+			t_pay_bill_type PBT
+		WHERE
+			PBT.f_gb_id = #{gbId}
+			AND PBT.f_paytime_type = #{paytimeType}
+			AND PBT.f_active_status = 1
+			<choose>
+				<when test="isMeterReading == null">
+					<if test="propertyPeriodType == 2">
+						AND PBT.f_is_prop_fee = 2
+					</if>
+				</when>
+				<otherwise>
+					<if test="isMeterReading == 1"> <!-- 抄表的 -->
+						AND PBT.f_is_prop_fee = 3
+					</if>
+				</otherwise>
+			</choose>
+			AND PBT.f_sys0_del_state = 0;
+    </select>
+    
+    <select id="select_isHas_empty_proprietor_byGbId" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+    	SELECT
+			count(0) as num
+		FROM
+		t_building B
+		INNER JOIN t_real_room RR ON B.f_id = RR.t_building_f_id
+		INNER JOIN t_property_proprietor PP ON RR.t_property_proprietor_f_id = PP.f_id
+		WHERE
+			RR.f_sys0_del_state = 0
+		AND PP.f_sys0_del_state = 0
+		AND B.f_sys0_del_state = 0
+		AND (PP.f_name IS NULL OR PP.f_name = '')
+		AND B.t_group_building_f_id = #{gbId};
+    </select>
+    
+    <select id="select_proprietor_byGbId_count" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+    	SELECT
+			count(0) as num
+		FROM
+		t_building B
+		INNER JOIN t_real_room RR ON B.f_id = RR.t_building_f_id
+		INNER JOIN t_property_proprietor PP ON RR.t_property_proprietor_f_id = PP.f_id
+		WHERE
+			RR.f_sys0_del_state = 0
+		AND PP.f_sys0_del_state = 0
+		AND B.f_sys0_del_state = 0
+		AND B.t_group_building_f_id = #{gbId};
+    </select>
+    
+    <sql id="update_groupBuilding">
+		UPDATE t_group_building
+		<trim prefix="SET" prefixOverrides=",">
+ 		<if test="tel != null and !tel.equals('') "> ,f_tel=#{tel}</if>
+ 		<if test="payPeriodStart != null and !payPeriodStart.equals('') "> ,f_pay_period_start=#{payPeriodStart}</if>
+ 		<if test="payPeriodEnd != null and !payPeriodEnd.equals('') "> ,f_pay_period_end=#{payPeriodEnd}</if>
+ 		<if test="tPropertyManagementFId != null and !tPropertyManagementFId.equals('') "> ,t_property_management_f_id=#{tPropertyManagementFId}</if>
+ 		<if test="name != null and !name.equals('') "> ,f_name=#{name}</if>
+ 		<if test="tBlockFId != null and !tBlockFId.equals('') "> ,t_block_f_id=#{tBlockFId}</if>
+ 		<if test="tAddressBlockSelfDefinedFId != null and !tAddressBlockSelfDefinedFId.equals('') "> ,t_address_block_self_defined_f_id=#{tAddressBlockSelfDefinedFId}</if>
+ 		<if test="level != null and !level.equals('') "> ,f_level=#{level}</if>
+ 		<if test="signStatus != null and !signStatus.equals('') "> ,f_sign_status=#{signStatus}</if>
+ 		<if test="lightCooperationTime != null and !lightCooperationTime.equals('') "> ,f_light_cooperation_time=str_to_date(#{lightCooperationTime},'%Y-%m-%d %T')</if>
+ 		<if test="cooperationType != null and !cooperationType.equals('') "> ,f_cooperation_type=#{cooperationType}</if>
+ 		<if test="highCooperationTime != null and !highCooperationTime.equals('') "> ,f_high_cooperation_time=str_to_date(#{highCooperationTime},'%Y-%m-%d %T')</if>
+ 		<if test="allCooperationTime != null and !allCooperationTime.equals('') "> ,f_all_cooperation_time=str_to_date(#{allCooperationTime},'%Y-%m-%d %T')</if>
+ 		<if test="propfeeCanpay != null and !propfeeCanpay.equals('') "> ,f_propfee_canpay=#{propfeeCanpay}</if>
+ 		<if test="pinyinName != null and !pinyinName.equals('') "> ,f_pinyin_name=#{pinyinName}</if>
+ 		<if test="checkStatus != null and !checkStatus.equals('') "> ,f_check_status=#{checkStatus}</if>
+ 		<if test="auditDesc != null and !auditDesc.equals('') "> ,f_audit_desc=#{auditDesc}</if>
+ 		<if test="creater != null and !creater.equals('') "> ,f_creater=#{creater}</if>
+ 		<if test="iconUrl != null and !iconUrl.equals('') "> ,f_icon_url=#{iconUrl}</if>
+ 		<if test="picDescUrl != null and !picDescUrl.equals('') "> ,f_pic_desc_url=#{picDescUrl}</if>
+ 		<if test="addressDesc != null and !addressDesc.equals('') "> ,f_address_desc=#{addressDesc}</if>
+ 		<if test="tPropertyCompanyFId != null and !tPropertyCompanyFId.equals('') "> ,t_property_company_f_id=#{tPropertyCompanyFId}</if>
+ 		<if test="tCompanyUserFId != null and !tCompanyUserFId.equals('') "> ,t_company_user_f_id=#{tCompanyUserFId}</if>
+ 		<if test="neighborName != null and !neighborName.equals('') "> ,f_neighbor_name=#{neighborName}</if>
+ 		<if test="neighborTel != null and !neighborTel.equals('') "> ,f_neighbor_tel=#{neighborTel}</if>
+ 		<if test="streetName != null and !streetName.equals('') "> ,f_street_name=#{streetName}</if>
+ 		<if test="streetTel != null and !streetTel.equals('') "> ,f_street_tel=#{streetTel}</if>
+ 		<if test="contectUser != null and !contectUser.equals('') "> ,f_contect_user=#{contectUser}</if>
+ 		<if test="contectTel != null and !contectTel.equals('') "> ,f_contect_tel=#{contectTel}</if>
+ 		<if test="sourceType != null and !sourceType.equals('') "> ,f_source_type=#{sourceType}</if>
+ 		<if test="baiduLocatLng != null and !baiduLocatLng.equals('') "> ,f_baidu_locat_lng=#{baiduLocatLng}</if>
+ 		<if test="baiduLocatLat != null and !baiduLocatLat.equals('') "> ,f_baidu_locat_lat=#{baiduLocatLat}</if>
+ 		<if test="baiduPrecise != null and !baiduPrecise.equals('') "> ,f_baidu_precise=#{baiduPrecise}</if>
+ 		<if test="baiduLevel != null and !baiduLevel.equals('') "> ,f_baidu_level=#{baiduLevel}</if>
+ 		<if test="propertyMonthChange != null and !propertyMonthChange.equals('') "> ,f_property_month_change=#{propertyMonthChange}</if>
+ 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if>
+ 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if>
+ 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if>
+ 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if>
+ 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if>
+ 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>
+ 		<if test="szgt01Seqid != null and !szgt01Seqid.equals('') "> ,f_szgt01_seqId=#{szgt01Seqid}</if>
+ 		<if test="szgt01Presellno != null and !szgt01Presellno.equals('') "> ,f_szgt01_preSellNo=#{szgt01Presellno}</if>
+ 		<if test="szgt01Enterprisename != null and !szgt01Enterprisename.equals('') "> ,f_szgt01_enterpriseName=#{szgt01Enterprisename}</if>
+ 		<if test="szgt01Allowtime != null and !szgt01Allowtime.equals('') "> ,f_szgt01_allowTime=#{szgt01Allowtime}</if>
+ 		<if test="szgt02Contractflowno != null and !szgt02Contractflowno.equals('') "> ,f_szgt02_contractFlowNo=#{szgt02Contractflowno}</if>
+ 		<if test="szgt02Area != null and !szgt02Area.equals('') "> ,f_szgt02_area=#{szgt02Area}</if>
+ 		<if test="szgt02Usedesc != null and !szgt02Usedesc.equals('') "> ,f_szgt02_useDesc=#{szgt02Usedesc}</if>
+ 		<if test="szgt02Floor != null and !szgt02Floor.equals('') "> ,f_szgt02_floor=#{szgt02Floor}</if>
+ 		<if test="szgt02Roomsrccode != null and !szgt02Roomsrccode.equals('') "> ,f_szgt02_roomSrcCode=#{szgt02Roomsrccode}</if>
+ 		<if test="szgt02Agentname != null and !szgt02Agentname.equals('') "> ,f_szgt02_agentName=#{szgt02Agentname}</if>
+ 		<if test="szgt02Agenttel != null and !szgt02Agenttel.equals('') "> ,f_szgt02_agentTel=#{szgt02Agenttel}</if>
+ 		<if test="szgt02Publishtime != null and !szgt02Publishtime.equals('') "> ,f_szgt02_publishTime=#{szgt02Publishtime}</if>
+ 		<if test="baiduFetchStatus != null and !baiduFetchStatus.equals('') "> ,f_baidu_fetch_status=#{baiduFetchStatus}</if>
+ 		<if test="mljFetchStatus != null and !mljFetchStatus.equals('') "> ,f_mlj_fetch_status=#{mljFetchStatus}</if>
+ 		<if test="fetchStatus != null and !fetchStatus.equals('') "> ,f_fetch_status=#{fetchStatus}</if>
+ 		<if test="ebuyFetchStatus != null and !ebuyFetchStatus.equals('') "> ,f_ebuy_fetch_status=#{ebuyFetchStatus}</if>
+ 		<if test="keyStatus != null and !keyStatus.equals('') "> ,f_key_status=#{keyStatus}</if>
+ 		<if test="isPrefer != null and !isPrefer.equals('') "> ,f_is_prefer=#{isPrefer}</if>
+ 		<if test="preferName != null and !preferName.equals('') "> ,f_prefer_name=#{preferName}</if>
+ 		<if test="hlbSwitch != null and !hlbSwitch.equals('') "> ,f_hlb_switch=#{hlbSwitch}</if>
+ 		,f_settlement_day=#{settlementDay}
+		</trim>
+		WHERE f_id=#{id}
+    </sql>
+	<update id="update_groupBuilding" parameterType="GroupBuilding">
+		<include refid="update_groupBuilding"/>
+    </update>
+    <update id="update_history_management_revenue_data" parameterType="java.util.Map">
+		UPDATE t_revenue_signal_amount SET t_property_management_f_id = #{managementId}
+		WHERE t_group_building_id = #{gbId} AND f_tk_status = 1 AND f_sys0_del_state = 0;
+    </update>
+
+	<select id="getgbListByGbIds" resultMap="groupBuildingBase.groupBuildingBaseMap">
+		SELECT <include refid="groupBuildingBase.queryHead"/>
+		FROM t_group_building GB
+		WHERE GB.f_sys0_del_state = 0
+		<if test="gbIdList != null">
+			AND GB.f_id IN
+			<foreach collection="gbIdList" item="item" open="(" close=")" separator=",">
+				${item}
+			</foreach>
+		</if>
+		ORDER BY GB.f_id
+		<if test="_begin != null and _length != null">
+			limit #{_begin}, #{_length}
+		</if>
+	</select>
+
+	<!--查询小区存在的楼栋房号数量-->
+	<select id="getBuildingAndRommCountByGbId" parameterType="java.math.BigInteger" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			t_building b
+		INNER JOIN t_real_room rr ON b.f_id = rr.t_building_f_id
+		WHERE
+			b.t_group_building_f_id = #{gbId}
+		AND b.f_sys0_del_state = 0
+		AND rr.f_sys0_del_state = 0
+		AND b.f_check_status in(1,9)
+		AND rr.f_check_status in(1,9);
+	</select>
+	
+	<sql id="getGbsForPrint_From_Where">
+		FROM
+			t_group_building GB
+			LEFT JOIN t_print_config PC ON GB.f_id = PC.t_group_building_f_id
+			LEFT JOIN t_print_init_template PIT ON PIT.f_id = PC.t_print_init_template_f_id
+			AND PIT.f_sys0_del_state = 0
+		WHERE
+			1 = 1
+			<if test="gbIdList != null">
+				AND GB.f_id IN
+				<foreach collection="gbIdList" item="item" open="(" close=")" separator=",">
+					${item}
+				</foreach>
+			</if>
+			<if test="name != null"> AND LOCATE(#{name}, GB.f_name) > 0 </if>
+			AND GB.f_sys0_del_state = 0
+		GROUP BY
+			GB.f_id
+		<if test="isConfig != null and isConfig=='1'.toString()">  
+			HAVING GROUP_CONCAT(
+				PC.f_template_content,
+				PIT.f_template_content
+			) IS NOT NULL 
+		</if>
+		<if test="isConfig != null and isConfig=='2'.toString()">
+			HAVING GROUP_CONCAT(
+				PC.f_template_content,
+				PIT.f_template_content
+			) IS NULL 
+		</if>
+	</sql>
+	
+	<select id="getGbsForPrint" parameterType="java.util.Map" resultType="com.cnfantasia.server.ms.payBill.entity.PrintConfigList">
+		SELECT
+			GB.f_id AS id,
+			GB.f_name AS name,
+			GROUP_CONCAT(
+				PC.f_template_content,
+				PIT.f_template_content
+			) AS templateContent
+		<include refid="getGbsForPrint_From_Where"/>
+		ORDER BY
+			GB.f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	
+	<select id="getGbCountForPrint" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT count(*)
+		FROM (
+			SELECT 1
+			<include refid="getGbsForPrint_From_Where"/> 
+		) AS _tmp
+	</select>
+
+	<select id="getGroupBuildingList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT f_id id, f_name name FROM t_group_building GB
+		WHERE 1=1 AND GB.f_check_status IN (1, 9) AND GB.f_sign_status = 1 AND GB.f_sys0_del_state=0
+		<include refid="permi.dataPermissionCondition"/>
+	</select>
+</mapper>

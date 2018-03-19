@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 电商模块 -->
+<mapper namespace="ebuyorder">
+
+	<resultMap type="com.cnfantasia.server.ms.ebuy.entity.OrderPushRecorder" id="orderPushRecorderMap">
+		<result column="f_isPush_success" javaType="int" property="isPush_success"/>
+		<result column="f_push_result" javaType="string" property="push_result"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.ebuy.entity.OrderBean" id="orderMap">
+		<result column="f_id" jdbcType="VARCHAR" property="id"/>
+		<result column="f_order_no" jdbcType="VARCHAR" property="orderNo"/>
+		<result column="f_delieve_order_id" jdbcType="BIGINT" property="delieveOrderId"/>
+		<result column="f_buy_time" jdbcType="TIMESTAMP" property="buyTime"/>
+		<result column="f_pay_time" jdbcType="TIMESTAMP" property="payTime"/>
+		<result column="f_hua_id" jdbcType="VARCHAR" property="huaId"/>
+		<result column="f_real_name" jdbcType="VARCHAR" property="realName"/>
+		<result column="f_mobile" jdbcType="VARCHAR" property="mobile"/>
+		<result column="f_supply_name" jdbcType="VARCHAR" property="supplyName"/>
+		<result column="f_supply_phone" jdbcType="VARCHAR" property="supplyPhone"/>
+		<result column="f_status" jdbcType="TINYINT" property="status"/>
+		<result column="f_delivery_status" jdbcType="TINYINT" property="deliveryStatus"/>
+		<result column="f_pay_status" jdbcType="TINYINT" property="payStatus"/>
+		<result column="f_pay_method" jdbcType="VARCHAR" property="payMethod"/>
+		<result column="f_amount" jdbcType="DECIMAL" property="amount"/>
+		<result column="amountPurchage" jdbcType="DECIMAL" property="amountPurchage"/>
+		<result column="amoutPurchageOrder" jdbcType="DECIMAL"  property="amoutPurchageOrder"/>
+		<result column="f_total_coupon_amount" jdbcType="DECIMAL" property="couponAmount" />
+		<result column="deliveryFee" javaType="java.lang.Long" property="deliveryFee"/>
+		<result column="deliverySettleFee" javaType="java.lang.Long" property="deliverySettleFee"/>
+		<result column="deliveryOrderAmount" javaType="java.lang.Long" property="deliveryOrderAmount"/>
+		<result column="deliveryOrderCoupon" javaType="java.lang.Long" property="deliveryOrderCoupon"/>
+		<result column="userDeliveryType" javaType="java.lang.Integer" property="userDeliveryType"/>
+		<result column="f_express_id" jdbcType="DECIMAL" property="expressId"/>
+		<result column="f_express_name" jdbcType="VARCHAR" property="expressName"/>
+		<result column="f_express_no" jdbcType="VARCHAR" property="expressNo"/>
+		<result column="f_express_kuaidi_com" jdbcType="VARCHAR" property="kuaidiCom"/>
+		<result column="f_order_amount" jdbcType="DECIMAL" property="orderAmount"/>
+		<result column="orderDeliveryFee" jdbcType="DECIMAL" property="orderDeliveryFee"/>
+		<result column="refundStatus" jdbcType="TINYINT" property="refundStatus" />
+		<result column="refundOrderId" javaType="java.lang.Long" property="refundOrderId"/>
+		<result column="deliveryMethodType" javaType="java.lang.Integer" property="deliveryMethodType" />
+		<result column="groupBuildingName" jdbcType="VARCHAR" property="groupBuildingName"/>
+		<association column="f_delieve_order_id" property="orderPushRecorder" select="selectOrderPushRecorder"/>
+		<collection property="opList" column="f_delieve_order_id" select="getOpList" />
+		
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.ebuy.entity.OrderOpBean" id="orderOpBeanMap">
+		<id column="f_op_id" javaType="java.lang.Long" property="id"/>
+		<result column="f_op_name" javaType="java.lang.String" property="opName"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.ebuy.entity.OrderDetailsBean" id="orderDetailsMap" extends="orderMap">
+		<result column="f_deliv_people_name" jdbcType="VARCHAR" property="delivPeopleName"/>
+		<result column="f_deliv_phone" jdbcType="VARCHAR" property="delivPhone"/>
+		<result column="f_deliv_address_area" jdbcType="TIMESTAMP" property="delivAddressArea"/>
+		<result column="f_deliv_address_detail" jdbcType="TIMESTAMP" property="delivAddressDetail"/>
+		<result column="identifyNo" jdbcType="VARCHAR" property="identifyNo" />
+		<collection property="productList" ofType="com.cnfantasia.server.ms.ebuy.entity.OrderProductBean">
+			<id property="id" column="t_ebuy_product_f_id"/>
+			<result property="productName" column="product_name"/>
+			<result property="productName2" column="product_name2"/>
+			<result property="productType" column="product_type"/>
+			<result property="qty" column="product_qty" jdbcType="TINYINT"/>
+			<result property="price" column="product_price"/>
+			<result property="priceUnit" column="f_price_unit"/>
+			<result column="f_size" jdbcType="VARCHAR" property="size"/>
+			<result column="f_colour" jdbcType="VARCHAR" property="colour"/>
+			<result column="f_op_name" jdbcType="VARCHAR" property="opName"/>
+		</collection>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.ebuy.entity.OrderExportBean" id="orderExportMap">
+		<result column="f_id" jdbcType="VARCHAR" property="id"/>
+		<result column="f_order_no" jdbcType="VARCHAR" property="orderNo"/>
+		<result column="f_delieve_order_id" jdbcType="BIGINT" property="delieveOrderId"/>
+		<result column="f_buy_time" jdbcType="TIMESTAMP" property="buyTime"/>
+		<result column="f_pay_time" jdbcType="TIMESTAMP" property="payTime"/>
+		<result column="f_hua_id" jdbcType="VARCHAR" property="huaId"/>
+		<result column="f_real_name" jdbcType="VARCHAR" property="realName"/>
+		<result column="f_mobile" jdbcType="VARCHAR" property="mobile"/>
+		<result column="f_supply_name" jdbcType="VARCHAR" property="supplyName"/>
+		<result column="f_supply_phone" jdbcType="VARCHAR" property="supplyPhone"/>
+		<result column="f_status" jdbcType="TINYINT" property="status"/>
+		<result column="f_delivery_status" jdbcType="TINYINT" property="deliveryStatus"/>
+		<result column="f_pay_status" jdbcType="TINYINT" property="payStatus"/>
+		<result column="f_pay_method" jdbcType="VARCHAR" property="payMethod"/>
+		<result column="f_amount" jdbcType="DECIMAL" property="amount"/>
+		<result column="f_total_coupon_amount" jdbcType="DECIMAL" property="couponAmount" />
+		<!-- <result column="f_delivery_fee" jdbcType="DECIMAL" property="deliveryFee"/> -->
+		<result column="f_express_id" jdbcType="DECIMAL" property="expressId"/>
+		<result column="f_express_name" jdbcType="VARCHAR" property="expressName"/>
+		<result column="f_express_no" jdbcType="VARCHAR" property="expressNo"/>
+		<result column="f_order_amount" jdbcType="DECIMAL" property="orderAmount"/>
+		<!-- <result column="f_order_delivery_fee" jdbcType="DECIMAL" property="orderDeliveryFee"/>-->
+	
+		<result column="f_deliv_people_name" jdbcType="VARCHAR" property="delivPeopleName"/>
+		<result column="f_deliv_phone" jdbcType="VARCHAR" property="delivPhone"/>
+		<result column="f_deliv_address_area" jdbcType="TIMESTAMP" property="delivAddressArea"/>
+		<result column="f_deliv_address_detail" jdbcType="TIMESTAMP" property="delivAddressDetail"/>
+		<result column="t_ebuy_product_f_id" property="productId"/>
+		<result column="product_name" property="productName" />
+		<result property="productName2" column="product_name2"/>
+		<result column="product_type" property="productType"/>
+		<result column="product_qty" jdbcType="TINYINT" property="qty"/>
+		<result column="product_price" property="price"/>
+		<result column="f_price_unit" property="priceUnit"/>
+		<result column="f_size" jdbcType="VARCHAR" property="size"/>
+		<result column="f_colour" jdbcType="VARCHAR" property="colour"/>
+		<result column="f_op_name" jdbcType="VARCHAR" property="opName"/>
+		<result column="refundFee" property="refundFee"/>
+		<result column="tkStatus" property="tkStatus"/>
+		<result column="supplyType" property="supplyType"/>
+		<result column="flowNo" property="flowNo"/>
+		<result column="refundFee" property="refundFee"/>
+		<result column="refundPayStatus" property="refundPayStatus"/>
+		<result column="purchasePrice" property="purchasePrice"/>
+		<result column="refundOrderStatus" property="refundOrderStatus"/>
+		<result column="identifyNo" jdbcType="VARCHAR" property="identifyNo" />
+	</resultMap>
+	
+	
+
+	<resultMap type="com.cnfantasia.server.ms.ebuy.entity.OrderDetailBean" id="orderDetailMap">
+		<result column="f_id" jdbcType="VARCHAR" property="id"/>
+		<result column="f_order_no" jdbcType="VARCHAR" property="orderNo"/>
+		<result column="f_hua_id" jdbcType="VARCHAR" property="huaId"/>
+		<result column="f_real_name" jdbcType="VARCHAR" property="realName"/>
+		<result column="f_buy_time" jdbcType="TIMESTAMP" property="buyTime"/>
+		<result column="f_amount" jdbcType="NUMERIC" property="amount"/>
+		<result column="fact_amount" jdbcType="NUMERIC" property="factAmount"/>
+		<result column="f_pay_method" jdbcType="VARCHAR" property="payMethod"/>
+		<result column="f_status" jdbcType="VARCHAR" property="status"/>
+		<result column="f_pay_status" jdbcType="VARCHAR" property="payStatus"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.ms.ebuy.entity.ReportBean" id="reportMap">
+		<result column="id" jdbcType="VARCHAR" property="id"/>
+		<result column="supply_name" jdbcType="VARCHAR" property="supplyName"/>
+		<result column="product_name" jdbcType="VARCHAR" property="productName"/>
+		<result column="type_name" jdbcType="VARCHAR" property="typeName"/>
+		<result column="price" jdbcType="VARCHAR" property="price"/>
+		<result column="total" jdbcType="VARCHAR" property="total"/>
+		<result column="price_unit" jdbcType="VARCHAR" property="priceUnit"/>
+		<result column="order_no" jdbcType="VARCHAR" property="orderNo"/>
+		<result column="buy_time" jdbcType="VARCHAR" property="buyTime"/>
+		<result column="order_status" jdbcType="VARCHAR" property="orderStatus"/>
+		<result column="logistics_name" jdbcType="VARCHAR" property="logisticsName"/>
+		<result column="logisticse_code" jdbcType="VARCHAR" property="logisticseCode"/>
+		<result column="delivery_fee" jdbcType="VARCHAR" property="deliveryFee"/>
+		<result column="amount" jdbcType="VARCHAR" property="amount"/>
+		<result column="fact_amount" jdbcType="VARCHAR" property="factAmount"/>
+		<result column="pay_status" jdbcType="VARCHAR" property="payStatus"/>
+		<result column="pay_method" jdbcType="VARCHAR" property="payMethod"/>
+		<result column="hua_id" jdbcType="VARCHAR" property="huaId"/>
+		<result column="real_name" jdbcType="VARCHAR" property="realName"/>
+		<result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+		<result column="people_name" jdbcType="VARCHAR" property="peopleName"/>
+		<result column="deliv_phone" jdbcType="VARCHAR" property="deliveryPhone"/>
+		<result column="address" jdbcType="VARCHAR" property="address"/>
+		<result column="pay_time" jdbcType="VARCHAR" property="payTime"/>
+	</resultMap>
+	
+	<sql id="queryHead_orderList">
+		o.f_id, o.f_order_no, o.f_buy_time, o.f_pay_time, u.f_hua_id, o.f_deliv_people_name f_real_name, u.f_mobile, s.f_name f_supply_name, s.f_tel f_supply_phone, o.f_status, d.f_status f_delivery_status, o.f_pay_status, o.f_pay_method, 
+			 d.f_id f_delieve_order_id, d.f_express_no, d.f_delivery_real_fee deliveryFee, d.f_delivery_settlement_fee deliverySettleFee,d.f_amount deliveryOrderAmount,d.f_total_coupon deliveryOrderCoupon, e.f_id f_express_id, e.f_name f_express_name,e.f_kuaidi_com f_express_kuaidi_com,
+			 term.f_amount, term.amountPurchage amountPurchage, o.f_total_coupon_amount, term.f_product_name, termOrder.f_purchase_price_total amoutPurchageOrder,
+			 o.f_amount f_order_amount, o.f_total_delivery_fee orderDeliveryFee, d.f_user_delivery_type userDeliveryType,
+			 ifnull(edp.t_ebuy_delivery_order_f_id,0) as f_orderPusherEdoId, ero.f_refund_status refundStatus, ero.f_id refundOrderId,
+			 dm.f_type deliveryMethodType,
+			 gb.f_name groupBuildingName
+	</sql>
+	
+	<sql id="queryCondition_orderList">
+		from t_ebuy_order o
+			 left join t_user u ON o.f_buyer_id = u.f_id and u.f_sys0_del_state = 0
+			 INNER join t_ebuy_delivery_order d on o.f_id = d.t_ebuy_order_f_id AND d.f_sys0_del_state = 0
+			 left join t_ebuy_delivery_push_recorder edp on d.f_id = edp.t_ebuy_delivery_order_f_id and edp.f_isPush_success = 1
+			 left join t_ebuy_supply_merchant s on d.t_supply_merchant_f_id = s.f_id
+			 left join t_ebuy_express_company e on d.t_ebuy_express_company_f_id = e.f_id
+			 left join 
+			   (select dp.t_ebuy_delivery_order_f_id, sum(p.f_product_qty*p.f_product_price) f_amount, sum(p.f_product_qty*p.f_purchase_price) amountPurchage, concat(',',GROUP_CONCAT(pr.f_name),',') f_product_name from  t_ebuy_delivery_order_product dp
+			      left join t_ebuy_order_has_t_ebuy_product p on dp.t_ebuy_order_has_t_ebuy_product_f_id = p.f_id
+			      left join t_ebuy_product_shelf ps on ps.f_id = p.t_ebuy_product_f_id
+				  left join t_ebuy_product pr on ps.t_ebuy_product_id = pr.f_id
+			      group by dp.t_ebuy_delivery_order_f_id) term on d.f_id = term.t_ebuy_delivery_order_f_id
+			 left join 
+			 	(SELECT dp.t_ebuy_order_f_id, sum(p.f_product_qty * p.f_product_price) f_amount,sum(p.f_product_qty * p.f_purchase_price) f_purchase_price_total FROM t_ebuy_delivery_order_product dp
+					LEFT JOIN t_ebuy_order_has_t_ebuy_product p ON dp.t_ebuy_order_has_t_ebuy_product_f_id = p.f_id
+					GROUP BY dp.t_ebuy_order_f_id) termOrder on o.f_id = termOrder.t_ebuy_order_f_id
+					
+			 left join (select * from t_ebuy_refund_order ero2 where ero2.f_id in (
+							select max(tero.f_id) from t_ebuy_refund_order tero
+							 group by tero.t_ebuy_delivery_order_f_id)) ero on d.f_id = ero.t_ebuy_delivery_order_f_id
+			 
+			 <!-- left join t_ebuy_refund_order ero on d.f_id = ero.t_ebuy_delivery_order_f_id -->
+			 left join t_revenue_signal_amount rsa on d.f_id = rsa.f_goal_id and rsa.f_goal_type = 4  and f_mini_role_type = 5
+			 left join t_ebuy_delivery_method dm on d.f_delivery_id = dm.f_id
+			 left join t_room r on o.f_curr_room_id = r.f_id
+			 left join t_real_room rr on r.t_real_room_f_id = rr.f_id
+			 left join t_building b on rr.t_building_f_id = b.f_id
+			 left join t_group_building gb on b.t_group_building_f_id = gb.f_id
+	</sql>
+	
+	<select id="selectOrderPushRecorder"  resultMap="orderPushRecorderMap">
+		select f_isPush_success, f_push_result from t_ebuy_delivery_push_recorder
+		where t_ebuy_delivery_order_f_id = #{edoId} 
+		order by f_id desc
+		limit 1
+	</select>
+	
+	<select id="getOrderListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*)
+		<include refid="queryCondition_orderList" />
+		<include refid="orderListConditions"/>
+	</select>
+	
+	<select id="getOrderListByPage" parameterType="java.util.Map" resultMap="orderMap">
+		select <include refid="queryHead_orderList" />
+			   <include refid="queryCondition_orderList" />
+		<include refid="orderListConditions"/>
+		order by o.f_pay_time desc
+		limit #{_begin},#{_length}
+	</select>
+	
+	<select id="getOpList" resultType="java.lang.Long" resultMap="orderOpBeanMap">
+		select op.f_id f_op_id, esp.f_name f_op_name
+				from t_ebuy_delivery_order_product op
+				 left join t_ebuy_sales_promotion esp on esp.f_type = op.f_op_type 
+		   	where op.t_ebuy_delivery_order_f_id = #{f_delieve_order_id}
+	</select>
+	
+	<select id="getOrderDetail" parameterType="java.util.Map" resultMap="orderDetailsMap">
+		select <include refid="queryHead_orderList" />, ofr.f_name product_name2,
+		        o.f_deliv_people_name, o.f_deliv_phone, o.f_deliv_address_area, o.f_deliv_address_detail,
+		        op.t_ebuy_order_has_t_ebuy_product_f_id t_ebuy_product_f_id, pp.f_name product_name, pp.f_price_unit, pt.f_type_name product_type, ep.f_product_qty product_qty, ep.f_product_price product_price,
+		        ps.f_size, ps.f_colour, esp.f_name f_op_name, eii.f_identify identifyNo
+			   <include refid="queryCondition_orderList" />
+			   	 left join t_ebuy_delivery_order_product op on d.f_id = op.t_ebuy_delivery_order_f_id
+			   	 left join t_ebuy_sales_promotion esp on esp.f_type = op.f_op_type 
+				 left join t_ebuy_order_has_t_ebuy_product ep on op.t_ebuy_order_has_t_ebuy_product_f_id = ep.f_id
+				 left join t_ebuy_product_shelf pps on pps.f_id = ep.t_ebuy_product_f_id
+				 left join t_ebuy_product pp on pps.t_ebuy_product_id = pp.f_id
+				 left join t_ebuy_product_type pt on pps.t_ebuy_product_type_id = pt.f_id
+				 left join t_ebuy_product_spec ps on ep.t_ebuy_product_spec_f_id = ps.f_id
+				 left join t_ebuy_order_flow_recharge ofr on ofr.t_order_id = o.f_id
+				 left join t_ebuy_identify_info eii on eii.t_order_id = o.f_id
+		<include refid="orderListConditions"/>
+	</select>
+	
+	<select id="getOrderForExport" parameterType="java.util.Map" resultMap="orderExportMap">
+		select <include refid="queryHead_orderList" />, ofr.f_name product_name2,
+		        o.f_deliv_people_name, o.f_deliv_phone, o.f_deliv_address_area, o.f_deliv_address_detail,
+		        op.t_ebuy_order_has_t_ebuy_product_f_id t_ebuy_product_f_id, pp.f_name product_name, pp.f_price_unit, pt.f_type_name product_type, ep.f_product_qty product_qty, ep.f_product_price product_price,
+		        ps.f_size, ps.f_colour, esp.f_name f_op_name,
+		        ero.f_refund_fee refundFee, ero.f_pay_status refundPayStatus,  pr.f_flow_no flowNo, rsa.f_tk_status tkStatus, s.f_type supplyType,
+				ep.f_purchase_price purchasePrice, ero.f_status refundOrderStatus, eii.f_identify identifyNo
+			   <include refid="queryCondition_orderList" />
+			   	 left join t_ebuy_delivery_order_product op on d.f_id = op.t_ebuy_delivery_order_f_id
+			   	 left join t_ebuy_sales_promotion esp on esp.f_type = op.f_op_type
+				 left join t_ebuy_order_has_t_ebuy_product ep on op.t_ebuy_order_has_t_ebuy_product_f_id = ep.f_id
+				 left join t_ebuy_product_shelf pps on pps.f_id = ep.t_ebuy_product_f_id
+				 left join t_ebuy_product pp on pps.t_ebuy_product_id = pp.f_id
+				 left join t_ebuy_product_type pt on pps.t_ebuy_product_type_id = pt.f_id
+				 left join t_ebuy_product_spec ps on ep.t_ebuy_product_spec_f_id = ps.f_id
+				 left join t_ebuy_order_flow_recharge ofr on ofr.t_order_id = o.f_id
+				 left join (select epr.t_ebuy_order_f_id, epr.f_flow_no from t_ebuy_pay_record epr group by epr.f_flow_no) pr on pr.t_ebuy_order_f_id = o.f_id
+				 left join t_ebuy_identify_info eii on eii.t_order_id = o.f_id
+			<!-- 	left join t_revenue_signal_amount rsa on rsa.f_goal_id = d.f_id and rsa.f_goal_type = 4 and f_mini_role_type = 5 -->
+		<include refid="orderListConditions"/>
+		order by o.f_id desc, d.f_id desc
+	</select>
+	
+	<sql id="orderListConditions">		
+		<where>
+			o.f_type in (1,3,8)
+			<if test="supplyList==null or supplyList.size() == 0">
+				<include refid="permi.dataPermissionCondition" />
+			</if>
+			<if test="orderNo!=null and orderNo!=''">
+				and o.f_order_no = #{orderNo}
+			</if>
+			<if test="payTimeStart!=null and payTimeStart!=''">
+				and o.f_pay_time >= #{payTimeStart}
+			</if>
+			<if test="payTimeEnd!=null and payTimeEnd!=''">
+				and o.f_pay_time <![CDATA[<=]]> #{payTimeEnd}
+			</if>
+			
+			<if test="delieveOrderId!=null and delieveOrderId!=''">
+				and d.f_id = #{delieveOrderId}
+			</if>
+			<if test="huaId!=null and huaId!=''">
+				and u.f_hua_id = #{huaId}
+			</if>
+			<if test="realName!=null and realName!=''">
+				and o.f_deliv_people_name like '%${realName}%'
+			</if>
+			<if test="productName!=null and productName!=''">
+				and term.f_product_name like '%${productName}%'
+			</if>
+			<if test="supplyName!=null and supplyName!=''">
+				and s.f_name like '%${supplyName}%'
+			</if>
+			<if test="payMethod!=null and payMethod!=''">
+				and o.f_pay_method = #{payMethod}
+			</if>
+			<if test="orderStatus!=null and orderStatus!=''">
+			  <choose> 
+			  <!-- 
+		        <when test="orderStatus == 1">  
+		            and o.f_status = 1
+		        </when>  
+		         --> 
+		        <when test="orderStatus == 7">  
+		            and ero.f_refund_status = 2
+		        </when>
+		        <when test="orderStatus == 8">  
+		            and ero.f_refund_status = 1 and d.f_status > 1
+		        </when>
+		        <when test="orderStatus == 3">  
+		            <![CDATA[ and o.f_status = 3 and d.f_status <= 1 ]]>
+		        </when>
+		        <when test="orderStatus == 4">  
+		            and d.f_status = 2 and (ero.f_refund_status not IN (1, 2) or ero.f_refund_status is null)
+		        </when>
+		        <!-- 
+		        <when test="orderStatus == 5">  
+		            <![CDATA[ and d.f_status = 3 and o.f_status < 6 ]]>
+		        </when>
+		         -->
+		        <when test="orderStatus == 6">  
+		            and d.f_status = 3 and (ero.f_refund_status not IN (1, 2) or ero.f_refund_status is null)
+		        </when>
+		      </choose>
+			</if>
+			<if test="payStatus == 1">
+				and o.f_pay_status in (1, 3)
+			</if>
+			<if test="payStatus == 2">
+				and o.f_pay_status in (2, 4)
+			</if>
+			<if test="refundStatus == 1">
+				and d.f_refund_status = 2
+			</if>
+			<if test="refundStatus == 2">
+				<![CDATA[ and (d.f_refund_status <> 2 or d.f_refund_status is null)]]>
+			</if>
+			<if test="expressNo != null">
+				and d.f_express_no = #{expressNo}
+			</if>
+			<if test="startTime!=null">
+				<![CDATA[and o.f_buy_time >= #{startTime}]]>
+			</if>
+			<if test="endTime!=null">
+				<![CDATA[and o.f_buy_time < #{endTime}]]>
+			</if>
+			<if test="expressIds!=null and expressIds!=''">
+				and e.f_id = #{expressIds}
+			</if>
+			<if test="supplyList!=null and supplyList.size() != 0">
+				and o.f_pay_status = 2
+                and s.f_id in
+                <foreach collection="supplyList" item="supply"
+                    index="index" open="(" close=")" separator=",">
+                    #{supply.id}
+                </foreach>
+            </if>
+            <if test="tSupplyMerchantFId!=null and tSupplyMerchantFId != ''">
+                and s.f_id = #{tSupplyMerchantFId}
+            </if>
+            <if test="tkStatus != null and tkStatus != 0"> and rsa.f_tk_status = #{tkStatus} </if>
+		</where>
+	</sql>
+	
+	<!-- @Deprecated 
+	<select id="countOrderDetail" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(0)
+		from
+		    t_ebuy_order o
+		        left join
+		    t_user u ON o.f_buyer_id = u.f_id and u.f_sys0_del_state = 0 
+		        left join(
+					select 
+						item.t_ebuy_order_f_id, 
+						concat(',',GROUP_CONCAT(p.f_name),',') product_name,
+						concat(',',GROUP_CONCAT(t.f_type_name),',') type_name,
+						concat(',',GROUP_CONCAT(s.f_name),',') supply_name
+					from
+						t_ebuy_order_has_t_ebuy_product item
+							left join
+						t_ebuy_product p ON item.t_ebuy_product_f_id = p.f_id and AND p.f_point_type = 1 
+							left join 
+						t_ebuy_product_type t on p.t_ebuy_product_type_f_id = t.f_id and AND t.f_point_type = 1 
+							left join
+						t_ebuy_supply_merchant s on p.t_supply_merchant_f_id = s.f_id
+					where 1=1
+						and item.f_sys0_del_state = 0 <if test="supplyName!=null and supplyName!=''"> and s.f_name like '%${supplyName}%'</if>
+					group by item.t_ebuy_order_f_id
+			) tt on o.f_id = tt.t_ebuy_order_f_id
+		    <include refid="orderConditions"/>
+		    limit 0,1
+	</select>
+	
+	<sql id="selectOrderDetail_base_aa">
+		select 
+			o.f_id,
+		    o.f_order_no,
+		    u.f_hua_id,
+		    u.f_real_name,
+		    o.f_buy_time,
+		    o.f_amount,
+		    o.f_amount fact_amount,
+		    o.f_pay_method,
+		    o.f_status,
+		    o.f_pay_status
+		from
+		    t_ebuy_order o
+		        left join
+		    t_user u ON o.f_buyer_id = u.f_id and u.f_sys0_del_state = 0 
+		        left join(
+					select 
+						item.t_ebuy_order_f_id, 
+						concat(',',GROUP_CONCAT(p.f_name),',') product_name,
+						concat(',',GROUP_CONCAT(t.f_type_name),',') type_name,
+						concat(',',GROUP_CONCAT(s.f_name),',') supply_name
+					from
+						t_ebuy_order_has_t_ebuy_product item
+							left join
+						t_ebuy_product p ON item.t_ebuy_product_f_id = p.f_id and AND p.f_point_type = 1 
+							left join 
+						t_ebuy_product_type t on p.t_ebuy_product_type_f_id = t.f_id AND t.f_point_type = 1
+							left join
+						t_ebuy_supply_merchant s on p.t_supply_merchant_f_id = s.f_id
+					where 1=1
+						and item.f_sys0_del_state = 0 <if test="supplyName!=null and supplyName!=''"> and s.f_name like '%${supplyName}%'</if>
+					group by item.t_ebuy_order_f_id
+			) tt on o.f_id = tt.t_ebuy_order_f_id
+		    <include refid="orderConditions"/>
+	</sql>
+	-->
+	<!-- 
+	<select id="selectOrderDetailAll" parameterType="java.util.Map" resultMap="orderDetailMap">
+		<include refid="selectOrderDetail_base_aa"/>
+	</select>
+	<select id="selectOrderDetailByPage" parameterType="java.util.Map" resultMap="orderDetailMap">
+		<include refid="selectOrderDetail_base_aa"/>
+	    limit #{_begin},#{_length}
+	</select>
+	 -->
+	 
+	<sql id="orderConditions">		
+		<where>
+				o.f_sys0_del_state = 0 
+			<if test="orderNo!=null and orderNo!=''">
+				and o.f_order_no = #{orderNo}
+			</if>
+			<if test="huaId!=null and huaId!=''">
+				and u.f_hua_id = #{huaId}
+			</if>
+			<if test="realName!=null and realName!=''">
+				and u.f_real_name like '%${realName}%'
+			</if>
+			<if test="mobile!=null and mobile!=''">
+				and u.f_mobile = #{mobile}
+			</if>
+			<if test="productName!=null and productName!=''">
+				and tt.product_name like '%${productName}%'
+			</if>
+			<if test="typeName!=null and typeName!=''">
+				and tt.type_name like '%${typeName}%'
+			</if>
+			<if test="supplyName!=null and supplyName!=''">
+				and tt.supply_name like '%${supplyName}%'
+			</if>
+			<if test="payMethod!=null and payMethod!=''">
+				and o.f_pay_method = #{payMethod}
+			</if>
+			<if test="orderStatus!=null and orderStatus!=''">
+				and o.f_status = #{orderStatus}
+			</if>
+			<if test="payStatus!=null and payStatus!=''">
+				and o.f_pay_status = #{payStatus}
+			</if>
+			<if test="startTime!=null">
+				<![CDATA[and o.f_buy_time >= #{startTime}]]>
+			</if>
+			<if test="endTime!=null">
+				<![CDATA[and o.f_buy_time < #{endTime}]]>
+			</if>
+			<![CDATA[and o.f_type = 1]]>
+		</where>
+	</sql>
+		
+	<!-- 
+	<select id="selectOrderItemsForReport" parameterType="java.util.Map" resultMap="reportMap">
+		select
+			o.f_id id,
+			tt.supply_name supply_name,
+			tt.product_name product_name,
+			tt.type_name type_name,
+		    tt.f_product_price price,
+			tt.f_product_qty total,
+			tt.f_price_unit price_unit,
+		    o.f_order_no order_no,
+			o.f_buy_time buy_time,
+			o.f_status order_status,
+			o.f_logisticsName logistics_name,
+		    o.f_logisticseCode logisticse_code,
+		    tt.f_delivery_real_fee delivery_fee,
+			o.f_amount amount,
+			o.f_amount fact_amount,
+			o.f_pay_method pay_method,
+			o.f_pay_status pay_status,
+			u.f_hua_id hua_id,
+			u.f_real_name real_name,
+			u.f_mobile mobile,
+			o.f_deliv_people_name people_name,
+			o.f_deliv_phone deliv_phone,
+			concat(o.f_deliv_address_area,o.f_deliv_address_detail) address,
+			o.f_pay_time pay_time 
+		from
+			t_ebuy_order o
+				left join
+			t_user u on o.f_buyer_id = u.f_id and u.f_sys0_del_state = 0 
+				left join
+			(
+					select
+						item.t_ebuy_order_f_id,
+						s.f_name supply_name,
+						p.f_name product_name,
+						t.f_type_name type_name,
+						item.f_product_price,
+						item.f_product_qty,
+						item.f_delivery_real_fee,
+						p.f_price_unit
+					from
+						t_ebuy_order_has_t_ebuy_product item
+							left join
+						t_ebuy_product p ON item.t_ebuy_product_f_id = p.f_id and AND p.f_point_type = 1 
+							left join 
+						t_ebuy_product_type t on p.t_ebuy_product_type_f_id = t.f_id and AND t.f_point_type = 1
+							left join
+						t_ebuy_supply_merchant s on p.t_supply_merchant_f_id = s.f_id
+					where 1=1
+						and item.f_sys0_del_state = 0 
+			) tt on o.f_id = tt.t_ebuy_order_f_id
+		<include refid="orderConditions"/>
+		order by o.f_order_no
+	</select>
+	 -->
+	<select id="getEbuyDeliveryOrderCount" parameterType="EbuyDeliveryOrder" resultType="java.lang.Integer">
+		SELECT COUNT(*) from t_ebuy_delivery_order t where t.t_ebuy_order_f_id = #{tEbuyOrderFId}
+		  <![CDATA[ and t.f_id <> #{id} ]]>
+		  and t.f_status in (0, 1)
+	</select>
+	
+</mapper>

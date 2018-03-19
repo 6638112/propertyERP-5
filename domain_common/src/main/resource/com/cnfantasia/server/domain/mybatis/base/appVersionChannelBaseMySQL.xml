@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:应用版本不同渠道信息 t_app_version_channel -->
+<mapper namespace="appVersionChannelBase">
+	<resultMap type="AppVersionChannel" id="appVersionChannelBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_channel_code" javaType="java.lang.String" property="channelCode"/>  <!-- 渠道编码 -->        <result column="t_app_base_info_f_id" javaType="java.math.BigInteger" property="tAppBaseInfoFId"/>  <!--  -->        <result column="f_version" javaType="java.lang.Long" property="version"/>  <!-- 版本号 -->        <result column="f_force_update" javaType="java.lang.Integer" property="forceUpdate"/>  <!-- 是否需要强制更新 -->        <result column="f_text_desc" javaType="java.lang.String" property="textDesc"/>  <!-- 更新描述 -->        <result column="f_pic_desc" javaType="java.lang.String" property="picDesc"/>  <!--  -->        <result column="f_version_dwon_url" javaType="java.lang.String" property="versionDwonUrl"/>  <!-- 版本下载地址 -->        <result column="f_create_time" javaType="java.lang.String" property="createTime"/>  <!-- 添加时间 -->        <result column="f_creater_id" javaType="java.math.BigInteger" property="createrId"/>  <!-- 创建人Id -->        <result column="f_gate_type" javaType="java.lang.Integer" property="gateType"/>  <!-- 灰度发布类别 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="AppVersionChannel" id="appVersionChannelExtendMap" extends="appVersionChannelBaseMap">
+	</resultMap>
+	<resultMap type="AppVersionChannel" id="appVersionChannelBaseMap_AppendTable">
+        <id column="appVersionChannel_f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="appVersionChannel_f_channel_code" javaType="java.lang.String" property="channelCode"/>  <!-- 渠道编码 -->        <result column="appVersionChannel_t_app_base_info_f_id" javaType="java.math.BigInteger" property="tAppBaseInfoFId"/>  <!--  -->        <result column="appVersionChannel_f_version" javaType="java.lang.Long" property="version"/>  <!-- 版本号 -->        <result column="appVersionChannel_f_force_update" javaType="java.lang.Integer" property="forceUpdate"/>  <!-- 是否需要强制更新 -->        <result column="appVersionChannel_f_text_desc" javaType="java.lang.String" property="textDesc"/>  <!-- 更新描述 -->        <result column="appVersionChannel_f_pic_desc" javaType="java.lang.String" property="picDesc"/>  <!--  -->        <result column="appVersionChannel_f_version_dwon_url" javaType="java.lang.String" property="versionDwonUrl"/>  <!-- 版本下载地址 -->        <result column="appVersionChannel_f_create_time" javaType="java.lang.String" property="createTime"/>  <!-- 添加时间 -->        <result column="appVersionChannel_f_creater_id" javaType="java.math.BigInteger" property="createrId"/>  <!-- 创建人Id -->        <result column="appVersionChannel_f_gate_type" javaType="java.lang.Integer" property="gateType"/>  <!-- 灰度发布类别 -->        <result column="appVersionChannel_f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="appVersionChannel_f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="appVersionChannel_f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="appVersionChannel_f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="appVersionChannel_f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="appVersionChannel_f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="appVersionChannel_f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		AVC.f_id,AVC.f_channel_code,AVC.t_app_base_info_f_id,AVC.f_version,AVC.f_force_update,AVC.f_text_desc,AVC.f_pic_desc,AVC.f_version_dwon_url,date_format(AVC.f_create_time,'%Y-%m-%d %T') as f_create_time,AVC.f_creater_id,AVC.f_gate_type,date_format(AVC.f_sys0_add_time,'%Y-%m-%d %T') as f_sys0_add_time,date_format(AVC.f_sys0_upd_time,'%Y-%m-%d %T') as f_sys0_upd_time,date_format(AVC.f_sys0_del_time,'%Y-%m-%d %T') as f_sys0_del_time,AVC.f_sys0_add_user,AVC.f_sys0_upd_user,AVC.f_sys0_del_user,AVC.f_sys0_del_state
+	</sql>
+	<sql id="queryHead_AppendTable">
+		AVC.f_id as appVersionChannel_f_id,AVC.f_channel_code as appVersionChannel_f_channel_code,AVC.t_app_base_info_f_id as appVersionChannel_t_app_base_info_f_id,AVC.f_version as appVersionChannel_f_version,AVC.f_force_update as appVersionChannel_f_force_update,AVC.f_text_desc as appVersionChannel_f_text_desc,AVC.f_pic_desc as appVersionChannel_f_pic_desc,AVC.f_version_dwon_url as appVersionChannel_f_version_dwon_url,date_format(AVC.f_create_time,'%Y-%m-%d %T') as appVersionChannel_f_create_time,AVC.f_creater_id as appVersionChannel_f_creater_id,AVC.f_gate_type as appVersionChannel_f_gate_type,date_format(AVC.f_sys0_add_time,'%Y-%m-%d %T') as appVersionChannel_f_sys0_add_time,date_format(AVC.f_sys0_upd_time,'%Y-%m-%d %T') as appVersionChannel_f_sys0_upd_time,date_format(AVC.f_sys0_del_time,'%Y-%m-%d %T') as appVersionChannel_f_sys0_del_time,AVC.f_sys0_add_user as appVersionChannel_f_sys0_add_user,AVC.f_sys0_upd_user as appVersionChannel_f_sys0_upd_user,AVC.f_sys0_del_user as appVersionChannel_f_sys0_del_user,AVC.f_sys0_del_state as appVersionChannel_f_sys0_del_state
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (AVC.f_id = #{id} ) </if>        <if test="channelCode != null">  and (AVC.f_channel_code = #{channelCode} ) </if>        <if test="tAppBaseInfoFId != null">  and (AVC.t_app_base_info_f_id = #{tAppBaseInfoFId} ) </if>        <if test="version != null">  and (AVC.f_version = #{version} ) </if>        <if test="forceUpdate != null">  and (AVC.f_force_update = #{forceUpdate} ) </if>        <if test="textDesc != null">  and (AVC.f_text_desc = #{textDesc} ) </if>        <if test="picDesc != null">  and (AVC.f_pic_desc = #{picDesc} ) </if>        <if test="versionDwonUrl != null">  and (AVC.f_version_dwon_url = #{versionDwonUrl} ) </if>        <if test="createTime != null and !createTime.equals('')  ">  and (AVC.f_create_time = str_to_date(#{createTime},'%Y-%m-%d %T') ) </if>        <if test="createTime_START != null and !createTime_START.equals('')  ">              <![CDATA[ and (AVC.f_create_time >= str_to_date(#{createTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="createTime_END != null and !createTime_END.equals('')  ">            <![CDATA[ and (AVC.f_create_time <= str_to_date(#{createTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="createrId != null">  and (AVC.f_creater_id = #{createrId} ) </if>        <if test="gateType != null">  and (AVC.f_gate_type = #{gateType} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (AVC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (AVC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (AVC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (AVC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (AVC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (AVC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (AVC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (AVC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (AVC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (AVC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (AVC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (AVC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (AVC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (AVC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (AVC.f_id = #{id} ) </if>        <if test="channelCode != null and !channelCode.equals('')  ">  and (AVC.f_channel_code like CONCAT('%',#{channelCode},'%') ) </if>        <if test="tAppBaseInfoFId != null and !tAppBaseInfoFId.equals('')  ">  and (AVC.t_app_base_info_f_id = #{tAppBaseInfoFId} ) </if>        <if test="version != null and !version.equals('')  ">  and (AVC.f_version = #{version} ) </if>        <if test="forceUpdate != null and !forceUpdate.equals('')  ">  and (AVC.f_force_update = #{forceUpdate} ) </if>        <if test="textDesc != null and !textDesc.equals('')  ">  and (AVC.f_text_desc like CONCAT('%',#{textDesc},'%') ) </if>        <if test="picDesc != null and !picDesc.equals('')  ">  and (AVC.f_pic_desc like CONCAT('%',#{picDesc},'%') ) </if>        <if test="versionDwonUrl != null and !versionDwonUrl.equals('')  ">  and (AVC.f_version_dwon_url like CONCAT('%',#{versionDwonUrl},'%') ) </if>        <if test="createTime != null and !createTime.equals('')  ">  and (AVC.f_create_time = str_to_date(#{createTime},'%Y-%m-%d %T') ) </if>        <if test="createTime_START != null and !createTime_START.equals('')  ">              <![CDATA[ and (AVC.f_create_time >= str_to_date(#{createTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="createTime_END != null and !createTime_END.equals('')  ">            <![CDATA[ and (AVC.f_create_time <= str_to_date(#{createTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="createrId != null and !createrId.equals('')  ">  and (AVC.f_creater_id = #{createrId} ) </if>        <if test="gateType != null and !gateType.equals('')  ">  and (AVC.f_gate_type = #{gateType} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (AVC.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (AVC.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (AVC.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (AVC.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (AVC.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (AVC.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (AVC.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (AVC.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (AVC.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (AVC.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (AVC.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (AVC.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (AVC.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (AVC.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="appVersionChannelBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="appVersionChannelBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="appVersionChannelBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="appVersionChannelBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_app_version_channel AVC    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(应用版本不同渠道信息)信息。 -->
+	<sql id="select_appVersionChannel">
+		SELECT <include refid="appVersionChannelBase.queryHead"/>
+		<include refid="appVersionChannelBase.busiQueryCondition"/>
+		<include refid="appVersionChannelBase.dimCheckSql"/>
+		ORDER BY AVC.f_id DESC
+	</sql>
+	<select id="select_appVersionChannel" parameterType="java.util.Map" resultMap="appVersionChannelBase.appVersionChannelExtendMap">
+		<include refid="appVersionChannelBase.select_appVersionChannel"/>
+	</select>
+	
+	<!-- 根据条件分页查询(应用版本不同渠道信息)信息  -->
+	<sql id="select_appVersionChannel_withPage">
+		SELECT <include refid="appVersionChannelBase.queryHead"/>
+		<include refid="appVersionChannelBase.busiQueryCondition"/>
+		<include refid="appVersionChannelBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_appVersionChannel_withPage" resultMap="appVersionChannelBase.appVersionChannelExtendMap" parameterType="java.util.Map">
+		<include refid="appVersionChannelBase.select_appVersionChannel_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(应用版本不同渠道信息)信息。 -->
+	<sql id="select_appVersionChannel_bySeqId">
+		SELECT <include refid="appVersionChannelBase.queryHead"/>
+		<include refid="appVersionChannelBase.busiQueryCondition"/>
+		 and AVC.f_id = #{_parameter}
+	</sql>
+	<select id="select_appVersionChannel_bySeqId" parameterType="java.math.BigInteger" resultMap="appVersionChannelBase.appVersionChannelBaseMap">
+		<include refid="appVersionChannelBase.select_appVersionChannel_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(应用版本不同渠道信息)记录数  -->
+	<sql id="select_appVersionChannel_count">
+		SELECT COUNT(*)
+		<include refid="appVersionChannelBase.busiQueryCount"/>
+		<include refid="appVersionChannelBase.dimCheckSql"/>
+	</sql>
+	<select id="select_appVersionChannel_count" resultType="java.lang.Integer">
+		<include refid="appVersionChannelBase.select_appVersionChannel_count"/>
+	</select>
+	
+	 <!-- 往(应用版本不同渠道信息)新增一条记录。 -->
+	 <sql id="insert_appVersionChannel">
+		INSERT INTO t_app_version_channel 
+		(f_id,f_channel_code,t_app_base_info_f_id,f_version,f_force_update,f_text_desc,f_pic_desc,f_version_dwon_url,f_create_time,f_creater_id,f_gate_type,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{channelCode,jdbcType=VARCHAR},#{tAppBaseInfoFId},#{version},#{forceUpdate},#{textDesc,jdbcType=VARCHAR},#{picDesc,jdbcType=VARCHAR},#{versionDwonUrl,jdbcType=VARCHAR},str_to_date(#{createTime,jdbcType=DATE},'%Y-%m-%d %T'),#{createrId},#{gateType},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_appVersionChannel" parameterType="AppVersionChannel">
+		<include refid="appVersionChannelBase.insert_appVersionChannel"/>
+    </insert>
+    
+	<!-- 批量新增(应用版本不同渠道信息)信息 -->
+    <insert id="insert_appVersionChannel_Batch" parameterType="java.util.List">
+    	INSERT INTO t_app_version_channel 
+		(f_id,f_channel_code,t_app_base_info_f_id,f_version,f_force_update,f_text_desc,f_pic_desc,f_version_dwon_url,f_create_time,f_creater_id,f_gate_type,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.channelCode,jdbcType=VARCHAR},#{item.tAppBaseInfoFId},#{item.version},#{item.forceUpdate},#{item.textDesc,jdbcType=VARCHAR},#{item.picDesc,jdbcType=VARCHAR},#{item.versionDwonUrl,jdbcType=VARCHAR},str_to_date(#{item.createTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.createrId},#{item.gateType},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(应用版本不同渠道信息)信息。 -->
+    <sql id="update_appVersionChannel">
+		UPDATE t_app_version_channel SET f_id=#{id} 		<if test="channelCode != null and !channelCode.equals('') "> ,f_channel_code=#{channelCode}</if> 		<if test="tAppBaseInfoFId != null and !tAppBaseInfoFId.equals('') "> ,t_app_base_info_f_id=#{tAppBaseInfoFId}</if> 		<if test="version != null and !version.equals('') "> ,f_version=#{version}</if> 		<if test="forceUpdate != null and !forceUpdate.equals('') "> ,f_force_update=#{forceUpdate}</if> 		<if test="textDesc != null and !textDesc.equals('') "> ,f_text_desc=#{textDesc}</if> 		<if test="picDesc != null and !picDesc.equals('') "> ,f_pic_desc=#{picDesc}</if> 		<if test="versionDwonUrl != null and !versionDwonUrl.equals('') "> ,f_version_dwon_url=#{versionDwonUrl}</if> 		<if test="createTime != null and !createTime.equals('') "> ,f_create_time=str_to_date(#{createTime},'%Y-%m-%d %T')</if> 		<if test="createrId != null and !createrId.equals('') "> ,f_creater_id=#{createrId}</if> 		<if test="gateType != null and !gateType.equals('') "> ,f_gate_type=#{gateType}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_appVersionChannel" parameterType="AppVersionChannel">
+		<include refid="appVersionChannelBase.update_appVersionChannel"/>
+    </update>
+    
+    <!-- 批量更新(应用版本不同渠道信息)信息。 -->
+    <update id="update_appVersionChannel_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_app_version_channel SET f_id=#{item.id} 		<if test="item.channelCode != null and !item.channelCode.equals('')  "> ,f_channel_code=#{item.channelCode}</if> 		<if test="item.tAppBaseInfoFId != null and !item.tAppBaseInfoFId.equals('')  "> ,t_app_base_info_f_id=#{item.tAppBaseInfoFId}</if> 		<if test="item.version != null and !item.version.equals('')  "> ,f_version=#{item.version}</if> 		<if test="item.forceUpdate != null and !item.forceUpdate.equals('')  "> ,f_force_update=#{item.forceUpdate}</if> 		<if test="item.textDesc != null and !item.textDesc.equals('')  "> ,f_text_desc=#{item.textDesc}</if> 		<if test="item.picDesc != null and !item.picDesc.equals('')  "> ,f_pic_desc=#{item.picDesc}</if> 		<if test="item.versionDwonUrl != null and !item.versionDwonUrl.equals('')  "> ,f_version_dwon_url=#{item.versionDwonUrl}</if> 		<if test="item.createTime != null and !item.createTime.equals('')  "> ,f_create_time=str_to_date(#{item.createTime},'%Y-%m-%d %T')</if> 		<if test="item.createrId != null and !item.createrId.equals('')  "> ,f_creater_id=#{item.createrId}</if> 		<if test="item.gateType != null and !item.gateType.equals('')  "> ,f_gate_type=#{item.gateType}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(应用版本不同渠道信息)信息_逻辑删除。 -->
+    <sql id="delete_appVersionChannel_Logic">
+		UPDATE t_app_version_channel SET f_id=#{id} 		<if test="id != null and !id.equals('')  "> ,f_id=#{id}</if> 		<if test="channelCode != null and !channelCode.equals('')  "> ,f_channel_code=#{channelCode}</if> 		<if test="tAppBaseInfoFId != null and !tAppBaseInfoFId.equals('')  "> ,t_app_base_info_f_id=#{tAppBaseInfoFId}</if> 		<if test="version != null and !version.equals('')  "> ,f_version=#{version}</if> 		<if test="forceUpdate != null and !forceUpdate.equals('')  "> ,f_force_update=#{forceUpdate}</if> 		<if test="textDesc != null and !textDesc.equals('')  "> ,f_text_desc=#{textDesc}</if> 		<if test="picDesc != null and !picDesc.equals('')  "> ,f_pic_desc=#{picDesc}</if> 		<if test="versionDwonUrl != null and !versionDwonUrl.equals('')  "> ,f_version_dwon_url=#{versionDwonUrl}</if> 		<if test="createTime != null and !createTime.equals('')  "> ,f_create_time=str_to_date(#{createTime},'%Y-%m-%d %T')</if> 		<if test="createrId != null and !createrId.equals('')  "> ,f_creater_id=#{createrId}</if> 		<if test="gateType != null and !gateType.equals('')  "> ,f_gate_type=#{gateType}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_appVersionChannel_Logic" parameterType="AppVersionChannel">
+		<include refid="appVersionChannelBase.delete_appVersionChannel_Logic"/>
+    </update>
+    
+    <!-- 批量删除(应用版本不同渠道信息)信息_逻辑删除 -->
+    <update id="delete_appVersionChannel_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_app_version_channel SET f_id=#{item.id} 		<if test="item.id != null and !item.id.equals('')  "> ,f_id=#{item.id}</if> 		<if test="item.channelCode != null and !item.channelCode.equals('')  "> ,f_channel_code=#{item.channelCode}</if> 		<if test="item.tAppBaseInfoFId != null and !item.tAppBaseInfoFId.equals('')  "> ,t_app_base_info_f_id=#{item.tAppBaseInfoFId}</if> 		<if test="item.version != null and !item.version.equals('')  "> ,f_version=#{item.version}</if> 		<if test="item.forceUpdate != null and !item.forceUpdate.equals('')  "> ,f_force_update=#{item.forceUpdate}</if> 		<if test="item.textDesc != null and !item.textDesc.equals('')  "> ,f_text_desc=#{item.textDesc}</if> 		<if test="item.picDesc != null and !item.picDesc.equals('')  "> ,f_pic_desc=#{item.picDesc}</if> 		<if test="item.versionDwonUrl != null and !item.versionDwonUrl.equals('')  "> ,f_version_dwon_url=#{item.versionDwonUrl}</if> 		<if test="item.createTime != null and !item.createTime.equals('')  "> ,f_create_time=str_to_date(#{item.createTime},'%Y-%m-%d %T')</if> 		<if test="item.createrId != null and !item.createrId.equals('')  "> ,f_creater_id=#{item.createrId}</if> 		<if test="item.gateType != null and !item.gateType.equals('')  "> ,f_gate_type=#{item.gateType}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(应用版本不同渠道信息)信息。 -->
+    <sql id="delete_appVersionChannel">
+		DELETE FROM t_app_version_channel WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_appVersionChannel" parameterType="java.lang.String">
+		<include refid="appVersionChannelBase.delete_appVersionChannel"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(应用版本不同渠道信息)信息。 -->
+    <delete id="delete_appVersionChannel_Batch" parameterType="java.util.List">
+		DELETE FROM t_app_version_channel WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

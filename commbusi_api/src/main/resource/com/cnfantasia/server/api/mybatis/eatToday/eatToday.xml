@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 今晚吃什么模块 -->
+<mapper namespace="eatToday">
+	<resultMap type="com.cnfantasia.server.api.eatToday.entity.EatMenuRecommendEntity" id="eatMenuRecommendMap" extends="eatMenuRecommendBase.eatMenuRecommendBaseMap_AppendTable">
+		<!-- 推荐的菜谱详情 -->
+		<association property="eatMenu" column="t_eat_menu_f_id" resultMap="eatMenuBase.eatMenuBaseMap_AppendTable" />
+	</resultMap>
+	
+	<!-- 查询推荐的菜谱列表 -->
+	<select id="select_TodayRecommend" resultMap="eatMenuRecommendMap">
+		SELECT <include refid="eatMenuRecommendBase.queryHead_AppendTable"/>,<include refid="eatMenuBase.queryHead_AppendTable"/>
+		FROM t_eat_menu_recommend EMR 
+			INNER JOIN t_eat_menu EM ON EMR.t_eat_menu_f_id = EM.f_id AND EM.f_sys0_del_state = 0
+		WHERE 1=1
+		AND EMR.f_sys0_del_state = 0
+	</select>
+</mapper>

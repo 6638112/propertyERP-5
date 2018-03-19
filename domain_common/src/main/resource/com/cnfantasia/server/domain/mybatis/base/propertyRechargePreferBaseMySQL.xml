@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:物业充值随机立减记录表 t_property_recharge_prefer -->
+<mapper namespace="propertyRechargePreferBase">
+	<resultMap type="PropertyRechargePrefer" id="propertyRechargePreferBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_gbbcc_id" javaType="java.math.BigInteger" property="tGbbccId"/>  <!--  -->        <result column="t_user_id" javaType="java.math.BigInteger" property="tUserId"/>  <!--  -->        <result column="t_real_room_id" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!--  -->        <result column="f_amount" javaType="java.lang.Long" property="amount"/>  <!-- 充值金额（单位 -->        <result column="t_paybill_id" javaType="java.math.BigInteger" property="tPaybillId"/>  <!-- 支付回调时写入 -->        <result column="f_perfer_amount" javaType="java.lang.Long" property="perferAmount"/>  <!-- 随机立减金额（单位 -->        <result column="f_pay_state" javaType="java.lang.Integer" property="payState"/>  <!-- 支付状态 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PropertyRechargePrefer" id="propertyRechargePreferExtendMap" extends="propertyRechargePreferBaseMap">
+	</resultMap>
+	<resultMap type="PropertyRechargePrefer" id="propertyRechargePreferBaseMap_AppendTable">
+        <id column="PRPid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PRPtGbbccId" javaType="java.math.BigInteger" property="tGbbccId"/>  <!--  -->        <result column="PRPtUserId" javaType="java.math.BigInteger" property="tUserId"/>  <!--  -->        <result column="PRPtRealRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!--  -->        <result column="PRPamount" javaType="java.lang.Long" property="amount"/>  <!-- 充值金额（单位 -->        <result column="PRPtPaybillId" javaType="java.math.BigInteger" property="tPaybillId"/>  <!-- 支付回调时写入 -->        <result column="PRPperferAmount" javaType="java.lang.Long" property="perferAmount"/>  <!-- 随机立减金额（单位 -->        <result column="PRPpayState" javaType="java.lang.Integer" property="payState"/>  <!-- 支付状态 -->        <result column="PRPsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="PRPsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="PRPsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="PRPsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="PRPsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="PRPsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="PRPsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<resultMap type="PropertyRechargePrefer" id="propertyRechargePreferBaseMap_AppendTable1">
+        <id column="PRP1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="PRP1tGbbccId" javaType="java.math.BigInteger" property="tGbbccId"/>  <!--  -->        <result column="PRP1tUserId" javaType="java.math.BigInteger" property="tUserId"/>  <!--  -->        <result column="PRP1tRealRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!--  -->        <result column="PRP1amount" javaType="java.lang.Long" property="amount"/>  <!-- 充值金额（单位 -->        <result column="PRP1tPaybillId" javaType="java.math.BigInteger" property="tPaybillId"/>  <!-- 支付回调时写入 -->        <result column="PRP1perferAmount" javaType="java.lang.Long" property="perferAmount"/>  <!-- 随机立减金额（单位 -->        <result column="PRP1payState" javaType="java.lang.Integer" property="payState"/>  <!-- 支付状态 -->        <result column="PRP1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->        <result column="PRP1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->        <result column="PRP1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->        <result column="PRP1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->        <result column="PRP1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->        <result column="PRP1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->        <result column="PRP1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		PRP.f_id,PRP.t_gbbcc_id,PRP.t_user_id,PRP.t_real_room_id,PRP.f_amount,PRP.t_paybill_id,PRP.f_perfer_amount,PRP.f_pay_state
+	</sql>
+	<sql id="queryHead_AppendTable">
+		PRP.f_id as PRPid,PRP.t_gbbcc_id as PRPtGbbccId,PRP.t_user_id as PRPtUserId,PRP.t_real_room_id as PRPtRealRoomId,PRP.f_amount as PRPamount,PRP.t_paybill_id as PRPtPaybillId,PRP.f_perfer_amount as PRPperferAmount,PRP.f_pay_state as PRPpayState
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		PRP1.f_id as PRP1id,PRP1.t_gbbcc_id as PRP1tGbbccId,PRP1.t_user_id as PRP1tUserId,PRP1.t_real_room_id as PRP1tRealRoomId,PRP1.f_amount as PRP1amount,PRP1.t_paybill_id as PRP1tPaybillId,PRP1.f_perfer_amount as PRP1perferAmount,PRP1.f_pay_state as PRP1payState
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (PRP.f_id = #{id} ) </if>        <if test="tGbbccId != null">  and (PRP.t_gbbcc_id = #{tGbbccId} ) </if>        <if test="tUserId != null">  and (PRP.t_user_id = #{tUserId} ) </if>        <if test="tRealRoomId != null">  and (PRP.t_real_room_id = #{tRealRoomId} ) </if>        <if test="amount != null">  and (PRP.f_amount = #{amount} ) </if>        <if test="tPaybillId != null">  and (PRP.t_paybill_id = #{tPaybillId} ) </if>        <if test="perferAmount != null">  and (PRP.f_perfer_amount = #{perferAmount} ) </if>        <if test="payState != null">  and (PRP.f_pay_state = #{payState} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PRP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PRP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PRP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PRP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PRP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PRP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PRP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PRP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PRP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (PRP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (PRP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (PRP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (PRP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (PRP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (PRP.f_id = #{id} ) </if>        <if test="tGbbccId != null and !tGbbccId.equals('')  ">  and (PRP.t_gbbcc_id = #{tGbbccId} ) </if>        <if test="tUserId != null and !tUserId.equals('')  ">  and (PRP.t_user_id = #{tUserId} ) </if>        <if test="tRealRoomId != null and !tRealRoomId.equals('')  ">  and (PRP.t_real_room_id = #{tRealRoomId} ) </if>        <if test="amount != null and !amount.equals('')  ">  and (PRP.f_amount = #{amount} ) </if>        <if test="tPaybillId != null and !tPaybillId.equals('')  ">  and (PRP.t_paybill_id = #{tPaybillId} ) </if>        <if test="perferAmount != null and !perferAmount.equals('')  ">  and (PRP.f_perfer_amount = #{perferAmount} ) </if>        <if test="payState != null and !payState.equals('')  ">  and (PRP.f_pay_state = #{payState} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (PRP.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (PRP.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (PRP.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (PRP.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (PRP.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (PRP.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (PRP.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (PRP.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (PRP.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (PRP.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (PRP.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (PRP.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (PRP.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (PRP.f_sys0_del_state = 0 ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="propertyRechargePreferBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="propertyRechargePreferBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="propertyRechargePreferBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="propertyRechargePreferBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_property_recharge_prefer PRP    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(物业充值随机立减记录表)信息。 -->
+	<sql id="select_propertyRechargePrefer">
+		SELECT <include refid="propertyRechargePreferBase.queryHead"/>
+		<include refid="propertyRechargePreferBase.busiQueryCondition"/>
+		<include refid="propertyRechargePreferBase.dimCheckSql"/>
+		ORDER BY PRP.f_id DESC
+	</sql>
+	<select id="select_propertyRechargePrefer" parameterType="java.util.Map" resultMap="propertyRechargePreferBase.propertyRechargePreferExtendMap">
+		<include refid="propertyRechargePreferBase.select_propertyRechargePrefer"/>
+	</select>
+	
+	<!-- 根据条件分页查询(物业充值随机立减记录表)信息  -->
+	<sql id="select_propertyRechargePrefer_withPage">
+		SELECT <include refid="propertyRechargePreferBase.queryHead"/>
+		<include refid="propertyRechargePreferBase.busiQueryCondition"/>
+		<include refid="propertyRechargePreferBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_propertyRechargePrefer_withPage" resultMap="propertyRechargePreferBase.propertyRechargePreferExtendMap" parameterType="java.util.Map">
+		<include refid="propertyRechargePreferBase.select_propertyRechargePrefer_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(物业充值随机立减记录表)信息。 -->
+	<sql id="select_propertyRechargePrefer_bySeqId">
+		SELECT <include refid="propertyRechargePreferBase.queryHead"/>
+		<include refid="propertyRechargePreferBase.busiQueryCondition"/>
+		 and PRP.f_id = #{_parameter}
+	</sql>
+	<select id="select_propertyRechargePrefer_bySeqId" parameterType="java.math.BigInteger" resultMap="propertyRechargePreferBase.propertyRechargePreferBaseMap">
+		<include refid="propertyRechargePreferBase.select_propertyRechargePrefer_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(物业充值随机立减记录表)记录数  -->
+	<sql id="select_propertyRechargePrefer_count">
+		SELECT COUNT(*)
+		<include refid="propertyRechargePreferBase.busiQueryCount"/>
+		<include refid="propertyRechargePreferBase.dimCheckSql"/>
+	</sql>
+	<select id="select_propertyRechargePrefer_count" resultType="java.lang.Integer">
+		<include refid="propertyRechargePreferBase.select_propertyRechargePrefer_count"/>
+	</select>
+	
+	 <!-- 往(物业充值随机立减记录表)新增一条记录。 -->
+	 <sql id="insert_propertyRechargePrefer">
+		INSERT INTO t_property_recharge_prefer 
+		(f_id,t_gbbcc_id,t_user_id,t_real_room_id,f_amount,t_paybill_id,f_perfer_amount,f_pay_state,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES 
+		(#{id},#{tGbbccId},#{tUserId},#{tRealRoomId},#{amount},#{tPaybillId},#{perferAmount},#{payState},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0)
+	 </sql>
+    <insert id="insert_propertyRechargePrefer" parameterType="PropertyRechargePrefer">
+		<include refid="propertyRechargePreferBase.insert_propertyRechargePrefer"/>
+    </insert>
+    
+	<!-- 批量新增(物业充值随机立减记录表)信息 -->
+    <insert id="insert_propertyRechargePrefer_Batch" parameterType="java.util.List">
+    	INSERT INTO t_property_recharge_prefer 
+		(f_id,t_gbbcc_id,t_user_id,t_real_room_id,f_amount,t_paybill_id,f_perfer_amount,f_pay_state,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tGbbccId},#{item.tUserId},#{item.tRealRoomId},#{item.amount},#{item.tPaybillId},#{item.perferAmount},#{item.payState},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0)
+		</foreach>
+    </insert>
+    
+    <!-- 更新(物业充值随机立减记录表)信息。 -->
+    <sql id="update_propertyRechargePrefer">
+		UPDATE t_property_recharge_prefer		<trim prefix="SET" prefixOverrides=","> 		<if test="tGbbccId != null and !tGbbccId.equals('') "> ,t_gbbcc_id=#{tGbbccId}</if> 		<if test="tUserId != null and !tUserId.equals('') "> ,t_user_id=#{tUserId}</if> 		<if test="tRealRoomId != null and !tRealRoomId.equals('') "> ,t_real_room_id=#{tRealRoomId}</if> 		<if test="amount != null and !amount.equals('') "> ,f_amount=#{amount}</if> 		<if test="tPaybillId != null and !tPaybillId.equals('') "> ,t_paybill_id=#{tPaybillId}</if> 		<if test="perferAmount != null and !perferAmount.equals('') "> ,f_perfer_amount=#{perferAmount}</if> 		<if test="payState != null and !payState.equals('') "> ,f_pay_state=#{payState}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_propertyRechargePrefer" parameterType="PropertyRechargePrefer">
+		<include refid="propertyRechargePreferBase.update_propertyRechargePrefer"/>
+    </update>
+    
+    <!-- 批量更新(物业充值随机立减记录表)信息。 -->
+    <update id="update_propertyRechargePrefer_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_property_recharge_prefer		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tGbbccId != null and !item.tGbbccId.equals('')  "> ,t_gbbcc_id=#{item.tGbbccId}</if> 		<if test="item.tUserId != null and !item.tUserId.equals('')  "> ,t_user_id=#{item.tUserId}</if> 		<if test="item.tRealRoomId != null and !item.tRealRoomId.equals('')  "> ,t_real_room_id=#{item.tRealRoomId}</if> 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if> 		<if test="item.tPaybillId != null and !item.tPaybillId.equals('')  "> ,t_paybill_id=#{item.tPaybillId}</if> 		<if test="item.perferAmount != null and !item.perferAmount.equals('')  "> ,f_perfer_amount=#{item.perferAmount}</if> 		<if test="item.payState != null and !item.payState.equals('')  "> ,f_pay_state=#{item.payState}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(物业充值随机立减记录表)信息_逻辑删除。 -->
+    <sql id="delete_propertyRechargePrefer_Logic">
+		UPDATE t_property_recharge_prefer		<trim prefix="SET" prefixOverrides=","> 		<if test="tGbbccId != null and !tGbbccId.equals('')  "> ,t_gbbcc_id=#{tGbbccId}</if> 		<if test="tUserId != null and !tUserId.equals('')  "> ,t_user_id=#{tUserId}</if> 		<if test="tRealRoomId != null and !tRealRoomId.equals('')  "> ,t_real_room_id=#{tRealRoomId}</if> 		<if test="amount != null and !amount.equals('')  "> ,f_amount=#{amount}</if> 		<if test="tPaybillId != null and !tPaybillId.equals('')  "> ,t_paybill_id=#{tPaybillId}</if> 		<if test="perferAmount != null and !perferAmount.equals('')  "> ,f_perfer_amount=#{perferAmount}</if> 		<if test="payState != null and !payState.equals('')  "> ,f_pay_state=#{payState}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_propertyRechargePrefer_Logic" parameterType="PropertyRechargePrefer">
+		<include refid="propertyRechargePreferBase.delete_propertyRechargePrefer_Logic"/>
+    </update>
+    
+    <!-- 批量删除(物业充值随机立减记录表)信息_逻辑删除 -->
+    <update id="delete_propertyRechargePrefer_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_property_recharge_prefer		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tGbbccId != null and !item.tGbbccId.equals('')  "> ,t_gbbcc_id=#{item.tGbbccId}</if> 		<if test="item.tUserId != null and !item.tUserId.equals('')  "> ,t_user_id=#{item.tUserId}</if> 		<if test="item.tRealRoomId != null and !item.tRealRoomId.equals('')  "> ,t_real_room_id=#{item.tRealRoomId}</if> 		<if test="item.amount != null and !item.amount.equals('')  "> ,f_amount=#{item.amount}</if> 		<if test="item.tPaybillId != null and !item.tPaybillId.equals('')  "> ,t_paybill_id=#{item.tPaybillId}</if> 		<if test="item.perferAmount != null and !item.perferAmount.equals('')  "> ,f_perfer_amount=#{item.perferAmount}</if> 		<if test="item.payState != null and !item.payState.equals('')  "> ,f_pay_state=#{item.payState}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(物业充值随机立减记录表)信息。 -->
+    <sql id="delete_propertyRechargePrefer">
+		DELETE FROM t_property_recharge_prefer WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_propertyRechargePrefer" parameterType="java.lang.String">
+		<include refid="propertyRechargePreferBase.delete_propertyRechargePrefer"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(物业充值随机立减记录表)信息。 -->
+    <delete id="delete_propertyRechargePrefer_Batch" parameterType="java.util.List">
+		DELETE FROM t_property_recharge_prefer WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:消息管理 -->
+<mapper namespace="notice">
+	<resultMap type="com.cnfantasia.server.ms.notice.entity.MessageEntity" id="MessageEntity_Append_Map" extends="messageBase.messageBaseMap_AppendTable">
+		<association property="createOmsUser" resultMap="omsUserBase.omsUserBaseMap_AppendTable" />
+	</resultMap>
+	<select id="select_Message_Detail" parameterType="java.util.Map" resultMap="MessageEntity_Append_Map">
+		SELECT <include refid ="messageBase.queryHead_AppendTable"/>,<include refid="omsUserBase.queryHead_AppendTable"/>
+		FROM t_message M
+		LEFT JOIN t_oms_user OU ON OU.f_id = M.f_creater AND OU.f_sys0_del_state = 0
+    	WHERE 1=1 
+    	AND M.f_sys0_del_state = 0
+    	AND M.f_id = #{messageId}
+	</select>
+	
+	<!-- 根据条件为后台运维账号获取所有物业公告，管理员要看到所有，其它账号看到自己新建的账号 -->
+	<sql id="select_all_notice">
+		SELECT <include refid ="messageBase.queryHead_AppendTable"/>
+		FROM t_message M
+    	WHERE 1=1 
+    	AND M.f_sys0_del_state = 0 
+    	and M.f_type = 3 
+	</sql>
+	
+	<select id="select_Notice_List_byCondition" parameterType="java.util.Map" resultMap="messageBase.messageBaseMap_AppendTable">
+		<include refid ="select_all_notice"/>
+		<if test="userId !=null and userId != 1 " >and M.f_sys0_add_user = #{userId}</if>
+    	<if test="title !=null and title != '' " >and M.f_title like CONCAT('%',#{title},'%') </if>
+    	<if test="beginTime != null and beginTime != '' " > and M.f_Time &gt;= #{beginTime}</if>
+    	<if test="endTime != null and endTime != '' " > and M.f_Time &lt;= #{endTime}</if>
+    	order by M.f_sys0_add_time desc 
+    	<if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+	</select>
+	
+	<!-- 逻辑删除，即将标志位置为删除状态-->
+	<delete id="delete_message_byId" parameterType="java.math.BigInteger">
+		update t_message set f_sys0_del_state =1 where f_id  = #{_parameter}
+    </delete>
+    
+    <select id="select_GroupBuilding_Simple_List" parameterType="java.util.Map" resultMap="groupBuilding.GroupBuildingSimpleEntity_Map_Append">
+    	SELECT <include refid="groupBuildingBase.queryHead_AppendTable"/>
+    		,AB.f_name AS ext_addressBlockName, ac.f_name as ext_addressCityName, ap.f_name as ext_addressProvinceName
+    	FROM t_group_building GB
+    		INNER JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id AND AB.f_sys0_del_state = 0
+    		inner join t_address_city ac on ac.f_id = AB.t_city_f_id and ac.f_sys0_del_state = 0 
+    		inner join t_address_province ap on ap.f_id = ac.t_province_f_id and ap.f_sys0_del_state = 0 
+    		inner join t_property_company pc on pc.f_id = GB.t_property_company_f_id 
+   	 	WHERE 1=1
+   	 	AND GB.f_sys0_del_state = 0
+   	 	<!--  <if test="userId != null and userId == 10 " > and GB.f_id in(2510,2511) 如果是宝丰账号过来，只显示物业下的两个小区 </if> -->
+   	 	<if test="userId != null and userId != '' and userId !=1  " > and pc.f_admin_id = #{userId}</if> <!-- 管理员要能看到所有，所以要加上and userId !=1  -->
+    </select>
+    
+    <!-- 根据消息的ID号批量删除(消息小区关联表)信息。 -->
+    <delete id="delete_messageGroup_byMsgId" parameterType="java.util.Map">
+		UPDATE t_message_group SET 
+ 		f_sys0_del_user=#{sys0DelUser}
+ 		,f_sys0_del_time= sysdate()
+ 		,f_sys0_del_state= 1 
+		WHERE 1=1  
+		AND f_sys0_del_state = 0 
+		AND t_message_f_id = #{msgId} 
+    </delete>
+    
+    <!-- 根据消息的ID号查找(消息小区关联表)信息 -->
+  	<select id="select_GroupBuildingIds_byMsgId" parameterType="int" resultType="java.lang.Object">
+    	select tmg.f_groupbuilding_id gbId from t_message_group tmg 
+    	where tmg.t_message_f_id = #{_parameter} 
+    	and tmg.f_sys0_del_state = 0 
+    </select> 
+	
+	<!-- 根据小区Id列表查询其下的<用户,房间>信息列表 -->
+	<select id="select_UserAndRoom_List_By_GroupBuildIds"  parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT UHTR.t_room_f_id roomId, UHTR.t_user_f_id userId 
+		FROM t_user_has_t_room UHTR 
+			INNER JOIN t_user U ON U.f_id = UHTR.t_user_f_id AND U.f_sys0_del_state = 0
+			INNER JOIN t_room R ON R.f_id = UHTR.t_room_f_id AND R.f_sys0_del_state = 0
+			INNER JOIN t_real_room RR ON RR.f_id = R.t_real_room_f_id  AND RR.f_sys0_del_state = 0
+			INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+			INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+    	 WHERE 1=1 and UHTR.f_sys0_del_state = 0
+		AND GB.f_id IN 
+		<foreach item="item" collection="groupBuildIdList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+</mapper>

@@ -1,0 +1,145 @@
+/**   
+* Filename:    RemoteUcenterDao.java   
+* @version:    1.0  
+* Create at:   2014年7月11日 上午3:08:56   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年7月11日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.login.dao;
+
+import java.util.LinkedList;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.cnfantasia.server.apibase.remoteUser.entity.RemoteUser;
+import com.cnfantasia.server.common.exception.BusinessRuntimeException;
+import com.fivestars.interfaces.bbs.client.Client;
+import com.fivestars.interfaces.bbs.util.XMLHelper;
+
+/**
+ * Filename:    RemoteUcenterDao.java
+ * @version:    1.0.0
+ * Create at:   2014年7月11日 上午3:08:56
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年7月11日       shiyl             1.0             1.0 Version
+ */
+public class RemoteUcenterDao implements IAccountDao{
+	private Log logger = LogFactory.getLog(getClass());
+	@Override
+	public boolean checkIsRegist(String account) {
+		Client uc = new Client();
+		String result=uc.uc_get_user(account, 0);
+		if("0".equals(result)){
+			return false;
+		}
+		return true;
+	}
+//	@Override
+//	public boolean checkIsRegist(String account) {
+//		Client uc = new Client();
+//		String result=uc.uc_get_user(account, 0);
+//		LinkedList<String> rs = XMLHelper.uc_unserialize(result);
+//		if(rs.size()>0){
+//			int $uid = Integer.parseInt(rs.get(0));
+//			if($uid == 0) {//用户不存在
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
+	
+	@Override
+	public int userRegister(String account, String password, String email) {
+		Client uc = new Client();
+		//setcookie('Example_auth', '', -86400);
+		//生成同步退出的代码
+		String $returns = uc.uc_user_register(account,password,email);
+		int $uid = Integer.parseInt($returns);
+		if($uid <= 0) {
+			if($uid == -1) {
+				logger.debug("用户名不合法");
+				throw new BusinessRuntimeException("RemoteUcenterDao.userRegister.retM1");
+			} else if($uid == -2) {
+				logger.debug("包含要允许注册的词语");
+				throw new BusinessRuntimeException("RemoteUcenterDao.userRegister.retM2");
+			} else if($uid == -3) {
+				logger.debug("用户名已经存在");
+				throw new BusinessRuntimeException("RemoteUcenterDao.userRegister.retM3");
+			} else if($uid == -4) {
+				logger.debug("Email 格式有误");
+				throw new BusinessRuntimeException("RemoteUcenterDao.userRegister.retM4");
+			} else if($uid == -5) {
+				logger.debug("Email 不允许注册");
+				throw new BusinessRuntimeException("RemoteUcenterDao.userRegister.retM5");
+			} else if($uid == -6) {
+				logger.debug("该 Email 已经被注册");
+				throw new BusinessRuntimeException("RemoteUcenterDao.userRegister.retM6");
+			} else {
+				logger.debug("未定义");
+				throw new BusinessRuntimeException("RemoteUcenterDao.userRegister.retMun");
+			}
+		} 
+		return $uid;
+	}
+
+	@Override
+	public RemoteUser userLogin(String account, String password) {
+		Client e = new Client();
+		String result = e.uc_user_login(account,password);
+		LinkedList<String> rs = XMLHelper.uc_unserialize(result);
+		int $uid = Integer.parseInt(rs.get(0));
+		if($uid > 0) {
+			
+		}else if($uid == -1) {
+			logger.debug("用户不存在,或者被删除");
+			throw new BusinessRuntimeException("RemoteUcenterDao.userLogin.retM1");
+		} else if($uid == -2) {
+			logger.debug("密码错");
+			throw new BusinessRuntimeException("RemoteUcenterDao.userLogin.retM2");
+		} else {
+			logger.debug("未定义");
+			throw new BusinessRuntimeException("RemoteUcenterDao.userLogin.retMun");
+		}
+		String $username = rs.get(1);
+		String $password = rs.get(2);
+		String $email = rs.get(3);
+		RemoteUser remoteUser = new RemoteUser(Long.valueOf($uid), null, $username, $password, $email);
+		return remoteUser;
+	}
+
+	@Override
+	public String userSynlogin(int $uid) {
+		Client e = new Client();
+		String $ucsynlogin = e.uc_user_synlogin($uid);
+		return $ucsynlogin;
+	}
+
+	@Override
+	public String userSynlogout(String account, String password) {
+		Client uc = new Client();
+		//setcookie('Example_auth', '', -86400);
+		//生成同步退出的代码
+		String $ucsynlogout = uc.uc_user_synlogout();
+		return $ucsynlogout;
+	}
+
+	@Override
+	public boolean updPwd(String userName, String newPwd) {
+		Client e = new Client();
+		String res = e.uc_user_edit(userName, "", newPwd, "", 1, "", "");
+		if("1".equals(res)){
+			return true;
+		}
+		return false;
+	}
+
+}

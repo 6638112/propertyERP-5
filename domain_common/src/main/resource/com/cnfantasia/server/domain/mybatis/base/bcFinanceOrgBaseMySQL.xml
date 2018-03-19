@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:银行托收金融机构信息 t_bc_finance_org -->
+<mapper namespace="bcFinanceOrgBase">
+	<resultMap type="BcFinanceOrg" id="bcFinanceOrgBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="f_org_name" javaType="java.lang.String" property="orgName"/>  <!-- 银行或金融机构名称 -->        <result column="f_sys0_add_time" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="f_sys0_upd_time" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="f_sys0_del_time" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="f_sys0_add_user" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="f_sys0_upd_user" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="f_sys0_del_user" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="f_sys0_del_state" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="f_class_name" javaType="java.lang.String" property="className"/>  <!-- 实现接口的的Class名称 -->
+	</resultMap>
+	<resultMap type="BcFinanceOrg" id="bcFinanceOrgExtendMap" extends="bcFinanceOrgBaseMap">
+	</resultMap>
+	<resultMap type="BcFinanceOrg" id="bcFinanceOrgBaseMap_AppendTable">
+        <id column="BFOid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="BFOorgName" javaType="java.lang.String" property="orgName"/>  <!-- 银行或金融机构名称 -->        <result column="BFOsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="BFOsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="BFOsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="BFOsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="BFOsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="BFOsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="BFOsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="BFOclassName" javaType="java.lang.String" property="className"/>  <!-- 实现接口的的Class名称 -->
+	</resultMap>
+	<resultMap type="BcFinanceOrg" id="bcFinanceOrgBaseMap_AppendTable1">
+        <id column="BFO1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="BFO1orgName" javaType="java.lang.String" property="orgName"/>  <!-- 银行或金融机构名称 -->        <result column="BFO1sys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!-- 新增时间 -->        <result column="BFO1sys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!-- 更新时间 -->        <result column="BFO1sys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!-- 删除时间 -->        <result column="BFO1sys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!-- 新增者 -->        <result column="BFO1sys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!-- 修改者 -->        <result column="BFO1sys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!-- 删除者 -->        <result column="BFO1sys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->        <result column="BFO1className" javaType="java.lang.String" property="className"/>  <!-- 实现接口的的Class名称 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		BFO.f_id,BFO.f_org_name,BFO.f_class_name
+	</sql>
+	<sql id="queryHead_AppendTable">
+		BFO.f_id as BFOid,BFO.f_org_name as BFOorgName,BFO.f_class_name as BFOclassName
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		BFO1.f_id as BFO1id,BFO1.f_org_name as BFO1orgName,BFO1.f_class_name as BFO1className
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (BFO.f_id = #{id} ) </if>        <if test="orgName != null">  and (BFO.f_org_name = #{orgName} ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (BFO.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (BFO.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (BFO.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (BFO.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (BFO.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (BFO.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (BFO.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (BFO.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (BFO.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null">  and (BFO.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null">  and (BFO.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null">  and (BFO.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null">  and (BFO.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null">  and (BFO.f_sys0_del_state = 0 ) </if>        <if test="className != null">  and (BFO.f_class_name = #{className} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (BFO.f_id = #{id} ) </if>        <if test="orgName != null and !orgName.equals('')  ">  and (BFO.f_org_name like CONCAT('%',#{orgName},'%') ) </if>        <if test="sys0AddTime != null and !sys0AddTime.equals('')  ">  and (BFO.f_sys0_add_time = str_to_date(#{sys0AddTime},'%Y-%m-%d %T') ) </if>        <if test="sys0AddTime_START != null and !sys0AddTime_START.equals('')  ">              <![CDATA[ and (BFO.f_sys0_add_time >= str_to_date(#{sys0AddTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddTime_END != null and !sys0AddTime_END.equals('')  ">            <![CDATA[ and (BFO.f_sys0_add_time <= str_to_date(#{sys0AddTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime != null and !sys0UpdTime.equals('')  ">  and (BFO.f_sys0_upd_time = str_to_date(#{sys0UpdTime},'%Y-%m-%d %T') ) </if>        <if test="sys0UpdTime_START != null and !sys0UpdTime_START.equals('')  ">              <![CDATA[ and (BFO.f_sys0_upd_time >= str_to_date(#{sys0UpdTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0UpdTime_END != null and !sys0UpdTime_END.equals('')  ">            <![CDATA[ and (BFO.f_sys0_upd_time <= str_to_date(#{sys0UpdTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime != null and !sys0DelTime.equals('')  ">  and (BFO.f_sys0_del_time = str_to_date(#{sys0DelTime},'%Y-%m-%d %T') ) </if>        <if test="sys0DelTime_START != null and !sys0DelTime_START.equals('')  ">              <![CDATA[ and (BFO.f_sys0_del_time >= str_to_date(#{sys0DelTime_START},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0DelTime_END != null and !sys0DelTime_END.equals('')  ">            <![CDATA[ and (BFO.f_sys0_del_time <= str_to_date(#{sys0DelTime_END},'%Y-%m-%d %T') ) ]]>        </if>        <if test="sys0AddUser != null and !sys0AddUser.equals('')  ">  and (BFO.f_sys0_add_user = #{sys0AddUser} ) </if>        <if test="sys0UpdUser != null and !sys0UpdUser.equals('')  ">  and (BFO.f_sys0_upd_user = #{sys0UpdUser} ) </if>        <if test="sys0DelUser != null and !sys0DelUser.equals('')  ">  and (BFO.f_sys0_del_user = #{sys0DelUser} ) </if>        <if test="sys0DelState != null and !sys0DelState.equals('')  ">  and (BFO.f_sys0_del_state = #{sys0DelState} ) </if>        <if test="sys0DelState == null or sys0DelState == '' ">  and (BFO.f_sys0_del_state = 0 ) </if>        <if test="className != null and !className.equals('')  ">  and (BFO.f_class_name like CONCAT('%',#{className},'%') ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="bcFinanceOrgBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="bcFinanceOrgBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="bcFinanceOrgBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="bcFinanceOrgBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_bc_finance_org BFO    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(银行托收金融机构信息)信息。 -->
+	<sql id="select_bcFinanceOrg">
+		SELECT <include refid="bcFinanceOrgBase.queryHead"/>
+		<include refid="bcFinanceOrgBase.busiQueryCondition"/>
+		<include refid="bcFinanceOrgBase.dimCheckSql"/>
+		ORDER BY BFO.f_id DESC
+	</sql>
+	<select id="select_bcFinanceOrg" parameterType="java.util.Map" resultMap="bcFinanceOrgBase.bcFinanceOrgExtendMap">
+		<include refid="bcFinanceOrgBase.select_bcFinanceOrg"/>
+	</select>
+	
+	<!-- 根据条件分页查询(银行托收金融机构信息)信息  -->
+	<sql id="select_bcFinanceOrg_withPage">
+		SELECT <include refid="bcFinanceOrgBase.queryHead"/>
+		<include refid="bcFinanceOrgBase.busiQueryCondition"/>
+		<include refid="bcFinanceOrgBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_bcFinanceOrg_withPage" resultMap="bcFinanceOrgBase.bcFinanceOrgExtendMap" parameterType="java.util.Map">
+		<include refid="bcFinanceOrgBase.select_bcFinanceOrg_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(银行托收金融机构信息)信息。 -->
+	<sql id="select_bcFinanceOrg_bySeqId">
+		SELECT <include refid="bcFinanceOrgBase.queryHead"/>
+		<include refid="bcFinanceOrgBase.busiQueryCondition"/>
+		 and BFO.f_id = #{_parameter}
+	</sql>
+	<select id="select_bcFinanceOrg_bySeqId" parameterType="java.math.BigInteger" resultMap="bcFinanceOrgBase.bcFinanceOrgBaseMap">
+		<include refid="bcFinanceOrgBase.select_bcFinanceOrg_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(银行托收金融机构信息)记录数  -->
+	<sql id="select_bcFinanceOrg_count">
+		SELECT COUNT(*)
+		<include refid="bcFinanceOrgBase.busiQueryCount"/>
+		<include refid="bcFinanceOrgBase.dimCheckSql"/>
+	</sql>
+	<select id="select_bcFinanceOrg_count" resultType="java.lang.Integer">
+		<include refid="bcFinanceOrgBase.select_bcFinanceOrg_count"/>
+	</select>
+	
+	 <!-- 往(银行托收金融机构信息)新增一条记录。 -->
+	 <sql id="insert_bcFinanceOrg">
+		INSERT INTO t_bc_finance_org 
+		(f_id,f_org_name,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_class_name) VALUES 
+		(#{id},#{orgName,jdbcType=VARCHAR},sysdate(),str_to_date(#{sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{sys0AddUser},#{sys0UpdUser},#{sys0DelUser},0,#{className,jdbcType=VARCHAR})
+	 </sql>
+    <insert id="insert_bcFinanceOrg" parameterType="BcFinanceOrg">
+		<include refid="bcFinanceOrgBase.insert_bcFinanceOrg"/>
+    </insert>
+    
+	<!-- 批量新增(银行托收金融机构信息)信息 -->
+    <insert id="insert_bcFinanceOrg_Batch" parameterType="java.util.List">
+    	INSERT INTO t_bc_finance_org 
+		(f_id,f_org_name,f_sys0_add_time,f_sys0_upd_time,f_sys0_del_time,f_sys0_add_user,f_sys0_upd_user,f_sys0_del_user,f_sys0_del_state,f_class_name) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.orgName,jdbcType=VARCHAR},sysdate(),str_to_date(#{item.sys0UpdTime,jdbcType=DATE},'%Y-%m-%d %T'),str_to_date(#{item.sys0DelTime,jdbcType=DATE},'%Y-%m-%d %T'),#{item.sys0AddUser},#{item.sys0UpdUser},#{item.sys0DelUser},0,#{item.className,jdbcType=VARCHAR})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(银行托收金融机构信息)信息。 -->
+    <sql id="update_bcFinanceOrg">
+		UPDATE t_bc_finance_org		<trim prefix="SET" prefixOverrides=","> 		<if test="orgName != null and !orgName.equals('') "> ,f_org_name=#{orgName}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('') "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('') "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime == null or sys0UpdTime.equals('')  "> ,f_sys0_upd_time= sysdate() </if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('') "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('') "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('') "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('') "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="sys0DelState != null and !sys0DelState.equals('') "> ,f_sys0_del_state=#{sys0DelState}</if> 		<if test="className != null and !className.equals('') "> ,f_class_name=#{className}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_bcFinanceOrg" parameterType="BcFinanceOrg">
+		<include refid="bcFinanceOrgBase.update_bcFinanceOrg"/>
+    </update>
+    
+    <!-- 批量更新(银行托收金融机构信息)信息。 -->
+    <update id="update_bcFinanceOrg_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_bc_finance_org		<trim prefix="SET" prefixOverrides=","> 		<if test="item.orgName != null and !item.orgName.equals('')  "> ,f_org_name=#{item.orgName}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime == null or item.sys0UpdTime == '' "> ,f_sys0_upd_time= sysdate() </if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.sys0DelState != null and !item.sys0DelState.equals('')  "> ,f_sys0_del_state=#{item.sys0DelState}</if> 		<if test="item.className != null and !item.className.equals('')  "> ,f_class_name=#{item.className}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(银行托收金融机构信息)信息_逻辑删除。 -->
+    <sql id="delete_bcFinanceOrg_Logic">
+		UPDATE t_bc_finance_org		<trim prefix="SET" prefixOverrides=","> 		<if test="orgName != null and !orgName.equals('')  "> ,f_org_name=#{orgName}</if> 		<if test="sys0AddTime != null and !sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="sys0UpdTime != null and !sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime != null and !sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="sys0DelTime == null or sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="sys0AddUser != null and !sys0AddUser.equals('')  "> ,f_sys0_add_user=#{sys0AddUser}</if> 		<if test="sys0UpdUser != null and !sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{sys0UpdUser}</if> 		<if test="sys0DelUser != null and !sys0DelUser.equals('')  "> ,f_sys0_del_user=#{sys0DelUser}</if> 		<if test="className != null and !className.equals('')  "> ,f_class_name=#{className}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_bcFinanceOrg_Logic" parameterType="BcFinanceOrg">
+		<include refid="bcFinanceOrgBase.delete_bcFinanceOrg_Logic"/>
+    </update>
+    
+    <!-- 批量删除(银行托收金融机构信息)信息_逻辑删除 -->
+    <update id="delete_bcFinanceOrg_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_bc_finance_org		<trim prefix="SET" prefixOverrides=","> 		<if test="item.orgName != null and !item.orgName.equals('')  "> ,f_org_name=#{item.orgName}</if> 		<if test="item.sys0AddTime != null and !item.sys0AddTime.equals('')  "> ,f_sys0_add_time=str_to_date(#{item.sys0AddTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0UpdTime != null and !item.sys0UpdTime.equals('')  "> ,f_sys0_upd_time=str_to_date(#{item.sys0UpdTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime != null and !item.sys0DelTime.equals('')  "> ,f_sys0_del_time=str_to_date(#{item.sys0DelTime},'%Y-%m-%d %T')</if> 		<if test="item.sys0DelTime == null or item.sys0DelTime == '' "> ,f_sys0_del_time= sysdate() </if> 		<if test="item.sys0AddUser != null and !item.sys0AddUser.equals('')  "> ,f_sys0_add_user=#{item.sys0AddUser}</if> 		<if test="item.sys0UpdUser != null and !item.sys0UpdUser.equals('')  "> ,f_sys0_upd_user=#{item.sys0UpdUser}</if> 		<if test="item.sys0DelUser != null and !item.sys0DelUser.equals('')  "> ,f_sys0_del_user=#{item.sys0DelUser}</if> 		<if test="item.className != null and !item.className.equals('')  "> ,f_class_name=#{item.className}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update>
+    
+    <!-- 根据序列号删除(银行托收金融机构信息)信息。 -->
+    <sql id="delete_bcFinanceOrg">
+		DELETE FROM t_bc_finance_org WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_bcFinanceOrg" parameterType="java.lang.String">
+		<include refid="bcFinanceOrgBase.delete_bcFinanceOrg"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(银行托收金融机构信息)信息。 -->
+    <delete id="delete_bcFinanceOrg_Batch" parameterType="java.util.List">
+		DELETE FROM t_bc_finance_org WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

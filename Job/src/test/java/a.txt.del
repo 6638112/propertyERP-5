@@ -1,0 +1,22 @@
+location ~* /img/(.+)_(\d+)x(\d+)\.(jpg|gif|png)$ {            
+            set $h $2;
+            set $w $3;
+            if ($h = "0") {
+                rewrite /img/(.+)_(\d+)x(\d+)\.(jpg|gif|png)$ /img/$1.$4 last;
+            }
+            if ($w = "0") {
+                rewrite /img/(.+)_(\d+)x(\d+)\.(jpg|gif|png)$ /img/$1.$4 last;
+            }
+
+            #根据给定的长宽生成缩略图
+            image_filter resize $h $w;
+            #原图最大2M，要裁剪的图片超过2M返回415错误，需要调节参数image_filter_buffer 
+            image_filter_buffer 2M;                          
+            
+            #error_page  415              /img/notfound.jpg;
+            try_files /img/$1.$4  /img/notfound.jpg;	
+        }
+
+        location ~* /img {
+            
+        }

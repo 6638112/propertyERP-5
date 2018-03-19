@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:双乾支付优惠补贴明细表 t_cash_sqpay_bt -->
+<mapper namespace="cashSqpayBtBase">
+	<resultMap type="CashSqpayBt" id="cashSqpayBtBaseMap">
+        <id column="f_id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="t_ebuy_order_f_id" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!--  -->        <result column="f_goal_name" javaType="java.lang.String" property="goalName"/>  <!-- 业务对象名称（注 -->        <result column="f_order_type" javaType="java.lang.Integer" property="orderType"/>  <!-- 订单类型 -->        <result column="f_amount_bt" javaType="java.lang.Long" property="amountBt"/>  <!-- 补贴金额（单位 -->
+	</resultMap>
+	<resultMap type="CashSqpayBt" id="cashSqpayBtExtendMap" extends="cashSqpayBtBaseMap">
+	</resultMap>
+	<resultMap type="CashSqpayBt" id="cashSqpayBtBaseMap_AppendTable">
+        <id column="CSBid" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CSBtEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!--  -->        <result column="CSBgoalName" javaType="java.lang.String" property="goalName"/>  <!-- 业务对象名称（注 -->        <result column="CSBorderType" javaType="java.lang.Integer" property="orderType"/>  <!-- 订单类型 -->        <result column="CSBamountBt" javaType="java.lang.Long" property="amountBt"/>  <!-- 补贴金额（单位 -->
+	</resultMap>
+	<resultMap type="CashSqpayBt" id="cashSqpayBtBaseMap_AppendTable1">
+        <id column="CSB1id" javaType="java.math.BigInteger" property="id"/>  <!--  -->        <result column="CSB1tEbuyOrderFId" javaType="java.math.BigInteger" property="tEbuyOrderFId"/>  <!--  -->        <result column="CSB1goalName" javaType="java.lang.String" property="goalName"/>  <!-- 业务对象名称（注 -->        <result column="CSB1orderType" javaType="java.lang.Integer" property="orderType"/>  <!-- 订单类型 -->        <result column="CSB1amountBt" javaType="java.lang.Long" property="amountBt"/>  <!-- 补贴金额（单位 -->
+	</resultMap>
+	<!-- 公共sql提取  -->
+	<sql id="queryHead">
+		CSB.f_id,CSB.t_ebuy_order_f_id,CSB.f_goal_name,CSB.f_order_type,CSB.f_amount_bt
+	</sql>
+	<sql id="queryHead_AppendTable">
+		CSB.f_id as CSBid,CSB.t_ebuy_order_f_id as CSBtEbuyOrderFId,CSB.f_goal_name as CSBgoalName,CSB.f_order_type as CSBorderType,CSB.f_amount_bt as CSBamountBt
+	</sql>
+	<sql id="queryHead_AppendTable1">
+		CSB1.f_id as CSB1id,CSB1.t_ebuy_order_f_id as CSB1tEbuyOrderFId,CSB1.f_goal_name as CSB1goalName,CSB1.f_order_type as CSB1orderType,CSB1.f_amount_bt as CSB1amountBt
+	</sql>
+	<sql id="querySql">
+        <if test="id != null">  and (CSB.f_id = #{id} ) </if>        <if test="tEbuyOrderFId != null">  and (CSB.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="goalName != null">  and (CSB.f_goal_name = #{goalName} ) </if>        <if test="orderType != null">  and (CSB.f_order_type = #{orderType} ) </if>        <if test="amountBt != null">  and (CSB.f_amount_bt = #{amountBt} ) </if>
+	</sql>
+	<sql id="querySqlDim">
+        <if test="id != null and !id.equals('')  ">  and (CSB.f_id = #{id} ) </if>        <if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  ">  and (CSB.t_ebuy_order_f_id = #{tEbuyOrderFId} ) </if>        <if test="goalName != null and !goalName.equals('')  ">  and (CSB.f_goal_name like CONCAT('%',#{goalName},'%') ) </if>        <if test="orderType != null and !orderType.equals('')  ">  and (CSB.f_order_type = #{orderType} ) </if>        <if test="amountBt != null and !amountBt.equals('')  ">  and (CSB.f_amount_bt = #{amountBt} ) </if>
+	</sql>
+	<sql id="dimCheckSql">
+		<if test="_QUERY_TYPE_IF_DIM == true"><include refid="cashSqpayBtBase.querySqlDim"/></if>
+		<if test="_QUERY_TYPE_IF_DIM == null or  _QUERY_TYPE_IF_DIM == '' or  _QUERY_TYPE_IF_DIM == false or _QUERY_TYPE_IF_DIM != true"><include refid="cashSqpayBtBase.querySql"/></if><!-- 默认精确查询 -->
+		<!-- <if test="_QUERY_TYPE_IF_DIM != true"><include refid="cashSqpayBtBase.querySql"/></if> --><!-- 默认精确查询 -->
+	</sql>
+	<!-- 各种查询附加的查询条件 -->
+	<sql id="busiQueryCondition">
+	    <include refid="cashSqpayBtBase.busiQueryCount"/>
+	</sql>
+	<!-- 查询记录数附加的查询条件 -->
+	<sql id="busiQueryCount">
+	     FROM t_cash_sqpay_bt CSB    	 WHERE 1=1
+	</sql>
+	
+	<!-- 根据条件查询(双乾支付优惠补贴明细表)信息。 -->
+	<sql id="select_cashSqpayBt">
+		SELECT <include refid="cashSqpayBtBase.queryHead"/>
+		<include refid="cashSqpayBtBase.busiQueryCondition"/>
+		<include refid="cashSqpayBtBase.dimCheckSql"/>
+		ORDER BY CSB.f_id DESC
+	</sql>
+	<select id="select_cashSqpayBt" parameterType="java.util.Map" resultMap="cashSqpayBtBase.cashSqpayBtExtendMap">
+		<include refid="cashSqpayBtBase.select_cashSqpayBt"/>
+	</select>
+	
+	<!-- 根据条件分页查询(双乾支付优惠补贴明细表)信息  -->
+	<sql id="select_cashSqpayBt_withPage">
+		SELECT <include refid="cashSqpayBtBase.queryHead"/>
+		<include refid="cashSqpayBtBase.busiQueryCondition"/>
+		<include refid="cashSqpayBtBase.dimCheckSql"/>
+		ORDER BY f_id DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</sql>
+	<select id="select_cashSqpayBt_withPage" resultMap="cashSqpayBtBase.cashSqpayBtExtendMap" parameterType="java.util.Map">
+		<include refid="cashSqpayBtBase.select_cashSqpayBt_withPage"/>
+	</select>
+
+	<!-- 根据序列号查询某个(双乾支付优惠补贴明细表)信息。 -->
+	<sql id="select_cashSqpayBt_bySeqId">
+		SELECT <include refid="cashSqpayBtBase.queryHead"/>
+		<include refid="cashSqpayBtBase.busiQueryCondition"/>
+		 and CSB.f_id = #{_parameter}
+	</sql>
+	<select id="select_cashSqpayBt_bySeqId" parameterType="java.math.BigInteger" resultMap="cashSqpayBtBase.cashSqpayBtBaseMap">
+		<include refid="cashSqpayBtBase.select_cashSqpayBt_bySeqId"/>
+	</select>
+	
+	<!-- 根据条件查询满足条件的(双乾支付优惠补贴明细表)记录数  -->
+	<sql id="select_cashSqpayBt_count">
+		SELECT COUNT(*)
+		<include refid="cashSqpayBtBase.busiQueryCount"/>
+		<include refid="cashSqpayBtBase.dimCheckSql"/>
+	</sql>
+	<select id="select_cashSqpayBt_count" resultType="java.lang.Integer">
+		<include refid="cashSqpayBtBase.select_cashSqpayBt_count"/>
+	</select>
+	
+	 <!-- 往(双乾支付优惠补贴明细表)新增一条记录。 -->
+	 <sql id="insert_cashSqpayBt">
+		INSERT INTO t_cash_sqpay_bt 
+		(f_id,t_ebuy_order_f_id,f_goal_name,f_order_type,f_amount_bt) VALUES 
+		(#{id},#{tEbuyOrderFId},#{goalName,jdbcType=VARCHAR},#{orderType},#{amountBt})
+	 </sql>
+    <insert id="insert_cashSqpayBt" parameterType="CashSqpayBt">
+		<include refid="cashSqpayBtBase.insert_cashSqpayBt"/>
+    </insert>
+    
+	<!-- 批量新增(双乾支付优惠补贴明细表)信息 -->
+    <insert id="insert_cashSqpayBt_Batch" parameterType="java.util.List">
+    	INSERT INTO t_cash_sqpay_bt 
+		(f_id,t_ebuy_order_f_id,f_goal_name,f_order_type,f_amount_bt) VALUES  
+		<foreach item="item" collection="list"  separator=","><!-- open="("  close=")" -->
+		(#{item.id},#{item.tEbuyOrderFId},#{item.goalName,jdbcType=VARCHAR},#{item.orderType},#{item.amountBt})
+		</foreach>
+    </insert>
+    
+    <!-- 更新(双乾支付优惠补贴明细表)信息。 -->
+    <sql id="update_cashSqpayBt">
+		UPDATE t_cash_sqpay_bt		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('') "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="goalName != null and !goalName.equals('') "> ,f_goal_name=#{goalName}</if> 		<if test="orderType != null and !orderType.equals('') "> ,f_order_type=#{orderType}</if> 		<if test="amountBt != null and !amountBt.equals('') "> ,f_amount_bt=#{amountBt}</if>		</trim>		WHERE f_id=#{id}
+    </sql>
+	<update id="update_cashSqpayBt" parameterType="CashSqpayBt">
+		<include refid="cashSqpayBtBase.update_cashSqpayBt"/>
+    </update>
+    
+    <!-- 批量更新(双乾支付优惠补贴明细表)信息。 -->
+    <update id="update_cashSqpayBt_Batch" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_cash_sqpay_bt		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.goalName != null and !item.goalName.equals('')  "> ,f_goal_name=#{item.goalName}</if> 		<if test="item.orderType != null and !item.orderType.equals('')  "> ,f_order_type=#{item.orderType}</if> 		<if test="item.amountBt != null and !item.amountBt.equals('')  "> ,f_amount_bt=#{item.amountBt}</if>		</trim>		WHERE f_id=#{item.id}
+    	</foreach>
+    </update>
+
+   <!-- 根据序列号删除(双乾支付优惠补贴明细表)信息_逻辑删除。 -->
+    <!-- <sql id="delete_cashSqpayBt_Logic">
+		UPDATE t_cash_sqpay_bt		<trim prefix="SET" prefixOverrides=","> 		<if test="tEbuyOrderFId != null and !tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{tEbuyOrderFId}</if> 		<if test="goalName != null and !goalName.equals('')  "> ,f_goal_name=#{goalName}</if> 		<if test="orderType != null and !orderType.equals('')  "> ,f_order_type=#{orderType}</if> 		<if test="amountBt != null and !amountBt.equals('')  "> ,f_amount_bt=#{amountBt}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{id}
+    </sql>
+    <update id="delete_cashSqpayBt_Logic" parameterType="CashSqpayBt">
+		<include refid="cashSqpayBtBase.delete_cashSqpayBt_Logic"/>
+    </update> -->
+    
+    <!-- 批量删除(双乾支付优惠补贴明细表)信息_逻辑删除 -->
+    <!-- <update id="delete_cashSqpayBt_Logic_Batch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";" open="" close="">
+		UPDATE t_cash_sqpay_bt		<trim prefix="SET" prefixOverrides=","> 		<if test="item.tEbuyOrderFId != null and !item.tEbuyOrderFId.equals('')  "> ,t_ebuy_order_f_id=#{item.tEbuyOrderFId}</if> 		<if test="item.goalName != null and !item.goalName.equals('')  "> ,f_goal_name=#{item.goalName}</if> 		<if test="item.orderType != null and !item.orderType.equals('')  "> ,f_order_type=#{item.orderType}</if> 		<if test="item.amountBt != null and !item.amountBt.equals('')  "> ,f_amount_bt=#{item.amountBt}</if> 		,f_sys0_del_state= 1 		</trim>		WHERE 1=1  		AND f_sys0_del_state = 0 		AND f_id=#{item.id}
+    	</foreach>
+    </update> -->
+    
+    <!-- 根据序列号删除(双乾支付优惠补贴明细表)信息。 -->
+    <sql id="delete_cashSqpayBt">
+		DELETE FROM t_cash_sqpay_bt WHERE f_id=#{_parameter}
+    </sql>
+    <delete id="delete_cashSqpayBt" parameterType="java.lang.String">
+		<include refid="cashSqpayBtBase.delete_cashSqpayBt"/>
+    </delete>
+    
+    <!-- 根据序列号批量删除(双乾支付优惠补贴明细表)信息。 -->
+    <delete id="delete_cashSqpayBt_Batch" parameterType="java.util.List">
+		DELETE FROM t_cash_sqpay_bt WHERE 1=1 AND f_id IN 
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+    </delete>
+    
+</mapper>

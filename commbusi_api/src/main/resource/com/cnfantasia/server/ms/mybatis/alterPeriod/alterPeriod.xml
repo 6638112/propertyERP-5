@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- tblNameCN:收益中心 -->
+<mapper namespace="alterPeriod">
+
+	<resultMap type="com.cnfantasia.server.commbusi.alterPeriod.entity.AlterPeroidDetailWithItem" id="AlterPeroidDetailWithItemMap">
+		<id column="realRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!--  -->
+		<result column="APDDid" javaType="java.math.BigInteger" property="id"/>
+        <result column="APDDtRealRoomId" javaType="java.math.BigInteger" property="tRealRoomId"/>  <!-- 真实房间id -->
+        <result column="APDDbillMonthStart" javaType="java.lang.String" property="billMonthStart"/>  <!-- 物业费起始时间 -->
+        <result column="APDDlatefeeStart" javaType="java.lang.String" property="latefeeStart"/>  <!-- 滞纳金起算时间 -->
+        <result column="APDDlatefeeAmount" javaType="java.lang.Long" property="latefeeAmount"/>  <!-- 滞纳金金额（分） -->
+        <result column="APDDtAlterPeriodCfgId" javaType="java.math.BigInteger" property="tAlterPeriodCfgId"/>  <!-- 选择周期配置id -->
+        <result column="APDDsys0AddTime" javaType="java.lang.String" property="sys0AddTime"/>  <!--  -->
+        <result column="APDDsys0UpdTime" javaType="java.lang.String" property="sys0UpdTime"/>  <!--  -->
+        <result column="APDDsys0DelTime" javaType="java.lang.String" property="sys0DelTime"/>  <!--  -->
+        <result column="APDDsys0AddUser" javaType="java.math.BigInteger" property="sys0AddUser"/>  <!--  -->
+        <result column="APDDsys0UpdUser" javaType="java.math.BigInteger" property="sys0UpdUser"/>  <!--  -->
+        <result column="APDDsys0DelUser" javaType="java.math.BigInteger" property="sys0DelUser"/>  <!--  -->
+        <result column="APDDsys0DelState" javaType="java.lang.Integer" property="sys0DelState"/>  <!-- 记录状态 -->
+		<result column="gbId" javaType="java.math.BigInteger" property="gbId"/>
+		<result column="gbName" javaType="java.lang.String" property="gbName"/>
+		<result column="bName" javaType="java.lang.String" property="bName"/>
+		<result column="unitName" javaType="java.lang.String" property="unitName"/>
+		<result column="roomNumTail" javaType="java.lang.String" property="roomNumTail"/>
+		<collection property="alterRoomHasFeeItemList" resultMap="alterRoomHasFeeItemBase.alterRoomHasFeeItemBaseMap_AppendTable" />
+	</resultMap>
+	<!-- 查询门牌对应的需要进行计算滞纳金的费用总和 -->
+	<select id="getNeedCalculateLatefeeSum" parameterType="java.math.BigInteger" resultType="java.lang.Long">
+		SELECT
+		IFNULL(SUM(arhfi.f_amount), 0)
+		FROM
+			t_alter_room_has_fee_item arhfi
+		INNER JOIN t_alter_period_fee_item apfi ON apfi.f_id = arhfi.t_alter_period_fee_item_id
+		WHERE
+			apfi.f_latefee_status = 1
+		AND arhfi.t_real_room_id = #{realRoomId}
+		AND apfi.f_sys0_del_state = 0
+		AND arhfi.f_sys0_del_state = 0
+	</select>
+
+	<!--查询每月需缴费的基数和-->
+	<select id="getBasicSumAmt" parameterType="java.math.BigInteger" resultType="java.lang.Long">
+		SELECT
+		IFNULL(SUM(arhfi.f_amount), 0)
+		FROM
+		t_alter_room_has_fee_item arhfi
+		INNER JOIN t_alter_period_fee_item apfi ON apfi.f_id = arhfi.t_alter_period_fee_item_id
+		WHERE
+		arhfi.t_real_room_id = #{realRoomId}
+		AND apfi.f_sys0_del_state = 0
+		AND arhfi.f_sys0_del_state = 0
+	</select>
+
+	<resultMap id="getAlterPeriodDetailMap" type="com.cnfantasia.server.api.plotproperty.entity.PropertyAlterBillInfo">
+		<id column="realRoomId" javaType="java.math.BigInteger" property="realRoomId"/>
+		<id column="latefeeAmount" javaType="java.math.BigDecimal" property="latefeeAmount"/>
+		<id column="billMonthStart" javaType="java.lang.String" property="billMonthStart"/>
+		<id column="latefeeStart" javaType="java.lang.String" property="latefeeStart"/>
+		<id column="periodMonths" javaType="java.lang.String" property="periodMonths"/>
+		<id column="address" javaType="java.lang.String" property="address"/>
+		<id column="propertyPeriodType" javaType="java.lang.Integer" property="propertyPeriodType"/>
+		<id column="isPrefer" javaType="java.lang.Integer" property="isPrefer"/>
+		<id column="proprietorName" javaType="java.lang.String" property="proprietorName"/>
+		<collection property="alterFeeItems"  ofType="com.cnfantasia.server.api.plotproperty.entity.AlterFeeItem">
+			<result column="name" javaType="java.lang.String" property="name"/>
+			<result column="totalPrice" javaType="java.math.BigDecimal" property="totalPrice"/>
+		</collection>
+	</resultMap>
+
+	<!--查询选择周期的详情-->
+	<select id="getAlterPeriodDetail" parameterType="java.math.BigInteger" resultMap="getAlterPeriodDetailMap">
+		SELECT
+		APDD.t_real_room_id AS realRoomId,
+		APDD.f_latefee_amount AS latefeeAmount,
+		DATE_FORMAT(APDD.f_bill_month_start, '%Y-%m') AS billMonthStart,
+		APDD.f_latefee_start AS latefeeStart,
+		GB.f_period_months AS periodMonths,
+		GB.f_property_period_type AS propertyPeriodType,
+		GB.f_is_prefer AS isPrefer,
+		<!-- CONCAT(AC.f_name,GB.f_name," ",B.f_name,"-",RR.f_num) AS address, -->
+		CONCAT(GB.f_name," ",B.f_name,"-",RR.f_num) AS address,
+		APFI.f_name AS name,
+		ARHFI.f_amount AS totalPrice,
+		PP.f_name AS proprietorName
+		FROM
+		t_alter_period_data_detail APDD
+		INNER JOIN t_alter_period_cfg APC ON APDD.t_alter_period_cfg_id = APC.f_id AND APDD.f_sys0_del_state = 0 AND APC.f_sys0_del_state = 0
+		INNER JOIN t_alter_period_fee_item APFI ON APFI.t_gb_id = APC.t_gb_id AND APFI.f_sys0_del_state = 0
+		INNER JOIN t_group_building GB ON GB.f_id = APC.t_gb_id AND GB.f_sys0_del_state = 0
+		INNER JOIN t_alter_room_has_fee_item ARHFI ON ARHFI.t_alter_period_fee_item_id = APFI.f_id AND ARHFI.f_sys0_del_state = 0 AND ARHFI.t_real_room_id = #{realRoomId}
+		INNER JOIN t_real_room RR ON RR.f_id = APDD.t_real_room_id AND RR.f_sys0_del_state = 0
+		INNER JOIN t_building B ON B.f_id = RR.t_building_f_id AND B.f_sys0_del_state = 0
+		INNER JOIN t_address_block AB ON AB.f_id = GB.t_block_f_id AND AB.f_sys0_del_state = 0
+		<!-- INNER JOIN t_address_city AC ON AC.f_id = AB.t_city_f_id AND AC.f_sys0_del_state = 0 -->
+		INNER JOIN  t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id
+		WHERE
+		APDD.t_real_room_id = #{realRoomId};
+	</select>
+
+	<!-- 获取随机立减金额 -->
+	<select id="select_preferential_random" statementType="CALLABLE" parameterType="java.util.Map" resultType="java.lang.Long">
+		<![CDATA[
+		    {CALL sp_get_coupon_property(#{userId,mode=IN,jdbcType=BIGINT}, #{realRoomId,mode=IN,jdbcType=BIGINT},#{month,mode=IN,jdbcType=INTEGER}, #{amt,mode=IN,jdbcType=INTEGER})}
+		]]>
+	</select>
+	<select id="alterPeriodCfgList" parameterType="java.util.Map" resultType="map">
+		SELECT apc.f_id apcId,gb.f_id gbId, gb.f_name gbName FROM t_group_building gb
+		LEFT JOIN t_alter_period_cfg apc on apc.t_gb_id = gb.f_id
+		<!-- <if test="isPmUser !=null and isPmUser == 1" >
+			管理处账号只能看到它所管辖的小区，所以用inner join
+			inner join t_property_management PM on PM.f_id=gb.t_property_management_f_id and PM.f_sys0_del_state=0
+			inner join t_property_management_has_oms_user PMHOU on PM.f_id = PMHOU.t_property_management_f_id and PMHOU.f_sys0_del_state=0
+		</if> -->
+		left JOIN t_property_company PC on gb.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+		where gb.f_property_period_type = 2 and gb.f_sys0_del_state = 0 and gb.f_check_status in (1,9) AND gb.f_propfee_canpay = 1
+		<!-- <if test="isAdmin ==null or isAdmin == 0">
+			<if test="isPmUser !=null and isPmUser == 0" >and PC.f_admin_id=#{adminId}</if>
+			<if test="isPmUser !=null and isPmUser == 1" >and PMHOU.t_oms_user_f_id=#{adminId}</if>
+		</if> -->
+		<if test="gbName != null and gbName != ''">
+			AND gb.f_name LIKE CONCAT('%',#{gbName}, '%')
+		</if>
+		<include refid="permiOos.dataPermissionCondition" />
+		<if test="_begin != null and _length != null">
+			limit #{_begin}, #{_length}
+		</if>
+	</select>
+
+	<select id="alterPeriodCfgCount" parameterType="java.util.Map" resultType="integer">
+		SELECT count(1) FROM t_group_building gb
+		LEFT JOIN t_alter_period_cfg apc on apc.t_gb_id = gb.f_id and apc.f_sys0_del_state = 0
+		<!-- <if test="isPmUser !=null and isPmUser == 1" >
+			管理处账号只能看到它所管辖的小区，所以用inner join
+			inner join t_property_management PM on PM.f_id=gb.t_property_management_f_id and PM.f_sys0_del_state=0
+			inner join t_property_management_has_oms_user PMHOU on PM.f_id = PMHOU.t_property_management_f_id and PMHOU.f_sys0_del_state=0
+		</if> -->
+		left JOIN t_property_company PC on gb.t_property_company_f_id=PC.f_id AND PC.f_sys0_del_state=0
+		where gb.f_property_period_type = 2 and gb.f_sys0_del_state = 0 and gb.f_check_status in (1,9) AND gb.f_propfee_canpay = 1
+		<!-- <if test="isAdmin ==null or isAdmin == 0">
+			<if test="isPmUser !=null and isPmUser == 0" >and PC.f_admin_id=#{adminId}</if>
+			<if test="isPmUser !=null and isPmUser == 1" >and PMHOU.t_oms_user_f_id=#{adminId}</if>
+		</if> -->
+		<if test="gbName != null and gbName != ''">
+			AND gb.f_name LIKE CONCAT('%',#{gbName}, '%')
+		</if>
+		<include refid="permiOos.dataPermissionCondition" />
+	</select>
+
+	<select id="getRoomAlterPeroidCount" parameterType="java.util.Map" resultType="integer">
+		SELECT count(1)
+		FROM t_group_building gb
+		LEFT JOIN t_building b ON b.t_group_building_f_id = gb.f_id AND b.f_sys0_del_state = 0
+		LEFT JOIN t_real_room rr ON rr.t_building_f_id = b.f_id AND rr.f_sys0_del_state = 0
+		INNER JOIN t_alter_period_data_detail pdd on pdd.t_real_room_id = rr.f_id and pdd.f_sys0_del_state = 0
+		WHERE gb.f_sys0_del_state = 0 AND gb.f_id = #{gbId}
+		<if test="bName != null and bName != ''">
+			AND b.f_name like concat('%', #{bName}, '%')
+		</if>
+		<if test="unitName != null and unitName != ''">
+			AND rr.f_unit_name like concat('%', #{unitName}, '%')
+		</if>
+		<if test="roomNum != null and roomNum != ''">
+			AND rr.f_num_tail like concat('%', #{roomNum}, '%')
+		</if>
+	</select>
+	<select id="getRoomAlterPeroidDetail" parameterType="java.util.Map" resultType="com.cnfantasia.server.commbusi.alterPeriod.entity.RoomAlterPeroidDetail">
+		SELECT gb.f_id gbId -- 小区ID
+  				,rr.f_id realRoomId
+				,pdd.f_id alterPeriodDataId
+				,gb.f_name gbName -- 小区名
+				,b.f_name bName -- 楼栋
+				,rr.f_unit_name unitName -- 单元
+				,rr.f_num_tail roomNumTail -- 房号
+  				,date_format(pdd.f_bill_month_start,'%Y-%m-%d %T') billMonthStart
+  				,date_format(pdd.f_latefee_start,'%Y-%m-%d %T') latefeeStart
+  				,IFNULL(pdd.f_latefee_amount,0) latefeeAmount
+		FROM t_group_building gb
+		LEFT JOIN t_building b ON b.t_group_building_f_id = gb.f_id AND b.f_sys0_del_state = 0
+		LEFT JOIN t_real_room rr ON rr.t_building_f_id = b.f_id AND rr.f_sys0_del_state = 0
+		INNER JOIN t_alter_period_data_detail pdd on pdd.t_real_room_id = rr.f_id and pdd.f_sys0_del_state = 0
+		WHERE gb.f_sys0_del_state = 0 AND gb.f_id = #{gbId}
+		<if test="bName != null and bName != ''">
+			AND b.f_name like concat('%', #{bName}, '%')
+		</if>
+		<if test="unitName != null and unitName != ''">
+			AND rr.f_unit_name like concat('%', #{unitName}, '%')
+		</if>
+		<if test="roomNum != null and roomNum != ''">
+			AND rr.f_num_tail like concat('%', #{roomNum}, '%')
+		</if>
+		ORDER BY pdd.f_id
+	</select>
+	
+	<select id="getAlterPeroidDetailWithItemList" parameterType="java.util.Map" resultMap="AlterPeroidDetailWithItemMap">
+		select  
+			rr.f_id realRoomId,
+			<include refid="alterPeriodDataDetailBase.queryHead_AppendTable" />,
+			gb.f_id gbId, gb.f_name gbName, b.f_name bName, rr.f_unit_name unitName, rr.f_num_tail roomNumTail,
+			<include refid="alterRoomHasFeeItemBase.queryHead_AppendTable" />
+		from t_group_building gb 
+		 inner join t_building b on b.t_group_building_f_id = gb.f_id and gb.f_sys0_del_state = 0 and b.f_sys0_del_state = 0
+		 inner join t_real_room rr on b.f_id = rr.t_building_f_id and rr.f_sys0_del_state = 0
+		 left join t_alter_period_data_detail APDD on APDD.t_real_room_id = rr.f_id and APDD.f_sys0_del_state = 0
+		 left join t_alter_room_has_fee_item ARHFI on ARHFI.t_real_room_id = APDD.t_real_room_id and ARHFI.f_sys0_del_state = 0
+		<where>
+			gb.f_id = #{gbId} 
+		    and CONCAT(IFNULL(b.f_name, ''), '!', IFNULL(rr.f_unit_name,''), '!', IFNULL(rr.f_num_tail, '')) in  
+			<foreach collection="alterItemList" item="iDetail" index="index" open="(" separator="," close=")">
+				CONCAT(#{iDetail.bName},'!', #{iDetail.unitName},'!', #{iDetail.roomNumTail})
+		    </foreach>
+	    </where>
+	</select>
+
+	<select id="getAlterPeriodItemsFee" parameterType="java.math.BigInteger" resultType="java.util.Map">
+		select
+			APFI.f_name name,f_amount amount
+		from t_alter_room_has_fee_item ARHFI
+			inner join t_alter_period_fee_item APFI
+			on ARHFI.t_alter_period_fee_item_id = APFI.f_id
+		where  ARHFI.t_real_room_id = #{realRoomId}
+		and ARHFI.f_sys0_del_state = 0 and APFI.f_sys0_del_state = 0;
+	</select>
+
+	<select id="getLateFeeByRealRoomId" parameterType="java.math.BigInteger" resultType="java.lang.Long">
+		SELECT APDD.f_latefee_amount AS lateFeeAmount FROM t_alter_period_data_detail APDD WHERE APDD.t_real_room_id = #{realRoomId};
+	</select>
+
+	<select id="getRoomStrByGbId" parameterType="java.math.BigInteger" resultType="java.util.Map">
+		SELECT
+		CONCAT(
+		IFNULL(b.f_name, ''),
+		"-",
+		IFNULL(rr.f_unit_name, ''),
+		"-",
+		IFNULL(rr.f_num_tail, '')
+		) AS room,
+		rr.f_id AS realRoomId
+		FROM t_group_building gb
+		INNER JOIN t_building b ON b.t_group_building_f_id = gb.f_id AND b.f_sys0_del_state = 0
+		INNER JOIN t_real_room rr ON rr.t_building_f_id = b.f_id AND rr.f_sys0_del_state = 0
+		WHERE gb.f_sys0_del_state = 0 AND gb.f_id = #{gbId}
+	</select>
+</mapper>

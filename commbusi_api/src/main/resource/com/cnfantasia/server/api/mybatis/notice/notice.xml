@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 物业公告模块 -->
+<mapper namespace="notice">
+	<!-- zzh-物业公共信息实体类 -->
+	<resultMap type="com.cnfantasia.server.api.notice.entity.NoticeBean" id="noticeMap">
+		 <id column="f_id" jdbcType="VARCHAR" property="id"/>
+		 <result column="f_title" jdbcType="VARCHAR" property="title"/>
+         <result column="f_content" jdbcType="VARCHAR" property="content"/>
+         <result column="f_time" jdbcType="TIMESTAMP" property="noticeDate"/>
+         <result column="f_pic_url" jdbcType="VARCHAR" property="picPath"/>
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.notice.nuomi.entity.NoticeMonth" id="noticeListForNuomiMap">
+		 <id column="monthTitle" jdbcType="VARCHAR" property="title"/>
+		 <association property="noticeItems" resultMap="noticeItemMap" />
+	</resultMap>
+	
+	<resultMap type="com.cnfantasia.server.api.notice.nuomi.entity.NoticeItem" id="noticeItemMap">
+		 <result column="id" jdbcType="VARCHAR" property="id"/>
+		 <result column="title" jdbcType="VARCHAR" property="title"/>
+		 <result column="content" jdbcType="VARCHAR" property="content"/>
+		 <result column="time" jdbcType="VARCHAR" property="time"/>
+	</resultMap>
+	
+	<sql id="select_System_Message_List_base">
+		FROM t_user U
+		LEFT JOIN t_user_has_t_message UHTM ON U.f_id = UHTM.t_user_f_id
+				AND UHTM.f_sys0_del_state = 0
+				AND UHTM.f_user_type = 1 <!-- 用户类别=={"1":"注册用户","2":"临时用户"} -->
+				AND UHTM.f_user_room_id = CASE WHEN ISNULL(UHTM.f_user_room_id) THEN UHTM.f_user_room_id ELSE U.f_default_room_id END
+		INNER JOIN t_message M ON UHTM.t_message_f_id = M.f_id AND M.f_sys0_del_state = 0 AND M.f_time <![CDATA[<=]]> NOW() AND IF(M.f_type=3, M.f_send_state=1, TRUE)
+		WHERE 1=1
+		AND U.f_id = #{userId}
+		AND ( ( ISNULL(UHTM.f_id) AND  M.f_visible_type = 2 ) <!-- 可见范围标识=={"2":"全部用户可见"} -->
+			OR (NOT ISNULL(UHTM.f_id)) 
+			)
+	</sql>
+	
+	<!-- <sql id="select_System_Message_List_base">
+		FROM t_user_has_t_message UHTM 
+			INNER JOIN t_message M ON UHTM.t_message_f_id = M.f_id AND M.f_sys0_del_state = 0
+			INNER JOIN t_user U ON U.f_id = UHTM.t_user_f_id
+				AND U.f_sys0_del_state = 0
+				AND U.f_id = #{userId}
+		WHERE 1=1
+		AND UHTM.f_sys0_del_state = 0
+		AND UHTM.f_user_type = 1 用户类别=={"1":"注册用户","2":"临时用户"}
+		AND UHTM.f_user_room_id = CASE WHEN ISNULL(UHTM.f_user_room_id) THEN UHTM.f_user_room_id ELSE U.f_default_room_id END
+	</sql> -->
+		
+	<sql id="selectAllNoticeByUserid_comm">
+		<include refid="select_System_Message_List_base"/>
+		AND M.f_type = 3 <!-- "3":"物业公告" syl-add-2014-11-25 15:48:55 -->
+	</sql>
+	<select id="selectAllNoticeByUserid" parameterType="java.util.Map" resultMap="noticeMap">
+		SELECT 
+		    M.f_id,M.f_title,M.f_content,M.f_time,M.f_pic_url
+		<include refid="selectAllNoticeByUserid_comm"/>
+		ORDER BY M.f_time DESC
+		<![CDATA[ LIMIT #{_begin},#{_length} ]]>
+	</select>
+	<select id="countAllNoticeByUserid" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		<include refid="selectAllNoticeByUserid_comm"/>
+	</select>
+	<select id="selectmobilePhone" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT TPM.f_tel FROM t_property_management TPM
+		WHERE TPM.f_id=#{pcId}
+	</select>
+	<select id="selectfornewuser" parameterType="java.util.Map" resultMap="noticeMap">
+		SELECT 
+			M.f_id,M.f_title,M.f_content,M.f_time,M.f_pic_url
+		FROM t_message M
+		INNER JOIN t_message_group MG ON MG.t_message_f_id = M.f_id
+		INNER JOIN t_group_building GB ON GB.f_id = MG.f_groupbuilding_id
+		WHERE GB.f_id=#{gbId} AND M.f_type = 3 and MG.f_sys0_del_state = 0 and M.f_sys0_del_state = 0
+		ORDER BY M.f_id DESC LIMIT 0,5
+	</select>
+	
+		
+	
+	
+	<!-- 消息实体 -->
+	<!-- <resultMap type="com.cnfantasia.server.api.user.entity.UserHasTMessageEntity" id="userHasTMessageEntity_Map_Append" extends="userHasTMessageBase.userHasTMessageBaseMap_AppendTable">
+		column="{message_f_id=userHasTMessage_t_message_f_id}" javaType="Message"
+		<association  property="message" resultMap="messageBase.messageBaseMap_AppendTable" />具体消息
+	</resultMap> -->
+	<resultMap type="com.cnfantasia.server.api.notice.entity.MessageWithReadStatusEntity" id="userHasTMessageEntity_Map_Append" extends="messageBase.messageBaseMap_AppendTable">
+		<result column="ext_readStatus" javaType="java.lang.Integer" property="readStatus" /> <!-- 消息状态=={"0":"未读","1":"已读"} -->
+	</resultMap>
+	<!-- 查询系统消息列表 -->
+	<sql id="select_System_Message_List_comm">
+		<include refid="select_System_Message_List_base"/>
+		AND M.f_type != 3 AND M.f_type &lt; 1000<!-- 消息类型=={"3":"物业公告"} 除了物业公告就都是系统消息 -->
+	</sql>
+	<select id="select_System_Message_List_Page" parameterType="java.util.Map" resultMap="userHasTMessageEntity_Map_Append">
+		SELECT <!-- <include refid="userHasTMessageBase.queryHead_AppendTable"/>, -->
+			<include refid="messageBase.queryHead_AppendTable"/>
+			,UHTM.f_status AS ext_readStatus
+		<include refid="select_System_Message_List_comm"/>
+		ORDER BY M.f_id DESC
+	</select>
+	<select id="select_System_Message_List_Count" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(0) 
+		<include refid="select_System_Message_List_comm"/>
+	</select>
+	
+	<!-- 根据消息Id查询所属省市区信息 -->
+	<select id="selectAddresssByMessageId" resultMap="noticeMap" parameterType="java.math.BigInteger">
+		select  p.f_name province,
+				c.f_name city,
+				b.f_name block,
+				gb.f_name groupbuilding 
+		from
+		    t_address_province p
+		        inner join
+		    t_address_city c ON p.f_id = c.t_province_f_id
+		        inner join
+		    t_address_block b ON c.f_id = b.t_city_f_id
+				inner join 
+			t_group_building gb on b.f_id = gb.t_block_f_id
+				inner join 
+			t_message_group mg on gb.f_id = mg.f_groupbuilding_id
+		where mg.t_message_f_id = #{msgId}
+		order by p.f_name,c.f_name,b.f_name,gb.f_name
+	</select>
+	
+	<!-- 根据消息Id查询所属小区 -->
+	<select id="select_groupBuilding_by_msgId" resultMap="messageGroupBase.messageGroupBaseMap_AppendTable"  parameterType="java.math.BigInteger">
+		SELECT <include refid="messageGroupBase.queryHead_AppendTable"/>
+		FROM t_message_group MG
+    	WHERE 1=1 
+    	AND MG.f_sys0_del_state = 0
+    	AND MG.t_message_f_id = #{_parameter}
+	</select>
+	
+	<!-- 根据用户Id和消息Id更改消息状态 -->
+	<update id="updateMsgStatus_ByUserMsgId">
+		UPDATE t_user_has_t_message SET f_status=#{state}
+			,f_sys0_upd_time = SYSDATE()
+		WHERE 1=1
+		AND f_sys0_del_state = 0
+		AND t_user_f_id=#{userId} ,t_message_f_id=#{msgId}
+	</update>
+	
+	<!-- 根据用户Id和消息Id删除消息 -->
+	<update id="deleteMsg_ByUserMsgId" parameterType="java.util.Map">
+		UPDATE t_user_has_t_message
+			SET f_sys0_del_state = 1,f_sys0_del_time = SYSDATE()
+		WHERE 1=1
+		AND f_sys0_del_state = 0
+		AND t_user_f_id=#{userId} ,t_message_f_id=#{msgId}
+	</update>
+
+	<!-- 根据虚拟门牌Id查询门牌信息 增加返回小区的点召唤的信息。 -->
+	<select id="select_room_bySeqId_WithSummon" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		GB.f_sign_status AS signStatus
+		,PM.f_tel AS tel
+		,(	SELECT CASE WHEN COUNT(S.f_id)>0 THEN 1 ELSE 2 END
+			FROM t_support S WHERE
+			S.f_target_type = 91 <!-- "91":"小区召唤" -->
+			AND S.f_user_id = #{userId}
+			AND GB.f_id = S.f_target_id
+			AND S.f_sys0_del_state = 0
+		) AS haveSummon <!-- 是否已经点召唤，1是2否 -->
+		<!-- ,CASE WHEN ISNULL(S.f_id) THEN 2 ELSE 1 END AS ext_haveSummon  -->
+		FROM t_room R
+		LEFT JOIN t_real_room RR ON R.t_real_room_f_id = RR.f_id  AND RR.f_sys0_del_state = 0
+		LEFT JOIN t_property_proprietor PP ON PP.f_id = RR.t_property_proprietor_f_id AND PP.f_sys0_del_state = 0
+		INNER JOIN t_building B ON RR.t_building_f_id = B.f_id  AND B.f_sys0_del_state = 0
+		INNER JOIN t_group_building GB ON B.t_group_building_f_id = GB.f_id  AND GB.f_sys0_del_state = 0
+		LEFT JOIN t_property_management PM ON PM.f_id = GB.t_property_management_f_id AND PM.f_sys0_del_state = 0
+		WHERE 1 = 1
+		AND R.f_sys0_del_state = 0
+		AND R.f_id = #{roomId}
+	</select>
+	
+	<sql id="select_notice_nuomi_comm">
+		FROM
+			t_nuomi_gb NG
+			INNER JOIN t_message_group MG ON MG.f_groupbuilding_id = NG.t_group_building_f_id
+			AND MG.f_sys0_del_state = 0
+			INNER JOIN t_message M ON M.f_id = MG.t_message_f_id
+			AND M.f_type = 3
+			AND M.f_send_state = 1
+			AND M.f_sys0_del_state = 0
+		WHERE
+			NG.f_city_name = #{city}
+			AND NG.f_block_name = #{block}
+			AND NG.f_gb_name = #{gbName}
+			AND NG.f_sys0_del_state = 0
+	</sql>
+	
+	<!-- 查询公告列表（糯米） -->
+	<select id="selectNoticeListForNuomi" parameterType="java.util.Map" resultMap="noticeListForNuomiMap">
+		SELECT
+			DATE_FORMAT(M.f_time, '%Y.%c.%d') `monthTitle`,
+			M.f_id `id`,
+			M.f_title `title`,
+			M.f_content `content`,
+			DATE_FORMAT(M.f_time, '%m.%d %H:%i') `time`
+		<include refid="select_notice_nuomi_comm"></include>
+			AND EXISTS (
+				SELECT
+					1
+				FROM
+					(
+						SELECT
+							DATE_FORMAT(M.f_time, '%Y.%c.%d') `dayTitle`,
+							MAX(M.f_id) f_id_max,
+							min(M.f_id) f_id_min
+						<include refid="select_notice_nuomi_comm"></include>
+						group by dayTitle
+					    order by M.f_time DESC 
+					    <if test="_begin != null and _length != '' "><![CDATA[ LIMIT #{_begin},#{_length} ]]> </if>
+					) t
+				WHERE
+					(
+						M.f_id BETWEEN t.f_id_min
+						AND t.f_id_max
+					)
+			)
+		ORDER BY
+			M.f_time DESC
+	</select>
+	
+	<!-- 查询公告数量（糯米） -->
+	<select id="selectNoticeCountForNuomi" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			COUNT(
+				DISTINCT DATE_FORMAT(M.f_time, '%Y.%c.%d')
+			)
+		<include refid="select_notice_nuomi_comm"></include>
+	</select>
+	
+</mapper>

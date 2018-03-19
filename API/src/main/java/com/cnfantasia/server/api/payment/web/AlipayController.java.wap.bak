@@ -1,0 +1,272 @@
+/**   
+* Filename:    AlipayController.java   
+* @version:    1.0  
+* Create at:   2014年12月4日 上午8:02:19   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年12月4日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.payment.web;
+
+import java.io.PrintWriter;
+import java.math.BigInteger;
+import java.net.URLDecoder;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alipay.config.AlipayConfig;
+import com.alipay.util.AlipayCore;
+import com.alipay.util.AlipaySubmit;
+import com.alipay.util.UtilDate;
+import com.cnfantasia.server.api.commSysPara.constant.SysParamKey;
+import com.cnfantasia.server.api.pub.BaseController;
+import com.cnfantasia.server.business.pub.sysParam.ISysParamManager;
+import com.cnfantasia.server.common.json.JsonResponse;
+
+/**
+ * Filename:    AlipayController.java
+ * @version:    1.0.0
+ * Create at:   2014年12月4日 上午8:02:19
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年12月4日       shiyl             1.0             1.0 Version
+ */
+@Controller
+@RequestMapping("/alipay")
+public class AlipayController extends BaseController {
+	private Log logger = LogFactory.getLog(getClass());
+	private static final String WIDseller_email = AlipayConfig.WIDseller_email;
+	
+	private ISysParamManager sysParamManager;
+	public void setSysParamManager(ISysParamManager sysParamManager) {
+		this.sysParamManager = sysParamManager;
+	}
+	
+	private String getNotifyUrl(){
+		String tmpUrl = "alipay/payNotify.json";
+		String baseUrl = sysParamManager.getSysParaValue(SysParamKey.PAYNOTIFY_BASEURL);
+		return baseUrl+tmpUrl;
+	}
+	private String getCallBackUrl(){
+		String tmpUrl = "alipay/callBack.json";
+		String baseUrl = sysParamManager.getSysParaValue(SysParamKey.PAYNOTIFY_BASEURL);
+		return baseUrl+tmpUrl;
+	}
+	private String getMerchantUrl(){
+		String tmpUrl = "alipay/merchant.json";
+		String baseUrl = sysParamManager.getSysParaValue(SysParamKey.PAYNOTIFY_BASEURL);
+		return baseUrl+tmpUrl;
+	}
+	/**
+	 * 预支付请求
+	 * @param request
+	 * @throws Exception 
+	 */
+	@RequestMapping("/prePayRequest.json")
+	@ResponseBody
+	public JsonResponse prePayRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JsonResponse jsonResponse = new JsonResponse();
+		
+		BigInteger orderId = new BigInteger(request.getParameter("orderId"));
+		String WIDout_trade_no = "orderNo001";
+		String WIDsubject = "测试商品1";
+		String WIDtotal_fee = "1.01";
+		
+		try {
+			//支付宝网关地址
+			String ALIPAY_GATEWAY_NEW = "http://wappaygw.alipay.com/service/rest.htm?";
+
+			////////////////////////////////////调用授权接口alipay.wap.trade.create.direct获取授权码token//////////////////////////////////////
+			
+			//返回格式
+			String format = "xml";
+			//必填，不需要修改
+			
+			//返回格式
+			String v = "2.0";
+			//必填，不需要修改
+			
+			//请求号
+			String req_id = UtilDate.getOrderNum();
+			//必填，须保证每次请求都是唯一
+			
+			//req_data详细信息
+			
+			//服务器异步通知页面路径
+//			String notify_url = "http://商户网关地址/WS_WAP_PAYWAP-JAVA-UTF-8/notify_url.jsp";
+			String notify_url = getNotifyUrl();
+			//需http://格式的完整路径，不能加?id=123这类自定义参数
+
+			//页面跳转同步通知页面路径
+//			String call_back_url = "http://127.0.0.1:8080/WS_WAP_PAYWAP-JAVA-UTF-8/call_back_url.jsp";
+			String call_back_url = getCallBackUrl();
+			//需http://格式的完整路径，不能加?id=123这类自定义参数，不能写成http://localhost/
+
+			//操作中断返回地址
+//			String merchant_url = "http://127.0.0.1:8080/WS_WAP_PAYWAP-JAVA-UTF-8/xxxxxx.jsp";
+			String merchant_url = getMerchantUrl();
+			//用户付款中途退出返回商户的地址。需http://格式的完整路径，不允许加?id=123这类自定义参数
+
+			//卖家支付宝帐户
+//			String seller_email = new String(request.getParameter("WIDseller_email").getBytes("ISO-8859-1"),"UTF-8");
+			String seller_email = WIDseller_email;
+			//必填
+
+			//商户订单号
+//			String out_trade_no = new String(request.getParameter("WIDout_trade_no").getBytes("ISO-8859-1"),"UTF-8");
+			String out_trade_no = WIDout_trade_no;
+			//商户网站订单系统中唯一订单号，必填
+
+			//订单名称
+//			String subject = new String(request.getParameter("WIDsubject").getBytes("ISO-8859-1"),"UTF-8");
+			String subject = WIDsubject;
+			//必填
+
+			//付款金额
+//			String total_fee = new String(request.getParameter("WIDtotal_fee").getBytes("ISO-8859-1"),"UTF-8");
+			String total_fee = WIDtotal_fee;
+			//必填
+			
+			//请求业务参数详细
+			String req_dataToken = "<direct_trade_create_req><notify_url>" + notify_url + "</notify_url><call_back_url>" + call_back_url + "</call_back_url><seller_account_name>" + seller_email + "</seller_account_name><out_trade_no>" + out_trade_no + "</out_trade_no><subject>" + subject + "</subject><total_fee>" + total_fee + "</total_fee><merchant_url>" + merchant_url + "</merchant_url></direct_trade_create_req>";
+			//必填
+			
+			//////////////////////////////////////////////////////////////////////////////////
+			
+			//把请求参数打包成数组
+			Map<String, String> sParaTempToken = new HashMap<String, String>();
+			sParaTempToken.put("service", "alipay.wap.trade.create.direct");
+			sParaTempToken.put("partner", AlipayConfig.partner);
+			sParaTempToken.put("_input_charset", AlipayConfig.input_charset);
+			sParaTempToken.put("sec_id", AlipayConfig.sign_type);
+			sParaTempToken.put("format", format);
+			sParaTempToken.put("v", v);
+			sParaTempToken.put("req_id", req_id);
+			sParaTempToken.put("req_data", req_dataToken);
+			
+			//建立请求
+			String sHtmlTextToken = AlipaySubmit.buildRequest(ALIPAY_GATEWAY_NEW,"", "",sParaTempToken);
+			//URLDECODE返回的信息
+			sHtmlTextToken = URLDecoder.decode(sHtmlTextToken,AlipayConfig.input_charset);
+			//获取token
+			String request_token = AlipaySubmit.getRequestToken(sHtmlTextToken);
+			//out.println(request_token);
+			
+			////////////////////////////////////根据授权码token调用交易接口alipay.wap.auth.authAndExecute//////////////////////////////////////
+			
+			//业务详细
+			String req_data = "<auth_and_execute_req><request_token>" + request_token + "</request_token></auth_and_execute_req>";
+			//必填
+			
+			//把请求参数打包成数组
+			Map<String, String> sParaTemp = new HashMap<String, String>();
+			sParaTemp.put("service", "alipay.wap.auth.authAndExecute");
+			sParaTemp.put("partner", AlipayConfig.partner);
+			sParaTemp.put("_input_charset", AlipayConfig.input_charset);
+			sParaTemp.put("sec_id", AlipayConfig.sign_type);
+			sParaTemp.put("format", format);
+			sParaTemp.put("v", v);
+			sParaTemp.put("req_data", req_data);
+			
+			Map<String, String> sParaTempWithSign = AlipaySubmit.buildRequestPara_s(sParaTemp);//TODO ..
+			String linkStr = AlipayCore.createLinkString(sParaTempWithSign);
+			jsonResponse.putData("linkStr", linkStr);
+			
+//			{//建立请求
+//				String sHtmlText = AlipaySubmit.buildRequest(ALIPAY_GATEWAY_NEW, sParaTemp, "get", "确认");
+//				logger.debug("AlipaySubmit.buildRequest result is :"+sHtmlText);
+//				PrintWriter out = response.getWriter();
+//				out.println(sHtmlText);
+//			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return jsonResponse;
+	}
+	
+	/**
+	 * 服务器异步通知页面路径
+	 * 需http://格式的完整路径，不能加?id=123这类自定义参数
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/payNotify.json")
+	@ResponseBody
+	public JsonResponse payNotify(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("AlipayController payNotify start..");//TODO 
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		Enumeration<String> currParams = request.getParameterNames();
+		while(currParams.hasMoreElements()){
+			logger.debug(currParams.nextElement());
+		}
+		//2.交互
+		//3.结果处理
+		return jsonResponse;
+	}
+	
+	/**
+	 * 页面跳转同步通知页面路径
+	 * 需http://格式的完整路径，不能加?id=123这类自定义参数，不能写成http://localhost/
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/callBack.json")
+	@ResponseBody
+	public JsonResponse callBack(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("AlipayController callBack start..");//TODO 
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		Enumeration<String> currParams = request.getParameterNames();
+		while(currParams.hasMoreElements()){
+			logger.debug(currParams.nextElement());
+		}
+		//2.交互
+		//3.结果处理
+		return jsonResponse;
+	}
+	
+	/**
+	 * 操作中断返回地址
+	 * 用户付款中途退出返回商户的地址。需http://格式的完整路径，不允许加?id=123这类自定义参数
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/merchant.json")
+	@ResponseBody
+	public JsonResponse merchant(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("AlipayController merchant start..");//TODO 
+		JsonResponse jsonResponse = new JsonResponse();
+		//1.搜集参数
+		Enumeration<String> currParams = request.getParameterNames();
+		while(currParams.hasMoreElements()){
+			logger.debug(currParams.nextElement());
+		}
+		//2.交互
+		//3.结果处理
+		return jsonResponse;
+	}
+	
+	
+}

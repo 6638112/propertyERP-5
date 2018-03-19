@@ -1,0 +1,71 @@
+/**   
+* Filename:    ICommunityService.java   
+* @version:    1.0  
+* Create at:   2014年7月13日 上午10:47:46   
+* Description:  
+*   
+* Modification History:   
+* Date        Author      Version     Description   
+* ----------------------------------------------------------------- 
+* 2014年7月13日    shiyl      1.0         1.0 Version   
+*/
+package com.cnfantasia.server.api.community.service;
+
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
+
+import com.cnfantasia.server.business.pub.entity.PageModel;
+
+
+/**
+ * Filename:    ICommunityService.java
+ * @version:    1.0.0
+ * Create at:   2014年7月13日 上午10:47:46
+ * Description:
+ *
+ * Modification History:
+ * Date           Author           Version           Description
+ * ------------------------------------------------------------------
+ * 2014年7月13日       shiyl             1.0             1.0 Version
+ */
+public interface ICommunityService {
+	public Map<ForumForum,ForumThread> getHomeInfo(Integer fid);
+	/**
+	 * 发帖
+	 * @param remoteUserName
+	 * @param remoteUserId
+	 * @param topicId
+	 * @param subject
+	 * @param messageTxt
+	 * @param useip
+	 * @param port
+	 * @return
+	 */
+	public int postMessage(String remoteUserName,Integer remoteUserId, Integer topicId,String subject,String messageTxt,String useip,Integer port);
+	/**
+	 * 查询主题列表
+	 * @return
+	 */
+	public List<ForumForum> getForumForumList();
+	public List<ForumForum> getForumForumList(PageModel pageModel);
+	/**
+	 * 查询帖子列表
+	 * @param tid
+	 * @param pageModel
+	 * @return
+	 */
+	public List<ForumThread> getMessageList(Integer fid,PageModel pageModel);
+	/**
+	 * 根据主主题查询子主题列表
+	 * @param fid
+	 * @return
+	 */
+	public List<ForumForum> getSubForumForumList(Integer fid);
+	public List<ForumForum> getSubForumForumList(Integer fid,PageModel pageModel);
+	/**
+	 * @return
+	 */
+	public ForumForum getDefaultBolck(BigInteger userId);
+	
+}
